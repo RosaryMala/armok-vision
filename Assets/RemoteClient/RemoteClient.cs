@@ -399,17 +399,17 @@ namespace DFHack
                     arrayReport += (char)number;
                 arrayReport += ",";
             }
-            String tempString = "";
-            byte[] tempArray = buffer.ToArray();
-            for (int i = 0; i < tempArray.GetUpperBound(0); i++)
-            {
-                //if (Char.IsControl((char)buf[i]))
-                tempString += (byte)tempArray[i];
-                //else
-                //    tempString += (char)buf[i];
-                tempString += ",";
-            }
-            UnityEngine.Debug.Log("Sent buf[" + tempArray.Length + "] = " + tempString);
+            //String tempString = "";
+            //byte[] tempArray = buffer.ToArray();
+            //for (int i = 0; i < tempArray.GetUpperBound(0); i++)
+            //{
+            //    //if (Char.IsControl((char)buf[i]))
+            //    tempString += (byte)tempArray[i];
+            //    //else
+            //    //    tempString += (char)buf[i];
+            //    tempString += ",";
+            //}
+            //UnityEngine.Debug.Log("Sent buf[" + tempArray.Length + "] = " + tempString);
             int got = socket.Send(buffer.ToArray());
             return (got == fullsz);
         }
@@ -478,7 +478,7 @@ namespace DFHack
                 header.id = BitConverter.ToInt16(buffer, 0);
                 header.size = BitConverter.ToInt32(buffer, 4); //because something, somewhere, is fucking retarded
 
-                outString.print("Received %d:%d.\n", header.id, header.size);
+                //outString.print("Received %d:%d.\n", header.id, header.size);
 
 
                 if ((DFHackReplyCode)header.id == DFHackReplyCode.RPC_REPLY_FAIL)
@@ -510,19 +510,19 @@ namespace DFHack
                 switch ((DFHackReplyCode)header.id)
                 {
                     case DFHackReplyCode.RPC_REPLY_RESULT:
-                        if (buf.Length >= 50)
-                        {
-                            String tempString = "";
-                            for (int i = header.size-50; i < header.size; i++)
-                            {
-                                //if (Char.IsControl((char)buf[i]))
-                                    tempString += (byte)buf[i];
-                                //else
-                                //    tempString += (char)buf[i];
-                                tempString += ",";
-                            }
-                            UnityEngine.Debug.Log("Got buf[" + buf.Length + "] = " + tempString);
-                        }
+                        //if (buf.Length >= 50)
+                        //{
+                        //    String tempString = "";
+                        //    for (int i = header.size - 50; i < header.size; i++)
+                        //    {
+                        //        //if (Char.IsControl((char)buf[i]))
+                        //        tempString += (byte)buf[i];
+                        //        //else
+                        //        //    tempString += (char)buf[i];
+                        //        tempString += ",";
+                        //    }
+                        //    UnityEngine.Debug.Log("Got buf[" + buf.Length + "] = " + tempString);
+                        //}
                         output = ProtoBuf.Serializer.Deserialize<Output>(new MemoryStream(buf));
                         if (output == null)
                         {
@@ -683,8 +683,13 @@ namespace DFHack
 
             if (size == 0)
                 return true;
-            int cnt = socket.Receive(buf, size, SocketFlags.None);
-            if (cnt <= 0) return false;
+            int left = size;
+            for (; left > 0; )
+            {
+                int cnt = socket.Receive(buf, size-left, left, SocketFlags.None);
+                if (cnt <= 0) return false;
+                left -= cnt;
+            }
 
             return true;
         }
