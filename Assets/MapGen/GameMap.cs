@@ -46,6 +46,7 @@ public class GameMap : MonoBehaviour
 
     void GetMapInfo()
     {
+        connectionState.net_request.save_folder = "ANY";
         if(connectionState.EmbarkInfoCall.execute(connectionState.net_request, out connectionState.net_reply) == command_result.CR_OK)
         {
             if (connectionState.net_reply.available)
@@ -58,6 +59,31 @@ public class GameMap : MonoBehaviour
                 GetAllTiles();
             }
             else Debug.Log("DF map is not available");
+        }
+        GetMaterialList();
+        PrintFullMaterialList();
+    }
+
+    void GetMaterialList()
+    {
+        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+        connectionState.MaterialListCall.execute(null, out connectionState.net_material_list);
+        stopwatch.Stop();
+        Debug.Log(connectionState.net_material_list.material_list.Count + " materials gotten, took " + stopwatch.Elapsed.TotalSeconds + " seconds.\n");
+    }
+
+    void PrintFullMaterialList()
+    {
+        int limit = connectionState.net_material_list.material_list.Count;
+        if (limit >= 100)
+            limit = 100;
+        //Don't ever do this.
+        for (int i = connectionState.net_material_list.material_list.Count - limit; i < connectionState.net_material_list.material_list.Count; i++)
+        {
+            //no really, don't.
+            RemoteFortressReader.MaterialDefinition material = connectionState.net_material_list.material_list[i];
+            Debug.Log("{" + material.mat_pair.mat_index + "," + material.mat_pair.mat_type + "}, " + material.id + ", " + material.name);
         }
     }
 
@@ -79,6 +105,8 @@ public class GameMap : MonoBehaviour
             {
                 if (!connectionState.net_embark_tile.is_valid)
                     return;
+                if (worldMap == null)
+                    worldMap = new Dictionary<DFCoord2d, LocalEmbarkTile>();
                 if (!worldMap.ContainsKey(localCoord))
                 {
                     LocalEmbarkTile tempTile = Instantiate(defaultEmbarkTile) as LocalEmbarkTile;

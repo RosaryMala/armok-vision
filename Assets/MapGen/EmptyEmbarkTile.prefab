@@ -38,7 +38,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a61feaa6910afe45aa66f7de3e11674, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseBlock: {fileID: 0}
+  baseBlock: {fileID: 11400000, guid: e636703138d422f44bbbd452ff4c589f, type: 2}
   blockList: []
   minZ: 0
   maxZ: 0
