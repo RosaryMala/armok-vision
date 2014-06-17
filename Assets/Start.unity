@@ -174,11 +174,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa92a0e1eefe93b40bec1e868142e050, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultEmbarkTile: {fileID: 11400000, guid: 904558a57f6dd384a816e05d5e96b2b4, type: 2}
-  sizeX: 0
-  sizeY: 0
-  posX: 0
-  posY: 0
+  defaultMapBlock: {fileID: 11400000, guid: e636703138d422f44bbbd452ff4c589f, type: 2}
+  blockCollection: []
+  rangeX: 3
+  rangeY: 3
+  rangeZup: 3
+  rangeZdown: 3
+  posX: 5
+  posY: 5
+  posZ: 5
 --- !u!1 &1293186818
 GameObject:
   m_ObjectHideFlags: 0

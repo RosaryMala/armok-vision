@@ -10,6 +10,58 @@
 // Generated from: RemoteFortressReader.proto
 namespace RemoteFortressReader
 {
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MapBlock")]
+  public partial class MapBlock : global::ProtoBuf.IExtensible
+  {
+    public MapBlock() {}
+    
+    private int _map_x;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"map_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int map_x
+    {
+      get { return _map_x; }
+      set { _map_x = value; }
+    }
+    private int _map_y;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"map_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int map_y
+    {
+      get { return _map_y; }
+      set { _map_y = value; }
+    }
+    private int _map_z;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"map_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int map_z
+    {
+      get { return _map_z; }
+      set { _map_z = value; }
+    }
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.TiletypeShape> _tiletype_shapes = new global::System.Collections.Generic.List<RemoteFortressReader.TiletypeShape>();
+    [global::ProtoBuf.ProtoMember(4, Name=@"tiletype_shapes", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.TiletypeShape> tiletype_shapes
+    {
+      get { return _tiletype_shapes; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.TiletypeSpecial> _tiletype_specials = new global::System.Collections.Generic.List<RemoteFortressReader.TiletypeSpecial>();
+    [global::ProtoBuf.ProtoMember(5, Name=@"tiletype_specials", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.TiletypeSpecial> tiletype_specials
+    {
+      get { return _tiletype_specials; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.TiletypeMaterial> _tiletype_materials = new global::System.Collections.Generic.List<RemoteFortressReader.TiletypeMaterial>();
+    [global::ProtoBuf.ProtoMember(6, Name=@"tiletype_materials", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.TiletypeMaterial> tiletype_materials
+    {
+      get { return _tiletype_materials; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MatPair")]
   public partial class MatPair : global::ProtoBuf.IExtensible
   {
@@ -122,5 +174,278 @@ namespace RemoteFortressReader
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BlockRequest")]
+  public partial class BlockRequest : global::ProtoBuf.IExtensible
+  {
+    public BlockRequest() {}
+    
+    private int _blocks_needed = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"blocks_needed", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int blocks_needed
+    {
+      get { return _blocks_needed; }
+      set { _blocks_needed = value; }
+    }
+    private int _min_x = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"min_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int min_x
+    {
+      get { return _min_x; }
+      set { _min_x = value; }
+    }
+    private int _max_x = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"max_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int max_x
+    {
+      get { return _max_x; }
+      set { _max_x = value; }
+    }
+    private int _min_y = default(int);
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"min_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int min_y
+    {
+      get { return _min_y; }
+      set { _min_y = value; }
+    }
+    private int _max_y = default(int);
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"max_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int max_y
+    {
+      get { return _max_y; }
+      set { _max_y = value; }
+    }
+    private int _min_z = default(int);
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"min_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int min_z
+    {
+      get { return _min_z; }
+      set { _min_z = value; }
+    }
+    private int _max_z = default(int);
+    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"max_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int max_z
+    {
+      get { return _max_z; }
+      set { _max_z = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BlockList")]
+  public partial class BlockList : global::ProtoBuf.IExtensible
+  {
+    public BlockList() {}
+    
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MapBlock> _map_blocks = new global::System.Collections.Generic.List<RemoteFortressReader.MapBlock>();
+    [global::ProtoBuf.ProtoMember(1, Name=@"map_blocks", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.MapBlock> map_blocks
+    {
+      get { return _map_blocks; }
+    }
+  
+    private int _map_x = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"map_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int map_x
+    {
+      get { return _map_x; }
+      set { _map_x = value; }
+    }
+    private int _map_y = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"map_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int map_y
+    {
+      get { return _map_y; }
+      set { _map_y = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"TiletypeShape")]
+    public enum TiletypeShape
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"NO_SHAPE", Value=-1)]
+      NO_SHAPE = -1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"EMPTY", Value=0)]
+      EMPTY = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"FLOOR", Value=1)]
+      FLOOR = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"BOULDER", Value=2)]
+      BOULDER = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"PEBBLES", Value=3)]
+      PEBBLES = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"WALL", Value=4)]
+      WALL = 4,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"FORTIFICATION", Value=5)]
+      FORTIFICATION = 5,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"STAIR_UP", Value=6)]
+      STAIR_UP = 6,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"STAIR_DOWN", Value=7)]
+      STAIR_DOWN = 7,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"STAIR_UPDOWN", Value=8)]
+      STAIR_UPDOWN = 8,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"RAMP", Value=9)]
+      RAMP = 9,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"RAMP_TOP", Value=10)]
+      RAMP_TOP = 10,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"BROOK_BED", Value=11)]
+      BROOK_BED = 11,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"BROOK_TOP", Value=12)]
+      BROOK_TOP = 12,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"TREE", Value=13)]
+      TREE = 13,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SAPLING", Value=14)]
+      SAPLING = 14,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SHRUB", Value=15)]
+      SHRUB = 15,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ENDLESS_PIT", Value=16)]
+      ENDLESS_PIT = 16
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"TiletypeSpecial")]
+    public enum TiletypeSpecial
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"NO_SPECIAL", Value=-1)]
+      NO_SPECIAL = -1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"NORMAL", Value=0)]
+      NORMAL = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"RIVER_SOURCE", Value=1)]
+      RIVER_SOURCE = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"WATERFALL", Value=2)]
+      WATERFALL = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SMOOTH", Value=3)]
+      SMOOTH = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"FURROWED", Value=4)]
+      FURROWED = 4,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"WET", Value=5)]
+      WET = 5,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DEAD", Value=6)]
+      DEAD = 6,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"WORN_1", Value=7)]
+      WORN_1 = 7,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"WORN_2", Value=8)]
+      WORN_2 = 8,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"WORN_3", Value=9)]
+      WORN_3 = 9,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"TRACK", Value=10)]
+      TRACK = 10
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"TiletypeMaterial")]
+    public enum TiletypeMaterial
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"NO_MATERIAL", Value=-1)]
+      NO_MATERIAL = -1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"AIR", Value=0)]
+      AIR = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SOIL", Value=1)]
+      SOIL = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"STONE", Value=2)]
+      STONE = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"FEATURE", Value=3)]
+      FEATURE = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"LAVA_STONE", Value=4)]
+      LAVA_STONE = 4,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"MINERAL", Value=5)]
+      MINERAL = 5,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"FROZEN_LIQUID", Value=6)]
+      FROZEN_LIQUID = 6,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CONSTRUCTION", Value=7)]
+      CONSTRUCTION = 7,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"GRASS_LIGHT", Value=8)]
+      GRASS_LIGHT = 8,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"GRASS_DARK", Value=9)]
+      GRASS_DARK = 9,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"GRASS_DRY", Value=10)]
+      GRASS_DRY = 10,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"GRASS_DEAD", Value=11)]
+      GRASS_DEAD = 11,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"PLANT", Value=12)]
+      PLANT = 12,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"HFS", Value=13)]
+      HFS = 13,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CAMPFIRE", Value=14)]
+      CAMPFIRE = 14,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"FIRE", Value=15)]
+      FIRE = 15,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ASHES", Value=16)]
+      ASHES = 16,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"MAGMA", Value=17)]
+      MAGMA = 17,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DRIFTWOOD", Value=18)]
+      DRIFTWOOD = 18,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"POOL", Value=19)]
+      POOL = 19,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"BROOK", Value=20)]
+      BROOK = 20,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"RIVER", Value=21)]
+      RIVER = 21
+    }
   
 }

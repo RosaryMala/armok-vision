@@ -1,14 +1,14 @@
-﻿using isoworldremote;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using System;
+using RemoteFortressReader;
 
 [CustomEditor(typeof(MapBlock))]
 [CanEditMultipleObjects]
 public class MapBlockEditor : Editor
 {
     static Color32 selectedColor = Color.white;
-    static BasicShape selectedShape = BasicShape.WALL;
+    static TiletypeShape selectedShape = TiletypeShape.WALL;
     bool showEditorGrid = false;
 
     public override void OnInspectorGUI()
@@ -20,16 +20,16 @@ public class MapBlockEditor : Editor
             EditorGUILayout.LabelField(targets.Length + " Map Blocks selected.");
 
         selectedColor = EditorGUILayout.ColorField("Material Color", selectedColor);
-        selectedShape = (BasicShape)EditorGUILayout.EnumPopup("Terrain Shape ", selectedShape);
+        selectedShape = (TiletypeShape)EditorGUILayout.EnumPopup("Terrain Shape ", selectedShape);
         showEditorGrid = EditorGUILayout.Foldout(showEditorGrid, "Block Tiles");
         if (showEditorGrid)
         {
             EditorGUILayout.BeginVertical();
             DFHack.DFCoord2d tempCoord = new DFHack.DFCoord2d();
-            for (int i = 0; i < MapBlock.blockWidth; i++)
+            for (int i = 0; i < MapBlock.blockWidthTiles; i++)
             {
                 EditorGUILayout.BeginHorizontal();
-                for (int j = 0; j < MapBlock.blockWidth; j++)
+                for (int j = 0; j < MapBlock.blockWidthTiles; j++)
                 {
                     tempCoord.x = j;
                     tempCoord.y = i;
@@ -45,34 +45,34 @@ public class MapBlockEditor : Editor
                     currentColor.a = 1.0f;
                     GUI.color = currentColor;
                     string buttonIcon = "\u00A0";
-                    BasicShape tile = targetBlocks[0].GetSingleTile(tempCoord);
+                    TiletypeShape tile = targetBlocks[0].GetSingleTile(tempCoord);
                     for (int index = 1; index < targetBlocks.Length; index++)
                     {
                         if (tile != targetBlocks[index].GetSingleTile(tempCoord))
                         {
-                            tile = BasicShape.NONE;
+                            tile = TiletypeShape.EMPTY;
                             break;
                         }
 
                     }
                     switch (tile)
                     {
-                        case BasicShape.WALL:
-                            buttonIcon = "▓";
-                            break;
-                        case BasicShape.FLOOR:
-                            buttonIcon = "+";
-                            break;
-                        case BasicShape.NONE:
+                        case TiletypeShape.NO_SHAPE:
                             buttonIcon = "?";
                             break;
-                        case BasicShape.OPEN:
+                        case TiletypeShape.WALL:
+                            buttonIcon = "▓";
+                            break;
+                        case TiletypeShape.FLOOR:
+                            buttonIcon = "+";
+                            break;
+                        case TiletypeShape.EMPTY:
                             buttonIcon = "\u00A0";
                             break;
-                        case BasicShape.RAMP_UP:
+                        case TiletypeShape.RAMP:
                             buttonIcon = "▲";
                             break;
-                        case BasicShape.RAMP_DOWN:
+                        case TiletypeShape.RAMP_TOP:
                             buttonIcon = "▼";
                             break;
                         default:
@@ -99,8 +99,8 @@ public class MapBlockEditor : Editor
         {
             for (int index = 0; index < targetBlocks.Length; index++)
             {
-                for (int i = 0; i < MapBlock.blockWidth; i++)
-                    for (int j = 0; j < MapBlock.blockWidth; j++)
+                for (int i = 0; i < MapBlock.blockWidthTiles; i++)
+                    for (int j = 0; j < MapBlock.blockWidthTiles; j++)
                     {
                         DFHack.DFCoord2d here = new DFHack.DFCoord2d(j, i);
                         targetBlocks[index].SetSingleTile(here, selectedShape);
