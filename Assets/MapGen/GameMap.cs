@@ -6,18 +6,23 @@ using DFHack;
 public class GameMap : MonoBehaviour
 {
     ConnectionState connectionState;
-    public LocalEmbarkTile defaultEmbarkTile;
-    public Dictionary<DFCoord2d, LocalEmbarkTile> worldMap;
-    public int sizeX = 0;
-    public int sizeY = 0;
+    public MapBlock defaultMapBlock;
+    public List<MapBlock> blockCollection;
+    public int rangeX = 0;
+    public int rangeY = 0;
+    public int rangeZup = 0;
+    public int rangeZdown = 0;
     public int posX = 0;
     public int posY = 0;
+    public int posZ = 0;
 
     // Use this for initialization
     void Start()
     {
+        InitializeBlocks();
         Connect();
-        GetMapInfo();
+        GetMaterialList();
+        GetBlockList();
         Disconnect();
     }
 	
@@ -25,6 +30,26 @@ public class GameMap : MonoBehaviour
 	void Update () {
 	
 	}
+
+    void InitializeBlocks()
+    {
+        if (blockCollection == null)
+            blockCollection = new List<MapBlock>();
+        int wantedSize = rangeX * 2 * rangeY * 2 * (rangeZup + rangeZdown);
+        if (blockCollection.Count < wantedSize)
+            for (int i = blockCollection.Count; i < wantedSize; i++)
+            {
+                MapBlock newblock = Instantiate(defaultMapBlock) as MapBlock;
+                newblock.transform.parent = this.transform;
+                blockCollection.Add(newblock);
+            }
+        else if(blockCollection.Count > wantedSize) //This shouldn't happen normally, but better to be prepared than not
+            for(int i = blockCollection.Count-1; i >= wantedSize; i--)
+            {
+                Destroy(blockCollection[i]);
+                blockCollection.RemoveAt(i);
+            }
+    }
 
     void Connect()
     {
@@ -42,26 +67,6 @@ public class GameMap : MonoBehaviour
     {
         connectionState.Disconnect();
         connectionState = null;
-    }
-
-    void GetMapInfo()
-    {
-        connectionState.net_request.save_folder = "ANY";
-        if(connectionState.EmbarkInfoCall.execute(connectionState.net_request, out connectionState.net_reply) == command_result.CR_OK)
-        {
-            if (connectionState.net_reply.available)
-            {
-                posX = connectionState.net_reply.region_x;
-                posY = connectionState.net_reply.region_y;
-                sizeX = connectionState.net_reply.region_size_x;
-                sizeY = connectionState.net_reply.region_size_y;
-                Debug.Log("DF map is " + sizeX + "x" + sizeY + " tiles big, situated at " + posX + "," + posY);
-                GetAllTiles();
-            }
-            else Debug.Log("DF map is not available");
-        }
-        GetMaterialList();
-        PrintFullMaterialList();
     }
 
     void GetMaterialList()
@@ -87,31 +92,46 @@ public class GameMap : MonoBehaviour
         }
     }
 
-    void GetAllTiles()
+    MapBlock getFreeBlock()
     {
-        for(int yy = 0; yy < connectionState.net_reply.region_size_y; yy++)
-            for(int xx = 0; xx < connectionState.net_reply.region_size_x; xx++)
-            {
-                GetEmbarkTile(new DFCoord2d(xx, yy));
-            }
+        for(int i = 0; i < blockCollection.Count; i++)
+        {
+            if (blockCollection[i].gameObject.activeSelf == false)
+                return blockCollection[i];
+        }
+        return null;
     }
 
-    void GetEmbarkTile(DFCoord2d localCoord)
+    void GetBlockList()
     {
-        connectionState.net_tile_request.want_x = localCoord.x;
-        connectionState.net_tile_request.want_y = localCoord.y;
-        if (connectionState.net_tile_request != null)
-            if (connectionState.EmbarkTileCall.execute(connectionState.net_tile_request, out connectionState.net_embark_tile) == DFHack.command_result.CR_OK)
+        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+        connectionState.net_block_request.min_x = posX - rangeX;
+        connectionState.net_block_request.max_x = posX + rangeX;
+        connectionState.net_block_request.min_y = posY - rangeY;
+        connectionState.net_block_request.max_y = posY + rangeY;
+        connectionState.net_block_request.min_z = posZ - rangeZdown;
+        connectionState.net_block_request.max_z = posZ + rangeZup;
+        connectionState.BlockListCall.execute(connectionState.net_block_request, out connectionState.net_block_list);
+        stopwatch.Stop();
+        Debug.Log(connectionState.net_block_list.map_blocks.Count + " blocks gotten, took " + stopwatch.Elapsed.TotalSeconds + " seconds.\n");
+        for(int i = 0; i < blockCollection.Count; i++)
+        {
+            if(blockCollection[i].gameObject.activeSelf == true)
             {
-                if (!connectionState.net_embark_tile.is_valid)
-                    return;
-                if (worldMap == null)
-                    worldMap = new Dictionary<DFCoord2d, LocalEmbarkTile>();
-                if (!worldMap.ContainsKey(localCoord))
-                {
-                    LocalEmbarkTile tempTile = Instantiate(defaultEmbarkTile) as LocalEmbarkTile;
-                    tempTile.makeTile(connectionState.net_embark_tile, connectionState.net_reply);
-                }
+                blockCollection[i].Reposition(connectionState.net_block_list);
             }
+        }
+        for (int i = 0; i < connectionState.net_block_list.map_blocks.Count; i++)
+        {
+            MapBlock newBlock = getFreeBlock();
+            if (newBlock == null)
+                break;
+            newBlock.gameObject.SetActive(true);
+            newBlock.SetAllTiles(connectionState.net_block_list.map_blocks[i], connectionState.net_block_list);
+            newBlock.Regenerate();
+            newBlock.name = "MapBlock(" + newBlock.coordString + ")";
+        }
+
     }
 }
