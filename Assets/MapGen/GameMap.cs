@@ -22,14 +22,16 @@ public class GameMap : MonoBehaviour
         InitializeBlocks();
         Connect();
         GetMaterialList();
+        GetUnitList();
         GetBlockList();
         Disconnect();
     }
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
 
     void InitializeBlocks()
     {
@@ -43,8 +45,8 @@ public class GameMap : MonoBehaviour
                 newblock.transform.parent = this.transform;
                 blockCollection.Add(newblock);
             }
-        else if(blockCollection.Count > wantedSize) //This shouldn't happen normally, but better to be prepared than not
-            for(int i = blockCollection.Count-1; i >= wantedSize; i--)
+        else if (blockCollection.Count > wantedSize) //This shouldn't happen normally, but better to be prepared than not
+            for (int i = blockCollection.Count - 1; i >= wantedSize; i--)
             {
                 Destroy(blockCollection[i]);
                 blockCollection.RemoveAt(i);
@@ -94,7 +96,7 @@ public class GameMap : MonoBehaviour
 
     MapBlock getFreeBlock()
     {
-        for(int i = 0; i < blockCollection.Count; i++)
+        for (int i = 0; i < blockCollection.Count; i++)
         {
             if (blockCollection[i].gameObject.activeSelf == false)
                 return blockCollection[i];
@@ -114,10 +116,10 @@ public class GameMap : MonoBehaviour
         connectionState.net_block_request.max_z = posZ + rangeZup;
         connectionState.BlockListCall.execute(connectionState.net_block_request, out connectionState.net_block_list);
         stopwatch.Stop();
-        Debug.Log(connectionState.net_block_list.map_blocks.Count + " blocks gotten, took " + stopwatch.Elapsed.TotalSeconds + " seconds.\n");
-        for(int i = 0; i < blockCollection.Count; i++)
+        Debug.Log(connectionState.net_block_list.map_blocks.Count + " blocks gotten, took 1/" + (1.0 / stopwatch.Elapsed.TotalSeconds) + " seconds.\n");
+        for (int i = 0; i < blockCollection.Count; i++)
         {
-            if(blockCollection[i].gameObject.activeSelf == true)
+            if (blockCollection[i].gameObject.activeSelf == true)
             {
                 blockCollection[i].Reposition(connectionState.net_block_list);
             }
@@ -132,6 +134,15 @@ public class GameMap : MonoBehaviour
             newBlock.Regenerate();
             newBlock.name = "MapBlock(" + newBlock.coordString + ")";
         }
+
+    }
+    void GetUnitList()
+    {
+        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+        connectionState.UnitListCall.execute(null, out connectionState.net_unit_list);
+        stopwatch.Stop();
+        Debug.Log(connectionState.net_unit_list.creature_list.Count + " units gotten, took 1/" + (1.0 / stopwatch.Elapsed.TotalSeconds) + " seconds.\n");
 
     }
 }
