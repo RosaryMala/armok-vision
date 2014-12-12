@@ -3,10 +3,13 @@ using System.Collections;
 
 public class GameWindow : MonoBehaviour
 {
-    public int viewPortWidth = 80;
-    public int viewPortHeight = 25;
+    public int viewWidth = 80;
+    public int viewHeight = 25;
+    public int viewDist = 5;
+    float viewPortWidth = 80*MapBlock.tileWidth;
+    float viewPortHeight = 25*MapBlock.tileWidth;
     public float verticalShift;
-    public float viewDistance = 5;
+    float viewDistance = 5*MapBlock.tileHeight;
     float n, f, r, l, t, b;
     Matrix4x4 mat = new Matrix4x4();
     // Use this for initialization
@@ -18,6 +21,9 @@ public class GameWindow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        viewPortWidth = viewWidth * MapBlock.tileWidth;
+        viewPortHeight = viewHeight * MapBlock.tileWidth;
+        viewDistance = viewDist * MapBlock.tileHeight;
         float screenAspect = (float)Screen.width / (float)Screen.height;
         float viewportAspect = (float)viewPortWidth / (float)viewPortHeight;
 
