@@ -7,6 +7,10 @@ public class GameMap : MonoBehaviour
 {
     ConnectionState connectionState;
     public MapBlock defaultMapBlock;
+    public GameObject defaultTile;
+    public GameWindow viewCamera;
+    public Material DefaultMaterial;
+    public Mesh[] defaultMeshes = new Mesh[17];
     public List<MapBlock> blockCollection;
     public int rangeX = 0;
     public int rangeY = 0;
@@ -21,17 +25,27 @@ public class GameMap : MonoBehaviour
     {
         InitializeBlocks();
         Connect();
+        //connectionState.HashCheckCall.execute();
+        GetViewInfo();
+        PositionCamera();
         GetMaterialList();
         GetTiletypeList();
         GetUnitList();
-        GetBlockList();
-        Disconnect();
+        InvokeRepeating("GetBlockList", 0, 1);
+        //GetBlockList();
+        //Disconnect();
     }
 
     // Update is called once per frame
     void Update()
     {
+        GetViewInfo();
+        PositionCamera();
+    }
 
+    void OnDestroy()
+    {
+        Disconnect();
     }
 
     void InitializeBlocks()
@@ -44,6 +58,7 @@ public class GameMap : MonoBehaviour
             {
                 MapBlock newblock = Instantiate(defaultMapBlock) as MapBlock;
                 newblock.transform.parent = this.transform;
+                newblock.parent = this;
                 blockCollection.Add(newblock);
             }
         else if (blockCollection.Count > wantedSize) //This shouldn't happen normally, but better to be prepared than not
@@ -52,6 +67,14 @@ public class GameMap : MonoBehaviour
                 Destroy(blockCollection[i]);
                 blockCollection.RemoveAt(i);
             }
+    }
+
+    void FreeAllBlocks()
+    {
+        foreach(MapBlock block in blockCollection)
+        {
+            block.gameObject.SetActive(false);
+        }
     }
 
     void Connect()
@@ -116,8 +139,11 @@ public class GameMap : MonoBehaviour
 
     void GetBlockList()
     {
-        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-        stopwatch.Start();
+        //System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        //stopwatch.Start();
+        posX = (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x/2)) / 16;
+        posY = (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y/2)) / 16;
+        posZ = connectionState.net_view_info.view_pos_z+1;
         connectionState.net_block_request.min_x = posX - rangeX;
         connectionState.net_block_request.max_x = posX + rangeX;
         connectionState.net_block_request.min_y = posY - rangeY;
@@ -125,8 +151,9 @@ public class GameMap : MonoBehaviour
         connectionState.net_block_request.min_z = posZ - rangeZdown;
         connectionState.net_block_request.max_z = posZ + rangeZup;
         connectionState.BlockListCall.execute(connectionState.net_block_request, out connectionState.net_block_list);
-        stopwatch.Stop();
-        Debug.Log(connectionState.net_block_list.map_blocks.Count + " blocks gotten, took 1/" + (1.0 / stopwatch.Elapsed.TotalSeconds) + " seconds.\n");
+        //stopwatch.Stop();
+        //Debug.Log(connectionState.net_block_list.map_blocks.Count + " blocks gotten, took 1/" + (1.0 / stopwatch.Elapsed.TotalSeconds) + " seconds.\n");
+        FreeAllBlocks();
         for (int i = 0; i < blockCollection.Count; i++)
         {
             if (blockCollection[i].gameObject.activeSelf == true)
@@ -134,6 +161,8 @@ public class GameMap : MonoBehaviour
                 blockCollection[i].Reposition(connectionState.net_block_list);
             }
         }
+        //System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+        //watch.Start();
         for (int i = 0; i < connectionState.net_block_list.map_blocks.Count; i++)
         {
             MapBlock newBlock = getFreeBlock();
@@ -144,7 +173,8 @@ public class GameMap : MonoBehaviour
             newBlock.Regenerate();
             newBlock.name = "MapBlock(" + newBlock.coordString + ")";
         }
-
+        //watch.Stop();
+        //Debug.Log("Generating " + connectionState.net_block_list.map_blocks.Count + " Meshes took " + watch.Elapsed.TotalSeconds + " seconds");
     }
     void GetUnitList()
     {
@@ -154,5 +184,24 @@ public class GameMap : MonoBehaviour
         stopwatch.Stop();
         Debug.Log(connectionState.net_unit_list.creature_list.Count + " units gotten, took 1/" + (1.0 / stopwatch.Elapsed.TotalSeconds) + " seconds.\n");
 
+    }
+    void GetViewInfo()
+    {
+        connectionState.ViewInfoCall.execute(null, out connectionState.net_view_info);
+        //Debug.Log(
+        //    "x:" + connectionState.net_view_info.view_pos_x +
+        //    ", y:" + connectionState.net_view_info.view_pos_y +
+        //    ", z:" + connectionState.net_view_info.view_pos_z +
+        //    ", w:" + connectionState.net_view_info.view_size_x +
+        //    ", h:" + connectionState.net_view_info.view_size_y
+        //    );
+    }
+
+    void PositionCamera()
+    {
+        viewCamera.transform.parent.transform.position = MapBlock.DFtoUnityCoord(
+            (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x/2)), 
+            (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y/2)), 
+            connectionState.net_view_info.view_pos_z+1);
     }
 }

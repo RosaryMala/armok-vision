@@ -478,6 +478,80 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ViewInfo")]
+  public partial class ViewInfo : global::ProtoBuf.IExtensible
+  {
+    public ViewInfo() {}
+    
+    private int _view_pos_x = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"view_pos_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int view_pos_x
+    {
+      get { return _view_pos_x; }
+      set { _view_pos_x = value; }
+    }
+    private int _view_pos_y = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"view_pos_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int view_pos_y
+    {
+      get { return _view_pos_y; }
+      set { _view_pos_y = value; }
+    }
+    private int _view_pos_z = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"view_pos_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int view_pos_z
+    {
+      get { return _view_pos_z; }
+      set { _view_pos_z = value; }
+    }
+    private int _view_size_x = default(int);
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"view_size_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int view_size_x
+    {
+      get { return _view_size_x; }
+      set { _view_size_x = value; }
+    }
+    private int _view_size_y = default(int);
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"view_size_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int view_size_y
+    {
+      get { return _view_size_y; }
+      set { _view_size_y = value; }
+    }
+    private int _cursor_pos_x = default(int);
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"cursor_pos_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int cursor_pos_x
+    {
+      get { return _cursor_pos_x; }
+      set { _cursor_pos_x = value; }
+    }
+    private int _cursor_pos_y = default(int);
+    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"cursor_pos_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int cursor_pos_y
+    {
+      get { return _cursor_pos_y; }
+      set { _cursor_pos_y = value; }
+    }
+    private int _cursor_pos_z = default(int);
+    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"cursor_pos_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int cursor_pos_z
+    {
+      get { return _cursor_pos_z; }
+      set { _cursor_pos_z = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
     [global::ProtoBuf.ProtoContract(Name=@"TiletypeShape")]
     public enum TiletypeShape
     {
