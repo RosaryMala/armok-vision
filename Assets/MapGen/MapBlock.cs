@@ -25,12 +25,21 @@ public class MapBlock : MonoBehaviour
     }
     DFCoord coordinates;
     DFCoord2d map_coords;
-    GameMap parent;
+    public GameMap parent;
+
+    public static Vector3 DFtoUnityCoord(int x, int y, int z)
+    {
+        Vector3 outCoord = new Vector3(x * tileWidth, z * tileHeight, y * (-tileWidth));
+        return outCoord;
+    }
 
     [SerializeField]
     TiletypeShape[] terrain = new TiletypeShape[blockAreaTiles];
     [SerializeField]
     Color32[] colors = new Color32[blockAreaTiles];
+
+    CombineInstance[] instances = new CombineInstance[blockAreaTiles];
+    //bool propogatedTransforms = false;
 
     List<Vector3> finalVertices = new List<Vector3>();
     List<int> finalFaces = new List<int>();
@@ -45,6 +54,11 @@ public class MapBlock : MonoBehaviour
     }
     Openness openness;
 
+    // Use this for initialization
+    void Start()
+    {
+    }
+
     public void SetOpenness()
     {
         int air = 0;
@@ -52,7 +66,7 @@ public class MapBlock : MonoBehaviour
         for (int x = 0; x < blockWidthTiles; x++)
             for (int y = 0; y < blockWidthTiles; y++)
             {
-                if (terrain[y * blockWidthTiles + x] == TiletypeShape.EMPTY)
+                if (terrain[y * blockWidthTiles + x] == TiletypeShape.EMPTY || terrain[y * blockWidthTiles + x] == TiletypeShape.NO_SHAPE)
                     air++;
                 else if (terrain[y * blockWidthTiles + x] == TiletypeShape.WALL)
                     solid++;
@@ -77,7 +91,7 @@ public class MapBlock : MonoBehaviour
 
     public void SetUnityPosition()
     {
-        transform.position = new Vector3(coordinates.x * tileWidth, coordinates.z * tileHeight, coordinates.y * (-tileWidth));
+        transform.position = DFtoUnityCoord(coordinates.x, coordinates.y, coordinates.z);
     }
 
     public Openness GetOpenness()
@@ -142,46 +156,71 @@ public class MapBlock : MonoBehaviour
 
     public void Regenerate()
     {
-        finalVertices.Clear();
-        finalFaces.Clear();
-        finalVertexColors.Clear();
-        finalUVs.Clear();
-
         if (openness == Openness.air)
         {
         }
         else
         {
-            for (int i = 0; i < blockWidthTiles; i++)
-                for (int j = 0; j < blockWidthTiles; j++)
-                {
-                    DFCoord2d here = new DFCoord2d(i, j);
-                    switch (GetSingleTile(here))
-                    {
-                        case TiletypeShape.WALL:
-                            AddTopFace(here, tileHeight);
-                            break;
-                        case TiletypeShape.RAMP:
-                        case TiletypeShape.FLOOR:
-                            AddTopFace(here, floorHeight);
-                            break;
-                    }
-                    AddSideFace(here, FaceDirection.North);
-                    AddSideFace(here, FaceDirection.South);
-                    AddSideFace(here, FaceDirection.East);
-                    AddSideFace(here, FaceDirection.West);
-                }
+            for(int i = 0; i < blockAreaTiles; i++)
+            {
+                int yy = i / blockWidthTiles;
+                int xx = i % blockWidthTiles;
+                int terraintype = (int)terrain[i];
+                //this is very very temporary
+                if (parent.defaultMeshes[terraintype] == null)
+                    parent.defaultMeshes[terraintype] = new Mesh();
+                instances[i].mesh = parent.defaultMeshes[terraintype];
+                instances[i].transform = Matrix4x4.TRS(new Vector3(xx * tileWidth, 0, -yy * tileWidth), Quaternion.identity, Vector3.one);
+            }
+            MeshFilter mf = GetComponent<MeshFilter>();
+            if (mf.mesh == null)
+                mf.mesh = new Mesh();
+            mf.mesh.Clear();
+            mf.mesh.CombineMeshes(instances, true);
         }
-        MeshFilter mf = GetComponent<MeshFilter>();
-        Mesh mesh = new Mesh();
-        mf.mesh = mesh;
-        mesh.vertices = finalVertices.ToArray();
-        mesh.uv = finalUVs.ToArray();
-        mesh.colors32 = finalVertexColors.ToArray();
-        mesh.triangles = finalFaces.ToArray();
-        mesh.RecalculateBounds();
-        mesh.RecalculateNormals();
     }
+
+    //public void Regenerate()
+    //{
+    //    finalVertices.Clear();
+    //    finalFaces.Clear();
+    //    finalVertexColors.Clear();
+    //    finalUVs.Clear();
+    //    if (openness == Openness.air)
+    //    {
+    //    }
+    //    else
+    //    {
+    //        for (int i = 0; i < blockWidthTiles; i++)
+    //            for (int j = 0; j < blockWidthTiles; j++)
+    //            {
+    //                DFCoord2d here = new DFCoord2d(i, j);
+    //                switch (GetSingleTile(here))
+    //                {
+    //                    case TiletypeShape.WALL:
+    //                        AddTopFace(here, tileHeight);
+    //                        break;
+    //                    case TiletypeShape.RAMP:
+    //                    case TiletypeShape.FLOOR:
+    //                        AddTopFace(here, floorHeight);
+    //                        break;
+    //                }
+    //                AddSideFace(here, FaceDirection.North);
+    //                AddSideFace(here, FaceDirection.South);
+    //                AddSideFace(here, FaceDirection.East);
+    //                AddSideFace(here, FaceDirection.West);
+    //            }
+    //    }
+    //    MeshFilter mf = GetComponent<MeshFilter>();
+    //    Mesh mesh = new Mesh();
+    //    mf.mesh = mesh;
+    //    mesh.vertices = finalVertices.ToArray();
+    //    mesh.uv = finalUVs.ToArray();
+    //    mesh.colors32 = finalVertexColors.ToArray();
+    //    mesh.triangles = finalFaces.ToArray();
+    //    mesh.RecalculateBounds();
+    //    mesh.RecalculateNormals();
+    //}
 
     enum FaceDirection
     {
