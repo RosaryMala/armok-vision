@@ -112,24 +112,24 @@ public class MapBlock : MonoBehaviour
         SetOpenness();
     }
 
-    public void SetAllTiles(RemoteFortressReader.MapBlock DFBlock, RemoteFortressReader.BlockList blockList)
+    public void SetAllTiles(RemoteFortressReader.MapBlock DFBlock, RemoteFortressReader.BlockList blockList, RemoteFortressReader.TiletypeList tiletypeList)
     {
-        //if(DFBlock.tiletype_shapes.Count != terrain.Length)
-        //{
-        //    Debug.LogError("Map Block has " + DFBlock.tiletype_shapes.Count + " shapes, should be " + terrain.Length);
-        //}
-        //for (int i = 0; i < DFBlock.tiletype_shapes.Count; i++)
-        //{
-        //    terrain[i] = DFBlock.tiletype_shapes[i];
-        //    colors[i] = Color.white;
-        //}
-        //SetOpenness();
-        //coordinates.x = DFBlock.map_x;
-        //coordinates.y = DFBlock.map_y;
-        //coordinates.z = DFBlock.map_z;
-        //map_coords.x = blockList.map_x;
-        //map_coords.y = blockList.map_y;
-        //SetUnityPosition();
+        if (DFBlock.tiles.Count != terrain.Length)
+        {
+            Debug.LogError("Map Block has " + DFBlock.tiles.Count + " tiles, should be " + terrain.Length);
+        }
+        for (int i = 0; i < DFBlock.tiles.Count; i++)
+        {
+            terrain[i] = tiletypeList.tiletype_list[DFBlock.tiles[i]].shape;
+            colors[i] = Color.white;
+        }
+        SetOpenness();
+        coordinates.x = DFBlock.map_x;
+        coordinates.y = DFBlock.map_y;
+        coordinates.z = DFBlock.map_z;
+        map_coords.x = blockList.map_x;
+        map_coords.y = blockList.map_y;
+        SetUnityPosition();
     }
 
     public TiletypeShape GetSingleTile(DFCoord2d position)
