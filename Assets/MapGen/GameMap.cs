@@ -22,6 +22,7 @@ public class GameMap : MonoBehaviour
         InitializeBlocks();
         Connect();
         GetMaterialList();
+        GetTiletypeList();
         GetUnitList();
         GetBlockList();
         Disconnect();
@@ -104,6 +105,15 @@ public class GameMap : MonoBehaviour
         return null;
     }
 
+    void GetTiletypeList()
+    {
+        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+        connectionState.TiletypeListCall.execute(null, out connectionState.net_tiletype_list);
+        stopwatch.Stop();
+        Debug.Log(connectionState.net_tiletype_list.tiletype_list.Count + " tiletypes gotten, took 1/" + (1.0 / stopwatch.Elapsed.TotalSeconds) + " seconds.\n");
+    }
+
     void GetBlockList()
     {
         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
@@ -130,7 +140,7 @@ public class GameMap : MonoBehaviour
             if (newBlock == null)
                 break;
             newBlock.gameObject.SetActive(true);
-            newBlock.SetAllTiles(connectionState.net_block_list.map_blocks[i], connectionState.net_block_list);
+            newBlock.SetAllTiles(connectionState.net_block_list.map_blocks[i], connectionState.net_block_list, connectionState.net_tiletype_list);
             newBlock.Regenerate();
             newBlock.name = "MapBlock(" + newBlock.coordString + ")";
         }

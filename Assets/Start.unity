@@ -136,6 +136,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 0
 --- !u!1 &861361727
 GameObject:
   m_ObjectHideFlags: 0
@@ -163,6 +164,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 1
 --- !u!114 &861361729
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -210,6 +212,7 @@ Transform:
   m_Children:
   - {fileID: 1336453711}
   m_Father: {fileID: 0}
+  m_RootOrder: 2
 --- !u!1 &1336453706
 GameObject:
   m_ObjectHideFlags: 0
@@ -222,8 +225,6 @@ GameObject:
   - 92: {fileID: 1336453709}
   - 124: {fileID: 1336453708}
   - 81: {fileID: 1336453707}
-  - 114: {fileID: 1336453713}
-  - 114: {fileID: 1336453712}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -279,8 +280,11 @@ Camera:
     m_Bits: 4294967039
   m_RenderingPath: 1
   m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
   m_HDR: 0
   m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: .0219999999
 --- !u!4 &1336453711
 Transform:
   m_ObjectHideFlags: 0
@@ -292,39 +296,4 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1293186819}
---- !u!114 &1336453712
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1336453706}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fb12edbd5d56cb4c99ccf773df52492, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startRect:
-    serializedVersion: 2
-    x: 10
-    y: 10
-    width: 75
-    height: 50
-  updateColor: 1
-  allowDrag: 1
-  frequency: .5
-  nbDecimal: 1
---- !u!114 &1336453713
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1336453706}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b54fa8be8a38a9f4e8f53b4399135e30, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewPortWidth: 80
-  viewPortHeight: 25
-  verticalShift: 0
-  viewDistance: 10
+  m_RootOrder: 0
