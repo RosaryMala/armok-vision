@@ -136,6 +136,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 0
 --- !u!1 &861361727
 GameObject:
   m_ObjectHideFlags: 0
@@ -163,6 +164,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 1
 --- !u!114 &861361729
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -175,14 +177,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultMapBlock: {fileID: 11400000, guid: e636703138d422f44bbbd452ff4c589f, type: 2}
+  defaultTile: {fileID: 100000, guid: e636703138d422f44bbbd452ff4c589f, type: 2}
+  DefaultMaterial: {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
+  defaultMeshes:
+  - {fileID: 0}
+  - {fileID: 4300000, guid: 5c132cfbc95ea1a42935aba49277b9be, type: 3}
+  - {fileID: 4300000, guid: a5ea42ab952c42b439c5d6fccd09bd5e, type: 3}
+  - {fileID: 4300000, guid: 8ddab006c704a3c418a7f04bf8e07ccb, type: 3}
+  - {fileID: 4300000, guid: dcfb5e4b97b90874288075d6e4f49be1, type: 3}
+  - {fileID: 4300002, guid: c3142d32d3b5fdd489a2bd0024a4ea9c, type: 3}
+  - {fileID: 4300000, guid: ab20aec254ba6dc47bb85270d4f67502, type: 3}
+  - {fileID: 4300000, guid: ad082742ca8249146a7bc0f32c5e0202, type: 3}
+  - {fileID: 4300000, guid: 1c8d2dc538858144cabb02879a81ed33, type: 3}
+  - {fileID: 4300002, guid: 21b0d15f773a5914687b024d1dc8a0fd, type: 3}
+  - {fileID: 0}
+  - {fileID: 4300002, guid: 3d45d649a0d719b48925624e73f5e2ff, type: 3}
+  - {fileID: 0}
+  - {fileID: 4300000, guid: d9f4e465911f1044c81d198d1410c58c, type: 3}
+  - {fileID: 4300002, guid: 494109b0dd25412499aafa30285d263a, type: 3}
+  - {fileID: 4300002, guid: 79a028a497610214b83f690a3087e237, type: 3}
+  - {fileID: 0}
   blockCollection: []
-  rangeX: 3
-  rangeY: 3
-  rangeZup: 3
-  rangeZdown: 3
-  posX: 5
-  posY: 5
-  posZ: 5
+  rangeX: 1
+  rangeY: 1
+  rangeZup: 6
+  rangeZdown: 128
+  posX: 4
+  posY: 4
+  posZ: 128
 --- !u!1 &1293186818
 GameObject:
   m_ObjectHideFlags: 0
@@ -205,11 +227,12 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1293186818}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: .5, z: 0}
+  m_LocalPosition: {x: 90, y: .5, z: 90}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1336453711}
   m_Father: {fileID: 0}
+  m_RootOrder: 2
 --- !u!1 &1336453706
 GameObject:
   m_ObjectHideFlags: 0
@@ -279,8 +302,11 @@ Camera:
     m_Bits: 4294967039
   m_RenderingPath: 1
   m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
   m_HDR: 0
   m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: .0219999999
 --- !u!4 &1336453711
 Transform:
   m_ObjectHideFlags: 0
@@ -292,6 +318,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1293186819}
+  m_RootOrder: 0
 --- !u!114 &1336453712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -324,7 +351,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b54fa8be8a38a9f4e8f53b4399135e30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewPortWidth: 80
-  viewPortHeight: 25
+  viewWidth: 80
+  viewHeight: 25
+  viewDist: 5
   verticalShift: 0
-  viewDistance: 10

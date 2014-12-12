@@ -7,6 +7,7 @@ public class ConnectionState {
     public RemoteFortressReader.BlockRequest net_block_request;
     public RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MaterialList> MaterialListCall;
     public RemoteFunction<RemoteFortressReader.BlockRequest, RemoteFortressReader.BlockList> BlockListCall;
+    public RemoteFunction<dfproto.EmptyMessage> HashCheckCall;
     color_ostream df_network_out;
     RemoteClient network_client;
 
@@ -18,8 +19,10 @@ public class ConnectionState {
         net_block_request = new RemoteFortressReader.BlockRequest();
         MaterialListCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MaterialList>();
         BlockListCall = new RemoteFunction<RemoteFortressReader.BlockRequest, RemoteFortressReader.BlockList>();
+        HashCheckCall = new RemoteFunction<dfproto.EmptyMessage>();
         MaterialListCall.bind(network_client, "GetMaterialList", "RemoteFortressReader");
         BlockListCall.bind(network_client, "GetBlockList", "RemoteFortressReader");
+        HashCheckCall.bind(network_client, "CheckHashes", "RemoteFortressReader");
     }
 
     public void Disconnect()

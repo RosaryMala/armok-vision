@@ -7,6 +7,9 @@ public class GameMap : MonoBehaviour
 {
     ConnectionState connectionState;
     public MapBlock defaultMapBlock;
+    public GameObject defaultTile;
+    public Material DefaultMaterial;
+    public Mesh[] defaultMeshes = new Mesh[17];
     public List<MapBlock> blockCollection;
     public int rangeX = 0;
     public int rangeY = 0;
@@ -21,15 +24,17 @@ public class GameMap : MonoBehaviour
     {
         InitializeBlocks();
         Connect();
+        connectionState.HashCheckCall.execute();
         GetMaterialList();
         GetBlockList();
         Disconnect();
     }
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
 
     void InitializeBlocks()
     {
@@ -41,6 +46,7 @@ public class GameMap : MonoBehaviour
             {
                 MapBlock newblock = Instantiate(defaultMapBlock) as MapBlock;
                 newblock.transform.parent = this.transform;
+                newblock.parent = this;
                 blockCollection.Add(newblock);
             }
         else if(blockCollection.Count > wantedSize) //This shouldn't happen normally, but better to be prepared than not
@@ -122,6 +128,8 @@ public class GameMap : MonoBehaviour
                 blockCollection[i].Reposition(connectionState.net_block_list);
             }
         }
+        System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+        watch.Start();
         for (int i = 0; i < connectionState.net_block_list.map_blocks.Count; i++)
         {
             MapBlock newBlock = getFreeBlock();
@@ -132,6 +140,7 @@ public class GameMap : MonoBehaviour
             newBlock.Regenerate();
             newBlock.name = "MapBlock(" + newBlock.coordString + ")";
         }
-
+        watch.Stop();
+        Debug.Log("Generating " + connectionState.net_block_list.map_blocks.Count + " Meshes took " + watch.Elapsed.TotalSeconds + " seconds");
     }
 }

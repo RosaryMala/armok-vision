@@ -10,6 +10,7 @@ public class MapBlockEditor : Editor
     static Color32 selectedColor = Color.white;
     static TiletypeShape selectedShape = TiletypeShape.WALL;
     bool showEditorGrid = false;
+    public GameMap parent = null;
 
     public override void OnInspectorGUI()
     {
@@ -19,7 +20,14 @@ public class MapBlockEditor : Editor
         else
             EditorGUILayout.LabelField(targets.Length + " Map Blocks selected.");
 
-        selectedColor = EditorGUILayout.ColorField("Material Color", selectedColor);
+        parent = targetBlocks[0].parent;
+        parent = (GameMap)EditorGUILayout.ObjectField("Parent", parent, typeof(GameMap), true);
+        for (int index = 0; index < targetBlocks.Length; index++)
+        {
+            targetBlocks[index].parent = parent;
+        }
+
+            selectedColor = EditorGUILayout.ColorField("Material Color", selectedColor);
         selectedShape = (TiletypeShape)EditorGUILayout.EnumPopup("Terrain Shape ", selectedShape);
         showEditorGrid = EditorGUILayout.Foldout(showEditorGrid, "Block Tiles");
         if (showEditorGrid)
