@@ -5,6 +5,11 @@ using DFHack;
 
 public class GameMap : MonoBehaviour
 {
+    public class MapTile
+    {
+        int tileType;
+    }
+    public MapTile[, ,] tiles;
     ConnectionState connectionState;
     public MapBlock defaultMapBlock;
     public GameObject defaultTile;
@@ -153,16 +158,16 @@ public class GameMap : MonoBehaviour
         connectionState.BlockListCall.execute(connectionState.net_block_request, out connectionState.net_block_list);
         //stopwatch.Stop();
         //Debug.Log(connectionState.net_block_list.map_blocks.Count + " blocks gotten, took 1/" + (1.0 / stopwatch.Elapsed.TotalSeconds) + " seconds.\n");
-        FreeAllBlocks();
-        for (int i = 0; i < blockCollection.Count; i++)
-        {
-            if (blockCollection[i].gameObject.activeSelf == true)
-            {
-                blockCollection[i].Reposition(connectionState.net_block_list);
-            }
-        }
+        //for (int i = 0; i < blockCollection.Count; i++)
+        //{
+        //    if (blockCollection[i].gameObject.activeSelf == true)
+        //    {
+        //        blockCollection[i].Reposition(connectionState.net_block_list);
+        //    }
+        //}
         //System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         //watch.Start();
+        FreeAllBlocks();
         for (int i = 0; i < connectionState.net_block_list.map_blocks.Count; i++)
         {
             MapBlock newBlock = getFreeBlock();
