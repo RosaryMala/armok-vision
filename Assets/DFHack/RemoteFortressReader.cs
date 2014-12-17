@@ -552,6 +552,40 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MapInfo")]
+  public partial class MapInfo : global::ProtoBuf.IExtensible
+  {
+    public MapInfo() {}
+    
+    private int _block_size_x = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"block_size_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int block_size_x
+    {
+      get { return _block_size_x; }
+      set { _block_size_x = value; }
+    }
+    private int _block_size_y = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"block_size_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int block_size_y
+    {
+      get { return _block_size_y; }
+      set { _block_size_y = value; }
+    }
+    private int _block_size_z = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"block_size_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int block_size_z
+    {
+      get { return _block_size_z; }
+      set { _block_size_z = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
     [global::ProtoBuf.ProtoContract(Name=@"TiletypeShape")]
     public enum TiletypeShape
     {
