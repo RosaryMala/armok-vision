@@ -12,7 +12,7 @@ public class MeshCombineUtility
         public Color color;
     }
 
-    public static void ColorCombine(Mesh mesh, MeshInstance[] combines)
+    public static bool ColorCombine(Mesh mesh, MeshInstance[] combines)
     {
         int vertexCount = 0;
         int triangleCount = 0;
@@ -22,6 +22,12 @@ public class MeshCombineUtility
             {
                 vertexCount += combine.mesh.vertexCount;
             }
+        }
+
+        if(vertexCount > 65535)
+        {
+            //Debug.LogError("Combined mesh would have " + vertexCount + " vertices. Should not be more than 65535");
+            return false;
         }
 
         // Precomputed how many triangles we need instead
@@ -121,7 +127,7 @@ public class MeshCombineUtility
         mesh.uv1 = uv1;
         mesh.tangents = tangents;
         mesh.triangles = triangles;
-
+        return true;
     }
 
     static void Copy(int vertexcount, Vector3[] src, Vector3[] dst, ref int offset, Matrix4x4 transform)
