@@ -156,28 +156,28 @@ public class MapBlock : MonoBehaviour
 
     public void Regenerate()
     {
-        if (openness == Openness.air)
-        {
-        }
-        else
-        {
-            for(int i = 0; i < blockAreaTiles; i++)
-            {
-                int yy = i / blockWidthTiles;
-                int xx = i % blockWidthTiles;
-                int terraintype = (int)terrain[i];
-                //this is very very temporary
-                if (parent.defaultMeshes[terraintype] == null)
-                    parent.defaultMeshes[terraintype] = new Mesh();
-                instances[i].mesh = parent.defaultMeshes[terraintype];
-                instances[i].transform = Matrix4x4.TRS(new Vector3(xx * tileWidth, 0, -yy * tileWidth), Quaternion.identity, Vector3.one);
-            }
-            MeshFilter mf = GetComponent<MeshFilter>();
-            if (mf.mesh == null)
-                mf.mesh = new Mesh();
-            mf.mesh.Clear();
-            mf.mesh.CombineMeshes(instances, true);
-        }
+        //if (openness == Openness.air)
+        //{
+        //}
+        //else
+        //{
+        //    for (int i = 0; i < blockAreaTiles; i++)
+        //    {
+        //        int yy = i / blockWidthTiles;
+        //        int xx = i % blockWidthTiles;
+        //        int terraintype = (int)terrain[i];
+        //        //this is very very temporary
+        //        if (parent.defaultMeshes[terraintype] == null)
+        //            parent.defaultMeshes[terraintype] = new Mesh();
+        //        instances[i].mesh = parent.defaultMeshes[terraintype];
+        //        instances[i].transform = Matrix4x4.TRS(new Vector3(xx * tileWidth, 0, -yy * tileWidth), Quaternion.identity, Vector3.one);
+        //    }
+        //    MeshFilter mf = GetComponent<MeshFilter>();
+        //    if (mf.mesh == null)
+        //        mf.mesh = new Mesh();
+        //    mf.mesh.Clear();
+        //    mf.mesh.CombineMeshes(instances, true);
+        //}
     }
 
     //public void Regenerate()
