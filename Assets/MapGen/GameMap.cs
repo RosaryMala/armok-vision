@@ -3,14 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using DFHack;
 using RemoteFortressReader;
-
+using UnityEngine.UI;
 
 public class GameMap : MonoBehaviour
 {
     public struct MatPairStruct
     {
-        int mat_index;
-        int mat_type;
+        public int mat_index;
+        public int mat_type;
 
         public static implicit operator MatPairStruct(MatPair input)
         {
@@ -47,6 +47,9 @@ public class GameMap : MonoBehaviour
     public int posX = 0;
     public int posY = 0;
     public int posZ = 0;
+    public int map_x;
+    public int map_y;
+    public Text genStatus;
 
     Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> materials;
 
@@ -83,6 +86,7 @@ public class GameMap : MonoBehaviour
     {
         GetViewInfo();
         PositionCamera();
+        HideMeshes();
     }
 
     void OnDestroy()
@@ -158,7 +162,7 @@ public class GameMap : MonoBehaviour
             materials[material.mat_pair] = material;
         }
         stopwatch.Stop();
-        Debug.Log(materials.Count + " materials gotten, took " + stopwatch.Elapsed.TotalSeconds + " seconds.\n");
+        Debug.Log(materials.Count + " materials gotten, took " + stopwatch.Elapsed.Milliseconds + " ms.");
     }
 
     void PrintFullMaterialList()
@@ -196,7 +200,7 @@ public class GameMap : MonoBehaviour
         stopwatch.Start();
         connectionState.TiletypeListCall.execute(null, out connectionState.net_tiletype_list);
         stopwatch.Stop();
-        Debug.Log(connectionState.net_tiletype_list.tiletype_list.Count + " tiletypes gotten, took 1/" + (1.0 / stopwatch.Elapsed.TotalSeconds) + " seconds.\n");
+        Debug.Log(connectionState.net_tiletype_list.tiletype_list.Count + " tiletypes gotten, took " + stopwatch.Elapsed.Milliseconds + " ms.");
     }
 
     void CopyTiles(RemoteFortressReader.MapBlock DFBlock)
@@ -214,7 +218,7 @@ public class GameMap : MonoBehaviour
            }
     }
 
-    void GenerateTiles(int block_x, int block_y, int block_z)
+    bool GenerateTiles(int block_x, int block_y, int block_z)
     {
         int bufferIndex = 0;
         for (int xx = (block_x * blockSize); xx < (block_x + 1) * blockSize; xx++)
@@ -235,7 +239,10 @@ public class GameMap : MonoBehaviour
                     if(materials.TryGetValue(tiles[xx, yy, block_z].material, out mattie))
                     {
                         ColorDefinition color = mattie.state_color;
-                        newColor = new Color(color.red / 255.0f, color.green / 255.0f, color.blue / 255.0f, 1);
+                        if (color == null)
+                            newColor = Color.cyan;
+                        else
+                            newColor = new Color(color.red / 255.0f, color.green / 255.0f, color.blue / 255.0f, 1);
                     }
                     meshBuffer[bufferIndex].color = newColor;
                 }
@@ -255,7 +262,7 @@ public class GameMap : MonoBehaviour
             mf.mesh = new Mesh();
         mf.mesh.Clear();
         //mf.mesh.CombineMeshes(meshBuffer);
-        MeshCombineUtility.ColorCombine(mf.mesh, meshBuffer);
+        return MeshCombineUtility.ColorCombine(mf.mesh, meshBuffer);
         //Debug.Log("Generated a mesh with " + (mf.mesh.triangles.Length / 3) + " tris");
 
     }
@@ -265,6 +272,7 @@ public class GameMap : MonoBehaviour
         System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         watch.Start();
         int count = 0;
+        int failed = 0;
         for (int zz = (posZ - rangeZdown); zz < (posZ + rangeZup); zz++)
             for (int yy = ((posY - rangeY) * 16 / blockSize); yy <= ((posY + rangeY) * 16 / blockSize); yy++)
                 for (int xx = ((posX - rangeX) * 16 / blockSize); xx <= ((posX + rangeX) * 16 / blockSize); xx++)
@@ -275,10 +283,13 @@ public class GameMap : MonoBehaviour
                         continue;
                     }
                     //Debug.Log("Generating tiles at " + xx + ", " + yy + ", " + zz);
-                    GenerateTiles(xx, yy, zz);
-                    count++;
+                    if (GenerateTiles(xx, yy, zz))
+                        count++;
+                    else
+                        failed++;
                 }
         watch.Stop();
+        genStatus.text = (watch.ElapsedMilliseconds / count).ToString() + "ms per embark tile generated. " + failed + " generation failures";
         //Debug.Log("Generating " + count + " meshes took " + watch.ElapsedMilliseconds + " ms");
     }
 
@@ -307,6 +318,10 @@ public class GameMap : MonoBehaviour
         //}
         //watch.Start();
         //FreeAllBlocks();
+        if ((connectionState.net_block_list.map_x != map_x) || (connectionState.net_block_list.map_y != map_y))
+            ClearMap();
+        map_x = connectionState.net_block_list.map_x;
+        map_y = connectionState.net_block_list.map_y;
         for (int i = 0; i < connectionState.net_block_list.map_blocks.Count; i++)
         {
             //MapBlock newBlock = getFreeBlock();
@@ -328,7 +343,7 @@ public class GameMap : MonoBehaviour
         stopwatch.Start();
         connectionState.UnitListCall.execute(null, out connectionState.net_unit_list);
         stopwatch.Stop();
-        Debug.Log(connectionState.net_unit_list.creature_list.Count + " units gotten, took 1/" + (1.0 / stopwatch.Elapsed.TotalSeconds) + " seconds.\n");
+        Debug.Log(connectionState.net_unit_list.creature_list.Count + " units gotten, took " + stopwatch.Elapsed.Milliseconds + " ms.");
 
     }
     void GetViewInfo()
@@ -354,5 +369,40 @@ public class GameMap : MonoBehaviour
     void GetMapInfo()
     {
         connectionState.MapInfoCall.execute(null, out connectionState.net_map_info);
+    }
+
+    void ClearMap()
+    {
+        foreach(MeshFilter MF in blocks)
+        {
+            if (MF)
+                MF.mesh.Clear();
+        }
+        foreach (var tile in tiles)
+        {
+            if (tile != null)
+            {
+                tile.tileType = 0;
+                tile.material.mat_index = -1;
+                tile.material.mat_type = -1;
+            }
+        }
+    }
+
+    void HideMeshes()
+    {
+        for(int zz = 0; zz < blocks.GetLength(2); zz++)
+        for(int yy = 0; yy < blocks.GetLength(1); yy++)
+        for(int xx = 0; xx < blocks.GetLength(0); xx++)
+        {
+            if (blocks[xx, yy, zz] != null)
+            {
+                if (zz > connectionState.net_view_info.view_pos_z)
+                    blocks[xx, yy, zz].gameObject.layer = 8;
+                else
+                    blocks[xx, yy, zz].gameObject.layer = 0;
+            }
+        }
+
     }
 }
