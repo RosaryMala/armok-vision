@@ -140,6 +140,27 @@ namespace RemoteFortressReader
       get { return _materials; }
     }
   
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _layer_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
+    [global::ProtoBuf.ProtoMember(6, Name=@"layer_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> layer_materials
+    {
+      get { return _layer_materials; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _vein_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
+    [global::ProtoBuf.ProtoMember(7, Name=@"vein_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> vein_materials
+    {
+      get { return _vein_materials; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _base_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
+    [global::ProtoBuf.ProtoMember(8, Name=@"base_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> base_materials
+    {
+      get { return _base_materials; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -580,6 +601,54 @@ namespace RemoteFortressReader
     {
       get { return _block_size_z; }
       set { _block_size_z = value; }
+    }
+    private int _block_pos_x = default(int);
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"block_pos_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int block_pos_x
+    {
+      get { return _block_pos_x; }
+      set { _block_pos_x = value; }
+    }
+    private int _block_pos_y = default(int);
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"block_pos_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int block_pos_y
+    {
+      get { return _block_pos_y; }
+      set { _block_pos_y = value; }
+    }
+    private int _block_pos_z = default(int);
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"block_pos_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int block_pos_z
+    {
+      get { return _block_pos_z; }
+      set { _block_pos_z = value; }
+    }
+    private string _world_name = "";
+    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"world_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string world_name
+    {
+      get { return _world_name; }
+      set { _world_name = value; }
+    }
+    private string _world_name_english = "";
+    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"world_name_english", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string world_name_english
+    {
+      get { return _world_name_english; }
+      set { _world_name_english = value; }
+    }
+    private string _save_name = "";
+    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"save_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string save_name
+    {
+      get { return _save_name; }
+      set { _save_name = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)

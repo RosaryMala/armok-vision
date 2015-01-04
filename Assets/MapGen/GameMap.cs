@@ -7,31 +7,14 @@ using UnityEngine.UI;
 
 public class GameMap : MonoBehaviour
 {
-    public struct MatPairStruct
-    {
-        public int mat_index;
-        public int mat_type;
 
-        public static implicit operator MatPairStruct(MatPair input)
-        {
-            MatPairStruct output;
-            output.mat_index = input.mat_index;
-            output.mat_type = input.mat_type;
-            return output;
-        }
-        public static implicit operator MatPair(MatPairStruct input)
-        {
-            MatPair output = new MatPair();
-            output.mat_index = input.mat_index;
-            output.mat_type = input.mat_type;
-            return output;
-
-        }
-    }
     public class MapTile
     {
         public int tileType;
         public MatPairStruct material;
+        public MatPairStruct base_material;
+        public MatPairStruct layer_material;
+        public MatPairStruct vein_material;
     }
     MapTile[, ,] tiles;
     public GenericTile tileSelector;
@@ -50,6 +33,7 @@ public class GameMap : MonoBehaviour
     public int map_x;
     public int map_y;
     public Text genStatus;
+    public Text cursorProperties;
 
     Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> materials;
 
@@ -87,6 +71,7 @@ public class GameMap : MonoBehaviour
         GetViewInfo();
         PositionCamera();
         HideMeshes();
+        ShowCursorInfo();
     }
 
     void OnDestroy()
@@ -215,6 +200,9 @@ public class GameMap : MonoBehaviour
                MapTile tile = tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z];
                tile.tileType = DFBlock.tiles[xx + (yy * 16)];
                tile.material = DFBlock.materials[xx + (yy * 16)];
+               tile.base_material = DFBlock.base_materials[xx + (yy * 16)];
+               tile.layer_material = DFBlock.layer_materials[xx + (yy * 16)];
+               tile.vein_material = DFBlock.vein_materials[xx + (yy * 16)];
            }
     }
 
@@ -404,5 +392,84 @@ public class GameMap : MonoBehaviour
             }
         }
 
+    }
+
+    void ShowCursorInfo()
+    {
+        int cursX = connectionState.net_view_info.cursor_pos_x;
+        int cursY = connectionState.net_view_info.cursor_pos_y;
+        int cursZ = connectionState.net_view_info.cursor_pos_z;
+        cursorProperties.text = "";
+        cursorProperties.text += "Cursor: ";
+        cursorProperties.text += cursX + ",";
+        cursorProperties.text += cursY + ",";
+        cursorProperties.text += cursZ + "\n";
+        if(
+            cursX >= 0 &&
+            cursY >= 0 &&
+            cursZ >= 0 &&
+            cursX < tiles.GetLength(0) &&
+            cursY < tiles.GetLength(1) &&
+            cursZ < tiles.GetLength(2) &&
+            tiles[cursX, cursY, cursZ] != null)
+        {
+            var mat = tiles[cursX, cursY, cursZ].material;
+            cursorProperties.text += "Material: ";
+            cursorProperties.text += mat.mat_type + ",";
+            cursorProperties.text += mat.mat_index + "\n";
+
+            if (materials.ContainsKey(mat))
+            {
+                cursorProperties.text += "Material Name: ";
+                cursorProperties.text += materials[mat].id + "\n";
+            }
+            else
+                cursorProperties.text += "Unknown Material\n";
+
+            cursorProperties.text += "\n";
+
+            var basemat = tiles[cursX, cursY, cursZ].base_material;
+            cursorProperties.text += "Base Material: ";
+            cursorProperties.text += basemat.mat_type + ",";
+            cursorProperties.text += basemat.mat_index + "\n";
+
+            if (materials.ContainsKey(basemat))
+            {
+                cursorProperties.text += "Base Material Name: ";
+                cursorProperties.text += materials[basemat].id + "\n";
+            }
+            else
+                cursorProperties.text += "Unknown Base Material\n";
+
+            cursorProperties.text += "\n";
+
+            var layermat = tiles[cursX, cursY, cursZ].layer_material;
+            cursorProperties.text += "Layer Material: ";
+            cursorProperties.text += layermat.mat_type + ",";
+            cursorProperties.text += layermat.mat_index + "\n";
+
+            if (materials.ContainsKey(layermat))
+            {
+                cursorProperties.text += "Layer Material Name: ";
+                cursorProperties.text += materials[layermat].id + "\n";
+            }
+            else
+                cursorProperties.text += "Unknown Layer Material\n";
+
+            cursorProperties.text += "\n";
+
+            var veinmat = tiles[cursX, cursY, cursZ].vein_material;
+            cursorProperties.text += "Vein Material: ";
+            cursorProperties.text += veinmat.mat_type + ",";
+            cursorProperties.text += veinmat.mat_index + "\n";
+
+            if (materials.ContainsKey(veinmat))
+            {
+                cursorProperties.text += "Vein Material Name: ";
+                cursorProperties.text += materials[veinmat].id + "\n";
+            }
+            else
+                cursorProperties.text += "Unknown Vein Material\n";
+        }
     }
 }
