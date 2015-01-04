@@ -38,7 +38,7 @@ public class MapBlock : MonoBehaviour
     [SerializeField]
     Color32[] colors = new Color32[blockAreaTiles];
 
-    CombineInstance[] instances = new CombineInstance[blockAreaTiles];
+    //CombineInstance[] instances = new CombineInstance[blockAreaTiles];
     //bool propogatedTransforms = false;
 
     List<Vector3> finalVertices = new List<Vector3>();
