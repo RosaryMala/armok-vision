@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class GameMap : MonoBehaviour
 {
+    public ContentLoader contentLoader = new ContentLoader();
 
     public class MapTile
     {
@@ -60,9 +61,11 @@ public class GameMap : MonoBehaviour
         GetMaterialList();
         GetTiletypeList();
         GetUnitList();
-        InvokeRepeating("GetBlockList", 0, 1);
+        InvokeRepeating("GetBlockList", 0, 0.25f);
         //GetBlockList();
         //Disconnect();
+        contentLoader.matTokenList = connectionState.net_material_list.material_list;
+        contentLoader.ParseContentIndexFile(Application.streamingAssetsPath + "\\index.txt");
     }
 
     // Update is called once per frame
@@ -222,15 +225,18 @@ public class GameMap : MonoBehaviour
                 meshBuffer[bufferIndex].transform = Matrix4x4.TRS(DFtoUnityCoord(xx, yy, block_z), Quaternion.identity, Vector3.one);
                 if (tiles[xx, yy, block_z] != null)
                 {
-                    MaterialDefinition mattie;
-                    Color newColor = Color.magenta;
-                    if(materials.TryGetValue(tiles[xx, yy, block_z].material, out mattie))
+                    Color newColor = contentLoader.colorConfiguration[tiles[xx, yy, block_z].material];
+                    if (newColor == Color.black)
                     {
-                        ColorDefinition color = mattie.state_color;
-                        if (color == null)
-                            newColor = Color.cyan;
-                        else
-                            newColor = new Color(color.red / 255.0f, color.green / 255.0f, color.blue / 255.0f, 1);
+                        MaterialDefinition mattie;
+                        if (materials.TryGetValue(tiles[xx, yy, block_z].material, out mattie))
+                        {
+                            ColorDefinition color = mattie.state_color;
+                            if (color == null)
+                                newColor = Color.cyan;
+                            else
+                                newColor = new Color(color.red / 255.0f, color.green / 255.0f, color.blue / 255.0f, 1);
+                        }
                     }
                     meshBuffer[bufferIndex].color = newColor;
                 }
@@ -413,6 +419,8 @@ public class GameMap : MonoBehaviour
             cursZ < tiles.GetLength(2) &&
             tiles[cursX, cursY, cursZ] != null)
         {
+            cursorProperties.text += "Tiletype: ";
+            cursorProperties.text += connectionState.net_tiletype_list.tiletype_list[tiles[cursX, cursY, cursZ].tileType].name + "\n";
             var mat = tiles[cursX, cursY, cursZ].material;
             cursorProperties.text += "Material: ";
             cursorProperties.text += mat.mat_type + ",";
