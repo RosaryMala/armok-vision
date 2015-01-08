@@ -1,6 +1,7 @@
 ﻿using RemoteFortressReader;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class MaterialMatcher<T>
 {
@@ -43,6 +44,11 @@ public class MaterialMatcher<T>
         get
         {
             MaterialMatch output;
+            if (matList.TryGetValue(mat, out output))
+            {
+                return output.item;
+            }
+            mat.mat_type = -1; //Try once more with a more generic value.
             if (matList.TryGetValue(mat, out output))
             {
                 return output.item;
