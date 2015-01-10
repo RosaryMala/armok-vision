@@ -40,7 +40,7 @@ public class GameMap : MonoBehaviour
 
     public static float tileHeight = 3.0f;
     public static float tileWidth = 2.0f;
-    public static int blockSize = 48;
+    public static int blockSize = 16;
     public static Vector3 DFtoUnityCoord(int x, int y, int z)
     {
         Vector3 outCoord = new Vector3(x * tileWidth, z * tileHeight, y * (-tileWidth));
@@ -64,8 +64,12 @@ public class GameMap : MonoBehaviour
         InvokeRepeating("GetBlockList", 0, 0.25f);
         //GetBlockList();
         //Disconnect();
+        System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+        watch.Start();
         contentLoader.matTokenList = connectionState.net_material_list.material_list;
         contentLoader.ParseContentIndexFile(Application.streamingAssetsPath + "\\index.txt");
+        watch.Stop();
+        Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
     }
 
     // Update is called once per frame
@@ -226,7 +230,7 @@ public class GameMap : MonoBehaviour
                 if (tiles[xx, yy, block_z] != null)
                 {
                     Color newColor = contentLoader.colorConfiguration[tiles[xx, yy, block_z].material];
-                    if (newColor == Color.black)
+                    if (newColor == default(Color))
                     {
                         MaterialDefinition mattie;
                         if (materials.TryGetValue(tiles[xx, yy, block_z].material, out mattie))
@@ -283,7 +287,7 @@ public class GameMap : MonoBehaviour
                         failed++;
                 }
         watch.Stop();
-        genStatus.text = (watch.ElapsedMilliseconds / count).ToString() + "ms per embark tile generated. " + failed + " generation failures";
+        genStatus.text = watch.ElapsedMilliseconds + "ms to generate " + count + "meshes. "  + failed + " generation failures";
         //Debug.Log("Generating " + count + " meshes took " + watch.ElapsedMilliseconds + " ms");
     }
 
