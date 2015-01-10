@@ -449,8 +449,8 @@ MonoBehaviour:
   sapling: {fileID: 1498625256}
   shrub: {fileID: 1752937491}
   endlessPit: {fileID: 0}
-  branch: {fileID: 0}
-  trunkBranch: {fileID: 0}
+  branch: {fileID: 1844339273}
+  trunkBranch: {fileID: 1844339273}
   twig: {fileID: 0}
 --- !u!1 &1336453706
 GameObject:
@@ -1264,7 +1264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30a12e7b3795fe943ae99c8b570e36c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ThisMesh: {fileID: 4300000, guid: 8ddab006c704a3c418a7f04bf8e07ccb, type: 3}
+  ThisMesh: {fileID: 4300002, guid: 3d45d649a0d719b48925624e73f5e2ff, type: 3}
 --- !u!4 &2125846749
 Transform:
   m_ObjectHideFlags: 0
