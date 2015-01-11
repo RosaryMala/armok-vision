@@ -16,6 +16,7 @@ public class ConnectionState {
     public RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.UnitList> UnitListCall;
     public RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.ViewInfo> ViewInfoCall;
     public RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MapInfo> MapInfoCall;
+    public RemoteFunction<dfproto.EmptyMessage> MapResetCall;
     color_ostream df_network_out;
     RemoteClient network_client;
 
@@ -39,6 +40,8 @@ public class ConnectionState {
         ViewInfoCall.bind(network_client, "GetViewInfo", "RemoteFortressReader");
         MapInfoCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MapInfo>();
         MapInfoCall.bind(network_client, "GetMapInfo", "RemoteFortressReader");
+        MapResetCall = new RemoteFunction<dfproto.EmptyMessage>();
+        MapResetCall.bind(network_client, "ResetMapHashes", "RemoteFortressReader");
     }
 
     public void Disconnect()
