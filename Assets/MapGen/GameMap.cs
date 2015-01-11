@@ -24,6 +24,7 @@ public class GameMap : MonoBehaviour
     public GameWindow viewCamera;
     public Material DefaultMaterial;
     public MeshFilter[,,] blocks; // Dumb blocks for holding the terrain data.
+    public bool[, ,] blockDirtyBits;
     public int rangeX = 0;
     public int rangeY = 0;
     public int rangeZup = 0;
@@ -61,7 +62,6 @@ public class GameMap : MonoBehaviour
         GetMaterialList();
         GetTiletypeList();
         GetUnitList();
-        InvokeRepeating("GetBlockList", 0, 0.25f);
         //GetBlockList();
         //Disconnect();
         System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
@@ -70,6 +70,8 @@ public class GameMap : MonoBehaviour
         contentLoader.ParseContentIndexFile(Application.streamingAssetsPath + "\\index.txt");
         watch.Stop();
         Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
+        connectionState.MapResetCall.execute();
+        InvokeRepeating("GetBlockList", 0, 0.1f);
     }
 
     // Update is called once per frame
@@ -79,6 +81,7 @@ public class GameMap : MonoBehaviour
         PositionCamera();
         HideMeshes();
         ShowCursorInfo();
+        //GetBlockList();
     }
 
     void OnDestroy()
@@ -92,6 +95,15 @@ public class GameMap : MonoBehaviour
         Debug.Log("Map Size: " + connectionState.net_map_info.block_size_x + ", " + connectionState.net_map_info.block_size_y + ", " + connectionState.net_map_info.block_size_z);
         tiles = new MapTile[connectionState.net_map_info.block_size_x * 16, connectionState.net_map_info.block_size_y * 16, connectionState.net_map_info.block_size_z];
         blocks = new MeshFilter[connectionState.net_map_info.block_size_x * 16 / blockSize, connectionState.net_map_info.block_size_y * 16 / blockSize, connectionState.net_map_info.block_size_z];
+        blockDirtyBits = new bool[connectionState.net_map_info.block_size_x * 16 / blockSize, connectionState.net_map_info.block_size_y * 16 / blockSize, connectionState.net_map_info.block_size_z];
+
+    }
+
+    void SetDirtyBlock(int mapBlockX, int mapBlockY, int mapBlockZ)
+    {
+        mapBlockX = mapBlockX / blockSize;
+        mapBlockY = mapBlockY / blockSize;
+        blockDirtyBits[mapBlockX, mapBlockY, mapBlockZ] = true;
     }
 
     //void InitializeBlocks()
@@ -211,10 +223,14 @@ public class GameMap : MonoBehaviour
                tile.layer_material = DFBlock.layer_materials[xx + (yy * 16)];
                tile.vein_material = DFBlock.vein_materials[xx + (yy * 16)];
            }
+       SetDirtyBlock(DFBlock.map_x, DFBlock.map_y, DFBlock.map_z);
     }
 
     bool GenerateTiles(int block_x, int block_y, int block_z)
     {
+        if (!blockDirtyBits[block_x, block_y, block_z])
+            return true;
+        blockDirtyBits[block_x, block_y, block_z] = false;
         int bufferIndex = 0;
         for (int xx = (block_x * blockSize); xx < (block_x + 1) * blockSize; xx++)
             for (int yy = (block_y * blockSize); yy < (block_y + 1) * blockSize; yy++)
@@ -240,6 +256,10 @@ public class GameMap : MonoBehaviour
                                 newColor = Color.cyan;
                             else
                                 newColor = new Color(color.red / 255.0f, color.green / 255.0f, color.blue / 255.0f, 1);
+                        }
+                        else
+                        {
+                            newColor = Color.white;
                         }
                     }
                     meshBuffer[bufferIndex].color = newColor;
@@ -267,8 +287,6 @@ public class GameMap : MonoBehaviour
 
     void UpdateMeshes()
     {
-        System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
-        watch.Start();
         int count = 0;
         int failed = 0;
         for (int zz = (posZ - rangeZdown); zz < (posZ + rangeZup); zz++)
@@ -286,16 +304,15 @@ public class GameMap : MonoBehaviour
                     else
                         failed++;
                 }
-        watch.Stop();
-        genStatus.text = watch.ElapsedMilliseconds + "ms to generate " + count + "meshes. "  + failed + " generation failures";
         //Debug.Log("Generating " + count + " meshes took " + watch.ElapsedMilliseconds + " ms");
     }
-
     void GetBlockList()
     {
-        //System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-        //stopwatch.Start();
-        posX = (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x/2)) / 16;
+        System.Diagnostics.Stopwatch loadWatch = new System.Diagnostics.Stopwatch();
+        System.Diagnostics.Stopwatch genWatch = new System.Diagnostics.Stopwatch();
+        loadWatch.Start();
+        
+        posX = (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x / 2)) / 16;
         posY = (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y/2)) / 16;
         posZ = connectionState.net_view_info.view_pos_z+1;
         connectionState.net_block_request.min_x = posX - rangeX;
@@ -331,7 +348,11 @@ public class GameMap : MonoBehaviour
             //newBlock.name = "MapBlock(" + newBlock.coordString + ")";
             CopyTiles(connectionState.net_block_list.map_blocks[i]);
         }
+        loadWatch.Stop();
+        genWatch.Start();
         UpdateMeshes();
+        genWatch.Stop();
+        genStatus.text = connectionState.net_block_list.map_blocks.Count + " blocks gotten. " + loadWatch.ElapsedMilliseconds + "ms map copy \n" + genWatch.ElapsedMilliseconds + "ms mesh generation";
         //watch.Stop();
         //Debug.Log("Generating " + connectionState.net_block_list.map_blocks.Count + " Meshes took " + watch.Elapsed.TotalSeconds + " seconds");
     }
