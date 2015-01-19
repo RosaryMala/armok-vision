@@ -1,0 +1,239 @@
+- - - - - - - - - - - - - - - -
+IMPORTANT IMPORT SETTINGS AND UPDATE NOTES
+
+Please make sure that you upgrade the Lux core files, especially: "LuxLightingAmbient.cginc" and of course the whole "Wetness" folder.
+You also need to updated the "SetupLux" script and import the "Lux Shader" --> "Wetness" folder which contains the wetness shaders.
+
+If you want to have water ripples rendered on top of the surfaces you need the "Animated_WaterDrops" texture and have to assign it to the given slot of the "SetupLux" script.
+
+In case you import the demo textures and meshes please make sure:
+Any texture which is not a regular diffuse or normal texture but a somehow combined one you should always check "Bypass sRGB Sampling". As far as the demo content is concerned please take care about the following notes:
+- "Animated_WaterDrops": Make sure this texture is set to "advanced", then check "Bypass sRGB Sampling"
+- "RoughConcrete [Height][Noise]" texture: Make sure this texture is set to "advanced", then check "Bypass sRGB Sampling"
+- "02_street.fbx" is a simple street but the mesh already contains vertex colors which define puddles.
+Import settings: scale factor should be set to 0.1. Calculate normals and calculate tangents.
+
+
+TABLE OF CONTENT
+
+- Lux wetness shaders – Introduction
+- Lux General Wetness Parameters
+- Lux Mesh/Material/Shader Parameters
+  - Setting up the vertex colors to distribute puddles and wetness
+- The shaders
+  - Lux Wetness Simple Bumped Specular
+  - Lux Puddles Bumped Specular
+  - Lux WaterFlow Bumped Specular
+- Troubleshooting
+
+
+- - - - - - - - - - - - - - - -
+LUX WETNESS SHADERS - INTRODUCTION
+
+The Lux wetness shaders let you add physically based dynamic wetness and rain effects to your materials.
+They are based on the fantastic work of Sébastien Lagarde who provides a lot of information on rendering wet surfaces. So if you are new to this topic i highly recommend to read his posts starting here:
+http://seblagarde.wordpress.com/2012/12/10/observe-rainy-world/
+
+But in order to keep it short: Adding wetness to the shaders/materials basically means:
+- The albedo of dielectric (porous materials) will be darkened according to wetness.
+- The specular reflectance will be adjusted to match those of water according to wetness.
+- The roughness or smoothness will be adjusted to match those of water according to wetness.
+- The normal will be smoothed according to wetness.
+- Special effects like water ripples and flowing water will be added according to wetness and the shader you have selected.
+
+Lux wetness shaders come in some different flavors. But they all rely on a bunch of parameters which could be divided into 2 groups:
+First you have the general parameters: Parameters that describe the overall weather condition for your whole scene and all shaders supporting wetness.
+Second you have the material/shader specific wetness parameters.
+But let’s start with having a look at the general parameters.
+
+
+- - - - - - - - - -
+Lux General Wetness Parameters
+
+All general wetness parameters are controlled by the „SetupLux“ script and cover things like the the amount of accumulated water on the surfaces (which should depend on the time rain has been falling) as well as the amount of currently falling rain (which controls the number of rendered rain ripples if this is supported by the selected shader).
+
+If you have a look at the „SetupLux“ script you will find a bunch of wetness related params which are:  
+- Lux_Water Floodlevel
+- Lux_Rain Intensity
+- Lux Rain Ripples
+- Lux_Ripple Wind Speed
+- Lux_Ripple Tiling
+- Lux_Ripple Anim Speed
+- Lux_WaterBump Distance
+
+- Lux_Water Floodlevel:
+It is a vector4 parameter but only X and Y are used.
+X controls the amount of water that is accumulated in small cracks and on flat surfaces – according to the heightmap assigned to the material.
+Y controls the amount of water that is accumulated in puddles.
+Puddles generally are defined by adding vertex colors to your mesh: vertex.color.g = 0 means: let us have a puddle here where vertex.color.g = 1 means: no puddle at all.
+But why do we have water accumulated separately in cracks and on the flat surface from water accumulated in puddles? Well, if it starts to rain water will first be accumulated in cracks, then it will flood the surface. Finally puddles will start to accumulate water. Whereas in case it stops raining and starts to dry first the thin layer of water on the whole surface and in the small cracks will dry, then the water in the puddles. The „SetupLux“ script does not handle this for you but let you control both values separately.
+
+- Lux_Rain Intensity:
+Even if it is not raining there might be wetness. But in case it is raining you might want to have rain drops added to your surfaces.
+
+- Lux Rain Ripples:
+This slot is reserved to the predefined rain ripple texture which is needed to add ripples to the surfaces: Please find "Animated_WaterDrops" and add it to this slot!
+
+- Lux_Ripple Wind Speed:
+Static rain ripples might just look a bit boring. So you can add some wind to them making them move into a specified direction.
+It is a vector4 parameter: XY define the movement of the first ripple sample, ZW define the movement of the second ripple sample. Lux_Ripple Wind Speed will only effect ripples rendered using the "Lux Puddles Bumped Specular" shader.
+
+- Lux_Ripple Tiling:
+This parameter defines the size of the ripple texture. Please note that the ripple texture is always projected in world space which ensures that ripples on all materials will have the same size. As it is a top down projection ripples might get distorted on steep slopes – but they should not be rendered on those slopes anyway...
+
+- Lux_Ripple Anim Speed:
+This param defines the speed of how the ripples "spread". Weak rain might have a slower ripple anim speed whereas heavy rain might have a faster one.
+
+- Lux_WaterBump Distance:
+As adding ripples and/or water flow is pretty expensive to render for it causes some more texture fetches you may want to fade out them over distance to the camera. This does not only speed up rendering but also smoothes the rendered image over distance!
+
+But now lets get into the much more interesting part which is the different wetness shaders.
+
+
+- - - - - - - - - -
+Lux Mesh/Material/Shader specific Wetness Parameters
+
+As wetness is more or less a global phenomenon we have to probably control it at a pretty large scale:
+Some parts of a given mesh (just think of a road) might get wet whereas other parts might not because those are „covered“ by a bridge, tree or anything else.
+Nevertheless you will most likely texture this mesh using a tiling texture. So storing dry and wet information in a texture is not very suitable – unless we use uv2 to lay out this texture on the mesh.
+For this reason all shaders use vertex colors to control wetness and puddles by default.
+
+- - - - - - - - - -
+Setting up the vertex colors to distribute puddles and wetness
+
+As vertexcolor.red is already used by the basic vertex blend shaders of Lux we use vertex.color.green to mark regions where puddles should be rendered: Vertex.color.green = 1 means no puddle, vertex.color.green = 0 means puddle.
+In case you want selected areas to completely stay dry assign vertex.color.blue = 0; areas which should receive wetness must have vertex color blue = 1 applied.
+If your mesh doesn’t have any vertex colors all values are "estimated" as being 1 which means: full wetness, no puddles.
+
+In case you would like to define puddle distribution or overall wetness rather by texture than by vertex colors the Ambient Occlusion Map would be the ideal texture to add those to as it uses uv2 by default in the "Lux Puddles Bumped Specular" and "Lux WaterFlow Bumped Specular" shaders.
+To enable this please edit the shader(s) and replace:
+#define WetnessMaskInputVertexColors
+by:
+//#define WetnessMaskInputVertexColors
+
+(Please make sure you have the latest version of "LuxLightingAmbient.cginc" downloaded from the repo.)
+
+
+- - - - - - - - - -
+THE SHADERS
+
+- - - - - - - - - -
+Lux Wetness Simple Bumped Specular
+
+This is the most "simple" wetness shader as it does not really need any additional input like textures or vertex colors (apart from the regular ones).
+Nevertheless is supports a wetness mask in vertex color blue. And you are able to control the accumulation of water due to the orientation of the world normal up vector.
+Puddles, dynamic water ripples or water flow are not supported.
+
+– Wetness WorldNormal Damp: This property lets you mask wetness according to the world normal upright orientation (world normal is calculated per PIXEL in this shader to give you at least some kind of variety): If set to 0 vertical oriented faces will never get wet, if set to 1 even vertical oriented faces will get wet.
+
+This shader is almost as fast as the regular "Lux bumped specular" shader if the overall water accumulation is set to 0.
+
+
+- - - - - - - - - -
+Lux Puddles Bumped Specular
+
+This shader is written for surfaces which are mainly flat or horizontal aligned like streets, flat rooftops or whatever else you might think of.
+
+It supports the accumulation of water in cracks and lower regions according to the assigned height map and the accumulation of water in puddles - which are defined adding vertex colors to the mesh.
+Next to the properties you should already be familiar with (albedo, specular color, roughness, normal) it lets you use a combined height map (stored in the alpha channel) and puddle noise texture (stored in the red channel) which makes the shape of the puddles based on the vertex colors applied more interesting (this especially is important in case you use low tessellated geometry)). This noise texture might just be a perlin noise texture (please have a look at the sample textures).
+As the calculation of the wetness is based on the presence of a height map the shader also uses this height map to calculate parallax displacement.
+
+Shader specific properties:
+- Diffuse Color:
+Standard diffuse color which gets multiplied on top of the diffuse texture.
+- Base(RGB) Alpha(A):
+Standard diffuse Texture.
+- Normal Map:
+Standard normal map. Uses tiling and offset of the base texture.
+- Height Map(A) Puddle Noise(R):
+Height is stored in the Alpha Channel, Puddle noise is taken from the red color channel. Both us the tiling and offset of the base texture.
+- Height:
+Defines parallax extrusion as you might already know from other shaders.
+- Texture Size:
+Set this value to match the size of the standard diffuse Texture (e.g. 512 or 1024) – needed to calculate the mip level for the ripple bump map (using tex2Dlod)
+- Mip Bias:
+Lets you sharpen the sampled water ripple normal: 1 = not sharpened, values < 1 = sharpened (do not go crazy here: value around 0.75 - 0.5 should be ok).
+– Wetness WorldNormal Damp:
+This property lets you mask wetness according to the world normal upright orientation (world normal is calculated per face NOT per pixel): If set to 0 vertical oriented faces will never get wet, if set to 1 even vertical oriented faces will get wet.
+- Wetness Height Map Influence:
+The height map controls the water accumulation in small cracks but also on the whole surface. So in case your height map covers the whole range from black (low) to pure white (high) the upper or higher parts of the texture will never get wet or covered by a thin layer of water if this property is set to 1 (which is the default). So you might want to lower this property in order to flood the whole surface.
+
+Optional properties:
+- Ambient Occlusion:
+Ambient occlusion texture stored in the alpha channel.
+As i would expect rather large geometry to use this shader like streets or rooftops the shader by default maps the ambient occlusion texture to uv2 so you can have highly detailed albedo and normal tiling textures next to an overall ao texture.
+In case you would like to define puddle distribution or overall wetness rather by texture than by vertex colors this would be the ideal texture to add those to.
+
+If both „Lux_Water Floodlevel“s in the „SetupLux“ and/or „Lux_Rain Intensity“ script are set to 0 the shader is more or less as fast as a regular parallax shader as it heavily uses dynamic branching.
+As the most expensive part probably is the calculation of the water ripples i recommend to set the „Lux_WaterBump Distance“ pretty low: Something around 15-20 should just fit. Due to the fact that we have to use "tex2Dlod" here ripples will get unsharp/unnoticeable at farer distances anyway... :-(
+
+
+- - - - - - - - - -
+Lux WaterFlow Bumped Specular
+
+This shader is the most complex one as it adds rain drops AND flowing water.
+Flowing water in this case means that the shader adds a second normal map (water bump map) which "scrolls" down the surface based on the world normal orientation of the given face.
+
+So it basicly does the same job as the "Lux Puddles Bumped Specular" but adds some special effects based on the slope of the given surface.
+
+Water Flow:
+Speed and "height" of the water flowing down the surface depend on the given world normal up orientation: So flat surfaces won’t show any water flow whereas steep slopes will show a fast and pretty "rough" water flow.
+
+Rain Drop Ripples:
+These fade out according to the given world normal up orientation: So you will not get any ripples on surfaces pointing downwards. Ripples do not get effected by the "Lux_Ripple Wind Speed".
+
+Puddles:
+You are able to define puddles but those will "shrink" or dry due to the given world normal orientation (and according to the given Flood level of course).
+
+Dry Areas:
+In case you want selected areas to stay completely dry assign vertex.color.blue = 0; areas which should receive wetness must have vertex color blue = 1 applied.
+
+Shader specific properties:
+- Diffuse Color:
+Standard diffuse color which gets multiplied on top of the diffuse texture.
+- Base(RGB) Alpha(A):
+Standard diffuse Texture.
+- Normal Map:
+Standard normal map. Uses tiling and offset of the base texture.
+- Height Map(A) Puddle Noise(R):
+Height is stored in the Alpha Channel, Puddle noise is taken from the red color channel. Both us the tiling and offset of the base texture.
+- Height:
+Defines parallax extrusion as you might already know from other shaders.
+- Texture Size:
+Set this value to match the size of the main texture (e.g. 512 or 1024) – needed to calculate the mip level for the ripple bump map (using tex2Dlod)
+- Mip Bias:
+Lets you sharpen the sampled water ripple normal: 1 = not sharpened, values < 1 = sharpened (do not go crazy here: a value around 0.75 - 0.5 should be ok).
+- Water Normal Map:
+Normal map that will be applied to simulate flowing water (tiling and offset will be ignored).
+- Water Normal Map Scale:
+Scale of the water normal map compared to the scale of the standard diffuse texture.
+- Water Flow Speed:
+Max speed of flowing water.
+- Water Flow Height Scale:
+Lets you adjust the bumpiness of the Water Normal Map. 
+- Water Flow Refraction:
+Lets you adjust the amount of refraction caused by flowing water. Should be rather low (e.g.: 0.02).
+– Wetness WorldNormal Damp:
+This property lets you mask wetness according to the world normal upright orientation (world normal is calculated per face NOT per pixel): If set to 0 vertical oriented faces will never get wet, if set to 1 even vertical oriented faces will get wet.
+- Wetness Height Map Influence:
+The height map controls the water accumulation in small cracks but also on the whole surface. So in case your height map covers the whole range from black (low) to pure white (high) the upper or higher parts of the texture will never get wet or covered by a thin layer of water if this property is set to 1 (which is the default). So you might want to lower this property in order to flood the whole surface.
+
+Optional properties:
+- Ambient Occlusion:
+Ambient occlusion texture stored in the alpha channel.
+As i would expect rather large geometry to use this shader like streets or rooftops the shader by default maps the ambient occlusion texture to uv2 so you can have highly detailed albedo and normal tiling textures next to an overall ao texture.
+In case you would like to define puddle distribution or overall wetness rather by texture than by vertex colors this would be the ideal texture to add those to.
+
+If both „Lux_Water Floodlevel“s in the „SetupLux“ and/or „Lux_Rain Intensity“ script are set to 0 the shader is more or less as fast as a regular parallax shader as it heavily uses dynamic branching.
+As the most expensive part probably is the calculation of the water ripples and water flow bumps i recommend to set the „Lux_WaterBump Distance“ pretty low: Something around 15-20 should just fit. Due to the fact that we have to use "tex2Dlod" here ripples will get unsharp/unnoticeable at farer distances anyway... :-(
+
+
+- - - - - - - - - -
+TROUBELSHOOTING
+
+In case wetness looks dull although both flood levels are set to 1 please check your mesh – especially its vertex colors as those control overall wetness and puddles by default.
+
+The wetness shaders do not support fog when using dx9 and forward rendering.
+You can either switch to dx11 or deferred rendering. Sorry about this.
+
+

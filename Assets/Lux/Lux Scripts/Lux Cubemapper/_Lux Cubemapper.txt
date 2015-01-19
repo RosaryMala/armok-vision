@@ -1,0 +1,75 @@
+- - - - - - - - - - - - - - - -
+LUX CUBEMAPPER
+
+The Lux Cubemapper lets you capture and convolve diffuse and specular ambient cubemaps also known as environment probes.
+It also handles box projected cubemaps and will sync all associated materials.
+
+- Create a new empty game object.
+- Add the "LuxEnvProbe" script to it. You will find it under: "Component/Lux/Lux Environment Probe".
+- The Lux Environment Probe Inspector will become visible.
+
+- - - - - - - - - - - - - - - -
+Lux Environment Probe Inspector
+
+Probe Settings
+
+- Diffuse Size: Size of the diffuse ambient probe. Rather small sizes are ok as it is a very "blurred" cubemap.
+
+- Specular Size: Size of the specular ambient probe. Start with rather small sizes (e.g. 64px) as it takes a lot of time to convolve high res specular probes (ca. 4 seconds for 64px, about 1 minute for 128px).
+
+- Pull to HDR: Check this if you have other cubemaps in your scene that are baked in HDR.
+Please note: Lux only supports either HDR or LDR probes - so all diffuse cubemaps have to share the same color space just like all specular probes have.
+
+- Set to Linear Space: Check this if you render in linear color space.
+
+- Smooth edges: Do you want Unity to smooth the edges between the different faces of the generates cubemaps? Probably not...
+  - Edge Width: Edge width in Pixels for "Smooth edges"
+
+- Cube Mode:
+  - Standard will just bake the probe and do nothing else. Choose this if you want to bake a standard environment probe.
+  - Box: Choose this if you want to use the generated probes together with a box projection shader.
+  If checked the probe's gizmo will change from a sphere to a cube and you will get an outer wire cube. Use the default scale handles to define the zone or size of the box projection (which is related to the "Cube Size" parameter of the box projected shaders).
+  	- Show Probe’s Size: If checked the outer volume of the probe will be drawn in scene view. 
+    - Manage associated Gameobjects: Open this foldout to add the gameobjects that should use the box projected probe: All added gameobjects will be updated automatically which means that the probe's rotation and size will be written to their materials (as long as those use a boxprojection shader) and the cubemap itself will be assigned.
+
+Probe Camera Settings
+
+- Clear Flags: Determines which parts of the screen will be cleared. This is handy when using multiple Cameras to draw different game elements.
+- Clear Color: Color applied to the remaining screen after all elements in view have been drawn and there is no skybox.
+- Culling Mask: Include or omit layers of objects to be rendered by the Camera.
+- Near Clip Plane: The closest point relative to the camera that drawing will occur.
+- Far Clip Plane: The furthest point relative to the camera that drawing will occur.
+- RenderToCubemap: Shall the cubemap be rendered using the built in function (Pro only)? It is faster but less accurate.
+Please note: RenderToCubemap is not available when baking box projected probes.
+
+- Bake Probe: The diffuse and specular probes will be captured according to the settings made above. Please note: These cubemaps have not been convolved which happens in the next step.
+
+Process Cubemaps
+
+If you have just baked new probes both slots will be filled with those. Alternatively you can assign cubemaps manually which you want to be convolved.
+In this case: Please mind the size!
+
+- Get generated Cubemaps: If the baked probes could not be assigned automatically you can force the script to pull them.
+
+- Convolve Cubemaps: Will convole the diffuse and specular probe assigned to the slots above. That might take a while according to the size of the specular cubemap.
+
+
+- - - - - - - - - - - - - - - -
+Box Projection
+
+In case you use the box projection features you have to be familiar with the concept of this technique.
+But briefly: It allows you to project parallax corrected cubemaps onto the faces of box like volume.
+So you may create more or less accurate reflections on the walls, the floor and the ceiling of a room.
+But only reflections from and onto these faces.
+If you would like to also have correct reflections on the surface of e.g. a table in the middle of the room you will have to define a new box volume – however you might reuse the cubemap from the room.
+Please keep in mind that all faces not beeing included in the projection volume will show a heavily distorted cubemap.
+Lux cubemapper and box projection shaders allow you to to create cubemaps which are not aligned along the global xyz axes thus allowing you to create reflections on surfuces which also are not aligned with the global axes.
+
+
+More infos on parallax corrected cubemaps can be found here:
+http://seblagarde.wordpress.com/2012/09/29/image-based-lighting-approaches-and-parallax-corrected-cubemap/
+
+- - - - - - - - - - - - - - - -
+
+Many thanks to Arie Leo (Rea) to write most parts of the LuxEnvProbe and LuxEnvProbeEditor scripts. 
+

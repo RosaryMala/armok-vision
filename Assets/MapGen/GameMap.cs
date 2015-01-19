@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using DFHack;
 using RemoteFortressReader;
 using UnityEngine.UI;
+using System.IO;
 
 public class GameMap : MonoBehaviour
 {
@@ -205,6 +206,32 @@ public class GameMap : MonoBehaviour
         connectionState.TiletypeListCall.execute(null, out connectionState.net_tiletype_list);
         stopwatch.Stop();
         Debug.Log(connectionState.net_tiletype_list.tiletype_list.Count + " tiletypes gotten, took " + stopwatch.Elapsed.Milliseconds + " ms.");
+        SaveTileTypeList();
+    }
+
+    void SaveTileTypeList()
+    {
+        try
+        {
+            File.Delete("TiletypeList.csv");
+        }
+        catch(IOException)
+        {
+            return;
+        }
+        using (StreamWriter writer = new StreamWriter("TiletypeList.csv"))
+        {
+            foreach (Tiletype item in connectionState.net_tiletype_list.tiletype_list)
+            {
+                writer.WriteLine(
+                    item.name + "'" +
+                    item.shape + "'" +
+                    item.material + "'" +
+                    item.special + "'" +
+                    item.direction
+                    );
+            }
+        }
     }
 
     void CopyTiles(RemoteFortressReader.MapBlock DFBlock)
@@ -242,9 +269,10 @@ public class GameMap : MonoBehaviour
                 }
 
                 meshBuffer[bufferIndex].mesh = tileSelector.GetMesh(this, xx, yy, block_z);
-                meshBuffer[bufferIndex].transform = Matrix4x4.TRS(DFtoUnityCoord(xx, yy, block_z), Quaternion.identity, Vector3.one);
+                meshBuffer[bufferIndex].transform = Matrix4x4.TRS(DFtoUnityCoord(xx, yy, block_z), Quaternion.AngleAxis(180, Vector3.up), Vector3.one);
                 if (tiles[xx, yy, block_z] != null)
                 {
+                    int matTexIndex = contentLoader.materialTextureConfiguration[tiles[xx, yy, block_z].material];
                     Color newColor = contentLoader.colorConfiguration[tiles[xx, yy, block_z].material];
                     if (newColor == default(Color))
                     {
@@ -263,6 +291,7 @@ public class GameMap : MonoBehaviour
                         }
                     }
                     meshBuffer[bufferIndex].color = newColor;
+                    meshBuffer[bufferIndex].uv1Index = matTexIndex;
                 }
                 bufferIndex++;
             }
@@ -308,10 +337,9 @@ public class GameMap : MonoBehaviour
     }
     void GetBlockList()
     {
+        System.Diagnostics.Stopwatch netWatch = new System.Diagnostics.Stopwatch();
         System.Diagnostics.Stopwatch loadWatch = new System.Diagnostics.Stopwatch();
         System.Diagnostics.Stopwatch genWatch = new System.Diagnostics.Stopwatch();
-        loadWatch.Start();
-        
         posX = (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x / 2)) / 16;
         posY = (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y/2)) / 16;
         posZ = connectionState.net_view_info.view_pos_z+1;
@@ -321,7 +349,9 @@ public class GameMap : MonoBehaviour
         connectionState.net_block_request.max_y = posY + rangeY;
         connectionState.net_block_request.min_z = posZ - rangeZdown;
         connectionState.net_block_request.max_z = posZ + rangeZup;
+        netWatch.Start();
         connectionState.BlockListCall.execute(connectionState.net_block_request, out connectionState.net_block_list);
+        netWatch.Stop();
         //stopwatch.Stop();
         //Debug.Log(connectionState.net_block_list.map_blocks.Count + " blocks gotten, took 1/" + (1.0 / stopwatch.Elapsed.TotalSeconds) + " seconds.\n");
         //for (int i = 0; i < blockCollection.Count; i++)
@@ -337,6 +367,7 @@ public class GameMap : MonoBehaviour
             ClearMap();
         map_x = connectionState.net_block_list.map_x;
         map_y = connectionState.net_block_list.map_y;
+        loadWatch.Start();
         for (int i = 0; i < connectionState.net_block_list.map_blocks.Count; i++)
         {
             //MapBlock newBlock = getFreeBlock();
@@ -352,7 +383,9 @@ public class GameMap : MonoBehaviour
         genWatch.Start();
         UpdateMeshes();
         genWatch.Stop();
-        genStatus.text = connectionState.net_block_list.map_blocks.Count + " blocks gotten. " + loadWatch.ElapsedMilliseconds + "ms map copy \n" + genWatch.ElapsedMilliseconds + "ms mesh generation";
+        genStatus.text = connectionState.net_block_list.map_blocks.Count + " blocks gotten.\n"
+            + netWatch.ElapsedMilliseconds + "ms network time\n"
+            + loadWatch.ElapsedMilliseconds + "ms map copy \n" + genWatch.ElapsedMilliseconds + "ms mesh generation";
         //watch.Stop();
         //Debug.Log("Generating " + connectionState.net_block_list.map_blocks.Count + " Meshes took " + watch.Elapsed.TotalSeconds + " seconds");
     }

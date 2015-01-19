@@ -10,6 +10,8 @@ public class MeshCombineUtility
         public int subMeshIndex;
         public Matrix4x4 transform;
         public Color color;
+        public int uv1Index;
+        public int uv2Index;
     }
 
     public static bool ColorCombine(Mesh mesh, MeshInstance[] combines)
@@ -83,14 +85,20 @@ public class MeshCombineUtility
         foreach (MeshInstance combine in combines)
         {
             if (combine.mesh)
-                Copy(combine.mesh.vertexCount, combine.mesh.uv, uv, ref offset);
+            {
+                Matrix4x4 transform = Matrix4x4.TRS(new Vector2(((combine.uv1Index % 16) / 16.0f), ((15 - (combine.uv2Index / 16)) / 16.0f)), Quaternion.identity, new Vector2(1.0f / 16.0f, 1.0f / 16.0f));
+                Copy(combine.mesh.vertexCount, combine.mesh.uv, uv, ref offset, transform);
+            }
         }
 
         offset = 0;
         foreach (MeshInstance combine in combines)
         {
             if (combine.mesh)
-                Copy(combine.mesh.vertexCount, combine.mesh.uv1, uv1, ref offset);
+            {
+                Matrix4x4 transform = Matrix4x4.TRS(new Vector2( ((combine.uv2Index % 16) / 16.0f),  ((15 - (combine.uv2Index / 16)) / 16.0f)), Quaternion.identity, new Vector2(1.0f / 16.0f, 1.0f / 16.0f));
+                Copy(combine.mesh.vertexCount, combine.mesh.uv, uv1, ref offset, transform);
+            }
         }
 
         offset = 0;
@@ -131,6 +139,12 @@ public class MeshCombineUtility
     }
 
     static void Copy(int vertexcount, Vector3[] src, Vector3[] dst, ref int offset, Matrix4x4 transform)
+    {
+        for (int i = 0; i < src.Length; i++)
+            dst[i + offset] = transform.MultiplyPoint(src[i]);
+        offset += vertexcount;
+    }
+    static void Copy(int vertexcount, Vector2[] src, Vector2[] dst, ref int offset, Matrix4x4 transform)
     {
         for (int i = 0; i < src.Length; i++)
             dst[i + offset] = transform.MultiplyPoint(src[i]);

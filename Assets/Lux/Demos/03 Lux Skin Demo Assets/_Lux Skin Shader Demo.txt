@@ -1,0 +1,11 @@
+- - - - - - - - - - - - - - - -
+LUX SKIN SHADER DEMO ASSETS
+
+You may import the „Head_Level2.OBJ“, create a new material and select the Lux Skin Shader.
+Assign the related textures like this:
+- „Head_Diff.jpg“ —> Base(RGB) Alpha(A)
+- „Head_Normal.jpg“ —> Normal Map
+- „Head_SpecGlossSSSAO.psd“ —> Specular(R) Roughness(G) SSS(B) AO(A)
+You should check „byPass“ sRGB Sampling for this texture.
+
+Finally assign the new material to the head object ;-)

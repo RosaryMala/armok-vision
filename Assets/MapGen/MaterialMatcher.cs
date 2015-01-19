@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MaterialMatcher<T>
 {
-    public static List<MaterialDefinition> _matTokenList;
+    static List<MaterialDefinition> _matTokenList;
     public List<MaterialDefinition> matTokenList
     {
         set
@@ -61,6 +61,8 @@ public class MaterialMatcher<T>
 
     void TrySetMatch(MaterialMatch match, MatPairStruct mat)
     {
+        if (matList == null)
+            matList = new Dictionary<MatPairStruct, MaterialMatch>();
         if (matList.ContainsKey(mat))
         {
             if (matList[mat].difference < match.difference)//overwrite existing exact matches
@@ -166,6 +168,8 @@ public class MaterialMatcher<T>
     {
         get
         {
+            if (matList == null)
+                return default(T);
             MaterialMatch output;
             if (matList.TryGetValue(mat, out output))
             {

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<materialTextures>
+	
+	<materialTexture index="2">
+		<material token="*:MARBLE" />
+	</materialTexture>
+	<materialTexture index="3">
+		<material token="INORGANIC:*" />
+	</materialTexture>
+</materialTextures>
