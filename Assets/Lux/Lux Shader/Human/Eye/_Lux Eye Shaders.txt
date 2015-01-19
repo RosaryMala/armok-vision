@@ -1,0 +1,33 @@
+- - - - - - - - - - - - - - - -
+LUX EYE SHADERS
+
+
+- - - - - - - - - - - - - - - -
+EYE BALL SHADER
+
+This shader was written to allow you to render advanced eye balls and supportis parallax distortion of the iris to give it the right feel of depth and and a dynamic scale of the pupil which you could connect to the give lighting situation.
+
+- Base (RGB) Heightmap (A): RGB store the base diffuse color information whereas Alpha stores the heightmap
+- Specular Color (RGB) Roughness (A): Just a common Specular Color / Roughness Texture.
+- Normal Map: The normal map should store the information about the cornea. Just have a look at the sample textures.
+- PupilSize: Lets you dynamically adjust the size of the pupil in order to make it react to the amount of the incoming light.
+- Height: Determines the amount of the parallax effect applied to the iris.
+
+Please note: When using PupilSize the shader has to make some "estimations" about the size of the iris in order to "know" which parts of the teture should be scaled and which should not be scaled. Right now it is hard coded and fits to the size of the iris defined by the sample textures. So either you author your textures according to the sample textures or you have to tweak the shader.
+
+Changelog
+- The current version of the shader uses a custom lighting function which will render the specular lighting according to the normal sampled from the normal map (which should be convex following the shape of the eye’s lens) and render the diffuse lighting using the "inversed" normal which is concave following the concave shape of the iris – not 100% correct but anyway.
+
+
+- - - - - - - - - - - - - - - -
+EYE AO SHADER
+
+This shader only adds ambient occlusion to the eye.
+It should be added to some extra geometry that covers the "visual" space of the eye ball and should be animated in conjunction with the face’s geometry.
+Altough the shader itself contains an offset please make sure that the geometry that covers the eye is always in front of the eye ball.
+
+The animation of the eye (looking left, looking right, ...) should always only effect the eye ball and not the eye ball ao geometry.
+
+
+More information can be found here:
+http://docs.cryengine.com/display/SDKDOC2/Eye+Shader
