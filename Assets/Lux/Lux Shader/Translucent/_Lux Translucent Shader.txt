@@ -1,0 +1,42 @@
+﻿- - - - - - - - - - - - - - - -
+LUX TRANSLUCENT SHADERS
+
+
+Writing a truslucent or sunsurface scattering shader is just a horror especially when it comes to real time shadows.
+Subsurface scattering should take the light attenuation into account of course (light’s fall off based on distance and range, light cookies etc. ) – but it should not be blocked by real time shadows as this simply corrupts the whole effect.
+Just imagine an object using sss casting real time shadows: The self shadowing of the object would simply kill all subsurface scattering.
+Thinking about real time shadows casted by other objects onto the surface using sss it gets a bit more complex. Smaller objects (or smaller shadows) should not block sss whereas large shadows should.
+So i had to look for a compromise and finally decided to go with a version in which sss is not blocked by real time shadows at all.
+This is fine for smaller shadow casters around and nearby the translucent object but imagine a light that is on the other side of a solid, shadow-casting wall, it would just shine through the translucent mesh.
+So the only possiblity to handle those cases is to set up the light’s culling mask so that it does not light the translucent object(s) on the other side of the wall.
+
+- - - - - - - - - - - - - - - -
+IMPORTANT INFO
+As the translucent shader uses its own lighting function it is forward only – no matter what lighting mode your camera is set to.
+But in order to make it work even when the camera is set to deferred i had to create my own "RenderType" = "LuxOpaque".
+This RenderType is a subshader in the "Camera-DepthNormalTexture" and "Camera-DepthTexture" shader and eliminates all z-fighting artifacts. So please make sure that you have also installed those 2 shaders which are located in "Lux/LuxCore/Resources".
+
+- - - - - - - - - - - - - - - -
+THE SHADERINPUTS
+
+- Base(RGB): Diffuse or albedo texture, alpha is unused.
+- Specular Color (RGB) Roughness(G): Specular Color and Roughness like in most other shaders
+- Normal Map: A normal map, but make sure that you only bake rather small details into it.
+- Thickness (G): Thickness, local thickness, SSS or transmission map determines the amount of subsurface scattering applied to specific parts of the mesh: 0 = no sss, 1 = full sss
+- Subsurface Power: Power value for direct translucency, view dependend: "While we usually want vient-independent effect, this power is very useful because it will break the continuity in a view-dependent way, which will break uniformity between back and front lighting/translucency, and make your results much more organic." Quoted from dice's paper
+- Subsurface Distortion: Shifts the surface normals, view dependend, fresnel like: "This factor will simulate subsurface light transport distortion, improving the results and making everything even more organic, and almost Fresnel-like at times" Quoted from dice's paper
+- Subsurface Scale: Scales light transportation or translucency
+- Subsurface Color: Color of the light scattering through the surface
+
+More infos can be found here:
+http://dice.se/wp-content/uploads/Colin_BarreBrisebois_Programming_ApproximatingTranslucency.pdf
+
+- - - - - - - - - - - - - - - -
+LIGHTMAPS
+The shader does not support lightmaps as they just do not fit its needs: In order to make sss work we have to know about the light direction – which is not present when using lightmaps.
+
+- - - - - - - - - - - - - - - -
+KNOWN ISSUES
+Using the shader on OS X might cause z-fighting artifacts when using deferred lighting + 2 directional lights which both drop shadows.
+It works perfectly with ONE directional light casting shadows + multiple directional light NOT casting shadows + multiple point- or spotlights casting shadows.
+It doesn’t produce any artifact when using forward rendering.

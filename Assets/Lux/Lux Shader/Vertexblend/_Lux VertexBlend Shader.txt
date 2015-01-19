@@ -1,0 +1,18 @@
+﻿- - - - - - - - - - - - - - - -
+LUX VERTEXBLEND SHADERS
+
+The Lux vertexblend shaders let you mix 2 different texture sets (albedo/specular color + roughness / normal) based on vertex color red.
+vertex color red = 0.0 --> Main Tex will be rendered
+vertex color red = 1.0 --> Main Tex1 will be rendered
+All other vertex colors will be ignored.
+
+Please note that all uv will be taken from Main Tex (albedo/specular color + roughness / normal) so you have to adjust the tiling of Main Tex1 by adjusting the "_Tex1TilingX" and "_Tex1TilingY" values.
+
+- - - - - - - - - -
+Simple Bumped Specular Shader
+This shader simply blends between the 2 texture sets only based on vertex color red.
+
+- - - - - - - - - -
+Parallax Height Bumped Specular Shader
+This shader blends between the 2 texture sets based on vertex color red in conjunction with the height of Main Tex1 (taken from the heightmap which has to be stored in the alpha channel).
+It also supports Parallax mapping on Main Tex1.

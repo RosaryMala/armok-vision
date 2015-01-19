@@ -1,0 +1,80 @@
+﻿- - - - - - - - - - - - - - - -
+LUX TREE CREATOR SHADERS
+
+
+Lux tree creator shaders give you the possibility to use all your trees created using the built in tree creator with lux advanced lighting functions and benefit from image based ambient lighting.
+Nevertheless, the tree shaders only support diffuse ambient image based lighting as specular image based ambient lighting just looked pretty weird on most trees i have tested and is far more complex to implement. So lets keep things simple.
+
+
+- - - - - - - - - - - - - - - -
+SETTING UP YOUR TREES
+
+I assume that you already got some trees – may they be selfmade or bought from the asset store.
+
+So in order to use the Lux tree shaders with your prefabs you will have to edit your base materials or create new ones.
+Choose the: "Lux/Nature/Tree Creator Bark" and "Lux/Nature/Tree Creator Leaves" shaders for those and assign your textures if you have created new materials.
+Check the material preview if your set up fits your needs or wishes. Otherwise adjust your textures.
+
+A lot of tree packages do not ship with all textures supported by the shader like Gloss ot Translucency.
+But i highliy recommend to add at least a Gloss texture which in our case defines the roughness of your material. Please note that gloss is sampled from the alpha channel of the texture. So if you have just a simple rbg or grayscale image please check "Alpha from Grascale" in the import settings of the given texture to let unity automatically create an alpha channel holding the needed information.
+
+You will note that the material does not offer the possibilty to add a specular Color texture like other lux shaders – as we simply can’t.
+Instead we use "Shininess" to feed in our specular "Color".
+As trees consist most likely of dielectric materials our specularColor should just be some shade of dark gray. "Shininess" controls the brightness of this gray. So set it to a rather low value.
+Do this for all the materials you use with your tree and hit "refresh" in the tree creator inspector.
+Then drag your tree to the scene view.
+Adjust "Shininess" and your "Gloss" texture untill you like the result.
+
+You may have noticed that the Lux tree creator shaders do not offer the possibility to turn diffuse ambient cubemap lighting on or off. Instead of declaring this per material it is controlled using the terrain settings you have made in the "LuxTerrainControl" script.
+- Diffuse Cube IBL: If unchecked the shader will fall ack to unity’s spherical harmonics.
+Next to this the "LuxTerrainControl" script also handles some bugs in unity 4.3.4. terrain engine:
+- Linear Lighting Fix Billboards: When rendering the Billboard textures unity 4.3.4. and may be even above will feed in the lightcolors in gamma not linear color space. So checking the checkbox will force the rendertex shader to convert the light colors to linear.
+- Linear Lighting Fix Meshtrees: When you place trees using the built in terrain engine you might assign a "Color Variation" in the "Place Tree" tool to add trees of different shades of gray which is great to create some more variety. However unity passes this gray values in gamma and not linear color space, so when using linear so mesh trees will become much darker than their billboards. Check this checkbox to force the mesh tree shaders to convert those colors to linear.
+Future versions of unity might fix these bugs so you are able to simply turn them off.
+
+
+- - - - - - - - - - - - - - - -
+FOG MODES
+
+Unity can not handle fog on complex terrain or tree shaders (especially on dx9/dx11 in forward lighting) so i had to add custom fog functions. By default the terrain and tree creator shaders only support Fog Mode = Exp2 – but you can change this manually by editing the following shaders:
+- LuxTerrainFirstPass.shader
+- LuxTreeCreatorBarkOptimized.shader
+- LuxTreeCreatorLeafsOptimized.shader
+
+All of these contain different custom fog functions but only one gets included by default: customFogExp2.
+So in case you want to change the fog mode please find:
+finalcolor:customFogExp2
+in the first #pragma directive and change it to:
+finalcolor:customFogLinear
+or:
+finalcolor:customFogExp
+depending on which fog mode you would like to use.
+
+
+- - - - - - - - - - - - - - - -
+TWEAKING THE SHADERS
+
+Right now the shaders work for both: manually placed trees and trees placed within the terrian engine.
+However if you just use trees within the terrain engine you might speed them up a little bit buy not using worldNormal but only normal (as in this case it would be the same – but not on manually and rotated trees).
+
+Do so by editing the "LuxTreeCreatorBarkOptimized" and the "LuxTreeCreatorLeafsOptimized" shader.
+There find the "struct Input" definitions and simply comment the 2 lines:
+- float3 worldNormal;
+- INTERNAL_DATA
+Next you will have to tell the shader to use IN.normal instead of IN.worlNormal.
+Do so by adding "#define NORMAL_IS_WORLDNORMAL" right after the "#pragma multi_compile ..." directives at the start of the CGPROGRAMM.
+
+You may have a look at the "WavingGrass" shader which uses the same method to spedd up rendering.
+
+
+- - - - - - - - - - - - - - - -
+DEVELOPMENT ANNOTATIOS
+
+Porting the tree creator shaders has just been a pain in the ass as the built in terrain has engine has so many bugs – especially when it comes to gamma vs. linear lighting.
+I have to admit that is has become much better in the 4.x cycle but still tree or light colors are not converted correctly to the given color space.
+
+As Lux is mainly written for the use in a HDR / linear lighting environment i had to add a lot of hacks to get more or less acceptable transitions between billboards and mesh trees – especially if you use differently colored instances of one tree within the terrain engine (using "Color Variation" in the "Place Tree" tool of the terrain engine – which you have to use of course to get some more lively shaded trees).
+
+Some color or lighting value are passed in as gamma values, others are correctly passed in linear space.
+But now the shaders should handle most cases for you.
+

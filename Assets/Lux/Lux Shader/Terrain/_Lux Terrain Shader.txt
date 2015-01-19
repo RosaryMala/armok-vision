@@ -1,0 +1,137 @@
+- - - - - - - - - - - - - - - -
+LUX TERRAIN SHADERS
+
+The Lux terrain shaders support physically based shading and image based ambient diffuse lighting on unity’s built in terrains.
+
+The shaders come in a package of three where the "Lux Terrain First Pass" shader draws the lower 4 detail textures and the "Lux Terrain Add Pass" shader will draw all other details textures on top of the lower 4 ones.
+The "Lux Terrain Far" shader will render the terrain at distances above the given Base Map Distance and speed up rendering as it is a pretty simple shader which will still give you image based ambient diffuse lighting though.
+
+
+- - - - - - - - - - - - - - - -
+SET UP YOUR TERRAIN
+
+Just create, import or whatever your terrain and assign at least 4 detail textures (and probably 4 detail normal maps) to it.
+
+Please make sure that your detail diffuse textures have an alpha channel which contains the roughness map. This is special to the terrain shaders as they can not handle an extra Specular Roughness map for each detail texture.
+
+Create a new material, choose the „Lux/Terrain/Spec Bumped" shader from the dropdown (which is indeed the "Lux Terrain First Pass" shader).
+Now the material inspector should show up which might be a bit confusing right now. So all you should do for the moment:
+Assign a global color map if you have any you would like to use on your terrain, and assign a global normal map for your terrain (which must fit the terrain’s geometry of course).
+Simply leave the rest untouched.
+
+Next assign this material to your terrain.
+
+Then add the "LuxTerrainControl" script to your terrain.
+
+This little script will just pass the splatting values of each detail texture to the material and fill the "Texture Tiling X" vector fields you might have seen in the step before.
+It also syncs the "Base Map Distance" from the terrain settings with your material and let you define the following parameters:
+- Detail Fade Distance: defines the distance over which detail textures will fade out and the base or color map will become visible
+- Colormap: Check this if you have a color map assigned to your terrain. If unchecked the shader will just display the detail maps in the foreground and the automatically generated basemap in the background.
+- Diffuse Cube IBL: If checked the terrain will be lit using the ambient diffuse cubemap. If unchecked the shader will fall back to Unity’s spherical harmonics lighting. Changes made here will also effect the lighting of grass and trees.
+- Linear Lighting Fix Billboards and Linear Lighting Fix Meshtrees control the Lux tree creator shaders. Please have a look at the Lux tree creator shaders documetation for more information.
+- Show Fog Settings Warning: Enable or disable the warning if you choose a fog mode that is not supported by default.
+
+If you have checked "Colormap" you might notice that your terrain looks pretty strange. This is caused by the fact that the shader needs some additional information to correctly blend the colormap with your detail textures: The average color value of each detail texture.
+Assign those by selecting your terrain material.
+Switch to the material inspector and find the color inputs named "Avrg. Color Tex X".
+Make sure you can see little thumbnail of your detail textures in the project tab, then pick one color from these thumbnails for each texture which you think would mostly fit the average color of the given texture.
+
+When done your terrain should look much better.
+
+Sorry for this inconvenient set up but the advanced color map blending function used by the shader lets you use any colorful detail texture (instead of mostly desaturated gray scaled textures like most other solutions)but needs those values to be able to do the blending.
+
+Unlike the regular Lux shaders the Lux terrain shaders do not offer the possibility to assign any specular color maps (Roughness should be stored in the alpha channel of the detail textures as mentioned above) just because of the texture limit we have to deal with. Instead of adding a specular color texture the shader lets you simply assign an overall specular color for each detail texture which will define its reflectance properties. Most terrain materials will probably use simply pretty dark shades of gray.
+
+Now your terrain should be pretty much ready to go.
+Further details will be explained below.
+
+
+- - - - - - - - - - - - - - - -
+USING MULTI PASS TERRIAN SHADERS
+
+Although i have to admit that this is my first first multipass terrain shader i can not really recommend to use multi pass shaders on the terrain at all.
+I have spent some time to get rid of bump mapping artifact in both forward and deferred lighting but finally i have to admit: It just does not seem to be possible to get a multi pass shader work correctly in unity right now using normal maps. No matter what you do: normal mapping will break and produce at least some visible seams as even the simple built in unity shader does.
+I am sorry about this but right now i recommend to just use a feature pimped first pass shader only. Using a multi pass shader will give you bad results depending on your light position or rotation or the fact if your are using forward or deferred lighting.
+Please have a look at rtp 3.x or the advanced colormap ultra shader to find out to draw more than 4 detail textures within on single shader pass.
+Using a global color and normal map might already make a lot of your wishes come true.
+
+
+- - - - - - - - - - - - - - - -
+TERRAIN SHADER PROPERTIES
+
+Custom Color Map (RGB) Ambient Occlusion (A):
+If enabled in the "LuxTerrainControl" script the custom color map will be mixed with your detail textures in the foreground and replace the automatically generated base map in the background. Use a custom color map to add millions of different colors to your limited number of detail textures to make your terrain more lively and hide tiling artifacts.
+Add an alpha channel to your color map which controls the ambient occlusion (occlusion of ambient diffuse lighting – either diffuse ambient cubemap or spherical harmonics) to make the shading of the terrain more believable.
+
+Terrain Normal Map (RGB):
+It should be a normal map fitting exactly the geometry of your terrain. Adding it will give you much crispier shading at even far viewing distances where unity will most likely just render a very low LOD usually producing boring results.
+
+FresnelStrength:
+When using deferred lighting the faked fresnel of Lux just might make your terrain look like a wet plastic wrapped piece of anything but not a terrain. So use this slider to adjust the fresnel strength.
+Tip: switch between forward and deferred lighting to see which strength might be correct.
+
+Detail Normal Map (RGB):
+This normal map is mixed with the normal map of detail texture 3 and let you hide tiling artifacts or simply add more variety on high frequent and bumpy textures such as rock. Usually you should just add a very generic or perlin noise based normal map.
+
+Detail Normal Map Scale:
+Using e.g.: 0.25 will make the detail normal map 4 times as big than the original detail texture 3 adding large "details" to the terrain, using 4.0 will make the detail normal map 4 times smaller than the original detail texture 3 adding very fine details to your terrain.
+
+BaseMap Distance:
+This must exactly fit the BaseMap Distance settings in the terrain settings. If you have added the "LuxTerrainControl" script to your terrain it will automatically keep this parameter in sync.
+
+Fade Length:
+It defines the distance over which detail textures will fade out and the base or color map will become visible. This parameter can be set up using the "LuxTerrainControl" script.
+
+Avrg. Color Tex X:
+Should fit the average color of the given texture to make the blending between color map and detail texture work correctly.
+
+Specular Color Tex X:
+Defines the overall specular color for each detail texture and determines its reflectance.
+
+Custom Diffuse Cube:
+If the terrain should not be lit by the overall ambient diffuse Cubemap you may assign a special one here.
+
+Tiling Texture X:
+As we can not afford to regularly sample the tiling of each detail texture within the shader (due to the limited number of texture interpolators) we have to feed the tiling information as vectors.
+Please assign the "LuxTerrainControl" script to your terrain which will do all needed adjustments so the shader tiles the textures just the way you have set up your detail textures within he unity "Paint texture" tool.
+
+
+- - - - - - - - - - - - - - - -
+FOG MODES
+
+Unity can not handle fog on complex terrain or tree shaders (especially on dx9/dx11 in forward lighting) so i had to add custom fog functions. By default the terrain and tree creator shaders only support Fog Mode = Exp2 – but you can change this manually by editing the following shaders:
+- LuxTerrainFirstPass.shader
+- LuxTerrainFar.shader
+- LuxTreeCreatorBarkOptimized.shader
+- LuxTreeCreatorLeafsOptimized.shader
+
+All of these contain different custom fog functions but only one gets included by default: customFogExp2.
+So in case you want to change the fog mode please find:
+finalcolor:customFogExp2
+in the first #pragma directive and change it to:
+finalcolor:customFogLinear
+or:
+finalcolor:customFogExp
+depending on which fog mode you would like to use.
+
+
+- - - - - - - - - - - - - - - -
+INTO THE SHADER CODE
+
+While writing the shaders and script i had to face the fact that unity 4.3.4 simply ignores per material keywords on terrain materials.
+So the terrain shaders could not follow the common Lux Ubershader approach using material specific shader keywords.
+Instead of that a had to fall back to global shader keywords.
+To make those work with the "LuxIBL" cginc i had to add 2 more keywords:
+USE_GLOBAL_DIFFIBL_SETTINGS
+This keyword is directly defined in the shader code itself telling the compiler that this shader should accept global ambient diffuse ibl settings.
+GLDIFFCUBE_ON
+This global keyword is enabled or disabled by the "LuxTerrainControl" script.
+Both keywords in conjunction will control the status of "DIFFCUBE_ON" and "DIFFCUBE_OFF" in "LuxIBL" cginc.
+
+
+- - - - - - - - - - - - - - - -
+KNOWN ISSUES
+
+I have to admit that this was my first "Add pass" terrain shader ever and i had to face some really strange problems.
+As i usually only use "first pass" shaders i have never noticed the strange rendering artifacts you get when adding more than 4 detail textures. Some of those i could get rid of. So you will probably get no dark borders where textures from a second or a third pass meet textures from the first pass like the built in shaders produce.
+However i could not solve the problem that if you use deferred lighting and just add a 5th detail texture normal mapping on the terrain will be somehow broken. Here Lux terrain shaders behave just like the built in ones, sorry.

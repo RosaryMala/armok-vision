@@ -1,0 +1,14 @@
+- - - - - - - - - - - - - - - -
+LUX TEXTUREPOSTPROCESSOR
+
+The Lux Texturepsoprocessor lets you prefilter your roughness textures so aliasing on very smooth surfaces becomes (at least a bit) less noticeable. 
+The script acts as AssetPostprocessor and will automatically look for textures that fit the naming conventions mentioned below and postprocess them whenever they are updated.
+
+In order to be able to postprocess your roughness textures – or better: the alpha channel of the "Specular Color (RGB) Roughness (A)" texture" the script needs the "Specular Color (RGB) Roughness (A)" and the corresponding normal texture:
+- Both texture have to be placed in the same folder.
+- Both textures have to have the same size.
+- Both textures have to marked as "readable" ( Import settings --> "Texture Type: Advanced" --> "Read/Write Enabled").
+- Both texture have to have the same file extension (e.g. ".tga" or ".psd").
+- Both texture have to be named properly:
+  - Spec/Roughness map: "YourtextureName_LuxSPEC"
+  - Normal map: "YourtextureName_LuxNRM"

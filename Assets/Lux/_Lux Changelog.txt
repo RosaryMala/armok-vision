@@ -1,0 +1,206 @@
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Lux Development notes v 0.07
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Changelog
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+04/14/2014
+- sss shader added
+- "LuxLightingAmbient.cginc" refactored: now it calculates deferredfresnel so it must be be part of the surface function any more
+
+03/2014
+- ambient lighting: spec miplevel changed
+- cubemapper: camera settings serialized and fixed.
+- skin, hair and eye shader added
+
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+initial release on the asset store
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+version 0.07
+
+- terrain detail shaders: all errors fixed for dx9 and dx11.
+- terrain shaders: possible division by zero fixed.
+- Lux Internal-PrePassLighting shader: doubled "max(0, dotNL)" removed.
+- "LuxLightingAmbient.cginc": "o.Emission = 0.0;" added to make SH lighting work with the Lux diffuse shaders (Lux diffuse shader or the terrain detial shaders e.g.)
+- metalness shader added
+- dualforward lightmaps: docu entry added
+- disabling specular ambient lighting won’t let the faked fresnel go crazy in deferred lighting mode
+
+version 0.062
+
+- treecreatorleaves shader: fixed
+
+
+version 0.061
+
+- lighting
+  - blinn phong: visibility term now is more robust (by adding saturate)
+  - cook torrance: sign corrected, no more magical number needed to make deferred match forward
+- terrain shader
+  - normal blending enhanced
+- detail shader
+  - normal bending corrected
+
+
+version 0.06
+
+this version is a major update because it introduces a Cook Torrence based approach as second lighting model next to Blinn Phong.
+In order to make it possible to switch between these models I had to rewrite some parts of the framework. i took this chance to make the naming a bit more flexible and descriptive:
+
+"LuxLightingPhong.cginc" changed to "LuxLightingDirect.cginc"
+"LuxIBL.cginc" changed to "LuxLightingAmbient.cginc"
+
+- surface shaders
+the name of the Lux lighting function changed to "LuxDirect":
+	#pragma surface surf LuxDirect noambient
+
+the name of the direct lighting functions include changed:
+	#include "LuxCore/LuxLightingDirect.cginc"
+
+a new pragma makes it possible to swith between the lighting models:
+	#pragma multi_compile LUX_LIGHTING_BP LUX_LIGHTING_CT
+
+writing to o.Specular has changed to a function call:
+	o.Specular = LuxAdjustSpecular(spec_albedo.a);
+
+- minor changes and fixes:
+-- VertexBlend shaders added
+-- Lux ambient lighting: if "diffuse cube IBL" is disabled the shader won’t add ambient lighting based spherical harmonics in case the object is lightmapped.
+-- tree creator redertex shaders fixed but this will be an ongoing process...
+-- terrain shader first pass: fixed for cook torrence using complex blending for detail normal
+
+
+version 0.05
+
+!!! important !!!
+- example shaders
+writing to o.DeferredFresnel changed to:
+o.DeferredFresnel = exp2(-OneOnLN2_x6 * max(0, dot(o.Normal, normalize(IN.viewDir) )));	
+as it could cause some lighting artifacts on dx9 / dx11. now it is even a bit faster ;-)
+You should do so in all your individual shaders too.
+- ambient lighting (LuxIBL.cginc)
+spec ambient IBL changed from spec_albeo.rgb and spec_albedo.a to o.SpecularColor and o.Specular
+- LuxLightingPhong.cginc
+optimized "Final Composition" (forward lighting)
+- tree creator shaders added
+
+version 0.046
+- ambient lighting (LuxIBL.cginc)
+Fixed errors from version 0.045.
+Shaders may declare "#define NORMAL_IS_WORLDNORMAL" to skip the calculation of the worldnormal and speed up rendering.
+Used e.g. by the terrain grass shaders as here normal equals worldnormal.
+
+- Lux terrain shaders:
+Improved normal blending between different shader passes.
+Added a the possibility to use a second normal map on detail texture number 3 to hide tiling artifacts on high frequent and bumpy textures such as rock.
+
+- Lux terrain grass and vertex lit shaders added
+
+version 0.045
+- ambient lighting (LuxIBL.cginc)
+Due to a bug in unity terrain materials i had to make the "#ifdef DIFFCUBE_ON" a bit more complex.
+Now diffuse ambient IBL can be activated per material using the material inspector or globally for shaders in which the keyword "USE_GLOBAL_DIFFIBL_SETTINGS" is enabled.
+Sorry for that mess.
+
+- lighting (LuxLightingPhong.cginc)
+color output.alpha is reduced to: c.a = s.Alpha;
+as long as anybody can tell me what the rest sould be good for i will keep it this simple.
+
+- Lux terrain shaders added
+
+- documentation added
+
+- DontnodGraphicChartForBlinnMicrofacet look up chart added
+
+version 0.044
+- shader folder structure refactored: "Resources" is now subfolder of "LuxCore"
+
+- ambient lighting (LuxIBL.cginc)
+-- specular ambient lighting: added alternative fresnel calculation which would give you only colorized specular reflections to match skyshop (deactivated by default, you will have to edit the cginc)
+
+- example shaders
+-- advanced detail shader added
+-- parallax mapping shader added
+-- material test shader: small fix
+
+version 0.043
+- ambient lighting (LuxIBL.cginc)
+-- specular ambient lighting fixed
+
+- example shaders
+-- material test shader added which lets you adjust roughness and specularColor within unity
+
+version 0.042
+- ambient lighting (LuxIBL.cginc)
+-- Spherical Harmonics added: In case you deactivate "diffuse Cube IBL" in the material inspector the shader falls back to unity’s SH lighting.
+Use this function if you want to make the shader react to lightprobes or speed up rendering.
+This makes the old Lux Lightprobes Shader obsolet (so i have removed it from the package)
+
+- forward lighting
+-- late dotNL to get rid of most artifacts on backsides and speed up rendering
+
+- surface shaders
+-- o.DeferredFresnel is only written #if defined(UNITY_PASS_PREPASSFINAL) to speed up forward rendering.
+see e.g.: "Lux Bumped Specular.shader"
+
+version 0.041
+- forward lighting
+-- fixed for dx11
+
+version 0.04
+- deferred lighting
+-- internal prepass lighting shader fixed for dx11
+
+version 0.03
+- deferred lighting
+-- faked fresnel added based on n_dot_v
+
+version 0.02
+- deferred lighting
+-- refactored
+-- visibility term added
+-- fresnel fixed (direct lighting): fresnel according only to ONE directional light, light position has to be passed by script
+see: "Lux Bumped Specular" shader
+
+- forward lighting
+-- refactored
+-- visibility term fixed
+
+- lightmaps
+-- lighting fixed when using lightmaps or lightprobes
+
+version 0.01
+initial release
+
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+LIGHTMAPPING
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Dual Lightmaps:
+- ok in deferred
+- ok for lightprobes
+- no spec in forward
+
+Directional Lightmaps:
+- ok in forward
+- ok in deferred
+
+Single Lightmaps:
+- no highlights in deferred and forward
+- no bump mapping on objects using lightprobes (neither forward nor deferred)
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+USEFUL RESSOURCES
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+non-​technical introduction in physically based shading:
+http://www.thetenthplanet.de/archives/3684
+

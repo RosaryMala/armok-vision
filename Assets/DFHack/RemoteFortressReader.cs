@@ -70,10 +70,10 @@ namespace RemoteFortressReader
       get { return _variant; }
       set { _variant = value; }
     }
-    private uint _direction = default(uint);
-    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"direction", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(uint))]
-    public uint direction
+    private string _direction = "";
+    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"direction", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string direction
     {
       get { return _direction; }
       set { _direction = value; }

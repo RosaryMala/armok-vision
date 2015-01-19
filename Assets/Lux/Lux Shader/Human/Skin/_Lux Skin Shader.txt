@@ -1,0 +1,52 @@
+- - - - - - - - - - - - - - - -
+LUX SKIN SHADER
+
+The Lux skin shader is base on the work of Eric Penner (http://www.ericpenner.net/) and his pre-integrated skin shader.
+The base of the code Lux uses was ported to unity by farfarer (Base Code taken from: http://www.farfarer.com/blog/).
+Also the BRDF Lookup texture was provided by farfarer.
+The example model and textures are taken from: http://www.ten24.info/?p=1164
+
+- - - - - - - - - - - - - - - -
+IMPORTANT INFO
+As the skin shader uses its own lighting function it is forward only – no matter what lighting mode your camera is set to.
+But in order to make it work even when the camera is set to deferred i had to create my own "RenderType" = "LuxOpaque".
+This RenderType is a subshader in the "Camera-DepthNormalTexture" and "Camera-DepthTexture" shader and eliminates all z-fighting artifacts. So please make sure that you have also installed those 2 shaders which are located in "Lux/LuxCore/Resources".
+
+- - - - - - - - - - - - - - - -
+THE SHADER
+The shader itself comes with only a few inputs:
+
+- Base(RGB) Alpha(A): Diffuse or albedo texture, alpha is unused.
+- Specular(R) Roughness(G) SSS(B) AO(A): Contains
+  - Specular color as shade of gray in the red channel (skin does not color the spec highlight so gray is ok).
+  - Roughness in the green channel
+  - SSS determines the amount of surbsurface scattering in the blue channel: It may also be known as depth or thickness map: So apply bright values for areas like the ears, nose, and fingers which would nusually have more subsurface scattering.
+  - AO ist stored in the alpha channel.
+- Normal Map: A normal map, but make sure that you only bake rather small details into it.
+- BRDF Lookup (RGB): Apply the lookup texture here that comes with the shader.
+- Curvature Scale: Lets you control the amount of subsurface scattering. You should use rather small values here: 0.02 – 0.002. PLease check your settings under variying lighting conditions!
+- Normal Map Blur Bias: Determines which mip level is used when calculating curvature so higher values will give you softer direct and ambient diffuse lighting. Best to keep this between 1 and 2.
+
+
+- - - - - - - - - - - - - - - -
+BRDF Texture
+When importing the BRDF Texture you MUST set it's Wrap Mode to Clamp.
+Also ensure it bypasses sRGB sampling (you have to switch to "Advanced" to be able to check this option).
+
+- - - - - - - - - - - - - - - -
+DEMO ASSETS
+https://drive.google.com/file/d/0B7wuYyJnwF9dbjhrQW8xd2ZnVE0/edit?usp=sharing
+
+- - - - - - - - - - - - - - - -
+DEPENDENCIES
+
+- The shader includes LuxLightingAmbient.cginc and LuxCustomFog.cginc from the LuxCore.
+- It needs to be feeded with diffuse and specular cube maps and has to be set to linear or gamma. Adjust this editing the shader or use the "SetupLux" script.
+- The shader uses the "LuxMaterialInspector" script.
+- As the shader always renders using forward even if your camera is set to "deferred lighting" it has to use its own depth shader that fixes all problems with z-fighting, real time shadows and directional lights. So please make sure that Lux’s "Camera-DepthNormalTexture" and "Camera-DepthTexture" shaders are present (and placed in a folder called "Resources").
+
+- - - - - - - - - - - - - - - -
+KNOWN ISSUES
+Using the shader on OS X might cause z-fighting artifacts when using deferred lighting + 2 directional lights which both drop shadows.
+It works perfectly with ONE directional light casting shadows + multiple directional light NOT casting shadows + multiple point- or spotlights casting shadows.
+It doesn’t produce any artifact when using forward rendering.

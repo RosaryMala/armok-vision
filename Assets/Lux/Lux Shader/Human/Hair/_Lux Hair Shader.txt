@@ -1,0 +1,62 @@
+- - - - - - - - - - - - - - - -
+LUX HAIR SHADER
+
+The Lux hair shader will give you anisotropic highlights – but request some special inputs.
+
+- - - - - - - - - - - - - - - -
+TEXTURING, UVS AND TANGENTS
+
+First and most important is the fact that all hair strands should always follow the tangents of your model which means that in texture space hair should always be vertically aligned. So please make sure that you always paint your hair from top to down or vice versa but never from left to right.
+
+All other inputs might be quite familiar to you.
+We do not need any fancy specular or roughness map here are everything is controlled by sliders or colorpickers(!).
+
+If you want to know more about hair rendering please have a look here:
+http://help.chaosgroup.com/vray/help/200R1/vrayhairmtl_params.htm
+The basiscs of this shader are explained here:
+http://amd-dev.wpengine.netdna-cdn.com/wordpress/media/2012/10/Scheuermann_HairRendering.pdf
+
+So lets get to the inputs.
+
+- - - - - - - - - - - - - - - -
+INPUTS
+
+- Main Color: Color that gets multiplied on top of the base texture.
+- Diffuse (RGB) Alpha (A): RGB store the base diffuse color information whereas Alpha stores the transparency.
+- Combined specular texture:
+  - Specular Shift (R): Lets you shift specular highlights per pixel.
+  - Roughness (G): Lets add you add per pixel Roughness.
+  Please keep in mind that the values will be multiplied with the values from the Roughness sliders below. So you should keep this channel rather bright.
+  - Noise (B): Noise that gets applied to the 2nd specular highlight simulating things like cracks in the strands.
+- Normalmap: Just a regular normal map but please make sure that it is not too bumpy.
+- Anisotropic Direction (XYZ): Determines the direction of the hair strands in texture space. If they are aligned along the y-axis (V) it should be 0,1,0. If they are aligned horizontaly it would be 1,0,0. The W-component is unused.
+
+As the shader supports 2 specular highlights (one from the outer surface of the strand, one from the inner one) you will find 2 "groups" of inputs:
+
+- Specular Color1: Sets primary spec color and should be a dark gray.
+- Primary Spec Shift: Sets primary specular shift and determines how far the first specular highlight will be offsetted.
+- Roughness1: Sets primary specular roughness.
+
+- Specular Color2: Sets secondary spec color.
+- Secondary Spec Shift: Sets secondary specular shift and determines how far the second specular highlight will be offsetted.
+- Roughness2: Sets secondary specular roughness.
+
+- Rim Light Strength: Set strength of Rim Lighting. As it is part of the direct Lighting function rim lighting fully reacts to real time shadows and light attenuation. It uses a fixed power of 2.
+
+- Alpha Cut Off Theshold: Controls alpha cut off.
+
+
+- - - - - - - - - - - - - - - -
+GEOMETRY
+
+- The shader uses "correct" backface culling. So it is up to you to double and flip faces where needed.
+- Ambient Occlusion can be baked to vertex color red: red = 0 = occluded and red = 1 = not occluded.
+
+
+- - - - - - - - - - - - - - - -
+DEPENDENCIES
+
+- The shader includes LuxLightingAmbient.cginc from the LuxCore.
+- It needs to be fed with diffuse and specular cube maps and has to be set to linear or gamma. Adjust this editing the shader or use the "SetupLux" script.
+- The shader uses the "LuxMaterialInspector" script.
+- As the shader always renders using forward even if your camera is set to "deferred lighting" it has to use its own depth shader that fixes all problems with z-fighting, real time shadows and directional lights. So please make sure that Lux’s "Camera-DepthNormalTexture" and "Camera-DepthTexture" shaders are present (and placed in a folder called "Resources").

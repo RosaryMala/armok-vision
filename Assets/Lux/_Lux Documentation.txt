@@ -1,0 +1,408 @@
+- - - - - - - - - - - - - - - -
+LUX DOCUMENTATION
+
+
+TABLE OF CONTENT
+
+- Introduction
+- Lux lighting features
+- Lux compatibility
+- Using Lux
+  - Setup Lux script
+  - Lux Lighting: BlinnPhong vs CookTorrence
+  - Lux Materials
+    - Specular reflectance vs. Metalness
+  - Light Maps and Light Probes
+    - Using Dual Light maps in forward rendering
+  - Ambient Occlusion and UV2
+- Authoring Lux materials
+  - Specular reflectance workflow
+    - Base
+    - Specular Color
+  - Metalness workflow
+    - Base
+    - Metalness
+    - AO
+    - Spec
+  - Roughness
+- Specular Anti Aliasing
+- Authoring Cubemaps
+- Writing Lux shaders
+  - Shaders using the Specular reflectance workflow
+  - Shaders using the Metalness workflow
+- Optimizing Lux shaders
+- Known Issues
+
+
+- - - - - - - - - - - - - - - -
+INTRODUCTION
+
+Lux is an open source framework for physically based shader which will give you much more realistic results than shaders using traditional Lambert or BlinnPphong lighting: No more fights with washed out specular highlights or boring dark areas: everything is shiny!
+Lux will help you to get much more constant and predictable rendering results under varying lighting conditions: Author your materials once, use them everywhere!
+
+
+- - - - - - - - - - - - - - - -
+LUX LIGHTING FEATURES
+
+Lux is mainly based on the work of Sébastien Lagarde and Dimitar Lazarov and supports most features you would expect from a physically based shader:
+
+Direct Lighting
+- normalized Blinn-Phong or Cook-Torrance Specular lighting
+- Schlick-Smith or GGX Visibility Term
+- Schlick’s Approximation to Fresnel
+
+Ambient Lighting
+- Diffuse Cubemap IBL
+- Specular Cubemap IBL
+Both cubemaps can be sampled in gamma and linear space.
+Support for RGB or RGBM (HDR) cubemaps.
+- Spherical Harmonics in case you disabled "Diffuse Cubemap IBL"
+- Ambient Occlusion controlled by texture input
+
+Although Lux was orginally written to supports materials defined using specular reflectance textures you can also use a "metalness workflow". Please see "Specular reflectance vs. Metalness"
+
+ 
+- - - - - - - - - - - - - - - -
+LUX COMPATIBILITY
+
+Lux supports forward and deferred lighting, light maps and light probes and handles gamma and linear lighting – although linear lighting is more than a key to physically based shading.
+It runs under dx9, dx11 and openGL.
+
+Forward Lighting
+In case you use forward lighting everything is just fine. Lux will not break any other shader or reset ambient lighting – however objects using other shaders might look a bit dull ;-)
+
+Deferred Lighting
+If you use deferred lighting installing Lux will influence the way other shaders look (only deferred shaders using specular lighting) as it overwrites the built in "internal prepass shader" in order to raise specular power or implement functions such as the Schlick-Smith visibility term.
+But unless you use very complicated shaders already using all available texture interpolators or texture samplers it should be rather easy to make your shaders work correctly along with lux. Please have a look at "Writing Lux Shaders" for further details.
+Next to that Lux also ships with a huge set of ready to go shaders covering bumped specular, transparent bumped specular, cutout bumped specular, detail bumped specular, self illuminated cut out bumped specular, parallax bumped specular and bumped specular terrain shaders next to a wide range of terrain related shaders. More will follow.
+
+
+- - - - - - - - - - - - - - - -
+USING LUX
+
+After having installed the package you should have a look at the demo scenes included.
+There you will find a game object called "-- SetupLux" which holds the "SetupLux" script. This script is needed in any scene as it controls overall IBL ambient lighting. So let’s have a look at its parameters.
+
+- - - - - - - - - -
+Setup Lux script
+
+- Lux_HDR_Scale: the factor which must be applied to RGBM coded HDR cubemaps. 6 will be just fine for most HDR cubemaps like those authored with skyshop.
+
+- Is Linear: Do not change this checkbox, it will be set by the script automatically according to the player settings.
+
+- Lux Lighting: Lets you choose between BlinnPhong and CookTorrence as Lighting function.
+
+- Lux_IBL_Diffuse Exposure: Lets you adjust the strength of the diffuse ambient image based lighting.
+
+- Lux_IBL_Specular Exposure: Lets you adjust the strength of the specular ambient image based lighting 
+
+- Diffuse Cube: Assign your diffuse ambient cubemap here.
+
+– Diffuse Is HDR: Check this if your diffuse cubemap uses HDR.
+
+- Specular Cube: Assign your specular ambient cubemap here.
+
+– Specular Is HDR: Check this if your specular cubemap uses HDR.
+
+The overall diffuse and specular cubemaps will be used by all shaders and materials unless you assign a different cubemap to a given material (see below).
+
+- - - - - - - - - -
+Lux Lighting: BlinnPhong vs CookTorrence
+
+Lux supports BlinnPhong and CookTorrence specular direct lighting.
+BlinnPhong is probably the most common lighting function in physically based shading and gives you well destinguished and sharp specular heighlights whereas CookTorrence will provide nice trails around the specular heighlights and much smoother specular lighting.
+So materials authored for one lighting model will not automatically "work" using the other.
+Please note: BlinnPhong is cheaper to render than CookTorrence. Most tools and look up tables are made to be used with BlinnPhong.
+
+- - - - - - - - - -
+Lux Materials
+
+Lets have a look at the materials. So just activate any of the spheres which will most likely just use the "Lux/Bumped Specular" shader. This shader is the most common one, the working horse and probably most materials in your project will use this shader.
+So open the material and have a look at its inputs which are the basic inputs of all Lux shaders:
+
+- Diffuse Color: Color that gets multiplied on top of your Base Texture.
+
+- Base (RGB) Alpha (A): The base diffuse or albedo texture. Alpha (A) is only used by transparent or cutout shaders so it is ok to just add an rgb texture in most cases.
+
+- Specular Color (RGB) Roughness (A): This is the most important texture when using Lux as it defines all physical properties of your material. See: "Authoring Lux Materials" for further details.
+Please note: Tiling and offset settings to this texture are ignored. When sampled the tiling and offset coordinates of the base texture are taken into account.
+
+- Normal Map: Assign a standard RGB normal map.
+
+- Custom Diffuse Cube & Custom Specular Cube: If you put any cubemaps into these slots they will override the global diffuse and specular lighting cubes. Use these slots if you want to apply custom lighting to a specific material.
+
+- Customize Material: As Lux is written as simple "Ubershader" it allows you to add special properties to each single material:
+-- Disable diffuse Cube IBL: If checked the shader will use unity’s spherical harmonics to calculate the diffuse ambient lighting. Use this to speed up rendering or if you want the material to react to lightprobes. Please note: You will have to check "Use Light Probes" in the mesh renderer component too.
+-- Disable Specular Cube: Simply disables ambient specular cubemap reflections and lighting.
+-- Enable Ambient Occlusion: If checked you will be able to add an ambient occlusion map that controls the strength of ambient diffuse and specular lighting. Please note: The shader only samples the alpha channel of the texture. So if you import a simple grayscale texture you will have to check "Alpha from Grayscale" in the import settings of the texture.
+
+Those are the common Lux shader inputs. More complex shaders may have more inputs but will always have these.
+
+- - - - - 
+Specular reflectance vs. Metalness
+
+Lux was originally written following a suggestion by Sébastien Lagarde (http://seblagarde.wordpress.com/2011/08/17/feeding-a-physical-based-lighting-mode/) where the specular color map defines the specular reflectance of a given material. However it is pretty easy to make Lux also work with a metalness workflow where the diffuse or albedo texture defines the diffuse color for dielectris (non-metals) and reflectivity for metallic parts of the surface based on the metalness mask which defines the metallic parts itself.
+More infos and a comparison of both workflows can be found here:
+http://www.marmoset.co/toolbag/learn/pbr-practice
+
+Please note: The base Lux distribution only ships with one single metalness shader which is "Lux Bumped Specular Metalness".
+
+
+- - - - - - - - - -
+Light Maps and Light Probes
+
+Lux supports lightmaps and light probes.
+Depending on your ambient lighting settings you should probably "disable diffuse cube IBL" on all objects which are lightmapped in order to not overbrighten these.
+If you want to use light probes you have to "disable diffuse cube IBL" to force the shader to fall back to unity’s built in spherical harmonics.
+Please do not forget to check "Use Light Probes" in the Mesh Renderer Component.
+
+- - - - -
+Using Dual Light maps in forward rendering
+The shaders that ship with Lux do not support dual lightmaps in forward rendering by default.
+However you might be able to enable this – depending on the set target platform or defined features (as the shader might run out of texture interpolators in forward base).
+- Edit the shader you want to support dual lightmaps in forward rendering.
+- Find the initial #pragma directive: "#pragma surface surf LuxDirect noambient"
+- Change it to: "#pragma surface surf LuxDirect noambient dualforward"
+- Then reimport the shader.
+- In case you run out of texture interpolators you might skip either "float2 uv_BumpMap; or "float2 uv_AO;" in the input structure. Please make sure that you also edit the surface function to e.g.: "o.Normal = UnpackNormal(tex2D(_BumpMap, IN.uv_MainTex));"
+
+
+- - - - - - - - - -
+Ambient Occlusion and UV2
+
+Most of the example shaders allow you to enable Ambient Occlusion with just a single click.
+However the AO texture is sampled according to the first UV set by default. In case you need AO to be linked to the second UV set you can simply tweak the shader by adding one more define:
+
+#define uv_AO uv2_AO
+
+Insert this right after:
+#include "../LuxCore/LuxLightingDirect.cginc"
+and recompile the shader.
+You may have a look at the "Lux Bumped Specular AO_UV2" example shader.
+
+
+- - - - - - - - - - - - - - - -
+AUTHORING LUX MATERIALS
+
+Probably the most challenging part will be the setup of the Lux materials and authoring the textures - especially the Specular Color (RGB) Roughness (A) texture as all other textures just work like you are used to.
+
+- - - - - - - - - -
+Specular reflectance workflow
+
+Base
+The base texture defines the color of the diffuse lighting.
+Please note that only non-metals have a diffuse part, so all metall parts of your texture should be set to black within the base texture.
+
+Specular Color
+In our physically based shading approach specular color defines the characteristic specular reflectance of the material which is the value of Fresnel reflectance at 0°. Ups!
+Just to break it down: The specular color determines if your material is a non-metal (dielectric) or a metal and how light is reflected at its surface.
+So dark and gray specular colors will allow to mimic non-metal materials like plastic, stone, wood and even glass while bright specular colors will represent metals like iron or chrome.
+Next to the different in luminance the specular color of dielectrics is always a shade of gray while metals might have colored specular colors tinting the specular highlight.
+Fortunetely you do not have to guess specular color values for different materials as the are several look up charts available on the web. The one that ships with this package it taken from dontnod and covers at least some very common materials, see: DontnodGraphicChartForBlinnMicrofacet.tga
+
+- - - - - - - - - -
+Metalness workflow
+
+When you use a metalness shader the specular color for metals (defined in the metalness texture) is taken from "Main (RGB)" texture.
+Specular color for dielectrics is taken from a gray scale spec map (stored in blue channel of the combines metal, ao, spec, gloss texture).
+
+Base
+The base map defines the diffuse color for non-metals and reflectivity for metallic parts of the surface.
+
+Metalness (R)
+The metalness texture (grayscale in red channel) should use values of either 0 (dielectrics) or 1(metal) – however using values inbetween should be okay for transitions. It defines whether a pixel of the texture represents a non-metal or metal surface.
+
+AO (G)
+Ambient occlusion (grayscale in green channel) is just a common ambient occlusion map and its values get multiplied with the diffuse and specular ambient lighting.
+
+Spec (B)
+Even when using the metalness workflow you can specify different shades of gray in the Spec = specular color texture (grayscale in blue channel) defining the reflectivity of the dielectric parts of the texture. But keep in mind that those values should be rather low (means: dark). Yo can use the Dontnod Graphic Chart to get the correct values for at least some materials.
+
+- - - - - - - - - -
+Roughness
+
+Well: naming. In fact I should have better called it "smoothness" as a value of "0" = black means totally rough and a value of "1" = white means totally smooth.
+Nevertheless this map not only controls the sharpness of the ambient specular reflection (fully smooth = mirror like) but also the sharpness of the direct specular highlight and fresnel strength. So it is not just the old "Shininess" but something completely new.
+
+For further details please have a look at:
+http://seblagarde.wordpress.com/2011/08/17/feeding-a-physical-based-lighting-mode/
+
+- - - - - - - - - -
+Testing materials
+
+As the regular Lux shaders expect a combined specular color and roughness texture it might be a bit of a pain to adjust your textures.
+So Lux comes with a special shader called: "Lux Bumped Specular Materialtest" shader. This shader lets you apply the specular color map and the roughness map to different slots so you can author your roughness maps using adjustment layers in photoshop until you have found the right values. Additionally this shader lets you quickly lower the specular color and roughness using some simple sliders.
+Please note: You should not use this shader for your final built as it is more expensive than the regular shaders.
+
+
+- - - - - - - - - - - - - - - -
+SPECULAR ANTI ALIASING
+
+Working with a physically based shading model, usually shader aliasing becomes a common problem for smooth surfaces caused by high-frequency reflectance produced by the combination of the specular BRDF and highly detailed normal maps: So specular highlights tend to flicker while the player moves.
+You may fight this problem adjusting the "Aniso Level" and "Filter Mode" of the roughness and normal map.
+Additionally you can make use of the Lux TexturePostProcsssor which will prefilter the roughness map.
+For more infos please have a look at the "_Lux TexturePostprocessor.txt" file.
+
+
+- - - - - - - - - - - - - - - -
+AUTHORING CUBEMAPS
+
+In order to generate convolved diffuse and specular ambient cube maps you can use the Lux Cubemap Tools. Lux also supports cubemaps generated by Skyshop or Jove. 
+
+
+- - - - - - - - - - - - - - - -
+WRITING LUX SHADERS
+
+- - - - - - - - - -
+Shaders using the Specular reflectance workflow
+
+Writing Lux shaders should be rather easy in case you are familiar with writing surface shaders.
+All you have to do is to include the needed functions and provide the surface function with all needed inputs.
+So lets have a look at the "Lux/Bumped Specular" shader.
+(If you want to write a diffuse only shader please have a look at the "Lux Bumped Diffuse" shader. But any material should have a specular lighting part according to physically based shading...)
+
+- Properties:
+Make sure you add the following samplers:
+ _SpecTex
+ _DiffCubeIBL
+ _SpecCubeIBL
+
+ You also have to add:
+ [HideInInspector] _Shininess
+ [HideInInspector] _AO
+
+- CGPROGRAM
+As we use our own custom direct and ambient lighting we have to use:
+  #pragma surface surf LuxDirect noambient
+To make it compile for openGL add:
+  #pragma glsl
+As it is a bit complex add:
+  #pragma target 3.0 
+In order to make the shader act as an Ubershader you will have to add:
+  #pragma multi_compile LUX_LIGHTING_BP LUX_LIGHTING_CT
+  // select between BlinnPhong and CookTorrence direct lighting functions
+  #pragma multi_compile LUX_LINEAR LUX_GAMMA
+  // handle linear and gamma lighting
+  #pragma multi_compile DIFFCUBE_ON DIFFCUBE_OFF
+  // use diffuse ambient cube map or spherical harmonics
+  #pragma multi_compile SPECCUBE_ON SPECCUBE_OFF
+  // turn specular ambient cube map on and off
+  #pragma multi_compile LUX_AO_OFF LUX_AO_ON
+  // enable or disable ambient occlusion
+This will make the compiler generate all different permutations of the shader which will take a while. So while working on your shader you might just comment the lines mentioned above and enable the features you want to test the shader with by adding e.g.:
+  #define LUX_LINEAR
+  #define DIFFCUBE_ON
+  ...
+
+If you comment:
+  #pragma multi_compile LUX_LIGHTING_BP LUX_LIGHTING_CT
+you do not have not write:
+  #define LUX_LIGHTING_BP
+because the shader will automatically choose Blinn Phong.
+However you may write:
+  #define LUX_LIGHTING_CT
+to force Cook Torrence Lighting.
+In this case, make sure that:
+  #include "LuxCore/LuxLightingDirect.cginc"
+is added after the #define LUX_LIGHTING_CT.
+In deferred lighting always both lighting functions will be present due to the fact that in deferred the internal_prepass shader is responsible for the light calculations.
+
+You have to include the Lux lighting functions:
+  #include "LuxCore/LuxLightingDirect.cginc"
+
+You will have to specify all inputs according to the properties setup in the properties block of course.
+
+- struct input
+Next to all other inputs needed by your shader like uv_coords "struct input" always needs:
+  float3 viewDir;
+  float3 worldNormal;
+  float3 worldRefl;
+  INTERNAL_DATA
+to calculate the worldnormal and worldreflection vector as these are used by the diffuse and ambient ambient lighting functions.
+
+- surf
+the surface function is more or less a regular surface function like you might already know.
+But of course you have to take care of some special instructions:
+-- define your surface function using SurfaceOutputLux: 
+   void surf (Input IN, inout SurfaceOutputLux o) {
+-- sample the SpecularRoughness Texture into spec_albedo:
+   fixed4 spec_albedo = tex2D(_SpecTex, IN.uv_MainTex);
+-- do not write to o.Gloss as it is not defined in SurfaceOutputLux
+-- write Roughness or Smoothness to o.Specular
+   o.Specular = LuxAdjustSpecular(spec_albedo.a);
+-- you have to write to o.SpecularColor:
+   o.SpecularColor = spec_albedo.rgb;
+-- last but not least you have to include the (image based) ambient lighting functions:
+   #include "LuxCore/LuxLightingAmbient.cginc"
+   (Update note: o.DeferredFresnel is set by including "LuxLightingAmbient.cginc" automatically. If you need anything special here you can have a look at the terrain shaders and how they handle deferred fresnel.)
+
+Please note: Depending on the location of your shader the paths to the includes might be different.
+
+Ambient lighting is written to o.Emission.
+For this reason all other values that contribute to o.Emission should use:
+   o.Emission += ...
+and be applied after including "LuxCore/LuxLightingAmbient.cginc" like the illumination shader of the package does.
+
+- - - - - - - - - -
+Shaders using the Metalness workflow
+
+Those shaders have a lot in common with shaders using the specular reflectivity workflow – however we have to map the texture inputs in a special way to make them fit with Lux’s needs.
+The most important differences are the ways how to write to "o.Albedo" and "o.SpecularColor".
+
+Please have a look at the "Bumped Specular Metalness" shader to find out details.
+
+- - - - - - - - - - - - - - - -
+OPTIMIZING LUX SHADERS
+
+In order to make Lux shaders not completely break with the standard unity ones most of them come with a "Diffuse Color" input that gets multiplied with the "Main" or diffuse texture. But as it is faster in the shader and much more flexible i would always recommend to drop this input in your final shaders and tweak your diffuse texture using photoshop instead.
+
+Assuming that you won’t use gamma AND linear color space, BlinnPhong AND CookTorrance lighting or materials that allow you to turn specular and diffuse image based lighting on and off you can most likely make your built much smaller (and increase compiling time btw.) by tweaking the shaders.
+So lets have a closer look at all the standard pragma multi_compile definitions:
+
+#pragma multi_compile LUX_LIGHTING_BP LUX_LIGHTING_CT
+  // select between BlinnPhong and CookTorrence direct lighting functions
+  // instead of using mult_compile simply define the lighting model you want:
+#define LUX_LIGHTING_BP
+  // or:
+#define LUX_LIGHTING_CT
+
+#pragma multi_compile LUX_LINEAR LUX_GAMMA
+  // handle Linear and gamma lighting
+  // instead of using mult_compile simply define the lighting model you use:
+#define LUX_LINEAR 
+  // or:
+#define LUX_GAMMA
+
+#pragma multi_compile DIFFCUBE_ON DIFFCUBE_OFF
+  // use diffuse ambient cube map or spherical harmonics
+  // if a shader does not need to support materials using spherical harmonics instead of ibl replace this with:
+#define DIFFCUBE_ON
+  // using #define DIFFCUBE_ON won’t let your objects react to lightprobes.
+
+#pragma multi_compile SPECCUBE_ON SPECCUBE_OFF
+  // turn specular ambient cube map on and off
+  // if a shader does not need to support materials not using specular ambient ibl replace it with:
+#define SPECCUBE_ON
+
+#pragma multi_compile LUX_AO_OFF LUX_AO_ON
+  // enable or disable ambient occlusion
+  // if a shader does not have to support ambient occlusion replace this pragma with:
+#define LUX_AO_OFF
+  // or simply skip it completely
+
+
+
+- - - - - - - - - - - - - - - -
+KNOWN ISSUES
+
+Right now Lux does not support a correct fresnel term in deferred lighting – like any other solution available for unity because the slim g-buffer used by unity’s internal rendering pipeline simply does not allow it.
+
+
+
+
+
+
+
+
+
+

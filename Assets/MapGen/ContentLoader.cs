@@ -96,11 +96,20 @@ public class ContentLoader
             return _colorConfiguration;
         }
     }
+    MaterialTextureConfiguration _materialTextureConfiguration = new MaterialTextureConfiguration();
+    public MaterialTextureConfiguration materialTextureConfiguration
+    {
+        get
+        {
+            return _materialTextureConfiguration;
+        }
+    }
     public List<MaterialDefinition> matTokenList
     {
         set
         {
             colorConfiguration.matTokenList = value;
+            materialTextureConfiguration.matTokenList = value;
         }
     }
 
@@ -157,7 +166,10 @@ public class ContentLoader
             switch (doc.Name.LocalName)
             {
                 case "colors":
-                    colorConfiguration.AddSingleColorConfig(doc);
+                    colorConfiguration.AddSingleMaterialConfig(doc);
+                    break;
+                case "materialTextures":
+                    materialTextureConfiguration.AddSingleMaterialConfig(doc);
                     break;
                 default:
                     break;

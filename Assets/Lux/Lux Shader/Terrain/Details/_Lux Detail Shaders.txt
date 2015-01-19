@@ -1,0 +1,15 @@
+- - - - - - - - - - - - - - - -
+LUX DETAIL SHADERS
+
+Please note: Deactivating diffuse ambient IBL on the terrain will also effect grass.
+
+- - - - - - - - - -
+Development Annotations
+
+The Lux detail shaders do not use worldNormal and INTERNAL_DATA because the "regular" or vertex normal simply fits the global normal as you can’t rotate or scale a terrain.
+And just using the regular vertex normal instead of calculating the wordNormal will make image based diffuse lighting a bit faster.
+
+In order to tell "LuxLightingAmbient.cginc" just to use IN.normal instead of calculating the worldnormal we have to declare "#define NORMAL_IS_WORLDNORMAL" 
+
+Additionally you have to write v.normal.xyz to o.normal in the vertex function.
+Otherwise IN.normal will not be setup in the surf function.
