@@ -525,11 +525,11 @@ MonoBehaviour:
   isLinear: 0
   LuxLighting: 1
   Lux_IBL_DiffuseExposure: .400000006
-  Lux_IBL_SpecularExposure: .400000006
-  diffuseCube: {fileID: 8900000, guid: 93af84dcb71e742809730565a16757d0, type: 2}
-  diffuseIsHDR: 0
+  Lux_IBL_SpecularExposure: 1
+  diffuseCube: {fileID: 8900000, guid: 4579ea1a287d4465587006d5739747fb, type: 2}
+  diffuseIsHDR: 1
   specularCube: {fileID: 8900000, guid: 1b2b3cd737a4d4d51aef34132186b19b, type: 2}
-  specularIsHDR: 0
+  specularIsHDR: 1
   Lux_WaterFloodlevel: {x: 0, y: 0, z: 0, w: 0}
   Lux_RainIntensity: 0
   Lux_RainRipples: {fileID: 0}
@@ -667,8 +667,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b54fa8be8a38a9f4e8f53b4399135e30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewWidth: 40
-  viewHeight: 12
+  viewWidth: 72
+  viewHeight: 23
   viewDist: 30
   verticalShift: 30
 --- !u!1 &1498625255

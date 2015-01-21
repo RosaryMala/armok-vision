@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ColorConfiguration: MaterialConfiguration<Color>
 {
-    protected override string rootName { get { return "colors"; } }
+    public override string rootName { get { return "colors"; } }
     protected override string nodeName { get { return "color"; } }
 
     public override bool ParseTypeElement(XElement elemtype, out Color value)
