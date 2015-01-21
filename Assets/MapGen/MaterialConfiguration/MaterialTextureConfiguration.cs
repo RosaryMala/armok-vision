@@ -1,7 +1,4 @@
-﻿using RemoteFortressReader;
-using System.Collections.Generic;
-using System.Xml.Linq;
-using UnityEngine;
+﻿using System.Xml.Linq;
 
 public class MaterialTextureConfiguration : MaterialConfiguration<int>
 {
@@ -17,7 +14,7 @@ public class MaterialTextureConfiguration : MaterialConfiguration<int>
         return int.TryParse(indexAtt.Value, out value);
     }
 
-    protected override string rootName
+    public override string rootName
     {
         get { return "materialTextures"; }
     }

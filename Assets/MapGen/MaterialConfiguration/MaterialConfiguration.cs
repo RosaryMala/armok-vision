@@ -1,11 +1,10 @@
 ﻿using RemoteFortressReader;
 using System.Collections.Generic;
 using System.Xml.Linq;
-using UnityEngine;
 
 abstract public class MaterialConfiguration<T> {
     MaterialMatcher<T> materialMatcher = new MaterialMatcher<T>();
-    abstract protected string rootName { get; }
+    abstract public string rootName { get; }
     abstract protected string nodeName { get; }
 
     public T this[MatPairStruct mat]

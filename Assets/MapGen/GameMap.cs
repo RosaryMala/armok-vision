@@ -68,6 +68,7 @@ public class GameMap : MonoBehaviour
         System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         watch.Start();
         contentLoader.matTokenList = connectionState.net_material_list.material_list;
+        contentLoader.tiletypeTokenList = connectionState.net_tiletype_list.tiletype_list;
         contentLoader.ParseContentIndexFile(Application.streamingAssetsPath + "\\index.txt");
         watch.Stop();
         Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
@@ -224,10 +225,11 @@ public class GameMap : MonoBehaviour
             foreach (Tiletype item in connectionState.net_tiletype_list.tiletype_list)
             {
                 writer.WriteLine(
-                    item.name + "'" +
-                    item.shape + "'" +
-                    item.material + "'" +
-                    item.special + "'" +
+                    item.name + "," +
+                    item.shape + ":" +
+                    item.special + ":" +
+                    item.material + ":" +
+                    item.variant + ":" +
                     item.direction
                     );
             }
@@ -272,6 +274,7 @@ public class GameMap : MonoBehaviour
                 meshBuffer[bufferIndex].transform = Matrix4x4.TRS(DFtoUnityCoord(xx, yy, block_z), Quaternion.AngleAxis(180, Vector3.up), Vector3.one);
                 if (tiles[xx, yy, block_z] != null)
                 {
+                    int tileTexIndex = contentLoader.tileTextureConfiguration[tiles[xx, yy, block_z].tileType];
                     int matTexIndex = contentLoader.materialTextureConfiguration[tiles[xx, yy, block_z].material];
                     Color newColor = contentLoader.colorConfiguration[tiles[xx, yy, block_z].material];
                     if (newColor == default(Color))
@@ -292,6 +295,7 @@ public class GameMap : MonoBehaviour
                     }
                     meshBuffer[bufferIndex].color = newColor;
                     meshBuffer[bufferIndex].uv1Index = matTexIndex;
+                    meshBuffer[bufferIndex].uv2Index = tileTexIndex;
                 }
                 bufferIndex++;
             }
@@ -477,8 +481,15 @@ public class GameMap : MonoBehaviour
             cursZ < tiles.GetLength(2) &&
             tiles[cursX, cursY, cursZ] != null)
         {
-            cursorProperties.text += "Tiletype: ";
-            cursorProperties.text += connectionState.net_tiletype_list.tiletype_list[tiles[cursX, cursY, cursZ].tileType].name + "\n";
+            cursorProperties.text += "Tiletype:\n";
+            var tiletype = connectionState.net_tiletype_list.tiletype_list[tiles[cursX, cursY, cursZ].tileType];
+            cursorProperties.text += tiletype.name + "\n";
+            cursorProperties.text +=
+                tiletype.shape + ":" +
+                tiletype.special + ":" +
+                tiletype.material + ":" +
+                tiletype.variant + ":" +
+                tiletype.direction + "\n";
             var mat = tiles[cursX, cursY, cursZ].material;
             cursorProperties.text += "Material: ";
             cursorProperties.text += mat.mat_type + ",";

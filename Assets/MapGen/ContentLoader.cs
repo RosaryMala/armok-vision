@@ -88,28 +88,33 @@ public class ContentLoader
         }
     }
 
-    ColorConfiguration _colorConfiguration = new ColorConfiguration();
-    public  ColorConfiguration colorConfiguration
+
+
+    public ColorConfiguration colorConfiguration { get; private set; }
+    public MaterialTextureConfiguration materialTextureConfiguration { get; private set; }
+    public TileTextureConfiguration tileTextureConfiguration { get; private set; }
+
+    public ContentLoader()
     {
-        get
-        {
-            return _colorConfiguration;
-        }
+        colorConfiguration = new ColorConfiguration();
+        materialTextureConfiguration = new MaterialTextureConfiguration();
+        tileTextureConfiguration = new TileTextureConfiguration();
     }
-    MaterialTextureConfiguration _materialTextureConfiguration = new MaterialTextureConfiguration();
-    public MaterialTextureConfiguration materialTextureConfiguration
-    {
-        get
-        {
-            return _materialTextureConfiguration;
-        }
-    }
+
     public List<MaterialDefinition> matTokenList
     {
         set
         {
             colorConfiguration.matTokenList = value;
             materialTextureConfiguration.matTokenList = value;
+        }
+    }
+
+    public List<Tiletype> tiletypeTokenList
+    {
+        set
+        {
+            tileTextureConfiguration.tiletypeTokenList = value;
         }
     }
 
@@ -170,6 +175,9 @@ public class ContentLoader
                     break;
                 case "materialTextures":
                     materialTextureConfiguration.AddSingleMaterialConfig(doc);
+                    break;
+                case "tileTextures":
+                    tileTextureConfiguration.AddSingleTiletypeConfig(doc);
                     break;
                 default:
                     break;
