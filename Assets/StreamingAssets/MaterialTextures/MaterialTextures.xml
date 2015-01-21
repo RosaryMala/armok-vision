@@ -4,7 +4,35 @@
 	<materialTexture index="2">
 		<material token="*:MARBLE" />
 	</materialTexture>
-	<materialTexture index="3">
-		<material token="INORGANIC:*" />
-	</materialTexture>
+    <materialTexture index="3">
+        <material token="INORGANIC:*" />
+    </materialTexture>
+    <materialTexture index="0">
+        <material token="*:IRON" />
+        <material token="*:GOLD" />
+        <material token="*:SILVER" />
+        <material token="*:COPPER" />
+        <material token="*:NICKEL" />
+        <material token="*:ZINC" />
+        <material token="*:BRONZE" />
+        <material token="*:BRASS" />
+        <material token="*:STEEL" />
+        <material token="*:PIG_IRON" />
+        <material token="*:PLATINUM" />
+        <material token="*:ELECTRUM" />
+        <material token="*:TIN" />
+        <material token="*:PEWTER_FINE" />
+        <material token="*:PEWTER_TRIFLE" />
+        <material token="*:PEWTER_LAY" />
+        <material token="*:LEAD" />
+        <material token="*:ALUMINUM" />
+        <material token="*:NICKEL_SILVER" />
+        <material token="*:BILLON" />
+        <material token="*:STERLING_SILVER" />
+        <material token="*:BLACK_BRONZE" />
+        <material token="*:ROSE_GOLD" />
+        <material token="*:BISMUTH" />
+        <material token="*:BISMUTH_BRONZE" />
+        <material token="*:ADAMANTINE" />
+    </materialTexture>
 </materialTextures>

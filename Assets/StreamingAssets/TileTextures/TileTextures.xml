@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<tileTextures>
+    <tileTexture index = "1">
+        <tiletype token="*:SMOOTH:*:*:*" />
+    </tileTexture>
+</tileTextures>
