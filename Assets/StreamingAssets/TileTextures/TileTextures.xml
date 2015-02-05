@@ -2,6 +2,9 @@
 <tileTextures>
     <tileTexture index = "1">
         <tiletype token="*:SMOOTH:*:*:*" />
+        <subObject index ="2">
+            <material token="*:MARBLE" />
+        </subObject>
     </tileTexture>
     <tileTexture index = "2">
         <tiletype token="*:NORMAL:*:*:*" />

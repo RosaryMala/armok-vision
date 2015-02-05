@@ -7,28 +7,28 @@ abstract public class ContentConfiguration<T> where T : IContent, new()
     protected class Content
     {
         public T defaultItem { private get; set; }
-        ContentConfiguration<T> overloadedItem;
+        public ContentConfiguration<T> overloadedItem { get; set; }
         public T GetValue(MapTile tile)
         {
-                if (overloadedItem == null)
-                    return defaultItem;
-                else
+            if (overloadedItem == null)
+                return defaultItem;
+            else
+            {
+                T item;
+                if (overloadedItem.GetValue(tile, out item))
                 {
-                    T item;
-                    if (overloadedItem.GetValue(tile, out item))
-                    {
-                        return item;
-                    }
-                    else
-                        return defaultItem;
+                    return item;
                 }
+                else
+                    return defaultItem;
+            }
         }
     }
     abstract public bool GetValue(MapTile tile, out T value);
 
     abstract protected void ParseElementConditions(XElement elemtype, Content content);
 
-    public string nodeName { get; set; }
+    string nodeName { get; set; }
 
     void ParseContentElement(XElement elemtype)
     {
@@ -43,6 +43,11 @@ abstract public class ContentConfiguration<T> where T : IContent, new()
         Content content = new Content();
         content.defaultItem = value;
         ParseElementConditions(elemtype, content);
+        if (elemtype.Element("subObject") != null)
+        {
+            content.overloadedItem = GetFromRootElement(elemtype, "subObject");
+            content.overloadedItem.AddSingleContentConfig(elemtype);
+        }
     }
 
     public bool AddSingleContentConfig(XElement elemRoot)
@@ -55,19 +60,24 @@ abstract public class ContentConfiguration<T> where T : IContent, new()
         return true;
     }
 
-
-    public static ContentConfiguration<T> GetFromElement(XElement elemRoot)
+    public static ContentConfiguration<T> GetFromRootElement(XElement elemRoot, XName name)
     {
-        switch (elemRoot.Elements().First().Elements().First().Name.LocalName)
+        ContentConfiguration<T> output;
+        switch (elemRoot.Element(name).Elements().First().Name.LocalName)
         {
             case "material":
-                return new MaterialConfiguration<T>();
+                output = new MaterialConfiguration<T>();
+                break;
             case "tiletype":
-                return new TileConfiguration<T>();
+                output = new TileConfiguration<T>();
+                break;
             default:
                 Debug.LogError("Found unknown matching method \"" + elemRoot.Elements().First().Elements().First().Name.LocalName + "\", assuming material.");
-                return new MaterialConfiguration<T>();
+                output = new MaterialConfiguration<T>();
+                break;
         }
+        output.nodeName = name.LocalName;
+        return output;
     }
 }
 
