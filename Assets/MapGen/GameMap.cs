@@ -10,14 +10,6 @@ public class GameMap : MonoBehaviour
 {
     public ContentLoader contentLoader = new ContentLoader();
 
-    public class MapTile
-    {
-        public int tileType;
-        public MatPairStruct material;
-        public MatPairStruct base_material;
-        public MatPairStruct layer_material;
-        public MatPairStruct vein_material;
-    }
     MapTile[, ,] tiles;
     public GenericTile tileSelector;
     public ConnectionState connectionState;
@@ -40,15 +32,19 @@ public class GameMap : MonoBehaviour
 
     Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> materials;
 
-    public static float tileHeight = 3.0f;
-    public static float tileWidth = 2.0f;
+    public static float tileHeight { get { return 3.0f; } }
+    public static float tileWidth { get { return 2.0f; } }
     public static int blockSize = 16;
     public static Vector3 DFtoUnityCoord(int x, int y, int z)
     {
         Vector3 outCoord = new Vector3(x * tileWidth, z * tileHeight, y * (-tileWidth));
         return outCoord;
     }
-
+    public static Vector3 DFtoUnityCoord(DFCoord input)
+    {
+        Vector3 outCoord = new Vector3(input.x * tileWidth, input.z * tileHeight, input.y * (-tileWidth));
+        return outCoord;
+    }
     MeshCombineUtility.MeshInstance[] meshBuffer;
     //CombineInstance[] meshBuffer;
 
@@ -67,13 +63,15 @@ public class GameMap : MonoBehaviour
         //Disconnect();
         System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         watch.Start();
-        contentLoader.matTokenList = connectionState.net_material_list.material_list;
-        contentLoader.tiletypeTokenList = connectionState.net_tiletype_list.tiletype_list;
+        MaterialTokenList.matTokenList = connectionState.net_material_list.material_list;
+        TiletypeTokenList.tiletypeTokenList = connectionState.net_tiletype_list.tiletype_list;
         contentLoader.ParseContentIndexFile(Application.streamingAssetsPath + "\\index.txt");
         watch.Stop();
         Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
         connectionState.MapResetCall.execute();
         InvokeRepeating("GetBlockList", 0, 0.1f);
+        InvokeRepeating("CullDistantBlocks", 1, 2);
+        InvokeRepeating("LazyLoadBlocks", 1, 1);
     }
 
     // Update is called once per frame
@@ -274,10 +272,21 @@ public class GameMap : MonoBehaviour
                 meshBuffer[bufferIndex].transform = Matrix4x4.TRS(DFtoUnityCoord(xx, yy, block_z), Quaternion.AngleAxis(180, Vector3.up), Vector3.one);
                 if (tiles[xx, yy, block_z] != null)
                 {
-                    int tileTexIndex = contentLoader.tileTextureConfiguration[tiles[xx, yy, block_z].tileType];
-                    int matTexIndex = contentLoader.materialTextureConfiguration[tiles[xx, yy, block_z].material];
-                    Color newColor = contentLoader.colorConfiguration[tiles[xx, yy, block_z].material];
-                    if (newColor == default(Color))
+                    int tileTexIndex = 2;
+                    IndexContent tileTexContent;
+                    if (contentLoader.tileTextureConfiguration.GetValue(tiles[xx, yy, block_z], out tileTexContent))
+                        tileTexIndex = tileTexContent.value;
+                    int matTexIndex = 2;
+                    IndexContent matTexContent;
+                    if (contentLoader.materialTextureConfiguration.GetValue(tiles[xx, yy, block_z], out matTexContent))
+                        matTexIndex = matTexContent.value;
+                    ColorContent newColorContent;
+                    Color newColor;
+                    if (contentLoader.colorConfiguration.GetValue(tiles[xx, yy, block_z], out newColorContent))
+                    {
+                        newColor = newColorContent.value;
+                    }
+                    else
                     {
                         MaterialDefinition mattie;
                         if (materials.TryGetValue(tiles[xx, yy, block_z].material, out mattie))
@@ -322,9 +331,9 @@ public class GameMap : MonoBehaviour
     {
         int count = 0;
         int failed = 0;
-        for (int zz = (posZ - rangeZdown); zz < (posZ + rangeZup); zz++)
-            for (int yy = ((posY - rangeY) * 16 / blockSize); yy <= ((posY + rangeY) * 16 / blockSize); yy++)
-                for (int xx = ((posX - rangeX) * 16 / blockSize); xx <= ((posX + rangeX) * 16 / blockSize); xx++)
+        for (int zz = connectionState.net_block_request.min_z; zz < connectionState.net_block_request.max_z; zz++)
+            for (int yy = (connectionState.net_block_request.min_y * 16 / blockSize); yy <= (connectionState.net_block_request.max_y * 16 / blockSize); yy++)
+                for (int xx = (connectionState.net_block_request.min_x * 16 / blockSize); xx <= (connectionState.net_block_request.max_x * 16 / blockSize); xx++)
                 {
                     if (xx < 0 || yy < 0 || zz < 0 || xx >= blocks.GetLength(0) || yy >= blocks.GetLength(1) || zz >= blocks.GetLength(2))
                     {
@@ -393,6 +402,84 @@ public class GameMap : MonoBehaviour
         //watch.Stop();
         //Debug.Log("Generating " + connectionState.net_block_list.map_blocks.Count + " Meshes took " + watch.Elapsed.TotalSeconds + " seconds");
     }
+
+    int lastLoadedLevel = 0;
+    void LazyLoadBlocks()
+    {
+        lastLoadedLevel--;
+        if (lastLoadedLevel < 0 || lastLoadedLevel < connectionState.net_view_info.view_pos_z + 1 - viewCamera.viewDist)
+            lastLoadedLevel = connectionState.net_view_info.view_pos_z + 1 - rangeZdown;
+        posX = (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x / 2)) / 16;
+        posY = (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y / 2)) / 16;
+        connectionState.net_block_request.min_x = posX - rangeX;
+        connectionState.net_block_request.max_x = posX + rangeX;
+        connectionState.net_block_request.min_y = posY - rangeY;
+        connectionState.net_block_request.max_y = posY + rangeY;
+        connectionState.net_block_request.min_z = lastLoadedLevel;
+        connectionState.net_block_request.max_z = lastLoadedLevel+1;
+
+        connectionState.BlockListCall.execute(connectionState.net_block_request, out connectionState.net_block_list);
+
+        if ((connectionState.net_block_list.map_x != map_x) || (connectionState.net_block_list.map_y != map_y))
+            ClearMap();
+        map_x = connectionState.net_block_list.map_x;
+        map_y = connectionState.net_block_list.map_y;
+
+        for (int i = 0; i < connectionState.net_block_list.map_blocks.Count; i++)
+        {
+            CopyTiles(connectionState.net_block_list.map_blocks[i]);
+        }
+
+        UpdateMeshes();
+    }
+
+    void CullDistantBlocks()
+    {
+        int dist = viewCamera.viewDist;
+        int centerZ = connectionState.net_view_info.view_pos_z;
+        //int centerX = (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x / 2));
+        //int centerY = (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y / 2));
+        for (int xx = 0; xx < blocks.GetLength(0); xx++)
+            for (int yy = 0; yy < blocks.GetLength(1); yy++)
+                for (int zz = 0; zz < blocks.GetLength(2); zz++)
+                {
+                    if (blocks[xx, yy, zz] == null)
+                        continue;
+                    if (zz > centerZ + dist)
+                    {
+                        blocks[xx, yy, zz].mesh.Clear();
+                        continue;
+                    }
+                    if (zz < centerZ - dist)
+                    {
+                        blocks[xx, yy, zz].mesh.Clear();
+                        continue;
+                    }
+                    //int distSide = dist;// / 16;
+                    //if (xx > centerX + distSide)
+                    //{
+                    //    blocks[xx, yy, zz].mesh.Clear();
+                    //    continue;
+                    //}
+                    //if (xx < centerX - distSide)
+                    //{
+                    //    blocks[xx, yy, zz].mesh.Clear();
+                    //    continue;
+                    //}
+                    //if (yy > centerY + distSide)
+                    //{
+                    //    blocks[xx, yy, zz].mesh.Clear();
+                    //    continue;
+                    //}
+                    //if (yy < centerY - distSide)
+                    //{
+                    //    blocks[xx, yy, zz].mesh.Clear();
+                    //    continue;
+                    //}
+
+                }
+    }
+
     void GetUnitList()
     {
         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
@@ -405,13 +492,6 @@ public class GameMap : MonoBehaviour
     void GetViewInfo()
     {
         connectionState.ViewInfoCall.execute(null, out connectionState.net_view_info);
-        //Debug.Log(
-        //    "x:" + connectionState.net_view_info.view_pos_x +
-        //    ", y:" + connectionState.net_view_info.view_pos_y +
-        //    ", z:" + connectionState.net_view_info.view_pos_z +
-        //    ", w:" + connectionState.net_view_info.view_size_x +
-        //    ", h:" + connectionState.net_view_info.view_size_y
-        //    );
     }
 
     void PositionCamera()
@@ -420,6 +500,8 @@ public class GameMap : MonoBehaviour
             (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x/2)), 
             (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y/2)), 
             connectionState.net_view_info.view_pos_z+1);
+        viewCamera.viewWidth = connectionState.net_view_info.view_size_x;
+        viewCamera.viewHeight = connectionState.net_view_info.view_size_y;
     }
 
     void GetMapInfo()

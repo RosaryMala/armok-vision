@@ -1,3 +1,4 @@
 Colors/index.txt
 MaterialTextures/index.txt
 TileTextures/index.txt
+TileMeshes/index.txt
