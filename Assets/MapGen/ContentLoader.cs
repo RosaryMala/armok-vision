@@ -89,34 +89,20 @@ public class ContentLoader
     }
 
 
+    public ContentConfiguration<ColorContent> colorConfiguration { get; private set; }
+    public ContentConfiguration<IndexContent> materialTextureConfiguration { get; private set; }
+    public ContentConfiguration<IndexContent> tileTextureConfiguration { get; private set; }
 
-    public ColorConfiguration colorConfiguration { get; private set; }
-    public MaterialTextureConfiguration materialTextureConfiguration { get; private set; }
-    public TileTextureConfiguration tileTextureConfiguration { get; private set; }
 
-    public ContentLoader()
-    {
-        colorConfiguration = new ColorConfiguration();
-        materialTextureConfiguration = new MaterialTextureConfiguration();
-        tileTextureConfiguration = new TileTextureConfiguration();
-    }
 
-    public List<MaterialDefinition> matTokenList
-    {
-        set
-        {
-            colorConfiguration.matTokenList = value;
-            materialTextureConfiguration.matTokenList = value;
-        }
-    }
+    //public ContentLoader()
+    //{
+    //    colorConfiguration = new MaterialConfiguration<ColorContent>();
+    //    colorConfiguration.nodeName = "color";
+    //    materialTextureConfiguration = new MaterialConfiguration<IndexContent>();
+    //    tileTextureConfiguration = new TileConfiguration<IndexContent>();
+    //}
 
-    public List<Tiletype> tiletypeTokenList
-    {
-        set
-        {
-            tileTextureConfiguration.tiletypeTokenList = value;
-        }
-    }
 
     public bool ParseContentIndexFile(string path)
     {
@@ -165,20 +151,32 @@ public class ContentLoader
     bool ParseContentXMLFile(string path)
     {
         bool runningResult = true;
-        XElement doc = XElement.Load(path);
+        XElement doc = XElement.Load(path, LoadOptions.SetBaseUri);
         while (doc != null)
         {
             switch (doc.Name.LocalName)
             {
                 case "colors":
-                    colorConfiguration.AddSingleMaterialConfig(doc);
+                    if(colorConfiguration == null)
+                        colorConfiguration = ContentConfiguration<ColorContent>.GetFromElement(doc);
+                    colorConfiguration.nodeName = "color";
+                    colorConfiguration.AddSingleContentConfig(doc);
                     break;
                 case "materialTextures":
-                    materialTextureConfiguration.AddSingleMaterialConfig(doc);
+                    if(materialTextureConfiguration == null)
+                        materialTextureConfiguration = ContentConfiguration<IndexContent>.GetFromElement(doc);
+                    materialTextureConfiguration.nodeName = "materialTexture";
+                    materialTextureConfiguration.AddSingleContentConfig(doc);
                     break;
                 case "tileTextures":
-                    tileTextureConfiguration.AddSingleTiletypeConfig(doc);
+                    if(tileTextureConfiguration == null)
+                        tileTextureConfiguration = ContentConfiguration<IndexContent>.GetFromElement(doc);
+                    tileTextureConfiguration.nodeName = "tileTexture";
+                    tileTextureConfiguration.AddSingleContentConfig(doc);
                     break;
+                //case "tileMeshes":
+                //    tileMeshConfiguration.AddSingleTiletypeConfig(doc);
+                //    break;
                 default:
                     break;
             }

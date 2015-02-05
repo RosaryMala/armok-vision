@@ -94,7 +94,7 @@ namespace DFHack
     }
 
     // simple function to store 
-    struct DFCoord
+    public struct DFCoord
     {
         public int x, y, z;
         //convert 
