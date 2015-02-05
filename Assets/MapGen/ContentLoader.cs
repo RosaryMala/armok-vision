@@ -158,20 +158,17 @@ public class ContentLoader
             {
                 case "colors":
                     if(colorConfiguration == null)
-                        colorConfiguration = ContentConfiguration<ColorContent>.GetFromElement(doc);
-                    colorConfiguration.nodeName = "color";
+                        colorConfiguration = ContentConfiguration<ColorContent>.GetFromRootElement(doc, "color");
                     colorConfiguration.AddSingleContentConfig(doc);
                     break;
                 case "materialTextures":
                     if(materialTextureConfiguration == null)
-                        materialTextureConfiguration = ContentConfiguration<IndexContent>.GetFromElement(doc);
-                    materialTextureConfiguration.nodeName = "materialTexture";
+                        materialTextureConfiguration = ContentConfiguration<IndexContent>.GetFromRootElement(doc, "materialTexture");
                     materialTextureConfiguration.AddSingleContentConfig(doc);
                     break;
                 case "tileTextures":
                     if(tileTextureConfiguration == null)
-                        tileTextureConfiguration = ContentConfiguration<IndexContent>.GetFromElement(doc);
-                    tileTextureConfiguration.nodeName = "tileTexture";
+                        tileTextureConfiguration = ContentConfiguration<IndexContent>.GetFromRootElement(doc, "tileTexture");
                     tileTextureConfiguration.AddSingleContentConfig(doc);
                     break;
                 //case "tileMeshes":
