@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MaterialMatcher<T>
+static class MaterialTokenList
 {
     static List<MaterialDefinition> _matTokenList;
-    public List<MaterialDefinition> matTokenList
+    public static List<MaterialDefinition> matTokenList
     {
         set
         {
@@ -17,27 +17,29 @@ public class MaterialMatcher<T>
             }
         }
     }
-    struct MaterialMatch
+    static Dictionary<string, Dictionary<string, Dictionary<string, MaterialDefinition>>> _tripleWords;
+    public static Dictionary<string, Dictionary<string, Dictionary<string, MaterialDefinition>>> tripleWords
     {
-        public T item;
-        public int difference;
+        get
+        {
+            return _tripleWords;
+        }
     }
-    Dictionary<MatPairStruct, MaterialMatch> matList;
-    static Dictionary<string, Dictionary<string, Dictionary<string, MaterialDefinition>>> tripleWords;
 
     static void AddMat(string prefix, string word, string suffix, MaterialDefinition token)
     {
-        if (tripleWords == null)
-            tripleWords = new Dictionary<string, Dictionary<string, Dictionary<string, MaterialDefinition>>>();
-        if (!tripleWords.ContainsKey(prefix))
-            tripleWords[prefix] = new Dictionary<string, Dictionary<string, MaterialDefinition>>();
-        if (!tripleWords[prefix].ContainsKey(suffix))
-            tripleWords[prefix][suffix] = new Dictionary<string, MaterialDefinition>();
-        tripleWords[prefix][suffix][word] = token;
+        if (_tripleWords == null)
+            _tripleWords = new Dictionary<string, Dictionary<string, Dictionary<string, MaterialDefinition>>>();
+        if (!_tripleWords.ContainsKey(prefix))
+            _tripleWords[prefix] = new Dictionary<string, Dictionary<string, MaterialDefinition>>();
+        if (!_tripleWords[prefix].ContainsKey(suffix))
+            _tripleWords[prefix][suffix] = new Dictionary<string, MaterialDefinition>();
+        _tripleWords[prefix][suffix][word] = token;
     }
 
     static void PopulateWordLists()
     {
+        Debug.Log("Settings " + _matTokenList.Count + " materials");
         foreach (MaterialDefinition token in _matTokenList)
         {
             var parts = token.id.Split(':');
@@ -58,6 +60,17 @@ public class MaterialMatcher<T>
             }
         }
     }
+}
+
+public class MaterialMatcher<T>
+{
+    struct MaterialMatch
+    {
+        public T item;
+        public int difference;
+    }
+
+    Dictionary<MatPairStruct, MaterialMatch> matList;
 
     void TrySetMatch(MaterialMatch match, MatPairStruct mat)
     {
@@ -107,15 +120,15 @@ public class MaterialMatcher<T>
         if (prefix == "*")
         {
             match.difference |= 1;
-            foreach (var item in tripleWords.Values)
+            foreach (var item in MaterialTokenList.tripleWords.Values)
             {
                 Setwords(word, suffix, item, match);
             }
         }
         else
         {
-            if (tripleWords.ContainsKey(prefix))
-                Setwords(word, suffix, tripleWords[prefix], match);
+            if (MaterialTokenList.tripleWords.ContainsKey(prefix))
+                Setwords(word, suffix, MaterialTokenList.tripleWords[prefix], match);
         }
     }
 
@@ -141,47 +154,17 @@ public class MaterialMatcher<T>
                 default:
                     break;
             }
-            //if (_matTokenList == null)
-            //    throw new ArgumentNullException("matTokenList");
-
-            //foreach (MaterialDefinition material in _matTokenList)
-            //{
-            //    int match = WildMatch.ScoreMatch(material.id, token); //gives a lower positive score for better matches
-            //    if (match < 0)
-            //        continue;
-            //    if (matList == null)
-            //        matList = new Dictionary<MatPairStruct, MaterialMatch>();
-            //    MatPairStruct pair = material.mat_pair;
-            //    if (matList.ContainsKey(pair))
-            //    {
-            //        if (matList[pair].difference < match)//overwrite existing exact matches
-            //            continue; //the comparitor can be changed to <= if that behavior is not desired.
-            //    }
-            //    MaterialMatch newItem;
-            //    newItem.item = value;
-            //    newItem.difference = match;
-            //    matList[pair] = newItem;
-            //}
         }
     }
     public T this[MatPairStruct mat]
     {
-        get
-        {
-            if (matList == null)
-                return default(T);
-            MaterialMatch output;
-            if (matList.TryGetValue(mat, out output))
-            {
-                return output.item;
-            }
-            mat.mat_type = -1; //Try once more with a more generic value.
-            if (matList.TryGetValue(mat, out output))
-            {
-                return output.item;
-            }
-            return default(T);
-        }
+        //get
+        //{
+        //    T output;
+        //    if (!Get(mat, out output))
+        //        output = default(T);
+        //    return output;
+        //}
         set
         {
             if (matList == null)
@@ -192,6 +175,27 @@ public class MaterialMatcher<T>
             matList[mat] = newItem; //actually, is that desired?
 
         }
+    }
+    public bool Get(MatPairStruct mat, out T value)
+    {
+        if (matList != null)
+        {
+            MaterialMatch output;
+            if (matList.TryGetValue(mat, out output))
+            {
+                value = output.item;
+                return true;
+            }
+            mat.mat_type = -1; //Try once more with a more generic value.
+            if (matList.TryGetValue(mat, out output))
+            {
+                value = output.item;
+                return true;
+            }
+        }
+        value = default(T);
+        return false;
+
     }
     public void Clear()
     {

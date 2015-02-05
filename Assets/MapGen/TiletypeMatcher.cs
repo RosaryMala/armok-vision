@@ -3,29 +3,22 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TiletypeMatcher<T>
+public static class TiletypeTokenList
 {
     static List<Tiletype> _tiletypeTokenList;
-    static Dictionary<TiletypeShape, Dictionary<TiletypeSpecial, Dictionary<TiletypeMaterial, Dictionary<TiletypeVariant, Dictionary<string, Tiletype>>>>> tileDefs;
-    static Dictionary<string, Tiletype> tileTokens;
-    public List<Tiletype> tiletypeTokenList
+    public static Dictionary<TiletypeShape, Dictionary<TiletypeSpecial, Dictionary<TiletypeMaterial, Dictionary<TiletypeVariant, Dictionary<string, Tiletype>>>>> tileDefs;
+    public static Dictionary<string, Tiletype> tileTokens;
+    public static List<Tiletype> tiletypeTokenList
     {
         set
         {
-            if(_tiletypeTokenList != value)
+            if (_tiletypeTokenList != value)
             {
                 _tiletypeTokenList = value;
                 PopulateWordLists();
             }
         }
     }
-    struct TiletypeMatch
-    {
-        public T item;
-        public int difference;
-    }
-    Dictionary<int, TiletypeMatch> tiletypeList;
-
     static void AddTile(TiletypeShape tileShape, TiletypeSpecial tileSpecial, TiletypeMaterial tileMaterial, TiletypeVariant tileVariant, string tileDirection, Tiletype token)
     {
         if (tileDefs == null)
@@ -44,7 +37,7 @@ public class TiletypeMatcher<T>
 
     static void PopulateWordLists()
     {
-        foreach(Tiletype token in _tiletypeTokenList)
+        foreach (Tiletype token in _tiletypeTokenList)
         {
             if (tileTokens == null)
                 tileTokens = new Dictionary<string, Tiletype>();
@@ -52,6 +45,18 @@ public class TiletypeMatcher<T>
             AddTile(token.shape, token.special, token.material, token.variant, token.direction, token);
         }
     }
+}
+
+public class TiletypeMatcher<T>
+{
+
+    struct TiletypeMatch
+    {
+        public T item;
+        public int difference;
+    }
+    Dictionary<int, TiletypeMatch> tiletypeList;
+
     void TrySetMatch(TiletypeMatch match, int tile)
     {
         if (tiletypeList == null)
@@ -167,7 +172,7 @@ public class TiletypeMatcher<T>
         if (shape == "*")
         {
             match.difference |= 2;
-            foreach (var item in tileDefs.Values)
+            foreach (var item in TiletypeTokenList.tileDefs.Values)
             {
                 SetOptions(special, material, variant, direction, item, match);
             }
@@ -177,8 +182,8 @@ public class TiletypeMatcher<T>
             try
             {
                 TiletypeShape tileShape = (TiletypeShape)Enum.Parse(typeof(TiletypeShape), shape);
-                if (tileDefs.ContainsKey(tileShape))
-                    SetOptions(special, material, variant, direction, tileDefs[tileShape], match);
+                if (TiletypeTokenList.tileDefs.ContainsKey(tileShape))
+                    SetOptions(special, material, variant, direction, TiletypeTokenList.tileDefs[tileShape], match);
             }
             catch (Exception)
             {
@@ -199,11 +204,10 @@ public class TiletypeMatcher<T>
             switch (parts.Length)
             {
                 case 1:
-                    if(tileTokens.ContainsKey(parts[0]))
-                        TrySetMatch(newItem, tileTokens[parts[0]].id);
+                    if (TiletypeTokenList.tileTokens.ContainsKey(parts[0]))
+                        TrySetMatch(newItem, TiletypeTokenList.tileTokens[parts[0]].id);
                     break;
                 case 5:
-                    Debug.Log(token);
                     newItem.difference |= 1;
                     SetOptions(parts[0], parts[1], parts[2], parts[3], parts[4], newItem);
                     break;
@@ -214,17 +218,12 @@ public class TiletypeMatcher<T>
     }
     public T this[int tiletype]
     {
-        get
-        {
-            if (tiletypeList == null)
-                return default(T);
-            TiletypeMatch output;
-            if(tiletypeList.TryGetValue(tiletype, out output))
-            {
-                return output.item;
-            }
-            return default(T);
-        }
+        //get
+        //{
+        //    T output;
+        //    Get(tiletype, out output);
+        //    return output;
+        //}
         set
         {
             if (tiletypeList == null)
@@ -238,6 +237,20 @@ public class TiletypeMatcher<T>
     public void Clear()
     {
         tiletypeList.Clear();
+    }
+    public bool Get(int tiletype, out T value)
+    {
+        if (tiletypeList != null)
+        {
+            TiletypeMatch output;
+            if (tiletypeList.TryGetValue(tiletype, out output))
+            {
+                value = output.item;
+                return true;
+            }
+        }
+        value = default(T);
+        return false;
     }
 }
 
