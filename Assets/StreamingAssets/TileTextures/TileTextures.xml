@@ -2,8 +2,11 @@
 <tileTextures>
     <tileTexture index = "1">
         <tiletype token="*:SMOOTH:*:*:*" />
+        <subObject index ="1">
+            <random/>
+        </subObject>
         <subObject index ="2">
-            <material token="*:MARBLE" />
+            <random/>
         </subObject>
     </tileTexture>
     <tileTexture index = "2">

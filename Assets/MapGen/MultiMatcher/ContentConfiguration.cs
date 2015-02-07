@@ -71,6 +71,9 @@ abstract public class ContentConfiguration<T> where T : IContent, new()
             case "tiletype":
                 output = new TileConfiguration<T>();
                 break;
+            case "random":
+                output = new RandomConfiguration<T>();
+                break;
             default:
                 Debug.LogError("Found unknown matching method \"" + elemRoot.Elements().First().Elements().First().Name.LocalName + "\", assuming material.");
                 output = new MaterialConfiguration<T>();
