@@ -242,6 +242,7 @@ public class GameMap : MonoBehaviour
                if(tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z] == null)
                {
                    tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z] = new MapTile();
+                   tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z].position = new DFCoord(DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z);
                }
                MapTile tile = tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z];
                tile.tileType = DFBlock.tiles[xx + (yy * 16)];
