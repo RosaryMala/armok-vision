@@ -108,7 +108,7 @@ namespace DFHack
             return output;
         }
 
-        DFCoord(int inx, int iny, int inz)
+        public DFCoord(int inx, int iny, int inz)
         {
             x = inx;
             y = iny;
