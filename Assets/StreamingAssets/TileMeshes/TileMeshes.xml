@@ -1,5 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <tileMeshes>
-    <tileMesh file = "Cube.obj">
+    <tileMesh file = "FLOOR.obj">
+        <tiletype token="FLOOR:*:*:*:*" />
+    </tileMesh>
+    <tileMesh file = "WALL.obj">
+        <tiletype token="WALL:*:*:*:*" />
+    </tileMesh>
+    <tileMesh file = "Ramps\RAMP_1.obj">
+        <tiletype token="RAMP:*:*:*:*" />
+        <subObject file ="Ramps\RAMP_1.obj">
+            <ramp index="1"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_2.obj">
+            <ramp index="2"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_3.obj">
+            <ramp index="3"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_4.obj">
+            <ramp index="4"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_5.obj">
+            <ramp index="5"/>
+        </subObject>
     </tileMesh>
 </tileMeshes>
