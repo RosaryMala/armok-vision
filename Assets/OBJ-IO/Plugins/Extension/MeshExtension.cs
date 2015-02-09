@@ -156,6 +156,71 @@ namespace UnityExtension
         }
 
         //------------------------------------------------------------------------------------------------------------
+        public static void LoadOBJ(this Mesh lMesh, OBJData lData, string subOject)
+        {
+            List<Vector3> lVertices = new List<Vector3>();
+            List<Vector3> lNormals = new List<Vector3>();
+            List<Vector2> lUVs = new List<Vector2>();
+            List<int> lIndices = new List<int>();
+            Dictionary<OBJFaceVertex, int> lVertexIndexRemap = new Dictionary<OBJFaceVertex, int>();
+            bool lHasNormals = lData.m_Normals.Count > 0;
+            bool lHasUVs = lData.m_UVs.Count > 0;
+
+            for (int lGCount = 0; lGCount < lData.m_Groups.Count; ++lGCount)
+            {
+                OBJGroup lGroup = lData.m_Groups[lGCount];
+                if(lGroup.m_Name != subOject)
+                    continue;
+
+                for (int lFCount = 0; lFCount < lGroup.Faces.Count; ++lFCount)
+                {
+                    OBJFace lFace = lGroup.Faces[lFCount];
+
+                    // Unity3d doesn't support non-triangle faces
+                    // so we do simple fan triangulation
+                    for (int lVCount = 1; lVCount < lFace.Count - 1; ++lVCount)
+                    {
+                        foreach (int i in new int[] { 0, lVCount, lVCount + 1 })
+                        {
+                            OBJFaceVertex lFaceVertex = lFace[i];
+                            int lVertexIndex = -1;
+
+                            if (!lVertexIndexRemap.TryGetValue(lFaceVertex, out lVertexIndex))
+                            {
+                                lVertexIndexRemap[lFaceVertex] = lVertices.Count;
+                                lVertexIndex = lVertices.Count;
+
+                                lVertices.Add(lData.m_Vertices[lFaceVertex.m_VertexIndex]);
+                                if (lHasUVs)
+                                {
+                                    lUVs.Add(lData.m_UVs[lFaceVertex.m_UVIndex]);
+                                }
+                                if (lHasNormals)
+                                {
+                                    lNormals.Add(lData.m_Normals[lFaceVertex.m_NormalIndex]);
+                                }
+                            }
+
+                            lIndices.Add(lVertexIndex);
+                        }
+                    }
+                }
+            }
+            if (lIndices.Count == 0)
+                return; //There's no valid mesh
+            lMesh.vertices = lVertices.ToArray();
+            lMesh.triangles = lIndices.ToArray();
+            lMesh.uv = lUVs.ToArray();
+            lMesh.normals = lNormals.ToArray();
+            if (!lHasNormals)
+            {
+                lMesh.RecalculateNormals();
+            }
+
+            lMesh.RecalculateTangents();
+        }
+
+        //------------------------------------------------------------------------------------------------------------
         public static OBJData EncodeOBJ(this Mesh lMesh)
         {
             OBJData lData = new OBJData
