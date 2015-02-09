@@ -11,7 +11,7 @@ public class GameMap : MonoBehaviour
     public ContentLoader contentLoader = new ContentLoader();
 
     MapTile[, ,] tiles;
-    public GenericTile tileSelector;
+    //public GenericTile tileSelector;
     public ConnectionState connectionState;
     public GameObject defaultMapBlock;
     public GameWindow viewCamera;
@@ -65,6 +65,7 @@ public class GameMap : MonoBehaviour
         watch.Start();
         MaterialTokenList.matTokenList = connectionState.net_material_list.material_list;
         TiletypeTokenList.tiletypeTokenList = connectionState.net_tiletype_list.tiletype_list;
+        MapTile.tiletypeTokenList = connectionState.net_tiletype_list.tiletype_list;
         contentLoader.ParseContentIndexFile(Application.streamingAssetsPath + "\\index.txt");
         watch.Stop();
         Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
@@ -243,6 +244,7 @@ public class GameMap : MonoBehaviour
                {
                    tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z] = new MapTile();
                    tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z].position = new DFCoord(DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z);
+                   tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z].container = tiles;
                }
                MapTile tile = tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z];
                tile.tileType = DFBlock.tiles[xx + (yy * 16)];
@@ -268,9 +270,15 @@ public class GameMap : MonoBehaviour
                     meshBuffer = new MeshCombineUtility.MeshInstance[blockSize * blockSize];
                     //meshBuffer = new CombineInstance[blockSize * blockSize];
                 }
-
-                meshBuffer[bufferIndex].mesh = tileSelector.GetMesh(this, xx, yy, block_z);
-                meshBuffer[bufferIndex].transform = Matrix4x4.TRS(DFtoUnityCoord(xx, yy, block_z), Quaternion.AngleAxis(180, Vector3.up), Vector3.one);
+                MeshContent content = null;
+                if (!contentLoader.tileMeshConfiguration.GetValue(tiles[xx, yy, block_z], out content))
+                {
+                    meshBuffer[bufferIndex].mesh = null;
+                    bufferIndex++;
+                    continue;
+                }
+                meshBuffer[bufferIndex].mesh = content.mesh;
+                meshBuffer[bufferIndex].transform = Matrix4x4.TRS(DFtoUnityCoord(xx, yy, block_z), Quaternion.identity, Vector3.one);
                 if (tiles[xx, yy, block_z] != null)
                 {
                     int tileTexIndex = 2;

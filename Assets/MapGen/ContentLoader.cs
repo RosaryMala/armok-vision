@@ -92,7 +92,7 @@ public class ContentLoader
     public ContentConfiguration<ColorContent> colorConfiguration { get; private set; }
     public ContentConfiguration<IndexContent> materialTextureConfiguration { get; private set; }
     public ContentConfiguration<IndexContent> tileTextureConfiguration { get; private set; }
-
+    public ContentConfiguration<MeshContent> tileMeshConfiguration { get; private set; }
 
 
     //public ContentLoader()
@@ -171,9 +171,11 @@ public class ContentLoader
                         tileTextureConfiguration = ContentConfiguration<IndexContent>.GetFromRootElement(doc, "tileTexture");
                     tileTextureConfiguration.AddSingleContentConfig(doc);
                     break;
-                //case "tileMeshes":
-                //    tileMeshConfiguration.AddSingleTiletypeConfig(doc);
-                //    break;
+                case "tileMeshes":
+                    if (tileMeshConfiguration == null)
+                        tileMeshConfiguration = ContentConfiguration<MeshContent>.GetFromRootElement(doc, "tileMesh");
+                    tileMeshConfiguration.AddSingleContentConfig(doc);
+                    break;
                 default:
                     break;
             }

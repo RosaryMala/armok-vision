@@ -63,6 +63,12 @@ abstract public class ContentConfiguration<T> where T : IContent, new()
     public static ContentConfiguration<T> GetFromRootElement(XElement elemRoot, XName name)
     {
         ContentConfiguration<T> output;
+        if (elemRoot.Element(name).Elements().Count() == 0)
+        {
+            output = new MaterialConfiguration<T>();
+            output.nodeName = name.LocalName;
+            return output;
+        }
         switch (elemRoot.Element(name).Elements().First().Name.LocalName)
         {
             case "material":
@@ -74,8 +80,11 @@ abstract public class ContentConfiguration<T> where T : IContent, new()
             case "random":
                 output = new RandomConfiguration<T>();
                 break;
+            case "ramp":
+                output = new RampConfiguration<T>();
+                break;
             default:
-                Debug.LogError("Found unknown matching method \"" + elemRoot.Elements().First().Elements().First().Name.LocalName + "\", assuming material.");
+                Debug.LogError("Found unknown matching method \"" + elemRoot.Element(name).Elements().First().Name.LocalName + "\", assuming material.");
                 output = new MaterialConfiguration<T>();
                 break;
         }
