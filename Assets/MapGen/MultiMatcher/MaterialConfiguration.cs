@@ -1,6 +1,4 @@
-﻿using RemoteFortressReader;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 
 public class MaterialConfiguration<T> : ContentConfiguration<T> where T : IContent, new()
 {

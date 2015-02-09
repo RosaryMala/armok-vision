@@ -39,7 +39,6 @@ static class MaterialTokenList
 
     static void PopulateWordLists()
     {
-        Debug.Log("Settings " + _matTokenList.Count + " materials");
         foreach (MaterialDefinition token in _matTokenList)
         {
             var parts = token.id.Split(':');
