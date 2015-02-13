@@ -8,23 +8,28 @@ ModelImporter:
     100004: StaticMaterial
     100006: Growth0Cutout
     100008: StaticCutout
+    100010: NoMaterialCutout
     400000: Sphere002
     400002: //RootNode
     400004: StaticMaterial
     400006: Growth0Cutout
     400008: StaticCutout
+    400010: NoMaterialCutout
     2300000: Sphere002
     2300002: StaticMaterial
     2300004: Growth0Cutout
     2300006: StaticCutout
+    2300008: NoMaterialCutout
     3300000: Sphere002
     3300002: StaticMaterial
     3300004: Growth0Cutout
     3300006: StaticCutout
+    3300008: NoMaterialCutout
     4300000: Sphere002
     4300002: StaticMaterial
     4300004: Growth0Cutout
     4300006: StaticCutout
+    4300008: NoMaterialCutout
     9500000: //RootNode
   materials:
     importMaterials: 0
