@@ -333,9 +333,45 @@ public class GameMap : MonoBehaviour
             }
             else
             {
-                MaterialDefinition mattie;
-                if (materials.TryGetValue(tile.material, out mattie))
+                MatPairStruct mat;
+                mat.mat_type = -1;
+                mat.mat_index = -1;
+                switch (layer)
                 {
+                    case MeshLayer.StaticMaterial:
+                    case MeshLayer.StaticCutout:
+                        mat = tile.material;
+                        break;
+                    case MeshLayer.BaseMaterial:
+                    case MeshLayer.BaseCutout:
+                        mat = tile.base_material;
+                        break;
+                    case MeshLayer.LayerMaterial:
+                    case MeshLayer.LayerCutout:
+                        mat = tile.layer_material;
+                        break;
+                    case MeshLayer.VeinMaterial:
+                    case MeshLayer.VeinCutout:
+                        mat = tile.vein_material;
+                        break;
+                    case MeshLayer.NoMaterial:
+                    case MeshLayer.NoMaterialCutout:
+                        break;
+                    case MeshLayer.Growth0Cutout:
+                        break;
+                    case MeshLayer.Growth1Cutout:
+                        break;
+                    case MeshLayer.Growth2Cutout:
+                        break;
+                    case MeshLayer.Growth3Cutout:
+                        break;
+                    default:
+                        break;
+                }
+                MaterialDefinition mattie;
+                if (materials.TryGetValue(mat, out mattie))
+                {
+
                     ColorDefinition color = mattie.state_color;
                     if (color == null)
                         newColor = Color.cyan;
@@ -542,7 +578,11 @@ public class GameMap : MonoBehaviour
         {
             if (liquidBlocks[block_x, block_y, block_z, liquid_select] == null)
             {
-                GameObject block = Instantiate(defaultWaterBlock) as GameObject;
+                GameObject block;
+                if(liquid_select == l_magma)
+                    block = Instantiate(defaultMagmaBlock) as GameObject;
+                else
+                    block = Instantiate(defaultWaterBlock) as GameObject;
                 block.SetActive(true);
                 block.transform.parent = this.transform;
                 block.name = (liquid_select == l_water ? "water(" : "magma(") + block_x + ", " + block_y + ", " + block_z + ")"; 

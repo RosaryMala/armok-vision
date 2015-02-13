@@ -3,7 +3,7 @@
 public class MaterialConfiguration<T> : ContentConfiguration<T> where T : IContent, new()
 {
     MaterialMatcher<Content> materialMatcher = new MaterialMatcher<Content>();
-
+    Content defaultMaterial;
     public override bool GetValue(MapTile tile, MeshLayer layer, out T value)
     {
         Content cont;
@@ -43,7 +43,10 @@ public class MaterialConfiguration<T> : ContentConfiguration<T> where T : IConte
                 break;
             case MeshLayer.NoMaterial:
             case MeshLayer.NoMaterialCutout:
-                break;
+                if (defaultMaterial == null)
+                    break;
+                value = defaultMaterial.GetValue(tile, layer);
+                return true;
             case MeshLayer.Growth0Cutout:
                 break;
             case MeshLayer.Growth1Cutout:
@@ -67,7 +70,10 @@ public class MaterialConfiguration<T> : ContentConfiguration<T> where T : IConte
             XAttribute elemToken = elemMaterial.Attribute("token");
             if (elemToken != null)
             {
-                materialMatcher[elemToken.Value] = content;
+                if (elemToken.Value == "NONE")
+                    defaultMaterial = content;
+                else
+                    materialMatcher[elemToken.Value] = content;
                 continue;
             }
 
