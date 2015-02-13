@@ -20,12 +20,12 @@ public class TileConfiguration<T> : ContentConfiguration<T> where T : IContent, 
         }
     }
 
-    public override bool GetValue(MapTile tile, out T value)
+    public override bool GetValue(MapTile tile, MeshLayer layer, out T value)
     {
         Content cont;
         if(tiletypeMatcher.Get(tile.tileType, out cont))
         {
-            value = cont.GetValue(tile);
+            value = cont.GetValue(tile, layer);
             return true;
         }
         value = default(T);

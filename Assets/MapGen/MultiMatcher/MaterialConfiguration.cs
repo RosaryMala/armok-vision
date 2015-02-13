@@ -4,13 +4,56 @@ public class MaterialConfiguration<T> : ContentConfiguration<T> where T : IConte
 {
     MaterialMatcher<Content> materialMatcher = new MaterialMatcher<Content>();
 
-    public override bool GetValue(MapTile tile, out T value)
+    public override bool GetValue(MapTile tile, MeshLayer layer, out T value)
     {
         Content cont;
-        if (materialMatcher.Get(tile.material, out cont))
+        switch (layer)
         {
-            value = cont.GetValue(tile);
-            return true;
+            case MeshLayer.StaticMaterial:
+            case MeshLayer.StaticCutout:
+                if (materialMatcher.Get(tile.material, out cont))
+                {
+                    value = cont.GetValue(tile, layer);
+                    return true;
+                }
+                break;
+            case MeshLayer.BaseMaterial:
+            case MeshLayer.BaseCutout:
+                if (materialMatcher.Get(tile.base_material, out cont))
+                {
+                    value = cont.GetValue(tile, layer);
+                    return true;
+                }
+                break;
+            case MeshLayer.LayerMaterial:
+            case MeshLayer.LayerCutout:
+                if (materialMatcher.Get(tile.layer_material, out cont))
+                {
+                    value = cont.GetValue(tile, layer);
+                    return true;
+                }
+                break;
+            case MeshLayer.VeinMaterial:
+            case MeshLayer.VeinCutout:
+                if (materialMatcher.Get(tile.vein_material, out cont))
+                {
+                    value = cont.GetValue(tile, layer);
+                    return true;
+                }
+                break;
+            case MeshLayer.NoMaterial:
+            case MeshLayer.NoMaterialCutout:
+                break;
+            case MeshLayer.Growth0Cutout:
+                break;
+            case MeshLayer.Growth1Cutout:
+                break;
+            case MeshLayer.Growth2Cutout:
+                break;
+            case MeshLayer.Growth3Cutout:
+                break;
+            default:
+                break;
         }
         value = default(T);
         return false;

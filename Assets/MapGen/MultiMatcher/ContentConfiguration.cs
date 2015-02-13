@@ -8,14 +8,14 @@ abstract public class ContentConfiguration<T> where T : IContent, new()
     {
         public T defaultItem { private get; set; }
         public ContentConfiguration<T> overloadedItem { get; set; }
-        public T GetValue(MapTile tile)
+        public T GetValue(MapTile tile, MeshLayer layer)
         {
             if (overloadedItem == null)
                 return defaultItem;
             else
             {
                 T item;
-                if (overloadedItem.GetValue(tile, out item))
+                if (overloadedItem.GetValue(tile, layer, out item))
                 {
                     return item;
                 }
@@ -24,7 +24,7 @@ abstract public class ContentConfiguration<T> where T : IContent, new()
             }
         }
     }
-    abstract public bool GetValue(MapTile tile, out T value);
+    abstract public bool GetValue(MapTile tile, MeshLayer layer, out T value);
 
     abstract protected void ParseElementConditions(XElement elemtype, Content content);
 

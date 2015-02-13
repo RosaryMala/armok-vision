@@ -6,6 +6,7 @@ public class GameWindow : MonoBehaviour
     public int viewWidth = 80;
     public int viewHeight = 25;
     public int viewDist = 5;
+    public float nearClipOffset = 0;
     float viewPortWidth = 80*MapBlock.tileWidth;
     float viewPortHeight = 25*MapBlock.tileWidth;
     public float verticalShift;
@@ -32,7 +33,7 @@ public class GameWindow : MonoBehaviour
         float height = (viewPortHeight / 2.0f) / Mathf.Sin((camera.fieldOfView / 2) * Mathf.Deg2Rad);
         transform.localPosition = new Vector3(0, height, -verticalShift);
 
-        camera.nearClipPlane = height - 1.0001f;
+        camera.nearClipPlane = height - nearClipOffset;
         camera.farClipPlane = height + viewDistance;
         RenderSettings.fogStartDistance = camera.nearClipPlane;
         RenderSettings.fogEndDistance = camera.farClipPlane;
