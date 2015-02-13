@@ -4,9 +4,29 @@ using System.IO;
 using System;
 using UnityExtension;
 
+public enum MeshLayer
+{
+    StaticMaterial,
+    BaseMaterial,
+    LayerMaterial,
+    VeinMaterial,
+    NoMaterial,
+    StaticCutout,
+    BaseCutout,
+    LayerCutout,
+    VeinCutout,
+    Growth0Cutout,
+    Growth1Cutout,
+    Growth2Cutout,
+    Growth3Cutout,
+    NoMaterialCutout,
+    Count
+}
+
 public class MeshContent : IContent
 {
-    public Mesh mesh { get; private set; }
+
+    public Mesh[] mesh { get; private set; }
     public bool AddTypeElement(System.Xml.Linq.XElement elemtype)
     {
         XAttribute fileAtt = elemtype.Attribute("file");
@@ -22,8 +42,12 @@ public class MeshContent : IContent
         var lStream = new FileStream(filePath, FileMode.Open);
         var lOBJData = OBJLoader.LoadOBJ(lStream);
         lStream.Close();
-        mesh = new Mesh();
-        mesh.LoadOBJ(lOBJData);
+        mesh = new Mesh[(int)MeshLayer.Count];
+        for (int i = 0; i < mesh.Length; i++)
+        {
+            mesh[i] = new Mesh();
+            mesh[i].LoadOBJ(lOBJData, ((MeshLayer)i).ToString());
+        }
         lStream = null;
         lOBJData = null;
         return true;
