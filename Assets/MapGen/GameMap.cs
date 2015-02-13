@@ -5,19 +5,29 @@ using DFHack;
 using RemoteFortressReader;
 using UnityEngine.UI;
 using System.IO;
+using UnityExtension;
 
 public class GameMap : MonoBehaviour
 {
     public ContentLoader contentLoader = new ContentLoader();
-
+    static readonly int l_water = 0;
+    static readonly int l_magma = 1;
     MapTile[, ,] tiles;
+    Light[, ,] magmaGlow;
+    public Light magmaGlowPrefab;
     //public GenericTile tileSelector;
     public ConnectionState connectionState;
     public GameObject defaultMapBlock;
+    public GameObject StencilMapBLock;
+    public GameObject defaultWaterBlock;
+    public GameObject defaultMagmaBlock;
     public GameWindow viewCamera;
     public Material DefaultMaterial;
-    public MeshFilter[,,] blocks; // Dumb blocks for holding the terrain data.
+    public MeshFilter[, ,] blocks; // Dumb blocks for holding the terrain data.
+    public MeshFilter[, ,] stencilBlocks;
+    public MeshFilter[, , ,] liquidBlocks; // Dumb blocks for holding the water.
     public bool[, ,] blockDirtyBits;
+    public bool[, ,] waterBlockDirtyBits; //also for magma
     public int rangeX = 0;
     public int rangeY = 0;
     public int rangeZup = 0;
@@ -33,6 +43,7 @@ public class GameMap : MonoBehaviour
     Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> materials;
 
     public static float tileHeight { get { return 3.0f; } }
+    public static float floorHeight { get { return 0.5f; } }
     public static float tileWidth { get { return 2.0f; } }
     public static int blockSize = 16;
     public static Vector3 DFtoUnityCoord(int x, int y, int z)
@@ -46,6 +57,7 @@ public class GameMap : MonoBehaviour
         return outCoord;
     }
     MeshCombineUtility.MeshInstance[] meshBuffer;
+    MeshCombineUtility.MeshInstance[] stencilMeshBuffer;
     //CombineInstance[] meshBuffer;
 
     // Use this for initialization
@@ -80,7 +92,7 @@ public class GameMap : MonoBehaviour
     {
         GetViewInfo();
         PositionCamera();
-        HideMeshes();
+        //HideMeshes();
         ShowCursorInfo();
         //GetBlockList();
     }
@@ -96,8 +108,11 @@ public class GameMap : MonoBehaviour
         Debug.Log("Map Size: " + connectionState.net_map_info.block_size_x + ", " + connectionState.net_map_info.block_size_y + ", " + connectionState.net_map_info.block_size_z);
         tiles = new MapTile[connectionState.net_map_info.block_size_x * 16, connectionState.net_map_info.block_size_y * 16, connectionState.net_map_info.block_size_z];
         blocks = new MeshFilter[connectionState.net_map_info.block_size_x * 16 / blockSize, connectionState.net_map_info.block_size_y * 16 / blockSize, connectionState.net_map_info.block_size_z];
+        stencilBlocks = new MeshFilter[connectionState.net_map_info.block_size_x * 16 / blockSize, connectionState.net_map_info.block_size_y * 16 / blockSize, connectionState.net_map_info.block_size_z];
+        liquidBlocks = new MeshFilter[connectionState.net_map_info.block_size_x * 16 / blockSize, connectionState.net_map_info.block_size_y * 16 / blockSize, connectionState.net_map_info.block_size_z, 2];
         blockDirtyBits = new bool[connectionState.net_map_info.block_size_x * 16 / blockSize, connectionState.net_map_info.block_size_y * 16 / blockSize, connectionState.net_map_info.block_size_z];
-
+        waterBlockDirtyBits = new bool[connectionState.net_map_info.block_size_x * 16 / blockSize, connectionState.net_map_info.block_size_y * 16 / blockSize, connectionState.net_map_info.block_size_z];
+        magmaGlow = new Light[connectionState.net_map_info.block_size_x * 16, connectionState.net_map_info.block_size_y * 16, connectionState.net_map_info.block_size_z];
     }
 
     void SetDirtyBlock(int mapBlockX, int mapBlockY, int mapBlockZ)
@@ -105,6 +120,12 @@ public class GameMap : MonoBehaviour
         mapBlockX = mapBlockX / blockSize;
         mapBlockY = mapBlockY / blockSize;
         blockDirtyBits[mapBlockX, mapBlockY, mapBlockZ] = true;
+    }
+    void SetDirtyWaterBlock(int mapBlockX, int mapBlockY, int mapBlockZ)
+    {
+        mapBlockX = mapBlockX / blockSize;
+        mapBlockY = mapBlockY / blockSize;
+        waterBlockDirtyBits[mapBlockX, mapBlockY, mapBlockZ] = true;
     }
 
     //void InitializeBlocks()
@@ -162,7 +183,7 @@ public class GameMap : MonoBehaviour
         if (materials == null)
             materials = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
         materials.Clear();
-        foreach(RemoteFortressReader.MaterialDefinition material in connectionState.net_material_list.material_list)
+        foreach (RemoteFortressReader.MaterialDefinition material in connectionState.net_material_list.material_list)
         {
             materials[material.mat_pair] = material;
         }
@@ -215,7 +236,7 @@ public class GameMap : MonoBehaviour
         {
             File.Delete("TiletypeList.csv");
         }
-        catch(IOException)
+        catch (IOException)
         {
             return;
         }
@@ -237,23 +258,99 @@ public class GameMap : MonoBehaviour
 
     void CopyTiles(RemoteFortressReader.MapBlock DFBlock)
     {
-       for(int xx = 0; xx < 16; xx++)
-           for(int yy = 0; yy < 16; yy++)
-           {
-               if(tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z] == null)
-               {
-                   tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z] = new MapTile();
-                   tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z].position = new DFCoord(DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z);
-                   tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z].container = tiles;
-               }
-               MapTile tile = tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z];
-               tile.tileType = DFBlock.tiles[xx + (yy * 16)];
-               tile.material = DFBlock.materials[xx + (yy * 16)];
-               tile.base_material = DFBlock.base_materials[xx + (yy * 16)];
-               tile.layer_material = DFBlock.layer_materials[xx + (yy * 16)];
-               tile.vein_material = DFBlock.vein_materials[xx + (yy * 16)];
-           }
-       SetDirtyBlock(DFBlock.map_x, DFBlock.map_y, DFBlock.map_z);
+        for (int xx = 0; xx < 16; xx++)
+            for (int yy = 0; yy < 16; yy++)
+            {
+                if (tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z] == null)
+                {
+                    tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z] = new MapTile();
+                    tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z].position = new DFCoord(DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z);
+                    tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z].container = tiles;
+                }
+            }
+        if (DFBlock.tiles.Count > 0)
+        {
+            for (int xx = 0; xx < 16; xx++)
+                for (int yy = 0; yy < 16; yy++)
+                {
+                    MapTile tile = tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z];
+                    tile.tileType = DFBlock.tiles[xx + (yy * 16)];
+                    tile.material = DFBlock.materials[xx + (yy * 16)];
+                    tile.base_material = DFBlock.base_materials[xx + (yy * 16)];
+                    tile.layer_material = DFBlock.layer_materials[xx + (yy * 16)];
+                    tile.vein_material = DFBlock.vein_materials[xx + (yy * 16)];
+                }
+            SetDirtyBlock(DFBlock.map_x, DFBlock.map_y, DFBlock.map_z);
+        }
+        if (DFBlock.water.Count > 0)
+        {
+            for (int xx = 0; xx < 16; xx++)
+                for (int yy = 0; yy < 16; yy++)
+                {
+                    MapTile tile = tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z];
+                    tile.liquid[l_water] = DFBlock.water[xx + (yy * 16)];
+                    tile.liquid[l_magma] = DFBlock.magma[xx + (yy * 16)];
+                }
+            SetDirtyWaterBlock(DFBlock.map_x, DFBlock.map_y, DFBlock.map_z);
+        }
+    }
+    bool GenerateLiquids(int block_x, int block_y, int block_z)
+    {
+        if (!waterBlockDirtyBits[block_x, block_y, block_z])
+            return true;
+        waterBlockDirtyBits[block_x, block_y, block_z] = false;
+        GenerateLiquidSurface(block_x, block_y, block_z, l_water);
+        GenerateLiquidSurface(block_x, block_y, block_z, l_magma);
+        return true;
+    }
+
+    void FillMeshBuffer(out MeshCombineUtility.MeshInstance buffer, MeshLayer layer, MapTile tile)
+    {
+        buffer = new MeshCombineUtility.MeshInstance();
+        MeshContent content = null;
+        if (!contentLoader.tileMeshConfiguration.GetValue(tile, layer, out content))
+        {
+            buffer.mesh = null;
+            return;
+        }
+        buffer.mesh = content.mesh[(int)layer];
+        buffer.transform = Matrix4x4.TRS(DFtoUnityCoord(tile.position), Quaternion.identity, Vector3.one);
+        if (tile != null)
+        {
+            int tileTexIndex = 0;
+            IndexContent tileTexContent;
+            if (contentLoader.tileTextureConfiguration.GetValue(tile, layer, out tileTexContent))
+                tileTexIndex = tileTexContent.value;
+            int matTexIndex = 0;
+            IndexContent matTexContent;
+            if (contentLoader.materialTextureConfiguration.GetValue(tile, layer, out matTexContent))
+                matTexIndex = matTexContent.value;
+            ColorContent newColorContent;
+            Color newColor;
+            if (contentLoader.colorConfiguration.GetValue(tile, layer, out newColorContent))
+            {
+                newColor = newColorContent.value;
+            }
+            else
+            {
+                MaterialDefinition mattie;
+                if (materials.TryGetValue(tile.material, out mattie))
+                {
+                    ColorDefinition color = mattie.state_color;
+                    if (color == null)
+                        newColor = Color.cyan;
+                    else
+                        newColor = new Color(color.red / 255.0f, color.green / 255.0f, color.blue / 255.0f, 1);
+                }
+                else
+                {
+                    newColor = Color.white;
+                }
+            }
+            buffer.color = newColor;
+            buffer.uv1Index = matTexIndex;
+            buffer.uv2Index = tileTexIndex;
+        }
     }
 
     bool GenerateTiles(int block_x, int block_y, int block_z)
@@ -262,79 +359,215 @@ public class GameMap : MonoBehaviour
             return true;
         blockDirtyBits[block_x, block_y, block_z] = false;
         int bufferIndex = 0;
+        int stencilBufferIndex = 0;
         for (int xx = (block_x * blockSize); xx < (block_x + 1) * blockSize; xx++)
             for (int yy = (block_y * blockSize); yy < (block_y + 1) * blockSize; yy++)
             {
-                if(meshBuffer == null)
+                ////do lights first
+                //if (tiles[xx, yy, block_z] != null)
+                //{
+                //    //do magma lights
+                //    if ((xx % 1 == 0) && (yy % 1 == 0) && (block_z % 1 == 0))
+                //        if (tiles[xx, yy, block_z].magma > 0 && magmaGlow[xx, yy, block_z] == null)
+                //        {
+                //            magmaGlow[xx, yy, block_z] = (Light)Instantiate(magmaGlowPrefab);
+                //            magmaGlow[xx, yy, block_z].gameObject.SetActive(true);
+                //            magmaGlow[xx, yy, block_z].transform.parent = this.transform;
+                //            magmaGlow[xx, yy, block_z].transform.position = DFtoUnityCoord(xx, yy, block_z + 1);
+                //        }
+                //}
+
+                if (meshBuffer == null)
+                    meshBuffer = new MeshCombineUtility.MeshInstance[blockSize * blockSize * (int)MeshLayer.StaticCutout];
+                if (stencilMeshBuffer == null)
+                    stencilMeshBuffer = new MeshCombineUtility.MeshInstance[blockSize * blockSize * ((int)MeshLayer.Count - (int)MeshLayer.StaticCutout)];
+
+                for (int i = 0; i < (int)MeshLayer.Count; i++)
                 {
-                    meshBuffer = new MeshCombineUtility.MeshInstance[blockSize * blockSize];
-                    //meshBuffer = new CombineInstance[blockSize * blockSize];
-                }
-                MeshContent content = null;
-                if (!contentLoader.tileMeshConfiguration.GetValue(tiles[xx, yy, block_z], out content))
-                {
-                    meshBuffer[bufferIndex].mesh = null;
-                    bufferIndex++;
-                    continue;
-                }
-                meshBuffer[bufferIndex].mesh = content.mesh;
-                meshBuffer[bufferIndex].transform = Matrix4x4.TRS(DFtoUnityCoord(xx, yy, block_z), Quaternion.identity, Vector3.one);
-                if (tiles[xx, yy, block_z] != null)
-                {
-                    int tileTexIndex = 2;
-                    IndexContent tileTexContent;
-                    if (contentLoader.tileTextureConfiguration.GetValue(tiles[xx, yy, block_z], out tileTexContent))
-                        tileTexIndex = tileTexContent.value;
-                    int matTexIndex = 2;
-                    IndexContent matTexContent;
-                    if (contentLoader.materialTextureConfiguration.GetValue(tiles[xx, yy, block_z], out matTexContent))
-                        matTexIndex = matTexContent.value;
-                    ColorContent newColorContent;
-                    Color newColor;
-                    if (contentLoader.colorConfiguration.GetValue(tiles[xx, yy, block_z], out newColorContent))
+                    MeshLayer layer = (MeshLayer)i;
+                    switch (layer)
                     {
-                        newColor = newColorContent.value;
+                        case MeshLayer.StaticMaterial:
+                        case MeshLayer.BaseMaterial:
+                        case MeshLayer.LayerMaterial:
+                        case MeshLayer.VeinMaterial:
+                        case MeshLayer.NoMaterial:
+                            FillMeshBuffer(out meshBuffer[bufferIndex], layer, tiles[xx, yy, block_z]);
+                            bufferIndex++;
+                            break;
+                        case MeshLayer.StaticCutout:
+                        case MeshLayer.BaseCutout:
+                        case MeshLayer.LayerCutout:
+                        case MeshLayer.VeinCutout:
+                        case MeshLayer.Growth0Cutout:
+                        case MeshLayer.Growth1Cutout:
+                        case MeshLayer.Growth2Cutout:
+                        case MeshLayer.Growth3Cutout:
+                        case MeshLayer.NoMaterialCutout:
+                            FillMeshBuffer(out stencilMeshBuffer[stencilBufferIndex], layer, tiles[xx, yy, block_z]);
+                            stencilBufferIndex++;
+                            break;
+                        default:
+                            break;
                     }
-                    else
-                    {
-                        MaterialDefinition mattie;
-                        if (materials.TryGetValue(tiles[xx, yy, block_z].material, out mattie))
-                        {
-                            ColorDefinition color = mattie.state_color;
-                            if (color == null)
-                                newColor = Color.cyan;
-                            else
-                                newColor = new Color(color.red / 255.0f, color.green / 255.0f, color.blue / 255.0f, 1);
-                        }
-                        else
-                        {
-                            newColor = Color.white;
-                        }
-                    }
-                    meshBuffer[bufferIndex].color = newColor;
-                    meshBuffer[bufferIndex].uv1Index = matTexIndex;
-                    meshBuffer[bufferIndex].uv2Index = tileTexIndex;
                 }
-                bufferIndex++;
             }
-        if(blocks[block_x, block_y, block_z] == null)
+        if (blocks[block_x, block_y, block_z] == null)
         {
             GameObject block = Instantiate(defaultMapBlock) as GameObject;
             block.SetActive(true);
             block.transform.parent = this.transform;
+            block.name = "terrain(" + block_x + ", " + block_y + ", " + block_z + ")"; 
             blocks[block_x, block_y, block_z] = block.GetComponent<MeshFilter>();
         }
         MeshFilter mf = blocks[block_x, block_y, block_z];
         if (mf == null)
             Debug.LogError("MF is null");
-        if(mf.mesh == null)
+        if (mf.mesh == null)
             mf.mesh = new Mesh();
         mf.mesh.Clear();
         //mf.mesh.CombineMeshes(meshBuffer);
+        if (stencilBlocks[block_x, block_y, block_z] == null)
+        {
+            GameObject stencilBlock = Instantiate(StencilMapBLock) as GameObject;
+            stencilBlock.SetActive(true);
+            stencilBlock.transform.parent = this.transform;
+            stencilBlock.name = "foliage(" + block_x + ", " + block_y + ", " + block_z + ")";
+            stencilBlocks[block_x, block_y, block_z] = stencilBlock.GetComponent<MeshFilter>();
+        }
+        MeshFilter mfs = stencilBlocks[block_x, block_y, block_z];
+        if (mfs == null)
+            Debug.LogError("MFS is null");
+        if (mfs.mesh == null)
+            mfs.mesh = new Mesh();
+        mfs.mesh.Clear();
+        MeshCombineUtility.ColorCombine(mfs.mesh, stencilMeshBuffer);
         return MeshCombineUtility.ColorCombine(mf.mesh, meshBuffer);
         //Debug.Log("Generated a mesh with " + (mf.mesh.triangles.Length / 3) + " tris");
-
     }
+    static int coord2Index(int x, int y)
+    {
+        return (x * (blockSize + 1)) + y;
+    }
+    void GenerateLiquidSurface(int block_x, int block_y, int block_z, int liquid_select)
+    {
+        Vector3[] finalVertices = new Vector3[(blockSize + 1) * (blockSize + 1)];
+        Vector3[] finalNormals = new Vector3[(blockSize + 1) * (blockSize + 1)];
+        Vector2[] finalUVs = new Vector2[(blockSize + 1) * (blockSize + 1)];
+        List<int> finalFaces = new List<int>();
+        float[,] heights = new float[2, 2];
+        for (int xx = 0; xx <= blockSize; xx++)
+            for (int yy = 0; yy <= blockSize; yy++)
+            {
+                //first find the heights of all tiles sharing one corner.
+                for(int xxx = 0; xxx < 2; xxx++)
+                    for(int yyy = 0; yyy < 2; yyy++)
+                    {
+                        int x = (block_x * blockSize) + xx + xxx - 1;
+                        int y = (block_y * blockSize) + yy + yyy - 1;
+                        if(x < 0 || y < 0 || x >= tiles.GetLength(0) || y >= tiles.GetLength(1))
+                        {
+                            heights[xxx,yyy] = -1;
+                            continue;
+                        }
+                        var tile = tiles[x, y, block_z];
+                        if(tile == null)
+                        {
+                            heights[xxx,yyy] = -1;
+                            continue;
+                        }
+                        if(tile.isWall)
+                        {
+                            heights[xxx,yyy] = -1;
+                            continue;
+                        }
+                        heights[xxx,yyy] = tile.liquid[liquid_select];
+                        heights[xxx, yyy] /= 7.0f;
+                        if (tile.isFloor)
+                        {
+                            heights[xxx, yyy] *= (tileHeight - floorHeight);
+                            heights[xxx, yyy] += floorHeight;
+                        }
+                        else
+                            heights[xxx, yyy] *= tileHeight;
+
+                    }
+
+                //now find their average, discaring invalid ones.
+                float height = 0 ;
+                float total = 0;
+                foreach (var item in heights)
+                {
+                    if (item < 0)
+                        continue;
+                    height += item;
+                    total++;
+                }
+                if (total >= 1)
+                    height /= total;
+                //find the slopes.
+                float sx = ((
+                    (heights[0, 0] < 0 ? height : heights[0, 0]) +
+                    (heights[0, 1] < 0 ? height : heights[0, 1])) / 2) - ((
+                    (heights[1, 0] < 0 ? height : heights[1, 0]) +
+                    (heights[1, 1] < 0 ? height : heights[1, 1])) / 2);
+                float sy = ((
+                    (heights[0, 0] < 0 ? height : heights[0, 0]) +
+                    (heights[1, 0] < 0 ? height : heights[1, 0])) / 2) - ((
+                    (heights[0, 1] < 0 ? height : heights[0, 1]) +
+                    (heights[1, 1] < 0 ? height : heights[1, 1])) / 2);
+                finalNormals[coord2Index(xx, yy)] = new Vector3(sx, tileWidth*2, -sy);
+                finalNormals[coord2Index(xx, yy)].Normalize();
+
+                finalVertices[coord2Index(xx, yy)] = DFtoUnityCoord(((block_x * blockSize) + xx), ((block_y * blockSize) + yy), block_z);
+                finalVertices[coord2Index(xx, yy)].x -= tileWidth / 2.0f;
+                finalVertices[coord2Index(xx, yy)].z += tileWidth / 2.0f;
+                finalVertices[coord2Index(xx, yy)].y += height;
+                finalUVs[coord2Index(xx, yy)] = new Vector2(xx, yy);
+            }
+        for (int xx = 0; xx < blockSize; xx++)
+            for (int yy = 0; yy < blockSize; yy++)
+            {
+                if (tiles[(block_x * blockSize) + xx, (block_y * blockSize) + yy, block_z].liquid[liquid_select] == 0)
+                    continue;
+                finalFaces.Add(coord2Index(xx, yy));
+                finalFaces.Add(coord2Index(xx + 1, yy));
+                finalFaces.Add(coord2Index(xx + 1, yy + 1));
+
+                finalFaces.Add(coord2Index(xx, yy));
+                finalFaces.Add(coord2Index(xx + 1, yy + 1));
+                finalFaces.Add(coord2Index(xx, yy + 1));
+            }
+        if (finalFaces.Count > 0)
+        {
+            if (liquidBlocks[block_x, block_y, block_z, liquid_select] == null)
+            {
+                GameObject block = Instantiate(defaultWaterBlock) as GameObject;
+                block.SetActive(true);
+                block.transform.parent = this.transform;
+                block.name = (liquid_select == l_water ? "water(" : "magma(") + block_x + ", " + block_y + ", " + block_z + ")"; 
+                liquidBlocks[block_x, block_y, block_z, liquid_select] = block.GetComponent<MeshFilter>();
+            }
+        }
+        MeshFilter mf = liquidBlocks[block_x, block_y, block_z, liquid_select];
+        if (mf == null)
+        {
+            return;
+        }
+        if (mf.mesh == null)
+            mf.mesh = new Mesh();
+        mf.mesh.Clear();
+        if (finalFaces.Count == 0)
+            return;
+        mf.mesh.vertices = finalVertices;
+        mf.mesh.uv = finalUVs;
+        mf.mesh.triangles = finalFaces.ToArray();
+        mf.mesh.normals = finalNormals;
+        //mf.mesh.RecalculateNormals();
+        mf.mesh.RecalculateBounds();
+        mf.mesh.RecalculateTangents();
+    }
+
 
     void UpdateMeshes()
     {
@@ -350,6 +583,7 @@ public class GameMap : MonoBehaviour
                         continue;
                     }
                     //Debug.Log("Generating tiles at " + xx + ", " + yy + ", " + zz);
+                    GenerateLiquids(xx, yy, zz);
                     if (GenerateTiles(xx, yy, zz))
                         count++;
                     else
@@ -363,8 +597,8 @@ public class GameMap : MonoBehaviour
         System.Diagnostics.Stopwatch loadWatch = new System.Diagnostics.Stopwatch();
         System.Diagnostics.Stopwatch genWatch = new System.Diagnostics.Stopwatch();
         posX = (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x / 2)) / 16;
-        posY = (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y/2)) / 16;
-        posZ = connectionState.net_view_info.view_pos_z+1;
+        posY = (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y / 2)) / 16;
+        posZ = connectionState.net_view_info.view_pos_z + 1;
         connectionState.net_block_request.min_x = posX - rangeX;
         connectionState.net_block_request.max_x = posX + rangeX;
         connectionState.net_block_request.min_y = posY - rangeY;
@@ -425,7 +659,7 @@ public class GameMap : MonoBehaviour
         connectionState.net_block_request.min_y = posY - rangeY;
         connectionState.net_block_request.max_y = posY + rangeY;
         connectionState.net_block_request.min_z = lastLoadedLevel;
-        connectionState.net_block_request.max_z = lastLoadedLevel+1;
+        connectionState.net_block_request.max_z = lastLoadedLevel + 1;
 
         connectionState.BlockListCall.execute(connectionState.net_block_request, out connectionState.net_block_list);
 
@@ -452,16 +686,36 @@ public class GameMap : MonoBehaviour
             for (int yy = 0; yy < blocks.GetLength(1); yy++)
                 for (int zz = 0; zz < blocks.GetLength(2); zz++)
                 {
-                    if (blocks[xx, yy, zz] == null)
-                        continue;
                     if (zz > centerZ + dist)
                     {
-                        blocks[xx, yy, zz].mesh.Clear();
+                        if (blocks[xx, yy, zz] != null)
+                        {
+                            blocks[xx, yy, zz].mesh.Clear();
+                            blockDirtyBits[xx, yy, zz] = true;
+
+                        }
+                        for (int i = 0; i < 2; i++)
+                            if (liquidBlocks[xx, yy, zz, i] != null)
+                            {
+                                liquidBlocks[xx, yy, zz, i].mesh.Clear();
+                                waterBlockDirtyBits[xx, yy, zz] = true;
+                            }
                         continue;
                     }
                     if (zz < centerZ - dist)
                     {
-                        blocks[xx, yy, zz].mesh.Clear();
+                        if (blocks[xx, yy, zz] != null)
+                        {
+                            blocks[xx, yy, zz].mesh.Clear();
+                            blockDirtyBits[xx, yy, zz] = true;
+
+                        }
+                        for (int i = 0; i < 2; i++)
+                            if (liquidBlocks[xx, yy, zz, i] != null)
+                            {
+                                liquidBlocks[xx, yy, zz, i].mesh.Clear();
+                                waterBlockDirtyBits[xx, yy, zz] = true;
+                            }
                         continue;
                     }
                     //int distSide = dist;// / 16;
@@ -506,9 +760,9 @@ public class GameMap : MonoBehaviour
     void PositionCamera()
     {
         viewCamera.transform.parent.transform.position = MapBlock.DFtoUnityCoord(
-            (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x/2)), 
-            (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y/2)), 
-            connectionState.net_view_info.view_pos_z+1);
+            (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x / 2)),
+            (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y / 2)),
+            connectionState.net_view_info.view_pos_z + 1);
         viewCamera.viewWidth = connectionState.net_view_info.view_size_x;
         viewCamera.viewHeight = connectionState.net_view_info.view_size_y;
     }
@@ -520,7 +774,7 @@ public class GameMap : MonoBehaviour
 
     void ClearMap()
     {
-        foreach(MeshFilter MF in blocks)
+        foreach (MeshFilter MF in blocks)
         {
             if (MF)
                 MF.mesh.Clear();
@@ -534,22 +788,26 @@ public class GameMap : MonoBehaviour
                 tile.material.mat_type = -1;
             }
         }
+        foreach (var item in magmaGlow)
+        {
+            Destroy(item);
+        }
     }
 
     void HideMeshes()
     {
-        for(int zz = 0; zz < blocks.GetLength(2); zz++)
-        for(int yy = 0; yy < blocks.GetLength(1); yy++)
-        for(int xx = 0; xx < blocks.GetLength(0); xx++)
-        {
-            if (blocks[xx, yy, zz] != null)
-            {
-                if (zz > connectionState.net_view_info.view_pos_z)
-                    blocks[xx, yy, zz].gameObject.layer = 8;
-                else
-                    blocks[xx, yy, zz].gameObject.layer = 0;
-            }
-        }
+        for (int zz = 0; zz < blocks.GetLength(2); zz++)
+            for (int yy = 0; yy < blocks.GetLength(1); yy++)
+                for (int xx = 0; xx < blocks.GetLength(0); xx++)
+                {
+                    if (blocks[xx, yy, zz] != null)
+                    {
+                        if (zz > connectionState.net_view_info.view_pos_z)
+                            blocks[xx, yy, zz].gameObject.layer = 8;
+                        else
+                            blocks[xx, yy, zz].gameObject.layer = 0;
+                    }
+                }
 
     }
 
@@ -563,7 +821,7 @@ public class GameMap : MonoBehaviour
         cursorProperties.text += cursX + ",";
         cursorProperties.text += cursY + ",";
         cursorProperties.text += cursZ + "\n";
-        if(
+        if (
             cursX >= 0 &&
             cursY >= 0 &&
             cursZ >= 0 &&
@@ -638,6 +896,7 @@ public class GameMap : MonoBehaviour
             }
             else
                 cursorProperties.text += "Unknown Vein Material\n";
+
         }
     }
 }

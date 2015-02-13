@@ -17,6 +17,8 @@ namespace UnityExtension
             int[] triangles = lMesh.triangles;
             Vector3[] vertices = lMesh.vertices;
             Vector2[] uv = lMesh.uv;
+            if (uv.Length == 0)
+                return; //we need UV coords to work with.
             Vector3[] normals = lMesh.normals;
 
             //variable definitions
@@ -37,7 +39,6 @@ namespace UnityExtension
                 Vector3 v1 = vertices[i1];
                 Vector3 v2 = vertices[i2];
                 Vector3 v3 = vertices[i3];
-
                 Vector2 w1 = uv[i1];
                 Vector2 w2 = uv[i2];
                 Vector2 w3 = uv[i3];

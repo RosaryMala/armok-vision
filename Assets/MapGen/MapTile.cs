@@ -31,6 +31,8 @@ public class MapTile
     public MatPairStruct layer_material;
     public MatPairStruct vein_material;
 
+    public int[] liquid = new int[2];
+
     public TiletypeShape shape { get { return tiletypeTokenList[tileType].shape; } }
     public TiletypeMaterial tiletypeMaterial { get { return tiletypeTokenList[tileType].material; } }
     public TiletypeSpecial special { get { return tiletypeTokenList[tileType].special; } }
@@ -114,6 +116,7 @@ public class MapTile
         {
             switch (shape)
             {
+                case TiletypeShape.RAMP:
                 case TiletypeShape.FLOOR:
                 case TiletypeShape.BOULDER:
                 case TiletypeShape.PEBBLES:

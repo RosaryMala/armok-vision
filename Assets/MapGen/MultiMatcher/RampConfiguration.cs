@@ -139,7 +139,7 @@ public class RampConfiguration<T> : ContentConfiguration<T> where T : IContent, 
         return rampblut[ramplookup];
     }
     Content[] rampList = new Content[26];
-    public override bool GetValue(MapTile tile, out T value)
+    public override bool GetValue(MapTile tile, MeshLayer layer, out T value)
     {
         if (tile.shape != RemoteFortressReader.TiletypeShape.RAMP)
         {
@@ -152,7 +152,7 @@ public class RampConfiguration<T> : ContentConfiguration<T> where T : IContent, 
             value = default(T);
             return false;
         }
-        value = rampList[index].GetValue(tile);
+        value = rampList[index].GetValue(tile, layer);
         return true;
     }
 

@@ -5,14 +5,19 @@ ModelImporter:
   fileIDToRecycleName:
     100000: FLOOR
     100002: //RootNode
+    100004: StaticMaterial
     400000: FLOOR
     400002: //RootNode
+    400004: StaticMaterial
     2300000: FLOOR
+    2300002: StaticMaterial
     3300000: FLOOR
+    3300002: StaticMaterial
     4300000: FLOOR
+    4300002: StaticMaterial
     9500000: //RootNode
   materials:
-    importMaterials: 1
+    importMaterials: 0
     materialName: 0
     materialSearch: 1
   animations:
@@ -62,6 +67,6 @@ ModelImporter:
     feetSpacing: 0
     rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 0
   additionalBone: 0
   userData: 
