@@ -1,11 +1,14 @@
 <?xml version="1.0"?>
 <materialTextures>
     <materialTexture index="0">
-        <material token="PLANT:*:*" />
+        <material token="NONE" />
         <subObject index ="1">
             <tiletype token="BRANCH:*:*:*:*" />
             <tiletype token="TWIG:*:*:*:*" />
         </subObject>
+    </materialTexture>
+    <materialTexture index="0">
+        <material token="PLANT:*:*" />
         <subObject index ="4">
             <tiletype token="*:*:GRASS_LIGHT:*:*" />
             <tiletype token="*:*:GRASS_DARK:*:*" />
