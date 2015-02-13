@@ -6,6 +6,49 @@
     <tileMesh file = "WALL.obj">
         <tiletype token="WALL:*:*:*:*" />
     </tileMesh>
+    <tileMesh file = "BOULDER.obj">
+        <tiletype token="BOULDER:*:*:*:*" />
+    </tileMesh>
+    <tileMesh file = "PEBBLES.obj">
+        <tiletype token="PEBBLES:*:*:*:*" />
+    </tileMesh>
+    <tileMesh file = "SAPLING.obj">
+        <tiletype token="SAPLING:*:*:*:*" />
+    </tileMesh>
+    <tileMesh file = "BUSH.obj">
+        <tiletype token="SHRUB:*:*:*:*" />
+    </tileMesh>
+    <tileMesh file = "FORTIFICATION.obj">
+        <tiletype token="FORTIFICATION:*:*:*:*" />
+    </tileMesh>
+    <tileMesh file = "STAIRS_UP.obj">
+        <tiletype token="STAIR_UP:*:*:*:*" />
+    </tileMesh>
+    <tileMesh file = "STAIRS_DOWN.obj">
+        <tiletype token="STAIR_DOWN:*:*:*:*" />
+    </tileMesh>
+    <tileMesh file = "STAIRS_UPDOWN.obj">
+        <tiletype token="STAIR_UPDOWN:*:*:*:*" />
+    </tileMesh>
+    <tileMesh file = "BROOK_BED.obj">
+        <tiletype token="BROOK_BED:*:*:*:*" />
+    </tileMesh>
+    <tileMesh file = "TREE.obj">
+        <tiletype token="TREE_SHAPE:*:*:*:*" />
+    </tileMesh>
+    <tileMesh file = "Branches.obj">
+        <tiletype token="BRANCH:*:*:*:*" />
+    </tileMesh>
+    <tileMesh file = "FLOOR.obj">
+        <tiletype token="TRUNK_BRANCH:*:*:*:*" />
+    </tileMesh>
+    <tileMesh file = "Twigs.obj">
+        <tiletype token="TWIG:*:*:*:*" />
+    </tileMesh>
+    <tileMesh file = "Grass Big.obj">
+        <tiletype token="*:*:GRASS_LIGHT:*:*" />
+        <tiletype token="*:*:GRASS_DARK:*:*" />
+    </tileMesh>
     <tileMesh file = "Ramps\RAMP_1.obj">
         <tiletype token="RAMP:*:*:*:*" />
         <subObject file ="Ramps\RAMP_1.obj">
@@ -22,6 +65,69 @@
         </subObject>
         <subObject file ="Ramps\RAMP_5.obj">
             <ramp index="5"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_6_sharp.obj">
+            <ramp index="6"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_7_sharp.obj">
+            <ramp index="7"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_8_sharp.obj">
+            <ramp index="8"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_9_sharp.obj">
+            <ramp index="9"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_10_sharp.obj">
+            <ramp index="10"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_11_sharp.obj">
+            <ramp index="11"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_12_sharp.obj">
+            <ramp index="12"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_13_sharp.obj">
+            <ramp index="13"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_14_sharp.obj">
+            <ramp index="15"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_15_sharp.obj">
+            <ramp index="15"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_16.obj">
+            <ramp index="16"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_17.obj">
+            <ramp index="17"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_18_sharp.obj">
+            <ramp index="18"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_19_sharp.obj">
+            <ramp index="19"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_20_sharp.obj">
+            <ramp index="20"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_21_sharp.obj">
+            <ramp index="21"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_22_sharp.obj">
+            <ramp index="22"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_23_sharp.obj">
+            <ramp index="23"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_24_sharp.obj">
+            <ramp index="24"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_25_sharp.obj">
+            <ramp index="25"/>
+        </subObject>
+        <subObject file ="Ramps\RAMP_26_sharp.obj">
+            <ramp index="26"/>
         </subObject>
     </tileMesh>
 </tileMeshes>

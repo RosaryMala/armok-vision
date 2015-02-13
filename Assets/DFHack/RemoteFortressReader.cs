@@ -161,6 +161,20 @@ namespace RemoteFortressReader
       get { return _base_materials; }
     }
   
+    private readonly global::System.Collections.Generic.List<int> _magma = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(9, Name=@"magma", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> magma
+    {
+      get { return _magma; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<int> _water = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(10, Name=@"water", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> water
+    {
+      get { return _water; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

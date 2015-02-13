@@ -4,6 +4,12 @@
         <tiletype token="*:SMOOTH:*:*:*" />
     </tileTexture>
     <tileTexture index = "2">
+        <tiletype token="*:SMOOTH:TREE_MATERIAL:*:*" />
+    </tileTexture>
+    <tileTexture index = "2">
+        <tiletype token="*:SMOOTH:MUSHROOM:*:*" />
+    </tileTexture>
+    <tileTexture index = "2">
         <tiletype token="*:NORMAL:*:*:*" />
     </tileTexture>
 </tileTextures>

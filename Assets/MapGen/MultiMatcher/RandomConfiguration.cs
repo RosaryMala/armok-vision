@@ -14,7 +14,7 @@ public class RandomConfiguration<T> : ContentConfiguration<T> where T : IContent
     }
     List<RandomItem> items = new List<RandomItem>();
 
-    public override bool GetValue(MapTile tile, out T value)
+    public override bool GetValue(MapTile tile, MeshLayer layer, out T value)
     {
         double maxValue = float.MinValue;
         Content maxContent = null;
@@ -34,7 +34,7 @@ public class RandomConfiguration<T> : ContentConfiguration<T> where T : IContent
             value = default(T);
             return false;
         }
-        value = maxContent.GetValue(tile);
+        value = maxContent.GetValue(tile, layer);
         return true;
     }
 
