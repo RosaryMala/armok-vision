@@ -2,9 +2,11 @@
 <materialTextures>
     <materialTexture index="0">
         <material token="NONE" />
-        <subObject index ="1">
+        <subObject index ="5">
             <tiletype token="BRANCH:*:*:*:*" />
             <tiletype token="TWIG:*:*:*:*" />
+            <tiletype token="SHRUB:*:*:*:*" />
+            <tiletype token="SAPLING:*:*:*:*" />
         </subObject>
     </materialTexture>
     <materialTexture index="0">

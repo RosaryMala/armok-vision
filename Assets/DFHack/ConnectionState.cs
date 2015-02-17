@@ -18,7 +18,7 @@ public class ConnectionState {
     public RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MapInfo> MapInfoCall;
     public RemoteFunction<dfproto.EmptyMessage> MapResetCall;
     color_ostream df_network_out;
-    RemoteClient network_client;
+    public RemoteClient network_client;
 
     public ConnectionState()
     {

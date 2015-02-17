@@ -60,6 +60,10 @@ public class GameMap : MonoBehaviour
     MeshCombineUtility.MeshInstance[] stencilMeshBuffer;
     //CombineInstance[] meshBuffer;
 
+    System.Diagnostics.Stopwatch blockListTimer = new System.Diagnostics.Stopwatch();
+    System.Diagnostics.Stopwatch cullTimer = new System.Diagnostics.Stopwatch();
+    System.Diagnostics.Stopwatch lazyLoadTimer = new System.Diagnostics.Stopwatch();
+
     // Use this for initialization
     void Start()
     {
@@ -78,23 +82,52 @@ public class GameMap : MonoBehaviour
         MaterialTokenList.matTokenList = connectionState.net_material_list.material_list;
         TiletypeTokenList.tiletypeTokenList = connectionState.net_tiletype_list.tiletype_list;
         MapTile.tiletypeTokenList = connectionState.net_tiletype_list.tiletype_list;
-        contentLoader.ParseContentIndexFile(Application.streamingAssetsPath + "\\index.txt");
+        contentLoader.ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt");
         watch.Stop();
         Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
         connectionState.MapResetCall.execute();
-        InvokeRepeating("GetBlockList", 0, 0.1f);
-        InvokeRepeating("CullDistantBlocks", 1, 2);
-        InvokeRepeating("LazyLoadBlocks", 1, 1);
+        blockListTimer.Start();
+        cullTimer.Start();
+        lazyLoadTimer.Start();
+        //InvokeRepeating("GetBlockList", 0, 0.1f);
+        //InvokeRepeating("CullDistantBlocks", 1, 2);
+        //InvokeRepeating("LazyLoadBlocks", 1, 1);
     }
 
+    bool gotBlocks = false;
     // Update is called once per frame
     void Update()
     {
+        connectionState.network_client.suspend_game();
         GetViewInfo();
         PositionCamera();
         //HideMeshes();
         ShowCursorInfo();
-        //GetBlockList();
+        //if (blockListTimer.ElapsedMilliseconds > 30)
+        {
+            GetBlockList();
+            blockListTimer.Reset();
+            blockListTimer.Start();
+            gotBlocks = true;
+        }
+        //if (lazyLoadTimer.ElapsedMilliseconds > 1000)
+        //{
+        //    LazyLoadBlocks();
+        //    lazyLoadTimer.Reset();
+        //    lazyLoadTimer.Start();
+        //}
+        connectionState.network_client.resume_game();
+        if(gotBlocks)
+        {
+            UseBlockList();
+            gotBlocks = false;
+        }
+        if (cullTimer.ElapsedMilliseconds > 1000)
+        {
+            CullDistantBlocks();
+            cullTimer.Reset();
+            cullTimer.Start();
+        }
     }
 
     void OnDestroy()
@@ -453,7 +486,7 @@ public class GameMap : MonoBehaviour
             GameObject block = Instantiate(defaultMapBlock) as GameObject;
             block.SetActive(true);
             block.transform.parent = this.transform;
-            block.name = "terrain(" + block_x + ", " + block_y + ", " + block_z + ")"; 
+            block.name = "terrain(" + block_x + ", " + block_y + ", " + block_z + ")";
             blocks[block_x, block_y, block_z] = block.GetComponent<MeshFilter>();
         }
         MeshFilter mf = blocks[block_x, block_y, block_z];
@@ -496,28 +529,28 @@ public class GameMap : MonoBehaviour
             for (int yy = 0; yy <= blockSize; yy++)
             {
                 //first find the heights of all tiles sharing one corner.
-                for(int xxx = 0; xxx < 2; xxx++)
-                    for(int yyy = 0; yyy < 2; yyy++)
+                for (int xxx = 0; xxx < 2; xxx++)
+                    for (int yyy = 0; yyy < 2; yyy++)
                     {
                         int x = (block_x * blockSize) + xx + xxx - 1;
                         int y = (block_y * blockSize) + yy + yyy - 1;
-                        if(x < 0 || y < 0 || x >= tiles.GetLength(0) || y >= tiles.GetLength(1))
+                        if (x < 0 || y < 0 || x >= tiles.GetLength(0) || y >= tiles.GetLength(1))
                         {
-                            heights[xxx,yyy] = -1;
+                            heights[xxx, yyy] = -1;
                             continue;
                         }
                         var tile = tiles[x, y, block_z];
-                        if(tile == null)
+                        if (tile == null)
                         {
-                            heights[xxx,yyy] = -1;
+                            heights[xxx, yyy] = -1;
                             continue;
                         }
-                        if(tile.isWall)
+                        if (tile.isWall)
                         {
-                            heights[xxx,yyy] = -1;
+                            heights[xxx, yyy] = -1;
                             continue;
                         }
-                        heights[xxx,yyy] = tile.liquid[liquid_select];
+                        heights[xxx, yyy] = tile.liquid[liquid_select];
                         heights[xxx, yyy] /= 7.0f;
                         if (tile.isFloor)
                         {
@@ -530,7 +563,7 @@ public class GameMap : MonoBehaviour
                     }
 
                 //now find their average, discaring invalid ones.
-                float height = 0 ;
+                float height = 0;
                 float total = 0;
                 foreach (var item in heights)
                 {
@@ -552,7 +585,7 @@ public class GameMap : MonoBehaviour
                     (heights[1, 0] < 0 ? height : heights[1, 0])) / 2) - ((
                     (heights[0, 1] < 0 ? height : heights[0, 1]) +
                     (heights[1, 1] < 0 ? height : heights[1, 1])) / 2);
-                finalNormals[coord2Index(xx, yy)] = new Vector3(sx, tileWidth*2, -sy);
+                finalNormals[coord2Index(xx, yy)] = new Vector3(sx, tileWidth * 2, -sy);
                 finalNormals[coord2Index(xx, yy)].Normalize();
 
                 finalVertices[coord2Index(xx, yy)] = DFtoUnityCoord(((block_x * blockSize) + xx), ((block_y * blockSize) + yy), block_z);
@@ -579,13 +612,13 @@ public class GameMap : MonoBehaviour
             if (liquidBlocks[block_x, block_y, block_z, liquid_select] == null)
             {
                 GameObject block;
-                if(liquid_select == l_magma)
+                if (liquid_select == l_magma)
                     block = Instantiate(defaultMagmaBlock) as GameObject;
                 else
                     block = Instantiate(defaultWaterBlock) as GameObject;
                 block.SetActive(true);
                 block.transform.parent = this.transform;
-                block.name = (liquid_select == l_water ? "water(" : "magma(") + block_x + ", " + block_y + ", " + block_z + ")"; 
+                block.name = (liquid_select == l_water ? "water(" : "magma(") + block_x + ", " + block_y + ", " + block_z + ")";
                 liquidBlocks[block_x, block_y, block_z, liquid_select] = block.GetComponent<MeshFilter>();
             }
         }
@@ -631,11 +664,13 @@ public class GameMap : MonoBehaviour
                 }
         //Debug.Log("Generating " + count + " meshes took " + watch.ElapsedMilliseconds + " ms");
     }
+    System.Diagnostics.Stopwatch netWatch = new System.Diagnostics.Stopwatch();
+    System.Diagnostics.Stopwatch loadWatch = new System.Diagnostics.Stopwatch();
+    System.Diagnostics.Stopwatch genWatch = new System.Diagnostics.Stopwatch();
     void GetBlockList()
     {
-        System.Diagnostics.Stopwatch netWatch = new System.Diagnostics.Stopwatch();
-        System.Diagnostics.Stopwatch loadWatch = new System.Diagnostics.Stopwatch();
-        System.Diagnostics.Stopwatch genWatch = new System.Diagnostics.Stopwatch();
+        netWatch.Reset();
+        netWatch.Start();
         posX = (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x / 2)) / 16;
         posY = (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y / 2)) / 16;
         posZ = connectionState.net_view_info.view_pos_z + 1;
@@ -645,9 +680,12 @@ public class GameMap : MonoBehaviour
         connectionState.net_block_request.max_y = posY + rangeY;
         connectionState.net_block_request.min_z = posZ - rangeZdown;
         connectionState.net_block_request.max_z = posZ + rangeZup;
-        netWatch.Start();
+        connectionState.net_block_request.blocks_needed = 1;
         connectionState.BlockListCall.execute(connectionState.net_block_request, out connectionState.net_block_list);
         netWatch.Stop();
+    }
+    void UseBlockList()
+    {
         //stopwatch.Stop();
         //Debug.Log(connectionState.net_block_list.map_blocks.Count + " blocks gotten, took 1/" + (1.0 / stopwatch.Elapsed.TotalSeconds) + " seconds.\n");
         //for (int i = 0; i < blockCollection.Count; i++)
@@ -663,6 +701,7 @@ public class GameMap : MonoBehaviour
             ClearMap();
         map_x = connectionState.net_block_list.map_x;
         map_y = connectionState.net_block_list.map_y;
+        loadWatch.Reset();
         loadWatch.Start();
         for (int i = 0; i < connectionState.net_block_list.map_blocks.Count; i++)
         {
@@ -676,6 +715,7 @@ public class GameMap : MonoBehaviour
             CopyTiles(connectionState.net_block_list.map_blocks[i]);
         }
         loadWatch.Stop();
+        genWatch.Reset();
         genWatch.Start();
         UpdateMeshes();
         genWatch.Stop();
@@ -816,8 +856,18 @@ public class GameMap : MonoBehaviour
     {
         foreach (MeshFilter MF in blocks)
         {
-            if (MF)
+            if (MF != null)
                 MF.mesh.Clear();
+        }
+        foreach (var item in stencilBlocks)
+        {
+            if (item != null)
+                item.mesh.Clear();
+        }
+        foreach (var item in liquidBlocks)
+        {
+            if (item != null)
+                item.mesh.Clear();   
         }
         foreach (var tile in tiles)
         {

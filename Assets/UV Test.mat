@@ -57,7 +57,7 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: .544117689, g: .500108182, b: .500108182, a: 1}
+        second: {r: .323529422, g: .323529422, b: .323529422, a: 1}
       data:
         first:
           name: _ShapeAdj
