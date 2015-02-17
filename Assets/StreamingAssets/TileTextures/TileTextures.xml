@@ -3,6 +3,12 @@
     <tileTexture index = "1">
         <tiletype token="*:SMOOTH:*:*:*" />
     </tileTexture>
+    <tileTexture index = "3">
+        <tiletype token="BRANCH:*:*:*:*" />
+        <tiletype token="TWIG:*:*:*:*" />
+        <tiletype token="SAPLING:*:*:*:*" />
+        <tiletype token="SHRUB:*:*:*:*" />
+    </tileTexture>
     <tileTexture index = "2">
         <tiletype token="*:SMOOTH:TREE_MATERIAL:*:*" />
     </tileTexture>

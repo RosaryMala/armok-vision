@@ -31,14 +31,14 @@ Material:
         first:
           name: _SpecCubeIBL
         second:
-          m_Texture: {fileID: 8900000, guid: 1b2b3cd737a4d4d51aef34132186b19b, type: 2}
+          m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
         first:
           name: _DiffCubeIBL
         second:
-          m_Texture: {fileID: 8900000, guid: 4579ea1a287d4465587006d5739747fb, type: 2}
+          m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:

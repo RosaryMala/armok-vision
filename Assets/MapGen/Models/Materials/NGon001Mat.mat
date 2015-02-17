@@ -61,4 +61,4 @@ Material:
       data:
         first:
           name: _ShapeAdj
-        second: {r: 1, g: 1, b: 1, a: 1}
+        second: {r: .145098045, g: 1, b: 1, a: 1}

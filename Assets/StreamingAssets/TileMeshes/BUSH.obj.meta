@@ -6,15 +6,25 @@ ModelImporter:
     100000: //RootNode
     100002: SHRUB
     100004: StaticMaterial
+    100006: LayerMaterial
+    100008: NoMaterialCutout
     400000: //RootNode
     400002: SHRUB
     400004: StaticMaterial
+    400006: LayerMaterial
+    400008: NoMaterialCutout
     2300000: SHRUB
     2300002: StaticMaterial
+    2300004: LayerMaterial
+    2300006: NoMaterialCutout
     3300000: SHRUB
     3300002: StaticMaterial
+    3300004: LayerMaterial
+    3300006: NoMaterialCutout
     4300000: SHRUB
     4300002: StaticMaterial
+    4300004: LayerMaterial
+    4300006: NoMaterialCutout
     9500000: //RootNode
   materials:
     importMaterials: 0
