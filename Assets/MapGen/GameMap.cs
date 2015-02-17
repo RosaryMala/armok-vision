@@ -78,7 +78,7 @@ public class GameMap : MonoBehaviour
         MaterialTokenList.matTokenList = connectionState.net_material_list.material_list;
         TiletypeTokenList.tiletypeTokenList = connectionState.net_tiletype_list.tiletype_list;
         MapTile.tiletypeTokenList = connectionState.net_tiletype_list.tiletype_list;
-        contentLoader.ParseContentIndexFile(Application.streamingAssetsPath + "\\index.txt");
+        contentLoader.ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt");
         watch.Stop();
         Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
         connectionState.MapResetCall.execute();
@@ -453,7 +453,7 @@ public class GameMap : MonoBehaviour
             GameObject block = Instantiate(defaultMapBlock) as GameObject;
             block.SetActive(true);
             block.transform.parent = this.transform;
-            block.name = "terrain(" + block_x + ", " + block_y + ", " + block_z + ")"; 
+            block.name = "terrain(" + block_x + ", " + block_y + ", " + block_z + ")";
             blocks[block_x, block_y, block_z] = block.GetComponent<MeshFilter>();
         }
         MeshFilter mf = blocks[block_x, block_y, block_z];
@@ -585,7 +585,7 @@ public class GameMap : MonoBehaviour
                     block = Instantiate(defaultWaterBlock) as GameObject;
                 block.SetActive(true);
                 block.transform.parent = this.transform;
-                block.name = (liquid_select == l_water ? "water(" : "magma(") + block_x + ", " + block_y + ", " + block_z + ")"; 
+                block.name = (liquid_select == l_water ? "water(" : "magma(") + block_x + ", " + block_y + ", " + block_z + ")";
                 liquidBlocks[block_x, block_y, block_z, liquid_select] = block.GetComponent<MeshFilter>();
             }
         }
