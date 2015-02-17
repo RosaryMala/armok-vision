@@ -23,7 +23,10 @@ public class GameWindow : MonoBehaviour
     void Update()
     {
         viewPortWidth = viewWidth * MapBlock.tileWidth;
-        viewPortHeight = viewHeight * MapBlock.tileWidth;
+        if(false)
+            viewPortHeight = viewHeight * MapBlock.tileWidth;
+        else
+            viewPortHeight = viewPortWidth * (float)Screen.height / (float)Screen.width;
         viewDistance = viewDist * MapBlock.tileHeight;
         float screenAspect = (float)Screen.width / (float)Screen.height;
         float viewportAspect = (float)viewPortWidth / (float)viewPortHeight;

@@ -18,6 +18,7 @@ Properties {
 SubShader { 
 	Tags { "Queue"="AlphaTest" "IgnoreProjector"="True" "RenderType"="TransparentCutout" }
 	LOD 400
+	Cull Off
 	
 	CGPROGRAM
 	#pragma surface surf LuxDirect noambient alphatest:_Cutoff
