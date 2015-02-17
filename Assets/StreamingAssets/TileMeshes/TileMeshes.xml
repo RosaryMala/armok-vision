@@ -49,84 +49,84 @@
         <tiletype token="*:*:GRASS_LIGHT:*:*" />
         <tiletype token="*:*:GRASS_DARK:*:*" />
     </tileMesh>
-    <tileMesh file = "Ramps\RAMP_1.obj">
+    <tileMesh file = "Ramps/RAMP_1.obj">
         <tiletype token="RAMP:*:*:*:*" />
-        <subObject file ="Ramps\RAMP_1.obj">
+        <subObject file ="Ramps/RAMP_1.obj">
             <ramp index="1"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_2.obj">
+        <subObject file ="Ramps/RAMP_2.obj">
             <ramp index="2"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_3.obj">
+        <subObject file ="Ramps/RAMP_3.obj">
             <ramp index="3"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_4.obj">
+        <subObject file ="Ramps/RAMP_4.obj">
             <ramp index="4"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_5.obj">
+        <subObject file ="Ramps/RAMP_5.obj">
             <ramp index="5"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_6_sharp.obj">
+        <subObject file ="Ramps/RAMP_6_sharp.obj">
             <ramp index="6"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_7_sharp.obj">
+        <subObject file ="Ramps/RAMP_7_sharp.obj">
             <ramp index="7"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_8_sharp.obj">
+        <subObject file ="Ramps/RAMP_8_sharp.obj">
             <ramp index="8"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_9_sharp.obj">
+        <subObject file ="Ramps/RAMP_9_sharp.obj">
             <ramp index="9"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_10_sharp.obj">
+        <subObject file ="Ramps/RAMP_10_sharp.obj">
             <ramp index="10"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_11_sharp.obj">
+        <subObject file ="Ramps/RAMP_11_sharp.obj">
             <ramp index="11"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_12_sharp.obj">
+        <subObject file ="Ramps/RAMP_12_sharp.obj">
             <ramp index="12"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_13_sharp.obj">
+        <subObject file ="Ramps/RAMP_13_sharp.obj">
             <ramp index="13"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_14_sharp.obj">
+        <subObject file ="Ramps/RAMP_14_sharp.obj">
             <ramp index="15"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_15_sharp.obj">
+        <subObject file ="Ramps/RAMP_15_sharp.obj">
             <ramp index="15"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_16.obj">
+        <subObject file ="Ramps/RAMP_16.obj">
             <ramp index="16"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_17.obj">
+        <subObject file ="Ramps/RAMP_17.obj">
             <ramp index="17"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_18_sharp.obj">
+        <subObject file ="Ramps/RAMP_18_sharp.obj">
             <ramp index="18"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_19_sharp.obj">
+        <subObject file ="Ramps/RAMP_19_sharp.obj">
             <ramp index="19"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_20_sharp.obj">
+        <subObject file ="Ramps/RAMP_20_sharp.obj">
             <ramp index="20"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_21_sharp.obj">
+        <subObject file ="Ramps/RAMP_21_sharp.obj">
             <ramp index="21"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_22_sharp.obj">
+        <subObject file ="Ramps/RAMP_22_sharp.obj">
             <ramp index="22"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_23_sharp.obj">
+        <subObject file ="Ramps/RAMP_23_sharp.obj">
             <ramp index="23"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_24_sharp.obj">
+        <subObject file ="Ramps/RAMP_24_sharp.obj">
             <ramp index="24"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_25_sharp.obj">
+        <subObject file ="Ramps/RAMP_25_sharp.obj">
             <ramp index="25"/>
         </subObject>
-        <subObject file ="Ramps\RAMP_26_sharp.obj">
+        <subObject file ="Ramps/RAMP_26_sharp.obj">
             <ramp index="26"/>
         </subObject>
     </tileMesh>
