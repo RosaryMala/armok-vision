@@ -36,18 +36,36 @@
     <tileMesh file = "TREE.obj">
         <tiletype token="TREE_SHAPE:*:*:*:*" />
     </tileMesh>
-    <tileMesh file = "Branches.obj">
+    <tileMesh file = "Foliage_1.obj">
         <tiletype token="BRANCH:*:*:*:*" />
+        <subObject file ="Foliage_1.obj">
+            <random/>
+        </subObject>
+        <subObject file ="Foliage_2.obj">
+            <random/>
+        </subObject>
+        <subObject file ="Foliage_3.obj">
+            <random/>
+        </subObject>
     </tileMesh>
     <tileMesh file = "FLOOR.obj">
         <tiletype token="TRUNK_BRANCH:*:*:*:*" />
     </tileMesh>
-    <tileMesh file = "Twigs.obj">
+    <tileMesh file = "Foliage_Small_1.obj">
         <tiletype token="TWIG:*:*:*:*" />
+        <subObject file ="Foliage_Small_1.obj">
+            <random/>
+        </subObject>
+        <subObject file ="Foliage_Small_2.obj">
+            <random/>
+        </subObject>
+        <subObject file ="Foliage_Small_3.obj">
+            <random/>
+        </subObject>
     </tileMesh>
     <tileMesh file = "Grass Big.obj">
-        <tiletype token="*:*:GRASS_LIGHT:*:*" />
-        <tiletype token="*:*:GRASS_DARK:*:*" />
+        <tiletype token="FLOOR:*:GRASS_LIGHT:*:*" />
+        <tiletype token="FLOOR:*:GRASS_DARK:*:*" />
     </tileMesh>
     <tileMesh file = "Ramps\RAMP_1.obj">
         <tiletype token="RAMP:*:*:*:*" />

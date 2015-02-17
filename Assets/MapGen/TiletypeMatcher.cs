@@ -72,7 +72,7 @@ public class TiletypeMatcher<T>
     {
         if(direction == "*")
         {
-            match.difference |= 32;
+            match.difference |= 1;
             foreach (var item in optionList.Values)
             {
                 TrySetMatch(match, item.id);
@@ -91,7 +91,7 @@ public class TiletypeMatcher<T>
     {
         if (variant == "*")
         {
-            match.difference |= 16;
+            match.difference |= 2;
             foreach (var item in optionList.Values)
             {
                 SetOptions(direction, item, match);
@@ -117,7 +117,7 @@ public class TiletypeMatcher<T>
     {
         if (material == "*")
         {
-            match.difference |= 8;
+            match.difference |= 4;
             foreach (var item in optionList.Values)
             {
                 SetOptions(variant, direction, item, match);
@@ -146,7 +146,7 @@ public class TiletypeMatcher<T>
     {
         if (special == "*")
         {
-            match.difference |= 4;
+            match.difference |= 8;
             foreach (var item in optionList.Values)
             {
                 SetOptions(material, variant, direction, item, match);
@@ -171,7 +171,7 @@ public class TiletypeMatcher<T>
     {
         if (shape == "*")
         {
-            match.difference |= 2;
+            match.difference |= 16;
             foreach (var item in TiletypeTokenList.tileDefs.Values)
             {
                 SetOptions(special, material, variant, direction, item, match);
@@ -208,7 +208,7 @@ public class TiletypeMatcher<T>
                         TrySetMatch(newItem, TiletypeTokenList.tileTokens[parts[0]].id);
                     break;
                 case 5:
-                    newItem.difference |= 1;
+                    newItem.difference |= 32;
                     SetOptions(parts[0], parts[1], parts[2], parts[3], parts[4], newItem);
                     break;
                 default:

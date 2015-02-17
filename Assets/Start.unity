@@ -265,9 +265,9 @@ MonoBehaviour:
   viewCamera: {fileID: 1336453713}
   DefaultMaterial: {fileID: 2100000, guid: fcc33854b846d0e4aa14f8afb74e173b, type: 2}
   rangeX: 4
-  rangeY: 4
+  rangeY: 3
   rangeZup: 1
-  rangeZdown: 2
+  rangeZdown: 5
   posX: 4
   posY: 4
   posZ: 120
