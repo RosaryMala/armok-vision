@@ -93,6 +93,12 @@ public class GameMap : MonoBehaviour
         //InvokeRepeating("CullDistantBlocks", 1, 2);
         //InvokeRepeating("LazyLoadBlocks", 1, 1);
     }
+    public void ConnectToDF()
+    {
+        if (connectionState != null)
+            return;
+
+    }
 
     bool gotBlocks = false;
     // Update is called once per frame
