@@ -2,6 +2,15 @@
 <tileTextures>
     <tileTexture index = "1">
         <tiletype token="*:SMOOTH:*:*:*" />
+        <subObject index="4">
+            <material token ="*:*:WOOD"/>
+        </subObject>
+    </tileTexture>
+    <tileTexture index = "1">
+        <tiletype token="*:*:CONSTRUCTION:*:*" />
+        <subObject index="4">
+            <material token ="*:*:WOOD"/>
+        </subObject>
     </tileTexture>
     <tileTexture index = "3">
         <tiletype token="BRANCH:*:*:*:*" />
