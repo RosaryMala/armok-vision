@@ -3,6 +3,7 @@ using System.Xml.Linq;
 
 public class ColorContent : IContent
 {
+
     public Color value;
     public bool AddTypeElement(System.Xml.Linq.XElement elemtype)
     {
@@ -50,6 +51,11 @@ public class ColorContent : IContent
         int.TryParse(colorGreenAtt.Value, out green);
         int.TryParse(colorBlueAtt.Value, out blue);
         value = new Color(red / 255.0f, green / 255.0f, blue / 255.0f, alpha / 255.0f);
+        // LINEAR
+        //if (PlayerSettings.colorSpace == ColorSpace.Linear)
+        {
+            value = value.linear;
+        }
         return true;
 
     }

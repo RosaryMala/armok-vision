@@ -63,10 +63,10 @@
             <random/>
         </subObject>
     </tileMesh>
-    <tileMesh file = "Grass Big.obj">
+    <!--<tileMesh file = "Grass Big.obj">
         <tiletype token="FLOOR:*:GRASS_LIGHT:*:*" />
         <tiletype token="FLOOR:*:GRASS_DARK:*:*" />
-    </tileMesh>
+    </tileMesh>-->
     <tileMesh file = "Ramps/RAMP_1.obj">
         <tiletype token="RAMP:*:*:*:*" />
         <subObject file ="Ramps/RAMP_1.obj">

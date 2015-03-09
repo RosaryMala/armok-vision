@@ -230,7 +230,7 @@
       <subtype value="SERPENTINE" />
     </material>
   </color>
-  <color red="248" green="487" blue="133">
+  <color red="248" green="187" blue="133">
     <material value="Inorganic">
       <subtype value="ORTHOCLASE" />
     </material>
@@ -280,7 +280,7 @@
       <subtype value="ALUNITE" />
     </material>
   </color>
-  <color red="101" green="235" blue="236">
+  <color red="101" green="335" blue="436">
     <material value="Inorganic">
       <subtype value="RAW_ADAMANTINE" />
     </material>

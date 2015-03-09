@@ -175,6 +175,55 @@ namespace RemoteFortressReader
       get { return _water; }
     }
   
+    private readonly global::System.Collections.Generic.List<bool> _hidden = new global::System.Collections.Generic.List<bool>();
+    [global::ProtoBuf.ProtoMember(11, Name=@"hidden", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<bool> hidden
+    {
+      get { return _hidden; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<bool> _light = new global::System.Collections.Generic.List<bool>();
+    [global::ProtoBuf.ProtoMember(12, Name=@"light", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<bool> light
+    {
+      get { return _light; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<bool> _subterranean = new global::System.Collections.Generic.List<bool>();
+    [global::ProtoBuf.ProtoMember(13, Name=@"subterranean", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<bool> subterranean
+    {
+      get { return _subterranean; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<bool> _outside = new global::System.Collections.Generic.List<bool>();
+    [global::ProtoBuf.ProtoMember(14, Name=@"outside", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<bool> outside
+    {
+      get { return _outside; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<bool> _aquifer = new global::System.Collections.Generic.List<bool>();
+    [global::ProtoBuf.ProtoMember(15, Name=@"aquifer", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<bool> aquifer
+    {
+      get { return _aquifer; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<bool> _water_stagnant = new global::System.Collections.Generic.List<bool>();
+    [global::ProtoBuf.ProtoMember(16, Name=@"water_stagnant", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<bool> water_stagnant
+    {
+      get { return _water_stagnant; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<bool> _water_salt = new global::System.Collections.Generic.List<bool>();
+    [global::ProtoBuf.ProtoMember(17, Name=@"water_salt", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<bool> water_salt
+    {
+      get { return _water_salt; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
