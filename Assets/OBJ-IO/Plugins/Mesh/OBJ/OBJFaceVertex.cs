@@ -20,6 +20,6 @@ public class OBJFaceVertex
             && m_UVIndex == faceVertex.m_UVIndex
             && m_UV2Index == faceVertex.m_UV2Index
             && m_NormalIndex == faceVertex.m_NormalIndex
-            && m_ColorIndex == m_ColorIndex;
+            && m_ColorIndex == faceVertex.m_ColorIndex;
     }
 }

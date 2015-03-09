@@ -228,19 +228,19 @@ public class LuxEnvProbe : MonoBehaviour {
             {
                 if(AssignedMeshes[i])
                 {
-                    if(AssignedMeshes[i].renderer != null)
+                    if(AssignedMeshes[i].GetComponent<Renderer>() != null)
                     {
-                        int materials = AssignedMeshes[i].renderer.sharedMaterials.Length;
+                        int materials = AssignedMeshes[i].GetComponent<Renderer>().sharedMaterials.Length;
                         // Get all materials
                         for (int j = 0; j < materials; j++) {
-                            if (AssignedMeshes[i].renderer.sharedMaterials[j].HasProperty("_CubemapSize"))
+                            if (AssignedMeshes[i].GetComponent<Renderer>().sharedMaterials[j].HasProperty("_CubemapSize"))
                             {
                                 // AssignedMeshes[i].renderer.sharedMaterials[j].SetVector("_CubemapPositionWS", new Vector4(transform.position.x, transform.position.y, transform.position.z, 0));
-                                AssignedMeshes[i].renderer.sharedMaterials[j].SetVector("_CubemapSize", new Vector4(BoxSize.x*0.5f, BoxSize.y*0.5f, BoxSize.z*0.5f, 0));
-                                AssignedMeshes[i].renderer.sharedMaterials[j].SetMatrix("_CubeMatrix_Trans", TRANS_BoxMatrix );
-                                AssignedMeshes[i].renderer.sharedMaterials[j].SetMatrix("_CubeMatrix_Inv", INV_BoxMatrix );
+                                AssignedMeshes[i].GetComponent<Renderer>().sharedMaterials[j].SetVector("_CubemapSize", new Vector4(BoxSize.x*0.5f, BoxSize.y*0.5f, BoxSize.z*0.5f, 0));
+                                AssignedMeshes[i].GetComponent<Renderer>().sharedMaterials[j].SetMatrix("_CubeMatrix_Trans", TRANS_BoxMatrix );
+                                AssignedMeshes[i].GetComponent<Renderer>().sharedMaterials[j].SetMatrix("_CubeMatrix_Inv", INV_BoxMatrix );
                                 if (SPECCube != null){
-                                    AssignedMeshes[i].renderer.sharedMaterials[j].SetTexture("_SpecCubeIBL", SPECCube);
+                                    AssignedMeshes[i].GetComponent<Renderer>().sharedMaterials[j].SetTexture("_SpecCubeIBL", SPECCube);
                                 }
                             }
                         }
