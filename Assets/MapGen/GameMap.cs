@@ -16,13 +16,20 @@ public class GameMap : MonoBehaviour
     Light[, ,] magmaGlow;
     public Light magmaGlowPrefab;
     //public GenericTile tileSelector;
+
+    public Material basicTerrainMaterial;
+    public Material stencilTerrainMaterial;
+    public Material waterMaterial;
+    public Material magmaMaterial;
+    public Material invisibleMaterial;
+    public Material invisibleStencilMaterial;
+
     public ConnectionState connectionState;
     public GameObject defaultMapBlock;
-    public GameObject StencilMapBLock;
+    public GameObject defaultStencilMapBLock;
     public GameObject defaultWaterBlock;
     public GameObject defaultMagmaBlock;
     public GameWindow viewCamera;
-    public Material DefaultMaterial;
     public MeshFilter[, ,] blocks; // Dumb blocks for holding the terrain data.
     public MeshFilter[, ,] stencilBlocks;
     public MeshFilter[, , ,] liquidBlocks; // Dumb blocks for holding the water.
@@ -32,6 +39,7 @@ public class GameMap : MonoBehaviour
     public int rangeY = 0;
     public int rangeZup = 0;
     public int rangeZdown = 0;
+    public int blocksToGet = 1;
     public int posX = 0;
     public int posY = 0;
     public int posZ = 0;
@@ -93,6 +101,7 @@ public class GameMap : MonoBehaviour
         //InvokeRepeating("CullDistantBlocks", 1, 2);
         //InvokeRepeating("LazyLoadBlocks", 1, 1);
     }
+
     public void ConnectToDF()
     {
         if (connectionState != null)
@@ -107,7 +116,6 @@ public class GameMap : MonoBehaviour
         connectionState.network_client.suspend_game();
         GetViewInfo();
         PositionCamera();
-        //HideMeshes();
         ShowCursorInfo();
         //if (blockListTimer.ElapsedMilliseconds > 30)
         {
@@ -122,18 +130,21 @@ public class GameMap : MonoBehaviour
         //    lazyLoadTimer.Reset();
         //    lazyLoadTimer.Start();
         //}
+        GetUnitList();
         connectionState.network_client.resume_game();
+        //UpdateCreatures();
         if(gotBlocks)
         {
             UseBlockList();
             gotBlocks = false;
         }
-        if (cullTimer.ElapsedMilliseconds > 1000)
+        if (cullTimer.ElapsedMilliseconds > 100)
         {
             CullDistantBlocks();
             cullTimer.Reset();
             cullTimer.Start();
         }
+        HideMeshes();
     }
 
     void OnDestroy()
@@ -504,7 +515,7 @@ public class GameMap : MonoBehaviour
         //mf.mesh.CombineMeshes(meshBuffer);
         if (stencilBlocks[block_x, block_y, block_z] == null)
         {
-            GameObject stencilBlock = Instantiate(StencilMapBLock) as GameObject;
+            GameObject stencilBlock = Instantiate(defaultStencilMapBLock) as GameObject;
             stencilBlock.SetActive(true);
             stencilBlock.transform.parent = this.transform;
             stencilBlock.name = "foliage(" + block_x + ", " + block_y + ", " + block_z + ")";
@@ -686,7 +697,7 @@ public class GameMap : MonoBehaviour
         connectionState.net_block_request.max_y = posY + rangeY;
         connectionState.net_block_request.min_z = posZ - rangeZdown;
         connectionState.net_block_request.max_z = posZ + rangeZup;
-        connectionState.net_block_request.blocks_needed = 1;
+        connectionState.net_block_request.blocks_needed = blocksToGet;
         connectionState.BlockListCall.execute(connectionState.net_block_request, out connectionState.net_block_list);
         netWatch.Stop();
     }
@@ -780,6 +791,12 @@ public class GameMap : MonoBehaviour
                             blockDirtyBits[xx, yy, zz] = true;
 
                         }
+                        if (stencilBlocks[xx, yy, zz] != null)
+                        {
+                            stencilBlocks[xx, yy, zz].mesh.Clear();
+                            blockDirtyBits[xx, yy, zz] = true;
+
+                        }
                         for (int i = 0; i < 2; i++)
                             if (liquidBlocks[xx, yy, zz, i] != null)
                             {
@@ -796,6 +813,12 @@ public class GameMap : MonoBehaviour
                             blockDirtyBits[xx, yy, zz] = true;
 
                         }
+                        if (stencilBlocks[xx, yy, zz] != null)
+                        {
+                            stencilBlocks[xx, yy, zz].mesh.Clear();
+                            blockDirtyBits[xx, yy, zz] = true;
+
+                        } 
                         for (int i = 0; i < 2; i++)
                             if (liquidBlocks[xx, yy, zz, i] != null)
                             {
@@ -831,11 +854,11 @@ public class GameMap : MonoBehaviour
 
     void GetUnitList()
     {
-        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-        stopwatch.Start();
+//        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+//        stopwatch.Start();
         connectionState.UnitListCall.execute(null, out connectionState.net_unit_list);
-        stopwatch.Stop();
-        Debug.Log(connectionState.net_unit_list.creature_list.Count + " units gotten, took " + stopwatch.Elapsed.Milliseconds + " ms.");
+//        stopwatch.Stop();
+//        Debug.Log(connectionState.net_unit_list.creature_list.Count + " units gotten, took " + stopwatch.Elapsed.Milliseconds + " ms.");
 
     }
     void GetViewInfo()
@@ -899,12 +922,53 @@ public class GameMap : MonoBehaviour
                     if (blocks[xx, yy, zz] != null)
                     {
                         if (zz > connectionState.net_view_info.view_pos_z)
-                            blocks[xx, yy, zz].gameObject.layer = 8;
+                        {
+                            blocks[xx, yy, zz].gameObject.GetComponent<Renderer>().material = invisibleMaterial;
+                            //blocks[xx, yy, zz].gameObject.SetActive(false);
+                        }
                         else
-                            blocks[xx, yy, zz].gameObject.layer = 0;
+                        {
+                            blocks[xx, yy, zz].gameObject.GetComponent<Renderer>().material = basicTerrainMaterial;
+                            //blocks[xx, yy, zz].gameObject.SetActive(true);
+                        }
                     }
                 }
-
+        for (int zz = 0; zz < stencilBlocks.GetLength(2); zz++)
+            for (int yy = 0; yy < stencilBlocks.GetLength(1); yy++)
+                for (int xx = 0; xx < stencilBlocks.GetLength(0); xx++)
+                {
+                    if (stencilBlocks[xx, yy, zz] != null)
+                    {
+                        if (zz > connectionState.net_view_info.view_pos_z)
+                        {
+                            stencilBlocks[xx, yy, zz].gameObject.GetComponent<Renderer>().material = invisibleStencilMaterial;
+                            //stencilBlocks[xx, yy, zz].gameObject.SetActive(false);
+                        }
+                        else
+                        {
+                            stencilBlocks[xx, yy, zz].gameObject.GetComponent<Renderer>().material = stencilTerrainMaterial;
+                            //stencilBlocks[xx, yy, zz].gameObject.SetActive(true);
+                        }
+                    }
+                }
+        for (int qq = 0; qq < liquidBlocks.GetLength(3); qq++)
+            for (int zz = 0; zz < liquidBlocks.GetLength(2); zz++)
+                for (int yy = 0; yy < liquidBlocks.GetLength(1); yy++)
+                    for (int xx = 0; xx < liquidBlocks.GetLength(0); xx++)
+                    {
+                        if (liquidBlocks[xx, yy, zz, qq] != null)
+                        {
+                            if (zz > connectionState.net_view_info.view_pos_z)
+                                liquidBlocks[xx, yy, zz, qq].gameObject.GetComponent<Renderer>().material = invisibleMaterial;
+                            else
+                            {
+                                if(qq == l_magma)
+                                    liquidBlocks[xx, yy, zz, qq].gameObject.GetComponent<Renderer>().material = magmaMaterial;
+                                else
+                                    liquidBlocks[xx, yy, zz, qq].gameObject.GetComponent<Renderer>().material = waterMaterial;
+                            }
+                        }
+                    }
     }
 
     void ShowCursorInfo()
@@ -995,4 +1059,24 @@ public class GameMap : MonoBehaviour
 
         }
     }
+
+    Dictionary<int, GameObject> creatureList;
+    public GameObject creatureTemplate;
+
+    void UpdateCreatures()
+    {
+        foreach (var unit in connectionState.net_unit_list.creature_list)
+        {
+            if (creatureList == null)
+                creatureList = new Dictionary<int, GameObject>();
+            if (!creatureList.ContainsKey(unit.id))
+            {
+                creatureList[unit.id] = Instantiate(creatureTemplate) as GameObject;
+                creatureList[unit.id].GetComponent<LayeredSprite>().Do_Sprite = true;
+                creatureList[unit.id].transform.parent = gameObject.transform;
+            }
+            creatureList[unit.id].transform.position = DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z) + new Vector3(0, 2, 0);
+        }
+    }
+
 }

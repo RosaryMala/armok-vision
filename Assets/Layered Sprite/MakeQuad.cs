@@ -9,7 +9,7 @@ public class MeshUtils
     public static Mesh MakeQuad(float height, float ratio)
     {
         float originX = -height / ratio / 2;
-        float originZ = 0;
+        float originZ = -height / 2;
         float sizeX = height / ratio;
         float sizeZ = height;
         Mesh newMesh = new Mesh();

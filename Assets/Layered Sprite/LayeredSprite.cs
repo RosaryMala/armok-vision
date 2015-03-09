@@ -27,7 +27,14 @@ public class LayeredSprite : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        EqualizeListLengths();
+        if (Do_Sprite)
+        {
+            UpdateQuad();
+            GetComponent<Renderer>().material.mainTexture = CompileSprite();
+            Resources.UnloadUnusedAssets();
+            Do_Sprite = false;
+        }
     }
 
     void OnValidate()
@@ -36,7 +43,7 @@ public class LayeredSprite : MonoBehaviour
         if(Do_Sprite)
         {
             UpdateQuad();
-            renderer.material.mainTexture = CompileSprite();
+            GetComponent<Renderer>().material.mainTexture = CompileSprite();
             Resources.UnloadUnusedAssets();
             Do_Sprite = false;
         }
@@ -44,7 +51,7 @@ public class LayeredSprite : MonoBehaviour
 
     void OnDestroy()
     {
-        DestroyImmediate(renderer.material);
+        DestroyImmediate(GetComponent<Renderer>().material);
     }
 
     public static bool nearlyEqual(float a, float b, float epsilon) {
@@ -154,7 +161,7 @@ public class LayeredSprite : MonoBehaviour
         }
         base_sprite.Apply();
         s1.Stop();
-        Debug.Log("Regenerating a " + sprite_width + "x" + sprite_height + "sprite with " + active_layers + " active layers took " + s1.ElapsedMilliseconds + "ms.");
+        //Debug.Log("Regenerating a " + sprite_width + "x" + sprite_height + "sprite with " + active_layers + " active layers took " + s1.ElapsedMilliseconds + "ms.");
         return base_sprite;
     }
 }
