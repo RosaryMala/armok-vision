@@ -132,7 +132,7 @@ public class MeshCombineUtility
         mesh.normals = normals;
         mesh.colors = colors;
         mesh.uv = uv;
-        mesh.uv1 = uv1;
+        mesh.uv2 = uv1;
         mesh.tangents = tangents;
         mesh.triangles = triangles;
         return true;

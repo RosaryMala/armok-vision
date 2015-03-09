@@ -27,30 +27,30 @@ public class GameWindow : MonoBehaviour
             viewPortHeight = viewHeight * MapBlock.tileWidth;
         else
             viewPortHeight = viewPortWidth * (float)Screen.height / (float)Screen.width;
-        viewDistance = viewDist * MapBlock.tileHeight;
+        viewDistance = viewDist * MapBlock.tileHeight * 10;
         float screenAspect = (float)Screen.width / (float)Screen.height;
         float viewportAspect = (float)viewPortWidth / (float)viewPortHeight;
 
         float fraction = screenAspect / viewportAspect;
 
-        float height = (viewPortHeight / 2.0f) / Mathf.Sin((camera.fieldOfView / 2) * Mathf.Deg2Rad);
+        float height = (viewPortHeight / 2.0f) / Mathf.Sin((GetComponent<Camera>().fieldOfView / 2) * Mathf.Deg2Rad);
         transform.localPosition = new Vector3(0, height, -verticalShift);
 
-        camera.nearClipPlane = height - nearClipOffset;
-        camera.farClipPlane = height + viewDistance;
-        RenderSettings.fogStartDistance = camera.nearClipPlane;
-        RenderSettings.fogEndDistance = camera.farClipPlane;
+        GetComponent<Camera>().nearClipPlane = height - nearClipOffset;
+        GetComponent<Camera>().farClipPlane = height + viewDistance;
+        RenderSettings.fogStartDistance = GetComponent<Camera>().nearClipPlane;
+        RenderSettings.fogEndDistance = GetComponent<Camera>().farClipPlane;
         if (fraction > 1.0f) //If the screen is wider than the DF Viewport
         {
-            camera.rect = new Rect(0.5f - ((1.0f / fraction) / 2.0f), 0.0f, 1.0f / fraction, 1.0f);
+            GetComponent<Camera>().rect = new Rect(0.5f - ((1.0f / fraction) / 2.0f), 0.0f, 1.0f / fraction, 1.0f);
         }
         else //If the DF Viewport is wider.
         {
-            camera.rect = new Rect(0.0f, 0.5f - (fraction / 2.0f), 1.0f, fraction);
+            GetComponent<Camera>().rect = new Rect(0.0f, 0.5f - (fraction / 2.0f), 1.0f, fraction);
         }
         //make a custom camera matrix, rather than use the inbuilt one.
-        n = camera.nearClipPlane;
-        f = camera.farClipPlane;
+        n = GetComponent<Camera>().nearClipPlane;
+        f = GetComponent<Camera>().farClipPlane;
         r = viewPortWidth / 2.0f;
         l = -viewPortWidth / 2.0f;
         t = verticalShift + (viewPortHeight / 2.0f);
@@ -62,6 +62,6 @@ public class GameWindow : MonoBehaviour
         mat[0, 2] = (r + l) / (r - l); mat[1, 2] = (t + b) / (t - b); mat[2, 2] = -(f + n) / (f - n); mat[3, 2] = -1;
         mat[0, 3] = 0; mat[1, 3] = 0; mat[2, 3] = -2 * f * n / (f - n); ; mat[3, 3] = 0;
 
-        camera.projectionMatrix = mat;
+        GetComponent<Camera>().projectionMatrix = mat;
     }
 }
