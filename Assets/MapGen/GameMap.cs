@@ -43,6 +43,7 @@ public class GameMap : MonoBehaviour
     public int posX = 0;
     public int posY = 0;
     public int posZ = 0;
+    public bool posZDirty = true; // Set in GetViewInfo if z changes, and reset in HideMeshes after meshes hidden.
     public int map_x;
     public int map_y;
     public Text genStatus;
@@ -863,7 +864,15 @@ public class GameMap : MonoBehaviour
     }
     void GetViewInfo()
     {
-        connectionState.ViewInfoCall.execute(null, out connectionState.net_view_info);
+        if (connectionState.net_view_info == null) {
+            connectionState.ViewInfoCall.execute (null, out connectionState.net_view_info);
+        } else {
+            int oldZ = connectionState.net_view_info.cursor_pos_z;
+            connectionState.ViewInfoCall.execute (null, out connectionState.net_view_info);
+            if (oldZ != connectionState.net_view_info.cursor_pos_z) {
+                posZDirty = true;
+            }
+        }
     }
 
     void PositionCamera()
@@ -915,6 +924,8 @@ public class GameMap : MonoBehaviour
 
     void HideMeshes()
     {
+        if (!posZDirty) return;
+        posZDirty = false;
         for (int zz = 0; zz < blocks.GetLength(2); zz++)
             for (int yy = 0; yy < blocks.GetLength(1); yy++)
                 for (int xx = 0; xx < blocks.GetLength(0); xx++)
