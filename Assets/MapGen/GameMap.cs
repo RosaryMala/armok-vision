@@ -867,9 +867,9 @@ public class GameMap : MonoBehaviour
         if (connectionState.net_view_info == null) {
             connectionState.ViewInfoCall.execute (null, out connectionState.net_view_info);
         } else {
-            int oldZ = connectionState.net_view_info.cursor_pos_z;
+            int oldZ = connectionState.net_view_info.view_pos_z;
             connectionState.ViewInfoCall.execute (null, out connectionState.net_view_info);
-            if (oldZ != connectionState.net_view_info.cursor_pos_z) {
+            if (oldZ != connectionState.net_view_info.view_pos_z) {
                 posZDirty = true;
             }
         }
