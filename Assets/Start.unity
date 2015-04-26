@@ -332,6 +332,7 @@ MonoBehaviour:
   posX: 4
   posY: 4
   posZ: 120
+  posZDirty: 1
   map_x: 0
   map_y: 0
   genStatus: {fileID: 1986774941}
