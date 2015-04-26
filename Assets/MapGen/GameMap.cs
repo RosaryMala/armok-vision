@@ -114,16 +114,25 @@ public class GameMap : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Profiler.BeginSample("DF Comm");
+        Profiler.BeginSample("Suspend");
         connectionState.network_client.suspend_game();
+        Profiler.EndSample();
+        Profiler.BeginSample("View");
         GetViewInfo();
+        Profiler.EndSample ();
+        Profiler.BeginSample("Camera & cursor");
         PositionCamera();
         ShowCursorInfo();
+        Profiler.EndSample();
         //if (blockListTimer.ElapsedMilliseconds > 30)
         {
+            Profiler.BeginSample ("Block List");
             GetBlockList();
             blockListTimer.Reset();
             blockListTimer.Start();
             gotBlocks = true;
+            Profiler.EndSample();
         }
         //if (lazyLoadTimer.ElapsedMilliseconds > 1000)
         //{
@@ -131,21 +140,32 @@ public class GameMap : MonoBehaviour
         //    lazyLoadTimer.Reset();
         //    lazyLoadTimer.Start();
         //}
+        Profiler.BeginSample ("Unit List");
         GetUnitList();
+        Profiler.EndSample ();
+        Profiler.BeginSample ("Resume");
         connectionState.network_client.resume_game();
+        Profiler.EndSample();
+        Profiler.EndSample ();
         //UpdateCreatures();
         if(gotBlocks)
         {
+            Profiler.BeginSample("Use blocks");
             UseBlockList();
             gotBlocks = false;
+            Profiler.EndSample();
         }
         if (cullTimer.ElapsedMilliseconds > 100)
         {
+            Profiler.BeginSample ("Cull blocks");
             CullDistantBlocks();
             cullTimer.Reset();
             cullTimer.Start();
+            Profiler.EndSample ();
         }
+        Profiler.BeginSample("Hide meshes");
         HideMeshes();
+        Profiler.EndSample();
     }
 
     void OnDestroy()
