@@ -778,7 +778,12 @@ namespace DFHack
                 Socket tempSocket =
                     new Socket(ipe.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
-                tempSocket.Connect(ipe);
+                try {
+                    tempSocket.Connect(ipe);
+                } catch (SocketException e) {
+                    // Often thrown if DF is inactive.
+                    continue;
+                }
 
                 if (tempSocket.Connected)
                 {

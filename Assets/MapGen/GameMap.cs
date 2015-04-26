@@ -7,50 +7,71 @@ using UnityEngine.UI;
 using System.IO;
 using UnityExtension;
 
+// The class responsible for talking to DF and meshing the data it gets.
+// Relevant vocabulary: A "map tile" is an individual square on the map.
+// A "map block" is a 16x16 area of map tiles stored by DF; think minecraft "chunks".
+
 public class GameMap : MonoBehaviour
 {
-    public ContentLoader contentLoader = new ContentLoader();
-    static readonly int l_water = 0;
-    static readonly int l_magma = 1;
-    MapTile[, ,] tiles;
-    Light[, ,] magmaGlow;
-    public Light magmaGlowPrefab;
-    //public GenericTile tileSelector;
-
-    public Material basicTerrainMaterial;
-    public Material stencilTerrainMaterial;
+    // Things to be set from the Unity Editor.
+    public Material basicTerrainMaterial;   // Can be any terrain you want.
+    public Material stencilTerrainMaterial; // Foliage & other stenciled materials.
     public Material waterMaterial;
     public Material magmaMaterial;
     public Material invisibleMaterial;
     public Material invisibleStencilMaterial;
-
-    public ConnectionState connectionState;
     public GameObject defaultMapBlock;
-    public GameObject defaultStencilMapBLock;
+    public GameObject defaultStencilMapBlock;
     public GameObject defaultWaterBlock;
     public GameObject defaultMagmaBlock;
-    public GameWindow viewCamera;
-    public MeshFilter[, ,] blocks; // Dumb blocks for holding the terrain data.
-    public MeshFilter[, ,] stencilBlocks;
-    public MeshFilter[, , ,] liquidBlocks; // Dumb blocks for holding the water.
-    public bool[, ,] blockDirtyBits;
-    public bool[, ,] waterBlockDirtyBits; //also for magma
-    public int rangeX = 0;
-    public int rangeY = 0;
-    public int rangeZup = 0;
-    public int rangeZdown = 0;
-    public int blocksToGet = 1;
-    public int posX = 0;
-    public int posY = 0;
-    public int posZ = 0;
-    public bool posZDirty = true; // Set in GetViewInfo if z changes, and reset in HideMeshes after meshes hidden.
-    public int map_x;
-    public int map_y;
+    public GameWindow viewCamera; // What does this do?
+    public Light magmaGlowPrefab;
     public Text genStatus;
     public Text cursorProperties;
 
-    Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> materials;
+    // Parameters managing the currently visible area of the map.
+    // Preference:
+    public int rangeX = 4;
+    public int rangeY = 4;
+    public int rangeZup = 0;
+    public int rangeZdown = 5;
+    public int blocksToGet = 1; // How many blocks to grab at a time.
+    // Read from DF:
+    int posX = 0;
+    int posY = 0;
+    int posZ = 0;
+    bool posZDirty = true; // Set in GetViewInfo if z changes, and reset in HideMeshes after meshes hidden.
+    int map_x;
+    int map_y;
 
+    // The thing that talks to Dwarf Fortress.
+    public ConnectionState connectionState;
+    // Dirty flag checking if we received blocks.
+    bool gotBlocks = false;
+
+    // The actual unity meshes used to draw things on screen.
+    MeshFilter[, ,] blocks;         // Terrain data.
+    MeshFilter[, ,] stencilBlocks;  // Foliage &ct.
+    MeshFilter[, , ,] liquidBlocks; // Water & magma.
+    // Dirty flags for those meshes
+    bool[, ,] blockDirtyBits;
+    bool[, ,] waterBlockDirtyBits;  // (Also for magma.)
+    // Lights from magma.
+    Light[, ,] magmaGlow;
+
+    // Used to index into water/magma arrays in a few places.
+    static readonly int l_water = 0;
+    static readonly int l_magma = 1;
+
+    // The stored data of the map (not drawn); just a big array of tiles.
+    MapTile[, ,] tiles;
+
+
+    // Stuff to let the material list & various meshes & whatnot be loaded from xml specs at runtime.
+    Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> materials;
+    public ContentLoader contentLoader = new ContentLoader();
+
+    // Coordinate system stuff.
     public static float tileHeight { get { return 3.0f; } }
     public static float floorHeight { get { return 0.5f; } }
     public static float tileWidth { get { return 2.0f; } }
@@ -65,27 +86,26 @@ public class GameMap : MonoBehaviour
         Vector3 outCoord = new Vector3(input.x * tileWidth, input.z * tileHeight, input.y * (-tileWidth));
         return outCoord;
     }
+
+    // Used while meshing blocks
     MeshCombineUtility.MeshInstance[] meshBuffer;
     MeshCombineUtility.MeshInstance[] stencilMeshBuffer;
-    //CombineInstance[] meshBuffer;
 
+    // Used for random diagnostics
     System.Diagnostics.Stopwatch blockListTimer = new System.Diagnostics.Stopwatch();
     System.Diagnostics.Stopwatch cullTimer = new System.Diagnostics.Stopwatch();
     System.Diagnostics.Stopwatch lazyLoadTimer = new System.Diagnostics.Stopwatch();
 
-    // Use this for initialization
+    // Does about what you'd think it does.
     void Start()
     {
         Connect();
         InitializeBlocks();
-        //connectionState.HashCheckCall.execute();
         GetViewInfo();
         PositionCamera();
         GetMaterialList();
         GetTiletypeList();
         GetUnitList();
-        //GetBlockList();
-        //Disconnect();
         System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         watch.Start();
         MaterialTokenList.matTokenList = connectionState.net_material_list.material_list;
@@ -98,74 +118,34 @@ public class GameMap : MonoBehaviour
         blockListTimer.Start();
         cullTimer.Start();
         lazyLoadTimer.Start();
-        //InvokeRepeating("GetBlockList", 0, 0.1f);
-        //InvokeRepeating("CullDistantBlocks", 1, 2);
-        //InvokeRepeating("LazyLoadBlocks", 1, 1);
     }
 
-    public void ConnectToDF()
-    {
-        if (connectionState != null)
-            return;
-
-    }
-
-    bool gotBlocks = false;
-    // Update is called once per frame
+    // Run once per frame.
     void Update()
     {
-        Profiler.BeginSample("DF Comm");
-        Profiler.BeginSample("Suspend");
         connectionState.network_client.suspend_game();
-        Profiler.EndSample();
-        Profiler.BeginSample("View");
         GetViewInfo();
-        Profiler.EndSample ();
-        Profiler.BeginSample("Camera & cursor");
         PositionCamera();
         ShowCursorInfo();
-        Profiler.EndSample();
-        //if (blockListTimer.ElapsedMilliseconds > 30)
-        {
-            Profiler.BeginSample ("Block List");
-            GetBlockList();
-            blockListTimer.Reset();
-            blockListTimer.Start();
-            gotBlocks = true;
-            Profiler.EndSample();
-        }
-        //if (lazyLoadTimer.ElapsedMilliseconds > 1000)
-        //{
-        //    LazyLoadBlocks();
-        //    lazyLoadTimer.Reset();
-        //    lazyLoadTimer.Start();
-        //}
-        Profiler.BeginSample ("Unit List");
+        GetBlockList();
+        blockListTimer.Reset();
+        blockListTimer.Start();
+        gotBlocks = true;
         GetUnitList();
-        Profiler.EndSample ();
-        Profiler.BeginSample ("Resume");
         connectionState.network_client.resume_game();
-        Profiler.EndSample();
-        Profiler.EndSample ();
         //UpdateCreatures();
         if(gotBlocks)
         {
-            Profiler.BeginSample("Use blocks");
             UseBlockList();
             gotBlocks = false;
-            Profiler.EndSample();
         }
         if (cullTimer.ElapsedMilliseconds > 100)
         {
-            Profiler.BeginSample ("Cull blocks");
             CullDistantBlocks();
             cullTimer.Reset();
             cullTimer.Start();
-            Profiler.EndSample ();
         }
-        Profiler.BeginSample("Hide meshes");
         HideMeshes();
-        Profiler.EndSample();
     }
 
     void OnDestroy()
@@ -199,35 +179,6 @@ public class GameMap : MonoBehaviour
         waterBlockDirtyBits[mapBlockX, mapBlockY, mapBlockZ] = true;
     }
 
-    //void InitializeBlocks()
-    //{
-    //    if (blockCollection == null)
-    //        blockCollection = new List<MapBlock>();
-    //    int wantedSize = rangeX * 2 * rangeY * 2 * (rangeZup + rangeZdown);
-    //    if (blockCollection.Count < wantedSize)
-    //        for (int i = blockCollection.Count; i < wantedSize; i++)
-    //        {
-    //            MapBlock newblock = Instantiate(defaultMapBlock) as MapBlock;
-    //            newblock.transform.parent = this.transform;
-    //            newblock.parent = this;
-    //            blockCollection.Add(newblock);
-    //        }
-    //    else if (blockCollection.Count > wantedSize) //This shouldn't happen normally, but better to be prepared than not
-    //        for (int i = blockCollection.Count - 1; i >= wantedSize; i--)
-    //        {
-    //            Destroy(blockCollection[i]);
-    //            blockCollection.RemoveAt(i);
-    //        }
-    //}
-
-    //void FreeAllBlocks()
-    //{
-    //    foreach(MapBlock block in blockCollection)
-    //    {
-    //        block.gameObject.SetActive(false);
-    //    }
-    //}
-
     void Connect()
     {
         if (connectionState != null)
@@ -235,8 +186,11 @@ public class GameMap : MonoBehaviour
         else
         {
             connectionState = new ConnectionState();
-            if (!connectionState.is_connected)
+            if (!connectionState.is_connected) {
+                Debug.Log("Connection failed; disabling GameMap."); 
+                enabled = false;
                 Disconnect();
+            }
         }
     }
 
@@ -275,16 +229,6 @@ public class GameMap : MonoBehaviour
             Debug.Log("{" + material.mat_pair.mat_index + "," + material.mat_pair.mat_type + "}, " + material.id + ", " + material.name);
         }
     }
-
-    //MapBlock getFreeBlock()
-    //{
-    //    for (int i = 0; i < blockCollection.Count; i++)
-    //    {
-    //        if (blockCollection[i].gameObject.activeSelf == false)
-    //            return blockCollection[i];
-    //    }
-    //    return null;
-    //}
 
     public MapTile GetTile(int x, int y, int z)
     {
@@ -470,20 +414,6 @@ public class GameMap : MonoBehaviour
         for (int xx = (block_x * blockSize); xx < (block_x + 1) * blockSize; xx++)
             for (int yy = (block_y * blockSize); yy < (block_y + 1) * blockSize; yy++)
             {
-                ////do lights first
-                //if (tiles[xx, yy, block_z] != null)
-                //{
-                //    //do magma lights
-                //    if ((xx % 1 == 0) && (yy % 1 == 0) && (block_z % 1 == 0))
-                //        if (tiles[xx, yy, block_z].magma > 0 && magmaGlow[xx, yy, block_z] == null)
-                //        {
-                //            magmaGlow[xx, yy, block_z] = (Light)Instantiate(magmaGlowPrefab);
-                //            magmaGlow[xx, yy, block_z].gameObject.SetActive(true);
-                //            magmaGlow[xx, yy, block_z].transform.parent = this.transform;
-                //            magmaGlow[xx, yy, block_z].transform.position = DFtoUnityCoord(xx, yy, block_z + 1);
-                //        }
-                //}
-
                 if (meshBuffer == null)
                     meshBuffer = new MeshCombineUtility.MeshInstance[blockSize * blockSize * (int)MeshLayer.StaticCutout];
                 if (stencilMeshBuffer == null)
@@ -533,10 +463,9 @@ public class GameMap : MonoBehaviour
         if (mf.mesh == null)
             mf.mesh = new Mesh();
         mf.mesh.Clear();
-        //mf.mesh.CombineMeshes(meshBuffer);
         if (stencilBlocks[block_x, block_y, block_z] == null)
         {
-            GameObject stencilBlock = Instantiate(defaultStencilMapBLock) as GameObject;
+            GameObject stencilBlock = Instantiate(defaultStencilMapBlock) as GameObject;
             stencilBlock.SetActive(true);
             stencilBlock.transform.parent = this.transform;
             stencilBlock.name = "foliage(" + block_x + ", " + block_y + ", " + block_z + ")";
@@ -674,7 +603,6 @@ public class GameMap : MonoBehaviour
         mf.mesh.uv = finalUVs;
         mf.mesh.triangles = finalFaces.ToArray();
         mf.mesh.normals = finalNormals;
-        //mf.mesh.RecalculateNormals();
         mf.mesh.RecalculateBounds();
         mf.mesh.RecalculateTangents();
     }
@@ -725,16 +653,7 @@ public class GameMap : MonoBehaviour
     void UseBlockList()
     {
         //stopwatch.Stop();
-        //Debug.Log(connectionState.net_block_list.map_blocks.Count + " blocks gotten, took 1/" + (1.0 / stopwatch.Elapsed.TotalSeconds) + " seconds.\n");
-        //for (int i = 0; i < blockCollection.Count; i++)
-        //{
-        //    if (blockCollection[i].gameObject.activeSelf == true)
-        //    {
-        //        blockCollection[i].Reposition(connectionState.net_block_list);
-        //    }
-        //}
         //watch.Start();
-        //FreeAllBlocks();
         if ((connectionState.net_block_list.map_x != map_x) || (connectionState.net_block_list.map_y != map_y))
             ClearMap();
         map_x = connectionState.net_block_list.map_x;
@@ -743,13 +662,6 @@ public class GameMap : MonoBehaviour
         loadWatch.Start();
         for (int i = 0; i < connectionState.net_block_list.map_blocks.Count; i++)
         {
-            //MapBlock newBlock = getFreeBlock();
-            //if (newBlock == null)
-            //    break;
-            //newBlock.gameObject.SetActive(true);
-            //newBlock.SetAllTiles(connectionState.net_block_list.map_blocks[i], connectionState.net_block_list, connectionState.net_tiletype_list);
-            //newBlock.Regenerate();
-            //newBlock.name = "MapBlock(" + newBlock.coordString + ")";
             CopyTiles(connectionState.net_block_list.map_blocks[i]);
         }
         loadWatch.Stop();
@@ -848,28 +760,6 @@ public class GameMap : MonoBehaviour
                             }
                         continue;
                     }
-                    //int distSide = dist;// / 16;
-                    //if (xx > centerX + distSide)
-                    //{
-                    //    blocks[xx, yy, zz].mesh.Clear();
-                    //    continue;
-                    //}
-                    //if (xx < centerX - distSide)
-                    //{
-                    //    blocks[xx, yy, zz].mesh.Clear();
-                    //    continue;
-                    //}
-                    //if (yy > centerY + distSide)
-                    //{
-                    //    blocks[xx, yy, zz].mesh.Clear();
-                    //    continue;
-                    //}
-                    //if (yy < centerY - distSide)
-                    //{
-                    //    blocks[xx, yy, zz].mesh.Clear();
-                    //    continue;
-                    //}
-
                 }
     }
 
