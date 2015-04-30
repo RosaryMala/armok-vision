@@ -86,6 +86,17 @@ public class GameMap : MonoBehaviour
         Vector3 outCoord = new Vector3(input.x * tileWidth, input.z * tileHeight, input.y * (-tileWidth));
         return outCoord;
     }
+    public static Vector3 DFtoUnityTileCenter(DFCoord input) {
+        Vector3 result = DFtoUnityCoord(input);
+        result.y += tileHeight/2;
+        return result;
+    }
+    public static DFCoord UnityToDFCoord(Vector3 input) {
+        int x = Mathf.RoundToInt (input.x / tileWidth);
+        int y = Mathf.RoundToInt (input.z / -tileWidth);
+        int z = Mathf.FloorToInt (input.y / tileHeight);
+        return new DFCoord(x, y, z);
+    }
 
     // Used while meshing blocks
     MeshCombineUtility.MeshInstance[] meshBuffer;
