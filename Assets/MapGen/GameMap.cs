@@ -64,8 +64,7 @@ public class GameMap : MonoBehaviour
     static readonly int l_magma = 1;
 
     // The stored data of the map (not drawn); just a big array of tiles.
-    MapTile[, ,] tiles;
-
+    public MapTile[, ,] tiles;
 
     // Stuff to let the material list & various meshes & whatnot be loaded from xml specs at runtime.
     Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> materials;
@@ -89,6 +88,12 @@ public class GameMap : MonoBehaviour
     public static Vector3 DFtoUnityTileCenter(DFCoord input) {
         Vector3 result = DFtoUnityCoord(input);
         result.y += tileHeight/2;
+        return result;
+    }
+    public static Vector3 DFtoUnityBottomCorner(DFCoord input) {
+        Vector3 result = DFtoUnityCoord(input);
+        result.x -= tileWidth / 2;
+        result.z -= tileWidth / 2;
         return result;
     }
     public static DFCoord UnityToDFCoord(Vector3 input) {
