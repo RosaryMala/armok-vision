@@ -9,7 +9,7 @@ using UnityExtension;
 
 // The class responsible for talking to DF and meshing the data it gets.
 // Relevant vocabulary: A "map tile" is an individual square on the map.
-// A "map block" is a 16x16 area of map tiles stored by DF; think minecraft "chunks".
+// A "map block" is a 16x16x1 area of map tiles stored by DF; think minecraft "chunks".
 
 public class GameMap : MonoBehaviour
 {
@@ -24,7 +24,6 @@ public class GameMap : MonoBehaviour
     public GameObject defaultStencilMapBlock;
     public GameObject defaultWaterBlock;
     public GameObject defaultMagmaBlock;
-    public GameWindow viewCamera; // What does this do?
     public Light magmaGlowPrefab;
     public Text genStatus;
     public Text cursorProperties;
@@ -36,6 +35,7 @@ public class GameMap : MonoBehaviour
     public int rangeZup = 0;
     public int rangeZdown = 5;
     public int blocksToGet = 1; // How many blocks to grab at a time.
+    public int cameraViewDist = 25;
     // Read from DF:
     int posX = 0;
     int posY = 0;
@@ -118,7 +118,6 @@ public class GameMap : MonoBehaviour
         Connect();
         InitializeBlocks();
         GetViewInfo();
-        PositionCamera();
         GetMaterialList();
         GetTiletypeList();
         GetUnitList();
@@ -141,7 +140,6 @@ public class GameMap : MonoBehaviour
     {
         connectionState.network_client.suspend_game();
         GetViewInfo();
-        PositionCamera();
         ShowCursorInfo();
         GetBlockList();
         blockListTimer.Reset();
@@ -646,6 +644,7 @@ public class GameMap : MonoBehaviour
                 }
         //Debug.Log("Generating " + count + " meshes took " + watch.ElapsedMilliseconds + " ms");
     }
+
     System.Diagnostics.Stopwatch netWatch = new System.Diagnostics.Stopwatch();
     System.Diagnostics.Stopwatch loadWatch = new System.Diagnostics.Stopwatch();
     System.Diagnostics.Stopwatch genWatch = new System.Diagnostics.Stopwatch();
@@ -696,7 +695,7 @@ public class GameMap : MonoBehaviour
     void LazyLoadBlocks()
     {
         lastLoadedLevel--;
-        if (lastLoadedLevel < 0 || lastLoadedLevel < connectionState.net_view_info.view_pos_z + 1 - viewCamera.viewDist)
+        if (lastLoadedLevel < 0)
             lastLoadedLevel = connectionState.net_view_info.view_pos_z + 1 - rangeZdown;
         posX = (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x / 2)) / 16;
         posY = (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y / 2)) / 16;
@@ -724,7 +723,6 @@ public class GameMap : MonoBehaviour
 
     void CullDistantBlocks()
     {
-        int dist = viewCamera.viewDist;
         int centerZ = connectionState.net_view_info.view_pos_z;
         //int centerX = (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x / 2));
         //int centerY = (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y / 2));
@@ -732,7 +730,7 @@ public class GameMap : MonoBehaviour
             for (int yy = 0; yy < blocks.GetLength(1); yy++)
                 for (int zz = 0; zz < blocks.GetLength(2); zz++)
                 {
-                    if (zz > centerZ + dist)
+                    if (zz > centerZ + cameraViewDist)
                     {
                         if (blocks[xx, yy, zz] != null)
                         {
@@ -754,7 +752,7 @@ public class GameMap : MonoBehaviour
                             }
                         continue;
                     }
-                    if (zz < centerZ - dist)
+                    if (zz < centerZ - cameraViewDist)
                     {
                         if (blocks[xx, yy, zz] != null)
                         {
@@ -799,16 +797,6 @@ public class GameMap : MonoBehaviour
                 posZDirty = true;
             }
         }
-    }
-
-    void PositionCamera()
-    {
-        viewCamera.transform.parent.transform.position = MapBlock.DFtoUnityCoord(
-            (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x / 2)),
-            (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y / 2)),
-            connectionState.net_view_info.view_pos_z + 1);
-        viewCamera.viewWidth = connectionState.net_view_info.view_size_x;
-        viewCamera.viewHeight = connectionState.net_view_info.view_size_y;
     }
 
     void GetMapInfo()
