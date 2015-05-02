@@ -10,7 +10,7 @@ public class DFConnection : MonoBehaviour {
 
     // Singleton stuff
     private static DFConnection _instance = null;
-    private static List<System.Action> connectionCallbacks = new List();
+    private static List<System.Action> connectionCallbacks = new List<System.Action>();
 
     // Remote bindings
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MaterialList> MaterialListCall;
@@ -25,11 +25,11 @@ public class DFConnection : MonoBehaviour {
     private RemoteClient networkClient;
 
     // Data from DF
-    public RemoteFortressReader.MaterialList _netMaterialList;
-    public RemoteFortressReader.TiletypeList _netTiletypeList;
-    public RemoteFortressReader.MapInfo _netMapInfo;
-    public RemoteFortressReader.ViewInfo _netViewInfo;
-    public RemoteFortressReader.UnitList _netUnitList;
+    private RemoteFortressReader.MaterialList _netMaterialList;
+    private RemoteFortressReader.TiletypeList _netTiletypeList;
+    private RemoteFortressReader.MapInfo _netMapInfo;
+    private RemoteFortressReader.ViewInfo _netViewInfo;
+    private RemoteFortressReader.UnitList _netUnitList;
 
     // Special stuff for map blocks
     private Queue<RemoteFortressReader.BlockRequest> pendingBlockRequests;
@@ -137,6 +137,9 @@ public class DFConnection : MonoBehaviour {
             throw new UnityException("Can't have multiple dwarf fortress connections!");
         }
         _instance = this;
+        pendingBlockRequests = new Queue<RemoteFortressReader.BlockRequest>();
+        pendingBlocks = new Dictionary<DFCoord, RemoteFortressReader.MapBlock>();
+        Connect();
     }
 	
 	void Update () {
@@ -147,6 +150,8 @@ public class DFConnection : MonoBehaviour {
             callback.Invoke();
         }
         connectionCallbacks.Clear();
+
+        PollDF();
 	}
 
     void FetchUnchangingInfo () {
