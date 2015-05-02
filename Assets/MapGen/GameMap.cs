@@ -44,11 +44,6 @@ public class GameMap : MonoBehaviour
     int map_x;
     int map_y;
 
-    // The thing that talks to Dwarf Fortress.
-    public ConnectionState connectionState;
-    // Dirty flag checking if we received blocks.
-    bool gotBlocks = false;
-
     // The actual unity meshes used to draw things on screen.
     MeshFilter[, ,] blocks;         // Terrain data.
     MeshFilter[, ,] stencilBlocks;  // Foliage &ct.
