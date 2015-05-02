@@ -14,6 +14,7 @@ public class MapSelection : MonoBehaviour {
     // If we're attached to a camera, highlight the cube we're pointing at
     // (For now)
     void OnPostRender () {
+        if (!DFConnection.Connected || !targetMap.enabled) return;
         Ray mouseRay = GetComponent<Camera>().ScreenPointToRay (Input.mousePosition);
         DFCoord? currentTarget = FindCurrentTarget (mouseRay);
         if (currentTarget.HasValue) {
