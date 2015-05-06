@@ -146,7 +146,7 @@ public class GameMap : MonoBehaviour
     {
         connectionState.network_client.suspend_game();
         GetViewInfo();
-        PositionCamera();
+        //PositionCamera(); //turning this off right now to test camera movement.
         ShowCursorInfo();
         GetBlockList();
         blockListTimer.Reset();

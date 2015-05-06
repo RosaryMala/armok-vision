@@ -3,21 +3,106 @@ using System.Collections;
 using DFHack;
 
 // Pretty tightly coupled to GameMap, ehhh.
-public class MapSelection : MonoBehaviour {
+public class MapSelection : MonoBehaviour
+{
     public GameMap targetMap;
+    public GameObject cameraOrigin;
     public bool debugMode = false;
+
+    public Vector3 dfCoord = new Vector3();
+    public Vector3 unityCoord = new Vector3();
+
+    private Vector3 mouseWorldPosition = Vector3.zero;
+    private float mouseWorldPositionLastKnownHeight = 0f;
+    private Vector3 mouseWorldPositionPrevious = Vector3.zero;
+    private float mouseWorldPlaneHeight = 0f; 
 
     const int MAXIMUM_CHECKS = 5000;
 
     private Material highlightLineMaterial;
 
+    //Handle mouse dragging here.
+    void Update()
+    {
+        mouseWorldPosition = GetMouseWorldPosition(Input.mousePosition);
+        mouseWorldPositionLastKnownHeight = mouseWorldPosition.y;
+
+        UpdateCameraPan();
+    }
+
+    private void UpdateCameraPan()
+    {
+        if (Input.GetMouseButtonDown(2))
+        {
+            
+            //Initialize mouse drag pan
+             
+            mouseWorldPositionPrevious = GetMouseWorldPosition(Input.mousePosition);
+            mouseWorldPlaneHeight = mouseWorldPositionPrevious.y;
+
+        }
+        if (Input.GetMouseButton(2))
+        {
+
+            //Mouse drag pan
+
+            Vector3 mouseWorldPosition = GetMouseWorldPosition(Input.mousePosition, mouseWorldPlaneHeight);
+
+            Vector3 current = new Vector3(mouseWorldPosition.x, 0f, mouseWorldPosition.z);
+            Vector3 previous = new Vector3(mouseWorldPositionPrevious.x, 0f, mouseWorldPositionPrevious.z);
+
+            cameraOrigin.transform.Translate(previous - current, Space.World);
+
+            mouseWorldPositionPrevious = GetMouseWorldPosition(Input.mousePosition, mouseWorldPlaneHeight);
+        }
+    }
+
+    private Vector3 GetMouseWorldPosition(Vector3 mousePosition, float planeHeight)
+    {
+        Plane plane = new Plane(Vector3.up, new Vector3(0f, planeHeight, 0f));
+        Ray ray = GetComponent<Camera>().ScreenPointToRay(mousePosition);
+        float distance;
+        if (plane.Raycast(ray, out distance))
+        {
+            return ray.GetPoint(distance);
+        }
+        return this.mouseWorldPositionPrevious;
+    }
+
+    Vector3 GetMouseWorldPosition(Vector3 mousePosition)
+    {
+        DFCoord dfTarget; //dummy coord to hold things for now.
+        Vector3 WorldPos;
+        Ray mouseRay = GetComponent<Camera>().ScreenPointToRay(mousePosition);
+        if (!FindCurrentTarget(mouseRay, out dfTarget, out WorldPos))
+        {
+            Plane currentPlane = new Plane(Vector3.up, GameMap.DFtoUnityCoord(0, 0, targetMap.posZ));
+            float distance;
+            if (currentPlane.Raycast(mouseRay, out distance))
+            {
+                WorldPos = mouseRay.GetPoint(distance);
+            }
+            else
+            {
+                WorldPos = Vector3.zero;
+            }
+        }
+        return WorldPos;
+    }
+
     // If we're attached to a camera, highlight the cube we're pointing at
     // (For now)
-    void OnPostRender () {
-        Ray mouseRay = GetComponent<Camera>().ScreenPointToRay (Input.mousePosition);
-        DFCoord? currentTarget = FindCurrentTarget (mouseRay);
-        if (currentTarget.HasValue) {
-            DebugHighlightTile(currentTarget.Value, Color.white);
+    void OnPostRender()
+    {
+        Ray mouseRay = GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+
+        DFCoord currentTarget;
+        Vector3 currentTargetCoords;
+        if (FindCurrentTarget(mouseRay, out currentTarget, out currentTargetCoords))
+        {
+            DebugHighlightTile(currentTarget, Color.white);
+            unityCoord = currentTargetCoords;
+            dfCoord = new Vector3(currentTarget.x, currentTarget.y, currentTarget.z);
         }
     }
 
@@ -26,9 +111,13 @@ public class MapSelection : MonoBehaviour {
     // in each tile, check if the ray is actively hitting something.
     // If it's not, find the wall of the tile the ray exits through,
     // go to that tile, and repeat.
-    DFCoord? FindCurrentTarget (Ray ray) {
-        if (!HitsMapCube(ray)) {
-            return null;
+    bool FindCurrentTarget(Ray ray, out DFCoord tileCoord, out Vector3 unityCoord)
+    {
+        if (!HitsMapCube(ray))
+        {
+            tileCoord = default(DFCoord);
+            unityCoord = default(Vector3);
+            return false;
         }
 
         // In each tile, we find its bottom corner, and then add these
@@ -40,26 +129,35 @@ public class MapSelection : MonoBehaviour {
         // When we pass through a tile and hit this wall, how do we increment
         // our DFCoord?
         DFCoord xHitIncrement, yHitIncrement, zHitIncrement;
-        if (ray.direction.x > 0) {
+        if (ray.direction.x > 0)
+        {
             xWallOffset = GameMap.tileWidth;
             xHitIncrement = new DFCoord(1, 0, 0);
-        } else {
+        }
+        else
+        {
             xWallOffset = 0;
             xHitIncrement = new DFCoord(-1, 0, 0);
         }
-        if (ray.direction.z > 0) {
+        if (ray.direction.z > 0)
+        {
             zWallOffset = GameMap.tileWidth;
             zHitIncrement = new DFCoord(0, -1, 0);
-        } else {
+        }
+        else
+        {
             zWallOffset = 0;
             zHitIncrement = new DFCoord(0, 1, 0);
         }
-        if (ray.direction.y > 0) {
+        if (ray.direction.y > 0)
+        {
             yWallOffset = GameMap.tileHeight;
             yHitIncrement = new DFCoord(0, 0, 1);
-        } else {
+        }
+        else
+        {
             yWallOffset = 0;
-            yHitIncrement = new DFCoord(0, 0,-1);
+            yHitIncrement = new DFCoord(0, 0, -1);
         }
 
         // If this is true and we go onto a tile outside the map,
@@ -73,14 +171,17 @@ public class MapSelection : MonoBehaviour {
         Vector3 lastHit = ray.origin;
 
         // Cheap hack to keep from looping forever if we screw up somehow.
-        for (int _insurance = 0; _insurance < MAXIMUM_CHECKS; _insurance++) {
+        for (int _insurance = 0; _insurance < MAXIMUM_CHECKS; _insurance++)
+        {
 
-            if (debugMode) {
+            if (debugMode)
+            {
                 DebugHighlightTile(currentCoord, Color.blue);
             }
 
             // Make sure we don't move backwards somehow.
-            if ((lastHit.x - ray.origin.x) / ray.direction.x < 0) {
+            if ((lastHit.x - ray.origin.x) / ray.direction.x < 0)
+            {
                 throw new UnityException("Negative distance multiplier?");
             }
 
@@ -90,67 +191,84 @@ public class MapSelection : MonoBehaviour {
             // Are we in the map?
             if (currentCoord.x < 0 || targetMap.tiles.GetLength(0) <= currentCoord.x ||
                 currentCoord.y < 0 || targetMap.tiles.GetLength(1) <= currentCoord.y ||
-                currentCoord.z < 0 || targetMap.posZ <= currentCoord.z) {
+                currentCoord.z < 0 || targetMap.posZ <= currentCoord.z)
+            {
                 // No.
-                if (haveHitMap) {
+                if (haveHitMap)
+                {
                     // But we have been before;
                     // we've entered and exited the map without hitting anything.
-                    return null;
+                    tileCoord = default(DFCoord);
+                    unityCoord = default(Vector3);
+                    return false;
                 }
-            } else {
+            }
+            else
+            {
                 // We are in the map.
                 haveHitMap = true;
 
                 MapTile currentTile = targetMap.tiles[currentCoord.x, currentCoord.y, currentCoord.z];
                 // Are we in a real tile?
-                if (currentTile != null) {
+                if (currentTile != null)
+                {
                     // Yes.
-                    switch (currentTile.shape) {
-                    case RemoteFortressReader.TiletypeShape.EMPTY:
-                    case RemoteFortressReader.TiletypeShape.NO_SHAPE:
-                        // We're not hitting anything, though.
-                        break;
-                    //case RemoteFortressReader.TiletypeShape.SHRUB:
-                    //case RemoteFortressReader.TiletypeShape.SAPLING:
-                    case RemoteFortressReader.TiletypeShape.WALL:
-                    case RemoteFortressReader.TiletypeShape.FORTIFICATION:
-                    //case RemoteFortressReader.TiletypeShape.TRUNK_BRANCH:
-                    case RemoteFortressReader.TiletypeShape.TWIG:
-                        // We must be hitting things.
-                        // (maybe adjust shrub, saplings out of this group?)
-                        return currentCoord;
-                    case RemoteFortressReader.TiletypeShape.RAMP:
-                    case RemoteFortressReader.TiletypeShape.FLOOR:
-                    case RemoteFortressReader.TiletypeShape.BOULDER:
-                    case RemoteFortressReader.TiletypeShape.PEBBLES:
-                    case RemoteFortressReader.TiletypeShape.BROOK_TOP:
-                    case RemoteFortressReader.TiletypeShape.SAPLING:
-                    case RemoteFortressReader.TiletypeShape.SHRUB:
-                    case RemoteFortressReader.TiletypeShape.BRANCH:
-                    case RemoteFortressReader.TiletypeShape.TRUNK_BRANCH:
-                        // Check if we're in the floor.
-                        // (that we're in the tile is implied.)
-                        if (Between (cornerCoord.y, lastHit.y, cornerCoord.y + GameMap.floorHeight)) {
-                            return currentCoord;
-                        }
-                        // Check if we enter the floor; same way we check wall intersections.
-                        float floorY = cornerCoord.y+GameMap.floorHeight;
-                        float toFloorMult = (floorY - ray.origin.y) / ray.direction.y;
-                        Vector3 floorIntercept = ray.origin + ray.direction*toFloorMult;
-                        if (Between (cornerCoord.x, floorIntercept.x, cornerCoord.x+GameMap.tileWidth) &&
-                            Between (cornerCoord.z, floorIntercept.z, cornerCoord.z+GameMap.tileWidth)) {
-                            return currentCoord;
-                        }
-                        break;
+                    switch (currentTile.shape)
+                    {
+                        case RemoteFortressReader.TiletypeShape.EMPTY:
+                        case RemoteFortressReader.TiletypeShape.NO_SHAPE:
+                            // We're not hitting anything, though.
+                            break;
+                        //case RemoteFortressReader.TiletypeShape.SHRUB:
+                        //case RemoteFortressReader.TiletypeShape.SAPLING:
+                        case RemoteFortressReader.TiletypeShape.WALL:
+                        case RemoteFortressReader.TiletypeShape.FORTIFICATION:
+                        //case RemoteFortressReader.TiletypeShape.TRUNK_BRANCH:
+                        case RemoteFortressReader.TiletypeShape.TWIG:
+                            // We must be hitting things.
+                            // (maybe adjust shrub, saplings out of this group?)
+                            tileCoord = currentCoord;
+                            unityCoord = lastHit;
+                            return true;
+                        case RemoteFortressReader.TiletypeShape.RAMP:
+                        case RemoteFortressReader.TiletypeShape.FLOOR:
+                        case RemoteFortressReader.TiletypeShape.BOULDER:
+                        case RemoteFortressReader.TiletypeShape.PEBBLES:
+                        case RemoteFortressReader.TiletypeShape.BROOK_TOP:
+                        case RemoteFortressReader.TiletypeShape.SAPLING:
+                        case RemoteFortressReader.TiletypeShape.SHRUB:
+                        case RemoteFortressReader.TiletypeShape.BRANCH:
+                        case RemoteFortressReader.TiletypeShape.TRUNK_BRANCH:
+                            // Check if we're in the floor.
+                            // (that we're in the tile is implied.)
+                            if (Between(cornerCoord.y, lastHit.y, cornerCoord.y + GameMap.floorHeight))
+                            {
+                                tileCoord = currentCoord;
+                                unityCoord = lastHit;
+                                return true;
+                            }
+                            // Check if we enter the floor; same way we check wall intersections.
+                            float floorY = cornerCoord.y + GameMap.floorHeight;
+                            float toFloorMult = (floorY - ray.origin.y) / ray.direction.y;
+                            Vector3 floorIntercept = ray.origin + ray.direction * toFloorMult;
+                            if (Between(cornerCoord.x, floorIntercept.x, cornerCoord.x + GameMap.tileWidth) &&
+                                Between(cornerCoord.z, floorIntercept.z, cornerCoord.z + GameMap.tileWidth))
+                            {
+                                tileCoord = currentCoord;
+                                unityCoord = lastHit;
+                                return true;
+                            }
+                            break;
                     }
                 }
             }
             // Didn't hit anything in the tile; figure out which wall we're hitting & walk to that tile.
             {
                 float xMult = (cornerCoord.x + xWallOffset - ray.origin.x) / ray.direction.x;
-                Vector3 xIntercept = ray.origin + ray.direction*xMult;
-                if (Between(cornerCoord.z, xIntercept.z, cornerCoord.z+GameMap.tileWidth) &&
-                    Between(cornerCoord.y, xIntercept.y, cornerCoord.y+GameMap.tileHeight)) {
+                Vector3 xIntercept = ray.origin + ray.direction * xMult;
+                if (Between(cornerCoord.z, xIntercept.z, cornerCoord.z + GameMap.tileWidth) &&
+                    Between(cornerCoord.y, xIntercept.y, cornerCoord.y + GameMap.tileHeight))
+                {
                     lastHit = xIntercept;
                     currentCoord += xHitIncrement;
                     continue;
@@ -158,9 +276,10 @@ public class MapSelection : MonoBehaviour {
             }
             {
                 float zMult = (cornerCoord.z + zWallOffset - ray.origin.z) / ray.direction.z;
-                Vector3 zIntercept = ray.origin + ray.direction*zMult;
-                if (Between(cornerCoord.x, zIntercept.x, cornerCoord.x+GameMap.tileWidth) &&
-                    Between(cornerCoord.y, zIntercept.y, cornerCoord.y+GameMap.tileHeight)) {
+                Vector3 zIntercept = ray.origin + ray.direction * zMult;
+                if (Between(cornerCoord.x, zIntercept.x, cornerCoord.x + GameMap.tileWidth) &&
+                    Between(cornerCoord.y, zIntercept.y, cornerCoord.y + GameMap.tileHeight))
+                {
                     lastHit = zIntercept;
                     currentCoord += zHitIncrement;
                     continue;
@@ -168,9 +287,10 @@ public class MapSelection : MonoBehaviour {
             }
             {
                 float yMult = (cornerCoord.y + yWallOffset - ray.origin.y) / ray.direction.y;
-                Vector3 yIntercept = ray.origin + ray.direction*yMult;
-                if (cornerCoord.x <= yIntercept.x && yIntercept.x <= cornerCoord.x+GameMap.tileWidth &&
-                    cornerCoord.z <= yIntercept.z && yIntercept.z <= cornerCoord.z+GameMap.tileWidth) {
+                Vector3 yIntercept = ray.origin + ray.direction * yMult;
+                if (cornerCoord.x <= yIntercept.x && yIntercept.x <= cornerCoord.x + GameMap.tileWidth &&
+                    cornerCoord.z <= yIntercept.z && yIntercept.z <= cornerCoord.z + GameMap.tileWidth)
+                {
                     lastHit = yIntercept;
                     currentCoord += yHitIncrement;
                     continue;
@@ -182,20 +302,24 @@ public class MapSelection : MonoBehaviour {
         }
 
         // We went the maximum amount of time without hitting anything
-        return null;
+        tileCoord = default(DFCoord);
+        unityCoord = default(Vector3);
+        return false;
     }
 
-    bool Between(float lower, float t, float upper) {
+    bool Between(float lower, float t, float upper)
+    {
         return lower <= t && t <= upper;
     }
 
     // Check if a ray could possibly hit the game map at all
-    bool HitsMapCube(Ray ray) {
-        Vector3 lowerLimits = GameMap.DFtoUnityBottomCorner(new DFCoord(0,0,0));
+    bool HitsMapCube(Ray ray)
+    {
+        Vector3 lowerLimits = GameMap.DFtoUnityBottomCorner(new DFCoord(0, 0, 0));
         Vector3 upperLimits = GameMap.DFtoUnityBottomCorner(new DFCoord(
-            targetMap.tiles.GetLength(0)-1,
-            targetMap.tiles.GetLength(1)-1,
-            targetMap.tiles.GetLength(2)-1
+            targetMap.tiles.GetLength(0) - 1,
+            targetMap.tiles.GetLength(1) - 1,
+            targetMap.tiles.GetLength(2) - 1
             )) + new Vector3(GameMap.tileWidth, GameMap.tileHeight, GameMap.tileWidth);
 
         // Multipliers to scale the ray to hit the different walls of the cube
@@ -206,19 +330,21 @@ public class MapSelection : MonoBehaviour {
         float tz1 = (lowerLimits.z - ray.origin.z) / ray.direction.z;
         float tz2 = (upperLimits.z - ray.origin.z) / ray.direction.z;
 
-        float tMin = Mathf.Min(tx1,tx2,ty1,ty2,tz1,tz2);
-        float tMax = Mathf.Max(tx1,tx2,ty1,ty2,tz1,tz2);
+        float tMin = Mathf.Min(tx1, tx2, ty1, ty2, tz1, tz2);
+        float tMax = Mathf.Max(tx1, tx2, ty1, ty2, tz1, tz2);
 
         // If tMax < 0, cube is entirely behind us; 
         // if tMin > tMax, we don't intersect the cube at all
         return tMin < tMax && 0 < tMax;
     }
-    
-    void DebugHighlightTile(DFCoord tile, Color color) {
-        DebugHighlightRegion (tile, tile, color);
+
+    void DebugHighlightTile(DFCoord tile, Color color)
+    {
+        DebugHighlightRegion(tile, tile, color);
     }
 
-    void DebugHighlightRegion(DFCoord a, DFCoord b, Color color) {
+    void DebugHighlightRegion(DFCoord a, DFCoord b, Color color)
+    {
 
         InitMaterial();
         highlightLineMaterial.SetPass(0);
@@ -228,14 +354,14 @@ public class MapSelection : MonoBehaviour {
         Vector3 bVec = GameMap.DFtoUnityBottomCorner(b);
 
         Vector3 lowC = new Vector3(
-            Mathf.Min (aVec.x, bVec.x),
-            Mathf.Min (aVec.y, bVec.y),
-            Mathf.Min (aVec.z, bVec.z)
+            Mathf.Min(aVec.x, bVec.x),
+            Mathf.Min(aVec.y, bVec.y),
+            Mathf.Min(aVec.z, bVec.z)
             );
         Vector3 upC = new Vector3(
-            Mathf.Max (aVec.x, bVec.x) + GameMap.tileWidth,
-            Mathf.Max (aVec.y, bVec.y) + GameMap.tileHeight,
-            Mathf.Max (aVec.z, bVec.z) + GameMap.tileWidth
+            Mathf.Max(aVec.x, bVec.x) + GameMap.tileWidth,
+            Mathf.Max(aVec.y, bVec.y) + GameMap.tileHeight,
+            Mathf.Max(aVec.z, bVec.z) + GameMap.tileWidth
             );
 
         // Bottom square
@@ -272,16 +398,18 @@ public class MapSelection : MonoBehaviour {
         GL.End();
     }
 
-    void InitMaterial() {
+    void InitMaterial()
+    {
         // From http://answers.unity3d.com/questions/482128/draw-grid-lines-in-game-view.html
-        if( !highlightLineMaterial ) {
-            highlightLineMaterial = new Material( "Shader \"Lines/Colored Blended\" {" +
+        if (!highlightLineMaterial)
+        {
+            highlightLineMaterial = new Material("Shader \"Lines/Colored Blended\" {" +
                                         "SubShader { Pass { " +
                                         "    Blend SrcAlpha OneMinusSrcAlpha " +
                                         "    ZWrite Off Cull Off Fog { Mode Off } " +
                                         "    BindChannels {" +
                                         "      Bind \"vertex\", vertex Bind \"color\", color }" +
-                                        "} } }" );
+                                        "} } }");
             highlightLineMaterial.hideFlags = HideFlags.HideAndDontSave;
             highlightLineMaterial.shader.hideFlags = HideFlags.HideAndDontSave;
         }
