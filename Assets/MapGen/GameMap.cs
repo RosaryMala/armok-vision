@@ -49,6 +49,15 @@ public class GameMap : MonoBehaviour
     public Text genStatus;
     public Text cursorProperties;
 
+    MeshCombineUtility.MeshInstance[] meshBuffer; //Collection of all solid meshes in use.
+    int bufferIndex = 0;
+    MeshCombineUtility.MeshInstance[] stencilMeshBuffer; //Collection of all partially transparent meshes, which use a different shader.
+    int stencilBufferIndex = 0;
+
+    System.Diagnostics.Stopwatch blockListTimer = new System.Diagnostics.Stopwatch();
+    System.Diagnostics.Stopwatch cullTimer = new System.Diagnostics.Stopwatch();
+    System.Diagnostics.Stopwatch lazyLoadTimer = new System.Diagnostics.Stopwatch();
+
     Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> materials;
 
     public static float tileHeight { get { return 3.0f; } }
@@ -65,13 +74,6 @@ public class GameMap : MonoBehaviour
         Vector3 outCoord = new Vector3(input.x * tileWidth, input.z * tileHeight, input.y * (-tileWidth));
         return outCoord;
     }
-    MeshCombineUtility.MeshInstance[] meshBuffer;
-    MeshCombineUtility.MeshInstance[] stencilMeshBuffer;
-    //CombineInstance[] meshBuffer;
-
-    System.Diagnostics.Stopwatch blockListTimer = new System.Diagnostics.Stopwatch();
-    System.Diagnostics.Stopwatch cullTimer = new System.Diagnostics.Stopwatch();
-    System.Diagnostics.Stopwatch lazyLoadTimer = new System.Diagnostics.Stopwatch();
 
     // Use this for initialization
     void Start()
@@ -445,8 +447,8 @@ public class GameMap : MonoBehaviour
         if (!blockDirtyBits[block_x, block_y, block_z])
             return true;
         blockDirtyBits[block_x, block_y, block_z] = false;
-        int bufferIndex = 0;
-        int stencilBufferIndex = 0;
+        bufferIndex = 0;
+        stencilBufferIndex = 0;
         for (int xx = (block_x * blockSize); xx < (block_x + 1) * blockSize; xx++)
             for (int yy = (block_y * blockSize); yy < (block_y + 1) * blockSize; yy++)
             {
@@ -528,8 +530,8 @@ public class GameMap : MonoBehaviour
         if (mfs.mesh == null)
             mfs.mesh = new Mesh();
         mfs.mesh.Clear();
-        MeshCombineUtility.ColorCombine(mfs.mesh, stencilMeshBuffer);
-        return MeshCombineUtility.ColorCombine(mf.mesh, meshBuffer);
+        MeshCombineUtility.ColorCombine(mfs.mesh, stencilMeshBuffer, stencilBufferIndex);
+        return MeshCombineUtility.ColorCombine(mf.mesh, meshBuffer, bufferIndex);
         //Debug.Log("Generated a mesh with " + (mf.mesh.triangles.Length / 3) + " tris");
     }
     static int coord2Index(int x, int y)
@@ -924,7 +926,7 @@ public class GameMap : MonoBehaviour
 
     void HideMeshes()
     {
-        if (!posZDirty) return;
+        //if (!posZDirty) return;
         posZDirty = false;
         for (int zz = 0; zz < blocks.GetLength(2); zz++)
             for (int yy = 0; yy < blocks.GetLength(1); yy++)
