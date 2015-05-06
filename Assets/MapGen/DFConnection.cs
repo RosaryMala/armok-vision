@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using DFHack;
 using System.Collections.Generic;
+using System.Linq;
 
 // Class for async communication with DF.
 // Will eventually run actual communication on a separate thread.
@@ -8,12 +9,32 @@ using System.Collections.Generic;
 
 public class DFConnection : MonoBehaviour {
 
-    // Assignable values
-    public int BlocksToFetch = 4;
-
     // Singleton stuff
+
     private static DFConnection _instance = null;
     private static List<System.Action> connectionCallbacks = new List<System.Action>();
+    public static DFConnection Instance {
+        get {
+            return _instance;
+        }
+    }
+
+    // Can always be called
+    public static bool Connected {
+        get {
+            return _instance != null && _instance.networkClient != null;
+        }
+    }
+
+    // Can be called before instance is initialized.
+    public static void RegisterConnectionCallback(System.Action callback) {
+        connectionCallbacks.Add(callback);
+    }
+
+    // Instance stuff
+
+    // Assignable values
+    public int BlocksToFetch = 4;
 
     // Remote bindings
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MaterialList> materialListCall;
@@ -27,62 +48,28 @@ public class DFConnection : MonoBehaviour {
     private color_ostream dfNetworkOut;
     private RemoteClient networkClient;
 
-    // Data from DF
+    // Things we read from DF
+
+    // Unchanging:
     private RemoteFortressReader.MaterialList _netMaterialList;
     private RemoteFortressReader.TiletypeList _netTiletypeList;
     private RemoteFortressReader.MapInfo _netMapInfo;
+
+    // Changing (used like queues):
     private RemoteFortressReader.ViewInfo _netViewInfo;
     private RemoteFortressReader.UnitList _netUnitList;
-
-    // Special stuff for map blocks.
-    // Coordinates of the region we're pulling data from:
-    private DFCoord _requestRegionMin;
-    private DFCoord _requestRegionMax;
-    public DFCoord RequestRegionMin {
-        get {
-            return _requestRegionMin;
-        }
-        set {
-            blockRequest.min_x = value.x;
-            blockRequest.min_y = value.y;
-            blockRequest.min_z = value.z;
-            _requestRegionMin = value;
-        }
-    }
-    public DFCoord RequestRegionMax {
-        get {
-            return _requestRegionMax;
-        }
-        set {
-
-            blockRequest.max_x = value.x;
-            blockRequest.max_y = value.y;
-            blockRequest.max_z = value.z;
-            _requestRegionMax = value;
-        }
-    }
-    // Cached block request
-    private RemoteFortressReader.BlockRequest blockRequest;
-    // We use this as a (sort of) queue-
+    // Special sort of queue:
     // It pops elements in random order, but makes sure that
     // we don't bother storing two updates to the same block at once
     private Dictionary<DFCoord, RemoteFortressReader.MapBlock> pendingBlocks;
+    // Cached block request
+    private RemoteFortressReader.BlockRequest blockRequest;
 
-    public static DFConnection Instance {
-        get {
-            return _instance;
-        }
-    }
+    // Mutexes for changing / nullable objects
+    private Object viewInfoLock = new Object();
+    private Object unitListLock = new Object();
 
-    public static bool Connected {
-        get {
-            return _instance != null && _instance.networkClient != null;
-        }
-    }
-    public static void RegisterConnectionCallback(System.Action callback) {
-        connectionCallbacks.Add(callback);
-    }
-
+    // Unchanging properties
     public RemoteFortressReader.MapInfo NetMapInfo {
         get {
             return _netMapInfo;
@@ -100,21 +87,55 @@ public class DFConnection : MonoBehaviour {
             return _netTiletypeList;
         }
     }
-
-    public RemoteFortressReader.ViewInfo NetViewInfo {
-        get {
-            return _netViewInfo;
+    // Coordinates of the region we're pulling data from:
+    public DFCoord RequestRegionMin {
+        get; private set;
+    }
+    public DFCoord RequestRegionMax {
+        get; private set;
+    }
+    public void SetRequestRegion(DFCoord min, DFCoord max) {
+        lock (blockRequest) {
+            RequestRegionMin = min;
+            RequestRegionMax = max;
+            blockRequest.min_x = min.x;
+            blockRequest.min_y = min.y;
+            blockRequest.min_z = min.z;
+            blockRequest.max_x = max.x;
+            blockRequest.max_y = max.y;
+            blockRequest.max_z = max.z;
         }
     }
 
-    public RemoteFortressReader.MapBlock PopMapBlock () {
-        if (pendingBlocks.Count == 0) {
-            return null;
+    // Pop a view update; return null if there isn't one.
+    public RemoteFortressReader.ViewInfo PopViewInfoUpdate () {
+        lock (viewInfoLock) {
+            RemoteFortressReader.ViewInfo result = _netViewInfo;
+            _netViewInfo = null;
+            return result;
         }
+    }
 
-        KeyValuePair<DFCoord, RemoteFortressReader.MapBlock> pair = pendingBlocks.GetEnumerator().Current;
-        pendingBlocks.Remove(pair.Key);
-        return pair.Value;
+    // Pop a unit list update; return null if there isn't one.
+    public RemoteFortressReader.UnitList PopUnitListUpdate () {
+        lock (unitListLock) {
+            RemoteFortressReader.UnitList result = _netUnitList;
+            _netViewInfo = null;
+            return result;
+        }
+    }
+
+    // Pop a map block update; return null if there isn't one.
+    public RemoteFortressReader.MapBlock PopMapBlockUpdate () {
+        lock (pendingBlocks) {
+            Debug.Log ("Remaining updates: "+pendingBlocks.Count);
+            if (pendingBlocks.Count == 0) {
+                return null;
+            }
+            var popped = pendingBlocks.First();
+            pendingBlocks.Remove(popped.Key);
+            return popped.Value;
+        }
     }
 
     // Connect to DF, fetch initial data, start things running
@@ -139,6 +160,12 @@ public class DFConnection : MonoBehaviour {
             callback.Invoke();
         }
         connectionCallbacks.Clear();
+    }
+
+    void Disconnect() {
+        networkClient.disconnect();
+        networkClient = null;
+        _instance = null;
     }
 
     // Bind the RPC functions we'll be calling
@@ -171,18 +198,25 @@ public class DFConnection : MonoBehaviour {
     // Fetch information that changes & read some pending map blocks
     void PollDF () {
         networkClient.suspend_game();
-        viewInfoCall.execute(null, out _netViewInfo);
-        unitListCall.execute(null, out _netUnitList);
+        lock (viewInfoLock) {
+            viewInfoCall.execute(null, out _netViewInfo);
+        }
+        lock (unitListLock) {
+            unitListCall.execute(null, out _netUnitList);
+        }
         RemoteFortressReader.BlockList resultList;
         blockListCall.execute(blockRequest, out resultList);
-        foreach (RemoteFortressReader.MapBlock block in resultList.map_blocks) {
-                pendingBlocks[new DFCoord(block.map_x, block.map_y, block.map_z)] =
-                    block;
+        lock (pendingBlocks) {
+            //Debug.Log ("Read "+resultList.map_blocks.Count+" Map Blocks");
+            foreach (RemoteFortressReader.MapBlock block in resultList.map_blocks) {
+                    pendingBlocks[new DFCoord(block.map_x, block.map_y, block.map_z)] =
+                        block;
+            }
         }
         networkClient.resume_game();
     }
 
-    // 
+    // Populate lists when we connect
     void PopulateTokenLists () {
         MaterialTokenList.matTokenList = _netMaterialList.material_list;
         TiletypeTokenList.tiletypeTokenList = _netTiletypeList.tiletype_list;
@@ -210,5 +244,7 @@ public class DFConnection : MonoBehaviour {
         PollDF();
 	}
 
-
+    void OnDestroy() {
+        Disconnect();
+    }
 }

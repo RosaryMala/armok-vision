@@ -28,21 +28,20 @@ public class GameMap : MonoBehaviour
     public Text genStatus;
     public Text cursorProperties;
 
+    bool connected = false;
+
     // Parameters managing the currently visible area of the map.
     // Preference:
     public int rangeX = 4;
     public int rangeY = 4;
     public int rangeZup = 0;
     public int rangeZdown = 5;
-    public int blocksToGet = 1; // How many blocks to grab at a time.
+    public int blocksToProcess = 1;
     public int cameraViewDist = 25;
-    // Read from DF:
-    int posX = 0;
-    int posY = 0;
-    int posZ = 0;
+
+    // Stored view information
+    RemoteFortressReader.ViewInfo view;
     bool posZDirty = true; // Set in GetViewInfo if z changes, and reset in HideMeshes after meshes hidden.
-    int map_x;
-    int map_y;
 
     // The actual unity meshes used to draw things on screen.
     MeshFilter[, ,] blocks;         // Terrain data.
@@ -110,44 +109,53 @@ public class GameMap : MonoBehaviour
     // Does about what you'd think it does.
     void Start()
     {
-        Connect();
         InitializeBlocks();
-        GetViewInfo();
-        GetMaterialList();
-        GetTiletypeList();
-        GetUnitList();
         System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         watch.Start();
-        MaterialTokenList.matTokenList = connectionState.net_material_list.material_list;
-        TiletypeTokenList.tiletypeTokenList = connectionState.net_tiletype_list.tiletype_list;
-        MapTile.tiletypeTokenList = connectionState.net_tiletype_list.tiletype_list;
         contentLoader.ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt");
         watch.Stop();
         Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
-        connectionState.MapResetCall.execute();
         blockListTimer.Start();
         cullTimer.Start();
         lazyLoadTimer.Start();
+        DFConnection.RegisterConnectionCallback(this.OnConnectToDF);
+    }
+
+    void OnConnectToDF() {
+        Debug.Log("Connected");
+        connected = true;
+        // Initialize materials
+        MaterialTokenList.matTokenList = DFConnection.Instance.NetMaterialList.material_list;
+        if (materials == null)
+            materials = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
+        materials.Clear();
+        foreach (RemoteFortressReader.MaterialDefinition material in DFConnection.Instance.NetMaterialList.material_list)
+        {
+            materials[material.mat_pair] = material;
+        }
+        // Initialize Tiletypes
+        TiletypeTokenList.tiletypeTokenList = DFConnection.Instance.NetTiletypeList.tiletype_list;
+        // Give data to map tiles
+        MapTile.tiletypeTokenList = DFConnection.Instance.NetTiletypeList.tiletype_list;
+
+        view = DFConnection.Instance.PopViewInfoUpdate();
+
+        InitializeBlocks();
+        Debug.Log("Materials fetched: " + DFConnection.Instance.NetMaterialList.material_list.Count);
+        Debug.Log("Tiletypes fetched: " + DFConnection.Instance.NetTiletypeList.tiletype_list.Count);
     }
 
     // Run once per frame.
     void Update()
     {
-        connectionState.network_client.suspend_game();
-        GetViewInfo();
+        if (!connected) return;
+        UpdateView ();
         ShowCursorInfo();
-        GetBlockList();
+        UpdateRequestRegion();
         blockListTimer.Reset();
         blockListTimer.Start();
-        gotBlocks = true;
-        GetUnitList();
-        connectionState.network_client.resume_game();
         //UpdateCreatures();
-        if(gotBlocks)
-        {
-            UseBlockList();
-            gotBlocks = false;
-        }
+        UpdateBlocks();
         if (cullTimer.ElapsedMilliseconds > 100)
         {
             CullDistantBlocks();
@@ -157,22 +165,30 @@ public class GameMap : MonoBehaviour
         HideMeshes();
     }
 
-    void OnDestroy()
-    {
-        Disconnect();
+    void UpdateView () {
+        RemoteFortressReader.ViewInfo newView = DFConnection.Instance.PopViewInfoUpdate();
+        if (newView == null) return;
+        //Debug.Log("Got view");
+        if (view.view_pos_z != newView.view_pos_z) {
+            posZDirty = true;
+        }
+        view = newView;
     }
 
     void InitializeBlocks()
     {
-        GetMapInfo();
-        Debug.Log("Map Size: " + connectionState.net_map_info.block_size_x + ", " + connectionState.net_map_info.block_size_y + ", " + connectionState.net_map_info.block_size_z);
-        tiles = new MapTile[connectionState.net_map_info.block_size_x * 16, connectionState.net_map_info.block_size_y * 16, connectionState.net_map_info.block_size_z];
-        blocks = new MeshFilter[connectionState.net_map_info.block_size_x * 16 / blockSize, connectionState.net_map_info.block_size_y * 16 / blockSize, connectionState.net_map_info.block_size_z];
-        stencilBlocks = new MeshFilter[connectionState.net_map_info.block_size_x * 16 / blockSize, connectionState.net_map_info.block_size_y * 16 / blockSize, connectionState.net_map_info.block_size_z];
-        liquidBlocks = new MeshFilter[connectionState.net_map_info.block_size_x * 16 / blockSize, connectionState.net_map_info.block_size_y * 16 / blockSize, connectionState.net_map_info.block_size_z, 2];
-        blockDirtyBits = new bool[connectionState.net_map_info.block_size_x * 16 / blockSize, connectionState.net_map_info.block_size_y * 16 / blockSize, connectionState.net_map_info.block_size_z];
-        waterBlockDirtyBits = new bool[connectionState.net_map_info.block_size_x * 16 / blockSize, connectionState.net_map_info.block_size_y * 16 / blockSize, connectionState.net_map_info.block_size_z];
-        magmaGlow = new Light[connectionState.net_map_info.block_size_x * 16, connectionState.net_map_info.block_size_y * 16, connectionState.net_map_info.block_size_z];
+        int blockSizeX = DFConnection.Instance.NetMapInfo.block_size_x;
+        int blockSizeY = DFConnection.Instance.NetMapInfo.block_size_y;
+        int blockSizeZ = DFConnection.Instance.NetMapInfo.block_size_z;
+
+        Debug.Log("Map Size: " + blockSizeX + ", " + blockSizeY + ", " + blockSizeZ);
+        tiles = new MapTile[blockSizeX * 16, blockSizeY * 16, blockSizeZ];
+        blocks = new MeshFilter[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
+        stencilBlocks = new MeshFilter[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
+        liquidBlocks = new MeshFilter[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ, 2];
+        blockDirtyBits = new bool[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
+        waterBlockDirtyBits = new bool[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
+        magmaGlow = new Light[blockSizeX * 16, blockSizeY * 16, blockSizeZ];
     }
 
     void SetDirtyBlock(int mapBlockX, int mapBlockY, int mapBlockZ)
@@ -188,53 +204,17 @@ public class GameMap : MonoBehaviour
         waterBlockDirtyBits[mapBlockX, mapBlockY, mapBlockZ] = true;
     }
 
-    void Connect()
-    {
-        if (connectionState != null)
-            return;
-        else
-        {
-            connectionState = new ConnectionState();
-            if (!connectionState.is_connected) {
-                Debug.Log("Connection failed; disabling GameMap."); 
-                enabled = false;
-                Disconnect();
-            }
-        }
-    }
-
-    void Disconnect()
-    {
-        connectionState.Disconnect();
-        connectionState = null;
-    }
-
-    void GetMaterialList()
-    {
-        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-        stopwatch.Start();
-        connectionState.MaterialListCall.execute(null, out connectionState.net_material_list);
-        if (materials == null)
-            materials = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
-        materials.Clear();
-        foreach (RemoteFortressReader.MaterialDefinition material in connectionState.net_material_list.material_list)
-        {
-            materials[material.mat_pair] = material;
-        }
-        stopwatch.Stop();
-        Debug.Log(materials.Count + " materials gotten, took " + stopwatch.Elapsed.Milliseconds + " ms.");
-    }
-
     void PrintFullMaterialList()
     {
-        int limit = connectionState.net_material_list.material_list.Count;
+        int totalCount = DFConnection.Instance.NetMaterialList.material_list.Count;
+        int limit = totalCount;
         if (limit >= 100)
             limit = 100;
         //Don't ever do this.
-        for (int i = connectionState.net_material_list.material_list.Count - limit; i < connectionState.net_material_list.material_list.Count; i++)
+        for (int i = totalCount - limit; i < totalCount; i++)
         {
             //no really, don't.
-            RemoteFortressReader.MaterialDefinition material = connectionState.net_material_list.material_list[i];
+            RemoteFortressReader.MaterialDefinition material = DFConnection.Instance.NetMaterialList.material_list[i];
             Debug.Log("{" + material.mat_pair.mat_index + "," + material.mat_pair.mat_type + "}, " + material.id + ", " + material.name);
         }
     }
@@ -242,16 +222,6 @@ public class GameMap : MonoBehaviour
     public MapTile GetTile(int x, int y, int z)
     {
         return tiles[x, y, z];
-    }
-
-    void GetTiletypeList()
-    {
-        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-        stopwatch.Start();
-        connectionState.TiletypeListCall.execute(null, out connectionState.net_tiletype_list);
-        stopwatch.Stop();
-        Debug.Log(connectionState.net_tiletype_list.tiletype_list.Count + " tiletypes gotten, took " + stopwatch.Elapsed.Milliseconds + " ms.");
-        SaveTileTypeList();
     }
 
     void SaveTileTypeList()
@@ -266,7 +236,7 @@ public class GameMap : MonoBehaviour
         }
         using (StreamWriter writer = new StreamWriter("TiletypeList.csv"))
         {
-            foreach (Tiletype item in connectionState.net_tiletype_list.tiletype_list)
+            foreach (Tiletype item in DFConnection.Instance.NetTiletypeList.tiletype_list)
             {
                 writer.WriteLine(
                     item.name + "," +
@@ -280,42 +250,42 @@ public class GameMap : MonoBehaviour
         }
     }
 
-    void CopyTiles(RemoteFortressReader.MapBlock DFBlock)
+    void CopyTiles(RemoteFortressReader.MapBlock block)
     {
         for (int xx = 0; xx < 16; xx++)
             for (int yy = 0; yy < 16; yy++)
             {
-                if (tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z] == null)
+                if (tiles[block.map_x + xx, block.map_y + yy, block.map_z] == null)
                 {
-                    tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z] = new MapTile();
-                    tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z].position = new DFCoord(DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z);
-                    tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z].container = tiles;
+                    tiles[block.map_x + xx, block.map_y + yy, block.map_z] = new MapTile();
+                    tiles[block.map_x + xx, block.map_y + yy, block.map_z].position = new DFCoord(block.map_x + xx, block.map_y + yy, block.map_z);
+                    tiles[block.map_x + xx, block.map_y + yy, block.map_z].container = tiles;
                 }
             }
-        if (DFBlock.tiles.Count > 0)
+        if (block.tiles.Count > 0)
         {
             for (int xx = 0; xx < 16; xx++)
                 for (int yy = 0; yy < 16; yy++)
                 {
-                    MapTile tile = tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z];
-                    tile.tileType = DFBlock.tiles[xx + (yy * 16)];
-                    tile.material = DFBlock.materials[xx + (yy * 16)];
-                    tile.base_material = DFBlock.base_materials[xx + (yy * 16)];
-                    tile.layer_material = DFBlock.layer_materials[xx + (yy * 16)];
-                    tile.vein_material = DFBlock.vein_materials[xx + (yy * 16)];
+                    MapTile tile = tiles[block.map_x + xx, block.map_y + yy, block.map_z];
+                    tile.tileType = block.tiles[xx + (yy * 16)];
+                    tile.material = block.materials[xx + (yy * 16)];
+                    tile.base_material = block.base_materials[xx + (yy * 16)];
+                    tile.layer_material = block.layer_materials[xx + (yy * 16)];
+                    tile.vein_material = block.vein_materials[xx + (yy * 16)];
                 }
-            SetDirtyBlock(DFBlock.map_x, DFBlock.map_y, DFBlock.map_z);
+            SetDirtyBlock(block.map_x, block.map_y, block.map_z);
         }
-        if (DFBlock.water.Count > 0)
+        if (block.water.Count > 0)
         {
             for (int xx = 0; xx < 16; xx++)
                 for (int yy = 0; yy < 16; yy++)
                 {
-                    MapTile tile = tiles[DFBlock.map_x + xx, DFBlock.map_y + yy, DFBlock.map_z];
-                    tile.liquid[l_water] = DFBlock.water[xx + (yy * 16)];
-                    tile.liquid[l_magma] = DFBlock.magma[xx + (yy * 16)];
+                    MapTile tile = tiles[block.map_x + xx, block.map_y + yy, block.map_z];
+                    tile.liquid[l_water] = block.water[xx + (yy * 16)];
+                    tile.liquid[l_magma] = block.magma[xx + (yy * 16)];
                 }
-            SetDirtyWaterBlock(DFBlock.map_x, DFBlock.map_y, DFBlock.map_z);
+            SetDirtyWaterBlock(block.map_x, block.map_y, block.map_z);
         }
     }
     bool GenerateLiquids(int block_x, int block_y, int block_z)
@@ -621,9 +591,9 @@ public class GameMap : MonoBehaviour
     {
         int count = 0;
         int failed = 0;
-        for (int zz = connectionState.net_block_request.min_z; zz < connectionState.net_block_request.max_z; zz++)
-            for (int yy = (connectionState.net_block_request.min_y * 16 / blockSize); yy <= (connectionState.net_block_request.max_y * 16 / blockSize); yy++)
-                for (int xx = (connectionState.net_block_request.min_x * 16 / blockSize); xx <= (connectionState.net_block_request.max_x * 16 / blockSize); xx++)
+        for (int zz = DFConnection.Instance.RequestRegionMin.z; zz < DFConnection.Instance.RequestRegionMax.z; zz++)
+            for (int yy = (DFConnection.Instance.RequestRegionMin.y * 16 / blockSize); yy <= (DFConnection.Instance.RequestRegionMax.y * 16 / blockSize); yy++)
+                for (int xx = (DFConnection.Instance.RequestRegionMin.x * 16 / blockSize); xx <= (DFConnection.Instance.RequestRegionMax.x * 16 / blockSize); xx++)
                 {
                     if (xx < 0 || yy < 0 || zz < 0 || xx >= blocks.GetLength(0) || yy >= blocks.GetLength(1) || zz >= blocks.GetLength(2))
                     {
@@ -643,82 +613,50 @@ public class GameMap : MonoBehaviour
     System.Diagnostics.Stopwatch netWatch = new System.Diagnostics.Stopwatch();
     System.Diagnostics.Stopwatch loadWatch = new System.Diagnostics.Stopwatch();
     System.Diagnostics.Stopwatch genWatch = new System.Diagnostics.Stopwatch();
-    void GetBlockList()
+
+    // Update the region we're requesting
+    void UpdateRequestRegion()
     {
-        netWatch.Reset();
-        netWatch.Start();
-        posX = (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x / 2)) / 16;
-        posY = (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y / 2)) / 16;
-        posZ = connectionState.net_view_info.view_pos_z + 1;
-        connectionState.net_block_request.min_x = posX - rangeX;
-        connectionState.net_block_request.max_x = posX + rangeX;
-        connectionState.net_block_request.min_y = posY - rangeY;
-        connectionState.net_block_request.max_y = posY + rangeY;
-        connectionState.net_block_request.min_z = posZ - rangeZdown;
-        connectionState.net_block_request.max_z = posZ + rangeZup;
-        connectionState.net_block_request.blocks_needed = blocksToGet;
-        connectionState.BlockListCall.execute(connectionState.net_block_request, out connectionState.net_block_list);
-        netWatch.Stop();
+        int posX = (view.view_pos_x + (view.view_size_x / 2)) / 16;
+        int posY = (view.view_pos_y + (view.view_size_y / 2)) / 16;
+        int posZ = view.view_pos_z + 1;
+        DFConnection.Instance.SetRequestRegion(
+            new DFCoord(
+                posX - rangeX,
+                posY - rangeY,
+                posZ - rangeZdown
+            ),
+            new DFCoord(
+                posX + rangeX,
+                posY + rangeY,
+                posZ + rangeZup
+            ));
     }
-    void UseBlockList()
+    void UpdateBlocks()
     {
         //stopwatch.Stop();
         //watch.Start();
-        if ((connectionState.net_block_list.map_x != map_x) || (connectionState.net_block_list.map_y != map_y))
-            ClearMap();
-        map_x = connectionState.net_block_list.map_x;
-        map_y = connectionState.net_block_list.map_y;
         loadWatch.Reset();
         loadWatch.Start();
-        for (int i = 0; i < connectionState.net_block_list.map_blocks.Count; i++)
+        for (int i = 0; i < blocksToProcess; i++)
         {
-            CopyTiles(connectionState.net_block_list.map_blocks[i]);
+            RemoteFortressReader.MapBlock block = DFConnection.Instance.PopMapBlockUpdate();
+            if (block == null) break;
+            CopyTiles (block);
+            //Debug.Log ("Used map block");
         }
         loadWatch.Stop();
         genWatch.Reset();
         genWatch.Start();
         UpdateMeshes();
         genWatch.Stop();
-        genStatus.text = connectionState.net_block_list.map_blocks.Count + " blocks gotten.\n"
-            + netWatch.ElapsedMilliseconds + "ms network time\n"
-            + loadWatch.ElapsedMilliseconds + "ms map copy \n" + genWatch.ElapsedMilliseconds + "ms mesh generation";
         //watch.Stop();
         //Debug.Log("Generating " + connectionState.net_block_list.map_blocks.Count + " Meshes took " + watch.Elapsed.TotalSeconds + " seconds");
     }
 
-    int lastLoadedLevel = 0;
-    void LazyLoadBlocks()
-    {
-        lastLoadedLevel--;
-        if (lastLoadedLevel < 0)
-            lastLoadedLevel = connectionState.net_view_info.view_pos_z + 1 - rangeZdown;
-        posX = (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x / 2)) / 16;
-        posY = (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y / 2)) / 16;
-        connectionState.net_block_request.min_x = posX - rangeX;
-        connectionState.net_block_request.max_x = posX + rangeX;
-        connectionState.net_block_request.min_y = posY - rangeY;
-        connectionState.net_block_request.max_y = posY + rangeY;
-        connectionState.net_block_request.min_z = lastLoadedLevel;
-        connectionState.net_block_request.max_z = lastLoadedLevel + 1;
-
-        connectionState.BlockListCall.execute(connectionState.net_block_request, out connectionState.net_block_list);
-
-        if ((connectionState.net_block_list.map_x != map_x) || (connectionState.net_block_list.map_y != map_y))
-            ClearMap();
-        map_x = connectionState.net_block_list.map_x;
-        map_y = connectionState.net_block_list.map_y;
-
-        for (int i = 0; i < connectionState.net_block_list.map_blocks.Count; i++)
-        {
-            CopyTiles(connectionState.net_block_list.map_blocks[i]);
-        }
-
-        UpdateMeshes();
-    }
-
     void CullDistantBlocks()
     {
-        int centerZ = connectionState.net_view_info.view_pos_z;
+        int centerZ = view.view_pos_z;
         //int centerX = (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x / 2));
         //int centerY = (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y / 2));
         for (int xx = 0; xx < blocks.GetLength(0); xx++)
@@ -772,33 +710,6 @@ public class GameMap : MonoBehaviour
                 }
     }
 
-    void GetUnitList()
-    {
-//        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-//        stopwatch.Start();
-        connectionState.UnitListCall.execute(null, out connectionState.net_unit_list);
-//        stopwatch.Stop();
-//        Debug.Log(connectionState.net_unit_list.creature_list.Count + " units gotten, took " + stopwatch.Elapsed.Milliseconds + " ms.");
-
-    }
-    void GetViewInfo()
-    {
-        if (connectionState.net_view_info == null) {
-            connectionState.ViewInfoCall.execute (null, out connectionState.net_view_info);
-        } else {
-            int oldZ = connectionState.net_view_info.view_pos_z;
-            connectionState.ViewInfoCall.execute (null, out connectionState.net_view_info);
-            if (oldZ != connectionState.net_view_info.view_pos_z) {
-                posZDirty = true;
-            }
-        }
-    }
-
-    void GetMapInfo()
-    {
-        connectionState.MapInfoCall.execute(null, out connectionState.net_map_info);
-    }
-
     void ClearMap()
     {
         foreach (MeshFilter MF in blocks)
@@ -841,7 +752,7 @@ public class GameMap : MonoBehaviour
                 {
                     if (blocks[xx, yy, zz] != null)
                     {
-                        if (zz > connectionState.net_view_info.view_pos_z)
+                        if (zz > view.view_pos_z)
                         {
                             blocks[xx, yy, zz].gameObject.GetComponent<Renderer>().material = invisibleMaterial;
                             //blocks[xx, yy, zz].gameObject.SetActive(false);
@@ -859,7 +770,7 @@ public class GameMap : MonoBehaviour
                 {
                     if (stencilBlocks[xx, yy, zz] != null)
                     {
-                        if (zz > connectionState.net_view_info.view_pos_z)
+                        if (zz > view.view_pos_z)
                         {
                             stencilBlocks[xx, yy, zz].gameObject.GetComponent<Renderer>().material = invisibleStencilMaterial;
                             //stencilBlocks[xx, yy, zz].gameObject.SetActive(false);
@@ -878,7 +789,7 @@ public class GameMap : MonoBehaviour
                     {
                         if (liquidBlocks[xx, yy, zz, qq] != null)
                         {
-                            if (zz > connectionState.net_view_info.view_pos_z)
+                            if (zz > view.view_pos_z)
                                 liquidBlocks[xx, yy, zz, qq].gameObject.GetComponent<Renderer>().material = invisibleMaterial;
                             else
                             {
@@ -893,9 +804,9 @@ public class GameMap : MonoBehaviour
 
     void ShowCursorInfo()
     {
-        int cursX = connectionState.net_view_info.cursor_pos_x;
-        int cursY = connectionState.net_view_info.cursor_pos_y;
-        int cursZ = connectionState.net_view_info.cursor_pos_z;
+        int cursX = view.cursor_pos_x;
+        int cursY = view.cursor_pos_y;
+        int cursZ = view.cursor_pos_z;
         cursorProperties.text = "";
         cursorProperties.text += "Cursor: ";
         cursorProperties.text += cursX + ",";
@@ -911,7 +822,8 @@ public class GameMap : MonoBehaviour
             tiles[cursX, cursY, cursZ] != null)
         {
             cursorProperties.text += "Tiletype:\n";
-            var tiletype = connectionState.net_tiletype_list.tiletype_list[tiles[cursX, cursY, cursZ].tileType];
+            var tiletype = DFConnection.Instance.NetTiletypeList.tiletype_list
+                [tiles[cursX, cursY, cursZ].tileType];
             cursorProperties.text += tiletype.name + "\n";
             cursorProperties.text +=
                 tiletype.shape + ":" +
@@ -985,7 +897,9 @@ public class GameMap : MonoBehaviour
 
     void UpdateCreatures()
     {
-        foreach (var unit in connectionState.net_unit_list.creature_list)
+        RemoteFortressReader.UnitList unitList = DFConnection.Instance.PopUnitListUpdate();
+        if (unitList == null) return;
+        foreach (var unit in unitList.creature_list)
         {
             if (creatureList == null)
                 creatureList = new Dictionary<int, GameObject>();

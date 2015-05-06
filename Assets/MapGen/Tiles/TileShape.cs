@@ -30,7 +30,7 @@ public class TileShape : GenericTile
     {
         MapTile tile = map.GetTile(x, y, z);
         if (tile == null) return null;
-        TiletypeShape shape = map.connectionState.net_tiletype_list.tiletype_list[tile.tileType].shape;
+        TiletypeShape shape = DFConnection.Instance.NetTiletypeList.tiletype_list[tile.tileType].shape;
         switch (shape)
         {
             case TiletypeShape.NO_SHAPE:
