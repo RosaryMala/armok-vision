@@ -38,9 +38,11 @@ public class GameMap : MonoBehaviour
     public int blocksToGet = 1; // How many blocks to grab at a time.
     public int cameraViewDist = 25;
     // Read from DF:
-    int posX = 0;
-    int posY = 0;
-    int posZ = 0;
+    public int posXBlock = 0;
+    public int posYBlock = 0;
+    public int posXTile = 0;
+    public int posYTile = 0;
+    public int posZ = 0;
     bool posZDirty = true; // Set in GetViewInfo if z changes, and reset in HideMeshes after meshes hidden.
     int map_x;
     int map_y;
@@ -657,13 +659,15 @@ public class GameMap : MonoBehaviour
     {
         netWatch.Reset();
         netWatch.Start();
-        posX = (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x / 2)) / 16;
-        posY = (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y / 2)) / 16;
+        posXTile = (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x / 2));
+        posYTile = (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y / 2));
+        posXBlock = posXTile / 16;
+        posYBlock = posYTile / 16;
         posZ = connectionState.net_view_info.view_pos_z + 1;
-        connectionState.net_block_request.min_x = posX - rangeX;
-        connectionState.net_block_request.max_x = posX + rangeX;
-        connectionState.net_block_request.min_y = posY - rangeY;
-        connectionState.net_block_request.max_y = posY + rangeY;
+        connectionState.net_block_request.min_x = posXBlock - rangeX;
+        connectionState.net_block_request.max_x = posXBlock + rangeX;
+        connectionState.net_block_request.min_y = posYBlock - rangeY;
+        connectionState.net_block_request.max_y = posYBlock + rangeY;
         connectionState.net_block_request.min_z = posZ - rangeZdown;
         connectionState.net_block_request.max_z = posZ + rangeZup;
         connectionState.net_block_request.blocks_needed = blocksToGet;
@@ -702,12 +706,12 @@ public class GameMap : MonoBehaviour
         lastLoadedLevel--;
         if (lastLoadedLevel < 0)
             lastLoadedLevel = connectionState.net_view_info.view_pos_z + 1 - rangeZdown;
-        posX = (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x / 2)) / 16;
-        posY = (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y / 2)) / 16;
-        connectionState.net_block_request.min_x = posX - rangeX;
-        connectionState.net_block_request.max_x = posX + rangeX;
-        connectionState.net_block_request.min_y = posY - rangeY;
-        connectionState.net_block_request.max_y = posY + rangeY;
+        posXBlock = (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x / 2)) / 16;
+        posYBlock = (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y / 2)) / 16;
+        connectionState.net_block_request.min_x = posXBlock - rangeX;
+        connectionState.net_block_request.max_x = posXBlock + rangeX;
+        connectionState.net_block_request.min_y = posYBlock - rangeY;
+        connectionState.net_block_request.max_y = posYBlock + rangeY;
         connectionState.net_block_request.min_z = lastLoadedLevel;
         connectionState.net_block_request.max_z = lastLoadedLevel + 1;
 
@@ -806,10 +810,7 @@ public class GameMap : MonoBehaviour
 
     void PositionCamera()
     {
-        viewCamera.transform.parent.transform.position = MapBlock.DFtoUnityCoord(
-            (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x / 2)),
-            (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y / 2)),
-            connectionState.net_view_info.view_pos_z + 1);
+        viewCamera.transform.parent.transform.position = MapBlock.DFtoUnityCoord(posXTile, posYTile, posZ);
         viewCamera.viewWidth = connectionState.net_view_info.view_size_x;
         viewCamera.viewHeight = connectionState.net_view_info.view_size_y;
     }

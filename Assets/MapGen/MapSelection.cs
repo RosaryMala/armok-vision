@@ -90,7 +90,7 @@ public class MapSelection : MonoBehaviour {
             // Are we in the map?
             if (currentCoord.x < 0 || targetMap.tiles.GetLength(0) <= currentCoord.x ||
                 currentCoord.y < 0 || targetMap.tiles.GetLength(1) <= currentCoord.y ||
-                currentCoord.z < 0 || targetMap.tiles.GetLength(2) <= currentCoord.z) {
+                currentCoord.z < 0 || targetMap.posZ <= currentCoord.z) {
                 // No.
                 if (haveHitMap) {
                     // But we have been before;
@@ -110,18 +110,24 @@ public class MapSelection : MonoBehaviour {
                     case RemoteFortressReader.TiletypeShape.NO_SHAPE:
                         // We're not hitting anything, though.
                         break;
-                    case RemoteFortressReader.TiletypeShape.SHRUB:
-                    case RemoteFortressReader.TiletypeShape.SAPLING:
+                    //case RemoteFortressReader.TiletypeShape.SHRUB:
+                    //case RemoteFortressReader.TiletypeShape.SAPLING:
                     case RemoteFortressReader.TiletypeShape.WALL:
                     case RemoteFortressReader.TiletypeShape.FORTIFICATION:
-                    case RemoteFortressReader.TiletypeShape.TRUNK_BRANCH:
+                    //case RemoteFortressReader.TiletypeShape.TRUNK_BRANCH:
                     case RemoteFortressReader.TiletypeShape.TWIG:
                         // We must be hitting things.
                         // (maybe adjust shrub, saplings out of this group?)
                         return currentCoord;
+                    case RemoteFortressReader.TiletypeShape.RAMP:
                     case RemoteFortressReader.TiletypeShape.FLOOR:
                     case RemoteFortressReader.TiletypeShape.BOULDER:
                     case RemoteFortressReader.TiletypeShape.PEBBLES:
+                    case RemoteFortressReader.TiletypeShape.BROOK_TOP:
+                    case RemoteFortressReader.TiletypeShape.SAPLING:
+                    case RemoteFortressReader.TiletypeShape.SHRUB:
+                    case RemoteFortressReader.TiletypeShape.BRANCH:
+                    case RemoteFortressReader.TiletypeShape.TRUNK_BRANCH:
                         // Check if we're in the floor.
                         // (that we're in the tile is implied.)
                         if (Between (cornerCoord.y, lastHit.y, cornerCoord.y + GameMap.floorHeight)) {
