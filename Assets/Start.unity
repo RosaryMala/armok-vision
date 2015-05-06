@@ -15,9 +15,9 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 6
   m_Fog: 1
-  m_FogColor: {r: .713235259, g: .822008133, b: 1, a: 1}
+  m_FogColor: {r: .178306282, g: .202507287, b: .24314326, a: 1}
   m_FogMode: 3
-  m_FogDensity: .00999999978
+  m_FogDensity: .00200000009
   m_LinearFogStart: 0
   m_LinearFogEnd: 50
   m_AmbientSkyColor: {r: .713235259, g: .822008133, b: 1, a: 1}
@@ -847,6 +847,7 @@ GameObject:
   - 114: {fileID: 1404020246}
   - 114: {fileID: 1404020245}
   - 114: {fileID: 1404020244}
+  - 114: {fileID: 1404020254}
   m_Layer: 0
   m_Name: RotatableCamera
   m_TagString: MainCamera
@@ -860,7 +861,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1404020243}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e50e925fb93c78246bf995d9dc3a2330, type: 3}
   m_Name: 
@@ -995,7 +996,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 1
-  far clip plane: 400
+  far clip plane: 4000
   field of view: 40
   orthographic: 0
   orthographic size: 100
@@ -1022,6 +1023,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2144561758}
   m_RootOrder: 0
+--- !u!114 &1404020254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1404020243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdbac23c6f40d2b498e1a5ee3c44d6f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zoomLevel: 2
+  zoomSpeed: .5
 --- !u!1 &1503824698
 GameObject:
   m_ObjectHideFlags: 0
@@ -1296,7 +1310,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   verticalRotationEnabled: 1
-  verticalRotationMin: 0
+  verticalRotationMin: 5
   verticalRotationMax: 89
   mouseSpeed: 10
   rotationX: 45
