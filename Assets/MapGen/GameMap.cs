@@ -24,6 +24,7 @@ public class GameMap : MonoBehaviour
     public GameObject defaultStencilMapBlock;
     public GameObject defaultWaterBlock;
     public GameObject defaultMagmaBlock;
+    public GameWindow viewCamera; // What does this do?
     public Light magmaGlowPrefab;
     public Text genStatus;
     public Text cursorProperties;
@@ -120,6 +121,7 @@ public class GameMap : MonoBehaviour
         Connect();
         InitializeBlocks();
         GetViewInfo();
+        PositionCamera();
         GetMaterialList();
         GetTiletypeList();
         GetUnitList();
@@ -142,6 +144,7 @@ public class GameMap : MonoBehaviour
     {
         connectionState.network_client.suspend_game();
         GetViewInfo();
+        PositionCamera();
         ShowCursorInfo();
         GetBlockList();
         blockListTimer.Reset();
@@ -799,6 +802,16 @@ public class GameMap : MonoBehaviour
                 posZDirty = true;
             }
         }
+    }
+
+    void PositionCamera()
+    {
+        viewCamera.transform.parent.transform.position = MapBlock.DFtoUnityCoord(
+            (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x / 2)),
+            (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y / 2)),
+            connectionState.net_view_info.view_pos_z + 1);
+        viewCamera.viewWidth = connectionState.net_view_info.view_size_x;
+        viewCamera.viewHeight = connectionState.net_view_info.view_size_y;
     }
 
     void GetMapInfo()
