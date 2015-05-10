@@ -24,7 +24,7 @@ public class CameraRotateVertical : MonoBehaviour
 
     public void HandleMouseRotation()
     {
-        if (Input.GetMouseButton(1) && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)))
+        if (Input.GetMouseButton(1))
         {
             //horizontal rotation
             if (verticalRotationEnabled && Input.mousePosition.y != mouseY)
