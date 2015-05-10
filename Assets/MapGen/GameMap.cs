@@ -66,9 +66,6 @@ public class GameMap : MonoBehaviour
     static readonly int l_water = 0;
     static readonly int l_magma = 1;
 
-    // The stored data of the map (not drawn); just a big array of tiles.
-    public MapTile[, ,] tiles;
-
     // Stuff to let the material list & various meshes & whatnot be loaded from xml specs at runtime.
     Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> materials;
     public ContentLoader contentLoader = new ContentLoader();
@@ -192,7 +189,6 @@ public class GameMap : MonoBehaviour
         int blockSizeZ = DFConnection.Instance.NetMapInfo.block_size_z;
 
         Debug.Log("Map Size: " + blockSizeX + ", " + blockSizeY + ", " + blockSizeZ);
-        tiles = new MapTile[blockSizeX * 16, blockSizeY * 16, blockSizeZ];
         blocks = new MeshFilter[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         stencilBlocks = new MeshFilter[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         liquidBlocks = new MeshFilter[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ, 2];
@@ -229,11 +225,6 @@ public class GameMap : MonoBehaviour
         }
     }
 
-    public MapTile GetTile(int x, int y, int z)
-    {
-        return tiles[x, y, z];
-    }
-
     void SaveTileTypeList()
     {
         try
@@ -262,22 +253,12 @@ public class GameMap : MonoBehaviour
 
     void CopyTiles(RemoteFortressReader.MapBlock block)
     {
-        for (int xx = 0; xx < 16; xx++)
-            for (int yy = 0; yy < 16; yy++)
-            {
-                if (tiles[block.map_x + xx, block.map_y + yy, block.map_z] == null)
-                {
-                    tiles[block.map_x + xx, block.map_y + yy, block.map_z] = new MapTile();
-                    tiles[block.map_x + xx, block.map_y + yy, block.map_z].position = new DFCoord(block.map_x + xx, block.map_y + yy, block.map_z);
-                    tiles[block.map_x + xx, block.map_y + yy, block.map_z].container = tiles;
-                }
-            }
         if (block.tiles.Count > 0)
         {
             for (int xx = 0; xx < 16; xx++)
                 for (int yy = 0; yy < 16; yy++)
                 {
-                    MapTile tile = tiles[block.map_x + xx, block.map_y + yy, block.map_z];
+                    MapTile tile = MapDataStore.GetOrInitTile(block.map_x + xx, block.map_y + yy, block.map_z);
                     tile.tileType = block.tiles[xx + (yy * 16)];
                     tile.material = block.materials[xx + (yy * 16)];
                     tile.base_material = block.base_materials[xx + (yy * 16)];
@@ -291,7 +272,7 @@ public class GameMap : MonoBehaviour
             for (int xx = 0; xx < 16; xx++)
                 for (int yy = 0; yy < 16; yy++)
                 {
-                    MapTile tile = tiles[block.map_x + xx, block.map_y + yy, block.map_z];
+                    MapTile tile = MapDataStore.GetOrInitTile(block.map_x + xx, block.map_y + yy, block.map_z);
                     tile.liquid[l_water] = block.water[xx + (yy * 16)];
                     tile.liquid[l_magma] = block.magma[xx + (yy * 16)];
                 }
@@ -418,7 +399,7 @@ public class GameMap : MonoBehaviour
                         case MeshLayer.LayerMaterial:
                         case MeshLayer.VeinMaterial:
                         case MeshLayer.NoMaterial:
-                            FillMeshBuffer(out meshBuffer[bufferIndex], layer, tiles[xx, yy, block_z]);
+                            FillMeshBuffer(out meshBuffer[bufferIndex], layer, MapDataStore.Tiles[xx, yy, block_z]);
                             bufferIndex++;
                             break;
                         case MeshLayer.StaticCutout:
@@ -430,7 +411,7 @@ public class GameMap : MonoBehaviour
                         case MeshLayer.Growth2Cutout:
                         case MeshLayer.Growth3Cutout:
                         case MeshLayer.NoMaterialCutout:
-                            FillMeshBuffer(out stencilMeshBuffer[stencilBufferIndex], layer, tiles[xx, yy, block_z]);
+                            FillMeshBuffer(out stencilMeshBuffer[stencilBufferIndex], layer, MapDataStore.Tiles[xx, yy, block_z]);
                             stencilBufferIndex++;
                             break;
                         default:
@@ -490,12 +471,12 @@ public class GameMap : MonoBehaviour
                     {
                         int x = (block_x * blockSize) + xx + xxx - 1;
                         int y = (block_y * blockSize) + yy + yyy - 1;
-                        if (x < 0 || y < 0 || x >= tiles.GetLength(0) || y >= tiles.GetLength(1))
+                        if (x < 0 || y < 0 || x >= MapDataStore.Size.x || y >= MapDataStore.Size.y)
                         {
                             heights[xxx, yyy] = -1;
                             continue;
                         }
-                        var tile = tiles[x, y, block_z];
+                        var tile = MapDataStore.Tiles[x, y, block_z];
                         if (tile == null)
                         {
                             heights[xxx, yyy] = -1;
@@ -553,7 +534,7 @@ public class GameMap : MonoBehaviour
         for (int xx = 0; xx < blockSize; xx++)
             for (int yy = 0; yy < blockSize; yy++)
             {
-                if (tiles[(block_x * blockSize) + xx, (block_y * blockSize) + yy, block_z].liquid[liquid_select] == 0)
+                if (MapDataStore.Tiles[(block_x * blockSize) + xx, (block_y * blockSize) + yy, block_z].liquid[liquid_select] == 0)
                     continue;
                 finalFaces.Add(coord2Index(xx, yy));
                 finalFaces.Add(coord2Index(xx + 1, yy));
@@ -734,19 +715,11 @@ public class GameMap : MonoBehaviour
             if (item != null)
                 item.mesh.Clear();   
         }
-        foreach (var tile in tiles)
-        {
-            if (tile != null)
-            {
-                tile.tileType = 0;
-                tile.material.mat_index = -1;
-                tile.material.mat_type = -1;
-            }
-        }
         foreach (var item in magmaGlow)
         {
             Destroy(item);
         }
+        MapDataStore.Clear();
     }
 
     void HideMeshes()
@@ -819,18 +792,11 @@ public class GameMap : MonoBehaviour
         cursorProperties.text += cursX + ",";
         cursorProperties.text += cursY + ",";
         cursorProperties.text += cursZ + "\n";
-        if (
-            cursX >= 0 &&
-            cursY >= 0 &&
-            cursZ >= 0 &&
-            cursX < tiles.GetLength(0) &&
-            cursY < tiles.GetLength(1) &&
-            cursZ < tiles.GetLength(2) &&
-            tiles[cursX, cursY, cursZ] != null)
+        if (MapDataStore.GetTile(cursX, cursY, cursZ) != null)
         {
             cursorProperties.text += "Tiletype:\n";
             var tiletype = DFConnection.Instance.NetTiletypeList.tiletype_list
-                [tiles[cursX, cursY, cursZ].tileType];
+                [MapDataStore.Tiles[cursX, cursY, cursZ].tileType];
             cursorProperties.text += tiletype.name + "\n";
             cursorProperties.text +=
                 tiletype.shape + ":" +
@@ -838,7 +804,7 @@ public class GameMap : MonoBehaviour
                 tiletype.material + ":" +
                 tiletype.variant + ":" +
                 tiletype.direction + "\n";
-            var mat = tiles[cursX, cursY, cursZ].material;
+            var mat = MapDataStore.Tiles[cursX, cursY, cursZ].material;
             cursorProperties.text += "Material: ";
             cursorProperties.text += mat.mat_type + ",";
             cursorProperties.text += mat.mat_index + "\n";
@@ -853,7 +819,7 @@ public class GameMap : MonoBehaviour
 
             cursorProperties.text += "\n";
 
-            var basemat = tiles[cursX, cursY, cursZ].base_material;
+            var basemat = MapDataStore.Tiles[cursX, cursY, cursZ].base_material;
             cursorProperties.text += "Base Material: ";
             cursorProperties.text += basemat.mat_type + ",";
             cursorProperties.text += basemat.mat_index + "\n";
@@ -868,7 +834,7 @@ public class GameMap : MonoBehaviour
 
             cursorProperties.text += "\n";
 
-            var layermat = tiles[cursX, cursY, cursZ].layer_material;
+            var layermat = MapDataStore.Tiles[cursX, cursY, cursZ].layer_material;
             cursorProperties.text += "Layer Material: ";
             cursorProperties.text += layermat.mat_type + ",";
             cursorProperties.text += layermat.mat_index + "\n";
@@ -883,7 +849,7 @@ public class GameMap : MonoBehaviour
 
             cursorProperties.text += "\n";
 
-            var veinmat = tiles[cursX, cursY, cursZ].vein_material;
+            var veinmat = MapDataStore.Tiles[cursX, cursY, cursZ].vein_material;
             cursorProperties.text += "Vein Material: ";
             cursorProperties.text += veinmat.mat_type + ",";
             cursorProperties.text += veinmat.mat_index + "\n";
