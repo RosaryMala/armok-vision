@@ -128,7 +128,6 @@ public class DFConnection : MonoBehaviour {
     // Pop a map block update; return null if there isn't one.
     public RemoteFortressReader.MapBlock PopMapBlockUpdate () {
         lock (pendingBlocks) {
-            Debug.Log ("Remaining updates: "+pendingBlocks.Count);
             if (pendingBlocks.Count == 0) {
                 return null;
             }
@@ -221,6 +220,8 @@ public class DFConnection : MonoBehaviour {
         MaterialTokenList.matTokenList = _netMaterialList.material_list;
         TiletypeTokenList.tiletypeTokenList = _netTiletypeList.tiletype_list;
         MapTile.tiletypeTokenList = _netTiletypeList.tiletype_list;
+        Debug.Log("Materials fetched: " + _netMaterialList.material_list.Count);
+        Debug.Log("Tiletypes fetched: " + _netTiletypeList.tiletype_list.Count);
     }
 
 	void Start () {
