@@ -4,14 +4,6 @@ using System.Collections.Generic;
 
 public class MapTile
 {
-    MapTile[, ,] _container;
-    public MapTile[, ,] container
-    {
-        set
-        {
-            _container = value;
-        }
-    }
     DFCoord _position;
     public DFCoord position
     {
@@ -39,58 +31,62 @@ public class MapTile
     public TiletypeVariant variant { get { return tiletypeTokenList[tileType].variant; } }
     public string direction { get { return tiletypeTokenList[tileType].direction; } }
 
+    private MapTile() {}
+
+    public MapTile(DFCoord coord) {
+        _position = coord;
+    }
+
+    public void Reset() {
+        tileType = default(int);
+        material = default(MatPairStruct);
+        base_material = default(MatPairStruct);
+        layer_material = default(MatPairStruct);
+        vein_material = default(MatPairStruct);
+        liquid[0] = default(int);
+        liquid[1] = default(int);
+    }
+
     public MapTile north
     {
         get
         {
-            if (position.y > 0)
-                return _container[position.x, position.y - 1, position.z];
-            else return null;
+            return MapDataStore.GetTile(position.x, position.y - 1, position.z);
         }
     }
     public MapTile south
     {
         get
         {
-            if (position.y < _container.GetLength(1) - 1)
-                return _container[position.x, position.y + 1, position.z];
-            else return null;
+            return MapDataStore.GetTile(position.x, position.y + 1, position.z);
         }
     }
     public MapTile east
     {
         get
         {
-            if (position.x < _container.GetLength(0) - 1)
-                return _container[position.x + 1, position.y, position.z];
-            else return null;
+            return MapDataStore.GetTile(position.x + 1, position.y, position.z);
         }
     }
     public MapTile west
     {
         get
         {
-            if (position.x > 0)
-                return _container[position.x - 1, position.y, position.z];
-            else return null;
+            return MapDataStore.GetTile(position.x - 1, position.y, position.z);
         }
     }
     public MapTile up
     {
         get
         {
-            if (position.z < _container.GetLength(2) - 1)
-                return _container[position.x, position.y, position.z + 1];
-            else return null;
+            return MapDataStore.GetTile(position.x, position.y, position.z + 1);
         }
     }
     public MapTile down
     {
         get
         {
-            if (position.z > 0)
-                return _container[position.x, position.y, position.z - 1];
-            else return null;
+            return MapDataStore.GetTile(position.x, position.y, position.z - 1);
         }
     }
 

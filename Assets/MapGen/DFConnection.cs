@@ -153,7 +153,7 @@ public class DFConnection : MonoBehaviour {
         FetchUnchangingInfo();
         PollDF();
         mapResetCall.execute();
-        PopulateTokenLists();
+        InitStatics();
 
         foreach (System.Action callback in connectionCallbacks) {
             callback.Invoke();
@@ -216,10 +216,11 @@ public class DFConnection : MonoBehaviour {
     }
 
     // Populate lists when we connect
-    void PopulateTokenLists () {
+    void InitStatics () {
         MaterialTokenList.matTokenList = _netMaterialList.material_list;
         TiletypeTokenList.tiletypeTokenList = _netTiletypeList.tiletype_list;
         MapTile.tiletypeTokenList = _netTiletypeList.tiletype_list;
+        MapDataStore.Init(_netMapInfo.block_size_x * 16, _netMapInfo.block_size_y * 16, _netMapInfo.block_size_z);
         Debug.Log("Materials fetched: " + _netMaterialList.material_list.Count);
         Debug.Log("Tiletypes fetched: " + _netTiletypeList.tiletype_list.Count);
     }

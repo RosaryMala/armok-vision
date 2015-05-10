@@ -164,6 +164,12 @@ namespace DFHack
         {
             return new DFCoord(a.x, a.y, a.z + number);
         }
+        public static bool operator ==(DFCoord a, DFCoord b) {
+            return a.x == b.x && a.y == b.y && a.z == b.z;
+        }
+        public static bool operator !=(DFCoord a, DFCoord b) {
+            return a.x != b.x || a.y != b.y || a.z != b.z;
+        }
     }
     public struct DFCoord2d
     {
