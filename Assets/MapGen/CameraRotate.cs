@@ -16,7 +16,7 @@ public class CameraRotate : MonoBehaviour {
 
     public void HandleMouseRotation()
     {
-        if (Input.GetMouseButton(1) && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)))
+        if (Input.GetMouseButton(1))
         {
             //horizontal rotation
             if(Input.mousePosition.x != mouseX)

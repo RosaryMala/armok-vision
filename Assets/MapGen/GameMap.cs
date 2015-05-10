@@ -28,10 +28,19 @@ public class GameMap : MonoBehaviour
     public Text genStatus;
     public Text cursorProperties;
 
-    bool connected = false;
-
     // Parameters managing the currently visible area of the map.
-    // Preference:
+    // Tracking:
+    int posXBlock = 0;
+    int posYBlock = 0;
+    int posXTile = 0;
+    int posYTile = 0;
+    int posZ = 0;
+    public int PosZ { // Public accessor; used from MapSelection
+        get {
+            return posZ;
+        }
+    }
+    // Preferences:
     public int rangeX = 4;
     public int rangeY = 4;
     public int rangeZup = 0;
@@ -109,7 +118,25 @@ public class GameMap : MonoBehaviour
     // Does about what you'd think it does.
     void Start()
     {
-        InitializeBlocks();
+        enabled = false;
+
+        DFConnection.RegisterConnectionCallback(this.OnConnectToDF);
+    }
+
+    void OnConnectToDF() {
+        Debug.Log("Connected");
+        enabled = true;
+        // Initialize materials
+        if (materials == null)
+            materials = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
+        materials.Clear();
+        foreach (RemoteFortressReader.MaterialDefinition material in DFConnection.Instance.NetMaterialList.material_list)
+        {
+            materials[material.mat_pair] = material;
+        }
+
+        UpdateView();
+
         System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         watch.Start();
         contentLoader.ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt");
@@ -118,37 +145,14 @@ public class GameMap : MonoBehaviour
         blockListTimer.Start();
         cullTimer.Start();
         lazyLoadTimer.Start();
-        DFConnection.RegisterConnectionCallback(this.OnConnectToDF);
-    }
-
-    void OnConnectToDF() {
-        Debug.Log("Connected");
-        connected = true;
-        // Initialize materials
-        MaterialTokenList.matTokenList = DFConnection.Instance.NetMaterialList.material_list;
-        if (materials == null)
-            materials = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
-        materials.Clear();
-        foreach (RemoteFortressReader.MaterialDefinition material in DFConnection.Instance.NetMaterialList.material_list)
-        {
-            materials[material.mat_pair] = material;
-        }
-        // Initialize Tiletypes
-        TiletypeTokenList.tiletypeTokenList = DFConnection.Instance.NetTiletypeList.tiletype_list;
-        // Give data to map tiles
-        MapTile.tiletypeTokenList = DFConnection.Instance.NetTiletypeList.tiletype_list;
-
-        view = DFConnection.Instance.PopViewInfoUpdate();
 
         InitializeBlocks();
-        Debug.Log("Materials fetched: " + DFConnection.Instance.NetMaterialList.material_list.Count);
-        Debug.Log("Tiletypes fetched: " + DFConnection.Instance.NetTiletypeList.tiletype_list.Count);
     }
 
     // Run once per frame.
     void Update()
     {
-        if (!connected) return;
+        if (!enabled) return;
         UpdateView ();
         ShowCursorInfo();
         UpdateRequestRegion();
@@ -169,10 +173,16 @@ public class GameMap : MonoBehaviour
         RemoteFortressReader.ViewInfo newView = DFConnection.Instance.PopViewInfoUpdate();
         if (newView == null) return;
         //Debug.Log("Got view");
-        if (view.view_pos_z != newView.view_pos_z) {
+        if (view == null || view.view_pos_z != newView.view_pos_z) {
             posZDirty = true;
         }
         view = newView;
+       
+        posXTile = (view.view_pos_x + (view.view_size_x / 2));
+        posYTile = (view.view_pos_y + (view.view_size_y / 2));
+        posXBlock = posXTile / 16;
+        posYBlock = posYTile / 16;
+        posZ = view.view_pos_z + 1;
     }
 
     void InitializeBlocks()
@@ -617,18 +627,15 @@ public class GameMap : MonoBehaviour
     // Update the region we're requesting
     void UpdateRequestRegion()
     {
-        int posX = (view.view_pos_x + (view.view_size_x / 2)) / 16;
-        int posY = (view.view_pos_y + (view.view_size_y / 2)) / 16;
-        int posZ = view.view_pos_z + 1;
         DFConnection.Instance.SetRequestRegion(
             new DFCoord(
-                posX - rangeX,
-                posY - rangeY,
+                posXBlock - rangeX,
+                posYBlock - rangeY,
                 posZ - rangeZdown
             ),
             new DFCoord(
-                posX + rangeX,
-                posY + rangeY,
+                posXBlock + rangeX,
+                posYBlock + rangeY,
                 posZ + rangeZup
             ));
     }
