@@ -162,8 +162,10 @@ public class DFConnection : MonoBehaviour {
     }
 
     void Disconnect() {
-        networkClient.disconnect();
-        networkClient = null;
+        if (networkClient != null) {
+            networkClient.disconnect();
+            networkClient = null;
+        }
         _instance = null;
     }
 

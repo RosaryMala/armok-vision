@@ -55,10 +55,10 @@ public class GameMap : MonoBehaviour
     // The actual unity meshes used to draw things on screen.
     MeshFilter[, ,] blocks;         // Terrain data.
     MeshFilter[, ,] stencilBlocks;  // Foliage &ct.
-    MeshFilter[, , ,] liquidBlocks; // Water & magma.
+    MeshFilter[, , ,] liquidBlocks; // Water & magma. Extra dimension is a liquid type.
     // Dirty flags for those meshes
     bool[, ,] blockDirtyBits;
-    bool[, ,] waterBlockDirtyBits;  // (Also for magma.)
+    bool[, ,] liquidBlockDirtyBits;
     // Lights from magma.
     Light[, ,] magmaGlow;
 
@@ -189,7 +189,7 @@ public class GameMap : MonoBehaviour
         stencilBlocks = new MeshFilter[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         liquidBlocks = new MeshFilter[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ, 2];
         blockDirtyBits = new bool[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
-        waterBlockDirtyBits = new bool[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
+        liquidBlockDirtyBits = new bool[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         magmaGlow = new Light[blockSizeX * 16, blockSizeY * 16, blockSizeZ];
     }
 
@@ -199,11 +199,11 @@ public class GameMap : MonoBehaviour
         mapBlockY = mapBlockY / blockSize;
         blockDirtyBits[mapBlockX, mapBlockY, mapBlockZ] = true;
     }
-    void SetDirtyWaterBlock(int mapBlockX, int mapBlockY, int mapBlockZ)
+    void SetDirtyLiquidBlock(int mapBlockX, int mapBlockY, int mapBlockZ)
     {
         mapBlockX = mapBlockX / blockSize;
         mapBlockY = mapBlockY / blockSize;
-        waterBlockDirtyBits[mapBlockX, mapBlockY, mapBlockZ] = true;
+        liquidBlockDirtyBits[mapBlockX, mapBlockY, mapBlockZ] = true;
     }
 
     void PrintFullMaterialList()
@@ -247,41 +247,13 @@ public class GameMap : MonoBehaviour
         }
     }
 
-    void CopyTiles(RemoteFortressReader.MapBlock block)
-    {
-        if (block.tiles.Count > 0)
-        {
-            for (int xx = 0; xx < 16; xx++)
-                for (int yy = 0; yy < 16; yy++)
-                {
-                    MapDataStore.Main.InitOrModifyTile(new DFCoord(block.map_x + xx, block.map_y + yy, block.map_z),
-                        tileType : block.tiles[xx + (yy * 16)],
-                        material : block.materials[xx + (yy * 16)],
-                        base_material : block.base_materials[xx + (yy * 16)],
-                        layer_material : block.layer_materials[xx + (yy * 16)],
-                        vein_material : block.vein_materials[xx + (yy * 16)]);
-                }
-            SetDirtyBlock(block.map_x, block.map_y, block.map_z);
-        }
-        if (block.water.Count > 0)
-        {
-            for (int xx = 0; xx < 16; xx++)
-                for (int yy = 0; yy < 16; yy++)
-                {
-                    MapDataStore.Main.InitOrModifyTile(new DFCoord(block.map_x + xx, block.map_y + yy, block.map_z),
-                        waterLevel : block.water[xx + (yy * 16)],
-                        magmaLevel : block.magma[xx + (yy * 16)]);
-                }
-            SetDirtyWaterBlock(block.map_x, block.map_y, block.map_z);
-        }
-    }
     bool GenerateLiquids(int block_x, int block_y, int block_z)
     {
-        if (!waterBlockDirtyBits[block_x, block_y, block_z])
+        if (!liquidBlockDirtyBits[block_x, block_y, block_z])
             return true;
-        waterBlockDirtyBits[block_x, block_y, block_z] = false;
-        GenerateLiquidSurface(block_x, block_y, block_z, MapDataStore.l_water);
-        GenerateLiquidSurface(block_x, block_y, block_z, MapDataStore.l_magma);
+        liquidBlockDirtyBits[block_x, block_y, block_z] = false;
+        GenerateLiquidSurface(block_x, block_y, block_z, MapDataStore.WATER_INDEX);
+        GenerateLiquidSurface(block_x, block_y, block_z, MapDataStore.MAGMA_INDEX);
         return true;
     }
 
@@ -539,13 +511,13 @@ public class GameMap : MonoBehaviour
             if (liquidBlocks[block_x, block_y, block_z, liquid_select] == null)
             {
                 GameObject block;
-                if (liquid_select == MapDataStore.l_magma)
+                if (liquid_select == MapDataStore.MAGMA_INDEX)
                     block = Instantiate(defaultMagmaBlock) as GameObject;
                 else
                     block = Instantiate(defaultWaterBlock) as GameObject;
                 block.SetActive(true);
                 block.transform.parent = this.transform;
-                block.name = (liquid_select == MapDataStore.l_water ? "water(" : "magma(") + block_x + ", " + block_y + ", " + block_z + ")";
+                block.name = (liquid_select == MapDataStore.WATER_INDEX ? "water(" : "magma(") + block_x + ", " + block_y + ", " + block_z + ")";
                 liquidBlocks[block_x, block_y, block_z, liquid_select] = block.GetComponent<MeshFilter>();
             }
         }
@@ -620,7 +592,11 @@ public class GameMap : MonoBehaviour
         {
             RemoteFortressReader.MapBlock block = DFConnection.Instance.PopMapBlockUpdate();
             if (block == null) break;
-            CopyTiles (block);
+            MapDataStore.Main.StoreTiles(block);
+            if (block.tiles.Count > 0) 
+                SetDirtyBlock(block.map_x, block.map_y, block.map_z);
+            if (block.water.Count > 0 || block.magma.Count > 0)
+                SetDirtyLiquidBlock(block.map_x, block.map_y, block.map_z);
             //Debug.Log ("Used map block");
         }
         loadWatch.Stop();
@@ -659,7 +635,7 @@ public class GameMap : MonoBehaviour
                             if (liquidBlocks[xx, yy, zz, i] != null)
                             {
                                 liquidBlocks[xx, yy, zz, i].mesh.Clear();
-                                waterBlockDirtyBits[xx, yy, zz] = true;
+                                liquidBlockDirtyBits[xx, yy, zz] = true;
                             }
                         continue;
                     }
@@ -681,7 +657,7 @@ public class GameMap : MonoBehaviour
                             if (liquidBlocks[xx, yy, zz, i] != null)
                             {
                                 liquidBlocks[xx, yy, zz, i].mesh.Clear();
-                                waterBlockDirtyBits[xx, yy, zz] = true;
+                                liquidBlockDirtyBits[xx, yy, zz] = true;
                             }
                         continue;
                     }
@@ -709,7 +685,7 @@ public class GameMap : MonoBehaviour
         {
             Destroy(item);
         }
-        MapDataStore.Main.Clear();
+        MapDataStore.Main.Reset();
     }
 
     void HideMeshes()
@@ -763,7 +739,7 @@ public class GameMap : MonoBehaviour
                                 liquidBlocks[xx, yy, zz, qq].gameObject.GetComponent<Renderer>().material = invisibleMaterial;
                             else
                             {
-                                if(qq == MapDataStore.l_magma)
+                                if(qq == MapDataStore.MAGMA_INDEX)
                                     liquidBlocks[xx, yy, zz, qq].gameObject.GetComponent<Renderer>().material = magmaMaterial;
                                 else
                                     liquidBlocks[xx, yy, zz, qq].gameObject.GetComponent<Renderer>().material = waterMaterial;
