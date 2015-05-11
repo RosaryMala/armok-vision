@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using DFHack;
 
@@ -192,7 +192,7 @@ public class MapSelection : MonoBehaviour
             Vector3 cornerCoord = GameMap.DFtoUnityBottomCorner(currentCoord);
 
             // Are we in the selectable area of the map?
-            if (!MapDataStore.InBounds(currentCoord) || targetMap.PosZ <= currentCoord.z)
+            if (!MapDataStore.InMapBounds(currentCoord) || targetMap.PosZ <= currentCoord.z)
             {
                 // No.
                 if (haveHitMap)
@@ -209,12 +209,12 @@ public class MapSelection : MonoBehaviour
                 // We are in the map.
                 haveHitMap = true;
 
-                MapTile currentTile = MapDataStore.Tiles[currentCoord.x, currentCoord.y, currentCoord.z];
+                MapDataStore.Tile? currentTile = MapDataStore.Main[currentCoord.x, currentCoord.y, currentCoord.z];
                 // Are we in a real tile?
                 if (currentTile != null)
                 {
                     // Yes.
-                    switch (currentTile.shape)
+                    switch (currentTile.Value.shape)
                     {
                         case RemoteFortressReader.TiletypeShape.EMPTY:
                         case RemoteFortressReader.TiletypeShape.NO_SHAPE:
@@ -318,9 +318,9 @@ public class MapSelection : MonoBehaviour
     {
         Vector3 lowerLimits = GameMap.DFtoUnityBottomCorner(new DFCoord(0, 0, 0));
         Vector3 upperLimits = GameMap.DFtoUnityBottomCorner(new DFCoord(
-            MapDataStore.Size.x - 1,
-            MapDataStore.Size.y - 1,
-            MapDataStore.Size.z - 1
+            MapDataStore.MapSize.x - 1,
+            MapDataStore.MapSize.y - 1,
+            MapDataStore.MapSize.z - 1
             )) + new Vector3(GameMap.tileWidth, GameMap.tileHeight, GameMap.tileWidth);
 
         // Multipliers to scale the ray to hit the different walls of the cube

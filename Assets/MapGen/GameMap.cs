@@ -62,10 +62,6 @@ public class GameMap : MonoBehaviour
     // Lights from magma.
     Light[, ,] magmaGlow;
 
-    // Used to index into water/magma arrays in a few places.
-    static readonly int l_water = 0;
-    static readonly int l_magma = 1;
-
     // Stuff to let the material list & various meshes & whatnot be loaded from xml specs at runtime.
     Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> materials;
     public ContentLoader contentLoader = new ContentLoader();
@@ -258,12 +254,12 @@ public class GameMap : MonoBehaviour
             for (int xx = 0; xx < 16; xx++)
                 for (int yy = 0; yy < 16; yy++)
                 {
-                    MapTile tile = MapDataStore.GetOrInitTile(block.map_x + xx, block.map_y + yy, block.map_z);
-                    tile.tileType = block.tiles[xx + (yy * 16)];
-                    tile.material = block.materials[xx + (yy * 16)];
-                    tile.base_material = block.base_materials[xx + (yy * 16)];
-                    tile.layer_material = block.layer_materials[xx + (yy * 16)];
-                    tile.vein_material = block.vein_materials[xx + (yy * 16)];
+                    MapDataStore.Main.InitOrModifyTile(new DFCoord(block.map_x + xx, block.map_y + yy, block.map_z),
+                        tileType : block.tiles[xx + (yy * 16)],
+                        material : block.materials[xx + (yy * 16)],
+                        base_material : block.base_materials[xx + (yy * 16)],
+                        layer_material : block.layer_materials[xx + (yy * 16)],
+                        vein_material : block.vein_materials[xx + (yy * 16)]);
                 }
             SetDirtyBlock(block.map_x, block.map_y, block.map_z);
         }
@@ -272,9 +268,9 @@ public class GameMap : MonoBehaviour
             for (int xx = 0; xx < 16; xx++)
                 for (int yy = 0; yy < 16; yy++)
                 {
-                    MapTile tile = MapDataStore.GetOrInitTile(block.map_x + xx, block.map_y + yy, block.map_z);
-                    tile.liquid[l_water] = block.water[xx + (yy * 16)];
-                    tile.liquid[l_magma] = block.magma[xx + (yy * 16)];
+                    MapDataStore.Main.InitOrModifyTile(new DFCoord(block.map_x + xx, block.map_y + yy, block.map_z),
+                        waterLevel : block.water[xx + (yy * 16)],
+                        magmaLevel : block.magma[xx + (yy * 16)]);
                 }
             SetDirtyWaterBlock(block.map_x, block.map_y, block.map_z);
         }
@@ -284,12 +280,12 @@ public class GameMap : MonoBehaviour
         if (!waterBlockDirtyBits[block_x, block_y, block_z])
             return true;
         waterBlockDirtyBits[block_x, block_y, block_z] = false;
-        GenerateLiquidSurface(block_x, block_y, block_z, l_water);
-        GenerateLiquidSurface(block_x, block_y, block_z, l_magma);
+        GenerateLiquidSurface(block_x, block_y, block_z, MapDataStore.l_water);
+        GenerateLiquidSurface(block_x, block_y, block_z, MapDataStore.l_magma);
         return true;
     }
 
-    void FillMeshBuffer(out MeshCombineUtility.MeshInstance buffer, MeshLayer layer, MapTile tile)
+    void FillMeshBuffer(out MeshCombineUtility.MeshInstance buffer, MeshLayer layer, MapDataStore.Tile tile)
     {
         buffer = new MeshCombineUtility.MeshInstance();
         MeshContent content = null;
@@ -300,78 +296,68 @@ public class GameMap : MonoBehaviour
         }
         buffer.mesh = content.mesh[(int)layer];
         buffer.transform = Matrix4x4.TRS(DFtoUnityCoord(tile.position), Quaternion.identity, Vector3.one);
-        if (tile != null)
-        {
-            int tileTexIndex = 0;
-            IndexContent tileTexContent;
-            if (contentLoader.tileTextureConfiguration.GetValue(tile, layer, out tileTexContent))
-                tileTexIndex = tileTexContent.value;
-            int matTexIndex = 0;
-            IndexContent matTexContent;
-            if (contentLoader.materialTextureConfiguration.GetValue(tile, layer, out matTexContent))
-                matTexIndex = matTexContent.value;
-            ColorContent newColorContent;
-            Color newColor;
-            if (contentLoader.colorConfiguration.GetValue(tile, layer, out newColorContent))
-            {
-                newColor = newColorContent.value;
+        int tileTexIndex = 0;
+        IndexContent tileTexContent;
+        if (contentLoader.tileTextureConfiguration.GetValue (tile, layer, out tileTexContent))
+            tileTexIndex = tileTexContent.value;
+        int matTexIndex = 0;
+        IndexContent matTexContent;
+        if (contentLoader.materialTextureConfiguration.GetValue (tile, layer, out matTexContent))
+            matTexIndex = matTexContent.value;
+        ColorContent newColorContent;
+        Color newColor;
+        if (contentLoader.colorConfiguration.GetValue (tile, layer, out newColorContent)) {
+            newColor = newColorContent.value;
+        } else {
+            MatPairStruct mat;
+            mat.mat_type = -1;
+            mat.mat_index = -1;
+            switch (layer) {
+            case MeshLayer.StaticMaterial:
+            case MeshLayer.StaticCutout:
+                mat = tile.material;
+                break;
+            case MeshLayer.BaseMaterial:
+            case MeshLayer.BaseCutout:
+                mat = tile.base_material;
+                break;
+            case MeshLayer.LayerMaterial:
+            case MeshLayer.LayerCutout:
+                mat = tile.layer_material;
+                break;
+            case MeshLayer.VeinMaterial:
+            case MeshLayer.VeinCutout:
+                mat = tile.vein_material;
+                break;
+            case MeshLayer.NoMaterial:
+            case MeshLayer.NoMaterialCutout:
+                break;
+            case MeshLayer.Growth0Cutout:
+                break;
+            case MeshLayer.Growth1Cutout:
+                break;
+            case MeshLayer.Growth2Cutout:
+                break;
+            case MeshLayer.Growth3Cutout:
+                break;
+            default:
+                break;
             }
-            else
-            {
-                MatPairStruct mat;
-                mat.mat_type = -1;
-                mat.mat_index = -1;
-                switch (layer)
-                {
-                    case MeshLayer.StaticMaterial:
-                    case MeshLayer.StaticCutout:
-                        mat = tile.material;
-                        break;
-                    case MeshLayer.BaseMaterial:
-                    case MeshLayer.BaseCutout:
-                        mat = tile.base_material;
-                        break;
-                    case MeshLayer.LayerMaterial:
-                    case MeshLayer.LayerCutout:
-                        mat = tile.layer_material;
-                        break;
-                    case MeshLayer.VeinMaterial:
-                    case MeshLayer.VeinCutout:
-                        mat = tile.vein_material;
-                        break;
-                    case MeshLayer.NoMaterial:
-                    case MeshLayer.NoMaterialCutout:
-                        break;
-                    case MeshLayer.Growth0Cutout:
-                        break;
-                    case MeshLayer.Growth1Cutout:
-                        break;
-                    case MeshLayer.Growth2Cutout:
-                        break;
-                    case MeshLayer.Growth3Cutout:
-                        break;
-                    default:
-                        break;
-                }
-                MaterialDefinition mattie;
-                if (materials.TryGetValue(mat, out mattie))
-                {
+            MaterialDefinition mattie;
+            if (materials.TryGetValue (mat, out mattie)) {
 
-                    ColorDefinition color = mattie.state_color;
-                    if (color == null)
-                        newColor = Color.cyan;
-                    else
-                        newColor = new Color(color.red / 255.0f, color.green / 255.0f, color.blue / 255.0f, 1);
-                }
+                ColorDefinition color = mattie.state_color;
+                if (color == null)
+                    newColor = Color.cyan;
                 else
-                {
-                    newColor = Color.white;
-                }
+                    newColor = new Color (color.red / 255.0f, color.green / 255.0f, color.blue / 255.0f, 1);
+            } else {
+                newColor = Color.white;
             }
-            buffer.color = newColor;
-            buffer.uv1Index = matTexIndex;
-            buffer.uv2Index = tileTexIndex;
         }
+        buffer.color = newColor;
+        buffer.uv1Index = matTexIndex;
+        buffer.uv2Index = tileTexIndex;
     }
 
     bool GenerateTiles(int block_x, int block_y, int block_z)
@@ -399,7 +385,7 @@ public class GameMap : MonoBehaviour
                         case MeshLayer.LayerMaterial:
                         case MeshLayer.VeinMaterial:
                         case MeshLayer.NoMaterial:
-                            FillMeshBuffer(out meshBuffer[bufferIndex], layer, MapDataStore.Tiles[xx, yy, block_z]);
+                            FillMeshBuffer(out meshBuffer[bufferIndex], layer, MapDataStore.Main[xx, yy, block_z].Value);
                             bufferIndex++;
                             break;
                         case MeshLayer.StaticCutout:
@@ -411,7 +397,7 @@ public class GameMap : MonoBehaviour
                         case MeshLayer.Growth2Cutout:
                         case MeshLayer.Growth3Cutout:
                         case MeshLayer.NoMaterialCutout:
-                            FillMeshBuffer(out stencilMeshBuffer[stencilBufferIndex], layer, MapDataStore.Tiles[xx, yy, block_z]);
+                            FillMeshBuffer(out stencilMeshBuffer[stencilBufferIndex], layer, MapDataStore.Main[xx, yy, block_z].Value);
                             stencilBufferIndex++;
                             break;
                         default:
@@ -471,23 +457,24 @@ public class GameMap : MonoBehaviour
                     {
                         int x = (block_x * blockSize) + xx + xxx - 1;
                         int y = (block_y * blockSize) + yy + yyy - 1;
-                        if (x < 0 || y < 0 || x >= MapDataStore.Size.x || y >= MapDataStore.Size.y)
+                        if (x < 0 || y < 0 || x >= MapDataStore.MapSize.x || y >= MapDataStore.MapSize.y)
                         {
                             heights[xxx, yyy] = -1;
                             continue;
                         }
-                        var tile = MapDataStore.Tiles[x, y, block_z];
-                        if (tile == null)
+                        var maybeTile = MapDataStore.Main[x, y, block_z];
+                        if (maybeTile == null)
                         {
                             heights[xxx, yyy] = -1;
                             continue;
                         }
+                        var tile = maybeTile.Value;
                         if (tile.isWall)
                         {
                             heights[xxx, yyy] = -1;
                             continue;
                         }
-                        heights[xxx, yyy] = tile.liquid[liquid_select];
+                        heights[xxx, yyy] = MapDataStore.Main.GetLiquidLevel(new DFCoord(x,y,block_z), liquid_select);
                         heights[xxx, yyy] /= 7.0f;
                         if (tile.isFloor)
                         {
@@ -534,8 +521,11 @@ public class GameMap : MonoBehaviour
         for (int xx = 0; xx < blockSize; xx++)
             for (int yy = 0; yy < blockSize; yy++)
             {
-                if (MapDataStore.Tiles[(block_x * blockSize) + xx, (block_y * blockSize) + yy, block_z].liquid[liquid_select] == 0)
-                    continue;
+                if (MapDataStore.Main.GetLiquidLevel(
+                        new DFCoord((block_x * blockSize) + xx, (block_y * blockSize) + yy, block_z),
+                        liquid_select) == 0) {
+                        continue;
+                }
                 finalFaces.Add(coord2Index(xx, yy));
                 finalFaces.Add(coord2Index(xx + 1, yy));
                 finalFaces.Add(coord2Index(xx + 1, yy + 1));
@@ -549,13 +539,13 @@ public class GameMap : MonoBehaviour
             if (liquidBlocks[block_x, block_y, block_z, liquid_select] == null)
             {
                 GameObject block;
-                if (liquid_select == l_magma)
+                if (liquid_select == MapDataStore.l_magma)
                     block = Instantiate(defaultMagmaBlock) as GameObject;
                 else
                     block = Instantiate(defaultWaterBlock) as GameObject;
                 block.SetActive(true);
                 block.transform.parent = this.transform;
-                block.name = (liquid_select == l_water ? "water(" : "magma(") + block_x + ", " + block_y + ", " + block_z + ")";
+                block.name = (liquid_select == MapDataStore.l_water ? "water(" : "magma(") + block_x + ", " + block_y + ", " + block_z + ")";
                 liquidBlocks[block_x, block_y, block_z, liquid_select] = block.GetComponent<MeshFilter>();
             }
         }
@@ -719,7 +709,7 @@ public class GameMap : MonoBehaviour
         {
             Destroy(item);
         }
-        MapDataStore.Clear();
+        MapDataStore.Main.Clear();
     }
 
     void HideMeshes()
@@ -773,7 +763,7 @@ public class GameMap : MonoBehaviour
                                 liquidBlocks[xx, yy, zz, qq].gameObject.GetComponent<Renderer>().material = invisibleMaterial;
                             else
                             {
-                                if(qq == l_magma)
+                                if(qq == MapDataStore.l_magma)
                                     liquidBlocks[xx, yy, zz, qq].gameObject.GetComponent<Renderer>().material = magmaMaterial;
                                 else
                                     liquidBlocks[xx, yy, zz, qq].gameObject.GetComponent<Renderer>().material = waterMaterial;
@@ -792,11 +782,13 @@ public class GameMap : MonoBehaviour
         cursorProperties.text += cursX + ",";
         cursorProperties.text += cursY + ",";
         cursorProperties.text += cursZ + "\n";
-        if (MapDataStore.GetTile(cursX, cursY, cursZ) != null)
+        var maybeTile = MapDataStore.Main[cursX, cursY, cursZ];
+        if (maybeTile != null)
         {
+            var tile = maybeTile.Value;
             cursorProperties.text += "Tiletype:\n";
             var tiletype = DFConnection.Instance.NetTiletypeList.tiletype_list
-                [MapDataStore.Tiles[cursX, cursY, cursZ].tileType];
+                [tile.tileType];
             cursorProperties.text += tiletype.name + "\n";
             cursorProperties.text +=
                 tiletype.shape + ":" +
@@ -804,7 +796,7 @@ public class GameMap : MonoBehaviour
                 tiletype.material + ":" +
                 tiletype.variant + ":" +
                 tiletype.direction + "\n";
-            var mat = MapDataStore.Tiles[cursX, cursY, cursZ].material;
+            var mat = tile.material;
             cursorProperties.text += "Material: ";
             cursorProperties.text += mat.mat_type + ",";
             cursorProperties.text += mat.mat_index + "\n";
@@ -819,7 +811,7 @@ public class GameMap : MonoBehaviour
 
             cursorProperties.text += "\n";
 
-            var basemat = MapDataStore.Tiles[cursX, cursY, cursZ].base_material;
+            var basemat = tile.base_material;
             cursorProperties.text += "Base Material: ";
             cursorProperties.text += basemat.mat_type + ",";
             cursorProperties.text += basemat.mat_index + "\n";
@@ -834,7 +826,7 @@ public class GameMap : MonoBehaviour
 
             cursorProperties.text += "\n";
 
-            var layermat = MapDataStore.Tiles[cursX, cursY, cursZ].layer_material;
+            var layermat = tile.layer_material;
             cursorProperties.text += "Layer Material: ";
             cursorProperties.text += layermat.mat_type + ",";
             cursorProperties.text += layermat.mat_index + "\n";
@@ -849,7 +841,7 @@ public class GameMap : MonoBehaviour
 
             cursorProperties.text += "\n";
 
-            var veinmat = MapDataStore.Tiles[cursX, cursY, cursZ].vein_material;
+            var veinmat = tile.vein_material;
             cursorProperties.text += "Vein Material: ";
             cursorProperties.text += veinmat.mat_type + ",";
             cursorProperties.text += veinmat.mat_index + "\n";
