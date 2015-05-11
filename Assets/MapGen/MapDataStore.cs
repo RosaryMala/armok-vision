@@ -73,15 +73,15 @@ public class MapDataStore {
             sliceSize.z < 0 || sliceSize.z > MapSize.z) {
             throw new UnityException("Can't have a map slice outside the map!");
         }
+        if (sliceSize.x < 1 || sliceSize.y < 1 || sliceSize.z < 1) {
+            throw new UnityException("Can't make map slice without any tiles");
+        }
         SliceSize = sliceSize;
         tiles = new Tile[SliceSize.x, SliceSize.y, SliceSize.z];
         tilesPresent = new BitArray(PresentIndex(SliceSize.x-1, SliceSize.y-1, SliceSize.z-1)+1);
     }
 
     public void CopySliceTo(DFCoord newSliceOrigin, DFCoord newSliceSize, MapDataStore target) {
-        if (newSliceSize.x < 1 || newSliceSize.y < 1 || newSliceSize.z < 1) {
-            throw new UnityException("Can't make slice without any tiles");
-        }
         if (newSliceSize != target.SliceSize) {
             throw new UnityException("Mismatched slice sizes");
         }
