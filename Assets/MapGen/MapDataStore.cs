@@ -78,6 +78,33 @@ public class MapDataStore {
         tilesPresent = new BitArray(PresentIndex(SliceSize.x-1, SliceSize.y-1, SliceSize.z-1)+1);
     }
 
+    public void CopySliceTo(DFCoord newSliceOrigin, DFCoord newSliceSize, MapDataStore target) {
+        if (newSliceSize.x < 1 || newSliceSize.y < 1 || newSliceSize.z < 1) {
+            throw new UnityException("Can't make slice without any tiles");
+        }
+        if (newSliceSize != target.SliceSize) {
+            throw new UnityException("Mismatched slice sizes");
+        }
+        var localNewSliceOrigin = WorldToLocalSpace(newSliceOrigin);
+        if (!InSliceBoundsLocal(localNewSliceOrigin) || !InSliceBoundsLocal(localNewSliceOrigin + newSliceSize - new DFCoord(1,1,1))) {
+            throw new UnityException("Can't slice outside of our slice bounds");
+        }
+        for (int x = 0; x < newSliceSize.x; x++) {
+            for (int y = 0; y < newSliceSize.y; y++) {
+                for (int z = 0; z < newSliceSize.z; z++) {
+                    target.tiles[x, y, z] = tiles[localNewSliceOrigin.x+x, localNewSliceOrigin.y+y, localNewSliceOrigin.z+z];
+                    target.tiles[x, y, z].container = target;
+                }
+            }
+        }
+    }
+
+    public MapDataStore CopySlice(DFCoord newSliceOrigin, DFCoord newSliceSize) {
+        MapDataStore target = new MapDataStore(newSliceOrigin, newSliceSize);
+        CopySliceTo(newSliceOrigin, newSliceSize, target);
+        return target;
+    }
+
     // Things to read and modify the map
     // Note: everything takes coordinates in world / DF space
     public Tile? this[int x, int y, int z] {
@@ -167,6 +194,9 @@ public class MapDataStore {
         return 0 <= x && x < SliceSize.x &&
                 0 <= y && y < SliceSize.y &&
                 0 <= z && z < SliceSize.z;
+    }
+    bool InSliceBoundsLocal(DFCoord coord) {
+        return InSliceBoundsLocal(coord.x, coord.y, coord.z);
     }
     int PresentIndex(int x, int y, int z) {
         return x * SliceSize.y * SliceSize.z + y * SliceSize.z + z;
