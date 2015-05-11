@@ -46,9 +46,10 @@ public class MapDataStore {
     // Used for dynamic material loading and stuff.
     public static List<Tiletype> tiletypeTokenList { private get; set; }
     // Used to index into water/magma arrays in a few places.
-    public const int l_water = 0;
-    public const int l_magma = 1;
+    public const int WATER_INDEX = 0;
+    public const int MAGMA_INDEX = 1;
 
+    public static readonly DFCoord BLOCK_SIZE = new DFCoord(16,16,1);
 
 
     // Instance stuff
@@ -79,6 +80,7 @@ public class MapDataStore {
         SliceSize = sliceSize;
         tiles = new Tile[SliceSize.x, SliceSize.y, SliceSize.z];
         tilesPresent = new BitArray(PresentIndex(SliceSize.x-1, SliceSize.y-1, SliceSize.z-1)+1);
+        Reset();
     }
 
     public void CopySliceTo(DFCoord newSliceOrigin, DFCoord newSliceSize, MapDataStore target) {
@@ -105,6 +107,32 @@ public class MapDataStore {
         return target;
     }
 
+    public void StoreTiles(RemoteFortressReader.MapBlock block) {
+        bool setTiles = block.tiles.Count > 0;
+        bool setLiquids = block.water.Count > 0 || block.magma.Count > 0;
+        if (!setTiles && !setLiquids) return;
+
+        for (int xx = 0; xx < 16; xx++)
+            for (int yy = 0; yy < 16; yy++)
+            {
+                DFCoord worldCoord = new DFCoord(block.map_x + xx, block.map_y + yy, block.map_z);
+                DFCoord localCoord = WorldToLocalSpace(worldCoord);
+                int netIndex = xx + (yy * 16);
+                tilesPresent[PresentIndex(localCoord.x, localCoord.y, localCoord.z)] = true;
+                if (setTiles) {
+                    tiles[localCoord.x, localCoord.y, localCoord.z].tileType = block.tiles[netIndex];
+                    tiles[localCoord.x, localCoord.y, localCoord.z].material = block.materials[netIndex];
+                    tiles[localCoord.x, localCoord.y, localCoord.z].base_material = block.base_materials[netIndex];
+                    tiles[localCoord.x, localCoord.y, localCoord.z].layer_material = block.layer_materials[netIndex];
+                    tiles[localCoord.x, localCoord.y, localCoord.z].vein_material = block.vein_materials[netIndex];
+                }
+                if (setLiquids) {
+                    tiles[localCoord.x, localCoord.y, localCoord.z].waterLevel = block.water[netIndex];
+                    tiles[localCoord.x, localCoord.y, localCoord.z].magmaLevel = block.magma[netIndex];
+                }
+            }
+    }
+
     // Things to read and modify the map
     // Note: everything takes coordinates in world / DF space
     public Tile? this[int x, int y, int z] {
@@ -128,9 +156,9 @@ public class MapDataStore {
         var tile = this[coord];
         if (tile == null) return 0;
         switch (liquidIndex) {
-        case l_water:
+        case WATER_INDEX:
             return tile.Value.waterLevel;
-        case l_magma:
+        case MAGMA_INDEX:
             return tile.Value.magmaLevel;
         default:
             throw new UnityException("No liquid with index "+liquidIndex);
@@ -139,10 +167,10 @@ public class MapDataStore {
 
     public void SetLiquidLevel(DFCoord coord, int liquidIndex, int liquidLevel) {
         switch (liquidIndex) {
-        case l_water:
+        case WATER_INDEX:
             InitOrModifyTile(coord, waterLevel: liquidLevel);
             return;
-        case l_magma:
+        case MAGMA_INDEX:
             InitOrModifyTile(coord, magmaLevel: liquidLevel);
             return;
         default:
@@ -163,15 +191,11 @@ public class MapDataStore {
         if (!InSliceBoundsLocal(local.x, local.y, local.z)) {
             throw new UnityException("Can't modify tile outside of slice");
         }
-        int presentIndex = PresentIndex (local.x, local.y, local.z);
-        if (!tilesPresent[presentIndex]) {
-            tilesPresent[presentIndex] = true;
-            tiles[local.x, local.y, local.z] = new Tile(this, coord);
-        }
+        tilesPresent[PresentIndex(local.x, local.y, local.z)] = true;
         tiles[local.x, local.y, local.z].Modify(tileType, material, base_material, layer_material, vein_material, waterLevel, magmaLevel);
     }
 
-    public void Clear() {
+    public void Reset() {
         tilesPresent.SetAll(false);
         for (int x = 0; x < SliceSize.x; x++) {
             for (int y = 0; y < SliceSize.y; y++) {
