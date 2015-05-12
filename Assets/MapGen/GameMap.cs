@@ -263,10 +263,10 @@ public class GameMap : MonoBehaviour
         MeshContent content = null;
         if (!contentLoader.tileMeshConfiguration.GetValue(tile, layer, out content))
         {
-            buffer.mesh = null;
+            buffer.meshData = null;
             return;
         }
-        buffer.mesh = content.mesh[(int)layer];
+        buffer.meshData = content.meshData[(int)layer];
         buffer.transform = Matrix4x4.TRS(DFtoUnityCoord(tile.position), Quaternion.identity, Vector3.one);
         int tileTexIndex = 0;
         IndexContent tileTexContent;
