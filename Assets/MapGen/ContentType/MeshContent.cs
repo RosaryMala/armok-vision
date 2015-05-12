@@ -26,7 +26,7 @@ public enum MeshLayer
 public class MeshContent : IContent
 {
 
-    public Mesh[] mesh { get; private set; }
+    public MeshData[] meshData { get; private set; }
     public bool AddTypeElement(System.Xml.Linq.XElement elemtype)
     {
         XAttribute fileAtt = elemtype.Attribute("file");
@@ -42,11 +42,13 @@ public class MeshContent : IContent
         var lStream = new FileStream(filePath, FileMode.Open);
         var lOBJData = OBJLoader.LoadOBJ(lStream);
         lStream.Close();
-        mesh = new Mesh[(int)MeshLayer.Count];
-        for (int i = 0; i < mesh.Length; i++)
+        meshData = new MeshData[(int)MeshLayer.Count];
+        Mesh tempMesh = new Mesh();
+        for (int i = 0; i < meshData.Length; i++)
         {
-            mesh[i] = new Mesh();
-            mesh[i].LoadOBJ(lOBJData, ((MeshLayer)i).ToString());
+            tempMesh.LoadOBJ(lOBJData, ((MeshLayer)i).ToString());
+            meshData[i] = new MeshData(tempMesh);
+            tempMesh.Clear();
         }
         lStream = null;
         lOBJData = null;

@@ -6,8 +6,7 @@ public class MeshCombineUtility
 
     public struct MeshInstance
     {
-        public Mesh mesh;
-        public int subMeshIndex;
+        public MeshData meshData;
         public Matrix4x4 transform;
         public Color color;
         public int uv1Index;
@@ -22,9 +21,9 @@ public class MeshCombineUtility
         int triangleCount = 0;
         for (int combIndex = 0; combIndex < length; combIndex++)
         {
-            if (combines[combIndex].mesh)
+            if (combines[combIndex].meshData != null)
             {
-                vertexCount += combines[combIndex].mesh.vertexCount;
+                vertexCount += combines[combIndex].meshData.vertexCount;
             }
         }
 
@@ -37,9 +36,9 @@ public class MeshCombineUtility
         // Precomputed how many triangles we need instead
         for (int combIndex = 0; combIndex < length; combIndex++)
         {
-            if (combines[combIndex].mesh)
+            if (combines[combIndex].meshData != null)
             {
-                triangleCount += combines[combIndex].mesh.GetTriangles(combines[combIndex].subMeshIndex).Length;
+                triangleCount += combines[combIndex].meshData.triangles.Length;
             }
         }
 
@@ -47,7 +46,7 @@ public class MeshCombineUtility
         Vector3[] normals = new Vector3[vertexCount];
         Vector4[] tangents = new Vector4[vertexCount];
         Vector2[] uv = new Vector2[vertexCount];
-        Vector2[] uv1 = new Vector2[vertexCount];
+        Vector2[] uv2 = new Vector2[vertexCount];
         Color[] colors = new Color[vertexCount];
 
         int[] triangles = new int[triangleCount];
@@ -57,57 +56,57 @@ public class MeshCombineUtility
         offset = 0;
         for (int combIndex = 0; combIndex < length; combIndex++)
         {
-            if (combines[combIndex].mesh)
-                Copy(combines[combIndex].mesh.vertexCount, combines[combIndex].mesh.vertices, vertices, ref offset, combines[combIndex].transform);
+            if (combines[combIndex].meshData != null)
+                Copy(combines[combIndex].meshData.vertexCount, combines[combIndex].meshData.vertices, vertices, ref offset, combines[combIndex].transform);
         }
 
         offset = 0;
         for (int combIndex = 0; combIndex < length; combIndex++)
         {
-            if (combines[combIndex].mesh)
+            if (combines[combIndex].meshData != null)
             {
                 Matrix4x4 invTranspose = combines[combIndex].transform;
                 invTranspose = invTranspose.inverse.transpose;
-                CopyNormal(combines[combIndex].mesh.vertexCount, combines[combIndex].mesh.normals, normals, ref offset, invTranspose);
+                CopyNormal(combines[combIndex].meshData.vertexCount, combines[combIndex].meshData.normals, normals, ref offset, invTranspose);
             }
 
         }
         offset = 0;
         for (int combIndex = 0; combIndex < length; combIndex++)
         {
-            if (combines[combIndex].mesh)
+            if (combines[combIndex].meshData != null)
             {
                 Matrix4x4 invTranspose = combines[combIndex].transform;
                 invTranspose = invTranspose.inverse.transpose;
-                CopyTangents(combines[combIndex].mesh.vertexCount, combines[combIndex].mesh.tangents, tangents, ref offset, invTranspose);
+                CopyTangents(combines[combIndex].meshData.vertexCount, combines[combIndex].meshData.tangents, tangents, ref offset, invTranspose);
             }
 
         }
         offset = 0;
         for (int combIndex = 0; combIndex < length; combIndex++)
         {
-            if (combines[combIndex].mesh)
+            if (combines[combIndex].meshData != null)
             {
                 Matrix4x4 transform = Matrix4x4.TRS(new Vector2(((combines[combIndex].uv1Index % 16) / 16.0f), ((15 - (combines[combIndex].uv2Index / 16)) / 16.0f)), Quaternion.identity, new Vector2(1.0f / 16.0f, 1.0f / 16.0f));
-                Copy(combines[combIndex].mesh.vertexCount, combines[combIndex].mesh.uv, uv, ref offset, transform);
+                Copy(combines[combIndex].meshData.vertexCount, combines[combIndex].meshData.uv, uv, ref offset, transform);
             }
         }
 
         offset = 0;
         for (int combIndex = 0; combIndex < length; combIndex++)
         {
-            if (combines[combIndex].mesh)
+            if (combines[combIndex].meshData != null)
             {
                 Matrix4x4 transform = Matrix4x4.TRS(new Vector2( ((combines[combIndex].uv2Index % 16) / 16.0f),  ((15 - (combines[combIndex].uv2Index / 16)) / 16.0f)), Quaternion.identity, new Vector2(1.0f / 16.0f, 1.0f / 16.0f));
-                Copy(combines[combIndex].mesh.vertexCount, combines[combIndex].mesh.uv, uv1, ref offset, transform);
+                Copy(combines[combIndex].meshData.vertexCount, combines[combIndex].meshData.uv, uv2, ref offset, transform);
             }
         }
 
         offset = 0;
         for (int combIndex = 0; combIndex < length; combIndex++)
         {
-            if (combines[combIndex].mesh)
-                CopyColors(combines[combIndex].mesh.vertexCount, combines[combIndex].mesh.colors, colors, ref offset, combines[combIndex].color);
+            if (combines[combIndex].meshData != null)
+                CopyColors(combines[combIndex].meshData.vertexCount, combines[combIndex].meshData.colors, colors, ref offset, combines[combIndex].color);
         }
 
 
@@ -115,17 +114,17 @@ public class MeshCombineUtility
         int vertexOffset = 0;
         for (int combIndex = 0; combIndex < length; combIndex++)
         {
-            if (combines[combIndex].mesh)
+            if (combines[combIndex].meshData != null)
             {
 
-                int[] inputtriangles = combines[combIndex].mesh.GetTriangles(combines[combIndex].subMeshIndex);
+                int[] inputtriangles = combines[combIndex].meshData.triangles;
                 for (int i = 0; i < inputtriangles.Length; i++)
                 {
                     triangles[i + triangleOffset] = inputtriangles[i] + vertexOffset;
                 }
                 triangleOffset += inputtriangles.Length;
 
-                vertexOffset += combines[combIndex].mesh.vertexCount;
+                vertexOffset += combines[combIndex].meshData.vertexCount;
             }
         }
         mesh.Clear();
@@ -134,7 +133,7 @@ public class MeshCombineUtility
         mesh.normals = normals;
         mesh.colors = colors;
         mesh.uv = uv;
-        mesh.uv2 = uv1;
+        mesh.uv2 = uv2;
         mesh.tangents = tangents;
         mesh.triangles = triangles;
         return true;
