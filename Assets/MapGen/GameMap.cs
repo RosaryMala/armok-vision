@@ -47,10 +47,13 @@ public class GameMap : MonoBehaviour
     public int rangeZdown = 5;
     public int blocksToProcess = 1;
     public int cameraViewDist = 25;
+    public int nThreads = 0;
 
     // Stored view information
     RemoteFortressReader.ViewInfo view;
     bool posZDirty = true; // Set in GetViewInfo if z changes, and reset in HideMeshes after meshes hidden.
+
+    BlockMesher mesher;
 
     // The actual unity meshes used to draw things on screen.
     MeshFilter[, ,] blocks;         // Terrain data.
@@ -67,10 +70,10 @@ public class GameMap : MonoBehaviour
     public ContentLoader contentLoader = new ContentLoader();
 
     // Coordinate system stuff.
-    public static float tileHeight { get { return 3.0f; } }
-    public static float floorHeight { get { return 0.5f; } }
-    public static float tileWidth { get { return 2.0f; } }
-    public static int blockSize = 16;
+    public const float tileHeight = 3.0f;
+    public const float floorHeight = 0.5f;
+    public const float tileWidth = 2.0f;
+    public const int blockSize = 16;
     public static Vector3 DFtoUnityCoord(int x, int y, int z)
     {
         Vector3 outCoord = new Vector3(x * tileWidth, z * tileHeight, y * (-tileWidth));
@@ -98,6 +101,11 @@ public class GameMap : MonoBehaviour
         int z = Mathf.FloorToInt (input.y / tileHeight);
         return new DFCoord(x, y, z);
     }
+    public static bool IsBlockCorner(DFCoord input) {
+        return input.x % blockSize == 0 &&
+               input.y % blockSize == 0 &&
+               input.z % blockSize == 0;
+    }
 
     // Used while meshing blocks
     MeshCombineUtility.MeshInstance[] meshBuffer;
@@ -119,6 +127,7 @@ public class GameMap : MonoBehaviour
     void OnConnectToDF() {
         Debug.Log("Connected");
         enabled = true;
+        mesher = BlockMesher.GetMesher(nThreads);
         // Initialize materials
         if (materials == null)
             materials = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
