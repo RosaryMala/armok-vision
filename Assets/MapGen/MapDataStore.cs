@@ -59,7 +59,7 @@ public class MapDataStore {
     // The origin of this slice of the map; subtracted from indices when indexed
     // (So that code using slices of the map can use the same coordinates as when
     // accessing the main map)
-    public readonly DFCoord SliceOrigin;
+    public DFCoord SliceOrigin { get; private set; }
     // The data
     Tile[,,] tiles;
     // An array for whether a tile is present or not; index with PresentIndex
@@ -99,6 +99,7 @@ public class MapDataStore {
                 }
             }
         }
+        target.SliceOrigin = newSliceOrigin;
     }
 
     public MapDataStore CopySlice(DFCoord newSliceOrigin, DFCoord newSliceSize) {
