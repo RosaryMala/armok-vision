@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityExtension;
 
 // Stores data like a Mesh, but doesn't talk to the graphics card.
 public class MeshData
@@ -27,7 +28,7 @@ public class MeshData
         triangles = target.GetTriangles(0); // Will the submesh always be 0?
     }
 
-    public MeshData (int vertexCount,
+    public MeshData (
      Vector3[] vertices,
      Vector3[] normals,
      Vector4[] tangents,
@@ -36,6 +37,7 @@ public class MeshData
      Color[] colors,
      int[] triangles)
     {
+        this.vertexCount = vertices.Length;
         this.vertices = vertices;
         this.normals = normals;
         this.tangents = tangents;
@@ -53,5 +55,7 @@ public class MeshData
         target.uv2 = uv2;
         target.colors = colors;
         target.triangles = triangles;
+        target.RecalculateBounds();
+        target.RecalculateTangents();
     }
 }
