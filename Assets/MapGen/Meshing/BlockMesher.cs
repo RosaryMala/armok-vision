@@ -93,6 +93,9 @@ abstract class BlockMesher {
     // Handles either talking to threads (multi) or doing meshing (single)
     public abstract void Poll();
 
+    // Does what you'd expect.
+    public abstract void Terminate();
+
     // Enqueue a block for meshing; inclde 
     public void Enqueue(DFCoord targetLocation, bool tiles, bool liquids) {
         if (!GameMap.IsBlockCorner(targetLocation)) {
@@ -437,15 +440,68 @@ sealed class SingleThreadedMesher : BlockMesher {
         resultQueue.Enqueue(CreateMeshes(req, temp));
         recycledBlocks.Push(req.data);
     }
+
+    public override void Terminate() {}
 }
 
 // Now we're cooking with charcoal.
 sealed class MultiThreadedMesher : BlockMesher {
+    private static readonly System.TimeSpan SLEEP_TIME = System.TimeSpan.FromMilliseconds(16);
+
+    private volatile bool finished;
+    private readonly Thread[] threads;
+
     public MultiThreadedMesher(int nThreads = 1) {
-        throw new System.NotImplementedException("Can't do that yet, sorry");
+        finished = false;
+        threads = new Thread[nThreads];
+
+        for (int i = 0; i < nThreads; i++) {
+            threads[i] = new Thread(new ThreadStart(this.MeshForever));
+            threads[i].Start();
+        }
     }
 
     public override void Poll() {
-        throw new System.NotImplementedException("Can't do that yet, sorry");
+        if (finished) {
+            Debug.Log ("Polling after completion");
+        }
+    }
+
+    public override void Terminate() {
+        finished = true;
+    }
+
+    // The actual computation
+    public void MeshForever() {
+        // Allocate our buffers
+        TempBuffers temp = new TempBuffers();
+        temp.Init();
+
+        // Loop forever
+        while (!finished) {
+            Request? maybeWorkItem;
+            // Check for an item
+            lock (requestQueue) {
+                if (requestQueue.Count > 0) {
+                    maybeWorkItem = requestQueue.Dequeue();
+                } else {
+                    maybeWorkItem = null;
+                }
+            }
+            if (!maybeWorkItem.HasValue) {
+                // Wait a bit; TODO tune SLEEP_TIME
+                Thread.Sleep(SLEEP_TIME);
+                continue;
+            }
+            // We've got something to do!
+            Request workItem = maybeWorkItem.Value;
+            Result result = CreateMeshes(workItem, temp);
+            lock (resultQueue) {
+                resultQueue.Enqueue(result);
+            }
+            lock (recycledBlocks) {
+                recycledBlocks.Push(workItem.data);
+            }
+        }
     }
 }
