@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using DFHack;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,7 +61,7 @@ public class DFConnection : MonoBehaviour {
     // Special sort of queue:
     // It pops elements in random order, but makes sure that
     // we don't bother storing two updates to the same block at once
-    private Dictionary<DFCoord, RemoteFortressReader.MapBlock> pendingBlocks;
+    private Util.UniqueQueue<DFCoord, RemoteFortressReader.MapBlock> pendingBlocks;
     // Cached block request
     private RemoteFortressReader.BlockRequest blockRequest;
 
@@ -128,12 +128,7 @@ public class DFConnection : MonoBehaviour {
     // Pop a map block update; return null if there isn't one.
     public RemoteFortressReader.MapBlock PopMapBlockUpdate () {
         lock (pendingBlocks) {
-            if (pendingBlocks.Count == 0) {
-                return null;
-            }
-            var popped = pendingBlocks.First();
-            pendingBlocks.Remove(popped.Key);
-            return popped.Value;
+            return pendingBlocks.Dequeue();
         }
     }
 
@@ -141,7 +136,7 @@ public class DFConnection : MonoBehaviour {
     void ConnectAndInit () {
         blockRequest = new RemoteFortressReader.BlockRequest();
         blockRequest.blocks_needed = BlocksToFetch;
-        pendingBlocks = new Dictionary<DFCoord, RemoteFortressReader.MapBlock>();
+        pendingBlocks = new Util.UniqueQueue<DFCoord, RemoteFortressReader.MapBlock>();
         networkClient = new DFHack.RemoteClient(dfNetworkOut);
         bool success = networkClient.connect();
         if (!success) {
@@ -208,10 +203,8 @@ public class DFConnection : MonoBehaviour {
         RemoteFortressReader.BlockList resultList;
         blockListCall.execute(blockRequest, out resultList);
         lock (pendingBlocks) {
-            //Debug.Log ("Read "+resultList.map_blocks.Count+" Map Blocks");
             foreach (RemoteFortressReader.MapBlock block in resultList.map_blocks) {
-                    pendingBlocks[new DFCoord(block.map_x, block.map_y, block.map_z)] =
-                        block;
+                pendingBlocks.EnqueueAndDisplace(new DFCoord(block.map_x, block.map_y, block.map_z), block);
             }
         }
         networkClient.resume_game();
