@@ -102,8 +102,8 @@ abstract class BlockMesher {
             throw new UnityException("Why mesh something without tiles or liquids?");
         }
 
-        MapDataStore targetDataStore = AllocateBlockStore();
         // Using our object pool
+        MapDataStore targetDataStore = AllocateBlockStore();
 
         // Copy data
         MapDataStore.Main.CopySliceTo(targetLocation, MapDataStore.BLOCK_SIZE, targetDataStore);
@@ -153,7 +153,7 @@ abstract class BlockMesher {
         lock (recycledBlocks) {
             if (recycledBlocks.Count == 0) {
                 // Nothing to recycle
-                return new MapDataStore(new DFCoord(0,0,0), MapDataStore.BLOCK_SIZE);
+                return new MapDataStore(new BlockCoord(0,0,0));
             } else {
                 // Reuse another data store
                 return recycledBlocks.Pop ();
@@ -185,7 +185,7 @@ abstract class BlockMesher {
     {
         int block_x = data.SliceOrigin.x / GameMap.blockSize;
         int block_y = data.SliceOrigin.y / GameMap.blockSize;
-        int block_z = data.SliceOrigin.z / GameMap.blockSize;
+        int block_z = data.SliceOrigin.z;
 
         Vector3[] finalVertices = new Vector3[(GameMap.blockSize + 1) * (GameMap.blockSize + 1)];
         Vector3[] finalNormals = new Vector3[(GameMap.blockSize + 1) * (GameMap.blockSize + 1)];
@@ -224,7 +224,7 @@ abstract class BlockMesher {
                             temp.heights[xxx, yyy] = -1;
                             continue;
                         }
-                        temp.heights[xxx, yyy] = MapDataStore.Main.GetLiquidLevel(new DFCoord(x,y,block_z), liquid_select);
+                        temp.heights[xxx, yyy] = data.GetLiquidLevel(new DFCoord(x,y,block_z), liquid_select);
                         temp.heights[xxx, yyy] /= 7.0f;
                         if (tile.isFloor)
                         {
@@ -271,7 +271,7 @@ abstract class BlockMesher {
         for (int xx = 0; xx < GameMap.blockSize; xx++)
             for (int yy = 0; yy < GameMap.blockSize; yy++)
             {
-                if (MapDataStore.Main.GetLiquidLevel(
+                if (data.GetLiquidLevel(
                         new DFCoord((block_x * GameMap.blockSize) + xx, (block_y * GameMap.blockSize) + yy, block_z),
                         liquid_select) == 0) {
                         continue;
@@ -301,16 +301,15 @@ abstract class BlockMesher {
     {
         int block_x = data.SliceOrigin.x / GameMap.blockSize;
         int block_y = data.SliceOrigin.y / GameMap.blockSize;
-        int block_z = data.SliceOrigin.z / GameMap.blockSize;
+        int block_z = data.SliceOrigin.z;
         int bufferIndex = 0;
         int stencilBufferIndex = 0;
         for (int xx = (block_x * GameMap.blockSize); xx < (block_x + 1) * GameMap.blockSize; xx++)
             for (int yy = (block_y * GameMap.blockSize); yy < (block_y + 1) * GameMap.blockSize; yy++)
             {
-                if (!data.InSliceBounds(new DFCoord(xx, yy, block_z))) {
-                    Debug.Log ("Slice origin: "+data.SliceOrigin+", Slice size: "+data.SliceSize+", coord: "+new DFCoord(xx, yy, block_z));
-                    throw new UnityException("YUP");
-                }
+                if (!data.InSliceBounds(new DFCoord(xx, yy, block_z))) throw new UnityException("OOB");
+                if (data[xx, yy, block_z] == null) continue;
+
                 for (int i = 0; i < (int)MeshLayer.Count; i++)
                 {
                     MeshLayer layer = (MeshLayer)i;
@@ -321,7 +320,7 @@ abstract class BlockMesher {
                         case MeshLayer.LayerMaterial:
                         case MeshLayer.VeinMaterial:
                         case MeshLayer.NoMaterial:
-                            FillMeshBuffer(out temp.meshBuffer[bufferIndex], layer, MapDataStore.Main[xx, yy, block_z].Value);
+                            FillMeshBuffer(out temp.meshBuffer[bufferIndex], layer, data[xx, yy, block_z].Value);
                             bufferIndex++;
                             break;
                         case MeshLayer.StaticCutout:
@@ -333,7 +332,7 @@ abstract class BlockMesher {
                         case MeshLayer.Growth2Cutout:
                         case MeshLayer.Growth3Cutout:
                         case MeshLayer.NoMaterialCutout:
-                            FillMeshBuffer(out temp.stencilMeshBuffer[stencilBufferIndex], layer, MapDataStore.Main[xx, yy, block_z].Value);
+                            FillMeshBuffer(out temp.stencilMeshBuffer[stencilBufferIndex], layer, data[xx, yy, block_z].Value);
                             stencilBufferIndex++;
                             break;
                         default:
