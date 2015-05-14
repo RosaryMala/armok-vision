@@ -124,6 +124,11 @@ namespace DFHack
             x = y = z = -30000;
         }
 
+        public override string ToString ()
+        {
+            return string.Format("DFCoord({0},{1},{2})",x,y,z);
+        }
+
         public static bool operator <(DFCoord a, DFCoord b)
         {
             if (a.x != b.x) return (a.x < b.x);

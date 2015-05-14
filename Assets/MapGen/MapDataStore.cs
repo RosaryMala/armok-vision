@@ -134,6 +134,10 @@ public class MapDataStore {
             }
     }
 
+    public bool InSliceBounds(DFCoord loc) {
+        return InSliceBoundsLocal(WorldToLocalSpace(loc));
+    }
+
     // Things to read and modify the map
     // Note: everything takes coordinates in world / DF space
     public Tile? this[int x, int y, int z] {
