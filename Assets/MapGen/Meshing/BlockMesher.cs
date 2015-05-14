@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using DFHack;
 using System.Threading;
+using RemoteFortressReader;
 
 // Two implementations: single and multithreaded.
 // All of the actual meshing code is exactly the same;
 // the only difference is in how it's called.
+
 abstract class BlockMesher {
     // If n = 0, single threaded; else multithreaded.
     public static BlockMesher GetMesher (int nThreads) {
@@ -22,6 +24,7 @@ abstract class BlockMesher {
     public struct Result {
         public DFCoord location;
         public MeshData tiles;
+        public MeshData stencilTiles;
         public MeshData water;
         public MeshData magma;
     }
@@ -50,6 +53,13 @@ abstract class BlockMesher {
         public float[,] heights { get; private set; }
     }
 
+    // Stuff for runtime configuration.
+    // These will be accessed from multiple threads, but DON'T need to be
+    // locked, since they don't change after being loaded.
+    protected readonly ContentLoader contentLoader;
+    protected readonly Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> materials;
+
+    // Some queues.
     // All of these need to be locked before access.
     // In general, NEVER LOCK MORE THAN ONE at the same time - 
     // That road leads to deadlock.
@@ -58,9 +68,25 @@ abstract class BlockMesher {
     protected readonly Stack<MapDataStore> recycledBlocks; // Object pool!
 
     protected BlockMesher() {
+        // Make queues
         requestQueue = new Util.UniqueQueue<DFCoord, Request>();
         recycledBlocks = new Stack<MapDataStore>();
         resultQueue = new Queue<Result>();
+
+        // Load meshes
+        contentLoader = new ContentLoader();
+        System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+        watch.Start();
+        contentLoader.ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt");
+        watch.Stop();
+        Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
+
+        // Load materials
+        materials = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
+        foreach (RemoteFortressReader.MaterialDefinition material in DFConnection.Instance.NetMaterialList.material_list)
+        {
+            materials[material.mat_pair] = material;
+        }
     }
 
     // Needs to be run frequently.
@@ -104,12 +130,20 @@ abstract class BlockMesher {
         }
     }
 
-    public Result? PopResult() {
+    public Result? Dequeue() {
         lock (resultQueue) {
             if (resultQueue.Count > 0) {
                 return resultQueue.Dequeue();
             } else {
                 return null;
+            }
+        }
+    }
+
+    public bool HasNewMeshes {
+        get {
+            lock (resultQueue) {
+                return resultQueue.Count > 0;
             }
         }
     }
@@ -128,16 +162,17 @@ abstract class BlockMesher {
     }
 
     // ACTUAL MESHING CODE!
-    // --------------------
+    // -------------------------------------------------
 
     protected Result CreateMeshes(Request request, TempBuffers temp) {
         Result result = new Result();
         result.location = request.data.SliceOrigin;
-        if (request.tiles) {
-            // Do tiles
-        }
         if (request.liquids) {
-            // Do liquids
+            result.water = GenerateLiquidSurface(request.data, MapDataStore.WATER_INDEX, temp);
+            result.magma = GenerateLiquidSurface(request.data, MapDataStore.MAGMA_INDEX, temp);
+        }
+        if (request.tiles) {
+            GenerateTiles (request.data, out result.tiles, out result.stencilTiles, temp);
         }
         return result;
     }
@@ -148,7 +183,10 @@ abstract class BlockMesher {
     }
     MeshData GenerateLiquidSurface(MapDataStore data, int liquid_select, TempBuffers temp)
     {
-        DFCoord block = data.SliceOrigin / 16;
+        int block_x = data.SliceOrigin.x / GameMap.blockSize;
+        int block_y = data.SliceOrigin.y / GameMap.blockSize;
+        int block_z = data.SliceOrigin.z / GameMap.blockSize;
+
         Vector3[] finalVertices = new Vector3[(GameMap.blockSize + 1) * (GameMap.blockSize + 1)];
         Vector3[] finalNormals = new Vector3[(GameMap.blockSize + 1) * (GameMap.blockSize + 1)];
         Vector2[] finalUVs = new Vector2[(GameMap.blockSize + 1) * (GameMap.blockSize + 1)];
@@ -167,14 +205,14 @@ abstract class BlockMesher {
                 for (int xxx = 0; xxx < 2; xxx++)
                     for (int yyy = 0; yyy < 2; yyy++)
                     {
-                        int x = (block.x * GameMap.blockSize) + xx + xxx - 1;
-                        int y = (block.y * GameMap.blockSize) + yy + yyy - 1;
+                        int x = (block_x * GameMap.blockSize) + xx + xxx - 1;
+                        int y = (block_y * GameMap.blockSize) + yy + yyy - 1;
                         if (x < 0 || y < 0 || x >= MapDataStore.MapSize.x || y >= MapDataStore.MapSize.y)
                         {
                             temp.heights[xxx, yyy] = -1;
                             continue;
                         }
-                        var maybeTile = data[x, y, block.z];
+                        var maybeTile = data[x, y, block_z];
                         if (maybeTile == null)
                         {
                             temp.heights[xxx, yyy] = -1;
@@ -186,7 +224,7 @@ abstract class BlockMesher {
                             temp.heights[xxx, yyy] = -1;
                             continue;
                         }
-                        temp.heights[xxx, yyy] = MapDataStore.Main.GetLiquidLevel(new DFCoord(x,y,block.z), liquid_select);
+                        temp.heights[xxx, yyy] = MapDataStore.Main.GetLiquidLevel(new DFCoord(x,y,block_z), liquid_select);
                         temp.heights[xxx, yyy] /= 7.0f;
                         if (tile.isFloor)
                         {
@@ -224,7 +262,7 @@ abstract class BlockMesher {
                 finalNormals[coord2Index(xx, yy)] = new Vector3(sx, GameMap.tileWidth * 2, -sy);
                 finalNormals[coord2Index(xx, yy)].Normalize();
 
-                finalVertices[coord2Index(xx, yy)] = GameMap.DFtoUnityCoord(((block.x * GameMap.blockSize) + xx), ((block.y * GameMap.blockSize) + yy), block.z);
+                finalVertices[coord2Index(xx, yy)] = GameMap.DFtoUnityCoord(((block_x * GameMap.blockSize) + xx), ((block_y * GameMap.blockSize) + yy), block_z);
                 finalVertices[coord2Index(xx, yy)].x -= GameMap.tileWidth / 2.0f;
                 finalVertices[coord2Index(xx, yy)].z += GameMap.tileWidth / 2.0f;
                 finalVertices[coord2Index(xx, yy)].y += height;
@@ -234,7 +272,7 @@ abstract class BlockMesher {
             for (int yy = 0; yy < GameMap.blockSize; yy++)
             {
                 if (MapDataStore.Main.GetLiquidLevel(
-                        new DFCoord((block.x * GameMap.blockSize) + xx, (block.y * GameMap.blockSize) + yy, block.z),
+                        new DFCoord((block_x * GameMap.blockSize) + xx, (block_y * GameMap.blockSize) + yy, block_z),
                         liquid_select) == 0) {
                         continue;
                 }
@@ -257,6 +295,131 @@ abstract class BlockMesher {
         } else {
             return null;
         }
+    }
+
+    bool GenerateTiles(MapDataStore data, out MeshData tiles, out MeshData stencilTiles, TempBuffers temp)
+    {
+        int block_x = data.SliceOrigin.x / GameMap.blockSize;
+        int block_y = data.SliceOrigin.y / GameMap.blockSize;
+        int block_z = data.SliceOrigin.z / GameMap.blockSize;
+        int bufferIndex = 0;
+        int stencilBufferIndex = 0;
+        for (int xx = (block_x * GameMap.blockSize); xx < (block_x + 1) * GameMap.blockSize; xx++)
+            for (int yy = (block_y * GameMap.blockSize); yy < (block_y + 1) * GameMap.blockSize; yy++)
+            {
+                if (!data.InSliceBounds(new DFCoord(xx, yy, block_z))) {
+                    Debug.Log ("Slice origin: "+data.SliceOrigin+", Slice size: "+data.SliceSize+", coord: "+new DFCoord(xx, yy, block_z));
+                    throw new UnityException("YUP");
+                }
+                for (int i = 0; i < (int)MeshLayer.Count; i++)
+                {
+                    MeshLayer layer = (MeshLayer)i;
+                    switch (layer)
+                    {
+                        case MeshLayer.StaticMaterial:
+                        case MeshLayer.BaseMaterial:
+                        case MeshLayer.LayerMaterial:
+                        case MeshLayer.VeinMaterial:
+                        case MeshLayer.NoMaterial:
+                            FillMeshBuffer(out temp.meshBuffer[bufferIndex], layer, MapDataStore.Main[xx, yy, block_z].Value);
+                            bufferIndex++;
+                            break;
+                        case MeshLayer.StaticCutout:
+                        case MeshLayer.BaseCutout:
+                        case MeshLayer.LayerCutout:
+                        case MeshLayer.VeinCutout:
+                        case MeshLayer.Growth0Cutout:
+                        case MeshLayer.Growth1Cutout:
+                        case MeshLayer.Growth2Cutout:
+                        case MeshLayer.Growth3Cutout:
+                        case MeshLayer.NoMaterialCutout:
+                            FillMeshBuffer(out temp.stencilMeshBuffer[stencilBufferIndex], layer, MapDataStore.Main[xx, yy, block_z].Value);
+                            stencilBufferIndex++;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        bool dontCare, success;
+        stencilTiles = MeshCombineUtility.ColorCombine(temp.stencilMeshBuffer, out dontCare);
+        tiles = MeshCombineUtility.ColorCombine(temp.meshBuffer, out success);
+        return success;
+    }
+
+    void FillMeshBuffer(out MeshCombineUtility.MeshInstance buffer, MeshLayer layer, MapDataStore.Tile tile)
+    {
+        buffer = new MeshCombineUtility.MeshInstance();
+        MeshContent content = null;
+        if (!contentLoader.tileMeshConfiguration.GetValue(tile, layer, out content))
+        {
+            buffer.meshData = null;
+            return;
+        }
+        buffer.meshData = content.meshData[(int)layer];
+        buffer.transform = Matrix4x4.TRS(GameMap.DFtoUnityCoord(tile.position), Quaternion.identity, Vector3.one);
+        int tileTexIndex = 0;
+        IndexContent tileTexContent;
+        if (contentLoader.tileTextureConfiguration.GetValue (tile, layer, out tileTexContent))
+            tileTexIndex = tileTexContent.value;
+        int matTexIndex = 0;
+        IndexContent matTexContent;
+        if (contentLoader.materialTextureConfiguration.GetValue (tile, layer, out matTexContent))
+            matTexIndex = matTexContent.value;
+        ColorContent newColorContent;
+        Color newColor;
+        if (contentLoader.colorConfiguration.GetValue (tile, layer, out newColorContent)) {
+            newColor = newColorContent.value;
+        } else {
+            MatPairStruct mat;
+            mat.mat_type = -1;
+            mat.mat_index = -1;
+            switch (layer) {
+            case MeshLayer.StaticMaterial:
+            case MeshLayer.StaticCutout:
+                mat = tile.material;
+                break;
+            case MeshLayer.BaseMaterial:
+            case MeshLayer.BaseCutout:
+                mat = tile.base_material;
+                break;
+            case MeshLayer.LayerMaterial:
+            case MeshLayer.LayerCutout:
+                mat = tile.layer_material;
+                break;
+            case MeshLayer.VeinMaterial:
+            case MeshLayer.VeinCutout:
+                mat = tile.vein_material;
+                break;
+            case MeshLayer.NoMaterial:
+            case MeshLayer.NoMaterialCutout:
+                break;
+            case MeshLayer.Growth0Cutout:
+                break;
+            case MeshLayer.Growth1Cutout:
+                break;
+            case MeshLayer.Growth2Cutout:
+                break;
+            case MeshLayer.Growth3Cutout:
+                break;
+            default:
+                break;
+            }
+            MaterialDefinition mattie;
+            if (materials.TryGetValue (mat, out mattie)) {
+
+                ColorDefinition color = mattie.state_color;
+                if (color == null)
+                    newColor = Color.cyan;
+                else
+                    newColor = new Color (color.red / 255.0f, color.green / 255.0f, color.blue / 255.0f, 1);
+            } else {
+                newColor = Color.white;
+            }
+        }
+        buffer.color = newColor;
+        buffer.uv1Index = matTexIndex;
+        buffer.uv2Index = tileTexIndex;
     }
 }
 

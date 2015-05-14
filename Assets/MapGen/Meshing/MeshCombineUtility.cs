@@ -13,10 +13,9 @@ public class MeshCombineUtility
         public int uv2Index;
     }
 
-    public static bool ColorCombine(Mesh mesh, MeshInstance[] combines, int length = -1)
+    public static MeshData ColorCombine(MeshInstance[] combines, out bool success)
     {
-        if (length < 0)
-            length = combines.Length;
+        int length = combines.Length;
         int vertexCount = 0;
         int triangleCount = 0;
         for (int combIndex = 0; combIndex < length; combIndex++)
@@ -30,7 +29,8 @@ public class MeshCombineUtility
         if(vertexCount > 65535)
         {
             //Debug.LogError("Combined mesh would have " + vertexCount + " vertices. Should not be more than 65535");
-            return false;
+            success = false;
+            return null;
         }
 
         // Precomputed how many triangles we need instead
@@ -127,16 +127,16 @@ public class MeshCombineUtility
                 vertexOffset += combines[combIndex].meshData.vertexCount;
             }
         }
-        mesh.Clear();
-        mesh.name = "Combined Mesh";
-        mesh.vertices = vertices;
-        mesh.normals = normals;
-        mesh.colors = colors;
-        mesh.uv = uv;
-        mesh.uv2 = uv2;
-        mesh.tangents = tangents;
-        mesh.triangles = triangles;
-        return true;
+        success = true;
+        return new MeshData(
+            vertices: vertices,
+            normals: normals,
+            tangents: tangents,
+            uv: uv,
+            uv2: uv2,
+            colors: colors,
+            triangles: triangles
+            );
     }
 
     static void Copy(int vertexcount, Vector3[] src, Vector3[] dst, ref int offset, Matrix4x4 transform)
