@@ -425,7 +425,7 @@ abstract class BlockMesher {
     }
 }
 
-// For meshing on one thread.
+// For meshing on the Unity thread.
 // Mostly for debugging purposes.
 sealed class SingleThreadedMesher : BlockMesher {
     private readonly TempBuffers temp;
