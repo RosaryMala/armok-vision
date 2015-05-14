@@ -87,14 +87,15 @@ public class DFConnection : MonoBehaviour {
             return _netTiletypeList;
         }
     }
-    // Coordinates of the region we're pulling data from:
-    public DFCoord RequestRegionMin {
+    // Coordinates of the region we're pulling data from.
+    // In block space - multiply x and y by 16 to get tile coordinates.
+    public BlockCoord RequestRegionMin {
         get; private set;
     }
-    public DFCoord RequestRegionMax {
+    public BlockCoord RequestRegionMax {
         get; private set;
     }
-    public void SetRequestRegion(DFCoord min, DFCoord max) {
+    public void SetRequestRegion(BlockCoord min, BlockCoord max) {
         lock (blockRequest) {
             RequestRegionMin = min;
             RequestRegionMax = max;

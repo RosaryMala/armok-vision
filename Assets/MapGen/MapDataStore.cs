@@ -83,6 +83,8 @@ public class MapDataStore {
         Reset();
     }
 
+    public MapDataStore(BlockCoord block) : this(block.ToDFCoord(), BLOCK_SIZE){}
+
     public void CopySliceTo(DFCoord newSliceOrigin, DFCoord newSliceSize, MapDataStore target) {
         if (newSliceSize != target.SliceSize) {
             throw new UnityException("Mismatched slice sizes");
@@ -96,16 +98,25 @@ public class MapDataStore {
                 for (int z = 0; z < newSliceSize.z; z++) {
                     target.tiles[x, y, z] = tiles[localNewSliceOrigin.x+x, localNewSliceOrigin.y+y, localNewSliceOrigin.z+z];
                     target.tiles[x, y, z].container = target;
+                    target.tilesPresent[target.PresentIndex(x, y, z)] = tilesPresent[PresentIndex(localNewSliceOrigin.x+x, localNewSliceOrigin.y+y, localNewSliceOrigin.z+z)];
                 }
             }
         }
         target.SliceOrigin = newSliceOrigin;
     }
 
+    public void CopySliceTo(BlockCoord block, MapDataStore target) {
+        CopySliceTo(block.ToDFCoord(), BLOCK_SIZE, target);
+    }
+
     public MapDataStore CopySlice(DFCoord newSliceOrigin, DFCoord newSliceSize) {
         MapDataStore target = new MapDataStore(newSliceOrigin, newSliceSize);
         CopySliceTo(newSliceOrigin, newSliceSize, target);
         return target;
+    }
+
+    public MapDataStore CopySlice(BlockCoord block) {
+        return CopySlice(block.ToDFCoord(), BLOCK_SIZE);
     }
 
     public void StoreTiles(RemoteFortressReader.MapBlock block) {

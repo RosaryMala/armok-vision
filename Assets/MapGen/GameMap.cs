@@ -184,12 +184,12 @@ public class GameMap : MonoBehaviour
     void UpdateRequestRegion()
     {
         DFConnection.Instance.SetRequestRegion(
-            new DFCoord(
+            new BlockCoord(
                 posXBlock - rangeX,
                 posYBlock - rangeY,
                 posZ - rangeZdown
             ),
-            new DFCoord(
+            new BlockCoord(
                 posXBlock + rangeX,
                 posYBlock + rangeY,
                 posZ + rangeZup
@@ -293,8 +293,8 @@ public class GameMap : MonoBehaviour
     void EnqueueMeshUpdates()
     {
         for (int zz = DFConnection.Instance.RequestRegionMin.z; zz < DFConnection.Instance.RequestRegionMax.z; zz++)
-            for (int yy = (DFConnection.Instance.RequestRegionMin.y * 16 / blockSize); yy <= (DFConnection.Instance.RequestRegionMax.y * 16 / blockSize); yy++)
-                for (int xx = (DFConnection.Instance.RequestRegionMin.x * 16 / blockSize); xx <= (DFConnection.Instance.RequestRegionMax.x * 16 / blockSize); xx++)
+            for (int yy = DFConnection.Instance.RequestRegionMin.y; yy <= DFConnection.Instance.RequestRegionMax.y; yy++)
+                for (int xx = DFConnection.Instance.RequestRegionMin.x; xx <= DFConnection.Instance.RequestRegionMax.x; xx++)
                 {
                     if (xx < 0 || yy < 0 || zz < 0 || xx >= blocks.GetLength(0) || yy >= blocks.GetLength(1) || zz >= blocks.GetLength(2))
                     {
