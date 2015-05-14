@@ -164,6 +164,10 @@ public class GameMap : MonoBehaviour
         HideMeshes();
     }
 
+    void OnDestroy() {
+        mesher.Terminate();
+    }
+
     void UpdateView () {
         RemoteFortressReader.ViewInfo newView = DFConnection.Instance.PopViewInfoUpdate();
         if (newView == null) return;
