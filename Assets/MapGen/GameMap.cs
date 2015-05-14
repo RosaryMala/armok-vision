@@ -47,7 +47,7 @@ public class GameMap : MonoBehaviour
     public int rangeZdown = 5;
     public int blocksToProcess = 1;
     public int cameraViewDist = 25;
-    public int nThreads = 0;
+    public int meshingThreads = 0;
 
     // Stored view information
     RemoteFortressReader.ViewInfo view;
@@ -67,7 +67,6 @@ public class GameMap : MonoBehaviour
 
     // Stuff to let the material list & various meshes & whatnot be loaded from xml specs at runtime.
     Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> materials;
-    public ContentLoader contentLoader = new ContentLoader();
 
     // Coordinate system stuff.
     public const float tileHeight = 3.0f;
@@ -103,8 +102,7 @@ public class GameMap : MonoBehaviour
     }
     public static bool IsBlockCorner(DFCoord input) {
         return input.x % blockSize == 0 &&
-               input.y % blockSize == 0 &&
-               input.z % blockSize == 0;
+               input.y % blockSize == 0;
     }
 
     // Used while meshing blocks
@@ -127,7 +125,7 @@ public class GameMap : MonoBehaviour
     void OnConnectToDF() {
         Debug.Log("Connected");
         enabled = true;
-        mesher = BlockMesher.GetMesher(nThreads);
+        mesher = BlockMesher.GetMesher(meshingThreads);
         // Initialize materials
         if (materials == null)
             materials = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
@@ -139,11 +137,6 @@ public class GameMap : MonoBehaviour
 
         UpdateView();
 
-        System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
-        watch.Start();
-        contentLoader.ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt");
-        watch.Stop();
-        Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
         blockListTimer.Start();
         cullTimer.Start();
         lazyLoadTimer.Start();
@@ -185,6 +178,46 @@ public class GameMap : MonoBehaviour
         posXBlock = posXTile / 16;
         posYBlock = posYTile / 16;
         posZ = view.view_pos_z + 1;
+    }
+
+    // Update the region we're requesting
+    void UpdateRequestRegion()
+    {
+        DFConnection.Instance.SetRequestRegion(
+            new DFCoord(
+                posXBlock - rangeX,
+                posYBlock - rangeY,
+                posZ - rangeZdown
+            ),
+            new DFCoord(
+                posXBlock + rangeX,
+                posYBlock + rangeY,
+                posZ + rangeZup
+            ));
+    }
+    void UpdateBlocks()
+    {
+        loadWatch.Reset();
+        loadWatch.Start();
+        for (int i = 0; i < blocksToProcess; i++)
+        {
+            RemoteFortressReader.MapBlock block = DFConnection.Instance.PopMapBlockUpdate();
+            if (block == null) break;
+            MapDataStore.Main.StoreTiles(block);
+            if (block.tiles.Count > 0) 
+                SetDirtyBlock(block.map_x, block.map_y, block.map_z);
+            if (block.water.Count > 0 || block.magma.Count > 0)
+                SetDirtyLiquidBlock(block.map_x, block.map_y, block.map_z);
+        }
+        loadWatch.Stop();
+        genWatch.Reset();
+        genWatch.Start();
+        EnqueueMeshUpdates();
+        genWatch.Stop();
+
+        mesher.Poll();
+
+        FetchNewMeshes();
     }
 
     void InitializeBlocks()
@@ -256,366 +289,92 @@ public class GameMap : MonoBehaviour
         }
     }
 
-    bool GenerateLiquids(int block_x, int block_y, int block_z)
+    // Have the mesher mesh all dirty tiles in the region
+    void EnqueueMeshUpdates()
     {
-        if (!liquidBlockDirtyBits[block_x, block_y, block_z])
-            return true;
-        liquidBlockDirtyBits[block_x, block_y, block_z] = false;
-        GenerateLiquidSurface(block_x, block_y, block_z, MapDataStore.WATER_INDEX);
-        GenerateLiquidSurface(block_x, block_y, block_z, MapDataStore.MAGMA_INDEX);
-        return true;
-    }
-
-    void FillMeshBuffer(out MeshCombineUtility.MeshInstance buffer, MeshLayer layer, MapDataStore.Tile tile)
-    {
-        buffer = new MeshCombineUtility.MeshInstance();
-        MeshContent content = null;
-        if (!contentLoader.tileMeshConfiguration.GetValue(tile, layer, out content))
-        {
-            buffer.meshData = null;
-            return;
-        }
-        buffer.meshData = content.meshData[(int)layer];
-        buffer.transform = Matrix4x4.TRS(DFtoUnityCoord(tile.position), Quaternion.identity, Vector3.one);
-        int tileTexIndex = 0;
-        IndexContent tileTexContent;
-        if (contentLoader.tileTextureConfiguration.GetValue (tile, layer, out tileTexContent))
-            tileTexIndex = tileTexContent.value;
-        int matTexIndex = 0;
-        IndexContent matTexContent;
-        if (contentLoader.materialTextureConfiguration.GetValue (tile, layer, out matTexContent))
-            matTexIndex = matTexContent.value;
-        ColorContent newColorContent;
-        Color newColor;
-        if (contentLoader.colorConfiguration.GetValue (tile, layer, out newColorContent)) {
-            newColor = newColorContent.value;
-        } else {
-            MatPairStruct mat;
-            mat.mat_type = -1;
-            mat.mat_index = -1;
-            switch (layer) {
-            case MeshLayer.StaticMaterial:
-            case MeshLayer.StaticCutout:
-                mat = tile.material;
-                break;
-            case MeshLayer.BaseMaterial:
-            case MeshLayer.BaseCutout:
-                mat = tile.base_material;
-                break;
-            case MeshLayer.LayerMaterial:
-            case MeshLayer.LayerCutout:
-                mat = tile.layer_material;
-                break;
-            case MeshLayer.VeinMaterial:
-            case MeshLayer.VeinCutout:
-                mat = tile.vein_material;
-                break;
-            case MeshLayer.NoMaterial:
-            case MeshLayer.NoMaterialCutout:
-                break;
-            case MeshLayer.Growth0Cutout:
-                break;
-            case MeshLayer.Growth1Cutout:
-                break;
-            case MeshLayer.Growth2Cutout:
-                break;
-            case MeshLayer.Growth3Cutout:
-                break;
-            default:
-                break;
-            }
-            MaterialDefinition mattie;
-            if (materials.TryGetValue (mat, out mattie)) {
-
-                ColorDefinition color = mattie.state_color;
-                if (color == null)
-                    newColor = Color.cyan;
-                else
-                    newColor = new Color (color.red / 255.0f, color.green / 255.0f, color.blue / 255.0f, 1);
-            } else {
-                newColor = Color.white;
-            }
-        }
-        buffer.color = newColor;
-        buffer.uv1Index = matTexIndex;
-        buffer.uv2Index = tileTexIndex;
-    }
-
-    bool GenerateTiles(int block_x, int block_y, int block_z)
-    {
-        if (!blockDirtyBits[block_x, block_y, block_z])
-            return true;
-        blockDirtyBits[block_x, block_y, block_z] = false;
-        int bufferIndex = 0;
-        int stencilBufferIndex = 0;
-        for (int xx = (block_x * blockSize); xx < (block_x + 1) * blockSize; xx++)
-            for (int yy = (block_y * blockSize); yy < (block_y + 1) * blockSize; yy++)
-            {
-                if (meshBuffer == null)
-                    meshBuffer = new MeshCombineUtility.MeshInstance[blockSize * blockSize * (int)MeshLayer.StaticCutout];
-                if (stencilMeshBuffer == null)
-                    stencilMeshBuffer = new MeshCombineUtility.MeshInstance[blockSize * blockSize * ((int)MeshLayer.Count - (int)MeshLayer.StaticCutout)];
-
-                for (int i = 0; i < (int)MeshLayer.Count; i++)
-                {
-                    MeshLayer layer = (MeshLayer)i;
-                    switch (layer)
-                    {
-                        case MeshLayer.StaticMaterial:
-                        case MeshLayer.BaseMaterial:
-                        case MeshLayer.LayerMaterial:
-                        case MeshLayer.VeinMaterial:
-                        case MeshLayer.NoMaterial:
-                            FillMeshBuffer(out meshBuffer[bufferIndex], layer, MapDataStore.Main[xx, yy, block_z].Value);
-                            bufferIndex++;
-                            break;
-                        case MeshLayer.StaticCutout:
-                        case MeshLayer.BaseCutout:
-                        case MeshLayer.LayerCutout:
-                        case MeshLayer.VeinCutout:
-                        case MeshLayer.Growth0Cutout:
-                        case MeshLayer.Growth1Cutout:
-                        case MeshLayer.Growth2Cutout:
-                        case MeshLayer.Growth3Cutout:
-                        case MeshLayer.NoMaterialCutout:
-                            FillMeshBuffer(out stencilMeshBuffer[stencilBufferIndex], layer, MapDataStore.Main[xx, yy, block_z].Value);
-                            stencilBufferIndex++;
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        if (blocks[block_x, block_y, block_z] == null)
-        {
-            GameObject block = Instantiate(defaultMapBlock) as GameObject;
-            block.SetActive(true);
-            block.transform.parent = this.transform;
-            block.name = "terrain(" + block_x + ", " + block_y + ", " + block_z + ")";
-            blocks[block_x, block_y, block_z] = block.GetComponent<MeshFilter>();
-        }
-        MeshFilter mf = blocks[block_x, block_y, block_z];
-        if (mf == null)
-            Debug.LogError("MF is null");
-        if (mf.mesh == null)
-            mf.mesh = new Mesh();
-        mf.mesh.Clear();
-        if (stencilBlocks[block_x, block_y, block_z] == null)
-        {
-            GameObject stencilBlock = Instantiate(defaultStencilMapBlock) as GameObject;
-            stencilBlock.SetActive(true);
-            stencilBlock.transform.parent = this.transform;
-            stencilBlock.name = "foliage(" + block_x + ", " + block_y + ", " + block_z + ")";
-            stencilBlocks[block_x, block_y, block_z] = stencilBlock.GetComponent<MeshFilter>();
-        }
-        MeshFilter mfs = stencilBlocks[block_x, block_y, block_z];
-        if (mfs == null)
-            Debug.LogError("MFS is null");
-        if (mfs.mesh == null)
-            mfs.mesh = new Mesh();
-        mfs.mesh.Clear();
-        MeshCombineUtility.ColorCombine(mfs.mesh, stencilMeshBuffer);
-        return MeshCombineUtility.ColorCombine(mf.mesh, meshBuffer);
-        //Debug.Log("Generated a mesh with " + (mf.mesh.triangles.Length / 3) + " tris");
-    }
-    static int coord2Index(int x, int y)
-    {
-        return (x * (blockSize + 1)) + y;
-    }
-    void GenerateLiquidSurface(int block_x, int block_y, int block_z, int liquid_select)
-    {
-        Vector3[] finalVertices = new Vector3[(blockSize + 1) * (blockSize + 1)];
-        Vector3[] finalNormals = new Vector3[(blockSize + 1) * (blockSize + 1)];
-        Vector2[] finalUVs = new Vector2[(blockSize + 1) * (blockSize + 1)];
-        List<int> finalFaces = new List<int>();
-        float[,] heights = new float[2, 2];
-        for (int xx = 0; xx <= blockSize; xx++)
-            for (int yy = 0; yy <= blockSize; yy++)
-            {
-                //first find the heights of all tiles sharing one corner.
-                for (int xxx = 0; xxx < 2; xxx++)
-                    for (int yyy = 0; yyy < 2; yyy++)
-                    {
-                        int x = (block_x * blockSize) + xx + xxx - 1;
-                        int y = (block_y * blockSize) + yy + yyy - 1;
-                        if (x < 0 || y < 0 || x >= MapDataStore.MapSize.x || y >= MapDataStore.MapSize.y)
-                        {
-                            heights[xxx, yyy] = -1;
-                            continue;
-                        }
-                        var maybeTile = MapDataStore.Main[x, y, block_z];
-                        if (maybeTile == null)
-                        {
-                            heights[xxx, yyy] = -1;
-                            continue;
-                        }
-                        var tile = maybeTile.Value;
-                        if (tile.isWall)
-                        {
-                            heights[xxx, yyy] = -1;
-                            continue;
-                        }
-                        heights[xxx, yyy] = MapDataStore.Main.GetLiquidLevel(new DFCoord(x,y,block_z), liquid_select);
-                        heights[xxx, yyy] /= 7.0f;
-                        if (tile.isFloor)
-                        {
-                            heights[xxx, yyy] *= (tileHeight - floorHeight);
-                            heights[xxx, yyy] += floorHeight;
-                        }
-                        else
-                            heights[xxx, yyy] *= tileHeight;
-
-                    }
-
-                //now find their average, discaring invalid ones.
-                float height = 0;
-                float total = 0;
-                foreach (var item in heights)
-                {
-                    if (item < 0)
-                        continue;
-                    height += item;
-                    total++;
-                }
-                if (total >= 1)
-                    height /= total;
-                //find the slopes.
-                float sx = ((
-                    (heights[0, 0] < 0 ? height : heights[0, 0]) +
-                    (heights[0, 1] < 0 ? height : heights[0, 1])) / 2) - ((
-                    (heights[1, 0] < 0 ? height : heights[1, 0]) +
-                    (heights[1, 1] < 0 ? height : heights[1, 1])) / 2);
-                float sy = ((
-                    (heights[0, 0] < 0 ? height : heights[0, 0]) +
-                    (heights[1, 0] < 0 ? height : heights[1, 0])) / 2) - ((
-                    (heights[0, 1] < 0 ? height : heights[0, 1]) +
-                    (heights[1, 1] < 0 ? height : heights[1, 1])) / 2);
-                finalNormals[coord2Index(xx, yy)] = new Vector3(sx, tileWidth * 2, -sy);
-                finalNormals[coord2Index(xx, yy)].Normalize();
-
-                finalVertices[coord2Index(xx, yy)] = DFtoUnityCoord(((block_x * blockSize) + xx), ((block_y * blockSize) + yy), block_z);
-                finalVertices[coord2Index(xx, yy)].x -= tileWidth / 2.0f;
-                finalVertices[coord2Index(xx, yy)].z += tileWidth / 2.0f;
-                finalVertices[coord2Index(xx, yy)].y += height;
-                finalUVs[coord2Index(xx, yy)] = new Vector2(xx, yy);
-            }
-        for (int xx = 0; xx < blockSize; xx++)
-            for (int yy = 0; yy < blockSize; yy++)
-            {
-                if (MapDataStore.Main.GetLiquidLevel(
-                        new DFCoord((block_x * blockSize) + xx, (block_y * blockSize) + yy, block_z),
-                        liquid_select) == 0) {
-                        continue;
-                }
-                finalFaces.Add(coord2Index(xx, yy));
-                finalFaces.Add(coord2Index(xx + 1, yy));
-                finalFaces.Add(coord2Index(xx + 1, yy + 1));
-
-                finalFaces.Add(coord2Index(xx, yy));
-                finalFaces.Add(coord2Index(xx + 1, yy + 1));
-                finalFaces.Add(coord2Index(xx, yy + 1));
-            }
-        if (finalFaces.Count > 0)
-        {
-            if (liquidBlocks[block_x, block_y, block_z, liquid_select] == null)
-            {
-                GameObject block;
-                if (liquid_select == MapDataStore.MAGMA_INDEX)
-                    block = Instantiate(defaultMagmaBlock) as GameObject;
-                else
-                    block = Instantiate(defaultWaterBlock) as GameObject;
-                block.SetActive(true);
-                block.transform.parent = this.transform;
-                block.name = (liquid_select == MapDataStore.WATER_INDEX ? "water(" : "magma(") + block_x + ", " + block_y + ", " + block_z + ")";
-                liquidBlocks[block_x, block_y, block_z, liquid_select] = block.GetComponent<MeshFilter>();
-            }
-        }
-        MeshFilter mf = liquidBlocks[block_x, block_y, block_z, liquid_select];
-        if (mf == null)
-        {
-            return;
-        }
-        if (mf.mesh == null)
-            mf.mesh = new Mesh();
-        mf.mesh.Clear();
-        if (finalFaces.Count == 0)
-            return;
-        mf.mesh.vertices = finalVertices;
-        mf.mesh.uv = finalUVs;
-        mf.mesh.triangles = finalFaces.ToArray();
-        mf.mesh.normals = finalNormals;
-        mf.mesh.RecalculateBounds();
-        mf.mesh.RecalculateTangents();
-    }
-
-
-    void UpdateMeshes()
-    {
-        int count = 0;
-        int failed = 0;
         for (int zz = DFConnection.Instance.RequestRegionMin.z; zz < DFConnection.Instance.RequestRegionMax.z; zz++)
             for (int yy = (DFConnection.Instance.RequestRegionMin.y * 16 / blockSize); yy <= (DFConnection.Instance.RequestRegionMax.y * 16 / blockSize); yy++)
                 for (int xx = (DFConnection.Instance.RequestRegionMin.x * 16 / blockSize); xx <= (DFConnection.Instance.RequestRegionMax.x * 16 / blockSize); xx++)
                 {
                     if (xx < 0 || yy < 0 || zz < 0 || xx >= blocks.GetLength(0) || yy >= blocks.GetLength(1) || zz >= blocks.GetLength(2))
                     {
-                        //Debug.Log(xx + ", " + yy + ", " + zz + " is outside of " + blocks.GetLength(0) + ", " + blocks.GetLength(1) + ", " + blocks.GetLength(2));
                         continue;
                     }
-                    //Debug.Log("Generating tiles at " + xx + ", " + yy + ", " + zz);
-                    GenerateLiquids(xx, yy, zz);
-                    if (GenerateTiles(xx, yy, zz))
-                        count++;
-                    else
-                        failed++;
+                    if (!blockDirtyBits[xx, yy, zz] && !liquidBlockDirtyBits[xx, yy, zz]) {
+                        continue;
+                    }
+                    mesher.Enqueue(new DFCoord(xx*16, yy*16, zz), blockDirtyBits[xx,yy,zz], liquidBlockDirtyBits[xx,yy,zz]);
+                    blockDirtyBits[xx, yy, zz] = false;
+                    liquidBlockDirtyBits[xx, yy, zz] = false;
                 }
-        //Debug.Log("Generating " + count + " meshes took " + watch.ElapsedMilliseconds + " ms");
+    }
+
+    // Get new meshes from the mesher
+    void FetchNewMeshes() {
+        while (mesher.HasNewMeshes) {
+            var newMeshes = mesher.Dequeue().Value;
+            int block_x = newMeshes.location.x / blockSize;
+            int block_y = newMeshes.location.y / blockSize;
+            int block_z = newMeshes.location.z;
+            if (newMeshes.tiles != null) {
+                if (blocks[block_x, block_y, block_z] == null)
+                {
+                    GameObject block = Instantiate(defaultMapBlock) as GameObject;
+                    block.SetActive(true);
+                    block.transform.parent = this.transform;
+                    block.name = "terrain(" + block_x + ", " + block_y + ", " + block_z + ")";
+                    blocks[block_x, block_y, block_z] = block.GetComponent<MeshFilter>();
+                }
+                MeshFilter tileFilter = blocks[block_x, block_y, block_z];
+                tileFilter.mesh.Clear();
+                newMeshes.tiles.CopyToMesh(tileFilter.mesh);
+            }
+            if (newMeshes.stencilTiles != null) {
+                if (stencilBlocks[block_x, block_y, block_z] == null)
+                {
+                    GameObject stencilBlock = Instantiate(defaultStencilMapBlock) as GameObject;
+                    stencilBlock.SetActive(true);
+                    stencilBlock.transform.parent = this.transform;
+                    stencilBlock.name = "foliage(" + block_x + ", " + block_y + ", " + block_z + ")";
+                    stencilBlocks[block_x, block_y, block_z] = stencilBlock.GetComponent<MeshFilter>();
+                }
+                MeshFilter stencilFilter = stencilBlocks[block_x, block_y, block_z];
+                stencilFilter.mesh.Clear();
+                newMeshes.stencilTiles.CopyToMesh(stencilFilter.mesh);
+            }
+            if (newMeshes.water != null) {
+                if (liquidBlocks[block_x, block_y, block_z, MapDataStore.WATER_INDEX] == null)
+                {
+                    GameObject block = Instantiate(defaultWaterBlock) as GameObject;
+                    block.SetActive(true);
+                    block.transform.parent = this.transform;
+                    block.name = "water(" + block_x + ", " + block_y + ", " + block_z + ")";
+                    liquidBlocks[block_x, block_y, block_z, MapDataStore.WATER_INDEX] = block.GetComponent<MeshFilter>();
+                }
+                MeshFilter waterFilter = liquidBlocks[block_x, block_y, block_z, MapDataStore.WATER_INDEX];
+                waterFilter.mesh.Clear();
+                newMeshes.water.CopyToMesh(waterFilter.mesh);
+            }
+            if (newMeshes.magma != null) {
+                if (liquidBlocks[block_x, block_y, block_z, MapDataStore.MAGMA_INDEX] == null)
+                {
+                    GameObject block = Instantiate(defaultMagmaBlock) as GameObject;
+                    block.SetActive(true);
+                    block.transform.parent = this.transform;
+                    block.name = "magma(" + block_x + ", " + block_y + ", " + block_z + ")";
+                    liquidBlocks[block_x, block_y, block_z, MapDataStore.MAGMA_INDEX] = block.GetComponent<MeshFilter>();
+                }
+                MeshFilter magmaFilter = liquidBlocks[block_x, block_y, block_z, MapDataStore.MAGMA_INDEX];
+                magmaFilter.mesh.Clear();
+                newMeshes.magma.CopyToMesh(magmaFilter.mesh);
+            }
+        }
     }
 
     System.Diagnostics.Stopwatch netWatch = new System.Diagnostics.Stopwatch();
     System.Diagnostics.Stopwatch loadWatch = new System.Diagnostics.Stopwatch();
     System.Diagnostics.Stopwatch genWatch = new System.Diagnostics.Stopwatch();
 
-    // Update the region we're requesting
-    void UpdateRequestRegion()
-    {
-        DFConnection.Instance.SetRequestRegion(
-            new DFCoord(
-                posXBlock - rangeX,
-                posYBlock - rangeY,
-                posZ - rangeZdown
-            ),
-            new DFCoord(
-                posXBlock + rangeX,
-                posYBlock + rangeY,
-                posZ + rangeZup
-            ));
-    }
-    void UpdateBlocks()
-    {
-        //stopwatch.Stop();
-        //watch.Start();
-        loadWatch.Reset();
-        loadWatch.Start();
-        for (int i = 0; i < blocksToProcess; i++)
-        {
-            RemoteFortressReader.MapBlock block = DFConnection.Instance.PopMapBlockUpdate();
-            if (block == null) break;
-            MapDataStore.Main.StoreTiles(block);
-            if (block.tiles.Count > 0) 
-                SetDirtyBlock(block.map_x, block.map_y, block.map_z);
-            if (block.water.Count > 0 || block.magma.Count > 0)
-                SetDirtyLiquidBlock(block.map_x, block.map_y, block.map_z);
-            //Debug.Log ("Used map block");
-        }
-        loadWatch.Stop();
-        genWatch.Reset();
-        genWatch.Start();
-        UpdateMeshes();
-        genWatch.Stop();
-        //watch.Stop();
-        //Debug.Log("Generating " + connectionState.net_block_list.map_blocks.Count + " Meshes took " + watch.Elapsed.TotalSeconds + " seconds");
-    }
 
     void CullDistantBlocks()
     {
@@ -862,5 +621,4 @@ public class GameMap : MonoBehaviour
             creatureList[unit.id].transform.position = DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z) + new Vector3(0, 2, 0);
         }
     }
-
 }
