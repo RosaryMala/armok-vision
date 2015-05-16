@@ -165,7 +165,10 @@ public class GameMap : MonoBehaviour
     }
 
     void OnDestroy() {
-        mesher.Terminate();
+        if (mesher != null) {
+            mesher.Terminate();
+            mesher = null;
+        }
     }
 
     void UpdateView () {
