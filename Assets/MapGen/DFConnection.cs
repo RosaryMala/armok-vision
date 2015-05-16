@@ -170,7 +170,10 @@ public class DFConnection : MonoBehaviour {
 
     void Disconnect() {
         _instance = null;
-        connectionMode.Terminate();
+        if (connectionMode != null) {
+            connectionMode.Terminate();
+            connectionMode = null;
+        }
     }
 
     // Bind the RPC functions we'll be calling
