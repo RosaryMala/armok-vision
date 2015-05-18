@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using DFHack;
 
@@ -24,6 +24,8 @@ public class MapSelection : MonoBehaviour
     //Handle mouse dragging here.
     void Update()
     {
+        if (!DFConnection.Connected || !targetMap.enabled) return;
+
         mouseWorldPosition = GetMouseWorldPosition(Input.mousePosition);
         mouseWorldPositionLastKnownHeight = mouseWorldPosition.y;
 
@@ -76,7 +78,7 @@ public class MapSelection : MonoBehaviour
         Ray mouseRay = GetComponent<Camera>().ScreenPointToRay(mousePosition);
         if (!FindCurrentTarget(mouseRay, out dfTarget, out WorldPos))
         {
-            Plane currentPlane = new Plane(Vector3.up, GameMap.DFtoUnityCoord(0, 0, targetMap.posZ));
+            Plane currentPlane = new Plane(Vector3.up, GameMap.DFtoUnityCoord(0, 0, targetMap.PosZ));
             float distance;
             if (currentPlane.Raycast(mouseRay, out distance))
             {
@@ -94,6 +96,7 @@ public class MapSelection : MonoBehaviour
     // (For now)
     void OnPostRender()
     {
+        if (!DFConnection.Connected || !targetMap.enabled) return;
         Ray mouseRay = GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
 
         DFCoord currentTarget;
@@ -188,10 +191,8 @@ public class MapSelection : MonoBehaviour
             // Get the corner of the current tile.
             Vector3 cornerCoord = GameMap.DFtoUnityBottomCorner(currentCoord);
 
-            // Are we in the map?
-            if (currentCoord.x < 0 || targetMap.tiles.GetLength(0) <= currentCoord.x ||
-                currentCoord.y < 0 || targetMap.tiles.GetLength(1) <= currentCoord.y ||
-                currentCoord.z < 0 || targetMap.posZ <= currentCoord.z)
+            // Are we in the selectable area of the map?
+            if (!MapDataStore.InMapBounds(currentCoord) || targetMap.PosZ <= currentCoord.z)
             {
                 // No.
                 if (haveHitMap)
@@ -208,12 +209,12 @@ public class MapSelection : MonoBehaviour
                 // We are in the map.
                 haveHitMap = true;
 
-                MapTile currentTile = targetMap.tiles[currentCoord.x, currentCoord.y, currentCoord.z];
+                MapDataStore.Tile? currentTile = MapDataStore.Main[currentCoord.x, currentCoord.y, currentCoord.z];
                 // Are we in a real tile?
                 if (currentTile != null)
                 {
                     // Yes.
-                    switch (currentTile.shape)
+                    switch (currentTile.Value.shape)
                     {
                         case RemoteFortressReader.TiletypeShape.EMPTY:
                         case RemoteFortressReader.TiletypeShape.NO_SHAPE:
@@ -317,9 +318,9 @@ public class MapSelection : MonoBehaviour
     {
         Vector3 lowerLimits = GameMap.DFtoUnityBottomCorner(new DFCoord(0, 0, 0));
         Vector3 upperLimits = GameMap.DFtoUnityBottomCorner(new DFCoord(
-            targetMap.tiles.GetLength(0) - 1,
-            targetMap.tiles.GetLength(1) - 1,
-            targetMap.tiles.GetLength(2) - 1
+            MapDataStore.MapSize.x - 1,
+            MapDataStore.MapSize.y - 1,
+            MapDataStore.MapSize.z - 1
             )) + new Vector3(GameMap.tileWidth, GameMap.tileHeight, GameMap.tileWidth);
 
         // Multipliers to scale the ray to hit the different walls of the cube
