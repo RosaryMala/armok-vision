@@ -4,7 +4,7 @@ public class MaterialConfiguration<T> : ContentConfiguration<T> where T : IConte
 {
     MaterialMatcher<Content> materialMatcher = new MaterialMatcher<Content>();
     Content defaultMaterial;
-    public override bool GetValue(MapTile tile, MeshLayer layer, out T value)
+    public override bool GetValue(MapDataStore.Tile tile, MeshLayer layer, out T value)
     {
         Content cont;
         switch (layer)

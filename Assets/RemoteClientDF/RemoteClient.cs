@@ -93,20 +93,9 @@ namespace DFHack
         }
     }
 
-    // simple function to store 
     public struct DFCoord
     {
         public int x, y, z;
-        //convert 
-        UnityEngine.Vector3 ToVector3()
-        {
-            return new UnityEngine.Vector3(x + 0.5f, z + 0.5f, -y - 0.5f);
-        }
-        static DFCoord FromVector3(UnityEngine.Vector3 input)
-        {
-            DFCoord output = new DFCoord((int)input.x, (int)(-input.z), (int)input.y);
-            return output;
-        }
 
         public DFCoord(int inx, int iny, int inz)
         {
@@ -115,13 +104,9 @@ namespace DFHack
             z = inz;
         }
 
-        public bool isValid()
+        public override string ToString ()
         {
-            return x != -30000;
-        }
-        public void clear()
-        {
-            x = y = z = -30000;
+            return string.Format("DFCoord({0},{1},{2})",x,y,z);
         }
 
         public static bool operator <(DFCoord a, DFCoord b)
@@ -164,6 +149,12 @@ namespace DFHack
         {
             return new DFCoord(a.x, a.y, a.z + number);
         }
+        public static bool operator ==(DFCoord a, DFCoord b) {
+            return a.x == b.x && a.y == b.y && a.z == b.z;
+        }
+        public static bool operator !=(DFCoord a, DFCoord b) {
+            return a.x != b.x || a.y != b.y || a.z != b.z;
+        }
     }
     public struct DFCoord2d
     {
@@ -205,7 +196,6 @@ namespace DFHack
             return new DFCoord2d(a.x - b.x, a.y - b.y);
         }
 
-
         public static DFCoord2d operator /(DFCoord2d a, int number)
         {
             return new DFCoord2d((a.x < 0 ? a.x - number : a.x) / number, (a.y < 0 ? a.y - number : a.y) / number);
@@ -221,6 +211,83 @@ namespace DFHack
         public static DFCoord2d operator &(DFCoord2d a, int number)
         {
             return new DFCoord2d(a.x & number, a.y & number);
+        }
+    }
+    // Coordinates of a MapBlock.
+    // Like DFCoord, but can only reference block corners.
+    // Use when you're expecting the coordinates of a block.
+    public struct BlockCoord
+    {
+        public int x, y, z;
+
+        public BlockCoord(int inx, int iny, int inz)
+        {
+            x = inx;
+            y = iny;
+            z = inz;
+        }
+
+        public static BlockCoord FromDFCoord(DFCoord coord) {
+            if (coord.x % GameMap.blockSize != 0 || coord.y % GameMap.blockSize != 0) {
+                throw new InvalidOperationException("Can't make a block coord from a non-block-corner");
+            }
+            return new BlockCoord(coord.x / GameMap.blockSize, coord.y / GameMap.blockSize, coord.z);
+        }
+
+        public DFCoord ToDFCoord() {
+            return new DFCoord(x * GameMap.blockSize, y * GameMap.blockSize, z);
+        }
+
+        public override string ToString ()
+        {
+            return string.Format("BlockCoord({0}[{1}],{2}[{3}],{4})", x, x * GameMap.blockSize, y, y * GameMap.blockSize, z);
+        }
+
+        public static bool operator <(BlockCoord a, BlockCoord b)
+        {
+            if (a.x != b.x) return (a.x < b.x);
+            if (a.y != b.y) return (a.y < b.y);
+            return a.z < b.z;
+        }
+        public static bool operator >(BlockCoord a, BlockCoord b)
+        {
+            if (a.x != b.x) return (a.x > b.x);
+            if (a.y != b.y) return (a.y > b.y);
+            return a.z > b.z;
+        }
+        public static BlockCoord operator +(BlockCoord a, BlockCoord b)
+        {
+            return new BlockCoord(a.x + b.x, a.y + b.y, a.z + b.z);
+        }
+        public static BlockCoord operator -(BlockCoord a, BlockCoord b)
+        {
+            return new BlockCoord(a.x - b.x, a.y - b.y, a.z - b.z);
+        }
+        public static BlockCoord operator /(BlockCoord a, int number)
+        {
+            return new BlockCoord((a.x < 0 ? a.x - number : a.x) / number, (a.y < 0 ? a.y - number : a.y) / number, a.z);
+        }
+        public static BlockCoord operator *(BlockCoord a, int number)
+        {
+            return new BlockCoord(a.x * number, a.y * number, a.z);
+        }
+        public static BlockCoord operator %(BlockCoord a, int number)
+        {
+            return new BlockCoord((a.x + number) % number, (a.y + number) % number, a.z);
+        }
+        public static BlockCoord operator -(BlockCoord a, int number)
+        {
+            return new BlockCoord(a.x, a.y, a.z - number);
+        }
+        public static BlockCoord operator +(BlockCoord a, int number)
+        {
+            return new BlockCoord(a.x, a.y, a.z + number);
+        }
+        public static bool operator ==(BlockCoord a, BlockCoord b) {
+            return a.x == b.x && a.y == b.y && a.z == b.z;
+        }
+        public static bool operator !=(BlockCoord a, BlockCoord b) {
+            return a.x != b.x || a.y != b.y || a.z != b.z;
         }
     }
     /* Protocol description:
