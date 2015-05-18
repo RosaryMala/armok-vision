@@ -1,4 +1,5 @@
 ﻿using System.Xml.Linq;
+using UnityEngine;
 
 public class RampConfiguration<T> : ContentConfiguration<T> where T : IContent, new()
 {
@@ -23,66 +24,66 @@ public class RampConfiguration<T> : ContentConfiguration<T> where T : IContent, 
         3 , 10 ,  3 , 10 , 17 , 17 , 17 , 17 ,  3 , 10 , 26 , 10 , 17 , 17 , 17 , 17 ,
         11 , 16 , 11 , 16 , 17 , 16 , 17 , 10 , 11 , 16 , 11 , 16 , 17 , 11 , 17 , 26
     };
-    static int CalculateRampType(MapTile tile)
+    static int CalculateRampType(MapDataStore.Tile tile)
     {
         int ramplookup = 0;
         if (tile.north != null &&
-            tile.north.up != null &&
-            tile.north.isWall &&
-            tile.north.up.isFloor)
+            tile.north.Value.up != null &&
+            tile.north.Value.isWall &&
+            tile.north.Value.up.Value.isFloor)
         {
             ramplookup ^= 1;
         }
         if (tile.north != null &&
-            tile.north.east != null &&
-            tile.north.east.up != null &&
-            tile.north.east.isWall &&
-            tile.north.east.up.isFloor)
+            tile.north.Value.east != null &&
+            tile.north.Value.east.Value.up != null &&
+            tile.north.Value.east.Value.isWall &&
+            tile.north.Value.east.Value.up.Value.isFloor)
         {
             ramplookup ^= 2;
         }
         if (tile.east != null &&
-            tile.east.up != null &&
-            tile.east.isWall &&
-            tile.east.up.isFloor)
+            tile.east.Value.up != null &&
+            tile.east.Value.isWall &&
+            tile.east.Value.up.Value.isFloor)
         {
             ramplookup ^= 4;
         }
         if (tile.south != null &&
-            tile.south.east != null &&
-            tile.south.east.up != null &&
-            tile.south.east.isWall &&
-            tile.south.east.up.isFloor)
+            tile.south.Value.east != null &&
+            tile.south.Value.east.Value.up != null &&
+            tile.south.Value.east.Value.isWall &&
+            tile.south.Value.east.Value.up.Value.isFloor)
         {
             ramplookup ^= 8;
         }
         if (tile.south != null &&
-            tile.south.up != null &&
-            tile.south.isWall &&
-            tile.south.up.isFloor)
+            tile.south.Value.up != null &&
+            tile.south.Value.isWall &&
+            tile.south.Value.up.Value.isFloor)
         {
             ramplookup ^= 16;
         }
         if (tile.south != null &&
-            tile.south.west != null &&
-            tile.south.west.up != null &&
-            tile.south.west.isWall &&
-            tile.south.west.up.isFloor)
+            tile.south.Value.west != null &&
+            tile.south.Value.west.Value.up != null &&
+            tile.south.Value.west.Value.isWall &&
+            tile.south.Value.west.Value.up.Value.isFloor)
         {
             ramplookup ^= 32;
         }
         if (tile.west != null &&
-            tile.west.up != null &&
-            tile.west.isWall &&
-            tile.west.up.isFloor)
+            tile.west.Value.up != null &&
+            tile.west.Value.isWall &&
+            tile.west.Value.up.Value.isFloor)
         {
             ramplookup ^= 64;
         }
         if (tile.north != null &&
-            tile.north.west != null &&
-            tile.north.west.up != null &&
-            tile.north.west.isWall &&
-            tile.north.west.up.isFloor)
+            tile.north.Value.west != null &&
+            tile.north.Value.west.Value.up != null &&
+            tile.north.Value.west.Value.isWall &&
+            tile.north.Value.west.Value.up.Value.isFloor)
         {
             ramplookup ^= 128;
         }
@@ -93,53 +94,53 @@ public class RampConfiguration<T> : ContentConfiguration<T> where T : IContent, 
         }
 
         if (tile.north != null &&
-            tile.north.isWall)
+            tile.north.Value.isWall)
         {
             ramplookup ^= 1;
         }
         if (tile.north != null &&
-            tile.north.east != null &&
-            tile.north.east.isWall)
+            tile.north.Value.east != null &&
+            tile.north.Value.east.Value.isWall)
         {
             ramplookup ^= 2;
         }
         if (tile.east != null &&
-            tile.east.isWall)
+            tile.east.Value.isWall)
         {
             ramplookup ^= 4;
         }
         if (tile.south != null &&
-            tile.south.east != null &&
-            tile.south.east.isWall)
+            tile.south.Value.east != null &&
+            tile.south.Value.east.Value.isWall)
         {
             ramplookup ^= 8;
         }
         if (tile.south != null &&
-            tile.south.isWall)
+            tile.south.Value.isWall)
         {
             ramplookup ^= 16;
         }
         if (tile.south != null &&
-            tile.south.west != null &&
-            tile.south.west.isWall)
+            tile.south.Value.west != null &&
+            tile.south.Value.west.Value.isWall)
         {
             ramplookup ^= 32;
         }
         if (tile.west != null &&
-            tile.west.isWall)
+            tile.west.Value.isWall)
         {
             ramplookup ^= 64;
         }
         if (tile.north != null &&
-            tile.north.west != null &&
-            tile.north.west.isWall)
+            tile.north.Value.west != null &&
+            tile.north.Value.west.Value.isWall)
         {
             ramplookup ^= 128;
         }
         return rampblut[ramplookup];
     }
     Content[] rampList = new Content[26];
-    public override bool GetValue(MapTile tile, MeshLayer layer, out T value)
+    public override bool GetValue(MapDataStore.Tile tile, MeshLayer layer, out T value)
     {
         if (tile.shape != RemoteFortressReader.TiletypeShape.RAMP)
         {

@@ -28,9 +28,10 @@ public class TileShape : GenericTile
 
     public override Mesh GetMesh(GameMap map, int x, int y, int z)
     {
-        MapTile tile = map.GetTile(x, y, z);
-        if (tile == null) return null;
-        TiletypeShape shape = map.connectionState.net_tiletype_list.tiletype_list[tile.tileType].shape;
+        var maybeTile = MapDataStore.Main[x, y, z];
+        if (maybeTile == null) return null;
+        var tile = maybeTile.Value;
+        TiletypeShape shape = DFConnection.Instance.NetTiletypeList.tiletype_list[tile.tileType].shape;
         switch (shape)
         {
             case TiletypeShape.NO_SHAPE:
