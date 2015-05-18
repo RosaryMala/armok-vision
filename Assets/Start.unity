@@ -322,7 +322,6 @@ MonoBehaviour:
     type: 2}
   defaultWaterBlock: {fileID: 189120, guid: 73331f53a82e43441ad1cdec65937dfb, type: 2}
   defaultMagmaBlock: {fileID: 184644, guid: 0daa0fe28c372dc428910d6731d1ae49, type: 2}
-  viewCamera: {fileID: 1336453713}
   magmaGlowPrefab: {fileID: 10814916, guid: 1404eb50c31e0534896ff4e91f3785e5, type: 2}
   genStatus: {fileID: 1986774941}
   cursorProperties: {fileID: 793246035}
@@ -330,13 +329,9 @@ MonoBehaviour:
   rangeY: 3
   rangeZup: 1
   rangeZdown: 5
-  blocksToGet: 1
+  blocksToProcess: 1
   cameraViewDist: 25
-  posXBlock: 0
-  posYBlock: 0
-  posXTile: 0
-  posYTile: 0
-  posZ: 120
+  meshingThreads: 2
   creatureTemplate: {fileID: 187478, guid: 6e1a61cd199f87d4db317855a72e405b, type: 2}
 --- !u!1 &1023333088
 GameObject:
@@ -571,6 +566,47 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1052559960}
+--- !u!1 &1201785582
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1201785584}
+  - 114: {fileID: 1201785583}
+  m_Layer: 0
+  m_Name: DFConnectionObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1201785583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1201785582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10e38d62d238e445a9a8002799fa9d78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BlocksToFetch: 4
+  RunOnAlternateThread: 1
+--- !u!4 &1201785584
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1201785582}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 137.488693, y: 383.485443, z: -102.926537}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
 --- !u!1 &1293186818
 GameObject:
   m_ObjectHideFlags: 0
