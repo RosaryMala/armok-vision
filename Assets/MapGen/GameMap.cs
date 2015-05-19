@@ -30,14 +30,14 @@ public class GameMap : MonoBehaviour
 
     // Parameters managing the currently visible area of the map.
     // Tracking:
-    int posXBlock
+    int PosXBlock
     {
         get
         {
             return posXTile / 16;
         }
     }
-    int posYBlock
+    int PosYBlock
     {
         get
         {
@@ -202,13 +202,13 @@ public class GameMap : MonoBehaviour
     {
         DFConnection.Instance.SetRequestRegion(
             new BlockCoord(
-                posXBlock - rangeX,
-                posYBlock - rangeY,
+                PosXBlock - rangeX,
+                PosYBlock - rangeY,
                 posZ - rangeZdown
             ),
             new BlockCoord(
-                posXBlock + rangeX,
-                posYBlock + rangeY,
+                PosXBlock + rangeX,
+                PosYBlock + rangeY,
                 posZ + rangeZup
             ));
     }
@@ -329,6 +329,7 @@ public class GameMap : MonoBehaviour
     // Get new meshes from the mesher
     void FetchNewMeshes() {
         while (mesher.HasNewMeshes) {
+            posZDirty = true; //the new blocks will also need to be hidden.
             var newMeshes = mesher.Dequeue().Value;
             int block_x = newMeshes.location.x / blockSize;
             int block_y = newMeshes.location.y / blockSize;
