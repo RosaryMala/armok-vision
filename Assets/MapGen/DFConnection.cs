@@ -7,6 +7,7 @@ using System.Linq;
 // Will eventually run actual communication on a separate thread.
 // Singleton-y - attached to a GameObject.
 using System.Threading;
+using System.Net.Sockets;
 
 public class DFConnection : MonoBehaviour {
 
@@ -237,6 +238,10 @@ public class DFConnection : MonoBehaviour {
         Disconnect();
     }
 
+    public sealed class DFRemoteException : System.Exception {
+        public DFRemoteException(System.Exception inner) : base("Remote exception!", inner) {}
+    }
+
     private abstract class ConnectionMode {
         public static ConnectionMode GetConnectionMode(DFConnection connection, bool runOnAltThread) {
             if (runOnAltThread) {
@@ -262,16 +267,20 @@ public class DFConnection : MonoBehaviour {
         public UnityThreadMode(DFConnection connection) : base(connection) {}
 
         public override void Poll() {
-            // No need for locks, single threaded.
-            connection.networkClient.suspend_game();
-            connection.viewInfoCall.execute(null, out connection._netViewInfo);
-            connection.unitListCall.execute(null, out connection._netUnitList);
-            RemoteFortressReader.BlockList resultList;
-            connection.blockListCall.execute(connection.blockRequest, out resultList);
-            foreach (RemoteFortressReader.MapBlock block in resultList.map_blocks) {
-                connection.pendingBlocks.EnqueueAndDisplace(new DFCoord(block.map_x, block.map_y, block.map_z), block);
+            try {
+                // No need for locks, single threaded.
+                connection.networkClient.suspend_game();
+                connection.viewInfoCall.execute(null, out connection._netViewInfo);
+                connection.unitListCall.execute(null, out connection._netUnitList);
+                RemoteFortressReader.BlockList resultList;
+                connection.blockListCall.execute(connection.blockRequest, out resultList);
+                foreach (RemoteFortressReader.MapBlock block in resultList.map_blocks) {
+                    connection.pendingBlocks.EnqueueAndDisplace(new DFCoord(block.map_x, block.map_y, block.map_z), block);
+                }
+                connection.networkClient.resume_game();
+            } catch (System.Exception e) {
+                throw new DFRemoteException(e);
             }
-            connection.networkClient.resume_game();
         }
 
         public override void Terminate() {
@@ -284,16 +293,31 @@ public class DFConnection : MonoBehaviour {
     private sealed class AltThreadMode : ConnectionMode {
         private static readonly System.TimeSpan SLEEP_TIME = System.TimeSpan.FromMilliseconds(16);
 
+        // Use to terminate computation thread
         private volatile bool finished;
+        // Said thread
         private readonly Thread connectionThread;
+        // Catch errors on the throwing thread and catch them on the main thread
+        private System.Object errorLock;
+        private System.Exception crashError;
 
         public AltThreadMode(DFConnection connection) : base(connection) {
             finished = false;
+            errorLock = new Object();
+            crashError = null;
             connectionThread = new Thread(new ThreadStart(this.RunForever));
             connectionThread.Start();
         }
 
-        public override void Poll() {}
+        public override void Poll() {
+            lock (errorLock) {
+                if (crashError != null) {
+                    System.Exception error = crashError;
+                    crashError = null;
+                    throw new DFRemoteException(error);
+                }
+            }
+        }
 
         public override void Terminate() {
             finished = true;
@@ -301,24 +325,32 @@ public class DFConnection : MonoBehaviour {
 
         private void RunForever() {
             while (!finished) {
-                connection.networkClient.suspend_game();
-                lock (connection.viewInfoLock) {
-                    connection.viewInfoCall.execute(null, out connection._netViewInfo);
-                }
-                lock (connection.unitListLock) {
-                    connection.unitListCall.execute(null, out connection._netUnitList);
-                }
-                RemoteFortressReader.BlockList resultList;
-                lock (connection.blockRequest) {
-                    connection.blockListCall.execute(connection.blockRequest, out resultList);
-                }
-                lock (connection.pendingBlocks) {
-                    foreach (RemoteFortressReader.MapBlock block in resultList.map_blocks) {
-                        connection.pendingBlocks.EnqueueAndDisplace(new DFCoord(block.map_x, block.map_y, block.map_z), block);
+                try {
+                    connection.networkClient.suspend_game();
+                    lock (connection.viewInfoLock) {
+                        connection.viewInfoCall.execute(null, out connection._netViewInfo);
+                    }
+                    lock (connection.unitListLock) {
+                        connection.unitListCall.execute(null, out connection._netUnitList);
+                    }
+                    RemoteFortressReader.BlockList resultList;
+                    lock (connection.blockRequest) {
+                        connection.blockListCall.execute(connection.blockRequest, out resultList);
+                    }
+                    lock (connection.pendingBlocks) {
+                        foreach (RemoteFortressReader.MapBlock block in resultList.map_blocks) {
+                            connection.pendingBlocks.EnqueueAndDisplace(new DFCoord(block.map_x, block.map_y, block.map_z), block);
+                        }
+                    }
+                    connection.networkClient.resume_game();
+                    Thread.Sleep(SLEEP_TIME);
+                } catch (System.Exception e) {
+                    // For now, just pass on any exceptions and exit
+                    lock (errorLock) {
+                        crashError = e;
+                        return;
                     }
                 }
-                connection.networkClient.resume_game();
-                Thread.Sleep(SLEEP_TIME);
             }
             // finished
             connection.networkClient.disconnect();
