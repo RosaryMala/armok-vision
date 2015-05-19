@@ -155,6 +155,14 @@ namespace DFHack
         public static bool operator !=(DFCoord a, DFCoord b) {
             return a.x != b.x || a.y != b.y || a.z != b.z;
         }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+        public override bool Equals(object obj)
+        {
+            return this == (DFCoord)obj;
+        }
     }
     public struct DFCoord2d
     {
@@ -288,6 +296,14 @@ namespace DFHack
         }
         public static bool operator !=(BlockCoord a, BlockCoord b) {
             return a.x != b.x || a.y != b.y || a.z != b.z;
+        }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+        public override bool Equals(object obj)
+        {
+            return this == (BlockCoord)obj;
         }
     }
     /* Protocol description:
@@ -847,7 +863,7 @@ namespace DFHack
 
                 try {
                     tempSocket.Connect(ipe);
-                } catch (SocketException e) {
+                } catch (SocketException) {
                     // Often thrown if DF is inactive.
                     continue;
                 }
