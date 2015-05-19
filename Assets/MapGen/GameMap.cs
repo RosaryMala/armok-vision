@@ -30,10 +30,22 @@ public class GameMap : MonoBehaviour
 
     // Parameters managing the currently visible area of the map.
     // Tracking:
-    int posXBlock = 0;
-    int posYBlock = 0;
-    int posXTile = 0;
-    int posYTile = 0;
+    int posXBlock
+    {
+        get
+        {
+            return posXTile / 16;
+        }
+    }
+    int posYBlock
+    {
+        get
+        {
+            return posYTile / 16;
+        }
+    }
+    int posXTile { get; set; }
+    int posYTile { get; set; }
     int posZ = 0;
     public int PosZ { // Public accessor; used from MapSelection
         get {
@@ -182,8 +194,6 @@ public class GameMap : MonoBehaviour
        
         posXTile = (view.view_pos_x + (view.view_size_x / 2));
         posYTile = (view.view_pos_y + (view.view_size_y / 2));
-        posXBlock = posXTile / 16;
-        posYBlock = posYTile / 16;
         posZ = view.view_pos_z + 1;
     }
 
@@ -378,7 +388,7 @@ public class GameMap : MonoBehaviour
         }
     }
 
-    System.Diagnostics.Stopwatch netWatch = new System.Diagnostics.Stopwatch();
+
     System.Diagnostics.Stopwatch loadWatch = new System.Diagnostics.Stopwatch();
     System.Diagnostics.Stopwatch genWatch = new System.Diagnostics.Stopwatch();
 
