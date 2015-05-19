@@ -826,7 +826,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetMap: {fileID: 861361729}
-  cameraOrigin: {fileID: 0}
+  cameraOrigin: {fileID: 716928473}
   debugMode: 0
   dfCoord: {x: 0, y: 0, z: 0}
   unityCoord: {x: 0, y: 0, z: 0}
