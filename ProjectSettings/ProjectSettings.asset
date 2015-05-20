@@ -48,7 +48,7 @@ PlayerSettings:
   submitAnalytics: 1
   usePlayerLog: 1
   bakeCollisionMeshes: 0
-  forceSingleInstance: 0
+  forceSingleInstance: 1
   resizableWindow: 1
   useMacAppStoreValidation: 0
   gpuSkinning: 1
@@ -58,7 +58,7 @@ PlayerSettings:
   xboxEnableKinectAutoTracking: 0
   xboxEnableFitness: 0
   visibleInBackground: 0
-  macFullscreenMode: 2
+  macFullscreenMode: 1
   d3d9FullscreenMode: 1
   d3d11FullscreenMode: 1
   xboxSpeechDB: 0
@@ -93,7 +93,7 @@ PlayerSettings:
   ForceSDCardPermission: 0
   CreateWallpaper: 0
   APKExpansionFiles: 0
-  preloadShaders: 0
+  preloadShaders: 1
   StripUnusedMeshComponents: 0
   iPhoneSdkVersion: 988
   iPhoneTargetOSVersion: 22
@@ -133,11 +133,12 @@ PlayerSettings:
     height: 180
     banner: {fileID: 0}
   androidGamepadSupportLevel: 0
-  resolutionDialogBanner: {fileID: 0}
+  resolutionDialogBanner: {fileID: 2800000, guid: c5438fb44cad84d79a3b9ae867451d83,
+    type: 3}
   m_BuildTargetIcons:
   - m_BuildTarget: 
     m_Icons:
-    - m_Icon: {fileID: 0}
+    - m_Icon: {fileID: 2800000, guid: d57e1ad97b15e43a187111ec757683de, type: 3}
       m_Size: 128
   m_BuildTargetBatching:
   - m_BuildTarget: Standalone
