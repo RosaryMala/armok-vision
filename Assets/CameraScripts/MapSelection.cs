@@ -5,7 +5,7 @@ using DFHack;
 // Pretty tightly coupled to GameMap, ehhh.
 public class MapSelection : MonoBehaviour
 {
-    public GameMap targetMap;
+    GameMap gameMap;
     public GameObject cameraOrigin;
     public bool debugMode = false;
 
@@ -20,10 +20,15 @@ public class MapSelection : MonoBehaviour
 
     private Material highlightLineMaterial;
 
+    void Awake()
+    {
+        gameMap = FindObjectOfType<GameMap>();
+    }
+
     //Handle mouse dragging here.
     void Update()
     {
-        if (!DFConnection.Connected || !targetMap.enabled) return;
+        if (!DFConnection.Connected || !gameMap.enabled) return;
 
         mouseWorldPosition = GetMouseWorldPosition(Input.mousePosition);
 
@@ -52,6 +57,7 @@ public class MapSelection : MonoBehaviour
             Vector3 previous = new Vector3(mouseWorldPositionPrevious.x, 0f, mouseWorldPositionPrevious.z);
 
             cameraOrigin.transform.Translate(previous - current, Space.World);
+            gameMap.UpdateCenter(cameraOrigin.transform.position);
 
             mouseWorldPositionPrevious = GetMouseWorldPosition(Input.mousePosition, mouseWorldPlaneHeight);
         }
@@ -76,7 +82,7 @@ public class MapSelection : MonoBehaviour
         Ray mouseRay = GetComponent<Camera>().ScreenPointToRay(mousePosition);
         if (!FindCurrentTarget(mouseRay, out dfTarget, out WorldPos))
         {
-            Plane currentPlane = new Plane(Vector3.up, GameMap.DFtoUnityCoord(0, 0, targetMap.PosZ));
+            Plane currentPlane = new Plane(Vector3.up, GameMap.DFtoUnityCoord(0, 0, gameMap.PosZ));
             float distance;
             if (currentPlane.Raycast(mouseRay, out distance))
             {
@@ -94,7 +100,7 @@ public class MapSelection : MonoBehaviour
     // (For now)
     void OnPostRender()
     {
-        if (!DFConnection.Connected || !targetMap.enabled) return;
+        if (!DFConnection.Connected || !gameMap.enabled) return;
         Ray mouseRay = GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
 
         DFCoord currentTarget;
@@ -190,7 +196,7 @@ public class MapSelection : MonoBehaviour
             Vector3 cornerCoord = GameMap.DFtoUnityBottomCorner(currentCoord);
 
             // Are we in the selectable area of the map?
-            if (!MapDataStore.InMapBounds(currentCoord) || targetMap.PosZ <= currentCoord.z)
+            if (!MapDataStore.InMapBounds(currentCoord) || gameMap.PosZ <= currentCoord.z)
             {
                 // No.
                 if (haveHitMap)
