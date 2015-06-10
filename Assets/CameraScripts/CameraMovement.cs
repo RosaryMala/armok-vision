@@ -5,16 +5,19 @@ using DFHack;
 public class CameraMovement : MonoBehaviour {
 
     GameMap gameMap;
+    public Transform cameraPos;
     bool following = true;
+    public float speed = 10;
 
     void Awake()
     {
         gameMap = FindObjectOfType<GameMap>();
+        
     }
 
 	// Use this for initialization
-	void Start () {
-	
+	void Start () 
+    {
 	}
 	
 	// Update is called once per frame
@@ -29,7 +32,8 @@ public class CameraMovement : MonoBehaviour {
         if(moveZ != 0.0f || moveY != 0.0f || moveX != 0.0f)
         {
             following = false;
-            transform.Translate(moveX, moveZ, moveY, Space.Self);
+            Vector3 movement = new Vector3(moveX, moveZ, moveY);
+            transform.Translate(movement * Time.deltaTime * speed * cameraPos.localPosition.z * -1.0f, Space.Self);
             gameMap.UpdateCenter(transform.position);
         }
 	}
