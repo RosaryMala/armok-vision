@@ -44,14 +44,31 @@ public class GameMap : MonoBehaviour
             return posYTile / 16;
         }
     }
-    int posXTile { get; set; }
-    int posYTile { get; set; }
-    int posZ = 0;
-    public int PosZ { // Public accessor; used from MapSelection
-        get {
+    public int posXTile = 0;
+    public int posYTile = 0;
+    public int posZ = 0;
+    public int PosZ
+    { // Public accessor; used from MapSelection
+        get
+        {
             return posZ;
         }
     }
+    public int PosXTile
+    {
+        get
+        {
+            return posXTile;
+        }
+    }
+    public int PosYTile
+    {
+        get
+        {
+            return posYTile;
+        }
+    }
+
     // Preferences:
     public int rangeX = 4;
     public int rangeY = 4;
@@ -95,24 +112,28 @@ public class GameMap : MonoBehaviour
         Vector3 outCoord = new Vector3(input.x * tileWidth, input.z * tileHeight, input.y * (-tileWidth));
         return outCoord;
     }
-    public static Vector3 DFtoUnityTileCenter(DFCoord input) {
+    public static Vector3 DFtoUnityTileCenter(DFCoord input)
+    {
         Vector3 result = DFtoUnityCoord(input);
-        result.y += tileHeight/2;
+        result.y += tileHeight / 2;
         return result;
     }
-    public static Vector3 DFtoUnityBottomCorner(DFCoord input) {
+    public static Vector3 DFtoUnityBottomCorner(DFCoord input)
+    {
         Vector3 result = DFtoUnityCoord(input);
         result.x -= tileWidth / 2;
         result.z -= tileWidth / 2;
         return result;
     }
-    public static DFCoord UnityToDFCoord(Vector3 input) {
-        int x = Mathf.RoundToInt (input.x / tileWidth);
-        int y = Mathf.RoundToInt (input.z / -tileWidth);
-        int z = Mathf.FloorToInt (input.y / tileHeight);
+    public static DFCoord UnityToDFCoord(Vector3 input)
+    {
+        int x = Mathf.RoundToInt(input.x / tileWidth);
+        int y = Mathf.RoundToInt(input.z / -tileWidth);
+        int z = Mathf.FloorToInt(input.y / tileHeight);
         return new DFCoord(x, y, z);
     }
-    public static bool IsBlockCorner(DFCoord input) {
+    public static bool IsBlockCorner(DFCoord input)
+    {
         return input.x % blockSize == 0 &&
                input.y % blockSize == 0;
     }
@@ -134,7 +155,8 @@ public class GameMap : MonoBehaviour
         DFConnection.RegisterConnectionCallback(this.OnConnectToDF);
     }
 
-    void OnConnectToDF() {
+    void OnConnectToDF()
+    {
         Debug.Log("Connected");
         enabled = true;
         mesher = BlockMesher.GetMesher(meshingThreads);
@@ -160,7 +182,7 @@ public class GameMap : MonoBehaviour
     void Update()
     {
         if (!enabled) return;
-        UpdateView ();
+        //UpdateView();
         ShowCursorInfo();
         UpdateRequestRegion();
         blockListTimer.Reset();
@@ -176,22 +198,26 @@ public class GameMap : MonoBehaviour
         HideMeshes();
     }
 
-    void OnDestroy() {
-        if (mesher != null) {
+    void OnDestroy()
+    {
+        if (mesher != null)
+        {
             mesher.Terminate();
             mesher = null;
         }
     }
 
-    void UpdateView () {
+    void UpdateView()
+    {
         RemoteFortressReader.ViewInfo newView = DFConnection.Instance.PopViewInfoUpdate();
         if (newView == null) return;
         //Debug.Log("Got view");
-        if (view == null || view.view_pos_z != newView.view_pos_z) {
+        if (view == null || view.view_pos_z != newView.view_pos_z)
+        {
             posZDirty = true;
         }
         view = newView;
-       
+
         posXTile = (view.view_pos_x + (view.view_size_x / 2));
         posYTile = (view.view_pos_y + (view.view_size_y / 2));
         posZ = view.view_pos_z + 1;
@@ -221,7 +247,7 @@ public class GameMap : MonoBehaviour
             RemoteFortressReader.MapBlock block = DFConnection.Instance.PopMapBlockUpdate();
             if (block == null) break;
             MapDataStore.Main.StoreTiles(block);
-            if (block.tiles.Count > 0) 
+            if (block.tiles.Count > 0)
                 SetDirtyBlock(block.map_x, block.map_y, block.map_z);
             if (block.water.Count > 0 || block.magma.Count > 0)
                 SetDirtyLiquidBlock(block.map_x, block.map_y, block.map_z);
@@ -317,24 +343,28 @@ public class GameMap : MonoBehaviour
                     {
                         continue;
                     }
-                    if (!blockDirtyBits[xx, yy, zz] && !liquidBlockDirtyBits[xx, yy, zz]) {
+                    if (!blockDirtyBits[xx, yy, zz] && !liquidBlockDirtyBits[xx, yy, zz])
+                    {
                         continue;
                     }
-                    mesher.Enqueue(new DFCoord(xx*16, yy*16, zz), blockDirtyBits[xx,yy,zz], liquidBlockDirtyBits[xx,yy,zz]);
+                    mesher.Enqueue(new DFCoord(xx * 16, yy * 16, zz), blockDirtyBits[xx, yy, zz], liquidBlockDirtyBits[xx, yy, zz]);
                     blockDirtyBits[xx, yy, zz] = false;
                     liquidBlockDirtyBits[xx, yy, zz] = false;
                 }
     }
 
     // Get new meshes from the mesher
-    void FetchNewMeshes() {
-        while (mesher.HasNewMeshes) {
+    void FetchNewMeshes()
+    {
+        while (mesher.HasNewMeshes)
+        {
             posZDirty = true; //the new blocks will also need to be hidden.
             var newMeshes = mesher.Dequeue().Value;
             int block_x = newMeshes.location.x / blockSize;
             int block_y = newMeshes.location.y / blockSize;
             int block_z = newMeshes.location.z;
-            if (newMeshes.tiles != null) {
+            if (newMeshes.tiles != null)
+            {
                 if (blocks[block_x, block_y, block_z] == null)
                 {
                     GameObject block = Instantiate(defaultMapBlock) as GameObject;
@@ -347,7 +377,8 @@ public class GameMap : MonoBehaviour
                 tileFilter.mesh.Clear();
                 newMeshes.tiles.CopyToMesh(tileFilter.mesh);
             }
-            if (newMeshes.stencilTiles != null) {
+            if (newMeshes.stencilTiles != null)
+            {
                 if (stencilBlocks[block_x, block_y, block_z] == null)
                 {
                     GameObject stencilBlock = Instantiate(defaultStencilMapBlock) as GameObject;
@@ -360,7 +391,8 @@ public class GameMap : MonoBehaviour
                 stencilFilter.mesh.Clear();
                 newMeshes.stencilTiles.CopyToMesh(stencilFilter.mesh);
             }
-            if (newMeshes.water != null) {
+            if (newMeshes.water != null)
+            {
                 if (liquidBlocks[block_x, block_y, block_z, MapDataStore.WATER_INDEX] == null)
                 {
                     GameObject block = Instantiate(defaultWaterBlock) as GameObject;
@@ -373,7 +405,8 @@ public class GameMap : MonoBehaviour
                 waterFilter.mesh.Clear();
                 newMeshes.water.CopyToMesh(waterFilter.mesh);
             }
-            if (newMeshes.magma != null) {
+            if (newMeshes.magma != null)
+            {
                 if (liquidBlocks[block_x, block_y, block_z, MapDataStore.MAGMA_INDEX] == null)
                 {
                     GameObject block = Instantiate(defaultMagmaBlock) as GameObject;
@@ -396,14 +429,13 @@ public class GameMap : MonoBehaviour
 
     void CullDistantBlocks()
     {
-        int centerZ = view.view_pos_z;
         //int centerX = (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x / 2));
         //int centerY = (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y / 2));
         for (int xx = 0; xx < blocks.GetLength(0); xx++)
             for (int yy = 0; yy < blocks.GetLength(1); yy++)
                 for (int zz = 0; zz < blocks.GetLength(2); zz++)
                 {
-                    if (zz > centerZ + cameraViewDist)
+                    if (zz > PosZ + cameraViewDist)
                     {
                         if (blocks[xx, yy, zz] != null)
                         {
@@ -425,7 +457,7 @@ public class GameMap : MonoBehaviour
                             }
                         continue;
                     }
-                    if (zz < centerZ - cameraViewDist)
+                    if (zz < PosZ - cameraViewDist)
                     {
                         if (blocks[xx, yy, zz] != null)
                         {
@@ -438,7 +470,7 @@ public class GameMap : MonoBehaviour
                             stencilBlocks[xx, yy, zz].mesh.Clear();
                             blockDirtyBits[xx, yy, zz] = true;
 
-                        } 
+                        }
                         for (int i = 0; i < 2; i++)
                             if (liquidBlocks[xx, yy, zz, i] != null)
                             {
@@ -465,7 +497,7 @@ public class GameMap : MonoBehaviour
         foreach (var item in liquidBlocks)
         {
             if (item != null)
-                item.mesh.Clear();   
+                item.mesh.Clear();
         }
         foreach (var item in magmaGlow)
         {
@@ -484,7 +516,7 @@ public class GameMap : MonoBehaviour
                 {
                     if (blocks[xx, yy, zz] != null)
                     {
-                        if (zz > view.view_pos_z)
+                        if (zz >= PosZ)
                         {
                             blocks[xx, yy, zz].gameObject.GetComponent<Renderer>().material = invisibleMaterial;
                             //blocks[xx, yy, zz].gameObject.SetActive(false);
@@ -502,7 +534,7 @@ public class GameMap : MonoBehaviour
                 {
                     if (stencilBlocks[xx, yy, zz] != null)
                     {
-                        if (zz > view.view_pos_z)
+                        if (zz >= PosZ)
                         {
                             stencilBlocks[xx, yy, zz].gameObject.GetComponent<Renderer>().material = invisibleStencilMaterial;
                             //stencilBlocks[xx, yy, zz].gameObject.SetActive(false);
@@ -521,11 +553,11 @@ public class GameMap : MonoBehaviour
                     {
                         if (liquidBlocks[xx, yy, zz, qq] != null)
                         {
-                            if (zz > view.view_pos_z)
+                            if (zz >= PosZ)
                                 liquidBlocks[xx, yy, zz, qq].gameObject.GetComponent<Renderer>().material = invisibleMaterial;
                             else
                             {
-                                if(qq == MapDataStore.MAGMA_INDEX)
+                                if (qq == MapDataStore.MAGMA_INDEX)
                                     liquidBlocks[xx, yy, zz, qq].gameObject.GetComponent<Renderer>().material = magmaMaterial;
                                 else
                                     liquidBlocks[xx, yy, zz, qq].gameObject.GetComponent<Renderer>().material = waterMaterial;
@@ -637,6 +669,18 @@ public class GameMap : MonoBehaviour
                 creatureList[unit.id].transform.parent = gameObject.transform;
             }
             creatureList[unit.id].transform.position = DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z) + new Vector3(0, 2, 0);
+        }
+    }
+
+    public void UpdateCenter(Vector3 pos)
+    {
+        DFCoord dfPos = UnityToDFCoord(pos);
+        posXTile = dfPos.x;
+        posYTile = dfPos.y;
+        if(posZ != dfPos.z+1)
+        {
+            posZ = dfPos.z+1;
+            posZDirty = true;
         }
     }
 }
