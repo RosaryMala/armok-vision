@@ -156,6 +156,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 716928474}
   - 114: {fileID: 716928475}
+  - 114: {fileID: 716928476}
   m_Layer: 0
   m_Name: CameraPivot
   m_TagString: Untagged
@@ -189,6 +190,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotateSpeed: 10
   moveSpeed: 1
+--- !u!114 &716928476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 716928473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f47966236c7164469bdefdb182692a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraPos: {fileID: 1404020253}
+  speed: 1
 --- !u!1 &793246033
 GameObject:
   m_ObjectHideFlags: 0
@@ -326,6 +340,9 @@ MonoBehaviour:
   magmaGlowPrefab: {fileID: 10814916, guid: 1404eb50c31e0534896ff4e91f3785e5, type: 2}
   genStatus: {fileID: 1986774941}
   cursorProperties: {fileID: 793246035}
+  posXTile: 0
+  posYTile: 0
+  posZ: 0
   rangeX: 4
   rangeY: 3
   rangeZup: 1
@@ -627,6 +644,7 @@ GameObject:
   - 114: {fileID: 1404020244}
   - 114: {fileID: 1404020254}
   - 114: {fileID: 1404020255}
+  - 114: {fileID: 1404020256}
   m_Layer: 0
   m_Name: RotatableCamera
   m_TagString: MainCamera
@@ -826,11 +844,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d41eb54e8321415195770d91be41a91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetMap: {fileID: 861361729}
   cameraOrigin: {fileID: 716928473}
   debugMode: 0
   dfCoord: {x: 0, y: 0, z: 0}
   unityCoord: {x: 0, y: 0, z: 0}
+--- !u!114 &1404020256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1404020243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 730475ee64f9a894bbac0d9e6f22e813, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mode: 2
+  sensitivityDepth: 1
+  sensitivityNormals: 1
+  lumThreshold: .200000003
+  edgeExp: .400000006
+  sampleDist: 1
+  edgesOnly: 0
+  edgesOnlyBgColor: {r: 1, g: 1, b: 1, a: 1}
+  edgeDetectShader: {fileID: 4800000, guid: 0d1644bdf064147baa97f235fc5b4903, type: 3}
 --- !u!1 &1503824698
 GameObject:
   m_ObjectHideFlags: 0
