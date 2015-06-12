@@ -28,6 +28,11 @@ public class GameMap : MonoBehaviour
     public Text genStatus;
     public Text cursorProperties;
 
+    public int cursX = -30000;
+    public int cursY = -30000;
+    public int cursZ = -30000;
+
+
     // Parameters managing the currently visible area of the map.
     // Tracking:
     int PosXBlock
@@ -242,7 +247,7 @@ public class GameMap : MonoBehaviour
     {
         loadWatch.Reset();
         loadWatch.Start();
-        for (int i = 0; i < blocksToProcess; i++)
+        while (true)
         {
             RemoteFortressReader.MapBlock block = DFConnection.Instance.PopMapBlockUpdate();
             if (block == null) break;
@@ -568,9 +573,6 @@ public class GameMap : MonoBehaviour
 
     void ShowCursorInfo()
     {
-        int cursX = view.cursor_pos_x;
-        int cursY = view.cursor_pos_y;
-        int cursZ = view.cursor_pos_z;
         cursorProperties.text = "";
         cursorProperties.text += "Cursor: ";
         cursorProperties.text += cursX + ",";
