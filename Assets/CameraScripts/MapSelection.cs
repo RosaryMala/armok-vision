@@ -33,6 +33,26 @@ public class MapSelection : MonoBehaviour
         mouseWorldPosition = GetMouseWorldPosition(Input.mousePosition);
 
         UpdateCameraPan();
+
+        if(Input.GetMouseButton(0))
+        {
+            Ray mouseRay = GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+
+            DFCoord currentTarget;
+            Vector3 currentTargetCoords;
+            if (DFConnection.Connected && gameMap.enabled && FindCurrentTarget(mouseRay, out currentTarget, out currentTargetCoords))
+            {
+                gameMap.cursX = currentTarget.x;
+                gameMap.cursY = currentTarget.y;
+                gameMap.cursZ = currentTarget.z;
+            }
+            else
+            {
+                gameMap.cursX = -30000;
+                gameMap.cursY = -30000;
+                gameMap.cursZ = -30000;
+            }
+        }
     }
 
     private void UpdateCameraPan()
