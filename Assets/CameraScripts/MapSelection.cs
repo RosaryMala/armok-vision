@@ -323,7 +323,7 @@ public class MapSelection : MonoBehaviour
             }
             // We haven't found a wall to hit.
             // This shouldn't happen, but occasionally does.
-            throw new UnityException("Didn't hit any tile walls?");
+            //throw new UnityException("Didn't hit any tile walls?");
         }
 
         // We went the maximum amount of time without hitting anything
