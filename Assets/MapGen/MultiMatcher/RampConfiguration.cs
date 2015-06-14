@@ -27,63 +27,63 @@ public class RampConfiguration<T> : ContentConfiguration<T> where T : IContent, 
     static int CalculateRampType(MapDataStore.Tile tile)
     {
         int ramplookup = 0;
-        if (tile.north != null &&
-            tile.north.Value.up != null &&
-            tile.north.Value.isWall &&
-            tile.north.Value.up.Value.isFloor)
+        if (tile.North != null &&
+            tile.North.Value.Up != null &&
+            tile.North.Value.isWall &&
+            tile.North.Value.Up.Value.isFloor)
         {
             ramplookup ^= 1;
         }
-        if (tile.north != null &&
-            tile.north.Value.east != null &&
-            tile.north.Value.east.Value.up != null &&
-            tile.north.Value.east.Value.isWall &&
-            tile.north.Value.east.Value.up.Value.isFloor)
+        if (tile.North != null &&
+            tile.North.Value.East != null &&
+            tile.North.Value.East.Value.Up != null &&
+            tile.North.Value.East.Value.isWall &&
+            tile.North.Value.East.Value.Up.Value.isFloor)
         {
             ramplookup ^= 2;
         }
-        if (tile.east != null &&
-            tile.east.Value.up != null &&
-            tile.east.Value.isWall &&
-            tile.east.Value.up.Value.isFloor)
+        if (tile.East != null &&
+            tile.East.Value.Up != null &&
+            tile.East.Value.isWall &&
+            tile.East.Value.Up.Value.isFloor)
         {
             ramplookup ^= 4;
         }
-        if (tile.south != null &&
-            tile.south.Value.east != null &&
-            tile.south.Value.east.Value.up != null &&
-            tile.south.Value.east.Value.isWall &&
-            tile.south.Value.east.Value.up.Value.isFloor)
+        if (tile.South != null &&
+            tile.South.Value.East != null &&
+            tile.South.Value.East.Value.Up != null &&
+            tile.South.Value.East.Value.isWall &&
+            tile.South.Value.East.Value.Up.Value.isFloor)
         {
             ramplookup ^= 8;
         }
-        if (tile.south != null &&
-            tile.south.Value.up != null &&
-            tile.south.Value.isWall &&
-            tile.south.Value.up.Value.isFloor)
+        if (tile.South != null &&
+            tile.South.Value.Up != null &&
+            tile.South.Value.isWall &&
+            tile.South.Value.Up.Value.isFloor)
         {
             ramplookup ^= 16;
         }
-        if (tile.south != null &&
-            tile.south.Value.west != null &&
-            tile.south.Value.west.Value.up != null &&
-            tile.south.Value.west.Value.isWall &&
-            tile.south.Value.west.Value.up.Value.isFloor)
+        if (tile.South != null &&
+            tile.South.Value.West != null &&
+            tile.South.Value.West.Value.Up != null &&
+            tile.South.Value.West.Value.isWall &&
+            tile.South.Value.West.Value.Up.Value.isFloor)
         {
             ramplookup ^= 32;
         }
-        if (tile.west != null &&
-            tile.west.Value.up != null &&
-            tile.west.Value.isWall &&
-            tile.west.Value.up.Value.isFloor)
+        if (tile.West != null &&
+            tile.West.Value.Up != null &&
+            tile.West.Value.isWall &&
+            tile.West.Value.Up.Value.isFloor)
         {
             ramplookup ^= 64;
         }
-        if (tile.north != null &&
-            tile.north.Value.west != null &&
-            tile.north.Value.west.Value.up != null &&
-            tile.north.Value.west.Value.isWall &&
-            tile.north.Value.west.Value.up.Value.isFloor)
+        if (tile.North != null &&
+            tile.North.Value.West != null &&
+            tile.North.Value.West.Value.Up != null &&
+            tile.North.Value.West.Value.isWall &&
+            tile.North.Value.West.Value.Up.Value.isFloor)
         {
             ramplookup ^= 128;
         }
@@ -93,47 +93,47 @@ public class RampConfiguration<T> : ContentConfiguration<T> where T : IContent, 
             return rampblut[ramplookup];
         }
 
-        if (tile.north != null &&
-            tile.north.Value.isWall)
+        if (tile.North != null &&
+            tile.North.Value.isWall)
         {
             ramplookup ^= 1;
         }
-        if (tile.north != null &&
-            tile.north.Value.east != null &&
-            tile.north.Value.east.Value.isWall)
+        if (tile.North != null &&
+            tile.North.Value.East != null &&
+            tile.North.Value.East.Value.isWall)
         {
             ramplookup ^= 2;
         }
-        if (tile.east != null &&
-            tile.east.Value.isWall)
+        if (tile.East != null &&
+            tile.East.Value.isWall)
         {
             ramplookup ^= 4;
         }
-        if (tile.south != null &&
-            tile.south.Value.east != null &&
-            tile.south.Value.east.Value.isWall)
+        if (tile.South != null &&
+            tile.South.Value.East != null &&
+            tile.South.Value.East.Value.isWall)
         {
             ramplookup ^= 8;
         }
-        if (tile.south != null &&
-            tile.south.Value.isWall)
+        if (tile.South != null &&
+            tile.South.Value.isWall)
         {
             ramplookup ^= 16;
         }
-        if (tile.south != null &&
-            tile.south.Value.west != null &&
-            tile.south.Value.west.Value.isWall)
+        if (tile.South != null &&
+            tile.South.Value.West != null &&
+            tile.South.Value.West.Value.isWall)
         {
             ramplookup ^= 32;
         }
-        if (tile.west != null &&
-            tile.west.Value.isWall)
+        if (tile.West != null &&
+            tile.West.Value.isWall)
         {
             ramplookup ^= 64;
         }
-        if (tile.north != null &&
-            tile.north.Value.west != null &&
-            tile.north.Value.west.Value.isWall)
+        if (tile.North != null &&
+            tile.North.Value.West != null &&
+            tile.North.Value.West.Value.isWall)
         {
             ramplookup ^= 128;
         }

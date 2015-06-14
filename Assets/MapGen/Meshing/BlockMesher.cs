@@ -422,6 +422,19 @@ abstract class BlockMesher {
         buffer.color = newColor;
         buffer.uv1Index = matTexIndex;
         buffer.uv2Index = tileTexIndex;
+        buffer.hiddenFaces = MeshCombineUtility.HiddenFaces.None;
+        if (tile.North != null && tile.North.Value.isWall)
+            buffer.hiddenFaces |= MeshCombineUtility.HiddenFaces.North;
+        if (tile.South != null && tile.South.Value.isWall)
+            buffer.hiddenFaces |= MeshCombineUtility.HiddenFaces.South;
+        if (tile.East != null && tile.East.Value.isWall)
+            buffer.hiddenFaces |= MeshCombineUtility.HiddenFaces.East;
+        if (tile.West != null && tile.West.Value.isWall)
+            buffer.hiddenFaces |= MeshCombineUtility.HiddenFaces.West;
+        if (tile.Up != null && tile.Up.Value.isSolidBase)
+            buffer.hiddenFaces |= MeshCombineUtility.HiddenFaces.Up;
+        if (tile.Down != null && tile.Down.Value.isWall)
+            buffer.hiddenFaces |= MeshCombineUtility.HiddenFaces.Down;
     }
 }
 

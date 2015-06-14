@@ -309,7 +309,7 @@ public class MapDataStore {
                 switch (shape) {
                 case TiletypeShape.WALL:
                 case TiletypeShape.FORTIFICATION:
-                case TiletypeShape.BROOK_BED:
+                //case TiletypeShape.BROOK_BED: //Dwarfs can't go through this, but it's permiable to water and also doesn't generally have solid tiles.
                 case TiletypeShape.TREE_SHAPE:
                     return true;
                 default:
@@ -324,7 +324,7 @@ public class MapDataStore {
                 case TiletypeShape.FLOOR:
                 case TiletypeShape.BOULDER:
                 case TiletypeShape.PEBBLES:
-                case TiletypeShape.BROOK_TOP:
+                //case TiletypeShape.BROOK_TOP: Not even visible, really.
                 case TiletypeShape.SAPLING:
                 case TiletypeShape.SHRUB:
                 case TiletypeShape.BRANCH:
@@ -335,32 +335,55 @@ public class MapDataStore {
                 }
             }
         }
-        public MapDataStore.Tile? north {
+        public bool isSolidBase
+        {
+            get
+            {
+                switch (shape)
+                {
+                    case TiletypeShape.FLOOR:
+                    case TiletypeShape.BOULDER:
+                    case TiletypeShape.PEBBLES:
+                    case TiletypeShape.WALL:
+                    case TiletypeShape.FORTIFICATION:
+                    case TiletypeShape.STAIR_UP:
+                    case TiletypeShape.RAMP:
+                    case TiletypeShape.BROOK_BED:
+                    case TiletypeShape.TREE_SHAPE:
+                    case TiletypeShape.SAPLING:
+                    case TiletypeShape.SHRUB:
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        }
+        public MapDataStore.Tile? North {
             get {
                 return container[position.x, position.y - 1, position.z];
             }
         }
-        public MapDataStore.Tile? south {
+        public MapDataStore.Tile? South {
             get {
                 return container[position.x, position.y + 1, position.z];
             }
         }
-        public MapDataStore.Tile? east {
+        public MapDataStore.Tile? East {
             get {
                 return container[position.x + 1, position.y, position.z];
             }
         }
-        public MapDataStore.Tile? west {
+        public MapDataStore.Tile? West {
             get {
                 return container[position.x - 1, position.y, position.z];
             }
         }
-        public MapDataStore.Tile? up {
+        public MapDataStore.Tile? Up {
             get {
                 return container[position.x, position.y, position.z + 1];
             }
         }
-        public MapDataStore.Tile? down {
+        public MapDataStore.Tile? Down {
             get {
                 return container[position.x, position.y, position.z - 1];
             }
