@@ -25,7 +25,7 @@ RenderSettings:
   m_AmbientGroundColor: {r: 0, g: 0, b: 0, a: 1}
   m_AmbientIntensity: .5
   m_AmbientMode: 1
-  m_SkyboxMaterial: {fileID: 2100000, guid: 644ac82f567faec40869ebde22fe219c, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 8b52a39ce56e17f45b84634123480687, type: 2}
   m_HaloStrength: .5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -400,6 +400,9 @@ MonoBehaviour:
   magmaGlowPrefab: {fileID: 10814916, guid: 1404eb50c31e0534896ff4e91f3785e5, type: 2}
   genStatus: {fileID: 1986774941}
   cursorProperties: {fileID: 793246035}
+  cursX: -30000
+  cursY: -30000
+  cursZ: -30000
   posXTile: 0
   posYTile: 0
   posZ: 0
