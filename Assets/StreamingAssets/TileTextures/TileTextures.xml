@@ -6,6 +6,12 @@
             <material token ="*:*:WOOD"/>
         </subObject>
     </tileTexture>
+    <tileTexture index = "5">
+        <tiletype token="FLOOR:SMOOTH:*:*:*" />
+        <subObject index="4">
+            <material token ="*:*:WOOD"/>
+        </subObject>
+    </tileTexture>
     <tileTexture index = "1">
         <tiletype token="*:*:CONSTRUCTION:*:*" />
         <subObject index="4">
@@ -20,6 +26,7 @@
     </tileTexture>
     <tileTexture index = "2">
         <tiletype token="*:SMOOTH:TREE_MATERIAL:*:*" />
+        <tiletype token="RAMP:*:TREE_MATERIAL:*:*" />
     </tileTexture>
     <tileTexture index = "2">
         <tiletype token="*:SMOOTH:MUSHROOM:*:*" />
