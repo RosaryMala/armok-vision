@@ -23,6 +23,12 @@
         <tiletype token="TWIG:*:*:*:*" />
         <tiletype token="SAPLING:*:*:*:*" />
         <tiletype token="SHRUB:*:*:*:*" />
+        <subObject index="2">
+            <material token ="INORGANIC:*"/>
+        </subObject>
+        <subObject index="2">
+            <material token ="PLANT:*:*"/>
+        </subObject>
     </tileTexture>
     <tileTexture index = "2">
         <tiletype token="*:SMOOTH:TREE_MATERIAL:*:*" />
