@@ -416,7 +416,7 @@ abstract class BlockMesher {
                 else
                     newColor = new Color (color.red / 255.0f, color.green / 255.0f, color.blue / 255.0f, 1);
             } else {
-                newColor = Color.white;
+                newColor = Color.grey;
             }
         }
         buffer.color = newColor;
