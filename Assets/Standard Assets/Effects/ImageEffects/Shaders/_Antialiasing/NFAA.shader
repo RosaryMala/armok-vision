@@ -125,6 +125,8 @@ SubShader {
 		#pragma vertex vert
 		#pragma fragment frag
 		#pragma exclude_renderers d3d11_9x
+		// Use shader model 3.0 target, to get nicer looking lighting
+		#pragma target 3.0
 		
 		ENDCG
 	}
@@ -136,6 +138,8 @@ SubShader {
 		#pragma vertex vert
 		#pragma fragment fragDebug
 		#pragma exclude_renderers d3d11_9x
+		// Use shader model 3.0 target, to get nicer looking lighting
+		#pragma target 3.0
 		
 		ENDCG
 	}
