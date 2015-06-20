@@ -224,6 +224,13 @@ namespace RemoteFortressReader
       get { return _water_salt; }
     }
   
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _construction_items = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
+    [global::ProtoBuf.ProtoMember(18, Name=@"construction_items", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> construction_items
+    {
+      get { return _construction_items; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
