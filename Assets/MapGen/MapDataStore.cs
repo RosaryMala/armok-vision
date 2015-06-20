@@ -137,6 +137,7 @@ public class MapDataStore {
                     tiles[localCoord.x, localCoord.y, localCoord.z].base_material = block.base_materials[netIndex];
                     tiles[localCoord.x, localCoord.y, localCoord.z].layer_material = block.layer_materials[netIndex];
                     tiles[localCoord.x, localCoord.y, localCoord.z].vein_material = block.vein_materials[netIndex];
+                    tiles[localCoord.x, localCoord.y, localCoord.z].construction_item = block.construction_items[netIndex];
                 }
                 if (setLiquids) {
                     tiles[localCoord.x, localCoord.y, localCoord.z].waterLevel = block.water[netIndex];
@@ -201,7 +202,8 @@ public class MapDataStore {
                            MatPairStruct? layer_material = null,
                            MatPairStruct? vein_material = null,
                            int? waterLevel = null,
-                           int? magmaLevel = null)
+                           int? magmaLevel = null,
+                           MatPairStruct? construction_item = null)
     {
         DFCoord local = WorldToLocalSpace(coord);
         if (!InSliceBoundsLocal(local.x, local.y, local.z)) {
@@ -254,6 +256,7 @@ public class MapDataStore {
             base_material = default(MatPairStruct);
             layer_material = default(MatPairStruct);
             vein_material = default(MatPairStruct);
+            construction_item = default(MatPairStruct);
             waterLevel = default(int);
             magmaLevel = default(int);
         }
@@ -265,6 +268,7 @@ public class MapDataStore {
         public MatPairStruct base_material;
         public MatPairStruct layer_material;
         public MatPairStruct vein_material;
+        public MatPairStruct construction_item;
         public int waterLevel;
         public int magmaLevel;
 
@@ -280,7 +284,8 @@ public class MapDataStore {
                            MatPairStruct? layer_material = null,
                            MatPairStruct? vein_material = null,
                            int? waterLevel = null,
-                           int? magmaLevel = null)
+                           int? magmaLevel = null,
+                           MatPairStruct? construction_item = null)
         {
             if (tileType != null) {
                 this.tileType = tileType.Value;
@@ -302,6 +307,10 @@ public class MapDataStore {
             }
             if (magmaLevel != null) {
                 this.magmaLevel = magmaLevel.Value;
+            }
+            if (construction_item != null)
+            {
+                this.construction_item = construction_item.Value;
             }
         }
         public bool isWall {

@@ -5,15 +5,31 @@
         <subObject index="4">
             <material token ="*:*:WOOD"/>
         </subObject>
+        <subObject index="17">
+            <material token ="GLASS_GREEN"/>
+            <material token ="GLASS_CLEAR"/>
+            <material token ="GLASS_CRYSTAL"/>
+        </subObject>
     </tileTexture>
     <tileTexture index = "5">
         <tiletype token="FLOOR:SMOOTH:*:*:*" />
         <subObject index="4">
             <material token ="*:*:WOOD"/>
         </subObject>
+        <subObject index="21">
+            <material token ="GLASS_GREEN"/>
+            <material token ="GLASS_CLEAR"/>
+            <material token ="GLASS_CRYSTAL"/>
+        </subObject>
     </tileTexture>
     <tileTexture index = "1">
         <tiletype token="*:*:CONSTRUCTION:*:*" />
+        <subObject index="4">
+            <material token ="*:*:WOOD"/>
+        </subObject>
+    </tileTexture>
+    <tileTexture index = "5">
+        <tiletype token="WALL:*:CONSTRUCTION:*:*" />
         <subObject index="4">
             <material token ="*:*:WOOD"/>
         </subObject>

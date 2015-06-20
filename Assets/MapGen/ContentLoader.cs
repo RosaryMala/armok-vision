@@ -89,10 +89,11 @@ public class ContentLoader
     }
 
 
-    public ContentConfiguration<ColorContent> colorConfiguration { get; private set; }
-    public ContentConfiguration<IndexContent> materialTextureConfiguration { get; private set; }
-    public ContentConfiguration<IndexContent> tileTextureConfiguration { get; private set; }
-    public ContentConfiguration<MeshContent> tileMeshConfiguration { get; private set; }
+    public ContentConfiguration<ColorContent> ColorConfiguration { get; private set; }
+    public ContentConfiguration<IndexContent> MaterialTextureConfiguration { get; private set; }
+    public ContentConfiguration<IndexContent> TileTextureConfiguration { get; private set; }
+    public ContentConfiguration<MeshContent> TileMeshConfiguration { get; private set; }
+    public ContentConfiguration<LayerContent> MaterialLayerConfiguration { get; private set; }
 
 
     //public ContentLoader()
@@ -157,24 +158,29 @@ public class ContentLoader
             switch (doc.Name.LocalName)
             {
                 case "colors":
-                    if(colorConfiguration == null)
-                        colorConfiguration = ContentConfiguration<ColorContent>.GetFromRootElement(doc, "color");
-                    colorConfiguration.AddSingleContentConfig(doc);
+                    if(ColorConfiguration == null)
+                        ColorConfiguration = ContentConfiguration<ColorContent>.GetFromRootElement(doc, "color");
+                    ColorConfiguration.AddSingleContentConfig(doc);
                     break;
                 case "materialTextures":
-                    if(materialTextureConfiguration == null)
-                        materialTextureConfiguration = ContentConfiguration<IndexContent>.GetFromRootElement(doc, "materialTexture");
-                    materialTextureConfiguration.AddSingleContentConfig(doc);
+                    if(MaterialTextureConfiguration == null)
+                        MaterialTextureConfiguration = ContentConfiguration<IndexContent>.GetFromRootElement(doc, "materialTexture");
+                    MaterialTextureConfiguration.AddSingleContentConfig(doc);
                     break;
                 case "tileTextures":
-                    if(tileTextureConfiguration == null)
-                        tileTextureConfiguration = ContentConfiguration<IndexContent>.GetFromRootElement(doc, "tileTexture");
-                    tileTextureConfiguration.AddSingleContentConfig(doc);
+                    if(TileTextureConfiguration == null)
+                        TileTextureConfiguration = ContentConfiguration<IndexContent>.GetFromRootElement(doc, "tileTexture");
+                    TileTextureConfiguration.AddSingleContentConfig(doc);
                     break;
                 case "tileMeshes":
-                    if (tileMeshConfiguration == null)
-                        tileMeshConfiguration = ContentConfiguration<MeshContent>.GetFromRootElement(doc, "tileMesh");
-                    tileMeshConfiguration.AddSingleContentConfig(doc);
+                    if (TileMeshConfiguration == null)
+                        TileMeshConfiguration = ContentConfiguration<MeshContent>.GetFromRootElement(doc, "tileMesh");
+                    TileMeshConfiguration.AddSingleContentConfig(doc);
+                    break;
+                case "materialLayers":
+                    if (MaterialLayerConfiguration == null)
+                        MaterialLayerConfiguration = ContentConfiguration<LayerContent>.GetFromRootElement(doc, "materialLayer");
+                    MaterialLayerConfiguration.AddSingleContentConfig(doc);
                     break;
                 default:
                     break;
