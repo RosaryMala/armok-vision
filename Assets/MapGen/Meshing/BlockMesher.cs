@@ -353,7 +353,7 @@ abstract class BlockMesher {
     {
         buffer = new MeshCombineUtility.MeshInstance();
         MeshContent content = null;
-        if (!contentLoader.tileMeshConfiguration.GetValue(tile, layer, out content))
+        if (!contentLoader.TileMeshConfiguration.GetValue(tile, layer, out content))
         {
             buffer.meshData = null;
             return;
@@ -362,15 +362,15 @@ abstract class BlockMesher {
         buffer.transform = Matrix4x4.TRS(GameMap.DFtoUnityCoord(tile.position), Quaternion.identity, Vector3.one);
         int tileTexIndex = 0;
         IndexContent tileTexContent;
-        if (contentLoader.tileTextureConfiguration.GetValue (tile, layer, out tileTexContent))
+        if (contentLoader.TileTextureConfiguration.GetValue (tile, layer, out tileTexContent))
             tileTexIndex = tileTexContent.value;
         int matTexIndex = 0;
         IndexContent matTexContent;
-        if (contentLoader.materialTextureConfiguration.GetValue (tile, layer, out matTexContent))
+        if (contentLoader.MaterialTextureConfiguration.GetValue (tile, layer, out matTexContent))
             matTexIndex = matTexContent.value;
         ColorContent newColorContent;
         Color newColor;
-        if (contentLoader.colorConfiguration.GetValue (tile, layer, out newColorContent)) {
+        if (contentLoader.ColorConfiguration.GetValue (tile, layer, out newColorContent)) {
             newColor = newColorContent.value;
         } else {
             MatPairStruct mat;

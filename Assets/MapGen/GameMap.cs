@@ -101,6 +101,7 @@ public class GameMap : MonoBehaviour
 
     // Stuff to let the material list & various meshes & whatnot be loaded from xml specs at runtime.
     Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> materials;
+    Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> items;
 
     // Coordinate system stuff.
     public const float tileHeight = 3.0f;
@@ -173,6 +174,18 @@ public class GameMap : MonoBehaviour
         {
             materials[material.mat_pair] = material;
         }
+        // Initialize items
+        if (items == null)
+            items = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
+        items.Clear();
+        foreach (RemoteFortressReader.MaterialDefinition material in DFConnection.Instance.NetItemList.material_list)
+        {
+            items[material.mat_pair] = material;
+        }
+
+        SaveTileTypeList();
+        SaveMaterialList(DFConnection.Instance.NetMaterialList.material_list, "MaterialList.csv");
+        SaveMaterialList(DFConnection.Instance.NetItemList.material_list, "ItemList.csv");
 
         UpdateView();
 
@@ -326,12 +339,35 @@ public class GameMap : MonoBehaviour
             foreach (Tiletype item in DFConnection.Instance.NetTiletypeList.tiletype_list)
             {
                 writer.WriteLine(
-                    item.name + "," +
+                    item.name + ";" +
                     item.shape + ":" +
                     item.special + ":" +
                     item.material + ":" +
                     item.variant + ":" +
                     item.direction
+                    );
+            }
+        }
+    }
+    void SaveMaterialList(List<MaterialDefinition> list, string filename)
+    {
+        try
+        {
+            File.Delete(filename);
+        }
+        catch (IOException)
+        {
+            return;
+        }
+        using (StreamWriter writer = new StreamWriter(filename))
+        {
+            foreach (var item in list)
+            {
+                writer.WriteLine(
+                    item.name + ";" +
+                    item.id + ";" +
+                    item.mat_pair.mat_type + ";" +
+                    item.mat_pair.mat_index
                     );
             }
         }
@@ -650,6 +686,20 @@ public class GameMap : MonoBehaviour
             else
                 cursorProperties.text += "Unknown Vein Material\n";
 
+            cursorProperties.text += "\n";
+
+            var cons = tile.construction_item;
+            cursorProperties.text += "Construction Item: ";
+            cursorProperties.text += cons.mat_type + ",";
+            cursorProperties.text += cons.mat_index + "\n";
+
+            if (materials.ContainsKey(cons))
+            {
+                cursorProperties.text += "Construction Item Name: ";
+                cursorProperties.text += items[cons].id + "\n";
+            }
+            else
+                cursorProperties.text += "Unknown Construction Item\n";
         }
     }
 
