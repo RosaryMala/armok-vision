@@ -9,27 +9,33 @@ using System.Linq;
 using System.Threading;
 using System.Net.Sockets;
 
-public class DFConnection : MonoBehaviour {
+public class DFConnection : MonoBehaviour
+{
 
     // Singleton stuff
 
     private static DFConnection _instance = null;
     private static List<System.Action> connectionCallbacks = new List<System.Action>();
-    public static DFConnection Instance {
-        get {
+    public static DFConnection Instance
+    {
+        get
+        {
             return _instance;
         }
     }
 
     // Can always be called
-    public static bool Connected {
-        get {
+    public static bool Connected
+    {
+        get
+        {
             return _instance != null && _instance.networkClient != null;
         }
     }
 
     // Can be called before instance is initialized.
-    public static void RegisterConnectionCallback(System.Action callback) {
+    public static void RegisterConnectionCallback(System.Action callback)
+    {
         connectionCallbacks.Add(callback);
     }
 
@@ -44,6 +50,7 @@ public class DFConnection : MonoBehaviour {
 
     // Remote bindings
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MaterialList> materialListCall;
+    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MaterialList> itemListCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.TiletypeList> tiletypeListCall;
     private RemoteFunction<RemoteFortressReader.BlockRequest, RemoteFortressReader.BlockList> blockListCall;
     private RemoteFunction<dfproto.EmptyMessage> hashCheckCall;
@@ -58,6 +65,7 @@ public class DFConnection : MonoBehaviour {
 
     // Unchanging:
     private RemoteFortressReader.MaterialList _netMaterialList;
+    private RemoteFortressReader.MaterialList _netItemList;
     private RemoteFortressReader.TiletypeList _netTiletypeList;
     private RemoteFortressReader.MapInfo _netMapInfo;
 
@@ -76,33 +84,52 @@ public class DFConnection : MonoBehaviour {
     private Object unitListLock = new Object();
 
     // Unchanging properties
-    public RemoteFortressReader.MapInfo NetMapInfo {
-        get {
+    public RemoteFortressReader.MapInfo NetMapInfo
+    {
+        get
+        {
             return _netMapInfo;
         }
     }
 
-    public RemoteFortressReader.MaterialList NetMaterialList {
-        get {
+    public RemoteFortressReader.MaterialList NetMaterialList
+    {
+        get
+        {
             return _netMaterialList;
         }
     }
+    public RemoteFortressReader.MaterialList NetItemList
+    {
+        get
+        {
+            return _netItemList;
+        }
+    }
 
-    public RemoteFortressReader.TiletypeList NetTiletypeList {
-        get {
+    public RemoteFortressReader.TiletypeList NetTiletypeList
+    {
+        get
+        {
             return _netTiletypeList;
         }
     }
     // Coordinates of the region we're pulling data from.
     // In block space - multiply x and y by 16 to get tile coordinates.
-    public BlockCoord RequestRegionMin {
-        get; private set;
+    public BlockCoord RequestRegionMin
+    {
+        get;
+        private set;
     }
-    public BlockCoord RequestRegionMax {
-        get; private set;
+    public BlockCoord RequestRegionMax
+    {
+        get;
+        private set;
     }
-    public void SetRequestRegion(BlockCoord min, BlockCoord max) {
-        lock (blockRequest) {
+    public void SetRequestRegion(BlockCoord min, BlockCoord max)
+    {
+        lock (blockRequest)
+        {
             RequestRegionMin = min;
             RequestRegionMax = max;
             blockRequest.min_x = min.x;
@@ -115,8 +142,10 @@ public class DFConnection : MonoBehaviour {
     }
 
     // Pop a view update; return null if there isn't one.
-    public RemoteFortressReader.ViewInfo PopViewInfoUpdate () {
-        lock (viewInfoLock) {
+    public RemoteFortressReader.ViewInfo PopViewInfoUpdate()
+    {
+        lock (viewInfoLock)
+        {
             RemoteFortressReader.ViewInfo result = _netViewInfo;
             _netViewInfo = null;
             return result;
@@ -124,8 +153,10 @@ public class DFConnection : MonoBehaviour {
     }
 
     // Pop a unit list update; return null if there isn't one.
-    public RemoteFortressReader.UnitList PopUnitListUpdate () {
-        lock (unitListLock) {
+    public RemoteFortressReader.UnitList PopUnitListUpdate()
+    {
+        lock (unitListLock)
+        {
             RemoteFortressReader.UnitList result = _netUnitList;
             _netViewInfo = null;
             return result;
@@ -133,20 +164,24 @@ public class DFConnection : MonoBehaviour {
     }
 
     // Pop a map block update; return null if there isn't one.
-    public RemoteFortressReader.MapBlock PopMapBlockUpdate () {
-        lock (pendingBlocks) {
+    public RemoteFortressReader.MapBlock PopMapBlockUpdate()
+    {
+        lock (pendingBlocks)
+        {
             return pendingBlocks.Dequeue();
         }
     }
 
     // Connect to DF, fetch initial data, start things running
-    void ConnectAndInit () {
+    void ConnectAndInit()
+    {
         blockRequest = new RemoteFortressReader.BlockRequest();
         blockRequest.blocks_needed = BlocksToFetch;
         pendingBlocks = new Util.UniqueQueue<DFCoord, RemoteFortressReader.MapBlock>();
         networkClient = new DFHack.RemoteClient(dfNetworkOut);
         bool success = networkClient.connect();
-        if (!success) {
+        if (!success)
+        {
             networkClient.disconnect();
             networkClient = null;
             throw new UnityException("DF Connection Failure");
@@ -162,25 +197,31 @@ public class DFConnection : MonoBehaviour {
         mapResetCall.execute();
         InitStatics();
 
-        foreach (System.Action callback in connectionCallbacks) {
+        foreach (System.Action callback in connectionCallbacks)
+        {
             callback.Invoke();
         }
         connectionCallbacks.Clear();
         connectionMode = ConnectionMode.GetConnectionMode(this, RunOnAlternateThread);
     }
 
-    void Disconnect() {
+    void Disconnect()
+    {
         _instance = null;
-        if (connectionMode != null) {
+        if (connectionMode != null)
+        {
             connectionMode.Terminate();
             connectionMode = null;
         }
     }
 
     // Bind the RPC functions we'll be calling
-    void BindMethods () {
+    void BindMethods()
+    {
         materialListCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MaterialList>();
         materialListCall.bind(networkClient, "GetMaterialList", "RemoteFortressReader");
+        itemListCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MaterialList>();
+        itemListCall.bind(networkClient, "GetItemList", "RemoteFortressReader");
         tiletypeListCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.TiletypeList>();
         tiletypeListCall.bind(networkClient, "GetTiletypeList", "RemoteFortressReader");
         blockListCall = new RemoteFunction<RemoteFortressReader.BlockRequest, RemoteFortressReader.BlockList>();
@@ -198,14 +239,17 @@ public class DFConnection : MonoBehaviour {
     }
 
     // Get information that only needs to be read once
-    void FetchUnchangingInfo () {
+    void FetchUnchangingInfo()
+    {
         materialListCall.execute(null, out _netMaterialList);
+        itemListCall.execute(null, out _netItemList);
         tiletypeListCall.execute(null, out _netTiletypeList);
         mapInfoCall.execute(null, out _netMapInfo);
     }
 
     // Populate lists when we connect
-    void InitStatics () {
+    void InitStatics()
+    {
         MaterialTokenList.matTokenList = _netMaterialList.material_list;
         TiletypeTokenList.tiletypeTokenList = _netTiletypeList.tiletype_list;
         MapDataStore.tiletypeTokenList = _netTiletypeList.tiletype_list;
@@ -214,47 +258,60 @@ public class DFConnection : MonoBehaviour {
         Debug.Log("Tiletypes fetched: " + _netTiletypeList.tiletype_list.Count);
     }
 
-	void Start () {
-        if (_instance != null) {
+    void Start()
+    {
+        if (_instance != null)
+        {
             throw new UnityException("Can't have multiple dwarf fortress connections!");
         }
         _instance = this;
 
         ConnectAndInit();
     }
-	
-	void Update () {
-	    if (!Connected) {
+
+    void Update()
+    {
+        if (!Connected)
+        {
             return;
         }
-        foreach (System.Action callback in connectionCallbacks) {
+        foreach (System.Action callback in connectionCallbacks)
+        {
             callback.Invoke();
         }
         connectionCallbacks.Clear();
         connectionMode.Poll();
-	}
+    }
 
-    void OnDestroy() {
+    void OnDestroy()
+    {
         Disconnect();
     }
 
-    public sealed class DFRemoteException : System.Exception {
-        public DFRemoteException(System.Exception inner) : base("Remote exception!", inner) {}
+    public sealed class DFRemoteException : System.Exception
+    {
+        public DFRemoteException(System.Exception inner) : base("Remote exception!", inner) { }
     }
 
-    private abstract class ConnectionMode {
-        public static ConnectionMode GetConnectionMode(DFConnection connection, bool runOnAltThread) {
-            if (runOnAltThread) {
+    private abstract class ConnectionMode
+    {
+        public static ConnectionMode GetConnectionMode(DFConnection connection, bool runOnAltThread)
+        {
+            if (runOnAltThread)
+            {
                 return new AltThreadMode(connection);
-            } else {
+            }
+            else
+            {
                 return new UnityThreadMode(connection);
             }
         }
 
         protected readonly DFConnection connection;
 
-        private ConnectionMode(){}
-        protected ConnectionMode(DFConnection connection) {
+        private ConnectionMode() { }
+        protected ConnectionMode(DFConnection connection)
+        {
             this.connection = connection;
         }
 
@@ -263,34 +320,42 @@ public class DFConnection : MonoBehaviour {
     }
 
     // Single-threaded connection; for debugging.
-    private sealed class UnityThreadMode : ConnectionMode {
-        public UnityThreadMode(DFConnection connection) : base(connection) {}
+    private sealed class UnityThreadMode : ConnectionMode
+    {
+        public UnityThreadMode(DFConnection connection) : base(connection) { }
 
-        public override void Poll() {
-            try {
+        public override void Poll()
+        {
+            try
+            {
                 // No need for locks, single threaded.
                 connection.networkClient.suspend_game();
                 connection.viewInfoCall.execute(null, out connection._netViewInfo);
                 connection.unitListCall.execute(null, out connection._netUnitList);
                 RemoteFortressReader.BlockList resultList;
                 connection.blockListCall.execute(connection.blockRequest, out resultList);
-                foreach (RemoteFortressReader.MapBlock block in resultList.map_blocks) {
+                foreach (RemoteFortressReader.MapBlock block in resultList.map_blocks)
+                {
                     connection.pendingBlocks.EnqueueAndDisplace(new DFCoord(block.map_x, block.map_y, block.map_z), block);
                 }
                 connection.networkClient.resume_game();
-            } catch (System.Exception e) {
+            }
+            catch (System.Exception e)
+            {
                 throw new DFRemoteException(e);
             }
         }
 
-        public override void Terminate() {
+        public override void Terminate()
+        {
             connection.networkClient.disconnect();
             connection.networkClient = null;
         }
     }
 
     // Connection running on alternate thread.
-    private sealed class AltThreadMode : ConnectionMode {
+    private sealed class AltThreadMode : ConnectionMode
+    {
         private static readonly System.TimeSpan SLEEP_TIME = System.TimeSpan.FromMilliseconds(16);
 
         // Use to terminate computation thread
@@ -301,7 +366,9 @@ public class DFConnection : MonoBehaviour {
         private System.Object errorLock;
         private System.Exception crashError;
 
-        public AltThreadMode(DFConnection connection) : base(connection) {
+        public AltThreadMode(DFConnection connection)
+            : base(connection)
+        {
             finished = false;
             errorLock = new Object();
             crashError = null;
@@ -309,9 +376,12 @@ public class DFConnection : MonoBehaviour {
             connectionThread.Start();
         }
 
-        public override void Poll() {
-            lock (errorLock) {
-                if (crashError != null) {
+        public override void Poll()
+        {
+            lock (errorLock)
+            {
+                if (crashError != null)
+                {
                     System.Exception error = crashError;
                     crashError = null;
                     throw new DFRemoteException(error);
@@ -319,34 +389,46 @@ public class DFConnection : MonoBehaviour {
             }
         }
 
-        public override void Terminate() {
+        public override void Terminate()
+        {
             finished = true;
         }
 
-        private void RunForever() {
-            while (!finished) {
-                try {
+        private void RunForever()
+        {
+            while (!finished)
+            {
+                try
+                {
                     connection.networkClient.suspend_game();
-                    lock (connection.viewInfoLock) {
+                    lock (connection.viewInfoLock)
+                    {
                         connection.viewInfoCall.execute(null, out connection._netViewInfo);
                     }
-                    lock (connection.unitListLock) {
+                    lock (connection.unitListLock)
+                    {
                         connection.unitListCall.execute(null, out connection._netUnitList);
                     }
                     RemoteFortressReader.BlockList resultList;
-                    lock (connection.blockRequest) {
+                    lock (connection.blockRequest)
+                    {
                         connection.blockListCall.execute(connection.blockRequest, out resultList);
                     }
-                    lock (connection.pendingBlocks) {
-                        foreach (RemoteFortressReader.MapBlock block in resultList.map_blocks) {
+                    lock (connection.pendingBlocks)
+                    {
+                        foreach (RemoteFortressReader.MapBlock block in resultList.map_blocks)
+                        {
                             connection.pendingBlocks.EnqueueAndDisplace(new DFCoord(block.map_x, block.map_y, block.map_z), block);
                         }
                     }
                     connection.networkClient.resume_game();
                     Thread.Sleep(SLEEP_TIME);
-                } catch (System.Exception e) {
+                }
+                catch (System.Exception e)
+                {
                     // For now, just pass on any exceptions and exit
-                    lock (errorLock) {
+                    lock (errorLock)
+                    {
                         crashError = e;
                         return;
                     }
