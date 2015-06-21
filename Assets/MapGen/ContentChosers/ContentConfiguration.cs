@@ -83,6 +83,9 @@ abstract public class ContentConfiguration<T> where T : IContent, new()
             case "ramp":
                 output = new RampConfiguration<T>();
                 break;
+            case "item":
+                output = new ItemConfiguration<T>();
+                break;
             default:
                 Debug.LogError("Found unknown matching method \"" + elemRoot.Element(name).Elements().First().Name.LocalName + "\", assuming material.");
                 output = new MaterialConfiguration<T>();
