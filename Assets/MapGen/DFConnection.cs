@@ -58,7 +58,7 @@ public class DFConnection : MonoBehaviour
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.ViewInfo> viewInfoCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MapInfo> mapInfoCall;
     private RemoteFunction<dfproto.EmptyMessage> mapResetCall;
-    private color_ostream dfNetworkOut;
+    private color_ostream dfNetworkOut = new color_ostream();
     private RemoteClient networkClient;
 
     // Things we read from DF
