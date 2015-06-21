@@ -30,8 +30,11 @@
     </tileTexture>
     <tileTexture index = "5">
         <tiletype token="WALL:*:CONSTRUCTION:*:*" />
+		<subObject index="6">
+			<item token = "BAR"/>
+		</subObject>
         <subObject index="4">
-            <material token ="*:*:WOOD"/>
+            <item token ="WOOD"/>
         </subObject>
     </tileTexture>
     <tileTexture index = "3">

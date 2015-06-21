@@ -252,6 +252,7 @@ public class DFConnection : MonoBehaviour
     {
         MaterialTokenList.matTokenList = _netMaterialList.material_list;
         TiletypeTokenList.tiletypeTokenList = _netTiletypeList.tiletype_list;
+        ItemTokenList.itemTokenList = _netItemList.material_list;
         MapDataStore.tiletypeTokenList = _netTiletypeList.tiletype_list;
         MapDataStore.InitMainMap(_netMapInfo.block_size_x * 16, _netMapInfo.block_size_y * 16, _netMapInfo.block_size_z);
         Debug.Log("Materials fetched: " + _netMaterialList.material_list.Count);
