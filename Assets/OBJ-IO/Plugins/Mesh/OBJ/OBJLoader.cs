@@ -37,27 +37,27 @@ public class OBJLoader
         { "g", PushOBJGroup },
     };
 
-    //------------------------------------------------------------------------------------------------------------
-    private static readonly Dictionary<string, Action<string>> m_ParseMTLActionDictionary = new Dictionary<string, Action<string>>
-    {
-        { "newmtl", PushOBJMaterial },
-        { "Ka", (lEntry) => { m_CurrentMaterial.m_AmbientColor = Utils.ParseVector3String(lEntry).ToColor(); } },
-        { "Kd", (lEntry) => { m_CurrentMaterial.m_DiffuseColor = Utils.ParseVector3String(lEntry).ToColor(); } },
-        { "Ks", (lEntry) => { m_CurrentMaterial.m_SpecularColor = Utils.ParseVector3String(lEntry).ToColor(); } },
-        { "Ns", (lEntry) => { m_CurrentMaterial.m_SpecularCoefficient = lEntry.ParseInvariantFloat(); } },
-        { "d", (lEntry) => { m_CurrentMaterial.m_Transparency = lEntry.ParseInvariantFloat(); } },
-        { "Tr", (lEntry) => { m_CurrentMaterial.m_Transparency = lEntry.ParseInvariantFloat(); } },
-        { "illum", (lEntry) => { m_CurrentMaterial.m_IlluminationModel = lEntry.ParseInvariantInt(); } },
-        { "map_Ka", (lEntry) => { m_CurrentMaterial.m_AmbientTextureMap = lEntry; } },
-        { "map_Kd", (lEntry) => { m_CurrentMaterial.m_DiffuseTextureMap = lEntry; } },
-        { "map_Ks", (lEntry) => { m_CurrentMaterial.m_SpecularTextureMap = lEntry; } },
-        { "map_Ns", (lEntry) => { m_CurrentMaterial.m_SpecularHighlightTextureMap = lEntry; } },
-        { "map_d", (lEntry) => { m_CurrentMaterial.m_AlphaTextureMap = lEntry; } },
-        { "map_bump", (lEntry) => { m_CurrentMaterial.m_BumpMap = lEntry; } },
-        { "bump", (lEntry) => { m_CurrentMaterial.m_BumpMap = lEntry; } },
-        { "disp", (lEntry) => { m_CurrentMaterial.m_DisplacementMap = lEntry; } },
-        { "decal",(lEntry) => { m_CurrentMaterial.m_StencilDecalMap = lEntry; } },
-    };
+    ////------------------------------------------------------------------------------------------------------------
+    //private static readonly Dictionary<string, Action<string>> m_ParseMTLActionDictionary = new Dictionary<string, Action<string>>
+    //{
+    //    { "newmtl", PushOBJMaterial },
+    //    { "Ka", (lEntry) => { m_CurrentMaterial.m_AmbientColor = Utils.ParseVector3String(lEntry).ToColor(); } },
+    //    { "Kd", (lEntry) => { m_CurrentMaterial.m_DiffuseColor = Utils.ParseVector3String(lEntry).ToColor(); } },
+    //    { "Ks", (lEntry) => { m_CurrentMaterial.m_SpecularColor = Utils.ParseVector3String(lEntry).ToColor(); } },
+    //    { "Ns", (lEntry) => { m_CurrentMaterial.m_SpecularCoefficient = lEntry.ParseInvariantFloat(); } },
+    //    { "d", (lEntry) => { m_CurrentMaterial.m_Transparency = lEntry.ParseInvariantFloat(); } },
+    //    { "Tr", (lEntry) => { m_CurrentMaterial.m_Transparency = lEntry.ParseInvariantFloat(); } },
+    //    { "illum", (lEntry) => { m_CurrentMaterial.m_IlluminationModel = lEntry.ParseInvariantInt(); } },
+    //    { "map_Ka", (lEntry) => { m_CurrentMaterial.m_AmbientTextureMap = lEntry; } },
+    //    { "map_Kd", (lEntry) => { m_CurrentMaterial.m_DiffuseTextureMap = lEntry; } },
+    //    { "map_Ks", (lEntry) => { m_CurrentMaterial.m_SpecularTextureMap = lEntry; } },
+    //    { "map_Ns", (lEntry) => { m_CurrentMaterial.m_SpecularHighlightTextureMap = lEntry; } },
+    //    { "map_d", (lEntry) => { m_CurrentMaterial.m_AlphaTextureMap = lEntry; } },
+    //    { "map_bump", (lEntry) => { m_CurrentMaterial.m_BumpMap = lEntry; } },
+    //    { "bump", (lEntry) => { m_CurrentMaterial.m_BumpMap = lEntry; } },
+    //    { "disp", (lEntry) => { m_CurrentMaterial.m_DisplacementMap = lEntry; } },
+    //    { "decal",(lEntry) => { m_CurrentMaterial.m_StencilDecalMap = lEntry; } },
+    //};
 
     #endregion
 
