@@ -12,7 +12,7 @@ public class MapSelection : MonoBehaviour
     public Vector3 dfCoord = new Vector3();
     public Vector3 unityCoord = new Vector3();
 
-    private Vector3 mouseWorldPosition = Vector3.zero;
+    //private Vector3 mouseWorldPosition = Vector3.zero;
     private Vector3 mouseWorldPositionPrevious = Vector3.zero;
     private float mouseWorldPlaneHeight = 0f; 
 
@@ -30,7 +30,7 @@ public class MapSelection : MonoBehaviour
     {
         if (!DFConnection.Connected || !gameMap.enabled) return;
 
-        mouseWorldPosition = GetMouseWorldPosition(Input.mousePosition);
+        //mouseWorldPosition = GetMouseWorldPosition(Input.mousePosition);
 
         UpdateCameraPan();
 
