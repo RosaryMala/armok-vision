@@ -58,6 +58,7 @@ public class DFConnection : MonoBehaviour
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.ViewInfo> viewInfoCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MapInfo> mapInfoCall;
     private RemoteFunction<dfproto.EmptyMessage> mapResetCall;
+    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.BuildingList> buildingListCall;
     private color_ostream dfNetworkOut = new color_ostream();
     private RemoteClient networkClient;
 
@@ -68,6 +69,7 @@ public class DFConnection : MonoBehaviour
     private RemoteFortressReader.MaterialList _netItemList;
     private RemoteFortressReader.TiletypeList _netTiletypeList;
     private RemoteFortressReader.MapInfo _netMapInfo;
+    private RemoteFortressReader.BuildingList _netBuildingList;
 
     // Changing (used like queues):
     private RemoteFortressReader.ViewInfo _netViewInfo;
@@ -112,6 +114,14 @@ public class DFConnection : MonoBehaviour
         get
         {
             return _netTiletypeList;
+        }
+    }
+
+    public RemoteFortressReader.BuildingList NetBuildingList
+    {
+        get
+        {
+            return _netBuildingList;
         }
     }
     // Coordinates of the region we're pulling data from.
@@ -236,6 +246,8 @@ public class DFConnection : MonoBehaviour
         mapInfoCall.bind(networkClient, "GetMapInfo", "RemoteFortressReader");
         mapResetCall = new RemoteFunction<dfproto.EmptyMessage>();
         mapResetCall.bind(networkClient, "ResetMapHashes", "RemoteFortressReader");
+        buildingListCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.BuildingList>();
+        buildingListCall.bind(networkClient, "GetBuildingDefList", "RemoteFortressReader");
     }
 
     // Get information that only needs to be read once
@@ -245,6 +257,7 @@ public class DFConnection : MonoBehaviour
         itemListCall.execute(null, out _netItemList);
         tiletypeListCall.execute(null, out _netTiletypeList);
         mapInfoCall.execute(null, out _netMapInfo);
+        buildingListCall.execute(null, out _netBuildingList);
     }
 
     // Populate lists when we connect
@@ -257,6 +270,8 @@ public class DFConnection : MonoBehaviour
         MapDataStore.InitMainMap(_netMapInfo.block_size_x * 16, _netMapInfo.block_size_y * 16, _netMapInfo.block_size_z);
         Debug.Log("Materials fetched: " + _netMaterialList.material_list.Count);
         Debug.Log("Tiletypes fetched: " + _netTiletypeList.tiletype_list.Count);
+        Debug.Log("Itemtypes fetched: " + _netItemList.material_list.Count);
+        Debug.Log("Buildingtypes fetched: " + _netBuildingList.building_list.Count);
     }
 
     void Start()

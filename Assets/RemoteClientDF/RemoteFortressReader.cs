@@ -332,6 +332,87 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BuildingType")]
+  public partial class BuildingType : global::ProtoBuf.IExtensible
+  {
+    public BuildingType() {}
+    
+    private int _building_type;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"building_type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int building_type
+    {
+      get { return _building_type; }
+      set { _building_type = value; }
+    }
+    private int _building_subtype;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"building_subtype", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int building_subtype
+    {
+      get { return _building_subtype; }
+      set { _building_subtype = value; }
+    }
+    private int _building_custom;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"building_custom", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int building_custom
+    {
+      get { return _building_custom; }
+      set { _building_custom = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BuildingDefinition")]
+  public partial class BuildingDefinition : global::ProtoBuf.IExtensible
+  {
+    public BuildingDefinition() {}
+    
+    private RemoteFortressReader.BuildingType _building_type;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"building_type", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public RemoteFortressReader.BuildingType building_type
+    {
+      get { return _building_type; }
+      set { _building_type = value; }
+    }
+    private string _id = "";
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string id
+    {
+      get { return _id; }
+      set { _id = value; }
+    }
+    private string _name = "";
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string name
+    {
+      get { return _name; }
+      set { _name = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BuildingList")]
+  public partial class BuildingList : global::ProtoBuf.IExtensible
+  {
+    public BuildingList() {}
+    
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.BuildingDefinition> _building_list = new global::System.Collections.Generic.List<RemoteFortressReader.BuildingDefinition>();
+    [global::ProtoBuf.ProtoMember(1, Name=@"building_list", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.BuildingDefinition> building_list
+    {
+      get { return _building_list; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MaterialList")]
   public partial class MaterialList : global::ProtoBuf.IExtensible
   {
