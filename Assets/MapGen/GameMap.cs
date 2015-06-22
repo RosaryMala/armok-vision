@@ -186,6 +186,7 @@ public class GameMap : MonoBehaviour
         SaveTileTypeList();
         SaveMaterialList(DFConnection.Instance.NetMaterialList.material_list, "MaterialList.csv");
         SaveMaterialList(DFConnection.Instance.NetItemList.material_list, "ItemList.csv");
+        SaveBuildingList();
 
         UpdateView();
 
@@ -345,6 +346,30 @@ public class GameMap : MonoBehaviour
                     item.material + ":" +
                     item.variant + ":" +
                     item.direction
+                    );
+            }
+        }
+    }
+    void SaveBuildingList()
+    {
+        try
+        {
+            File.Delete("BuildingList.csv");
+        }
+        catch (IOException)
+        {
+            return;
+        }
+        using (StreamWriter writer = new StreamWriter("BuildingList.csv"))
+        {
+            foreach (var item in DFConnection.Instance.NetBuildingList.building_list)
+            {
+                writer.WriteLine(
+                    item.name + ";" +
+                    item.id + ";" +
+                    item.building_type.building_type + ":" +
+                    item.building_type.building_subtype + ":" +
+                    item.building_type.building_custom
                     );
             }
         }

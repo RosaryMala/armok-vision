@@ -24,11 +24,7 @@ public class ItemConfiguration<T> : ContentConfiguration<T> where T : IContent, 
             XAttribute elemToken = elemItem.Attribute("token");
             if (elemToken != null)
             {
-                if (elemToken.Value == "NONE")
-                    defaultItem = content;
-                else
-                    itemMatcher[elemToken.Value] = content;
-                continue;
+                itemMatcher[elemToken.Value] = content;
             }
         }
     }
