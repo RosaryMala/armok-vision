@@ -2,6 +2,12 @@
 <tileTextures>
     <tileTexture index = "1">
         <tiletype token="*:SMOOTH:*:*:*" />
+        <subObject index="1">
+            <material token ="INORGANIC:*"/>
+            <subObject index="6">
+                <item token = "BAR"/>
+            </subObject>
+        </subObject>
         <subObject index="4">
             <material token ="*:*:WOOD"/>
         </subObject>
@@ -24,15 +30,26 @@
     </tileTexture>
     <tileTexture index = "1">
         <tiletype token="*:*:CONSTRUCTION:*:*" />
+        <subObject index="1">
+            <material token ="INORGANIC:*"/>
+            <subObject index="6">
+                <item token = "BAR"/>
+            </subObject>
+        </subObject>
         <subObject index="4">
             <material token ="*:*:WOOD"/>
+        </subObject>
+        <subObject index="17">
+            <material token ="GLASS_GREEN"/>
+            <material token ="GLASS_CLEAR"/>
+            <material token ="GLASS_CRYSTAL"/>
         </subObject>
     </tileTexture>
     <tileTexture index = "5">
         <tiletype token="WALL:*:CONSTRUCTION:*:*" />
-		<subObject index="6">
-			<item token = "BAR"/>
-		</subObject>
+        <subObject index="6">
+            <item token = "BAR"/>
+        </subObject>
         <subObject index="4">
             <item token ="WOOD"/>
         </subObject>

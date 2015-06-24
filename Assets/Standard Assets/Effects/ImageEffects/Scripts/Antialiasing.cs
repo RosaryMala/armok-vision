@@ -104,6 +104,19 @@ namespace UnityStandardAssets.ImageEffects
             return isSupported;
         }
 
+        void Awake()
+        {
+            switch (QualitySettings.names[QualitySettings.GetQualityLevel()])
+            {
+                case "Fastest":
+                case "Fast":
+                case "Simple":
+                    enabled = false;
+                    break;
+                default:
+                    break;
+            }
+        }
 
         public void OnRenderImage(RenderTexture source, RenderTexture destination)
         {
