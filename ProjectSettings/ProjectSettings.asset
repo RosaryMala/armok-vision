@@ -26,7 +26,7 @@ PlayerSettings:
   m_ActiveColorSpace: 1
   m_MTRendering: 1
   m_MobileMTRendering: 0
-  m_UseDX11: 0
+  m_UseDX11: 1
   m_Stereoscopic3D: 0
   iosShowActivityIndicatorOnLoading: -1
   androidShowActivityIndicatorOnLoading: -1
