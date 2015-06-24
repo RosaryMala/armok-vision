@@ -56,6 +56,20 @@ namespace UnityStandardAssets.ImageEffects
                 DestroyImmediate (fastBloomMaterial);
         }
 
+        void Awake()
+        {
+            switch (QualitySettings.names[QualitySettings.GetQualityLevel()])
+            {
+                case "Fastest":
+                case "Fast":
+                case "Simple":
+                    enabled = false;
+                    break;
+                default:
+                    break;
+            }
+        }
+
         void OnRenderImage (RenderTexture source, RenderTexture destination)
 		{
             if (CheckResources() == false)
