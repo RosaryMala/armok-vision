@@ -169,7 +169,7 @@ Material:
       data:
         first:
           name: _BumpScale
-        second: 1
+        second: .5
       data:
         first:
           name: _OcclusionStrength
@@ -177,7 +177,7 @@ Material:
       data:
         first:
           name: _DetailNormalMapScale
-        second: .400000006
+        second: .200000003
       data:
         first:
           name: _UVSec

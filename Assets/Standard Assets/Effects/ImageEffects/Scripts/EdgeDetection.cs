@@ -47,19 +47,6 @@ namespace UnityStandardAssets.ImageEffects
             return isSupported;
         }
 
-        void Awake()
-        {
-            switch (QualitySettings.names[QualitySettings.GetQualityLevel()])
-            {
-                case "Fastest":
-                case "Fast":
-                    enabled = false;
-                    break;
-                default:
-                    break;
-            }
-        }
-
 
         new void Start ()
 		{

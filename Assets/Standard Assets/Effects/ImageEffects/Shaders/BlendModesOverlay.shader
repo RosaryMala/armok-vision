@@ -77,7 +77,7 @@ if (Target <= ½) R = (2xTarget) x Blend
 	
 	half4 fragAlphaBlend (v2f i) : SV_Target {
 		half4 toAdd = tex2D(_Overlay, i.uv[0]) ;
-		return lerp(tex2D(_MainTex, i.uv[1]), toAdd, toAdd.a);
+		return lerp(tex2D(_MainTex, i.uv[1]), toAdd, toAdd.a * _Intensity);
 	}	
 
 

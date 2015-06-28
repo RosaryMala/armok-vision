@@ -420,8 +420,8 @@ abstract class BlockMesher {
             }
         }
         buffer.color = newColor;
-        buffer.uv1Index = matTexIndex;
-        buffer.uv2Index = tileTexIndex;
+        buffer.uv1Transform = Matrix4x4.TRS(new Vector2(((matTexIndex % 16) / 16.0f), ((15 - (matTexIndex / 16)) / 16.0f)), Quaternion.identity, new Vector2(1.0f / 16.0f, 1.0f / 16.0f));
+        buffer.uv2Transform = Matrix4x4.TRS(new Vector2(((tileTexIndex % 16) / 16.0f), ((15 - (tileTexIndex / 16)) / 16.0f)), Quaternion.identity, new Vector2(1.0f / 16.0f, 1.0f / 16.0f));
         buffer.hiddenFaces = MeshCombineUtility.HiddenFaces.None;
         if (tile.North != null && tile.North.Value.isWall)
             buffer.hiddenFaces |= MeshCombineUtility.HiddenFaces.North;

@@ -17,7 +17,7 @@ Shader "Hidden/BrightPassFilterForBloom"
 	
 	sampler2D _MainTex;	
 	
-	half4 threshhold;
+	half4 threshold;
 	half useSrcAlphaAsMask;
 		
 	v2f vert( appdata_img v ) 
@@ -33,7 +33,7 @@ Shader "Hidden/BrightPassFilterForBloom"
 		half4 color = tex2D(_MainTex, i.uv);
 		//color = color * saturate((color-threshhold.x) * 75.0); // didn't go well with HDR and din't make sense
 		color = color * lerp(1.0, color.a, useSrcAlphaAsMask);
-		color = max(half4(0,0,0,0), color-threshhold.x);
+		color = max(half4(0,0,0,0), color-threshold.x);
 		return color;
 	}
 

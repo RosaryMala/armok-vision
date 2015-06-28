@@ -18,7 +18,7 @@ public class MapSelection : MonoBehaviour
 
     const int MAXIMUM_CHECKS = 5000;
 
-    private Material highlightLineMaterial;
+    public Material highlightLineMaterial;
 
     void Awake()
     {
@@ -370,8 +370,6 @@ public class MapSelection : MonoBehaviour
 
     void DebugHighlightRegion(DFCoord a, DFCoord b, Color color)
     {
-
-        InitMaterial();
         highlightLineMaterial.SetPass(0);
 
 
@@ -421,22 +419,5 @@ public class MapSelection : MonoBehaviour
         GL.Vertex3(upC.x, upC.y, lowC.z);
         GL.Vertex3(lowC.x, upC.y, lowC.z);
         GL.End();
-    }
-
-    void InitMaterial()
-    {
-        // From http://answers.unity3d.com/questions/482128/draw-grid-lines-in-game-view.html
-        if (!highlightLineMaterial)
-        {
-            highlightLineMaterial = new Material("Shader \"Lines/Colored Blended\" {" +
-                                        "SubShader { Pass { " +
-                                        "    Blend SrcAlpha OneMinusSrcAlpha " +
-                                        "    ZWrite Off Cull Off Fog { Mode Off } " +
-                                        "    BindChannels {" +
-                                        "      Bind \"vertex\", vertex Bind \"color\", color }" +
-                                        "} } }");
-            highlightLineMaterial.hideFlags = HideFlags.HideAndDontSave;
-            highlightLineMaterial.shader.hideFlags = HideFlags.HideAndDontSave;
-        }
     }
 }
