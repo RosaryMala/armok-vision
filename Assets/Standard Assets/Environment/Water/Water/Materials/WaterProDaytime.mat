@@ -2,14 +2,13 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 5
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: WaterProDaytime
   m_Shader: {fileID: 4800000, guid: 1cac2e0bcc34e4b3cbb4bd85982eba83, type: 3}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 5
+  m_ShaderKeywords: []
   m_CustomRenderQueue: -1
   m_SavedProperties:
     serializedVersion: 2
@@ -79,24 +78,20 @@ Material:
     m_Colors:
       data:
         first:
-          name: _MainTex_ST
-        second: {r: 1, g: 1, b: 0, a: 0}
-      data:
-        first:
-          name: WaveSpeed
-        second: {r: 9, g: 4.5, b: -8, a: -3.5}
-      data:
-        first:
-          name: _BumpMap_ST
-        second: {r: 1, g: 1, b: 0, a: 0}
-      data:
-        first:
           name: _RefrColor
         second: {r: .937254906, g: .937254906, b: .937254906, a: 1}
       data:
         first:
           name: _Fresnel_ST
         second: {r: 1, g: 1, b: 0, a: 0}
+      data:
+        first:
+          name: _BumpMap_ST
+        second: {r: 1, g: 1, b: 0, a: 0}
+      data:
+        first:
+          name: WaveSpeed
+        second: {r: 9, g: 4.5, b: -8, a: -3.5}
       data:
         first:
           name: _ReflectiveColor_ST
@@ -112,6 +107,10 @@ Material:
       data:
         first:
           name: _RefractionTex_ST
+        second: {r: 1, g: 1, b: 0, a: 0}
+      data:
+        first:
+          name: _MainTex_ST
         second: {r: 1, g: 1, b: 0, a: 0}
       data:
         first:

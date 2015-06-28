@@ -14,4 +14,12 @@ public class TileTextureContent : IContent {
         }
         return int.TryParse(indexAtt.Value, out value);
     }
+
+
+    public object ExternalStorage
+    {
+        set
+        {
+        }
+    }
 }

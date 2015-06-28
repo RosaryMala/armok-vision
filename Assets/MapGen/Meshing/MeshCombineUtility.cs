@@ -25,8 +25,8 @@ public class MeshCombineUtility
         public MeshData meshData;
         public Matrix4x4 transform;
         public Color color;
-        public int uv1Index;
-        public int uv2Index;
+        public Matrix4x4 uv1Transform;
+        public Matrix4x4 uv2Transform;
         public HiddenFaces hiddenFaces;
     }
 
@@ -105,8 +105,7 @@ public class MeshCombineUtility
         {
             if (combines[combIndex].meshData != null)
             {
-                Matrix4x4 transform = Matrix4x4.TRS(new Vector2(((combines[combIndex].uv1Index % 16) / 16.0f), ((15 - (combines[combIndex].uv2Index / 16)) / 16.0f)), Quaternion.identity, new Vector2(1.0f / 16.0f, 1.0f / 16.0f));
-                Copy(combines[combIndex].meshData.vertexCount, combines[combIndex].meshData.uv, uv, ref offset, transform);
+                Copy(combines[combIndex].meshData.vertexCount, combines[combIndex].meshData.uv, uv, ref offset, combines[combIndex].uv1Transform);
             }
         }
 
@@ -115,8 +114,7 @@ public class MeshCombineUtility
         {
             if (combines[combIndex].meshData != null)
             {
-                Matrix4x4 transform = Matrix4x4.TRS(new Vector2( ((combines[combIndex].uv2Index % 16) / 16.0f),  ((15 - (combines[combIndex].uv2Index / 16)) / 16.0f)), Quaternion.identity, new Vector2(1.0f / 16.0f, 1.0f / 16.0f));
-                Copy(combines[combIndex].meshData.vertexCount, combines[combIndex].meshData.uv, uv2, ref offset, transform);
+                Copy(combines[combIndex].meshData.vertexCount, combines[combIndex].meshData.uv, uv2, ref offset, combines[combIndex].uv2Transform);
             }
         }
 

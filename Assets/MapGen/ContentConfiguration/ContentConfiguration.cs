@@ -1,6 +1,7 @@
-﻿using System.Xml.Linq;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
+using UnityEngine;
 
 abstract public class ContentConfiguration<T> where T : IContent, new()
 {
@@ -30,7 +31,7 @@ abstract public class ContentConfiguration<T> where T : IContent, new()
 
     string nodeName { get; set; }
 
-    void ParseContentElement(XElement elemtype)
+    void ParseContentElement(XElement elemtype, object externalStorage)
     {
         T value = new T();
         if (!value.AddTypeElement(elemtype))
@@ -40,22 +41,23 @@ abstract public class ContentConfiguration<T> where T : IContent, new()
             //There's nothing to work with.
             return;
         }
+        value.ExternalStorage = externalStorage;
         Content content = new Content();
         content.defaultItem = value;
         ParseElementConditions(elemtype, content);
         if (elemtype.Element("subObject") != null)
         {
             content.overloadedItem = GetFromRootElement(elemtype, "subObject");
-            content.overloadedItem.AddSingleContentConfig(elemtype);
+            content.overloadedItem.AddSingleContentConfig(elemtype, externalStorage);
         }
     }
 
-    public bool AddSingleContentConfig(XElement elemRoot)
+    public bool AddSingleContentConfig(XElement elemRoot, object externalStorage = null)
     {
         var elemValues = elemRoot.Elements(nodeName);
         foreach (XElement elemValue in elemValues)
         {
-            ParseContentElement(elemValue);
+            ParseContentElement(elemValue, externalStorage);
         }
         return true;
     }
