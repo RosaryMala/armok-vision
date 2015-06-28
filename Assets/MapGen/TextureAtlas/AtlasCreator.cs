@@ -6,7 +6,7 @@ using System.Text;
 using UnityEngine;
 
 public class AtlasCreator {
-	public static int AtlasSize = 1024;
+	public static int AtlasSize = 2046;
 	
 	public class AtlasNode {
 		public AtlasNode[] child = null;
@@ -204,7 +204,7 @@ public class AtlasCreator {
 		string file = Application.persistentDataPath + "/Debug/" + name + ".png";
 		
 		System.IO.File.WriteAllBytes(file, bytes);
-		//Debug.LogError("SAVE TO: " + file);
+		Debug.Log("SAVE TO: " + file);
 	}
 	
 	public static Atlas[] CreateAtlas(string name, Texture2D[] textures, Atlas startWith = null) {
