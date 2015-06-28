@@ -1,28 +1,28 @@
 <?xml version="1.0"?>
 <materialTextures>
-    <materialTexture index="0">
+    <materialTexture file="Grey.png">
         <material token="NONE" />
-        <subObject index ="5">
+        <subObject file="Leaves.png">
             <tiletype token="BRANCH:*:*:*:*" />
             <tiletype token="TWIG:*:*:*:*" />
             <tiletype token="SHRUB:*:*:*:*" />
             <tiletype token="SAPLING:*:*:*:*" />
         </subObject>
     </materialTexture>
-    <materialTexture index="0">
+    <materialTexture file="Grey.png">
         <material token="PLANT:*:*" />
         <!--<subObject index ="4">
             <tiletype token="*:*:GRASS_LIGHT:*:*" />
             <tiletype token="*:*:GRASS_DARK:*:*" />
         </subObject>-->
     </materialTexture>
-    <materialTexture index="2">
+    <materialTexture file="Marble.png">
         <material token="*:MARBLE" />
     </materialTexture>
-    <materialTexture index="3">
+    <materialTexture file="Stone.png">
         <material token="INORGANIC:*" />
     </materialTexture>
-    <materialTexture index="0">
+    <materialTexture file="Grey.png">
         <material token="*:IRON" />
         <material token="*:GOLD" />
         <material token="*:SILVER" />
