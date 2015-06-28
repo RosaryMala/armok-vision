@@ -50,7 +50,6 @@ public class TextureContent : IContent
         tex.name = filePath;
 
         storageIndex = store.AddTexture(tex);
-        Debug.Log("Added texture " + filePath);
         return true;
     }
 

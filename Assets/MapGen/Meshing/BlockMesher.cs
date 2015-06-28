@@ -347,6 +347,7 @@ abstract class BlockMesher {
         bool dontCare, success;
         stencilTiles = MeshCombineUtility.ColorCombine(temp.stencilMeshBuffer, out dontCare);
         tiles = MeshCombineUtility.ColorCombine(temp.meshBuffer, out success);
+
         return success;
     }
 
