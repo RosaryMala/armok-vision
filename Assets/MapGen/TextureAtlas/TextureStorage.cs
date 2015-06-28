@@ -8,9 +8,15 @@ public class TextureStorage
 
     AtlasCreator.Atlas atlas;
 
+    Dictionary<int, string> texIndexToName;
+
+    Dictionary<string, int> nameToAtlasIndex;
+
+    Dictionary<int, int> texIndexToAtlasIndex;
+
     public Matrix4x4 getUVTransform(int index)
     {
-        return atlas.uvRects[index].UVTransform;
+        return atlas.uvRects[texIndexToAtlasIndex[index]].UVTransform;
     }
 
     public Texture2D AtlasTexture
@@ -25,7 +31,10 @@ public class TextureStorage
     {
         if (textureList == null)
             textureList = new List<Texture2D>();
+        if (texIndexToName == null)
+            texIndexToName = new Dictionary<int, string>();
         textureList.Add(tex);
+        texIndexToName[textureList.Count - 1] = tex.name;
         return textureList.Count - 1;
     }
 
@@ -35,6 +44,18 @@ public class TextureStorage
         AtlasCreator.Atlas[] atlasList = AtlasCreator.CreateAtlas(name, textureList.ToArray());
         atlas = atlasList[0];
         textureList.Clear();
+
+        texIndexToAtlasIndex = new Dictionary<int, int>();
+        nameToAtlasIndex = new Dictionary<string, int>();
+        for (int i = 0; i < atlas.uvRects.Length; i++)
+        {
+            nameToAtlasIndex[atlas.uvRects[i].name] = i;
+        }
+
+        foreach (var item in texIndexToName)
+        {
+            texIndexToAtlasIndex[item.Key] = nameToAtlasIndex[item.Value];
+        }
 
         AtlasCreator.SaveAtlas(atlas, name);
     }
