@@ -224,7 +224,8 @@ public class AtlasCreator {
 			Atlas _atlas = startWith;
 			if (_atlas == null) {
 				_atlas = new Atlas();
-				_atlas.texture = new Texture2D(AtlasSize, AtlasSize, TextureFormat.RGBA32, false);
+				_atlas.texture = new Texture2D(AtlasSize, AtlasSize, TextureFormat.RGBA32, true);
+                _atlas.texture.filterMode = FilterMode.Bilinear;
 				_atlas.root = new AtlasNode();
 				_atlas.root.rc = new Rect(0, 0, AtlasSize, AtlasSize);
 			}
