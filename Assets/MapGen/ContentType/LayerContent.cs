@@ -28,4 +28,12 @@ public class LayerContent : IContent
         }
         return true;
     }
+
+
+    public object ExternalStorage
+    {
+        set
+        {
+        }
+    }
 }

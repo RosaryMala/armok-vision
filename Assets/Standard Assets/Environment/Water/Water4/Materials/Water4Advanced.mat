@@ -2,14 +2,13 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 5
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Water4Advanced
   m_Shader: {fileID: 4800000, guid: 475c4a4e617a8401b84ca7b32c7cc460, type: 3}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 5
+  m_ShaderKeywords: []
   m_CustomRenderQueue: -1
   m_SavedProperties:
     serializedVersion: 2
@@ -72,6 +71,13 @@ Material:
           m_Offset: {x: 1, y: 1}
       data:
         first:
+          name: _ReflectiveColorCube
+        second:
+          m_Texture: {fileID: 8900000, guid: 0620bdf0302d84423be4aa15b82a0e11, type: 2}
+          m_Scale: {x: .150000006, y: .100000001}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
           name: _WavesTex
         second:
           m_Texture: {fileID: 0}
@@ -97,13 +103,6 @@ Material:
         second:
           m_Texture: {fileID: 2800000, guid: dc30b984e8e3c4cdfb38d5fceb411602, type: 2}
           m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _ReflectiveColorCube
-        second:
-          m_Texture: {fileID: 8900000, guid: 0620bdf0302d84423be4aa15b82a0e11, type: 2}
-          m_Scale: {x: .150000006, y: .100000001}
           m_Offset: {x: 0, y: 0}
       data:
         first:
@@ -165,10 +164,6 @@ Material:
         second: .0462896563
       data:
         first:
-          name: _InvFade
-        second: .628782988
-      data:
-        first:
           name: _ReflDistort
         second: .926769614
       data:
@@ -183,6 +178,10 @@ Material:
         first:
           name: _GerstnerIntensity
         second: 1.67142856
+      data:
+        first:
+          name: _InvFade
+        second: .628782988
       data:
         first:
           name: _HeightDisplacement
@@ -250,24 +249,20 @@ Material:
         second: {r: 1, g: 1, b: 1, a: 1}
       data:
         first:
-          name: _MainTex_ST
-        second: {r: 1, g: 1, b: 0, a: 0}
-      data:
-        first:
-          name: WaveSpeed
-        second: {r: 1.08616495, g: 4.44057512, b: 12.1051464, a: -3.02064466}
-      data:
-        first:
-          name: _BumpMap_ST
-        second: {r: 1, g: 1, b: 0, a: 0}
-      data:
-        first:
           name: _RefrColor
         second: {r: .523390472, g: .947761178, b: .912149608, a: 1}
       data:
         first:
           name: _Fresnel_ST
         second: {r: 1, g: 1, b: 0, a: 0}
+      data:
+        first:
+          name: _BumpMap_ST
+        second: {r: 1, g: 1, b: 0, a: 0}
+      data:
+        first:
+          name: WaveSpeed
+        second: {r: 1.08616495, g: 4.44057512, b: 12.1051464, a: -3.02064466}
       data:
         first:
           name: _ReflectiveColor_ST
@@ -283,6 +278,10 @@ Material:
       data:
         first:
           name: _RefractionTex_ST
+        second: {r: 1, g: 1, b: 0, a: 0}
+      data:
+        first:
+          name: _MainTex_ST
         second: {r: 1, g: 1, b: 0, a: 0}
       data:
         first:
@@ -354,6 +353,14 @@ Material:
         second: {r: .70338881, g: -.679999888, b: .717573524, a: -.200000003}
       data:
         first:
+          name: _ReflectiveColorCube_ST
+        second: {r: 1, g: 1, b: 0, a: 0}
+      data:
+        first:
+          name: _WaveScale4
+        second: {r: .100000001, g: .100000001, b: .00999999978, a: .00999999978}
+      data:
+        first:
           name: _WaveOffset
         second: {r: 1, g: 1, b: -.00999999978, a: -.00999999978}
       data:
@@ -364,14 +371,6 @@ Material:
         first:
           name: _RefractionFog
         second: {r: .505434752, g: .505434752, b: .505434752, a: .5}
-      data:
-        first:
-          name: _ReflectiveColorCube_ST
-        second: {r: 1, g: 1, b: 0, a: 0}
-      data:
-        first:
-          name: _WaveScale4
-        second: {r: .100000001, g: .100000001, b: .00999999978, a: .00999999978}
       data:
         first:
           name: _Displacement

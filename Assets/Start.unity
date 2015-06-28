@@ -420,8 +420,7 @@ MonoBehaviour:
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -687,7 +686,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1404020243}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4975a6e437fc3b149a8cd508ce5bdd69, type: 3}
   m_Name: 
@@ -704,7 +703,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1404020243}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 646b5bc27a658f447b1d929fd5ffbd70, type: 3}
   m_Name: 
@@ -748,7 +747,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1404020243}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 75febd242c999f04d9654522a10c006b, type: 3}
   m_Name: 
@@ -813,6 +812,7 @@ Camera:
   m_OcclusionCulling: 0
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!4 &1404020253
 Transform:
   m_ObjectHideFlags: 0
@@ -853,6 +853,8 @@ MonoBehaviour:
   debugMode: 0
   dfCoord: {x: 0, y: 0, z: 0}
   unityCoord: {x: 0, y: 0, z: 0}
+  highlightLineMaterial: {fileID: 2100000, guid: 1c9356298dc65654d87468f4b00d9831,
+    type: 2}
 --- !u!114 &1404020256
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -887,13 +889,13 @@ MonoBehaviour:
   backfaceDepthDownsample: 8
   ssrDownsample: 0
   blurDownsample: 0
-  iterations: 20
+  iterations: 30
   binarySearchIterations: 5
   pixelStride: 30
-  pixelStrideZCutoff: 100
+  pixelStrideZCutoff: 500
   pixelZSizeOffset: .100000001
   maxRayDistance: 200
-  screenEdgeFadeStart: .75
+  screenEdgeFadeStart: .899999976
   eyeFadeStart: 0
   eyeFadeEnd: 1
   maxBlurRadius: 8
@@ -1036,6 +1038,7 @@ MonoBehaviour:
   m_SubmitButton: Submit
   m_CancelButton: Cancel
   m_InputActionsPerSecond: 10
+  m_RepeatDelay: .5
   m_AllowActivationOnMobileDevice: 0
 --- !u!114 &1615664371
 MonoBehaviour:

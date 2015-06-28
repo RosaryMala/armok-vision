@@ -59,4 +59,12 @@ public class ColorContent : IContent
         return true;
 
     }
+
+
+    public object ExternalStorage
+    {
+        set
+        {
+        }
+    }
 }
