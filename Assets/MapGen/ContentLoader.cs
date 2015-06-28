@@ -88,21 +88,24 @@ public class ContentLoader
         }
     }
 
+    TextureStorage materialTextureStorage;
+
 
     public ContentConfiguration<ColorContent> ColorConfiguration { get; private set; }
-    public ContentConfiguration<IndexContent> MaterialTextureConfiguration { get; private set; }
+    public ContentConfiguration<TextureContent> MaterialTextureConfiguration { get; private set; }
     public ContentConfiguration<IndexContent> TileTextureConfiguration { get; private set; }
     public ContentConfiguration<MeshContent> TileMeshConfiguration { get; private set; }
     public ContentConfiguration<LayerContent> MaterialLayerConfiguration { get; private set; }
 
 
-    //public ContentLoader()
-    //{
+    public ContentLoader()
+    {
+        materialTextureStorage = new TextureStorage();
     //    colorConfiguration = new MaterialConfiguration<ColorContent>();
     //    colorConfiguration.nodeName = "color";
     //    materialTextureConfiguration = new MaterialConfiguration<IndexContent>();
     //    tileTextureConfiguration = new TileConfiguration<IndexContent>();
-    //}
+    }
 
 
     public bool ParseContentIndexFile(string path)
@@ -164,8 +167,8 @@ public class ContentLoader
                     break;
                 case "materialTextures":
                     if(MaterialTextureConfiguration == null)
-                        MaterialTextureConfiguration = ContentConfiguration<IndexContent>.GetFromRootElement(doc, "materialTexture");
-                    MaterialTextureConfiguration.AddSingleContentConfig(doc);
+                        MaterialTextureConfiguration = ContentConfiguration<TextureContent>.GetFromRootElement(doc, "materialTexture");
+                    MaterialTextureConfiguration.AddSingleContentConfig(doc, materialTextureStorage);
                     break;
                 case "tileTextures":
                     if(TileTextureConfiguration == null)
@@ -188,6 +191,16 @@ public class ContentLoader
             doc = doc.NextNode as XElement;
         }
         return runningResult;
+    }
+
+    public void FinalizeTextureAtlases()
+    {
+        materialTextureStorage.BuildAtlas("MaterialTexture");
+
+        GameMap gameMap = GameObject.FindObjectOfType<GameMap>();
+        gameMap.basicTerrainMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
+        gameMap.stencilTerrainMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
+
     }
 
 }

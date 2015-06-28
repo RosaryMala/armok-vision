@@ -78,6 +78,7 @@ abstract class BlockMesher {
         System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         watch.Start();
         contentLoader.ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt");
+        contentLoader.FinalizeTextureAtlases();
         watch.Stop();
         Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
 
@@ -364,10 +365,10 @@ abstract class BlockMesher {
         IndexContent tileTexContent;
         if (contentLoader.TileTextureConfiguration.GetValue (tile, layer, out tileTexContent))
             tileTexIndex = tileTexContent.value;
-        int matTexIndex = 0;
-        IndexContent matTexContent;
+        Matrix4x4 matTexTransform = Matrix4x4.identity;
+        TextureContent matTexContent;
         if (contentLoader.MaterialTextureConfiguration.GetValue (tile, layer, out matTexContent))
-            matTexIndex = matTexContent.value;
+            matTexTransform = matTexContent.UVTransform;
         ColorContent newColorContent;
         Color newColor;
         if (contentLoader.ColorConfiguration.GetValue (tile, layer, out newColorContent)) {
@@ -420,7 +421,7 @@ abstract class BlockMesher {
             }
         }
         buffer.color = newColor;
-        buffer.uv1Transform = Matrix4x4.TRS(new Vector2(((matTexIndex % 16) / 16.0f), ((15 - (matTexIndex / 16)) / 16.0f)), Quaternion.identity, new Vector2(1.0f / 16.0f, 1.0f / 16.0f));
+        buffer.uv1Transform = matTexTransform;
         buffer.uv2Transform = Matrix4x4.TRS(new Vector2(((tileTexIndex % 16) / 16.0f), ((15 - (tileTexIndex / 16)) / 16.0f)), Quaternion.identity, new Vector2(1.0f / 16.0f, 1.0f / 16.0f));
         buffer.hiddenFaces = MeshCombineUtility.HiddenFaces.None;
         if (tile.North != null && tile.North.Value.isWall)

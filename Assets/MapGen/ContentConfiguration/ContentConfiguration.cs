@@ -34,6 +34,7 @@ abstract public class ContentConfiguration<T> where T : IContent, new()
     void ParseContentElement(XElement elemtype, object externalStorage)
     {
         T value = new T();
+        value.ExternalStorage = externalStorage;
         if (!value.AddTypeElement(elemtype))
         {
             Debug.LogError("Couldn't parse " + elemtype);
