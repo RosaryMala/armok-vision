@@ -806,6 +806,48 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Building")]
+  public partial class Building : global::ProtoBuf.IExtensible
+  {
+    public Building() {}
+    
+    private int _min_x = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"min_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int min_x
+    {
+      get { return _min_x; }
+      set { _min_x = value; }
+    }
+    private int _min_y = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"min_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int min_y
+    {
+      get { return _min_y; }
+      set { _min_y = value; }
+    }
+    private RemoteFortressReader.BuildingType _type = null;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"type", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.BuildingType type
+    {
+      get { return _type; }
+      set { _type = value; }
+    }
+    private RemoteFortressReader.MatPair _main_material = null;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"main_material", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.MatPair main_material
+    {
+      get { return _main_material; }
+      set { _main_material = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
     [global::ProtoBuf.ProtoContract(Name=@"TiletypeShape")]
     public enum TiletypeShape
     {

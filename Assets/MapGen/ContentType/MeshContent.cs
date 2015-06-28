@@ -54,4 +54,12 @@ public class MeshContent : IContent
         lOBJData = null;
         return true;
     }
+
+
+    public object ExternalStorage
+    {
+        set
+        {
+        }
+    }
 }
