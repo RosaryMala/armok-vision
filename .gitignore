@@ -16,3 +16,4 @@
 *.csv#
 Armok Vision.app
 /*.csv
+/Debug
