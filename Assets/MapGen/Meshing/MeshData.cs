@@ -25,7 +25,10 @@ public class MeshData
         uv = target.uv;
         uv2 = target.uv2;
         colors = target.colors;
-        triangles = target.GetTriangles(0); // Will the submesh always be 0?
+        if(target.GetTopology(0) == MeshTopology.Triangles)
+            triangles = target.GetTriangles(0); // Will the submesh always be 0?
+        else
+            triangles = new int[0];
     }
 
     public MeshData (

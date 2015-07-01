@@ -1,79 +1,77 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<tileTextures>
-    <tileTexture index = "1">
+<shapeTextures>
+    <shapeTexture normal="Flat_N.png" occlusion="Flat_O.png">
         <tiletype token="*:SMOOTH:*:*:*" />
-        <subObject index="1">
+        <subObject normal="Flat_N.png" occlusion="Flat_O.png">
             <material token ="INORGANIC:*"/>
-            <subObject index="6">
+            <subObject normal="Bars_N.png" occlusion="Bars_O.png">
                 <item token = "BAR"/>
             </subObject>
         </subObject>
-        <subObject index="4">
+        <subObject normal="Logs_N.png" occlusion="Logs_O.png">
             <material token ="*:*:WOOD"/>
         </subObject>
-        <subObject index="17">
+        <subObject normal="Tiles_N.png" occlusion="Tiles_O.png">
             <material token ="GLASS_GREEN"/>
             <material token ="GLASS_CLEAR"/>
             <material token ="GLASS_CRYSTAL"/>
         </subObject>
-    </tileTexture>
-    <tileTexture index = "5">
+    </shapeTexture>
+    <shapeTexture normal="Tiles_N.png" occlusion="Tiles_O.png">
         <tiletype token="FLOOR:SMOOTH:*:*:*" />
-        <subObject index="4">
+        <subObject normal="Logs_N.png" occlusion="Logs_O.png">
             <material token ="*:*:WOOD"/>
         </subObject>
-        <subObject index="21">
-            <material token ="GLASS_GREEN"/>
-            <material token ="GLASS_CLEAR"/>
-            <material token ="GLASS_CRYSTAL"/>
-        </subObject>
-    </tileTexture>
-    <tileTexture index = "1">
+    </shapeTexture>
+    <shapeTexture normal="Flat_N.png" occlusion="Flat_O.png">
         <tiletype token="*:*:CONSTRUCTION:*:*" />
-        <subObject index="1">
+        <subObject normal="Flat_N.png" occlusion="Flat_O.png">
             <material token ="INORGANIC:*"/>
-            <subObject index="6">
+            <subObject normal="Bars_N.png" occlusion="Bars_O.png">
                 <item token = "BAR"/>
             </subObject>
         </subObject>
-        <subObject index="4">
+        <subObject normal="Logs_N.png" occlusion="Logs_O.png">
             <material token ="*:*:WOOD"/>
         </subObject>
-        <subObject index="17">
+        <subObject normal="Tiles_N.png" occlusion="Tiles_O.png">
             <material token ="GLASS_GREEN"/>
             <material token ="GLASS_CLEAR"/>
             <material token ="GLASS_CRYSTAL"/>
         </subObject>
-    </tileTexture>
-    <tileTexture index = "5">
+    </shapeTexture>
+    <shapeTexture normal="Tiles_N.png" occlusion="Tiles_O.png">
         <tiletype token="WALL:*:CONSTRUCTION:*:*" />
-        <subObject index="6">
+        <subObject normal="Bars_N.png" occlusion="Bars_O.png">
             <item token = "BAR"/>
         </subObject>
-        <subObject index="4">
+        <subObject normal="Logs_N.png" occlusion="Logs_O.png">
             <item token ="WOOD"/>
         </subObject>
-    </tileTexture>
-    <tileTexture index = "3">
+    </shapeTexture>
+    <shapeTexture normal="Leaves_N.png" occlusion="Leaves_O.png">
         <tiletype token="BRANCH:*:*:*:*" />
         <tiletype token="TWIG:*:*:*:*" />
         <tiletype token="SAPLING:*:*:*:*" />
         <tiletype token="SHRUB:*:*:*:*" />
-        <subObject index="2">
+        <subObject normal="Rough_N.png" occlusion="Rough_O.png">
             <material token ="INORGANIC:*"/>
         </subObject>
-        <subObject index="2">
+        <subObject normal="Rough_N.png" occlusion="Rough_O.png">
             <material token ="PLANT:*:*"/>
         </subObject>
-    </tileTexture>
-    <tileTexture index = "2">
+    </shapeTexture>
+    <shapeTexture normal="Rough_N.png" occlusion="Rough_O.png">
         <tiletype token="*:SMOOTH:TREE_MATERIAL:*:*" />
         <tiletype token="RAMP:*:TREE_MATERIAL:*:*" />
-    </tileTexture>
-    <tileTexture index = "2">
+    </shapeTexture>
+    <shapeTexture normal="Rough_N.png" occlusion="Rough_O.png">
         <tiletype token="*:SMOOTH:MUSHROOM:*:*" />
-    </tileTexture>
-    <tileTexture index = "2">
+    </shapeTexture>
+    <shapeTexture normal="Rough_N.png" occlusion="Rough_O.png">
         <tiletype token="*:NORMAL:*:*:*" />
-    </tileTexture>
-</tileTextures>
+    </shapeTexture>
+        <shapeTexture normal="Flat_N.png" occlusion="Flat_O.png">
+        <tiletype token="*:*:*:*:*" />
+    </shapeTexture>
+</shapeTextures>
