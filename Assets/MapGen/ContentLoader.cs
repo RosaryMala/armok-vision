@@ -89,11 +89,12 @@ public class ContentLoader
     }
 
     TextureStorage materialTextureStorage;
+    TextureStorage shapeTextureStorage;
 
 
     public ContentConfiguration<ColorContent> ColorConfiguration { get; private set; }
     public ContentConfiguration<TextureContent> MaterialTextureConfiguration { get; private set; }
-    public ContentConfiguration<IndexContent> TileTextureConfiguration { get; private set; }
+    public ContentConfiguration<NormalContent> ShapeTextureConfiguration { get; private set; }
     public ContentConfiguration<MeshContent> TileMeshConfiguration { get; private set; }
     public ContentConfiguration<LayerContent> MaterialLayerConfiguration { get; private set; }
 
@@ -101,6 +102,7 @@ public class ContentLoader
     public ContentLoader()
     {
         materialTextureStorage = new TextureStorage();
+        shapeTextureStorage = new TextureStorage();
     //    colorConfiguration = new MaterialConfiguration<ColorContent>();
     //    colorConfiguration.nodeName = "color";
     //    materialTextureConfiguration = new MaterialConfiguration<IndexContent>();
@@ -170,10 +172,10 @@ public class ContentLoader
                         MaterialTextureConfiguration = ContentConfiguration<TextureContent>.GetFromRootElement(doc, "materialTexture");
                     MaterialTextureConfiguration.AddSingleContentConfig(doc, materialTextureStorage);
                     break;
-                case "tileTextures":
-                    if(TileTextureConfiguration == null)
-                        TileTextureConfiguration = ContentConfiguration<IndexContent>.GetFromRootElement(doc, "tileTexture");
-                    TileTextureConfiguration.AddSingleContentConfig(doc);
+                case "shapeTextures":
+                    if(ShapeTextureConfiguration == null)
+                        ShapeTextureConfiguration = ContentConfiguration<NormalContent>.GetFromRootElement(doc, "shapeTexture");
+                    ShapeTextureConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
                     break;
                 case "tileMeshes":
                     if (TileMeshConfiguration == null)
@@ -196,10 +198,13 @@ public class ContentLoader
     public void FinalizeTextureAtlases()
     {
         materialTextureStorage.BuildAtlas("MaterialTexture");
+        shapeTextureStorage.BuildAtlas("ShapeTexture");
 
         GameMap gameMap = GameObject.FindObjectOfType<GameMap>();
         gameMap.basicTerrainMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
+        gameMap.basicTerrainMaterial.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
         gameMap.stencilTerrainMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
+        gameMap.stencilTerrainMaterial.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
 
     }
 
