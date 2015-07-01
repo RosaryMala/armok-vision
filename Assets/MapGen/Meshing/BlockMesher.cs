@@ -362,10 +362,10 @@ abstract class BlockMesher {
         }
         buffer.meshData = content.meshData[(int)layer];
         buffer.transform = Matrix4x4.TRS(GameMap.DFtoUnityCoord(tile.position), Quaternion.identity, Vector3.one);
-        int tileTexIndex = 0;
-        IndexContent tileTexContent;
-        if (contentLoader.TileTextureConfiguration.GetValue (tile, layer, out tileTexContent))
-            tileTexIndex = tileTexContent.value;
+        Matrix4x4 shapeTextTransform = Matrix4x4.identity;
+        NormalContent tileTexContent;
+        if (contentLoader.ShapeTextureConfiguration.GetValue (tile, layer, out tileTexContent))
+            shapeTextTransform = tileTexContent.UVTransform;
         Matrix4x4 matTexTransform = Matrix4x4.identity;
         TextureContent matTexContent;
         if (contentLoader.MaterialTextureConfiguration.GetValue (tile, layer, out matTexContent))
@@ -423,7 +423,7 @@ abstract class BlockMesher {
         }
         buffer.color = newColor;
         buffer.uv1Transform = matTexTransform;
-        buffer.uv2Transform = Matrix4x4.TRS(new Vector2(((tileTexIndex % 16) / 16.0f), ((15 - (tileTexIndex / 16)) / 16.0f)), Quaternion.identity, new Vector2(1.0f / 16.0f, 1.0f / 16.0f));
+        buffer.uv2Transform = shapeTextTransform;
         buffer.hiddenFaces = MeshCombineUtility.HiddenFaces.None;
         if (tile.North != null && tile.North.Value.isWall)
             buffer.hiddenFaces |= MeshCombineUtility.HiddenFaces.North;
