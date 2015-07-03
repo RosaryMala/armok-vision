@@ -5,6 +5,7 @@ using System.Xml.Linq;
 public class TileConfiguration<T> : ContentConfiguration<T> where T : IContent, new()
 {
     TiletypeMatcher<Content> tiletypeMatcher = new TiletypeMatcher<Content>();
+    Content defaultTile = new Content();
 
     protected override void ParseElementConditions(XElement elemtype, Content content)
     {
@@ -14,7 +15,10 @@ public class TileConfiguration<T> : ContentConfiguration<T> where T : IContent, 
             XAttribute elemToken = elemTiletype.Attribute("token");
             if (elemToken != null)
             {
-                tiletypeMatcher[elemToken.Value] = content;
+                if (elemToken.Value == "NONE")
+                    defaultTile = content;
+                else
+                    tiletypeMatcher[elemToken.Value] = content;
                 continue;
             }
         }
@@ -28,7 +32,7 @@ public class TileConfiguration<T> : ContentConfiguration<T> where T : IContent, 
             value = cont.GetValue(tile, layer);
             return true;
         }
-        value = default(T);
+        value = defaultTile.GetValue(tile, layer);
         return false;
     }
 }

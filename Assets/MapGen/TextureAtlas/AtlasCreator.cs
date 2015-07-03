@@ -257,7 +257,24 @@ public class AtlasCreator
         Debug.Log("SAVE TO: " + file);
     }
 
-    public static Atlas[] CreateAtlas(string name, Texture2D[] textures, Atlas startWith = null)
+    public static void SaveImage(Texture2D atlas, string name)
+    {
+        if (atlas == null)
+            return;
+
+        var bytes = atlas.EncodeToPNG();
+
+        if (!System.IO.Directory.Exists("./Debug/"))
+            System.IO.Directory.CreateDirectory("./Debug/");
+
+        //string name = Time.realtimeSinceStartup.ToString().Replace(".", "-"); //DateTime.UtcNow.ToString().Replace("/", "_").Replace(" ", "_").Replace("\\", "_");
+        string file = "./Debug/" + name + ".png";
+
+        System.IO.File.WriteAllBytes(file, bytes);
+        Debug.Log("SAVE TO: " + file);
+    }
+
+    public static Atlas[] CreateAtlas(string name, Texture2D[] textures, Atlas startWith = null, TextureFormat format = TextureFormat.RGBA32, Color defaultColor = default(Color))
     {
         List<Texture2D> toProcess = new List<Texture2D>();
         toProcess.AddRange(textures);
@@ -278,7 +295,16 @@ public class AtlasCreator
             if (_atlas == null)
             {
                 _atlas = new Atlas();
-                _atlas.texture = new Texture2D(AtlasSize, AtlasSize, TextureFormat.RGBA32, true);
+                _atlas.texture = new Texture2D(AtlasSize, AtlasSize, format, true);
+                if(defaultColor != default(Color))
+                {
+                    Color[] fillcolors = new Color[AtlasSize * AtlasSize];
+                    for(int i = 0; i < fillcolors.Length; i++)
+                    {
+                        fillcolors[i] = defaultColor;
+                    }
+                    _atlas.texture.SetPixels(fillcolors);
+                }
                 _atlas.texture.filterMode = FilterMode.Bilinear;
                 _atlas.root = new AtlasNode();
                 _atlas.root.rc = new Rect(0, 0, AtlasSize, AtlasSize);
