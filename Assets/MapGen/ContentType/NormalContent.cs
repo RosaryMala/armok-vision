@@ -43,9 +43,34 @@ public class NormalContent : IContent
         }
 
         byte[] normalData = File.ReadAllBytes(normalPath);
-
         Texture2D normalMap = new Texture2D(2, 2);
         normalMap.LoadImage(normalData);
+
+        XAttribute specularAtt = elemtype.Attribute("specular");
+        if (specularAtt == null)
+        {
+            Debug.LogError("No specular map in " + elemtype);
+            //Add error message here
+            return false;
+        }
+        string specularPath = Path.Combine(Path.GetDirectoryName(new Uri(elemtype.BaseUri).LocalPath), specularAtt.Value);
+        specularPath = Path.GetFullPath(specularPath);
+
+        if (!File.Exists(specularPath))
+        {
+            Debug.LogError("File not found: " + specularPath);
+            return false;
+        }
+
+        byte[] specularData = File.ReadAllBytes(specularPath);
+        Texture2D specularMap = new Texture2D(2, 2);
+        specularMap.LoadImage(specularData);
+
+        if ((specularMap.width != normalMap.width) || (specularMap.height != normalMap.height))
+        {
+            TextureScale.Bilinear(specularMap, normalMap.width, normalMap.height);
+        }
+
         XAttribute occlusionAtt = elemtype.Attribute("occlusion");
         if (occlusionAtt == null)
         {
@@ -69,19 +94,23 @@ public class NormalContent : IContent
 
         if (occlusionMap.width != normalMap.width || occlusionMap.height != normalMap.height)
         {
-            occlusionMap.Resize(normalMap.width, normalMap.height);
+            TextureScale.Bilinear(occlusionMap, normalMap.width, normalMap.height);
         }
 
         Texture2D combinedMap = new Texture2D(normalMap.width, normalMap.height, TextureFormat.ARGB32, false);
 
-        combinedMap.name = normalPath + occlusionAtt.Value;
+        combinedMap.name = normalPath + occlusionAtt.Value + specularAtt.Value;
 
         Color[] normalColors = normalMap.GetPixels();
         Color[] occlusionColors = occlusionMap.GetPixels();
+        Color[] specularColors = specularMap.GetPixels();
+
+        if (normalColors.Length != specularColors.Length)
+            Debug.LogError("Maps aren't same size!");
 
         for (int i = 0; i < normalColors.Length; i++)
         {
-            normalColors[i].a = occlusionColors[i].r;
+            normalColors[i] = new Color(occlusionColors[i].r, normalColors[i].g, specularColors[i].r, normalColors[i].r);
         }
 
         combinedMap.SetPixels(normalColors);
