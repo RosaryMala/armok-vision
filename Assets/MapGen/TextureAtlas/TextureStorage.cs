@@ -38,10 +38,9 @@ public class TextureStorage
         return textureList.Count - 1;
     }
 
-    public void BuildAtlas(string name)
+    public void BuildAtlas(string name, TextureFormat format = TextureFormat.RGBA32, Color defaultColor = default(Color))
     {
-        Debug.Log("Making atlas from " + textureList.Count + " items");
-        AtlasCreator.Atlas[] atlasList = AtlasCreator.CreateAtlas(name, textureList.ToArray());
+        AtlasCreator.Atlas[] atlasList = AtlasCreator.CreateAtlas(name, textureList.ToArray(), null, format, defaultColor);
         atlas = atlasList[0];
         textureList.Clear();
 
@@ -57,6 +56,6 @@ public class TextureStorage
             texIndexToAtlasIndex[item.Key] = nameToAtlasIndex[item.Value];
         }
 
-        AtlasCreator.SaveAtlas(atlas, name);
+        //AtlasCreator.SaveAtlas(atlas, name);
     }
 }

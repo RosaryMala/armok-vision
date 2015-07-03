@@ -11,10 +11,10 @@
     </materialTexture>
     <materialTexture file="Grey.png">
         <material token="PLANT:*:*" />
-        <!--<subObject index ="4">
+        <subObject file="Grass.png">
             <tiletype token="*:*:GRASS_LIGHT:*:*" />
             <tiletype token="*:*:GRASS_DARK:*:*" />
-        </subObject>-->
+        </subObject>
     </materialTexture>
     <materialTexture file="Marble.png">
         <material token="*:MARBLE" />
