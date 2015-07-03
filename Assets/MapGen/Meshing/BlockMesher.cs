@@ -368,7 +368,7 @@ abstract class BlockMesher {
             shapeTextTransform = tileTexContent.UVTransform;
         Matrix4x4 matTexTransform = Matrix4x4.identity;
         TextureContent matTexContent;
-        if (contentLoader.MaterialTextureConfiguration.GetValue (tile, layer, out matTexContent))
+        if (contentLoader.MaterialTextureConfiguration.GetValue(tile, layer, out matTexContent))
             matTexTransform = matTexContent.UVTransform;
         ColorContent newColorContent;
         Color newColor;
