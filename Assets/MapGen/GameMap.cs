@@ -20,13 +20,11 @@ public class GameMap : MonoBehaviour
     public Material magmaMaterial;
     public Material invisibleMaterial;
     public Material invisibleStencilMaterial;
-    public GameObject defaultMapBlock;
-    public GameObject defaultStencilMapBlock;
-    public GameObject defaultWaterBlock;
-    public GameObject defaultMagmaBlock;
     public Light magmaGlowPrefab;
     public Text genStatus;
     public Text cursorProperties;
+
+    public bool overheadShadows = true;
 
     public int cursX = -30000;
     public int cursY = -30000;
@@ -90,9 +88,9 @@ public class GameMap : MonoBehaviour
     BlockMesher mesher;
 
     // The actual unity meshes used to draw things on screen.
-    MeshFilter[, ,] blocks;         // Terrain data.
-    MeshFilter[, ,] stencilBlocks;  // Foliage &ct.
-    MeshFilter[, , ,] liquidBlocks; // Water & magma. Extra dimension is a liquid type.
+    Mesh[, ,] blocks;         // Terrain data.
+    Mesh[, ,] stencilBlocks;  // Foliage &ct.
+    Mesh[, , ,] liquidBlocks; // Water & magma. Extra dimension is a liquid type.
     // Dirty flags for those meshes
     bool[, ,] blockDirtyBits;
     bool[, ,] liquidBlockDirtyBits;
@@ -208,14 +206,10 @@ public class GameMap : MonoBehaviour
         blockListTimer.Start();
         //UpdateCreatures();
         UpdateBlocks();
-        if (cullTimer.ElapsedMilliseconds > 100)
-        {
-            CullDistantBlocks();
-            cullTimer.Reset();
-            cullTimer.Start();
-        }
-        HideMeshes();
+
+        DrawBlocks();
     }
+
 
     void OnDestroy()
     {
@@ -289,9 +283,9 @@ public class GameMap : MonoBehaviour
         int blockSizeZ = DFConnection.Instance.NetMapInfo.block_size_z;
 
         Debug.Log("Map Size: " + blockSizeX + ", " + blockSizeY + ", " + blockSizeZ);
-        blocks = new MeshFilter[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
-        stencilBlocks = new MeshFilter[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
-        liquidBlocks = new MeshFilter[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ, 2];
+        blocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
+        stencilBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
+        liquidBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ, 2];
         blockDirtyBits = new bool[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         liquidBlockDirtyBits = new bool[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         magmaGlow = new Light[blockSizeX * 16, blockSizeY * 16, blockSizeZ];
@@ -433,57 +427,42 @@ public class GameMap : MonoBehaviour
             {
                 if (blocks[block_x, block_y, block_z] == null)
                 {
-                    GameObject block = Instantiate(defaultMapBlock) as GameObject;
-                    block.SetActive(true);
-                    block.transform.parent = this.transform;
-                    block.name = "terrain(" + block_x + ", " + block_y + ", " + block_z + ")";
-                    blocks[block_x, block_y, block_z] = block.GetComponent<MeshFilter>();
+                    blocks[block_x, block_y, block_z] = new Mesh();
                 }
-                MeshFilter tileFilter = blocks[block_x, block_y, block_z];
-                tileFilter.mesh.Clear();
-                newMeshes.tiles.CopyToMesh(tileFilter.mesh);
+                Mesh tileMesh = blocks[block_x, block_y, block_z];
+                tileMesh.Clear();
+                newMeshes.tiles.CopyToMesh(tileMesh);
             }
             if (newMeshes.stencilTiles != null)
             {
                 if (stencilBlocks[block_x, block_y, block_z] == null)
                 {
-                    GameObject stencilBlock = Instantiate(defaultStencilMapBlock) as GameObject;
-                    stencilBlock.SetActive(true);
-                    stencilBlock.transform.parent = this.transform;
-                    stencilBlock.name = "foliage(" + block_x + ", " + block_y + ", " + block_z + ")";
-                    stencilBlocks[block_x, block_y, block_z] = stencilBlock.GetComponent<MeshFilter>();
+
+                    stencilBlocks[block_x, block_y, block_z] = new Mesh();
                 }
-                MeshFilter stencilFilter = stencilBlocks[block_x, block_y, block_z];
-                stencilFilter.mesh.Clear();
-                newMeshes.stencilTiles.CopyToMesh(stencilFilter.mesh);
+                Mesh stencilMesh = stencilBlocks[block_x, block_y, block_z];
+                stencilMesh.Clear();
+                newMeshes.stencilTiles.CopyToMesh(stencilMesh);
             }
             if (newMeshes.water != null)
             {
                 if (liquidBlocks[block_x, block_y, block_z, MapDataStore.WATER_INDEX] == null)
                 {
-                    GameObject block = Instantiate(defaultWaterBlock) as GameObject;
-                    block.SetActive(true);
-                    block.transform.parent = this.transform;
-                    block.name = "water(" + block_x + ", " + block_y + ", " + block_z + ")";
-                    liquidBlocks[block_x, block_y, block_z, MapDataStore.WATER_INDEX] = block.GetComponent<MeshFilter>();
+                    liquidBlocks[block_x, block_y, block_z, MapDataStore.WATER_INDEX] = new Mesh();
                 }
-                MeshFilter waterFilter = liquidBlocks[block_x, block_y, block_z, MapDataStore.WATER_INDEX];
-                waterFilter.mesh.Clear();
-                newMeshes.water.CopyToMesh(waterFilter.mesh);
+                Mesh waterMesh = liquidBlocks[block_x, block_y, block_z, MapDataStore.WATER_INDEX];
+                waterMesh.Clear();
+                newMeshes.water.CopyToMesh(waterMesh);
             }
             if (newMeshes.magma != null)
             {
                 if (liquidBlocks[block_x, block_y, block_z, MapDataStore.MAGMA_INDEX] == null)
                 {
-                    GameObject block = Instantiate(defaultMagmaBlock) as GameObject;
-                    block.SetActive(true);
-                    block.transform.parent = this.transform;
-                    block.name = "magma(" + block_x + ", " + block_y + ", " + block_z + ")";
-                    liquidBlocks[block_x, block_y, block_z, MapDataStore.MAGMA_INDEX] = block.GetComponent<MeshFilter>();
+                    liquidBlocks[block_x, block_y, block_z, MapDataStore.MAGMA_INDEX] = new Mesh();
                 }
-                MeshFilter magmaFilter = liquidBlocks[block_x, block_y, block_z, MapDataStore.MAGMA_INDEX];
-                magmaFilter.mesh.Clear();
-                newMeshes.magma.CopyToMesh(magmaFilter.mesh);
+                Mesh magmaMesh = liquidBlocks[block_x, block_y, block_z, MapDataStore.MAGMA_INDEX];
+                magmaMesh.Clear();
+                newMeshes.magma.CopyToMesh(magmaMesh);
             }
         }
     }
@@ -493,143 +472,29 @@ public class GameMap : MonoBehaviour
     System.Diagnostics.Stopwatch genWatch = new System.Diagnostics.Stopwatch();
 
 
-    void CullDistantBlocks()
-    {
-        //int centerX = (connectionState.net_view_info.view_pos_x + (connectionState.net_view_info.view_size_x / 2));
-        //int centerY = (connectionState.net_view_info.view_pos_y + (connectionState.net_view_info.view_size_y / 2));
-        for (int xx = 0; xx < blocks.GetLength(0); xx++)
-            for (int yy = 0; yy < blocks.GetLength(1); yy++)
-                for (int zz = 0; zz < blocks.GetLength(2); zz++)
-                {
-                    if (zz > PosZ + cameraViewDist)
-                    {
-                        if (blocks[xx, yy, zz] != null)
-                        {
-                            blocks[xx, yy, zz].mesh.Clear();
-                            blockDirtyBits[xx, yy, zz] = true;
-
-                        }
-                        if (stencilBlocks[xx, yy, zz] != null)
-                        {
-                            stencilBlocks[xx, yy, zz].mesh.Clear();
-                            blockDirtyBits[xx, yy, zz] = true;
-
-                        }
-                        for (int i = 0; i < 2; i++)
-                            if (liquidBlocks[xx, yy, zz, i] != null)
-                            {
-                                liquidBlocks[xx, yy, zz, i].mesh.Clear();
-                                liquidBlockDirtyBits[xx, yy, zz] = true;
-                            }
-                        continue;
-                    }
-                    if (zz < PosZ - cameraViewDist)
-                    {
-                        if (blocks[xx, yy, zz] != null)
-                        {
-                            blocks[xx, yy, zz].mesh.Clear();
-                            blockDirtyBits[xx, yy, zz] = true;
-
-                        }
-                        if (stencilBlocks[xx, yy, zz] != null)
-                        {
-                            stencilBlocks[xx, yy, zz].mesh.Clear();
-                            blockDirtyBits[xx, yy, zz] = true;
-
-                        }
-                        for (int i = 0; i < 2; i++)
-                            if (liquidBlocks[xx, yy, zz, i] != null)
-                            {
-                                liquidBlocks[xx, yy, zz, i].mesh.Clear();
-                                liquidBlockDirtyBits[xx, yy, zz] = true;
-                            }
-                        continue;
-                    }
-                }
-    }
 
     void ClearMap()
     {
-        foreach (MeshFilter MF in blocks)
+        foreach (var item in blocks)
         {
-            if (MF != null)
-                MF.mesh.Clear();
+            if (item != null)
+                item.Clear();
         }
         foreach (var item in stencilBlocks)
         {
             if (item != null)
-                item.mesh.Clear();
+                item.Clear();
         }
         foreach (var item in liquidBlocks)
         {
             if (item != null)
-                item.mesh.Clear();
+                item.Clear();
         }
         foreach (var item in magmaGlow)
         {
             Destroy(item);
         }
         MapDataStore.Main.Reset();
-    }
-
-    void HideMeshes()
-    {
-        if (!posZDirty) return;
-        posZDirty = false;
-        for (int zz = 0; zz < blocks.GetLength(2); zz++)
-            for (int yy = 0; yy < blocks.GetLength(1); yy++)
-                for (int xx = 0; xx < blocks.GetLength(0); xx++)
-                {
-                    if (blocks[xx, yy, zz] != null)
-                    {
-                        if (zz >= PosZ)
-                        {
-                            blocks[xx, yy, zz].gameObject.GetComponent<Renderer>().material = invisibleMaterial;
-                            //blocks[xx, yy, zz].gameObject.SetActive(false);
-                        }
-                        else
-                        {
-                            blocks[xx, yy, zz].gameObject.GetComponent<Renderer>().material = basicTerrainMaterial;
-                            //blocks[xx, yy, zz].gameObject.SetActive(true);
-                        }
-                    }
-                }
-        for (int zz = 0; zz < stencilBlocks.GetLength(2); zz++)
-            for (int yy = 0; yy < stencilBlocks.GetLength(1); yy++)
-                for (int xx = 0; xx < stencilBlocks.GetLength(0); xx++)
-                {
-                    if (stencilBlocks[xx, yy, zz] != null)
-                    {
-                        if (zz >= PosZ)
-                        {
-                            stencilBlocks[xx, yy, zz].gameObject.GetComponent<Renderer>().material = invisibleStencilMaterial;
-                            //stencilBlocks[xx, yy, zz].gameObject.SetActive(false);
-                        }
-                        else
-                        {
-                            stencilBlocks[xx, yy, zz].gameObject.GetComponent<Renderer>().material = stencilTerrainMaterial;
-                            //stencilBlocks[xx, yy, zz].gameObject.SetActive(true);
-                        }
-                    }
-                }
-        for (int qq = 0; qq < liquidBlocks.GetLength(3); qq++)
-            for (int zz = 0; zz < liquidBlocks.GetLength(2); zz++)
-                for (int yy = 0; yy < liquidBlocks.GetLength(1); yy++)
-                    for (int xx = 0; xx < liquidBlocks.GetLength(0); xx++)
-                    {
-                        if (liquidBlocks[xx, yy, zz, qq] != null)
-                        {
-                            if (zz >= PosZ)
-                                liquidBlocks[xx, yy, zz, qq].gameObject.GetComponent<Renderer>().material = invisibleMaterial;
-                            else
-                            {
-                                if (qq == MapDataStore.MAGMA_INDEX)
-                                    liquidBlocks[xx, yy, zz, qq].gameObject.GetComponent<Renderer>().material = magmaMaterial;
-                                else
-                                    liquidBlocks[xx, yy, zz, qq].gameObject.GetComponent<Renderer>().material = waterMaterial;
-                            }
-                        }
-                    }
     }
 
     void ShowCursorInfo()
@@ -760,4 +625,41 @@ public class GameMap : MonoBehaviour
             posZDirty = true;
         }
     }
+
+    private void DrawBlocks()
+    {
+        for (int z = posZ - cameraViewDist; z <= posZ; z++)
+            for (int x = 0; x < blocks.GetLength(0); x++)
+                for (int y = 0; y < blocks.GetLength(1); y++)
+                {
+                    if (blocks[x, y, z] != null && blocks[x, y, z].vertexCount > 0)
+                        Graphics.DrawMesh(blocks[x, y, z], Matrix4x4.identity, basicTerrainMaterial, 0);
+
+                    if (stencilBlocks[x, y, z] != null && stencilBlocks[x, y, z].vertexCount > 0)
+                        Graphics.DrawMesh(stencilBlocks[x, y, z], Matrix4x4.identity, stencilTerrainMaterial, 1);
+
+                    if (liquidBlocks[x, y, z, MapDataStore.WATER_INDEX] != null && liquidBlocks[x, y, z, MapDataStore.WATER_INDEX].vertexCount > 0)
+                        Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.WATER_INDEX], Matrix4x4.identity, waterMaterial, 4);
+
+                    if (liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX] != null && liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX].vertexCount > 0)
+                        Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX], Matrix4x4.identity, magmaMaterial, 4);
+                }
+        for (int z = posZ + 1; z <= posZ+cameraViewDist; z++)
+            for (int x = 0; x < blocks.GetLength(0); x++)
+                for (int y = 0; y < blocks.GetLength(1); y++)
+                {
+                    if (blocks[x, y, z] != null && blocks[x, y, z].vertexCount > 0)
+                        Graphics.DrawMesh(blocks[x, y, z], Matrix4x4.identity, invisibleMaterial, 0);
+
+                    if (stencilBlocks[x, y, z] != null && stencilBlocks[x, y, z].vertexCount > 0)
+                        Graphics.DrawMesh(stencilBlocks[x, y, z], Matrix4x4.identity, invisibleStencilMaterial, 1);
+
+                    //if (liquidBlocks[x, y, z, MapDataStore.WATER_INDEX] != null && liquidBlocks[x, y, z, MapDataStore.WATER_INDEX].vertexCount > 0)
+                    //    Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.WATER_INDEX], Matrix4x4.identity, waterMaterial, 4);
+
+                    //if (liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX] != null && liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX].vertexCount > 0)
+                    //    Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX], Matrix4x4.identity, magmaMaterial, 4);
+                }
+    }
+
 }
