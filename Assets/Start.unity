@@ -341,6 +341,7 @@ MonoBehaviour:
   magmaGlowPrefab: {fileID: 10814916, guid: 1404eb50c31e0534896ff4e91f3785e5, type: 2}
   genStatus: {fileID: 1986774941}
   cursorProperties: {fileID: 793246035}
+  overheadShadows: 1
   cursX: -30000
   cursY: -30000
   cursZ: -30000
@@ -350,9 +351,9 @@ MonoBehaviour:
   rangeX: 4
   rangeY: 3
   rangeZup: 1
-  rangeZdown: 5
+  rangeZdown: 10
   blocksToProcess: 1
-  cameraViewDist: 25
+  cameraViewDist: 10
   meshingThreads: 2
   creatureTemplate: {fileID: 187478, guid: 6e1a61cd199f87d4db317855a72e405b, type: 2}
 --- !u!1 &1023333088
@@ -889,9 +890,9 @@ MonoBehaviour:
   backfaceDepthDownsample: 8
   ssrDownsample: 0
   blurDownsample: 0
-  iterations: 10
-  binarySearchIterations: 5
-  pixelStride: 50
+  iterations: 128
+  binarySearchIterations: 0
+  pixelStride: 1
   pixelStrideZCutoff: 500
   pixelZSizeOffset: .100000001
   maxRayDistance: 200
