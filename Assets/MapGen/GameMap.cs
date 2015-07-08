@@ -83,7 +83,6 @@ public class GameMap : MonoBehaviour
 
     // Stored view information
     RemoteFortressReader.ViewInfo view;
-    bool posZDirty = true; // Set in GetViewInfo if z changes, and reset in HideMeshes after meshes hidden.
 
     BlockMesher mesher;
 
@@ -225,10 +224,6 @@ public class GameMap : MonoBehaviour
         RemoteFortressReader.ViewInfo newView = DFConnection.Instance.PopViewInfoUpdate();
         if (newView == null) return;
         //Debug.Log("Got view");
-        if (view == null || view.view_pos_z != newView.view_pos_z)
-        {
-            posZDirty = true;
-        }
         view = newView;
 
         posXTile = (view.view_pos_x + (view.view_size_x / 2));
@@ -418,7 +413,6 @@ public class GameMap : MonoBehaviour
     {
         while (mesher.HasNewMeshes)
         {
-            posZDirty = true; //the new blocks will also need to be hidden.
             var newMeshes = mesher.Dequeue().Value;
             int block_x = newMeshes.location.x / blockSize;
             int block_y = newMeshes.location.y / blockSize;
@@ -622,13 +616,16 @@ public class GameMap : MonoBehaviour
         if(posZ != dfPos.z+1)
         {
             posZ = dfPos.z+1;
-            posZDirty = true;
         }
     }
 
     private void DrawBlocks()
     {
         for (int z = posZ - cameraViewDist; z <= posZ; z++)
+        {
+            if (z < 0) z = 0;
+            if (z >= blocks.GetLength(2))
+                continue;
             for (int x = 0; x < blocks.GetLength(0); x++)
                 for (int y = 0; y < blocks.GetLength(1); y++)
                 {
@@ -644,7 +641,12 @@ public class GameMap : MonoBehaviour
                     if (liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX] != null && liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX].vertexCount > 0)
                         Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX], Matrix4x4.identity, magmaMaterial, 4);
                 }
-        for (int z = posZ + 1; z <= posZ+cameraViewDist; z++)
+        }
+        for (int z = posZ + 1; z <= posZ + cameraViewDist; z++)
+        {
+            if (z < 0) z = 0;
+            if (z >= blocks.GetLength(2))
+                continue;
             for (int x = 0; x < blocks.GetLength(0); x++)
                 for (int y = 0; y < blocks.GetLength(1); y++)
                 {
@@ -660,6 +662,7 @@ public class GameMap : MonoBehaviour
                     //if (liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX] != null && liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX].vertexCount > 0)
                     //    Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX], Matrix4x4.identity, magmaMaterial, 4);
                 }
+        }
     }
 
 }
