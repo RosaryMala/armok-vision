@@ -24,18 +24,18 @@ RenderSettings:
   m_AmbientEquatorColor: {r: .962478399, g: .993094504, b: 1, a: 1}
   m_AmbientGroundColor: {r: 0, g: 0, b: 0, a: 1}
   m_AmbientIntensity: .5
-  m_AmbientMode: 1
+  m_AmbientMode: 0
   m_SkyboxMaterial: {fileID: 2100000, guid: 8b52a39ce56e17f45b84634123480687, type: 2}
   m_HaloStrength: .5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
   m_SpotCookie: {fileID: 10001, guid: 0000000000000000e000000000000000, type: 0}
-  m_DefaultReflectionMode: 0
+  m_DefaultReflectionMode: 1
   m_DefaultReflectionResolution: 128
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
-  m_CustomReflection: {fileID: 0}
+  m_CustomReflection: {fileID: 8900000, guid: 5c0a1a67937589042ba02aae57da200d, type: 3}
   m_Sun: {fileID: 692705303}
 --- !u!127 &3
 LevelGameManager:
@@ -97,6 +97,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 692705304}
   - 108: {fileID: 692705303}
+  - 114: {fileID: 692705305}
   m_Layer: 0
   m_Name: Directional light
   m_TagString: Untagged
@@ -142,12 +143,24 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 692705302}
-  m_LocalRotation: {x: .209064633, y: .252684027, z: -.0560187064, w: .943029523}
-  m_LocalPosition: {x: -2.00056601, y: 1.30904579, z: 6.58499813}
+  m_LocalRotation: {x: -.00855736993, y: .195938766, z: .00170993188, w: .98057735}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
+--- !u!114 &692705305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 692705302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccd93fb54f2323f499f81beaab3fac66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 50
 --- !u!1 &716928473
 GameObject:
   m_ObjectHideFlags: 0
@@ -333,11 +346,6 @@ MonoBehaviour:
   invisibleMaterial: {fileID: 2100000, guid: f080095bc106b8b439e98ea1cb55b233, type: 2}
   invisibleStencilMaterial: {fileID: 2100000, guid: 3dca4e666ae94214a8ac0e061c710a2b,
     type: 2}
-  defaultMapBlock: {fileID: 100000, guid: e636703138d422f44bbbd452ff4c589f, type: 2}
-  defaultStencilMapBlock: {fileID: 148376, guid: bd1d0642ee6db0043a94c8adc6216cfe,
-    type: 2}
-  defaultWaterBlock: {fileID: 189120, guid: 73331f53a82e43441ad1cdec65937dfb, type: 2}
-  defaultMagmaBlock: {fileID: 184644, guid: 0daa0fe28c372dc428910d6731d1ae49, type: 2}
   magmaGlowPrefab: {fileID: 10814916, guid: 1404eb50c31e0534896ff4e91f3785e5, type: 2}
   genStatus: {fileID: 1986774941}
   cursorProperties: {fileID: 793246035}
@@ -629,6 +637,65 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
+--- !u!1 &1255736699
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1255736701}
+  - 215: {fileID: 1255736700}
+  m_Layer: 0
+  m_Name: Full Scene Reflection
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!215 &1255736700
+ReflectionProbe:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1255736699}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Type: 0
+  m_Mode: 1
+  m_RefreshMode: 1
+  m_TimeSlicingMode: 0
+  m_Resolution: 128
+  m_UpdateFrequency: 0
+  m_Importance: 1
+  m_BoxSize: {x: 10000, y: 10000, z: 10000}
+  m_BoxOffset: {x: 0, y: 0, z: 0}
+  m_NearClip: .300000012
+  m_FarClip: 1000
+  m_ShadowDistance: 100
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: .192156866, g: .301960796, b: .474509805, a: 0}
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 0
+  m_IntensityMultiplier: 1
+  m_HDR: 1
+  m_BoxProjection: 0
+  m_RenderDynamicObjects: 0
+  m_UseOcclusionCulling: 1
+  m_CustomBakedTexture: {fileID: 0}
+--- !u!4 &1255736701
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1255736699}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
 --- !u!1 &1404020243
 GameObject:
   m_ObjectHideFlags: 0
