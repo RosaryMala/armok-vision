@@ -15,7 +15,7 @@ public class CameraRotateVertical : MonoBehaviour
 
     public float rotationX = 45.0f;
 
-    void LateUpdate()
+    void Update()
     {
         HandleMouseRotation();
 
