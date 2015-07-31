@@ -198,7 +198,7 @@ public class ContentLoader
     public void FinalizeTextureAtlases()
     {
         materialTextureStorage.BuildAtlas("MaterialTexture");
-        shapeTextureStorage.BuildAtlas("ShapeTexture", TextureFormat.RGBA32, new Color(1.0f, 0.5f, 0.0f, 0.5f));
+        shapeTextureStorage.BuildAtlas("ShapeTexture", TextureFormat.RGBA32, new Color(1.0f, 0.5f, 0.0f, 0.5f), true);
 
         GameMap gameMap = GameObject.FindObjectOfType<GameMap>();
         gameMap.basicTerrainMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
