@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 using System.Collections;
 using System.Collections.Generic;
 using DFHack;
@@ -630,16 +631,16 @@ public class GameMap : MonoBehaviour
                 for (int y = 0; y < blocks.GetLength(1); y++)
                 {
                     if (blocks[x, y, z] != null && blocks[x, y, z].vertexCount > 0)
-                        Graphics.DrawMesh(blocks[x, y, z], Matrix4x4.identity, basicTerrainMaterial, 0);
+                        Graphics.DrawMesh(blocks[x, y, z], Vector3.zero, Quaternion.identity, basicTerrainMaterial, 0, null, 0, null, ShadowCastingMode.On, true, transform);
 
                     if (stencilBlocks[x, y, z] != null && stencilBlocks[x, y, z].vertexCount > 0)
-                        Graphics.DrawMesh(stencilBlocks[x, y, z], Matrix4x4.identity, stencilTerrainMaterial, 1);
+                        Graphics.DrawMesh(stencilBlocks[x, y, z], Vector3.zero, Quaternion.identity, stencilTerrainMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
 
                     if (liquidBlocks[x, y, z, MapDataStore.WATER_INDEX] != null && liquidBlocks[x, y, z, MapDataStore.WATER_INDEX].vertexCount > 0)
-                        Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.WATER_INDEX], Matrix4x4.identity, waterMaterial, 4);
+                        Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.WATER_INDEX], Vector3.zero, Quaternion.identity, waterMaterial, 4, null, 0, null, ShadowCastingMode.On, true, transform);
 
                     if (liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX] != null && liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX].vertexCount > 0)
-                        Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX], Matrix4x4.identity, magmaMaterial, 4);
+                        Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX], Vector3.zero, Quaternion.identity, magmaMaterial, 4, null, 0, null, ShadowCastingMode.On, true, transform);
                 }
         }
         for (int z = posZ + 1; z <= posZ + cameraViewDist; z++)

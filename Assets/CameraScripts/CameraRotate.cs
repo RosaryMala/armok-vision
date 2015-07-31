@@ -10,7 +10,7 @@ public class CameraRotate : MonoBehaviour {
     public float moveSpeed = 1.0f;
 
     
-	void LateUpdate()
+	void Update()
     {
         HandleMouseRotation();
 
