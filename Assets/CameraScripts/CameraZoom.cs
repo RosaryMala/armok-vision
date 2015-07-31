@@ -8,7 +8,7 @@ public class CameraZoom : MonoBehaviour {
     public float zoomSpeed = 0.1f;
 
     
-    void LateUpdate()
+    void Update()
     {
         HandleMouseRotation();
     }
