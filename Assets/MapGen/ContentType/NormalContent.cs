@@ -1,8 +1,7 @@
-﻿using System.Xml.Linq;
-using UnityEngine;
+﻿using System;
 using System.IO;
-using System;
-using UnityExtension;
+using System.Xml.Linq;
+using UnityEngine;
 
 public class NormalContent : IContent
 {
@@ -43,7 +42,7 @@ public class NormalContent : IContent
         }
 
         byte[] normalData = File.ReadAllBytes(normalPath);
-        Texture2D normalMap = new Texture2D(2, 2);
+        Texture2D normalMap = new Texture2D(2, 2, TextureFormat.ARGB32, false, true);
         normalMap.LoadImage(normalData);
 
         XAttribute specularAtt = elemtype.Attribute("specular");
@@ -63,7 +62,7 @@ public class NormalContent : IContent
         }
 
         byte[] specularData = File.ReadAllBytes(specularPath);
-        Texture2D specularMap = new Texture2D(2, 2);
+        Texture2D specularMap = new Texture2D(2, 2, TextureFormat.ARGB32, false, true);
         specularMap.LoadImage(specularData);
 
         if ((specularMap.width != normalMap.width) || (specularMap.height != normalMap.height))
@@ -89,7 +88,7 @@ public class NormalContent : IContent
 
         byte[] occlusionData = File.ReadAllBytes(occlusionPath);
 
-        Texture2D occlusionMap = new Texture2D(2, 2);
+        Texture2D occlusionMap = new Texture2D(2, 2, TextureFormat.ARGB32, false, true);
         occlusionMap.LoadImage(occlusionData);
 
         if (occlusionMap.width != normalMap.width || occlusionMap.height != normalMap.height)
@@ -97,7 +96,7 @@ public class NormalContent : IContent
             TextureScale.Bilinear(occlusionMap, normalMap.width, normalMap.height);
         }
 
-        Texture2D combinedMap = new Texture2D(normalMap.width, normalMap.height, TextureFormat.ARGB32, false);
+        Texture2D combinedMap = new Texture2D(normalMap.width, normalMap.height, TextureFormat.ARGB32, false, true);
 
         combinedMap.name = normalPath + occlusionAtt.Value + specularAtt.Value;
 
