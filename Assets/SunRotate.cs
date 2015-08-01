@@ -18,7 +18,7 @@ public class SunRotate : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Vector3 rotation = SunAngle.CalculateSunPosition((int)(Time.time * rotationSpeed), 0, 0);
+        Vector3 rotation = new Vector3((Time.time * rotationSpeed) % 360, 0, 0);
         float brightness = rotation.x + 1;
         brightness /= 2.0f;
         if (brightness < 0)
