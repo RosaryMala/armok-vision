@@ -274,7 +274,7 @@ public class AtlasCreator
         Debug.Log("SAVE TO: " + file);
     }
 
-    public static Atlas[] CreateAtlas(string name, Texture2D[] textures, Atlas startWith = null, TextureFormat format = TextureFormat.RGBA32, Color defaultColor = default(Color))
+    public static Atlas[] CreateAtlas(string name, Texture2D[] textures, Atlas startWith = null, TextureFormat format = TextureFormat.RGBA32, Color defaultColor = default(Color), bool linear = false)
     {
         List<Texture2D> toProcess = new List<Texture2D>();
         toProcess.AddRange(textures);
@@ -295,7 +295,7 @@ public class AtlasCreator
             if (_atlas == null)
             {
                 _atlas = new Atlas();
-                _atlas.texture = new Texture2D(AtlasSize, AtlasSize, format, true);
+                _atlas.texture = new Texture2D(AtlasSize, AtlasSize, format, true, linear);
                 if(defaultColor != default(Color))
                 {
                     Color[] fillcolors = new Color[AtlasSize * AtlasSize];
