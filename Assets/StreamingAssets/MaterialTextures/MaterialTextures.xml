@@ -1,7 +1,13 @@
 <?xml version="1.0"?>
 <materialTextures>
-     <materialTexture file="Grey.png">
+    <materialTexture file="Grey.png">
         <material token="*" />
+    </materialTexture>
+    <materialTexture file="Grey.png">
+        <material token="*:*" />
+    </materialTexture>
+    <materialTexture file="Grey.png">
+        <material token="*:*:*" />
     </materialTexture>
    <materialTexture file="Grey.png">
         <material token="NONE" />
