@@ -11,9 +11,38 @@ public class CameraRotateVertical : MonoBehaviour
     public float verticalRotationMin = 0.0f;
     public float verticalRotationMax = 80.0f;
 
+    public float firstPersonVerticalRotationMin = 0.0f;
+    public float firstPersonVerticalRotationMax = 80.0f;
+
+    float RotationMin
+    {
+        get
+        {
+            if (gameMap.firstPerson)
+                return firstPersonVerticalRotationMin;
+            else return verticalRotationMin;
+        }
+    }
+    float RotationMax
+    {
+        get
+        {
+            if (gameMap.firstPerson)
+                return firstPersonVerticalRotationMax;
+            else return verticalRotationMax;
+        }
+    }
+
     public float mouseSpeed = 10.0f;
 
     public float rotationX = 45.0f;
+
+    GameMap gameMap;
+
+    void Awake()
+    {
+        gameMap = FindObjectOfType<GameMap>();
+    }
 
     void Update()
     {
@@ -31,10 +60,10 @@ public class CameraRotateVertical : MonoBehaviour
             {
                 float cameraRotationX = (mouseY - Input.mousePosition.y) * mouseSpeed * Time.deltaTime;
                 rotationX = rotationX + cameraRotationX;
-                if (rotationX < verticalRotationMin)
-                    rotationX = verticalRotationMin;
-                if (rotationX > verticalRotationMax)
-                    rotationX = verticalRotationMax;
+                if (rotationX < RotationMin)
+                    rotationX = RotationMin;
+                if (rotationX > RotationMax)
+                    rotationX = RotationMax;
                 this.transform.localEulerAngles = new Vector3(rotationX, 0, 0);
             }
         }

@@ -94,6 +94,13 @@ Material:
           m_Offset: {x: 0, y: 0}
       data:
         first:
+          name: _Shapetex
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
           name: _SpecTex
         second:
           m_Texture: {fileID: 0}
@@ -104,13 +111,6 @@ Material:
           name: _AO
         second:
           m_Texture: {fileID: 2800000, guid: 9fbcb662b576c8841a4215cd9d6da541, type: 3}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _Shapetex
-        second:
-          m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
     m_Floats:
