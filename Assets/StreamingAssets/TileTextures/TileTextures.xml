@@ -1,81 +1,30 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <shapeTextures>
-    <shapeTexture normal="Flat_N.png" occlusion="Flat_O.png" specular="Matte_S.png">
-        <tiletype token="*:SMOOTH:*:*:*" />
+    <shapeTexture normal="Bars_N.png" occlusion="Bars_O.png" specular="Mirror_S.png">
+        <item token="BAR"/>
+        <subObject normal="Bars_N.png" occlusion="Bars_O.png" specular="Matte_S.png">
+            <material token="COAL:*"/>
+        </subObject>
+    </shapeTexture>
+    <shapeTexture normal="Tiles_N.png" occlusion="Tiles_O.png" specular="Medium_S.png">
+        <item token="BLOCKS"/>
+    </shapeTexture>
+    <shapeTexture normal="Logs_N.png" occlusion="Logs_O.png" specular="Matte_S.png">
+        <item token="WOOD"/>
+    </shapeTexture>
+    <shapeTexture normal="Boulders_N.png" occlusion="Boulders_O.png" specular="Boulders_S.png">
+        <item token="BOULDER"/>
+    </shapeTexture>
+    <shapeTexture normal="Rough_N.png" occlusion="Rough_O.png" specular="Rough_S.png">
+        <item token="NONE"/>
         <subObject normal="Flat_N.png" occlusion="Flat_O.png" specular="Matte_S.png">
-            <material token ="INORGANIC:*"/>
-            <subObject normal="Bars_N.png" occlusion="Bars_O.png"  specular="Mirror_S.png">
-                <item token = "BAR"/>
+            <material token="NONE"/>
+            <subObject normal="Leaves_N.png" occlusion="Leaves_O.png" specular="Leaves_S.png">
+                <tiletype token="BRANCH:*:*:*:*"/>
+                <tiletype token="TWIG:*:*:*:*"/>
+                <tiletype token="SHRUB:*:*:*:*"/>
+                <tiletype token="SAPLING:*:*:*:*"/>
             </subObject>
         </subObject>
-        <subObject normal="Logs_N.png" occlusion="Logs_O.png"  specular="Matte_S.png">
-            <material token ="*:*:WOOD"/>
-        </subObject>
-        <subObject normal="Tiles_N.png" occlusion="Tiles_O.png"  specular="Mirror_S.png">
-            <material token ="GLASS_GREEN"/>
-            <material token ="GLASS_CLEAR"/>
-            <material token ="GLASS_CRYSTAL"/>
-        </subObject>
-    </shapeTexture>
-    <shapeTexture normal="Tiles_N.png" occlusion="Tiles_O.png"  specular="Medium_S.png">
-        <tiletype token="FLOOR:SMOOTH:*:*:*" />
-        <subObject normal="Logs_N.png" occlusion="Logs_O.png"  specular="Matte_S.png">
-            <material token ="*:*:WOOD"/>
-        </subObject>
-    </shapeTexture>
-    <shapeTexture normal="Flat_N.png" occlusion="Flat_O.png"  specular="Matte_S.png">
-        <tiletype token="*:*:CONSTRUCTION:*:*" />
-        <subObject normal="Flat_N.png" occlusion="Flat_O.png"  specular="Matte_S.png">
-            <material token ="INORGANIC:*"/>
-            <subObject normal="Bars_N.png" occlusion="Bars_O.png"  specular="Mirror_S.png">
-                <item token = "BAR"/>
-            </subObject>
-        </subObject>
-        <subObject normal="Logs_N.png" occlusion="Logs_O.png"  specular="Matte_S.png">
-            <material token ="*:*:WOOD"/>
-        </subObject>
-        <subObject normal="Tiles_N.png" occlusion="Tiles_O.png"  specular="Mirror_S.png">
-            <material token ="GLASS_GREEN"/>
-            <material token ="GLASS_CLEAR"/>
-            <material token ="GLASS_CRYSTAL"/>
-        </subObject>
-    </shapeTexture>
-    <shapeTexture normal="Tiles_N.png" occlusion="Tiles_O.png"  specular="Medium_S.png">
-        <tiletype token="WALL:*:CONSTRUCTION:*:*" />
-        <subObject normal="Bars_N.png" occlusion="Bars_O.png"  specular="Mirror_S.png">
-            <item token = "BAR"/>
-        </subObject>
-        <subObject normal="Logs_N.png" occlusion="Logs_O.png"  specular="Matte_S.png">
-            <item token ="WOOD"/>
-        </subObject>
-    </shapeTexture>
-    <shapeTexture normal="Leaves_N.png" occlusion="Leaves_O.png"  specular="Leaves_S.png">
-        <tiletype token="BRANCH:*:*:*:*" />
-        <tiletype token="TWIG:*:*:*:*" />
-        <tiletype token="SAPLING:*:*:*:*" />
-        <tiletype token="SHRUB:*:*:*:*" />
-        <subObject normal="Rough_N.png" occlusion="Rough_O.png"  specular="Rough_S.png">
-            <material token ="INORGANIC:*"/>
-        </subObject>
-        <subObject normal="Rough_N.png" occlusion="Rough_O.png"  specular="Rough_S.png">
-            <material token ="PLANT:*:*"/>
-        </subObject>
-    </shapeTexture>
-    <shapeTexture normal="Rough_N.png" occlusion="Rough_O.png"  specular="Rough_S.png">
-        <tiletype token="*:SMOOTH:TREE_MATERIAL:*:*" />
-        <tiletype token="RAMP:*:TREE_MATERIAL:*:*" />
-    </shapeTexture>
-    <shapeTexture normal="Rough_N.png" occlusion="Rough_O.png"  specular="Rough_S.png">
-        <tiletype token="*:SMOOTH:MUSHROOM:*:*" />
-    </shapeTexture>
-    <shapeTexture normal="Rough_N.png" occlusion="Rough_O.png"  specular="Rough_S.png">
-        <tiletype token="*:NORMAL:*:*:*" />
-    </shapeTexture>
-    <shapeTexture normal="Flat_N.png" occlusion="Flat_O.png"  specular="Matte_S.png">
-        <tiletype token="*:*:*:*:*" />
-    </shapeTexture>
-    <shapeTexture normal="Grass_N.png" occlusion="Grass_O.png"  specular="Grass_S.png">
-        <tiletype token="*:*:GRASS_LIGHT:*:*" />
-        <tiletype token="*:*:GRASS_DARK:*:*" />
     </shapeTexture>
 </shapeTextures>

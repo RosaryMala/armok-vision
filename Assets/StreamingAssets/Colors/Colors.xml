@@ -22,6 +22,9 @@
     <color red="255" green="255" blue="255">
         <material token="Inorganic" />
     </color>
+    <color red="32" green="32" blue="32">
+        <material token="COAL:*" />
+    </color>
     <color red="127" green="196" blue="28">
         <material token="VOMIT" />
     </color>
