@@ -40,6 +40,11 @@ public class ItemMatcher<T>
     {
         set
         {
+            if(!ItemTokenList.itemLookup.ContainsKey(token))
+            {
+                Debug.Log("Invalid item: " + token);
+                return;
+            }
             if (itemList == null)
                 itemList = new Dictionary<MatPairStruct, T>();
             itemList[ItemTokenList.itemLookup[token].mat_pair] = value;

@@ -8,7 +8,8 @@ public class CameraMovement : MonoBehaviour {
     public Transform cameraPos;
     bool following = true;
     public float speed = 10;
-
+    public float minDistance = 5;
+    public float fasterMultiplier = 10;
     void Awake()
     {
         gameMap = FindObjectOfType<GameMap>();
@@ -32,8 +33,13 @@ public class CameraMovement : MonoBehaviour {
         if(moveZ != 0.0f || moveY != 0.0f || moveX != 0.0f)
         {
             following = false;
+            float cameraDistance = cameraPos.localPosition.z * -1.0f;
+            if (cameraDistance < minDistance)
+                cameraDistance = minDistance;
+            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                cameraDistance *= fasterMultiplier;
             Vector3 movement = new Vector3(moveX, moveZ, moveY);
-            transform.Translate(movement * Time.deltaTime * speed * cameraPos.localPosition.z * -1.0f, Space.Self);
+            transform.Translate(movement * Time.deltaTime * speed * cameraDistance, Space.Self);
             gameMap.UpdateCenter(transform.position);
         }
 	}

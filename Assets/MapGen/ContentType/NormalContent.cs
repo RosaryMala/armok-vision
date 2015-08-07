@@ -62,7 +62,7 @@ public class NormalContent : IContent
         }
 
         byte[] specularData = File.ReadAllBytes(specularPath);
-        Texture2D specularMap = new Texture2D(2, 2, TextureFormat.ARGB32, false, true);
+        Texture2D specularMap = new Texture2D(2, 2, TextureFormat.ARGB32, false, false);
         specularMap.LoadImage(specularData);
 
         if ((specularMap.width != normalMap.width) || (specularMap.height != normalMap.height))
