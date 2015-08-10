@@ -39,7 +39,7 @@
 			o.Metallic = 1.0 - IN.color.a;
 			o.Smoothness = b.b;
 			o.Occlusion = b.a;
-			o.Normal = b.rgb;
+			o.Normal = UnpackNormal(b.ggga);
 			o.Alpha = c.a;
 		}
 		ENDCG

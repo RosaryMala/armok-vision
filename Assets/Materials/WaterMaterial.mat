@@ -2,7 +2,7 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 5
+  serializedVersion: 6
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -11,6 +11,7 @@ Material:
   m_ShaderKeywords: _DETAIL_MULX2 _NORMALMAP
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
+  stringTagMap: {}
   m_SavedProperties:
     serializedVersion: 2
     m_TexEnvs:
@@ -20,7 +21,7 @@ Material:
         second:
           m_Texture: {fileID: 0}
           m_Scale: {x: .100000001, y: .100000001}
-          m_Offset: {x: 0, y: 0}
+          m_Offset: {x: .175567403, y: .313267708}
       data:
         first:
           name: _BumpMap
@@ -93,13 +94,6 @@ Material:
           m_Offset: {x: 0, y: 0}
       data:
         first:
-          name: _Shapetex
-        second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
           name: _SpecTex
         second:
           m_Texture: {fileID: 2800000, guid: cd64ec2ebcf7bf04bb5ce530607807e9, type: 3}
@@ -108,6 +102,13 @@ Material:
       data:
         first:
           name: _AO
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _Shapetex
         second:
           m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
@@ -136,6 +137,14 @@ Material:
     m_Floats:
       data:
         first:
+          name: _SrcBlend
+        second: 1
+      data:
+        first:
+          name: _DstBlend
+        second: 0
+      data:
+        first:
           name: _Scale
         second: 2
       data:
@@ -146,14 +155,6 @@ Material:
         first:
           name: _Shininess
         second: .5
-      data:
-        first:
-          name: _SrcBlend
-        second: 1
-      data:
-        first:
-          name: _DstBlend
-        second: 0
       data:
         first:
           name: _Parallax

@@ -28,16 +28,11 @@ using System.Collections;
 public class Water : MonoBehaviour 
 {
 	private Vector2 _uvOffset = Vector2.zero;
-	private Renderer _renderer;
-
-	void Start () 
-	{
-		_renderer = GetComponent<Renderer>();
-	}
+    public Material waterMaterial;
 
 	void Update () 
 	{
 		_uvOffset += new Vector2( 0.051f, 0.091f) * Time.deltaTime * 0.1f;
-		_renderer.materials[ 0].SetTextureOffset( "_MainTex", _uvOffset);
+        waterMaterial.SetTextureOffset("_MainTex", _uvOffset);
 	}
 }
