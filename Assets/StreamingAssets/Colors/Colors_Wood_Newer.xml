@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<colors>
+    <color red="192" green="144" blue="101">
+        <material token="PLANT:AVOCADO:WOOD"/>
+    </color>
+    <color red="228" green="198" blue="160">
+        <material token="PLANT:LIME:WOOD"/>
+        <material token="PLANT:FINGER_LIME:WOOD"/>
+        <material token="PLANT:ROUND_LIME:WOOD"/>
+        <material token="PLANT:DESERT_LIME:WOOD"/>
+    </color>
+    <color red="182" green="183" blue="177">
+        <material token="PLANT:POMELO:WOOD"/>
+        <material token="PLANT:CITRON:WOOD"/>
+    </color>
+    <color red="181" green="152" blue="108">
+        <material token="PLANT:ORANGE:WOOD"/>
+        <material token="PLANT:BITTER_ORANGE:WOOD"/>
+    </color>
+    <color red="181" green="152" blue="108">
+        <material token="PLANT:KUMQUAT:WOOD"/>
+    </color>
+    <color red="232" green="214" blue="151">
+        <material token="PLANT:CUSTARD-APPLE:WOOD"/>
+    </color>
+    <color red="210" green="171" blue="142">
+        <material token="PLANT:DATE_PALM:WOOD"/>
+    </color>
+    <color red="134" green="86" blue="25">
+        <material token="PLANT:LYCHEE:WOOD"/>
+    </color>
+    <color red="143" green="92" blue="72">
+        <material token="PLANT:MACADAMIA:WOOD"/>
+    </color>
+    <color red="182" green="138" blue="91">
+        <material token="PLANT:OLIVE:WOOD"/>
+    </color>
+    <color red="243" green="224" blue="157">
+        <material token="PLANT:POMEGRANATE:WOOD"/>
+    </color>
+    <color red="176" green="144" blue="115">
+        <material token="PLANT:APPLE:WOOD"/>
+    </color>
+    <color red="176" green="113" blue="88">
+        <material token="PLANT:BAYBERRY:WOOD"/>
+    </color>
+    <color red="214" green="183" blue="145">
+        <material token="PLANT:CHERRY:WOOD"/>
+    </color>
+    <color red="253" green="232" blue="165">
+        <material token="PLANT:GINKGO:WOOD"/>
+    </color>
+    <color red="231" green="157" blue="111">
+        <material token="PLANT:PEAR:WOOD"/>
+        <material token="PLANT:SAND_PEAR:WOOD"/>
+    </color>
+    <color red="240" green="200" blue="156">
+        <material token="PLANT:PECAN:WOOD"/>
+    </color>
+    <color red="219" green="185" blue="133">
+        <material token="PLANT:PERSIMMON:WOOD"/>
+    </color>
+    <color red="170" green="138" blue="99">
+        <material token="PLANT:PLUM:WOOD"/>
+    </color>
+    <color red="94" green="63" blue="42">
+        <material token="PLANT:WALNUT:WOOD"/>
+    </color>
+</colors>

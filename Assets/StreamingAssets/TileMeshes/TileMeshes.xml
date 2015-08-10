@@ -37,7 +37,7 @@
         <tiletype token="TREE_SHAPE:*:*:*:*" />
     </tileMesh>
     <tileMesh file = "Foliage_1.obj">
-        <tiletype token="BRANCH:*:*:*:*" />
+        <tiletype token="BRANCH:*:*:*:--------" />
         <subObject file ="Foliage_1.obj">
             <random/>
         </subObject>
@@ -50,8 +50,10 @@
     </tileMesh>
     <tileMesh file = "FLOOR.obj">
         <tiletype token="TRUNK_BRANCH:*:*:*:*" />
+        <tiletype token="BRANCH:*:*:*:*" />
     </tileMesh>
-    <tileMesh file = "Foliage_Small_1.obj">
+    
+    <tileMesh file = "Foliage_Test.obj">
         <tiletype token="TWIG:*:*:*:*" />
         <subObject file ="Foliage_Small_1.obj">
             <random/>
@@ -63,6 +65,7 @@
             <random/>
         </subObject>
     </tileMesh>
+    
     <!--<tileMesh file = "Grass Big.obj">
         <tiletype token="FLOOR:*:GRASS_LIGHT:*:*" />
         <tiletype token="FLOOR:*:GRASS_DARK:*:*" />

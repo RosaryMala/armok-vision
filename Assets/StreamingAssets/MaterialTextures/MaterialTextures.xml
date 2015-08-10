@@ -2,11 +2,7 @@
 <materialTextures>
     <materialTexture file="Grey.png">
         <material token="*" />
-    </materialTexture>
-    <materialTexture file="Grey.png">
         <material token="*:*" />
-    </materialTexture>
-    <materialTexture file="Grey.png">
         <material token="*:*:*" />
     </materialTexture>
    <materialTexture file="Grey.png">
@@ -30,6 +26,9 @@
     </materialTexture>
     <materialTexture file="Stone.png">
         <material token="INORGANIC:*" />
+    </materialTexture>
+    <materialTexture file="Wood.png">
+        <material token="*:*:WOOD" />
     </materialTexture>
     <materialTexture file="Grey.png">
         <material token="*:IRON" />

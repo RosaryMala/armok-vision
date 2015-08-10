@@ -23,7 +23,7 @@ RenderSettings:
   m_AmbientSkyColor: {r: .713235259, g: .822008133, b: 1, a: 1}
   m_AmbientEquatorColor: {r: .962478399, g: .993094504, b: 1, a: 1}
   m_AmbientGroundColor: {r: 0, g: 0, b: 0, a: 1}
-  m_AmbientIntensity: .5
+  m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SkyboxMaterial: {fileID: 2100000, guid: 8b52a39ce56e17f45b84634123480687, type: 2}
   m_HaloStrength: .5
@@ -31,11 +31,11 @@ RenderSettings:
   m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
   m_SpotCookie: {fileID: 10001, guid: 0000000000000000e000000000000000, type: 0}
-  m_DefaultReflectionMode: 1
+  m_DefaultReflectionMode: 0
   m_DefaultReflectionResolution: 128
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
-  m_CustomReflection: {fileID: 8900000, guid: 5c0a1a67937589042ba02aae57da200d, type: 3}
+  m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 692705303}
 --- !u!127 &3
 LevelGameManager:
@@ -88,6 +88,79 @@ NavMeshSettings:
     cellSize: .166666657
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &202886696
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 202886700}
+  - 33: {fileID: 202886699}
+  - 135: {fileID: 202886698}
+  - 23: {fileID: 202886697}
+  m_Layer: 0
+  m_Name: Sphere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!23 &202886697
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 202886696}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 2cccb6d474beb2a41bac76a15baf4ff3, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 1
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 1
+  m_ImportantGI: 0
+  m_AutoUVMaxDistance: .5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!135 &202886698
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 202886696}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: .5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!33 &202886699
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 202886696}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &202886700
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 202886696}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 444, y: 377, z: -315}
+  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
 --- !u!1 &224966259
 GameObject:
   m_ObjectHideFlags: 0
@@ -239,8 +312,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 1
-  currentLight: {fileID: 0}
-  oppositeLight: {fileID: 895398303}
 --- !u!114 &692705306
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -414,6 +485,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 861361728}
   - 114: {fileID: 861361729}
+  - 114: {fileID: 861361730}
   m_Layer: 0
   m_Name: GameMapObject
   m_TagString: Untagged
@@ -467,11 +539,23 @@ MonoBehaviour:
   rangeX: 4
   rangeY: 3
   rangeZup: 1
-  rangeZdown: 10
+  rangeZdown: 5
   blocksToProcess: 1
-  cameraViewDist: 10
+  cameraViewDist: 20
   meshingThreads: 3
   creatureTemplate: {fileID: 187478, guid: 6e1a61cd199f87d4db317855a72e405b, type: 2}
+--- !u!114 &861361730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 861361727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b33f47b56f49cc48aaa6e0068ba291b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waterMaterial: {fileID: 2100000, guid: 653692fae3c0d494fa3483ac3f95927f, type: 2}
 --- !u!1 &895398301
 GameObject:
   m_ObjectHideFlags: 0
@@ -1112,7 +1196,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1404020243}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 730475ee64f9a894bbac0d9e6f22e813, type: 3}
   m_Name: 
@@ -1137,20 +1221,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88733af66f90b5d48979e1ee485f80cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backfaceDepthDownsample: 8
+  backfaceDepthDownsample: 5
   ssrDownsample: 0
   blurDownsample: 0
-  iterations: 128
-  binarySearchIterations: 0
-  pixelStride: 1
-  pixelStrideZCutoff: 500
+  iterations: 10
+  binarySearchIterations: 4
+  pixelStride: 30
+  pixelStrideZCutoff: 100
   pixelZSizeOffset: .100000001
-  maxRayDistance: 200
-  screenEdgeFadeStart: .899999976
-  eyeFadeStart: 0
-  eyeFadeEnd: 1
+  maxRayDistance: 10
+  screenEdgeFadeStart: .75
+  eyeFadeStart: .5
+  eyeFadeEnd: .800000012
   maxBlurRadius: 8
-  BlurQuality: 4
+  BlurQuality: 2
 --- !u!1 &1503824698
 GameObject:
   m_ObjectHideFlags: 0
