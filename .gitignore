@@ -17,3 +17,4 @@
 *.app
 /*.csv
 /Debug
+/.vs
