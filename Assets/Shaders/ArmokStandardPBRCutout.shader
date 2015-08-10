@@ -8,9 +8,7 @@
 	}
 	SubShader {
 		Tags { "Queue"="AlphaTest" "IgnoreProjector"="True" "RenderType"="TransparentCutout" }
-		Tags { "RenderType"="Opaque" }
 		LOD 200
-		Cull Off
 		
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
@@ -41,7 +39,7 @@
 			o.Metallic = 1.0 - IN.color.a;
 			o.Smoothness = b.b;
 			o.Occlusion = b.a;
-			o.Normal = b.rgb;
+			o.Normal = UnpackNormal(b.ggga);
 			o.Alpha = c.a;
 		}
 		ENDCG
