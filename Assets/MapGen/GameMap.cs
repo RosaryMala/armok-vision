@@ -57,6 +57,8 @@ public class GameMap : MonoBehaviour
     public int cursY = -30000;
     public int cursZ = -30000;
 
+    public WorldMapMaker worldMap;
+
 
     // Parameters managing the currently visible area of the map.
     // Tracking:
@@ -224,7 +226,6 @@ public class GameMap : MonoBehaviour
     // Run once per frame.
     void Update()
     {
-        if (!enabled) return;
         //UpdateView();
         ShowCursorInfo();
         UpdateRequestRegion();
