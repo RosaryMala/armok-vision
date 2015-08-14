@@ -6,9 +6,9 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: WaterMaterial
-  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: _DETAIL_MULX2 _NORMALMAP
+  m_Name: WorldMap
+  m_Shader: {fileID: 4800000, guid: c0748bb0d39b17c4c9f2adab3178b78e, type: 3}
+  m_ShaderKeywords: 
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -19,21 +19,21 @@ Material:
         first:
           name: _MainTex
         second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: .100000001, y: .100000001}
-          m_Offset: {x: 1.23283482, y: 2.19975305}
+          m_Texture: {fileID: 2800000, guid: c6e0767b1f8c34890ac245217f4b9731, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
       data:
         first:
           name: _BumpMap
         second:
-          m_Texture: {fileID: 2800000, guid: a53cf5449d11a15d1100a04b44295342, type: 3}
-          m_Scale: {x: .25, y: .25}
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
         first:
           name: _DetailNormalMap
         second:
-          m_Texture: {fileID: 2800000, guid: a53cf5449d11a15d1100a04b44295342, type: 3}
+          m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
@@ -55,7 +55,7 @@ Material:
           name: _EmissionMap
         second:
           m_Texture: {fileID: 0}
-          m_Scale: {x: .100000001, y: .100000001}
+          m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
         first:
@@ -69,7 +69,7 @@ Material:
           name: _DetailAlbedoMap
         second:
           m_Texture: {fileID: 0}
-          m_Scale: {x: .100000001, y: .100000001}
+          m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
         first:
@@ -80,58 +80,16 @@ Material:
           m_Offset: {x: 0, y: 0}
       data:
         first:
-          name: _SpecCubeIBL
+          name: _ElevationGradient
         second:
-          m_Texture: {fileID: 0}
+          m_Texture: {fileID: 2800000, guid: 50e978fa24c89ab458b9a23f6b9f6c0d, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
         first:
-          name: _DiffCubeIBL
+          name: _BiomeMap
         second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _SpecTex
-        second:
-          m_Texture: {fileID: 2800000, guid: cd64ec2ebcf7bf04bb5ce530607807e9, type: 3}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _AO
-        second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _Shapetex
-        second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _ColorControlCube
-        second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _ColorControl
-        second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _Thickness
-        second:
-          m_Texture: {fileID: 0}
+          m_Texture: {fileID: 2800000, guid: 1e4358acdb78b9248bb4a21645538d1a, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
     m_Floats:
@@ -146,14 +104,10 @@ Material:
       data:
         first:
           name: _Scale
-        second: 2
+        second: .00999999978
       data:
         first:
           name: _Cutoff
-        second: .5
-      data:
-        first:
-          name: _Shininess
         second: .5
       data:
         first:
@@ -166,11 +120,11 @@ Material:
       data:
         first:
           name: _Glossiness
-        second: .846000016
+        second: .200000003
       data:
         first:
           name: _BumpScale
-        second: .5
+        second: 1
       data:
         first:
           name: _OcclusionStrength
@@ -178,14 +132,10 @@ Material:
       data:
         first:
           name: _DetailNormalMapScale
-        second: .200000003
+        second: 1
       data:
         first:
           name: _UVSec
-        second: 0
-      data:
-        first:
-          name: _EmissionScaleUI
         second: 0
       data:
         first:
@@ -197,42 +147,30 @@ Material:
         second: 0
       data:
         first:
-          name: _WaveScale
-        second: .0700000003
-      data:
-        first:
-          name: _Power
-        second: 2
-      data:
-        first:
-          name: _Distortion
-        second: .100000001
+          name: _SeaLevel
+        second: 100
     m_Colors:
       data:
         first:
           name: _EmissionColor
-        second: {r: 0, g: 0, b: 0, a: 0}
+        second: {r: 0, g: 0, b: 0, a: 1}
       data:
         first:
           name: _Color
-        second: {r: .0509803928, g: .384313732, b: .639215708, a: .850980401}
+        second: {r: .21708478, g: .699999988, b: .133823529, a: 1}
       data:
         first:
-          name: _EmissionColorUI
-        second: {r: 1, g: 1, b: 1, a: 1}
+          name: _OceanColor
+        second: {r: 0, g: 0, b: 1, a: 1}
       data:
         first:
-          name: _horizonColor
-        second: {r: .172000006, g: .463, b: .435000002, a: 0}
+          name: _BeachColor
+        second: {r: .996551752, g: .89741385, b: .703448296, a: 1}
       data:
         first:
-          name: WaveSpeed
-        second: {r: 19, g: 9, b: -16, a: -7}
+          name: _OceanShallowColor
+        second: {r: .0509842783, g: .384319872, b: .639220357, a: .850980401}
       data:
         first:
-          name: _ShapeAdj
-        second: {r: .980392158, g: 1, b: 1, a: 1}
-      data:
-        first:
-          name: _SubColor
-        second: {r: 1, g: 1, b: 1, a: 1}
+          name: _OceanDeepColor
+        second: {r: .0376797579, g: .284030467, b: .472413778, a: .850980401}
