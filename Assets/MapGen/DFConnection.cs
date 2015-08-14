@@ -59,6 +59,7 @@ public class DFConnection : MonoBehaviour
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MapInfo> mapInfoCall;
     private RemoteFunction<dfproto.EmptyMessage> mapResetCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.BuildingList> buildingListCall;
+    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.WorldMap> worldMapCall;
     private color_ostream dfNetworkOut = new color_ostream();
     private RemoteClient networkClient;
 
@@ -70,6 +71,7 @@ public class DFConnection : MonoBehaviour
     private RemoteFortressReader.TiletypeList _netTiletypeList;
     private RemoteFortressReader.MapInfo _netMapInfo;
     private RemoteFortressReader.BuildingList _netBuildingList;
+    private RemoteFortressReader.WorldMap _netWorldMap;
 
     // Changing (used like queues):
     private RemoteFortressReader.ViewInfo _netViewInfo;
@@ -122,6 +124,13 @@ public class DFConnection : MonoBehaviour
         get
         {
             return _netBuildingList;
+        }
+    }
+    public RemoteFortressReader.WorldMap NetWorldMap
+    {
+        get
+        {
+            return _netWorldMap;
         }
     }
     // Coordinates of the region we're pulling data from.
@@ -248,6 +257,8 @@ public class DFConnection : MonoBehaviour
         mapResetCall.bind(networkClient, "ResetMapHashes", "RemoteFortressReader");
         buildingListCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.BuildingList>();
         buildingListCall.bind(networkClient, "GetBuildingDefList", "RemoteFortressReader");
+        worldMapCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.WorldMap>();
+        worldMapCall.bind(networkClient, "GetWorldMap", "RemoteFortressReader");
     }
 
     // Get information that only needs to be read once
@@ -258,6 +269,7 @@ public class DFConnection : MonoBehaviour
         tiletypeListCall.execute(null, out _netTiletypeList);
         mapInfoCall.execute(null, out _netMapInfo);
         buildingListCall.execute(null, out _netBuildingList);
+        worldMapCall.execute(null, out _netWorldMap);
     }
 
     // Populate lists when we connect

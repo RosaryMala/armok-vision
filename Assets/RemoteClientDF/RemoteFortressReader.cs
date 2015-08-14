@@ -806,6 +806,166 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Cloud")]
+  public partial class Cloud : global::ProtoBuf.IExtensible
+  {
+    public Cloud() {}
+    
+    private RemoteFortressReader.FrontType _front = RemoteFortressReader.FrontType.FRONT_NONE;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"front", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.FrontType.FRONT_NONE)]
+    public RemoteFortressReader.FrontType front
+    {
+      get { return _front; }
+      set { _front = value; }
+    }
+    private RemoteFortressReader.CumulusType _cumulus = RemoteFortressReader.CumulusType.CUMULUS_NONE;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"cumulus", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.CumulusType.CUMULUS_NONE)]
+    public RemoteFortressReader.CumulusType cumulus
+    {
+      get { return _cumulus; }
+      set { _cumulus = value; }
+    }
+    private bool _cirrus = default(bool);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"cirrus", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool cirrus
+    {
+      get { return _cirrus; }
+      set { _cirrus = value; }
+    }
+    private RemoteFortressReader.StratusType _stratus = RemoteFortressReader.StratusType.STRATUS_NONE;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"stratus", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.StratusType.STRATUS_NONE)]
+    public RemoteFortressReader.StratusType stratus
+    {
+      get { return _stratus; }
+      set { _stratus = value; }
+    }
+    private RemoteFortressReader.FogType _fog = RemoteFortressReader.FogType.FOG_NONE;
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"fog", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.FogType.FOG_NONE)]
+    public RemoteFortressReader.FogType fog
+    {
+      get { return _fog; }
+      set { _fog = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"WorldMap")]
+  public partial class WorldMap : global::ProtoBuf.IExtensible
+  {
+    public WorldMap() {}
+    
+    private int _world_width;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"world_width", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int world_width
+    {
+      get { return _world_width; }
+      set { _world_width = value; }
+    }
+    private int _world_height;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"world_height", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int world_height
+    {
+      get { return _world_height; }
+      set { _world_height = value; }
+    }
+    private string _name = "";
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string name
+    {
+      get { return _name; }
+      set { _name = value; }
+    }
+    private string _name_english = "";
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"name_english", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string name_english
+    {
+      get { return _name_english; }
+      set { _name_english = value; }
+    }
+    private readonly global::System.Collections.Generic.List<int> _elevation = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(5, Name=@"elevation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> elevation
+    {
+      get { return _elevation; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<int> _rainfall = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(6, Name=@"rainfall", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> rainfall
+    {
+      get { return _rainfall; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<int> _vegetation = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(7, Name=@"vegetation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> vegetation
+    {
+      get { return _vegetation; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<int> _temperature = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(8, Name=@"temperature", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> temperature
+    {
+      get { return _temperature; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<int> _evilness = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(9, Name=@"evilness", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> evilness
+    {
+      get { return _evilness; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<int> _drainage = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(10, Name=@"drainage", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> drainage
+    {
+      get { return _drainage; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<int> _volcanism = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(11, Name=@"volcanism", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> volcanism
+    {
+      get { return _volcanism; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<int> _savagery = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(12, Name=@"savagery", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> savagery
+    {
+      get { return _savagery; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.Cloud> _clouds = new global::System.Collections.Generic.List<RemoteFortressReader.Cloud>();
+    [global::ProtoBuf.ProtoMember(13, Name=@"clouds", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.Cloud> clouds
+    {
+      get { return _clouds; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<int> _salinity = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(14, Name=@"salinity", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> salinity
+    {
+      get { return _salinity; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
     [global::ProtoBuf.ProtoContract(Name=@"TiletypeShape")]
     public enum TiletypeShape
     {
@@ -1022,6 +1182,91 @@ namespace RemoteFortressReader
             
       [global::ProtoBuf.ProtoEnum(Name=@"VAR_4", Value=3)]
       VAR_4 = 3
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"WorldPoles")]
+    public enum WorldPoles
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"NO_POLES", Value=0)]
+      NO_POLES = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"NORTH_POLE", Value=1)]
+      NORTH_POLE = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SOUTH_POLE", Value=2)]
+      SOUTH_POLE = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"BOTH_POLES", Value=3)]
+      BOTH_POLES = 3
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"FrontType")]
+    public enum FrontType
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"FRONT_NONE", Value=0)]
+      FRONT_NONE = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"FRONT_WARM", Value=1)]
+      FRONT_WARM = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"FRONT_COLD", Value=2)]
+      FRONT_COLD = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"FRONT_OCCLUDED", Value=3)]
+      FRONT_OCCLUDED = 3
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"CumulusType")]
+    public enum CumulusType
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CUMULUS_NONE", Value=0)]
+      CUMULUS_NONE = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CUMULUS_MEDIUM", Value=1)]
+      CUMULUS_MEDIUM = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CUMULUS_MULTI", Value=2)]
+      CUMULUS_MULTI = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CUMULUS_NIMBUS", Value=3)]
+      CUMULUS_NIMBUS = 3
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"StratusType")]
+    public enum StratusType
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"STRATUS_NONE", Value=0)]
+      STRATUS_NONE = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"STRATUS_ALTO", Value=1)]
+      STRATUS_ALTO = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"STRATUS_PROPER", Value=2)]
+      STRATUS_PROPER = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"STRATUS_NIMBUS", Value=3)]
+      STRATUS_NIMBUS = 3
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"FogType")]
+    public enum FogType
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"FOG_NONE", Value=0)]
+      FOG_NONE = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"FOG_MIST", Value=1)]
+      FOG_MIST = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"FOG_NORMAL", Value=2)]
+      FOG_NORMAL = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"F0G_THICK", Value=3)]
+      F0G_THICK = 3
     }
   
 }

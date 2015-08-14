@@ -6,6 +6,7 @@ public class ColorByAngle : MonoBehaviour {
 
     public float noonTemp = 5500;
     public float sunriseTemp = 2000;
+    public float currentTemp;
 
     Light lightComponent;
 
@@ -18,8 +19,8 @@ public class ColorByAngle : MonoBehaviour {
     void Update () 
     {
         float angle = transform.rotation.eulerAngles.x;
-        angle /= 90;
-        angle = Mathf.Clamp(angle, 0, 1);
-        lightComponent.color = ColorTemperature.Color(Mathf.Lerp(sunriseTemp, noonTemp, angle));
+        angle = Mathf.Sin(angle * Mathf.PI / 180);
+        currentTemp = Mathf.Lerp(sunriseTemp, noonTemp, angle);
+        lightComponent.color = ColorTemperature.Color(currentTemp);
     }
 }
