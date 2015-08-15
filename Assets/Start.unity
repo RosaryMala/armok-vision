@@ -187,7 +187,7 @@ MeshRenderer:
   m_GameObject: {fileID: 458878499}
   m_Enabled: 1
   m_CastShadows: 1
-  m_ReceiveShadows: 0
+  m_ReceiveShadows: 1
   m_Materials:
   - {fileID: 2100000, guid: 5c4766ae81bd7be4199757857af3a8d8, type: 2}
   m_SubsetIndices: 
@@ -214,13 +214,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f81689fd345faa4a9d59b0fdaee384f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scale: .00999999978
+  scale: .00100000005
   width: 0
   height: 0
   worldName: 
   worldNameEnglish: 
   offset: {x: 0, y: 0, z: 0}
   worldPosition: {x: 0, y: 0, z: 0}
+  cloudPrafab: {fileID: 11429096, guid: 81483fb545a1d2c42ab4bcdf87c47fab, type: 2}
 --- !u!33 &458878502
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1530,7 +1531,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentCamera: {fileID: 1404020252}
-  scaleFactor: .00999999978
+  scaleFactor: .00100000005
   scaleClipPlanes: 0
 --- !u!20 &1688073732
 Camera:
@@ -1548,8 +1549,8 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: .300000012
-  far clip plane: 10000
+  near clip plane: .0299999993
+  far clip plane: 1000
   field of view: 60
   orthographic: 0
   orthographic size: 5
