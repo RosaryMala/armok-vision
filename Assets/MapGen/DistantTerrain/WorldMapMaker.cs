@@ -21,18 +21,29 @@ public class WorldMapMaker : MonoBehaviour
     int[,] volcanism;
     int[,] savagery;
     int[,] salinity;
-    bool[,] CumulusMedium;
-    bool[,] CumulusMulti;
-    bool[,] CumulusNimbus;
-    bool[,] StratusAlto;
-    bool[,] StratusProper;
-    bool[,] StratusNimbus;
-    bool[,] FogMist;
-    bool[,] FogNormal;
-    bool[,] FogThick;
+    bool[,] cumulusMedium;
+    bool[,] cumulusMulti;
+    bool[,] cumulusNimbus;
+    bool[,] stratusAlto;
+    bool[,] stratusProper;
+    bool[,] stratusNimbus;
+    bool[,] cirrus;
+    bool[,] fogMist;
+    bool[,] fogNormal;
+    bool[,] fogThick;
 
     public Vector3 offset;
     public Vector3 worldPosition;
+
+    public CloudMaker cloudPrafab;
+
+    CloudMaker cumulusMediumClouds;
+    CloudMaker cumulusMultiClouds;
+    CloudMaker cumulusNimbusClouds;
+    CloudMaker stratusAltoClouds;
+    CloudMaker stratusProperClouds;
+    CloudMaker stratusNimbusClouds;
+    CloudMaker cirrusClouds;
 
     Mesh terrainMesh;
 
@@ -85,17 +96,19 @@ public class WorldMapMaker : MonoBehaviour
                 volcanism[x, y] = remoteMap.volcanism[index];
                 savagery[x, y] = remoteMap.savagery[index];
                 salinity[x, y] = remoteMap.salinity[index];
-                CumulusMedium[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_MEDIUM;
-                CumulusMulti[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_MULTI;
-                CumulusNimbus[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_NIMBUS;
-                StratusAlto[x, y] = remoteMap.clouds[index].stratus == StratusType.STRATUS_ALTO;
-                StratusProper[x, y] = remoteMap.clouds[index].stratus == StratusType.STRATUS_PROPER;
-                StratusNimbus[x, y] = remoteMap.clouds[index].stratus == StratusType.STRATUS_NIMBUS;
-                FogMist[x, y] = remoteMap.clouds[index].fog == FogType.FOG_MIST;
-                FogNormal[x, y] = remoteMap.clouds[index].fog == FogType.FOG_NORMAL;
-                FogThick[x, y] = remoteMap.clouds[index].fog == FogType.F0G_THICK;
+                cumulusMedium[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_MEDIUM;
+                cumulusMulti[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_MULTI;
+                cumulusNimbus[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_NIMBUS;
+                stratusAlto[x, y] = remoteMap.clouds[index].stratus == StratusType.STRATUS_ALTO;
+                stratusProper[x, y] = remoteMap.clouds[index].stratus == StratusType.STRATUS_PROPER;
+                stratusNimbus[x, y] = remoteMap.clouds[index].stratus == StratusType.STRATUS_NIMBUS;
+                cirrus[x, y] = remoteMap.clouds[index].cirrus;
+                fogMist[x, y] = remoteMap.clouds[index].fog == FogType.FOG_MIST;
+                fogNormal[x, y] = remoteMap.clouds[index].fog == FogType.FOG_NORMAL;
+                fogThick[x, y] = remoteMap.clouds[index].fog == FogType.F0G_THICK;
             }
         GenerateMesh();
+        GenerateClouds();
         Debug.Log("Loaded World: " + worldNameEnglish);
     }
 
@@ -110,15 +123,16 @@ public class WorldMapMaker : MonoBehaviour
         volcanism = new int[width, height];
         savagery = new int[width, height];
         salinity = new int[width, height];
-        CumulusMedium = new bool[width, height];
-        CumulusMulti = new bool[width, height];
-        CumulusNimbus = new bool[width, height];
-        StratusAlto = new bool[width, height];
-        StratusProper = new bool[width, height];
-        StratusNimbus = new bool[width, height];
-        FogMist = new bool[width, height];
-        FogNormal = new bool[width, height];
-        FogThick = new bool[width, height];
+        cumulusMedium = new bool[width, height];
+        cumulusMulti = new bool[width, height];
+        cumulusNimbus = new bool[width, height];
+        stratusAlto = new bool[width, height];
+        stratusProper = new bool[width, height];
+        stratusNimbus = new bool[width, height];
+        cirrus = new bool[width, height];
+        fogMist = new bool[width, height];
+        fogNormal = new bool[width, height];
+        fogThick = new bool[width, height];
     }
 
     // Does about what you'd think it does.
@@ -184,5 +198,31 @@ public class WorldMapMaker : MonoBehaviour
         terrainMesh.RecalculateTangents();
 
         meshFilter.mesh = terrainMesh;
+    }
+
+    void GenerateClouds()
+    {
+        cumulusMediumClouds = MakeCloud(cumulusMediumClouds, 1000, cumulusMedium, "cumulusMedium");
+        cumulusMultiClouds = MakeCloud(cumulusMultiClouds, 5000, cumulusMulti, "cumulusMulti");
+        cumulusNimbusClouds = MakeCloud(cumulusNimbusClouds, 6000, cumulusNimbus, "cumulusNimbus");
+        stratusAltoClouds = MakeCloud(stratusAltoClouds, 6100, stratusAlto, "stratusAlto");
+        stratusProperClouds = MakeCloud(stratusProperClouds, 1500, stratusProper, "stratusProper");
+        stratusNimbusClouds = MakeCloud(stratusNimbusClouds, 2500, stratusNimbus, "stratusNimbus");
+        cirrusClouds = MakeCloud(cirrusClouds, 6100, cirrus, "cirrus");
+    }
+
+    CloudMaker MakeCloud(CloudMaker original, float height, bool[,]cloudMap, string name)
+    {
+        if (original == null)
+        {
+            original = Instantiate<CloudMaker>(cloudPrafab);
+        }
+        original.transform.position = new Vector3(0, height * GameMap.tileHeight * scale);
+        original.offset = offset;
+        original.scale = scale;
+        original.GenerateMesh(cloudMap);
+        original.name = name;
+        original.transform.parent = transform;
+        return original;
     }
 }
