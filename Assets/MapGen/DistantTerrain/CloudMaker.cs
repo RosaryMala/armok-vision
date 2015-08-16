@@ -69,8 +69,6 @@ public class CloudMaker : MonoBehaviour
                     triangles.Add(CoordToIndex(x, y + 1));
                 }
             }
-
-        Debug.Log(vertexPositions.Length);
         Mesh terrainMesh = new Mesh();
         terrainMesh.vertices = vertexPositions;
         terrainMesh.colors = vertexColors;
