@@ -60,6 +60,7 @@ public class DFConnection : MonoBehaviour
     private RemoteFunction<dfproto.EmptyMessage> mapResetCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.BuildingList> buildingListCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.WorldMap> worldMapCall;
+    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.RegionMaps> regionMapCall;
     private color_ostream dfNetworkOut = new color_ostream();
     private RemoteClient networkClient;
 
@@ -72,6 +73,7 @@ public class DFConnection : MonoBehaviour
     private RemoteFortressReader.MapInfo _netMapInfo;
     private RemoteFortressReader.BuildingList _netBuildingList;
     private RemoteFortressReader.WorldMap _netWorldMap;
+    private RemoteFortressReader.RegionMaps _netRegionMaps;
 
     // Changing (used like queues):
     private RemoteFortressReader.ViewInfo _netViewInfo;
@@ -132,6 +134,10 @@ public class DFConnection : MonoBehaviour
         {
             return _netWorldMap;
         }
+    }
+    public RemoteFortressReader.RegionMaps NetRegionMaps
+    {
+        get { return _netRegionMaps; }
     }
     // Coordinates of the region we're pulling data from.
     // In block space - multiply x and y by 16 to get tile coordinates.
@@ -259,6 +265,8 @@ public class DFConnection : MonoBehaviour
         buildingListCall.bind(networkClient, "GetBuildingDefList", "RemoteFortressReader");
         worldMapCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.WorldMap>();
         worldMapCall.bind(networkClient, "GetWorldMap", "RemoteFortressReader");
+        regionMapCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.RegionMaps>();
+        regionMapCall.bind(networkClient, "GetRegionMaps", "RemoteFortressReader");
     }
 
     // Get information that only needs to be read once
@@ -270,6 +278,7 @@ public class DFConnection : MonoBehaviour
         mapInfoCall.execute(null, out _netMapInfo);
         buildingListCall.execute(null, out _netBuildingList);
         worldMapCall.execute(null, out _netWorldMap);
+        regionMapCall.execute(null, out _netRegionMaps);
     }
 
     // Populate lists when we connect
@@ -284,6 +293,7 @@ public class DFConnection : MonoBehaviour
         Debug.Log("Tiletypes fetched: " + _netTiletypeList.tiletype_list.Count);
         Debug.Log("Itemtypes fetched: " + _netItemList.material_list.Count);
         Debug.Log("Buildingtypes fetched: " + _netBuildingList.building_list.Count);
+        Debug.Log("Fetched " + _netRegionMaps.world_maps.Count + " surrounding regions");
     }
 
     void Start()
