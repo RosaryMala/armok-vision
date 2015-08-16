@@ -961,6 +961,39 @@ namespace RemoteFortressReader
       get { return _salinity; }
     }
   
+    private int _map_x = default(int);
+    [global::ProtoBuf.ProtoMember(15, IsRequired = false, Name=@"map_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int map_x
+    {
+      get { return _map_x; }
+      set { _map_x = value; }
+    }
+    private int _map_y = default(int);
+    [global::ProtoBuf.ProtoMember(16, IsRequired = false, Name=@"map_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int map_y
+    {
+      get { return _map_y; }
+      set { _map_y = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"RegionMaps")]
+  public partial class RegionMaps : global::ProtoBuf.IExtensible
+  {
+    public RegionMaps() {}
+    
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.WorldMap> _world_maps = new global::System.Collections.Generic.List<RemoteFortressReader.WorldMap>();
+    [global::ProtoBuf.ProtoMember(1, Name=@"world_maps", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.WorldMap> world_maps
+    {
+      get { return _world_maps; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

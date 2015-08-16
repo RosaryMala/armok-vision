@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityExtension;
+using DFHack;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
@@ -45,6 +46,9 @@ public class WorldMapMaker : MonoBehaviour
     CloudMaker stratusNimbusClouds;
     CloudMaker cirrusClouds;
 
+    Dictionary<DFCoord2d,RegionMaker> DetailRegions = new Dictionary<DFCoord2d,RegionMaker>();
+    public RegionMaker regionPrefab;
+
     Mesh terrainMesh;
 
     int CoordToIndex(int x, int y)
@@ -78,7 +82,10 @@ public class WorldMapMaker : MonoBehaviour
         height = remoteMap.world_height;
         worldName = remoteMap.name;
         worldNameEnglish = remoteMap.name_english;
-        offset = new Vector3(-mapInfo.block_pos_x * 48 * GameMap.tileWidth, -mapInfo.block_pos_z * GameMap.tileHeight, mapInfo.block_pos_y * 48 * GameMap.tileWidth);
+        offset = new Vector3(
+            -mapInfo.block_pos_x * 48 * GameMap.tileWidth,
+            -mapInfo.block_pos_z * GameMap.tileHeight,
+            mapInfo.block_pos_y * 48 * GameMap.tileWidth);
         worldPosition = new Vector3(mapInfo.block_pos_x, mapInfo.block_pos_y, mapInfo.block_pos_z);
         meshRenderer.material.SetFloat("_Scale", scale);
         meshRenderer.material.SetFloat("_SeaLevel", (99 * GameMap.tileHeight) + offset.y);
@@ -146,7 +153,26 @@ public class WorldMapMaker : MonoBehaviour
     void OnConnectToDF()
     {
         enabled = true;
+        GenerateRegionMeshes();
         CopyFromRemote(DFConnection.Instance.NetWorldMap, DFConnection.Instance.NetMapInfo);
+    }
+
+    void GenerateRegionMeshes()
+    {
+        foreach (WorldMap map in DFConnection.Instance.NetRegionMaps.world_maps)
+        {
+            DFCoord2d pos = new DFCoord2d(map.map_x, map.map_y);
+            if (DetailRegions.ContainsKey(pos))
+            {
+                Debug.Log("Region exists: " + pos.x + ", " + pos.y);
+                continue;
+            }
+            RegionMaker region = Instantiate<RegionMaker>(regionPrefab);
+            region.CopyFromRemote(map, DFConnection.Instance.NetMapInfo);
+            region.name = region.worldNameEnglish;
+            region.transform.parent = transform;
+            DetailRegions[pos] = region;
+        }
     }
 
     void GenerateMesh()
@@ -177,6 +203,8 @@ public class WorldMapMaker : MonoBehaviour
         for (int x = 0; x < width - 1; x++)
             for (int y = 0; y < height - 1; y++)
             {
+                if (DetailRegions.ContainsKey(new DFCoord2d(x, y)))
+                    continue;
                 triangles.Add(CoordToIndex(x, y));
                 triangles.Add(CoordToIndex(x + 1, y));
                 triangles.Add(CoordToIndex(x + 1, y + 1));
@@ -186,7 +214,6 @@ public class WorldMapMaker : MonoBehaviour
                 triangles.Add(CoordToIndex(x, y + 1));
             }
 
-        Debug.Log(vertexPositions.Length);
         terrainMesh = new Mesh();
         terrainMesh.vertices = vertexPositions;
         terrainMesh.colors = vertexColors;
@@ -204,10 +231,12 @@ public class WorldMapMaker : MonoBehaviour
     {
         cumulusMediumClouds = MakeCloud(cumulusMediumClouds, 1000, cumulusMedium, "cumulusMedium");
         cumulusMultiClouds = MakeCloud(cumulusMultiClouds, 5000, cumulusMulti, "cumulusMulti");
-        cumulusNimbusClouds = MakeCloud(cumulusNimbusClouds, 6000, cumulusNimbus, "cumulusNimbus");
+        for (int i = 2000; i <= 6000; i += 100)
+            cumulusNimbusClouds = MakeCloud(null, i, cumulusNimbus, "cumulusNimbus");
         stratusAltoClouds = MakeCloud(stratusAltoClouds, 6100, stratusAlto, "stratusAlto");
         stratusProperClouds = MakeCloud(stratusProperClouds, 1500, stratusProper, "stratusProper");
-        stratusNimbusClouds = MakeCloud(stratusNimbusClouds, 2500, stratusNimbus, "stratusNimbus");
+        for (int i = 500; i <= 1500; i += 100 )
+            stratusNimbusClouds = MakeCloud(null, i, stratusNimbus, "stratusNimbus");
         cirrusClouds = MakeCloud(cirrusClouds, 6100, cirrus, "cirrus");
     }
 
