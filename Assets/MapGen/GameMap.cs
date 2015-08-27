@@ -1,12 +1,10 @@
 using UnityEngine;
 using UnityEngine.Rendering;
-using System.Collections;
 using System.Collections.Generic;
 using DFHack;
 using RemoteFortressReader;
 using UnityEngine.UI;
 using System.IO;
-using UnityExtension;
 
 // The class responsible for talking to DF and meshing the data it gets.
 // Relevant vocabulary: A "map tile" is an individual square on the map.
