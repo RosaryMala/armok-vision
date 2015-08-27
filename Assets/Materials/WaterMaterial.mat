@@ -21,7 +21,7 @@ Material:
         second:
           m_Texture: {fileID: 0}
           m_Scale: {x: .100000001, y: .100000001}
-          m_Offset: {x: .251700938, y: .449114144}
+          m_Offset: {x: .0115935672, y: .0206865594}
       data:
         first:
           name: _BumpMap
@@ -39,20 +39,6 @@ Material:
       data:
         first:
           name: _ParallaxMap
-        second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _ColorControl
-        second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _Shapetex
         second:
           m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
@@ -122,6 +108,20 @@ Material:
           m_Offset: {x: 0, y: 0}
       data:
         first:
+          name: _Shapetex
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _ColorControl
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
           name: _ColorControlCube
         second:
           m_Texture: {fileID: 0}
@@ -157,24 +157,16 @@ Material:
         second: .5
       data:
         first:
-          name: _Glossiness
-        second: .846000016
-      data:
-        first:
-          name: _Metallic
-        second: 0
-      data:
-        first:
           name: _Parallax
         second: .0199999996
       data:
         first:
-          name: _WaveScale
-        second: .0700000003
-      data:
-        first:
           name: _ZWrite
         second: 1
+      data:
+        first:
+          name: _Glossiness
+        second: .846000016
       data:
         first:
           name: _BumpScale
@@ -201,6 +193,14 @@ Material:
         second: 0
       data:
         first:
+          name: _Metallic
+        second: 0
+      data:
+        first:
+          name: _WaveScale
+        second: .0700000003
+      data:
+        first:
           name: _Power
         second: 2
       data:
@@ -218,16 +218,16 @@ Material:
         second: {r: .0509803928, g: .384313732, b: .639215708, a: .850980401}
       data:
         first:
+          name: _EmissionColorUI
+        second: {r: 1, g: 1, b: 1, a: 1}
+      data:
+        first:
           name: WaveSpeed
         second: {r: 19, g: 9, b: -16, a: -7}
       data:
         first:
           name: _horizonColor
         second: {r: .172000006, g: .463, b: .435000002, a: 0}
-      data:
-        first:
-          name: _EmissionColorUI
-        second: {r: 1, g: 1, b: 1, a: 1}
       data:
         first:
           name: _ShapeAdj

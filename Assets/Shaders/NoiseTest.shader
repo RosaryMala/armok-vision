@@ -1,20 +1,17 @@
-﻿Shader "Custom/Clouds" {
+﻿Shader "Custom/NoiseTest" {
 	Properties {
-		_Color1("Color 1", Color) = (1,1,1,1)
-		_Color2("Color 2", Color) = (1,1,1,1)
+		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
 		_Metallic ("Metallic", Range(0,1)) = 0.0
-		_Cutoff ("Alpha cutoff", Range(0,1)) = 0.5
 	}
 	SubShader {
-		Tags { "Queue"="AlphaTest" "IgnoreProjector"="True" "RenderType"="TransparentCutout" }
+		Tags { "RenderType"="Opaque" }
 		LOD 200
-		Cull Off
 		
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf Standard addshadow alphatest:_Cutoff
+		#pragma surface surf Standard fullforwardshadows
 
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 3.0
@@ -23,14 +20,12 @@
 
 		struct Input {
 			float2 uv_MainTex;
-			float4 color: Color;
 			float3 worldPos;
 		};
 
 		half _Glossiness;
 		half _Metallic;
-		fixed4 _Color1;
-		fixed4 _Color2;
+		fixed4 _Color;
 
 		float noise(float3 x) {
 			float3 p = floor(x);
@@ -50,20 +45,19 @@
 			// random rotation reduces artifacts
 			p = mul(float3x3(0.28862355854826727, 0.6997227302779844, 0.6535170557707412,
 				0.06997493955670424, 0.6653237235314099, -0.7432683571499161,
-				-0.9548821651308448, 0.26025457467376617, 0.14306504491456504), p);
+				-0.9548821651308448, 0.26025457467376617, 0.14306504491456504),p);
 			return dot(float4(noise(p), noise(p*2.), noise(p*4.), noise(p*8.)),
 				float4(0.5, 0.25, 0.125, 0.06));
 		}
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
-			fixed n = fnoise(IN.worldPos);
 			// Albedo comes from a texture tinted by color
-			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * lerp(_Color1, _Color2, n);
+			fixed4 c = fnoise(IN.worldPos) * _Color;
 			o.Albedo = c.rgb;
 			// Metallic and smoothness come from slider variables
 			o.Metallic = _Metallic;
 			o.Smoothness = _Glossiness;
-			o.Alpha = n + IN.color.a;
+			o.Alpha = c.a;
 		}
 		ENDCG
 	} 
