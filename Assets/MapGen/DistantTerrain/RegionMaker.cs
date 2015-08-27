@@ -79,7 +79,6 @@ public class RegionMaker : MonoBehaviour
                 salinity[x, y] = remoteMap.salinity[index];
             }
         GenerateMesh();
-        Debug.Log("Loaded World: " + worldNameEnglish);
     }
 
     void InitArrays()
