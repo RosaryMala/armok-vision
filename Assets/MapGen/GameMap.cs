@@ -229,7 +229,7 @@ public class GameMap : MonoBehaviour
         UpdateRequestRegion();
         blockListTimer.Reset();
         blockListTimer.Start();
-        //UpdateCreatures();
+        UpdateCreatures();
         UpdateBlocks();
 
         DrawBlocks();
@@ -627,10 +627,10 @@ public class GameMap : MonoBehaviour
             if (!creatureList.ContainsKey(unit.id))
             {
                 creatureList[unit.id] = Instantiate(creatureTemplate) as GameObject;
-                creatureList[unit.id].GetComponent<LayeredSprite>().Do_Sprite = true;
                 creatureList[unit.id].transform.parent = gameObject.transform;
             }
             creatureList[unit.id].transform.position = DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z) + new Vector3(0, 2, 0);
+            creatureList[unit.id].SetActive(unit.pos_z < PosZ && unit.pos_z > (PosZ - cameraViewDist));
         }
     }
 
