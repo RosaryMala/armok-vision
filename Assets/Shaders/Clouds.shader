@@ -1,7 +1,6 @@
 ﻿Shader "Custom/Clouds" {
 	Properties {
-		_Color1("Color 1", Color) = (1,1,1,1)
-		_Color2("Color 2", Color) = (1,1,1,1)
+		_Color("Color ", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
 		_Metallic ("Metallic", Range(0,1)) = 0.0
@@ -29,8 +28,7 @@
 
 		half _Glossiness;
 		half _Metallic;
-		fixed4 _Color1;
-		fixed4 _Color2;
+		fixed4 _Color;
 
 		float noise(float3 x) {
 			float3 p = floor(x);
@@ -56,14 +54,16 @@
 		}
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
-			fixed n = fnoise(IN.worldPos);
+			fixed n = 0;
+			//if(IN.color.a > 0 || IN.color.a < 1)
+			//	n = fnoise(IN.worldPos);
 			// Albedo comes from a texture tinted by color
-			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * lerp(_Color1, _Color2, n);
+			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 			o.Albedo = c.rgb;
 			// Metallic and smoothness come from slider variables
 			o.Metallic = _Metallic;
 			o.Smoothness = _Glossiness;
-			o.Alpha = n + IN.color.a;
+			o.Alpha = c.a + IN.color.a;
 		}
 		ENDCG
 	} 
