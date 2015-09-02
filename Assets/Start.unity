@@ -543,6 +543,7 @@ GameObject:
   - 4: {fileID: 861361728}
   - 114: {fileID: 861361729}
   - 114: {fileID: 861361730}
+  - 114: {fileID: 861361731}
   m_Layer: 0
   m_Name: GameMapObject
   m_TagString: Untagged
@@ -614,6 +615,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waterMaterial: {fileID: 2100000, guid: 653692fae3c0d494fa3483ac3f95927f, type: 2}
+--- !u!114 &861361731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 861361727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fb12edbd5d56cb4c99ccf773df52492, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startRect:
+    serializedVersion: 2
+    x: 10
+    y: 10
+    width: 75
+    height: 50
+  updateColor: 1
+  allowDrag: 1
+  frequency: .5
+  nbDecimal: 1
 --- !u!1 &895398301
 GameObject:
   m_ObjectHideFlags: 0
