@@ -20,8 +20,12 @@ public class CloudMaker : MonoBehaviour
         meshFilter = GetComponent<MeshFilter>();
     }
 
+    Color[] vertexColors;
+
     public void GenerateMesh(bool[,] cloudArray)
     {
+        if (cloudArray == null)
+            return;
         width = cloudArray.GetLength(0);
         height = cloudArray.GetLength(1);
         if (width * height > 65535)
@@ -30,7 +34,7 @@ public class CloudMaker : MonoBehaviour
             height = Mathf.Clamp(height, 0, 255);
         }
         Vector3[] vertexPositions = new Vector3[width * height];
-        Color[] vertexColors = new Color[width * height];
+        vertexColors = new Color[width * height];
         Vector2[] vertexUV = new Vector2[width * height];
         for (int x = 0; x < width; x++)
             for (int y = 0; y < height; y++)
@@ -52,22 +56,13 @@ public class CloudMaker : MonoBehaviour
         for (int x = 0; x < width - 1; x++)
             for (int y = 0; y < height - 1; y++)
             {
-                if (vertexColors[CoordToIndex(x, y)].a > 0
-                    || vertexColors[CoordToIndex(x + 1, y)].a > 0
-                    || vertexColors[CoordToIndex(x + 1, y + 1)].a > 0)
-                {
                     triangles.Add(CoordToIndex(x, y));
                     triangles.Add(CoordToIndex(x + 1, y));
                     triangles.Add(CoordToIndex(x + 1, y + 1));
-                }
-                if (vertexColors[CoordToIndex(x, y)].a > 0
-                    || vertexColors[CoordToIndex(x + 1, y + 1)].a > 0
-                    || vertexColors[CoordToIndex(x, y + 1)].a > 0)
-                {
+
                     triangles.Add(CoordToIndex(x, y));
                     triangles.Add(CoordToIndex(x + 1, y + 1));
                     triangles.Add(CoordToIndex(x, y + 1));
-                }
             }
         Mesh terrainMesh = new Mesh();
         terrainMesh.vertices = vertexPositions;
@@ -79,5 +74,27 @@ public class CloudMaker : MonoBehaviour
         terrainMesh.RecalculateTangents();
 
         meshFilter.mesh = terrainMesh;
+    }
+
+    public void UpdateClouds(bool[,] cloudArray)
+    {
+        if (cloudArray == null)
+            return;
+        //width = cloudArray.GetLength(0);
+        //height = cloudArray.GetLength(1);
+        //if (width * height > 65535)
+        //{
+        //    width = Mathf.Clamp(width, 0, 255);
+        //    height = Mathf.Clamp(height, 0, 255);
+        //}
+        for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
+            {
+                int index = CoordToIndex(x, y);
+                vertexColors[index].a *= 0.9f;
+                if (cloudArray[x, y])
+                    vertexColors[index].a += 0.1f;
+            }
+        meshFilter.mesh.colors = vertexColors;
     }
 }

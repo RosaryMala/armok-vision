@@ -474,6 +474,14 @@ namespace RemoteFortressReader
       get { return _pos_z; }
       set { _pos_z = value; }
     }
+    private RemoteFortressReader.MatPair _race = null;
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"race", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.MatPair race
+    {
+      get { return _race; }
+      set { _race = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -992,6 +1000,156 @@ namespace RemoteFortressReader
     public global::System.Collections.Generic.List<RemoteFortressReader.WorldMap> world_maps
     {
       get { return _world_maps; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"CasteRaw")]
+  public partial class CasteRaw : global::ProtoBuf.IExtensible
+  {
+    public CasteRaw() {}
+    
+    private int _index = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int index
+    {
+      get { return _index; }
+      set { _index = value; }
+    }
+    private string _caste_id = "";
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"caste_id", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string caste_id
+    {
+      get { return _caste_id; }
+      set { _caste_id = value; }
+    }
+    private readonly global::System.Collections.Generic.List<string> _caste_name = new global::System.Collections.Generic.List<string>();
+    [global::ProtoBuf.ProtoMember(3, Name=@"caste_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<string> caste_name
+    {
+      get { return _caste_name; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<string> _baby_name = new global::System.Collections.Generic.List<string>();
+    [global::ProtoBuf.ProtoMember(4, Name=@"baby_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<string> baby_name
+    {
+      get { return _baby_name; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<string> _child_name = new global::System.Collections.Generic.List<string>();
+    [global::ProtoBuf.ProtoMember(5, Name=@"child_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<string> child_name
+    {
+      get { return _child_name; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"CreatureRaw")]
+  public partial class CreatureRaw : global::ProtoBuf.IExtensible
+  {
+    public CreatureRaw() {}
+    
+    private int _index = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int index
+    {
+      get { return _index; }
+      set { _index = value; }
+    }
+    private string _creature_id = "";
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"creature_id", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string creature_id
+    {
+      get { return _creature_id; }
+      set { _creature_id = value; }
+    }
+    private readonly global::System.Collections.Generic.List<string> _name = new global::System.Collections.Generic.List<string>();
+    [global::ProtoBuf.ProtoMember(3, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<string> name
+    {
+      get { return _name; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<string> _general_baby_name = new global::System.Collections.Generic.List<string>();
+    [global::ProtoBuf.ProtoMember(4, Name=@"general_baby_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<string> general_baby_name
+    {
+      get { return _general_baby_name; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<string> _general_child_name = new global::System.Collections.Generic.List<string>();
+    [global::ProtoBuf.ProtoMember(5, Name=@"general_child_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<string> general_child_name
+    {
+      get { return _general_child_name; }
+    }
+  
+    private int _creature_tile = default(int);
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"creature_tile", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int creature_tile
+    {
+      get { return _creature_tile; }
+      set { _creature_tile = value; }
+    }
+    private int _creature_soldier_tile = default(int);
+    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"creature_soldier_tile", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int creature_soldier_tile
+    {
+      get { return _creature_soldier_tile; }
+      set { _creature_soldier_tile = value; }
+    }
+    private RemoteFortressReader.ColorDefinition _color = null;
+    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"color", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.ColorDefinition color
+    {
+      get { return _color; }
+      set { _color = value; }
+    }
+    private int _adultsize = default(int);
+    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"adultsize", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int adultsize
+    {
+      get { return _adultsize; }
+      set { _adultsize = value; }
+    }
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.CasteRaw> _caste = new global::System.Collections.Generic.List<RemoteFortressReader.CasteRaw>();
+    [global::ProtoBuf.ProtoMember(10, Name=@"caste", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.CasteRaw> caste
+    {
+      get { return _caste; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"CreatureRawList")]
+  public partial class CreatureRawList : global::ProtoBuf.IExtensible
+  {
+    public CreatureRawList() {}
+    
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.CreatureRaw> _creature_raws = new global::System.Collections.Generic.List<RemoteFortressReader.CreatureRaw>();
+    [global::ProtoBuf.ProtoMember(1, Name=@"creature_raws", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.CreatureRaw> creature_raws
+    {
+      get { return _creature_raws; }
     }
   
     private global::ProtoBuf.IExtension extensionObject;

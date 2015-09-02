@@ -61,6 +61,7 @@ public class DFConnection : MonoBehaviour
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.BuildingList> buildingListCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.WorldMap> worldMapCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.RegionMaps> regionMapCall;
+    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.CreatureRawList> creatureRawListCall;
     private color_ostream dfNetworkOut = new color_ostream();
     private RemoteClient networkClient;
 
@@ -72,12 +73,13 @@ public class DFConnection : MonoBehaviour
     private RemoteFortressReader.TiletypeList _netTiletypeList;
     private RemoteFortressReader.MapInfo _netMapInfo;
     private RemoteFortressReader.BuildingList _netBuildingList;
-    private RemoteFortressReader.WorldMap _netWorldMap;
-    private RemoteFortressReader.RegionMaps _netRegionMaps;
+    private RemoteFortressReader.CreatureRawList _netCreatureRawList;
 
     // Changing (used like queues):
     private RemoteFortressReader.ViewInfo _netViewInfo;
     private RemoteFortressReader.UnitList _netUnitList;
+    private RemoteFortressReader.WorldMap _netWorldMap;
+    private RemoteFortressReader.RegionMaps _netRegionMaps;
     // Special sort of queue:
     // It pops elements in random order, but makes sure that
     // we don't bother storing two updates to the same block at once
@@ -88,6 +90,8 @@ public class DFConnection : MonoBehaviour
     // Mutexes for changing / nullable objects
     private Object viewInfoLock = new Object();
     private Object unitListLock = new Object();
+    private Object worldMapLock = new Object();
+    private Object regionMapLock = new Object();
 
     // Unchanging properties
     public RemoteFortressReader.MapInfo NetMapInfo
@@ -128,17 +132,7 @@ public class DFConnection : MonoBehaviour
             return _netBuildingList;
         }
     }
-    public RemoteFortressReader.WorldMap NetWorldMap
-    {
-        get
-        {
-            return _netWorldMap;
-        }
-    }
-    public RemoteFortressReader.RegionMaps NetRegionMaps
-    {
-        get { return _netRegionMaps; }
-    }
+
     // Coordinates of the region we're pulling data from.
     // In block space - multiply x and y by 16 to get tile coordinates.
     public BlockCoord RequestRegionMin
@@ -188,6 +182,34 @@ public class DFConnection : MonoBehaviour
         }
     }
 
+    // Pop a world map update. The map doesn't change, but the clouds do.
+    public RemoteFortressReader.WorldMap PopWorldMapUpdate()
+    {
+        RemoteFortressReader.WorldMap result = null;
+        if (Monitor.TryEnter(worldMapLock))
+            try
+            {
+                result = _netWorldMap;
+                _netWorldMap = null;
+            }
+            finally
+            {
+                Monitor.Exit(worldMapLock);
+            }
+        return result;
+    }
+
+    // Pop region map update. These change in adventure mode.
+    public RemoteFortressReader.RegionMaps PopRegionMapUpdate()
+    {
+        lock (regionMapLock)
+        {
+            RemoteFortressReader.RegionMaps result = _netRegionMaps;
+            _netRegionMaps = null;
+            return result;
+        }
+    }
+
     // Pop a map block update; return null if there isn't one.
     public RemoteFortressReader.MapBlock PopMapBlockUpdate()
     {
@@ -217,6 +239,8 @@ public class DFConnection : MonoBehaviour
         networkClient.suspend_game();
         viewInfoCall.execute(null, out _netViewInfo);
         unitListCall.execute(null, out _netUnitList);
+        worldMapCall.execute(null, out _netWorldMap);
+        regionMapCall.execute(null, out _netRegionMaps);
         networkClient.resume_game();
 
         mapResetCall.execute();
@@ -267,6 +291,8 @@ public class DFConnection : MonoBehaviour
         worldMapCall.bind(networkClient, "GetWorldMap", "RemoteFortressReader");
         regionMapCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.RegionMaps>();
         regionMapCall.bind(networkClient, "GetRegionMaps", "RemoteFortressReader");
+        creatureRawListCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.CreatureRawList>();
+        creatureRawListCall.bind(networkClient, "GetCreatureRaws", "RemoteFortressReader");
     }
 
     // Get information that only needs to be read once
@@ -277,8 +303,7 @@ public class DFConnection : MonoBehaviour
         tiletypeListCall.execute(null, out _netTiletypeList);
         mapInfoCall.execute(null, out _netMapInfo);
         buildingListCall.execute(null, out _netBuildingList);
-        worldMapCall.execute(null, out _netWorldMap);
-        regionMapCall.execute(null, out _netRegionMaps);
+        creatureRawListCall.execute(null, out _netCreatureRawList);
     }
 
     // Populate lists when we connect
@@ -294,6 +319,7 @@ public class DFConnection : MonoBehaviour
         Debug.Log("Itemtypes fetched: " + _netItemList.material_list.Count);
         Debug.Log("Buildingtypes fetched: " + _netBuildingList.building_list.Count);
         Debug.Log("Fetched " + _netRegionMaps.world_maps.Count + " surrounding regions");
+        Debug.Log("Creature Raws fetched: " + _netCreatureRawList.creature_raws.Count);
     }
 
     void Start()
@@ -370,6 +396,8 @@ public class DFConnection : MonoBehaviour
                 connection.networkClient.suspend_game();
                 connection.viewInfoCall.execute(null, out connection._netViewInfo);
                 connection.unitListCall.execute(null, out connection._netUnitList);
+                connection.regionMapCall.execute(null, out connection._netRegionMaps);
+                connection.worldMapCall.execute(null, out connection._netWorldMap);
                 RemoteFortressReader.BlockList resultList;
                 connection.blockListCall.execute(connection.blockRequest, out resultList);
                 foreach (RemoteFortressReader.MapBlock block in resultList.map_blocks)
@@ -447,6 +475,19 @@ public class DFConnection : MonoBehaviour
                     {
                         connection.unitListCall.execute(null, out connection._netUnitList);
                     }
+                    lock (connection.regionMapLock)
+                    {
+                        connection.regionMapCall.execute(null, out connection._netRegionMaps);
+                    }
+                    if (Monitor.TryEnter(connection.worldMapLock))
+                        try
+                        {
+                            connection.worldMapCall.execute(null, out connection._netWorldMap);
+                        }
+                        finally
+                        {
+                            Monitor.Exit(connection.worldMapLock);
+                        }
                     RemoteFortressReader.BlockList resultList;
                     lock (connection.blockRequest)
                     {
