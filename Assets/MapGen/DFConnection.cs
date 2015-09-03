@@ -133,6 +133,14 @@ public class DFConnection : MonoBehaviour
         }
     }
 
+    public RemoteFortressReader.CreatureRawList NetCreatureRawList
+    {
+        get
+        {
+            return _netCreatureRawList;
+        }
+    }
+
     // Coordinates of the region we're pulling data from.
     // In block space - multiply x and y by 16 to get tile coordinates.
     public BlockCoord RequestRegionMin
