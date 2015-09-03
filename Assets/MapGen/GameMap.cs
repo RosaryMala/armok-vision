@@ -613,8 +613,8 @@ public class GameMap : MonoBehaviour
         }
     }
 
-    Dictionary<int, GameObject> creatureList;
-    public GameObject creatureTemplate;
+    Dictionary<int, AtlasSprite> creatureList;
+    public AtlasSprite creatureTemplate;
 
     void UpdateCreatures()
     {
@@ -623,14 +623,20 @@ public class GameMap : MonoBehaviour
         foreach (var unit in unitList.creature_list)
         {
             if (creatureList == null)
-                creatureList = new Dictionary<int, GameObject>();
+                creatureList = new Dictionary<int, AtlasSprite>();
             if (!creatureList.ContainsKey(unit.id))
             {
-                creatureList[unit.id] = Instantiate(creatureTemplate) as GameObject;
+                creatureList[unit.id] = Instantiate(creatureTemplate);
                 creatureList[unit.id].transform.parent = gameObject.transform;
+                creatureList[unit.id].ClearMesh();
+                if(DFConnection.Instance.NetCreatureRawList != null)
+                {
+                    var creatureRaw = DFConnection.Instance.NetCreatureRawList.creature_raws[unit.race.mat_type];
+                    creatureList[unit.id].AddTile(creatureRaw.creature_tile, new Color(creatureRaw.color.red/255.0f, creatureRaw.color.green / 255.0f, creatureRaw.color.blue / 255.0f));
+                }
             }
-            creatureList[unit.id].transform.position = DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z) + new Vector3(0, 2, 0);
-            creatureList[unit.id].SetActive(unit.pos_z < PosZ && unit.pos_z > (PosZ - cameraViewDist));
+            creatureList[unit.id].transform.position = DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z) + new Vector3(0, 1.5f, 0);
+            creatureList[unit.id].gameObject.SetActive(unit.pos_z < PosZ && unit.pos_z > (PosZ - cameraViewDist));
         }
     }
 
