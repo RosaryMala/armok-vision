@@ -324,12 +324,12 @@ public class WorldMapMaker : MonoBehaviour
         cumulusMediumClouds = MakeCloud(cumulusMediumClouds, 1250, cumulusMedium, "cumulusMedium");
         cumulusMultiClouds = MakeCloud(cumulusMultiClouds, 5000, cumulusMulti, "cumulusMulti");
         if (cumulusNimbusClouds == null) cumulusNimbusClouds = new Dictionary<int, CloudMaker>();
-        for (int i = 1875; i <= 6250; i += 625)
+        for (int i = 1875; i <= 6250; i += 300)
             cumulusNimbusClouds[i] = MakeCloud(cumulusNimbusClouds.ContainsKey(i) ? cumulusNimbusClouds[i] : null, i, cumulusNimbus, "cumulusNimbus");
         stratusAltoClouds = MakeCloud(stratusAltoClouds, 6250, stratusAlto, "stratusAlto");
         stratusProperClouds = MakeCloud(stratusProperClouds, 1875, stratusProper, "stratusProper");
         if (stratusNimbusClouds == null) stratusNimbusClouds = new Dictionary<int, CloudMaker>();
-        for (int i = 625; i <= 1875; i += 625)
+        for (int i = 625; i <= 1875; i += 300)
             stratusNimbusClouds[i] = MakeCloud(stratusNimbusClouds.ContainsKey(i) ? stratusNimbusClouds[i] : null, i, stratusNimbus, "stratusNimbus");
         cirrusClouds = MakeCloud(cirrusClouds, 6250, cirrus, "cirrus");
     }

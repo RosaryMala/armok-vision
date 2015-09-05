@@ -602,7 +602,7 @@ MonoBehaviour:
   blocksToProcess: 1
   cameraViewDist: 20
   meshingThreads: 3
-  creatureTemplate: {fileID: 187478, guid: 6e1a61cd199f87d4db317855a72e405b, type: 2}
+  creatureTemplate: {fileID: 11414388, guid: 6e1a61cd199f87d4db317855a72e405b, type: 2}
 --- !u!114 &861361730
 MonoBehaviour:
   m_ObjectHideFlags: 0

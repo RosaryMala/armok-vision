@@ -482,6 +482,38 @@ namespace RemoteFortressReader
       get { return _race; }
       set { _race = value; }
     }
+    private RemoteFortressReader.ColorDefinition _profession_color = null;
+    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"profession_color", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.ColorDefinition profession_color
+    {
+      get { return _profession_color; }
+      set { _profession_color = value; }
+    }
+    private uint _flags1 = default(uint);
+    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"flags1", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(uint))]
+    public uint flags1
+    {
+      get { return _flags1; }
+      set { _flags1 = value; }
+    }
+    private uint _flags2 = default(uint);
+    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"flags2", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(uint))]
+    public uint flags2
+    {
+      get { return _flags2; }
+      set { _flags2 = value; }
+    }
+    private uint _flags3 = default(uint);
+    [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name=@"flags3", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(uint))]
+    public uint flags3
+    {
+      get { return _flags3; }
+      set { _flags3 = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
