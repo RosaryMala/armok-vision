@@ -5,6 +5,7 @@ using DFHack;
 using RemoteFortressReader;
 using UnityEngine.UI;
 using System.IO;
+using UnitFlags;
 
 // The class responsible for talking to DF and meshing the data it gets.
 // Relevant vocabulary: A "map tile" is an individual square on the map.
@@ -624,19 +625,36 @@ public class GameMap : MonoBehaviour
         {
             if (creatureList == null)
                 creatureList = new Dictionary<int, AtlasSprite>();
-            if (!creatureList.ContainsKey(unit.id))
+            UnitFlags1 flags1 = (UnitFlags1)unit.flags1;
+            //UnitFlags2 flags2 = (UnitFlags2)unit.flags2;
+            //UnitFlags3 flags3 = (UnitFlags3)unit.flags3;
+            if (((flags1 & UnitFlags1.dead) == UnitFlags1.dead) ||
+                ((flags1 & UnitFlags1.left) == UnitFlags1.left))
             {
-                creatureList[unit.id] = Instantiate(creatureTemplate);
-                creatureList[unit.id].transform.parent = gameObject.transform;
-                creatureList[unit.id].ClearMesh();
-                if(DFConnection.Instance.NetCreatureRawList != null)
+                if (creatureList.ContainsKey(unit.id))
                 {
-                    var creatureRaw = DFConnection.Instance.NetCreatureRawList.creature_raws[unit.race.mat_type];
-                    creatureList[unit.id].AddTile(creatureRaw.creature_tile, new Color(creatureRaw.color.red/255.0f, creatureRaw.color.green / 255.0f, creatureRaw.color.blue / 255.0f));
+                    Destroy(creatureList[unit.id]);
+                    creatureList.Remove(unit.id);
                 }
             }
-            creatureList[unit.id].transform.position = DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z) + new Vector3(0, 1.5f, 0);
-            creatureList[unit.id].gameObject.SetActive(unit.pos_z < PosZ && unit.pos_z > (PosZ - cameraViewDist));
+            else
+            {
+                if (!creatureList.ContainsKey(unit.id))
+                {
+                    creatureList[unit.id] = Instantiate(creatureTemplate);
+                    creatureList[unit.id].transform.parent = gameObject.transform;
+                    creatureList[unit.id].ClearMesh();
+                    if (DFConnection.Instance.NetCreatureRawList != null)
+                    {
+                        var creatureRaw = DFConnection.Instance.NetCreatureRawList.creature_raws[unit.race.mat_type];
+                        Color color = new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1);
+
+                        creatureList[unit.id].AddTile(creatureRaw.creature_tile, color);
+                    }
+                }
+                creatureList[unit.id].transform.position = DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z) + new Vector3(0, 1.5f, 0);
+                creatureList[unit.id].gameObject.SetActive(unit.pos_z < PosZ && unit.pos_z > (PosZ - cameraViewDist));
+            }
         }
     }
 

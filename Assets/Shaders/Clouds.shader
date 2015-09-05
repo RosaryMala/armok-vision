@@ -55,15 +55,15 @@
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
 			fixed n = 0;
-			//if(IN.color.a > 0 || IN.color.a < 1)
-			//	n = fnoise(IN.worldPos);
+			if(IN.color.a > 0 || IN.color.a < 1)
+				n = fnoise(IN.worldPos);
 			// Albedo comes from a texture tinted by color
 			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 			o.Albedo = c.rgb;
 			// Metallic and smoothness come from slider variables
 			o.Metallic = _Metallic;
 			o.Smoothness = _Glossiness;
-			o.Alpha = c.a + IN.color.a;
+			o.Alpha = n + IN.color.a;
 		}
 		ENDCG
 	} 
