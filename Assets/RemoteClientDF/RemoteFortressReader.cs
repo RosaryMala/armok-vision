@@ -514,6 +514,14 @@ namespace RemoteFortressReader
       get { return _flags3; }
       set { _flags3 = value; }
     }
+    private bool _is_soldier = default(bool);
+    [global::ProtoBuf.ProtoMember(11, IsRequired = false, Name=@"is_soldier", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool is_soldier
+    {
+      get { return _is_soldier; }
+      set { _is_soldier = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
