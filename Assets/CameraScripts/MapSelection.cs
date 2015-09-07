@@ -127,7 +127,7 @@ public class MapSelection : MonoBehaviour
         Vector3 currentTargetCoords;
         if (FindCurrentTarget(mouseRay, out currentTarget, out currentTargetCoords))
         {
-            DebugHighlightTile(currentTarget, Color.white);
+            //DebugHighlightTile(currentTarget, Color.white);
             unityCoord = currentTargetCoords;
             dfCoord = new Vector3(currentTarget.x, currentTarget.y, currentTarget.z);
         }

@@ -104,7 +104,7 @@ Material:
       data:
         first:
           name: _Scale
-        second: .00999999978
+        second: .00100000005
       data:
         first:
           name: _Cutoff
@@ -148,7 +148,7 @@ Material:
       data:
         first:
           name: _SeaLevel
-        second: 100
+        second: 0
     m_Colors:
       data:
         first:

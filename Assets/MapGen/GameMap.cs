@@ -612,14 +612,49 @@ public class GameMap : MonoBehaviour
             else
                 cursorProperties.text += "Unknown Construction Item\n";
         }
+
+        if (unitList != null)
+            foreach (UnitDefinition unit in unitList.creature_list)
+            {
+                UnitFlags1 flags1 = (UnitFlags1)unit.flags1;
+                UnitFlags2 flags2 = (UnitFlags2)unit.flags2;
+                UnitFlags3 flags3 = (UnitFlags3)unit.flags3;
+
+                if (((flags1 & UnitFlags1.dead) == UnitFlags1.dead) ||
+                    ((flags1 & UnitFlags1.left) == UnitFlags1.left))
+                    continue;
+                if (unit.pos_x != cursX || unit.pos_y != cursY || unit.pos_z != cursZ)
+                    continue;
+
+                CreatureRaw creatureRaw = null;
+                if (DFConnection.Instance.NetCreatureRawList != null)
+                    creatureRaw = DFConnection.Instance.NetCreatureRawList.creature_raws[unit.race.mat_type];
+
+                if (creatureRaw != null)
+                {
+                    cursorProperties.text += "Unit:   \n";
+
+                    cursorProperties.text += "Race: ";
+                    cursorProperties.text += creatureRaw.creature_id + ":";
+                    cursorProperties.text += creatureRaw.caste[unit.race.mat_index].caste_id;
+                    cursorProperties.text += "\n";
+
+                    cursorProperties.text += flags1 + "\n";
+                    cursorProperties.text += flags2 + "\n";
+                    cursorProperties.text += flags3 + "\n";
+                }
+                break;
+            }
     }
 
     Dictionary<int, AtlasSprite> creatureList;
     public AtlasSprite creatureTemplate;
 
+    RemoteFortressReader.UnitList unitList = null;
+
     void UpdateCreatures()
     {
-        RemoteFortressReader.UnitList unitList = DFConnection.Instance.PopUnitListUpdate();
+        unitList = DFConnection.Instance.PopUnitListUpdate();
         if (unitList == null) return;
         foreach (var unit in unitList.creature_list)
         {
@@ -639,21 +674,47 @@ public class GameMap : MonoBehaviour
             }
             else
             {
+                CreatureRaw creatureRaw = null;
+                if (DFConnection.Instance.NetCreatureRawList != null)
+                    creatureRaw = DFConnection.Instance.NetCreatureRawList.creature_raws[unit.race.mat_type];
+
                 if (!creatureList.ContainsKey(unit.id))
                 {
                     creatureList[unit.id] = Instantiate(creatureTemplate);
                     creatureList[unit.id].transform.parent = gameObject.transform;
                     creatureList[unit.id].ClearMesh();
-                    if (DFConnection.Instance.NetCreatureRawList != null)
-                    {
-                        var creatureRaw = DFConnection.Instance.NetCreatureRawList.creature_raws[unit.race.mat_type];
-                        Color color = new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1);
 
+                    Color color = new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1);
+
+                    if (creatureRaw != null)
                         creatureList[unit.id].AddTile(creatureRaw.creature_tile, color);
+
+                }
+                creatureList[unit.id].gameObject.SetActive(unit.pos_z < PosZ && unit.pos_z > (PosZ - cameraViewDist));
+                if (creatureList[unit.id].gameObject.activeSelf) //Only update stuff if it's actually visible.
+                {
+                    Vector3 position = DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z);
+                    if((flags1 & UnitFlags1.on_ground) == UnitFlags1.on_ground)
+                    {
+                        creatureList[unit.id].transform.position = position + new Vector3(0, 0.51f, 0);
+                        creatureList[unit.id].cameraFacing.enabled = false;
+                        creatureList[unit.id].transform.rotation = Quaternion.Euler(90, 0, 0);
+                    }
+                    else
+                    {
+                        creatureList[unit.id].transform.position = position + new Vector3(0, 1.5f, 0);
+                        creatureList[unit.id].cameraFacing.enabled = true;
+                    }
+                    creatureList[unit.id].SetColor(0, new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1));
+                    if (creatureRaw != null)
+                    {
+                        if (unit.is_soldier)
+                            creatureList[unit.id].SetTile(0, creatureRaw.creature_soldier_tile);
+                        else
+                            creatureList[unit.id].SetTile(0, creatureRaw.creature_tile);
                     }
                 }
-                creatureList[unit.id].transform.position = DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z) + new Vector3(0, 1.5f, 0);
-                creatureList[unit.id].gameObject.SetActive(unit.pos_z < PosZ && unit.pos_z > (PosZ - cameraViewDist));
+
             }
         }
     }
