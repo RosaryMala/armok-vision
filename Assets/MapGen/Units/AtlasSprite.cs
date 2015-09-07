@@ -21,10 +21,13 @@ public class AtlasSprite : MonoBehaviour {
     Mesh mesh;
 
     MeshFilter meshFilter;
+    public CameraFacing cameraFacing;
 
     void Awake()
     {
         meshFilter = GetComponent<MeshFilter>();
+        cameraFacing = GetComponent<CameraFacing>();
+
         vertices = new List<Vector3>();
         colors = new List<Color>();
         uvs = new List<Vector2>();
@@ -86,4 +89,65 @@ public class AtlasSprite : MonoBehaviour {
         mesh.triangles = triangles.ToArray();
     }
 
+    public void SetColor(int index, Color color)
+    {
+        if (index >= Count)
+            throw new System.IndexOutOfRangeException();
+        int startIndex = index * 4;
+
+        bool changed = false;
+        for(int i = 0; i < 4; i++)
+        {
+            if(colors[startIndex + i] != color)
+            {
+                colors[startIndex + i] = color;
+                changed = true;
+            }
+        }
+
+        if (changed)
+            mesh.colors = colors.ToArray();
+    }
+
+    public void SetTile(int index, int character)
+    {
+        if (index >= Count)
+            throw new System.IndexOutOfRangeException();
+        int startIndex = index * 4;
+
+        Rect rect = CharacterToRect(character);
+
+        bool changed = false;
+        Vector2 uvPos;
+
+        uvPos = new Vector2(rect.xMin, 1 - rect.yMax);
+        if (uvs[startIndex + 0] != uvPos)
+        {
+            uvs[startIndex + 0] = uvPos;
+            changed = true;
+        }
+        uvPos = new Vector2(rect.xMax, 1 - rect.yMax);
+        if (uvs[startIndex + 1] != uvPos)
+        {
+            uvs[startIndex + 1] = uvPos;
+            changed = true;
+        }
+        uvPos = new Vector2(rect.xMin, 1 - rect.yMin);
+        if (uvs[startIndex + 2] != uvPos)
+        {
+            uvs[startIndex + 2] = uvPos;
+            changed = true;
+        }
+        uvPos = new Vector2(rect.xMax, 1 - rect.yMin);
+        if (uvs[startIndex + 3] != uvPos)
+        {
+            uvs[startIndex + 3] = uvPos;
+            changed = true;
+        }
+
+        if(changed)
+        {
+            mesh.uv = uvs.ToArray();
+        }
+    }
 }
