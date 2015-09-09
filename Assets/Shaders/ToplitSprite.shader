@@ -30,7 +30,7 @@
 		fixed4 _Color;
 
 		void vert(inout appdata_full v) {
-			v.normal = mul(_World2Object, float3(0,1,0));
+			v.normal = mul(_World2Object, float4(0,1,0, 0));
 		}
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
