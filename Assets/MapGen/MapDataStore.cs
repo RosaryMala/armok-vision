@@ -140,7 +140,10 @@ public class MapDataStore {
                     tiles[localCoord.x, localCoord.y, localCoord.z].base_material = block.base_materials[netIndex];
                     tiles[localCoord.x, localCoord.y, localCoord.z].layer_material = block.layer_materials[netIndex];
                     tiles[localCoord.x, localCoord.y, localCoord.z].vein_material = block.vein_materials[netIndex];
-                    tiles[localCoord.x, localCoord.y, localCoord.z].construction_item = block.construction_items[netIndex];
+                    if (block.construction_items != null && block.construction_items.Count > netIndex)
+                        tiles[localCoord.x, localCoord.y, localCoord.z].construction_item = block.construction_items[netIndex];
+                    else
+                        tiles[localCoord.x, localCoord.y, localCoord.z].construction_item = new MatPairStruct(-1, -1);
                 }
                 if (setLiquids) {
                     tiles[localCoord.x, localCoord.y, localCoord.z].waterLevel = block.water[netIndex];
