@@ -191,26 +191,32 @@ public class GameMap : MonoBehaviour
         Debug.Log("Connected");
         enabled = true;
         mesher = BlockMesher.GetMesher(meshingThreads);
-        // Initialize materials
-        if (materials == null)
-            materials = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
-        materials.Clear();
-        foreach (RemoteFortressReader.MaterialDefinition material in DFConnection.Instance.NetMaterialList.material_list)
+        // Initialize materials, if available
+        if (DFConnection.Instance.NetMaterialList != null)
         {
-            materials[material.mat_pair] = material;
+            if (materials == null)
+                materials = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
+            materials.Clear();
+            foreach (RemoteFortressReader.MaterialDefinition material in DFConnection.Instance.NetMaterialList.material_list)
+            {
+                materials[material.mat_pair] = material;
+            }
+            SaveMaterialList(DFConnection.Instance.NetMaterialList.material_list, "MaterialList.csv");
         }
-        // Initialize items
-        if (items == null)
-            items = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
-        items.Clear();
-        foreach (RemoteFortressReader.MaterialDefinition material in DFConnection.Instance.NetItemList.material_list)
+        // Initialize items, if available
+        if (DFConnection.Instance.NetItemList != null)
         {
-            items[material.mat_pair] = material;
+            if (items == null)
+                items = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
+            items.Clear();
+            foreach (RemoteFortressReader.MaterialDefinition material in DFConnection.Instance.NetItemList.material_list)
+            {
+                items[material.mat_pair] = material;
+            }
+            SaveMaterialList(DFConnection.Instance.NetItemList.material_list, "ItemList.csv");
         }
 
         SaveTileTypeList();
-        SaveMaterialList(DFConnection.Instance.NetMaterialList.material_list, "MaterialList.csv");
-        SaveMaterialList(DFConnection.Instance.NetItemList.material_list, "ItemList.csv");
         SaveBuildingList();
 
         UpdateView();
@@ -343,6 +349,8 @@ public class GameMap : MonoBehaviour
 
     void SaveTileTypeList()
     {
+        if (DFConnection.Instance.NetTiletypeList == null)
+            return;
         try
         {
             File.Delete("TiletypeList.csv");
@@ -368,6 +376,8 @@ public class GameMap : MonoBehaviour
     }
     void SaveBuildingList()
     {
+        if (DFConnection.Instance.NetBuildingList == null)
+            return;
         try
         {
             File.Delete("BuildingList.csv");
@@ -684,7 +694,9 @@ public class GameMap : MonoBehaviour
                     creatureList[unit.id].transform.parent = gameObject.transform;
                     creatureList[unit.id].ClearMesh();
 
-                    Color color = new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1);
+                    Color color = Color.white;
+                    if (unit.profession_color != null)
+                        color = new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1);
 
                     if (creatureRaw != null)
                         creatureList[unit.id].AddTile(creatureRaw.creature_tile, color);
@@ -705,7 +717,8 @@ public class GameMap : MonoBehaviour
                         creatureList[unit.id].transform.position = position + new Vector3(0, 1.5f, 0);
                         creatureList[unit.id].cameraFacing.enabled = true;
                     }
-                    creatureList[unit.id].SetColor(0, new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1));
+                    if(unit.profession_color != null)
+                        creatureList[unit.id].SetColor(0, new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1));
                     if (creatureRaw != null)
                     {
                         if (unit.is_soldier)

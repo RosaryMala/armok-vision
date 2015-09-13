@@ -87,7 +87,13 @@ abstract public class ContentConfiguration<T> where T : IContent, new()
                 output = new RampConfiguration<T>();
                 break;
             case "item":
-                output = new ItemConfiguration<T>();
+                if (ItemTokenList.IsValid)
+                    output = new ItemConfiguration<T>();
+                else
+                {
+                    Debug.LogError("Item Types not available in this version of Remotefortressreader. Please upgrade.");
+                    output = new MaterialConfiguration<T>();
+                }
                 break;
             default:
                 Debug.LogError("Found unknown matching method \"" + elemRoot.Element(name).Elements().First().Name.LocalName + "\", assuming material.");

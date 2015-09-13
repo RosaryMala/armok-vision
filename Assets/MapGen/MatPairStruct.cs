@@ -20,4 +20,10 @@ public struct MatPairStruct
         return output;
 
     }
+
+    public MatPairStruct(int index, int type)
+    {
+        mat_index = index;
+        mat_type = type;
+    }
 }
