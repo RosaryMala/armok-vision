@@ -1,13 +1,11 @@
 using UnityEngine;
 using DFHack;
 using System.Collections.Generic;
-using System.Linq;
 
 // Class for async communication with DF.
 // Will eventually run actual communication on a separate thread.
 // Singleton-y - attached to a GameObject.
 using System.Threading;
-using System.Net.Sockets;
 
 public class DFConnection : MonoBehaviour
 {
@@ -53,7 +51,6 @@ public class DFConnection : MonoBehaviour
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MaterialList> itemListCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.TiletypeList> tiletypeListCall;
     private RemoteFunction<RemoteFortressReader.BlockRequest, RemoteFortressReader.BlockList> blockListCall;
-    private RemoteFunction<dfproto.EmptyMessage> hashCheckCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.UnitList> unitListCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.ViewInfo> viewInfoCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MapInfo> mapInfoCall;
@@ -185,7 +182,7 @@ public class DFConnection : MonoBehaviour
         lock (unitListLock)
         {
             RemoteFortressReader.UnitList result = _netUnitList;
-            _netViewInfo = null;
+            _netUnitList = null;
             return result;
         }
     }
@@ -245,13 +242,18 @@ public class DFConnection : MonoBehaviour
         FetchUnchangingInfo();
 
         networkClient.suspend_game();
-        viewInfoCall.execute(null, out _netViewInfo);
-        unitListCall.execute(null, out _netUnitList);
-        worldMapCall.execute(null, out _netWorldMap);
-        regionMapCall.execute(null, out _netRegionMaps);
+        if (viewInfoCall != null)
+            viewInfoCall.execute(null, out _netViewInfo);
+        if (unitListCall != null)
+            unitListCall.execute(null, out _netUnitList);
+        if (worldMapCall != null)
+            worldMapCall.execute(null, out _netWorldMap);
+        if (regionMapCall != null)
+            regionMapCall.execute(null, out _netRegionMaps);
         networkClient.resume_game();
 
-        mapResetCall.execute();
+        if(mapResetCall!=null)
+            mapResetCall.execute();
         InitStatics();
 
         foreach (System.Action callback in connectionCallbacks)
@@ -272,62 +274,114 @@ public class DFConnection : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Tries to bind an RPC function, leaving returning null if it fails.
+    /// </summary>
+    /// <typeparam name="Input">Protobuf class used as an input</typeparam>
+    /// <param name="client">Connection to Dwarf Fortress</param>
+    /// <param name="name">Name of the RPC function to bind to</param>
+    /// <param name="proto">Name of the protobuf file to use</param>
+    /// <returns>Bound remote function on success, otherwise null.</returns>
+    RemoteFunction<Input> CreateAndBind<Input>(RemoteClient client, string name, string proto = "") where Input : class, ProtoBuf.IExtensible, new()
+    {
+        RemoteFunction<Input> output = new RemoteFunction<Input>();
+        if (output.bind(client, name, proto))
+            return output;
+        else
+            return null;
+    }
+
+    /// <summary>
+    /// Tries to bind an RPC function, leaving returning null if it fails.
+    /// </summary>
+    /// <typeparam name="Input">Protobuf class used as an input</typeparam>
+    /// <typeparam name="Output">Protobuf class to use as an output</typeparam>
+    /// <param name="client">Connection to Dwarf Fortress</param>
+    /// <param name="name">Name of the RPC function to bind to</param>
+    /// <param name="proto">Name of the protobuf file to use</param>
+    /// <returns>Bound remote function on success, otherwise null.</returns>
+    RemoteFunction<Input, Output> CreateAndBind<Input, Output>(RemoteClient client, string name, string proto = "")
+        where Input : class, ProtoBuf.IExtensible, new()
+        where Output : class, ProtoBuf.IExtensible, new()
+    {
+        RemoteFunction<Input, Output> output = new RemoteFunction<Input, Output>();
+        if (output.bind(client, name, proto))
+            return output;
+        else
+            return null;
+    }
+
     // Bind the RPC functions we'll be calling
     void BindMethods()
     {
-        materialListCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MaterialList>();
-        materialListCall.bind(networkClient, "GetMaterialList", "RemoteFortressReader");
-        itemListCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MaterialList>();
-        itemListCall.bind(networkClient, "GetItemList", "RemoteFortressReader");
-        tiletypeListCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.TiletypeList>();
-        tiletypeListCall.bind(networkClient, "GetTiletypeList", "RemoteFortressReader");
-        blockListCall = new RemoteFunction<RemoteFortressReader.BlockRequest, RemoteFortressReader.BlockList>();
-        blockListCall.bind(networkClient, "GetBlockList", "RemoteFortressReader");
-        hashCheckCall = new RemoteFunction<dfproto.EmptyMessage>();
-        hashCheckCall.bind(networkClient, "CheckHashes", "RemoteFortressReader");
-        unitListCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.UnitList>();
-        unitListCall.bind(networkClient, "GetUnitList", "RemoteFortressReader");
-        viewInfoCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.ViewInfo>();
-        viewInfoCall.bind(networkClient, "GetViewInfo", "RemoteFortressReader");
-        mapInfoCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MapInfo>();
-        mapInfoCall.bind(networkClient, "GetMapInfo", "RemoteFortressReader");
-        mapResetCall = new RemoteFunction<dfproto.EmptyMessage>();
-        mapResetCall.bind(networkClient, "ResetMapHashes", "RemoteFortressReader");
-        buildingListCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.BuildingList>();
-        buildingListCall.bind(networkClient, "GetBuildingDefList", "RemoteFortressReader");
-        worldMapCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.WorldMap>();
-        worldMapCall.bind(networkClient, "GetWorldMap", "RemoteFortressReader");
-        regionMapCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.RegionMaps>();
-        regionMapCall.bind(networkClient, "GetRegionMaps", "RemoteFortressReader");
-        creatureRawListCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.CreatureRawList>();
-        creatureRawListCall.bind(networkClient, "GetCreatureRaws", "RemoteFortressReader");
+        materialListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.MaterialList>(networkClient, "GetMaterialList", "RemoteFortressReader");
+        itemListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.MaterialList>(networkClient, "GetItemList", "RemoteFortressReader");
+        tiletypeListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.TiletypeList>(networkClient, "GetTiletypeList", "RemoteFortressReader");
+        blockListCall = CreateAndBind<RemoteFortressReader.BlockRequest, RemoteFortressReader.BlockList>(networkClient, "GetBlockList", "RemoteFortressReader");
+        unitListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.UnitList>(networkClient, "GetUnitList", "RemoteFortressReader");
+        viewInfoCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.ViewInfo>(networkClient, "GetViewInfo", "RemoteFortressReader");
+        mapInfoCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.MapInfo>(networkClient, "GetMapInfo", "RemoteFortressReader");
+        mapResetCall = CreateAndBind<dfproto.EmptyMessage>(networkClient, "ResetMapHashes", "RemoteFortressReader");
+        buildingListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.BuildingList>(networkClient, "GetBuildingDefList", "RemoteFortressReader");
+        worldMapCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.WorldMap>(networkClient, "GetWorldMap", "RemoteFortressReader");
+        regionMapCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.RegionMaps>(networkClient, "GetRegionMaps", "RemoteFortressReader");
+        creatureRawListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.CreatureRawList>(networkClient, "GetCreatureRaws", "RemoteFortressReader");
     }
 
     // Get information that only needs to be read once
     void FetchUnchangingInfo()
     {
-        materialListCall.execute(null, out _netMaterialList);
-        itemListCall.execute(null, out _netItemList);
-        tiletypeListCall.execute(null, out _netTiletypeList);
-        mapInfoCall.execute(null, out _netMapInfo);
-        buildingListCall.execute(null, out _netBuildingList);
-        creatureRawListCall.execute(null, out _netCreatureRawList);
+        if (materialListCall != null)
+            materialListCall.execute(null, out _netMaterialList);
+        if (itemListCall != null)
+            itemListCall.execute(null, out _netItemList);
+        if (tiletypeListCall != null)
+            tiletypeListCall.execute(null, out _netTiletypeList);
+        if (mapInfoCall != null)
+            mapInfoCall.execute(null, out _netMapInfo);
+        if (buildingListCall != null)
+            buildingListCall.execute(null, out _netBuildingList);
+        if (creatureRawListCall != null)
+            creatureRawListCall.execute(null, out _netCreatureRawList);
     }
 
     // Populate lists when we connect
     void InitStatics()
     {
-        MaterialTokenList.matTokenList = _netMaterialList.material_list;
-        TiletypeTokenList.tiletypeTokenList = _netTiletypeList.tiletype_list;
-        ItemTokenList.itemTokenList = _netItemList.material_list;
-        MapDataStore.tiletypeTokenList = _netTiletypeList.tiletype_list;
+        if (_netMaterialList != null)
+        {
+            MaterialTokenList.matTokenList = _netMaterialList.material_list;
+            Debug.Log("Materials fetched: " + _netMaterialList.material_list.Count);
+        }
+        if (_netTiletypeList != null)
+        {
+            TiletypeTokenList.tiletypeTokenList = _netTiletypeList.tiletype_list;
+            Debug.Log("Tiletypes fetched: " + _netTiletypeList.tiletype_list.Count);
+        }
+        if (_netItemList != null)
+        {
+            ItemTokenList.itemTokenList = _netItemList.material_list;
+            Debug.Log("Itemtypes fetched: " + _netItemList.material_list.Count);
+        }
+        else
+        {
+            RemoteFortressReader.MaterialDefinition blankMaterial = new RemoteFortressReader.MaterialDefinition();
+            blankMaterial.id = "NONE";
+            blankMaterial.name = "NONE";
+            blankMaterial.mat_pair = new RemoteFortressReader.MatPair();
+            blankMaterial.mat_pair.mat_type = -1;
+            blankMaterial.mat_pair.mat_index = -1;
+            List<RemoteFortressReader.MaterialDefinition> blankItemList = new List<RemoteFortressReader.MaterialDefinition>();
+            blankItemList.Add(blankMaterial);
+            ItemTokenList.itemTokenList = blankItemList;
+            Debug.Log("Created dummy Itemtype list.");
+        }
+        if (_netTiletypeList != null)
+            MapDataStore.tiletypeTokenList = _netTiletypeList.tiletype_list;
+
         MapDataStore.InitMainMap(_netMapInfo.block_size_x * 16, _netMapInfo.block_size_y * 16, _netMapInfo.block_size_z);
-        Debug.Log("Materials fetched: " + _netMaterialList.material_list.Count);
-        Debug.Log("Tiletypes fetched: " + _netTiletypeList.tiletype_list.Count);
-        Debug.Log("Itemtypes fetched: " + _netItemList.material_list.Count);
-        Debug.Log("Buildingtypes fetched: " + _netBuildingList.building_list.Count);
-        Debug.Log("Fetched " + _netRegionMaps.world_maps.Count + " surrounding regions");
-        Debug.Log("Creature Raws fetched: " + _netCreatureRawList.creature_raws.Count);
+        //Debug.Log("Buildingtypes fetched: " + _netBuildingList.building_list.Count);
+        //Debug.Log("Creature Raws fetched: " + _netCreatureRawList.creature_raws.Count);
     }
 
     void Start()
@@ -477,30 +531,31 @@ public class DFConnection : MonoBehaviour
                     connection.networkClient.suspend_game();
                     lock (connection.viewInfoLock)
                     {
-                        connection.viewInfoCall.execute(null, out connection._netViewInfo);
+                        if (connection.viewInfoCall != null)
+                            connection.viewInfoCall.execute(null, out connection._netViewInfo);
                     }
                     lock (connection.unitListLock)
                     {
-                        connection.unitListCall.execute(null, out connection._netUnitList);
+                        if (connection.unitListCall != null)
+                            connection.unitListCall.execute(null, out connection._netUnitList);
                     }
                     lock (connection.regionMapLock)
                     {
-                        connection.regionMapCall.execute(null, out connection._netRegionMaps);
+                        if (connection.regionMapCall != null)
+                            connection.regionMapCall.execute(null, out connection._netRegionMaps);
                     }
-                    if (Monitor.TryEnter(connection.worldMapLock))
-                        try
-                        {
+                    lock (connection.worldMapLock)
+                    {
+                        if (connection.worldMapCall != null)
                             connection.worldMapCall.execute(null, out connection._netWorldMap);
-                        }
-                        finally
-                        {
-                            Monitor.Exit(connection.worldMapLock);
-                        }
-                    RemoteFortressReader.BlockList resultList;
+                    }
+                    RemoteFortressReader.BlockList resultList = null;
                     lock (connection.blockRequest)
                     {
+                        if(connection.blockListCall != null)
                         connection.blockListCall.execute(connection.blockRequest, out resultList);
                     }
+                    if(resultList != null)
                     lock (connection.pendingBlocks)
                     {
                         foreach (RemoteFortressReader.MapBlock block in resultList.map_blocks)

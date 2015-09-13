@@ -17,15 +17,21 @@ static class ItemTokenList
             }
         }
     }
+    public static bool IsValid
+    {
+        get
+        {
+            return _itemTokenList != null;
+        }
+    }
     public static Dictionary<string, MaterialDefinition> itemLookup { get; private set; }
 
     static void PopulateWordLists()
     {
+        if (itemLookup == null)
+            itemLookup = new Dictionary<string, MaterialDefinition>();
         foreach (MaterialDefinition token in _itemTokenList)
         {
-            if (itemLookup == null)
-                itemLookup = new Dictionary<string, MaterialDefinition>();
-
             itemLookup[token.id] = token;
         }
     }
