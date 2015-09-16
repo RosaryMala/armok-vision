@@ -225,6 +225,7 @@ public class GameMap : MonoBehaviour
         cullTimer.Start();
         lazyLoadTimer.Start();
 
+        if(DFConnection.Instance.NetMapInfo != null)
         InitializeBlocks();
     }
 
@@ -281,6 +282,8 @@ public class GameMap : MonoBehaviour
     }
     void UpdateBlocks()
     {
+        if (blocks == null)
+            return;
         loadWatch.Reset();
         loadWatch.Start();
         while (true)
@@ -745,6 +748,8 @@ public class GameMap : MonoBehaviour
 
     private void DrawBlocks()
     {
+        if (blocks == null)
+            return;
         for (int z = posZ - cameraViewDist; z < posZ; z++)
         {
             if (z < 0) z = 0;
