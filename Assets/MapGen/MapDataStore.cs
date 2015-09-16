@@ -75,7 +75,10 @@ public class MapDataStore {
             throw new UnityException("Can't have a map slice outside the map!");
         }
         if (sliceSize.x < 1 || sliceSize.y < 1 || sliceSize.z < 1) {
-            throw new UnityException("Can't make map slice without any tiles");
+            Debug.Log("Can't make map slice without any tiles, making a minimal sized one instead.");
+            sliceSize.x = 16;
+            sliceSize.y = 16;
+            sliceSize.z = 1;
         }
         SliceSize = sliceSize;
         tiles = new Tile[SliceSize.x, SliceSize.y, SliceSize.z];

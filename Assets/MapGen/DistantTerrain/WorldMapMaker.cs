@@ -34,7 +34,6 @@ public class WorldMapMaker : MonoBehaviour
     bool[,] fogThick;
 
     public Vector3 offset;
-    public Vector3 worldPosition;
 
     RemoteFortressReader.RegionMaps regionMaps;
     RemoteFortressReader.WorldMap worldMap;
@@ -93,10 +92,9 @@ public class WorldMapMaker : MonoBehaviour
         worldName = remoteMap.name;
         worldNameEnglish = remoteMap.name_english;
         offset = new Vector3(
-            -mapInfo.block_pos_x * 48 * GameMap.tileWidth,
-            -mapInfo.block_pos_z * GameMap.tileHeight,
-            mapInfo.block_pos_y * 48 * GameMap.tileWidth);
-        worldPosition = new Vector3(mapInfo.block_pos_x, mapInfo.block_pos_y, mapInfo.block_pos_z);
+        -remoteMap.center_x * 48 * GameMap.tileWidth,
+        -remoteMap.center_z * GameMap.tileHeight,
+        remoteMap.center_y * 48 * GameMap.tileWidth);
         meshRenderer.material.SetFloat("_Scale", scale);
         meshRenderer.material.SetFloat("_SeaLevel", (99 * GameMap.tileHeight) + offset.y);
         InitArrays();
@@ -229,7 +227,8 @@ public class WorldMapMaker : MonoBehaviour
     {
         enabled = true;
         regionMaps = DFConnection.Instance.PopRegionMapUpdate();
-        if (regionMaps != null)
+        worldMap = DFConnection.Instance.PopWorldMapUpdate();
+        if (regionMaps != null && worldMap != null)
         {
             GenerateRegionMeshes();
         }
@@ -261,7 +260,7 @@ public class WorldMapMaker : MonoBehaviour
                 continue;
             }
             RegionMaker region = Instantiate<RegionMaker>(regionPrefab);
-            region.CopyFromRemote(map, DFConnection.Instance.NetMapInfo);
+            region.CopyFromRemote(map, worldMap);
             region.name = region.worldNameEnglish;
             region.transform.parent = transform;
             DetailRegions[pos] = region;

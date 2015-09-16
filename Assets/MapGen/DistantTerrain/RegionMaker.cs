@@ -22,7 +22,6 @@ public class RegionMaker : MonoBehaviour
     int[,] salinity;
 
     public Vector3 offset;
-    public Vector3 worldPosition;
 
     Mesh terrainMesh;
 
@@ -46,7 +45,7 @@ public class RegionMaker : MonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
     }
 
-    public void CopyFromRemote(WorldMap remoteMap, MapInfo mapInfo)
+    public void CopyFromRemote(WorldMap remoteMap, WorldMap mainMap)
     {
         if (remoteMap == null)
         {
@@ -56,11 +55,16 @@ public class RegionMaker : MonoBehaviour
         width = remoteMap.world_width;
         height = remoteMap.world_height;
         worldNameEnglish = remoteMap.name_english;
-        offset = new Vector3(
-            (-mapInfo.block_pos_x + (remoteMap.map_x * 16)) * 48 * GameMap.tileWidth,
-            -mapInfo.block_pos_z * GameMap.tileHeight,
-            (mapInfo.block_pos_y - (remoteMap.map_y * 16)) * 48 * GameMap.tileWidth);
-        worldPosition = new Vector3(mapInfo.block_pos_x, mapInfo.block_pos_y, mapInfo.block_pos_z);
+        if (mainMap != null)
+            offset = new Vector3(
+            (-mainMap.center_x + (remoteMap.map_x * 16)) * 48 * GameMap.tileWidth,
+            -mainMap.center_z * GameMap.tileHeight,
+            (mainMap.center_y - (remoteMap.map_y * 16)) * 48 * GameMap.tileWidth);
+        else
+            offset = new Vector3(
+            (remoteMap.map_x * 16) * 48 * GameMap.tileWidth,
+            0,
+            -(remoteMap.map_y * 16) * 48 * GameMap.tileWidth);
         meshRenderer.material.SetFloat("_Scale", scale);
         meshRenderer.material.SetFloat("_SeaLevel", (99 * GameMap.tileHeight) + offset.y);
         InitArrays();
