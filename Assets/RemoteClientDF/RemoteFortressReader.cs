@@ -1025,6 +1025,30 @@ namespace RemoteFortressReader
       get { return _map_y; }
       set { _map_y = value; }
     }
+    private int _center_x = default(int);
+    [global::ProtoBuf.ProtoMember(17, IsRequired = false, Name=@"center_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int center_x
+    {
+      get { return _center_x; }
+      set { _center_x = value; }
+    }
+    private int _center_y = default(int);
+    [global::ProtoBuf.ProtoMember(18, IsRequired = false, Name=@"center_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int center_y
+    {
+      get { return _center_y; }
+      set { _center_y = value; }
+    }
+    private int _center_z = default(int);
+    [global::ProtoBuf.ProtoMember(19, IsRequired = false, Name=@"center_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int center_z
+    {
+      get { return _center_z; }
+      set { _center_z = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -1190,6 +1214,88 @@ namespace RemoteFortressReader
     public global::System.Collections.Generic.List<RemoteFortressReader.CreatureRaw> creature_raws
     {
       get { return _creature_raws; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Army")]
+  public partial class Army : global::ProtoBuf.IExtensible
+  {
+    public Army() {}
+    
+    private int _id = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int id
+    {
+      get { return _id; }
+      set { _id = value; }
+    }
+    private int _pos_x = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"pos_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int pos_x
+    {
+      get { return _pos_x; }
+      set { _pos_x = value; }
+    }
+    private int _pos_y = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"pos_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int pos_y
+    {
+      get { return _pos_y; }
+      set { _pos_y = value; }
+    }
+    private int _pos_z = default(int);
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"pos_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int pos_z
+    {
+      get { return _pos_z; }
+      set { _pos_z = value; }
+    }
+    private RemoteFortressReader.UnitDefinition _leader = null;
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"leader", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.UnitDefinition leader
+    {
+      get { return _leader; }
+      set { _leader = value; }
+    }
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition> _members = new global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition>();
+    [global::ProtoBuf.ProtoMember(6, Name=@"members", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition> members
+    {
+      get { return _members; }
+    }
+  
+    private uint _flags = default(uint);
+    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"flags", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(uint))]
+    public uint flags
+    {
+      get { return _flags; }
+      set { _flags = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ArmyList")]
+  public partial class ArmyList : global::ProtoBuf.IExtensible
+  {
+    public ArmyList() {}
+    
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.Army> _armies = new global::System.Collections.Generic.List<RemoteFortressReader.Army>();
+    [global::ProtoBuf.ProtoMember(1, Name=@"armies", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.Army> armies
+    {
+      get { return _armies; }
     }
   
     private global::ProtoBuf.IExtension extensionObject;

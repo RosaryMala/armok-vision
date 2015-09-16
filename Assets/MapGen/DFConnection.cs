@@ -379,7 +379,10 @@ public class DFConnection : MonoBehaviour
         if (_netTiletypeList != null)
             MapDataStore.tiletypeTokenList = _netTiletypeList.tiletype_list;
 
-        MapDataStore.InitMainMap(_netMapInfo.block_size_x * 16, _netMapInfo.block_size_y * 16, _netMapInfo.block_size_z);
+        if(_netMapInfo != null)
+            MapDataStore.InitMainMap(_netMapInfo.block_size_x * 16, _netMapInfo.block_size_y * 16, _netMapInfo.block_size_z);
+        else
+            MapDataStore.InitMainMap(0,0,0);
         //Debug.Log("Buildingtypes fetched: " + _netBuildingList.building_list.Count);
         //Debug.Log("Creature Raws fetched: " + _netCreatureRawList.creature_raws.Count);
     }
