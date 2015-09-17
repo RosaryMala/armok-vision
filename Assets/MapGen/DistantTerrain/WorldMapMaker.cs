@@ -75,7 +75,7 @@ public class WorldMapMaker : MonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
     }
 
-    void CopyFromRemote(WorldMap remoteMap, MapInfo mapInfo)
+    void CopyFromRemote(WorldMap remoteMap)
     {
         if (remoteMap == null)
         {
@@ -235,7 +235,7 @@ public class WorldMapMaker : MonoBehaviour
         worldMap = DFConnection.Instance.PopWorldMapUpdate();
         if (worldMap != null)
         {
-            CopyFromRemote(worldMap, DFConnection.Instance.NetMapInfo);
+            CopyFromRemote(worldMap);
         }
     }
 
@@ -246,7 +246,7 @@ public class WorldMapMaker : MonoBehaviour
             if (madeTerrain)
                 CopyClouds(worldMap);
             else
-                CopyFromRemote(worldMap, DFConnection.Instance.NetMapInfo);
+                CopyFromRemote(worldMap);
     }
 
     void GenerateRegionMeshes()

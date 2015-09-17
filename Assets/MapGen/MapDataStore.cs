@@ -33,6 +33,7 @@ public class MapDataStore {
     public static void InitMainMap(int xSize, int ySize, int zSize) {
         MapSize = new DFCoord(xSize, ySize, zSize);
         _main = new MapDataStore(new DFCoord(0,0,0), MapSize);
+        Debug.Log("Set main map to " + MapSize);
     }
 
     // The size of the whole map.
@@ -125,7 +126,7 @@ public class MapDataStore {
         return CopySlice(block.ToDFCoord(), BLOCK_SIZE);
     }
 
-    public void StoreTiles(RemoteFortressReader.MapBlock block) {
+    public void StoreTiles(RemoteFortressReader.MapBlock block, bool liquid) {
         bool setTiles = block.tiles.Count > 0;
         bool setLiquids = block.water.Count > 0 || block.magma.Count > 0;
         if (!setTiles && !setLiquids) return;
@@ -135,6 +136,11 @@ public class MapDataStore {
             {
                 DFCoord worldCoord = new DFCoord(block.map_x + xx, block.map_y + yy, block.map_z);
                 DFCoord localCoord = WorldToLocalSpace(worldCoord);
+                if (!InSliceBoundsLocal(localCoord))
+                {
+                    Debug.LogError(worldCoord + " is out of bounds for " + MapSize);
+                    return;
+                }
                 int netIndex = xx + (yy * 16);
                 tilesPresent[PresentIndex(localCoord.x, localCoord.y, localCoord.z)] = true;
                 if (setTiles) {

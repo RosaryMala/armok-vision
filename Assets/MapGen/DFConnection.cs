@@ -68,7 +68,6 @@ public class DFConnection : MonoBehaviour
     private RemoteFortressReader.MaterialList _netMaterialList;
     private RemoteFortressReader.MaterialList _netItemList;
     private RemoteFortressReader.TiletypeList _netTiletypeList;
-    private RemoteFortressReader.MapInfo _netMapInfo;
     private RemoteFortressReader.BuildingList _netBuildingList;
     private RemoteFortressReader.CreatureRawList _netCreatureRawList;
 
@@ -77,27 +76,29 @@ public class DFConnection : MonoBehaviour
     private RemoteFortressReader.UnitList _netUnitList;
     private RemoteFortressReader.WorldMap _netWorldMap;
     private RemoteFortressReader.RegionMaps _netRegionMaps;
+    private RemoteFortressReader.MapInfo _netMapInfo;
     // Special sort of queue:
     // It pops elements in random order, but makes sure that
     // we don't bother storing two updates to the same block at once
-    private Util.UniqueQueue<DFCoord, RemoteFortressReader.MapBlock> pendingBlocks;
+    private Util.UniqueQueue<DFCoord, RemoteFortressReader.MapBlock> pendingLandscapeBlocks;
+    private Util.UniqueQueue<DFCoord, RemoteFortressReader.MapBlock> pendingLiquidBlocks;
     // Cached block request
     private RemoteFortressReader.BlockRequest blockRequest;
+
+    //Rarely changing info that can nevertheless change.
+    private DFCoord _embarkMapSize = new DFCoord(0, 0, 0);
+    private DFCoord _embarkMapPosition = new DFCoord(-1, -1, -1);
+    private bool _mapResetRequested = false;
 
     // Mutexes for changing / nullable objects
     private Object viewInfoLock = new Object();
     private Object unitListLock = new Object();
     private Object worldMapLock = new Object();
     private Object regionMapLock = new Object();
+    private Object mapInfoLock = new Object();
+    private Object mapResetLock = new Object();
 
     // Unchanging properties
-    public RemoteFortressReader.MapInfo NetMapInfo
-    {
-        get
-        {
-            return _netMapInfo;
-        }
-    }
 
     public RemoteFortressReader.MaterialList NetMaterialList
     {
@@ -215,12 +216,51 @@ public class DFConnection : MonoBehaviour
         }
     }
 
-    // Pop a map block update; return null if there isn't one.
-    public RemoteFortressReader.MapBlock PopMapBlockUpdate()
+    //Fetch the current embark map size
+    public DFCoord EmbarkMapSize
     {
-        lock (pendingBlocks)
+        get
         {
-            return pendingBlocks.Dequeue();
+            lock(mapInfoLock)
+            {
+                return _embarkMapSize;
+            }
+        }
+    }
+
+    public DFCoord EmbarkMapPosition
+    {
+        get
+        {
+            lock(mapInfoLock)
+            {
+                return _embarkMapPosition;
+            }
+        }
+    }
+
+    // Pop a map block update; return null if there isn't one.
+    public RemoteFortressReader.MapBlock PopLandscapeMapBlockUpdate()
+    {
+        lock (pendingLandscapeBlocks)
+        {
+            return pendingLandscapeBlocks.Dequeue();
+        }
+    }
+    public RemoteFortressReader.MapBlock PopLiquidMapBlockUpdate()
+    {
+        lock (pendingLiquidBlocks)
+        {
+            return pendingLiquidBlocks.Dequeue();
+        }
+    }
+
+    //Queue a map hash reset, forcing a re-send of all map blocks
+    public void RequestMapReset()
+    {
+        lock(mapResetLock)
+        {
+            _mapResetRequested = true;
         }
     }
 
@@ -229,7 +269,8 @@ public class DFConnection : MonoBehaviour
     {
         blockRequest = new RemoteFortressReader.BlockRequest();
         blockRequest.blocks_needed = BlocksToFetch;
-        pendingBlocks = new Util.UniqueQueue<DFCoord, RemoteFortressReader.MapBlock>();
+        pendingLandscapeBlocks = new Util.UniqueQueue<DFCoord, RemoteFortressReader.MapBlock>();
+        pendingLiquidBlocks = new Util.UniqueQueue<DFCoord, RemoteFortressReader.MapBlock>();
         networkClient = new DFHack.RemoteClient(dfNetworkOut);
         bool success = networkClient.connect();
         if (!success)
@@ -337,8 +378,6 @@ public class DFConnection : MonoBehaviour
             itemListCall.execute(null, out _netItemList);
         if (tiletypeListCall != null)
             tiletypeListCall.execute(null, out _netTiletypeList);
-        if (mapInfoCall != null)
-            mapInfoCall.execute(null, out _netMapInfo);
         if (buildingListCall != null)
             buildingListCall.execute(null, out _netBuildingList);
         if (creatureRawListCall != null)
@@ -379,10 +418,6 @@ public class DFConnection : MonoBehaviour
         if (_netTiletypeList != null)
             MapDataStore.tiletypeTokenList = _netTiletypeList.tiletype_list;
 
-        if(_netMapInfo != null)
-            MapDataStore.InitMainMap(_netMapInfo.block_size_x * 16, _netMapInfo.block_size_y * 16, _netMapInfo.block_size_z);
-        else
-            MapDataStore.InitMainMap(0,0,0);
         //Debug.Log("Buildingtypes fetched: " + _netBuildingList.building_list.Count);
         //Debug.Log("Creature Raws fetched: " + _netCreatureRawList.creature_raws.Count);
     }
@@ -459,15 +494,60 @@ public class DFConnection : MonoBehaviour
             {
                 // No need for locks, single threaded.
                 connection.networkClient.suspend_game();
+                if (connection._mapResetRequested)
+                {
+                    connection.mapResetCall.execute();
+                    connection._mapResetRequested = false;
+                }
+                if (connection.mapInfoCall != null)
+                {
+                    RemoteFortressReader.MapInfo mapInfo;
+                    connection.mapInfoCall.execute(null, out mapInfo);
+                    if(mapInfo == null)
+                    {
+                        if (connection._netMapInfo != null)
+                        {
+                            connection._embarkMapPosition = new DFCoord(-1, -1, -1);
+                            connection._embarkMapSize = new DFCoord(0, 0, 0);
+                            MapDataStore.InitMainMap(connection.EmbarkMapSize.x * 16, connection.EmbarkMapSize.y * 16, connection.EmbarkMapSize.z);
+                        }
+                    }
+                    else
+                    {
+                        if((connection._netMapInfo == null)
+                            || mapInfo.block_pos_x != connection._netMapInfo.block_pos_x
+                            || mapInfo.block_pos_y != connection._netMapInfo.block_pos_y
+                            || mapInfo.block_pos_z != connection._netMapInfo.block_pos_z
+                            || mapInfo.block_size_x != connection._netMapInfo.block_size_x
+                            || mapInfo.block_size_y != connection._netMapInfo.block_size_y
+                            || mapInfo.block_size_z != connection._netMapInfo.block_size_z
+                            )
+                        {
+                            connection._embarkMapPosition = new DFCoord(mapInfo.block_pos_x, mapInfo.block_pos_y, mapInfo.block_pos_z);
+                            connection._embarkMapSize = new DFCoord(mapInfo.block_size_x, mapInfo.block_size_y, mapInfo.block_size_z);
+                            MapDataStore.InitMainMap(connection.EmbarkMapSize.x * 16, connection.EmbarkMapSize.y * 16, connection.EmbarkMapSize.z);
+                            connection.mapResetCall.execute();
+                        }
+                    }
+                    connection._netMapInfo = mapInfo;
+                }
                 connection.viewInfoCall.execute(null, out connection._netViewInfo);
                 connection.unitListCall.execute(null, out connection._netUnitList);
                 connection.regionMapCall.execute(null, out connection._netRegionMaps);
                 connection.worldMapCall.execute(null, out connection._netWorldMap);
-                RemoteFortressReader.BlockList resultList;
-                connection.blockListCall.execute(connection.blockRequest, out resultList);
-                foreach (RemoteFortressReader.MapBlock block in resultList.map_blocks)
+                if (connection.EmbarkMapSize.x > 0
+                    && connection.EmbarkMapSize.y > 0
+                    && connection.EmbarkMapSize.z > 0)
                 {
-                    connection.pendingBlocks.EnqueueAndDisplace(new DFCoord(block.map_x, block.map_y, block.map_z), block);
+                    RemoteFortressReader.BlockList resultList;
+                    connection.blockListCall.execute(connection.blockRequest, out resultList);
+                    foreach (RemoteFortressReader.MapBlock block in resultList.map_blocks)
+                    {
+                        if (block.tiles.Count > 0)
+                            connection.pendingLandscapeBlocks.EnqueueAndDisplace(new DFCoord(block.map_x, block.map_y, block.map_z), block);
+                        if (block.water.Count > 0 || block.magma.Count > 0)
+                            connection.pendingLiquidBlocks.EnqueueAndDisplace(new DFCoord(block.map_x, block.map_y, block.map_z), block);
+                    }
                 }
                 connection.networkClient.resume_game();
             }
@@ -532,6 +612,52 @@ public class DFConnection : MonoBehaviour
                 try
                 {
                     connection.networkClient.suspend_game();
+                    lock(connection.mapResetLock)
+                    {
+                        if (connection._mapResetRequested)
+                        {
+                            connection.mapResetCall.execute();
+                            connection._mapResetRequested = false;
+                        }
+                    }
+                    if (connection.mapInfoCall != null)
+                    {
+                        RemoteFortressReader.MapInfo mapInfo;
+                        connection.mapInfoCall.execute(null, out mapInfo);
+                        if (mapInfo == null)
+                        {
+                            if (connection._netMapInfo != null)
+                            {
+                                lock(connection.mapInfoLock)
+                                {
+                                    connection._embarkMapPosition = new DFCoord(-1, -1, -1);
+                                    connection._embarkMapSize = new DFCoord(0, 0, 0);
+                                    MapDataStore.InitMainMap(connection.EmbarkMapSize.x * 16, connection.EmbarkMapSize.y * 16, connection.EmbarkMapSize.z);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if ((connection._netMapInfo == null)
+                                || mapInfo.block_pos_x != connection._netMapInfo.block_pos_x
+                                || mapInfo.block_pos_y != connection._netMapInfo.block_pos_y
+                                || mapInfo.block_pos_z != connection._netMapInfo.block_pos_z
+                                || mapInfo.block_size_x != connection._netMapInfo.block_size_x
+                                || mapInfo.block_size_y != connection._netMapInfo.block_size_y
+                                || mapInfo.block_size_z != connection._netMapInfo.block_size_z
+                                )
+                            {
+                                lock (connection.mapInfoLock)
+                                {
+                                    connection._embarkMapPosition = new DFCoord(mapInfo.block_pos_x, mapInfo.block_pos_y, mapInfo.block_pos_z);
+                                    connection._embarkMapSize = new DFCoord(mapInfo.block_size_x, mapInfo.block_size_y, mapInfo.block_size_z);
+                                    MapDataStore.InitMainMap(connection.EmbarkMapSize.x * 16, connection.EmbarkMapSize.y * 16, connection.EmbarkMapSize.z);
+                                    connection.mapResetCall.execute();
+                                }
+                            }
+                        }
+                        connection._netMapInfo = mapInfo;
+                    }
                     lock (connection.viewInfoLock)
                     {
                         if (connection.viewInfoCall != null)
@@ -552,18 +678,32 @@ public class DFConnection : MonoBehaviour
                         if (connection.worldMapCall != null)
                             connection.worldMapCall.execute(null, out connection._netWorldMap);
                     }
-                    RemoteFortressReader.BlockList resultList = null;
-                    lock (connection.blockRequest)
+                    if (connection.EmbarkMapSize.x > 0
+                        && connection.EmbarkMapSize.y > 0
+                        && connection.EmbarkMapSize.z > 0)
                     {
-                        if(connection.blockListCall != null)
-                        connection.blockListCall.execute(connection.blockRequest, out resultList);
-                    }
-                    if(resultList != null)
-                    lock (connection.pendingBlocks)
-                    {
-                        foreach (RemoteFortressReader.MapBlock block in resultList.map_blocks)
+                        RemoteFortressReader.BlockList resultList = null;
+                        lock (connection.blockRequest)
                         {
-                            connection.pendingBlocks.EnqueueAndDisplace(new DFCoord(block.map_x, block.map_y, block.map_z), block);
+                            if (connection.blockListCall != null)
+                                connection.blockListCall.execute(connection.blockRequest, out resultList);
+                        }
+                        if (resultList != null)
+                        {
+                            lock (connection.pendingLandscapeBlocks)
+                            {
+                                foreach (RemoteFortressReader.MapBlock block in resultList.map_blocks)
+                                {
+                                    connection.pendingLandscapeBlocks.EnqueueAndDisplace(new DFCoord(block.map_x, block.map_y, block.map_z), block);
+                                }
+                            }
+                            lock (connection.pendingLiquidBlocks)
+                            {
+                                foreach (RemoteFortressReader.MapBlock block in resultList.map_blocks)
+                                {
+                                    connection.pendingLiquidBlocks.EnqueueAndDisplace(new DFCoord(block.map_x, block.map_y, block.map_z), block);
+                                }
+                            }
                         }
                     }
                     connection.networkClient.resume_game();
