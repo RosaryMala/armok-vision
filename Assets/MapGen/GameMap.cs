@@ -124,6 +124,9 @@ public class GameMap : MonoBehaviour
     // Lights from magma.
     Light[, ,] magmaGlow;
 
+    DFCoord mapSize; //This is to keep track of changing size of the map.
+    DFCoord mapPosition;
+
     // Stuff to let the material list & various meshes & whatnot be loaded from xml specs at runtime.
     Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> materials;
     Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> items;
@@ -225,7 +228,6 @@ public class GameMap : MonoBehaviour
         cullTimer.Start();
         lazyLoadTimer.Start();
 
-        if(DFConnection.Instance.NetMapInfo != null)
         InitializeBlocks();
     }
 
@@ -282,19 +284,36 @@ public class GameMap : MonoBehaviour
     }
     void UpdateBlocks()
     {
-        if (blocks == null)
+        if(DFConnection.Instance.EmbarkMapSize != mapSize)
+        {
+            ClearMap();
+            InitializeBlocks();
+            mapSize = DFConnection.Instance.EmbarkMapSize;
+            DFConnection.Instance.RequestMapReset();
+        }
+        if(DFConnection.Instance.EmbarkMapPosition != mapPosition)
+        {
+            ClearMap();
+            mapPosition = DFConnection.Instance.EmbarkMapPosition;
+            DFConnection.Instance.RequestMapReset();
+        }
+        if (MapDataStore.MapSize.x < 48)
             return;
         loadWatch.Reset();
         loadWatch.Start();
         while (true)
         {
-            RemoteFortressReader.MapBlock block = DFConnection.Instance.PopMapBlockUpdate();
+            RemoteFortressReader.MapBlock block = DFConnection.Instance.PopLandscapeMapBlockUpdate();
             if (block == null) break;
-            MapDataStore.Main.StoreTiles(block);
-            if (block.tiles.Count > 0)
-                SetDirtyBlock(block.map_x, block.map_y, block.map_z);
-            if (block.water.Count > 0 || block.magma.Count > 0)
-                SetDirtyLiquidBlock(block.map_x, block.map_y, block.map_z);
+            MapDataStore.Main.StoreTiles(block, false);
+            SetDirtyBlock(block.map_x, block.map_y, block.map_z);
+        }
+        while (true)
+        {
+            RemoteFortressReader.MapBlock block = DFConnection.Instance.PopLiquidMapBlockUpdate();
+            if (block == null) break;
+            MapDataStore.Main.StoreTiles(block, true);
+            SetDirtyLiquidBlock(block.map_x, block.map_y, block.map_z);
         }
         loadWatch.Stop();
         genWatch.Reset();
@@ -309,11 +328,10 @@ public class GameMap : MonoBehaviour
 
     void InitializeBlocks()
     {
-        int blockSizeX = DFConnection.Instance.NetMapInfo.block_size_x;
-        int blockSizeY = DFConnection.Instance.NetMapInfo.block_size_y;
-        int blockSizeZ = DFConnection.Instance.NetMapInfo.block_size_z;
+        int blockSizeX = DFConnection.Instance.EmbarkMapSize.x;
+        int blockSizeY = DFConnection.Instance.EmbarkMapSize.y;
+        int blockSizeZ = DFConnection.Instance.EmbarkMapSize.z;
 
-        Debug.Log("Map Size: " + blockSizeX + ", " + blockSizeY + ", " + blockSizeZ);
         blocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         stencilBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         liquidBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ, 2];
@@ -533,6 +551,8 @@ public class GameMap : MonoBehaviour
 
     void ShowCursorInfo()
     {
+        if (MapDataStore.Main == null)
+            return; //No map
         cursorProperties.text = "";
         cursorProperties.text += "Cursor: ";
         cursorProperties.text += cursX + ",";
@@ -695,6 +715,7 @@ public class GameMap : MonoBehaviour
                 {
                     creatureList[unit.id] = Instantiate(creatureTemplate);
                     creatureList[unit.id].transform.parent = gameObject.transform;
+                    creatureList[unit.id].name = "Unit_" + unit.id;
                     creatureList[unit.id].ClearMesh();
 
                     Color color = Color.white;
