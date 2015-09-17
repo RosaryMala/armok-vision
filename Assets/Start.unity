@@ -217,7 +217,6 @@ MonoBehaviour:
   worldName: 
   worldNameEnglish: 
   offset: {x: 0, y: 0, z: 0}
-  worldPosition: {x: 0, y: 0, z: 0}
   cloudPrafab: {fileID: 11429096, guid: 81483fb545a1d2c42ab4bcdf87c47fab, type: 2}
   regionPrefab: {fileID: 11445684, guid: 90bab0905d33d714694a6059b62f28d2, type: 2}
 --- !u!33 &458878502
