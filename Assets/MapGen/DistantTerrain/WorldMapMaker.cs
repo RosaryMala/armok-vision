@@ -126,7 +126,7 @@ public class WorldMapMaker : MonoBehaviour
 
         GenerateClouds();
         madeTerrain = true;
-        Debug.Log("Loaded World: " + worldNameEnglish);
+        //Debug.Log("Loaded World: " + worldNameEnglish);
     }
 
     void CopyClouds(WorldMap remoteMap)
@@ -232,7 +232,6 @@ public class WorldMapMaker : MonoBehaviour
         {
             GenerateRegionMeshes();
         }
-        worldMap = DFConnection.Instance.PopWorldMapUpdate();
         if (worldMap != null)
         {
             CopyFromRemote(worldMap);
@@ -241,12 +240,32 @@ public class WorldMapMaker : MonoBehaviour
 
     void Update()
     {
+        regionMaps = DFConnection.Instance.PopRegionMapUpdate();
         worldMap = DFConnection.Instance.PopWorldMapUpdate();
+        if (regionMaps != null && worldMap != null)
+        {
+            GenerateRegionMeshes();
+        }
         if (worldMap != null)
-            if (madeTerrain)
-                CopyClouds(worldMap);
-            else
-                CopyFromRemote(worldMap);
+        {
+            CopyFromRemote(worldMap);
+            UpdateRegionPositions(worldMap);
+        }
+        //worldMap = DFConnection.Instance.PopWorldMapUpdate();
+        //if (worldMap != null)
+        //    if (madeTerrain)
+        //        CopyClouds(worldMap);
+        //    else
+        //        CopyFromRemote(worldMap);
+    }
+
+    void UpdateRegionPositions(WorldMap map)
+    {
+        foreach (var item in DetailRegions)
+        {
+            RegionMaker region = item.Value;
+            region.SetPosition(map);
+        }
     }
 
     void GenerateRegionMeshes()
@@ -256,7 +275,6 @@ public class WorldMapMaker : MonoBehaviour
             DFCoord2d pos = new DFCoord2d(map.map_x, map.map_y);
             if (DetailRegions.ContainsKey(pos))
             {
-                //Debug.Log("Region exists: " + pos.x + ", " + pos.y);
                 continue;
             }
             RegionMaker region = Instantiate<RegionMaker>(regionPrefab);

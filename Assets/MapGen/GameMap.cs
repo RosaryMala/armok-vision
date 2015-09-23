@@ -136,14 +136,34 @@ public class GameMap : MonoBehaviour
     public const float floorHeight = 0.5f;
     public const float tileWidth = 2.0f;
     public const int blockSize = 16;
+
+    static Object mapZOffsetLock = new Object();
+    static int _mapZoffset = 0;
+    public static int MapZOffset
+    {
+        get
+        {
+            lock(mapZOffsetLock)
+            {
+                return _mapZoffset;
+            }
+        }
+        set
+        {
+            lock(mapZOffsetLock)
+            {
+                _mapZoffset = value;
+            }
+        }
+    }
     public static Vector3 DFtoUnityCoord(int x, int y, int z)
     {
-        Vector3 outCoord = new Vector3(x * tileWidth, z * tileHeight, y * (-tileWidth));
+        Vector3 outCoord = new Vector3(x * tileWidth, (z + MapZOffset) * tileHeight, y * (-tileWidth));
         return outCoord;
     }
     public static Vector3 DFtoUnityCoord(DFCoord input)
     {
-        Vector3 outCoord = new Vector3(input.x * tileWidth, input.z * tileHeight, input.y * (-tileWidth));
+        Vector3 outCoord = new Vector3(input.x * tileWidth, (input.z + MapZOffset) * tileHeight, input.y * (-tileWidth));
         return outCoord;
     }
     public static Vector3 DFtoUnityTileCenter(DFCoord input)
@@ -164,7 +184,7 @@ public class GameMap : MonoBehaviour
         int x = Mathf.RoundToInt(input.x / tileWidth);
         int y = Mathf.RoundToInt(input.z / -tileWidth);
         int z = Mathf.FloorToInt(input.y / tileHeight);
-        return new DFCoord(x, y, z);
+        return new DFCoord(x, y, z - MapZOffset);
     }
     public static bool IsBlockCorner(DFCoord input)
     {
@@ -295,6 +315,7 @@ public class GameMap : MonoBehaviour
         {
             ClearMap();
             mapPosition = DFConnection.Instance.EmbarkMapPosition;
+            MapZOffset = DFConnection.Instance.EmbarkMapPosition.z;
             DFConnection.Instance.RequestMapReset();
         }
         if (MapDataStore.MapSize.x < 48)
@@ -305,14 +326,14 @@ public class GameMap : MonoBehaviour
         {
             RemoteFortressReader.MapBlock block = DFConnection.Instance.PopLandscapeMapBlockUpdate();
             if (block == null) break;
-            MapDataStore.Main.StoreTiles(block, false);
+            MapDataStore.Main.StoreTiles(block);
             SetDirtyBlock(block.map_x, block.map_y, block.map_z);
         }
         while (true)
         {
             RemoteFortressReader.MapBlock block = DFConnection.Instance.PopLiquidMapBlockUpdate();
             if (block == null) break;
-            MapDataStore.Main.StoreTiles(block, true);
+            MapDataStore.Main.StoreTiles(block);
             SetDirtyLiquidBlock(block.map_x, block.map_y, block.map_z);
         }
         loadWatch.Stop();
@@ -331,6 +352,7 @@ public class GameMap : MonoBehaviour
         int blockSizeX = DFConnection.Instance.EmbarkMapSize.x;
         int blockSizeY = DFConnection.Instance.EmbarkMapSize.y;
         int blockSizeZ = DFConnection.Instance.EmbarkMapSize.z;
+        MapZOffset = DFConnection.Instance.EmbarkMapPosition.z;
 
         blocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         stencilBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
@@ -546,7 +568,8 @@ public class GameMap : MonoBehaviour
         {
             Destroy(item);
         }
-        MapDataStore.Main.Reset();
+        if (MapDataStore.Main != null)
+            MapDataStore.Main.Reset();
     }
 
     void ShowCursorInfo()
@@ -637,13 +660,28 @@ public class GameMap : MonoBehaviour
             cursorProperties.text += cons.mat_type + ",";
             cursorProperties.text += cons.mat_index + "\n";
 
-            if (materials.ContainsKey(cons))
+            if (items.ContainsKey(cons))
             {
                 cursorProperties.text += "Construction Item Name: ";
                 cursorProperties.text += items[cons].id + "\n";
             }
             else
                 cursorProperties.text += "Unknown Construction Item\n";
+
+            cursorProperties.text += "\n";
+
+            cursorProperties.text += "Building: [";
+            cursorProperties.text += tile.buildingType.building_type + ":";
+            cursorProperties.text += tile.buildingType.building_subtype + ":";
+            cursorProperties.text += tile.buildingType.building_custom + "]\n";
+
+            if (materials.ContainsKey(tile.buildingMaterial))
+            {
+                cursorProperties.text += "Building Material: ";
+                cursorProperties.text += materials[tile.buildingMaterial].id + "\n";
+            }
+            else
+                cursorProperties.text += "Unknown Building Material\n";
         }
 
         if (unitList != null)
