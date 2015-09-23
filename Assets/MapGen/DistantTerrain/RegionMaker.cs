@@ -22,6 +22,7 @@ public class RegionMaker : MonoBehaviour
     int[,] salinity;
 
     public Vector3 offset;
+    Vector3 embarkTileOffset;
 
     Mesh terrainMesh;
 
@@ -45,6 +46,20 @@ public class RegionMaker : MonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
     }
 
+    public void SetPosition(WorldMap mainMap)
+    {
+        if (mainMap != null)
+        {
+            offset = (new Vector3(-mainMap.center_x, 0, mainMap.center_y) + embarkTileOffset) * 48 * GameMap.tileWidth;
+        }
+        else
+        {
+            offset = embarkTileOffset * 48 * GameMap.tileWidth;
+        }
+
+        transform.position = offset * scale;
+    }
+
     public void CopyFromRemote(WorldMap remoteMap, WorldMap mainMap)
     {
         if (remoteMap == null)
@@ -55,16 +70,8 @@ public class RegionMaker : MonoBehaviour
         width = remoteMap.world_width;
         height = remoteMap.world_height;
         worldNameEnglish = remoteMap.name_english;
-        if (mainMap != null)
-            offset = new Vector3(
-            (-mainMap.center_x + (remoteMap.map_x * 16)) * 48 * GameMap.tileWidth,
-            -mainMap.center_z * GameMap.tileHeight,
-            (mainMap.center_y - (remoteMap.map_y * 16)) * 48 * GameMap.tileWidth);
-        else
-            offset = new Vector3(
-            (remoteMap.map_x * 16) * 48 * GameMap.tileWidth,
-            0,
-            -(remoteMap.map_y * 16) * 48 * GameMap.tileWidth);
+        embarkTileOffset = new Vector3((remoteMap.map_x * 16), 0, -(remoteMap.map_y * 16));
+        SetPosition(mainMap);
         meshRenderer.material.SetFloat("_Scale", scale);
         meshRenderer.material.SetFloat("_SeaLevel", (99 * GameMap.tileHeight) + offset.y);
         InitArrays();
@@ -124,10 +131,10 @@ public class RegionMaker : MonoBehaviour
             for (int y = 0; y < height; y++)
             {
                 int index = CoordToIndex(x, y);
-                vertexPositions[index] = (new Vector3(
+                vertexPositions[index] = new Vector3(
                     x * 48 * GameMap.tileWidth,
                     elevation[x, y] * GameMap.tileHeight,
-                    -y * 48 * GameMap.tileWidth) + offset) * scale;
+                    -y * 48 * GameMap.tileWidth) * scale;
                 //vertexColors[index] = cloudStriped[x, y] ? Color.white : Color.black;// * cloudFog[x, y] / 3.0f;
                 vertexColors[index] = Color.white;
                 vertexUV2[index] = new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100;

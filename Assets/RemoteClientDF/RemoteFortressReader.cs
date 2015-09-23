@@ -100,6 +100,156 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BuildingExtents")]
+  public partial class BuildingExtents : global::ProtoBuf.IExtensible
+  {
+    public BuildingExtents() {}
+    
+    private int _pos_x;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"pos_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int pos_x
+    {
+      get { return _pos_x; }
+      set { _pos_x = value; }
+    }
+    private int _pos_y;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"pos_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int pos_y
+    {
+      get { return _pos_y; }
+      set { _pos_y = value; }
+    }
+    private int _width;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"width", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int width
+    {
+      get { return _width; }
+      set { _width = value; }
+    }
+    private int _height;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = true, Name=@"height", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int height
+    {
+      get { return _height; }
+      set { _height = value; }
+    }
+    private readonly global::System.Collections.Generic.List<int> _extents = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(5, Name=@"extents", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> extents
+    {
+      get { return _extents; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BuildingInstance")]
+  public partial class BuildingInstance : global::ProtoBuf.IExtensible
+  {
+    public BuildingInstance() {}
+    
+    private int _index;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int index
+    {
+      get { return _index; }
+      set { _index = value; }
+    }
+    private int _pos_x_min = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"pos_x_min", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int pos_x_min
+    {
+      get { return _pos_x_min; }
+      set { _pos_x_min = value; }
+    }
+    private int _pos_y_min = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"pos_y_min", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int pos_y_min
+    {
+      get { return _pos_y_min; }
+      set { _pos_y_min = value; }
+    }
+    private int _pos_z_min = default(int);
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"pos_z_min", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int pos_z_min
+    {
+      get { return _pos_z_min; }
+      set { _pos_z_min = value; }
+    }
+    private int _pos_x_max = default(int);
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"pos_x_max", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int pos_x_max
+    {
+      get { return _pos_x_max; }
+      set { _pos_x_max = value; }
+    }
+    private int _pos_y_max = default(int);
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"pos_y_max", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int pos_y_max
+    {
+      get { return _pos_y_max; }
+      set { _pos_y_max = value; }
+    }
+    private int _pos_z_max = default(int);
+    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"pos_z_max", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int pos_z_max
+    {
+      get { return _pos_z_max; }
+      set { _pos_z_max = value; }
+    }
+    private RemoteFortressReader.BuildingType _building_type = null;
+    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"building_type", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.BuildingType building_type
+    {
+      get { return _building_type; }
+      set { _building_type = value; }
+    }
+    private RemoteFortressReader.MatPair _material = null;
+    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"material", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.MatPair material
+    {
+      get { return _material; }
+      set { _material = value; }
+    }
+    private uint _building_flags = default(uint);
+    [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name=@"building_flags", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(uint))]
+    public uint building_flags
+    {
+      get { return _building_flags; }
+      set { _building_flags = value; }
+    }
+    private bool _is_room = default(bool);
+    [global::ProtoBuf.ProtoMember(11, IsRequired = false, Name=@"is_room", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool is_room
+    {
+      get { return _is_room; }
+      set { _is_room = value; }
+    }
+    private RemoteFortressReader.BuildingExtents _room = null;
+    [global::ProtoBuf.ProtoMember(12, IsRequired = false, Name=@"room", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.BuildingExtents room
+    {
+      get { return _room; }
+      set { _room = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MapBlock")]
   public partial class MapBlock : global::ProtoBuf.IExtensible
   {
@@ -229,6 +379,13 @@ namespace RemoteFortressReader
     public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> construction_items
     {
       get { return _construction_items; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.BuildingInstance> _buildings = new global::System.Collections.Generic.List<RemoteFortressReader.BuildingInstance>();
+    [global::ProtoBuf.ProtoMember(19, Name=@"buildings", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.BuildingInstance> buildings
+    {
+      get { return _buildings; }
     }
   
     private global::ProtoBuf.IExtension extensionObject;

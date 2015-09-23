@@ -88,6 +88,7 @@ abstract class BlockMesher {
         {
             materials[material.mat_pair] = material;
         }
+        System.GC.Collect(); //force a garbage collect after initial load.
     }
 
     // Needs to be run frequently.
