@@ -126,9 +126,10 @@ public class MapDataStore {
         return CopySlice(block.ToDFCoord(), BLOCK_SIZE);
     }
 
-    public void StoreTiles(RemoteFortressReader.MapBlock block, bool liquid) {
+    public void StoreTiles(RemoteFortressReader.MapBlock block) {
         bool setTiles = block.tiles.Count > 0;
         bool setLiquids = block.water.Count > 0 || block.magma.Count > 0;
+        bool setBuildings = block.buildings.Count > 0;
         if (!setTiles && !setLiquids) return;
 
         for (int xx = 0; xx < 16; xx++)
@@ -159,6 +160,23 @@ public class MapDataStore {
                     tiles[localCoord.x, localCoord.y, localCoord.z].magmaLevel = block.magma[netIndex];
                 }
             }
+        foreach (var building in block.buildings)
+        {
+            for (int xx = building.pos_x_min; xx <= building.pos_x_max; xx++)
+                for (int yy = building.pos_y_min; yy <= building.pos_y_max; yy++)
+                {
+                    DFCoord worldCoord = new DFCoord(xx,yy, block.map_z);
+                    DFCoord localCoord = WorldToLocalSpace(worldCoord);
+                    if (!InSliceBoundsLocal(localCoord))
+                    {
+                        Debug.LogError(worldCoord + " is out of bounds for " + MapSize);
+                        continue;
+                    }
+                    tilesPresent[PresentIndex(localCoord.x, localCoord.y, localCoord.z)] = true;
+                    tiles[localCoord.x, localCoord.y, localCoord.z].buildingType = building.building_type;
+                    tiles[localCoord.x, localCoord.y, localCoord.z].buildingMaterial = building.material;
+                }
+        }
     }
 
     public bool InSliceBounds(DFCoord loc) {
@@ -219,14 +237,16 @@ public class MapDataStore {
                            int? waterLevel = null,
                            int? magmaLevel = null,
                            MatPairStruct? construction_item = null,
-                           int? rampType = null)
+                           int? rampType = null,
+                           BuildingStruct? buildingType = null,
+                           MatPairStruct? buildingMaterial = null)
     {
         DFCoord local = WorldToLocalSpace(coord);
         if (!InSliceBoundsLocal(local.x, local.y, local.z)) {
             throw new UnityException("Can't modify tile outside of slice");
         }
         tilesPresent[PresentIndex(local.x, local.y, local.z)] = true;
-        tiles[local.x, local.y, local.z].Modify(tileType, material, base_material, layer_material, vein_material, waterLevel, magmaLevel, construction_item, rampType);
+        tiles[local.x, local.y, local.z].Modify(tileType, material, base_material, layer_material, vein_material, waterLevel, magmaLevel, construction_item, rampType, buildingType, buildingMaterial);
     }
 
     public void Reset() {
@@ -276,6 +296,8 @@ public class MapDataStore {
             waterLevel = default(int);
             magmaLevel = default(int);
             rampType = 0;
+            buildingMaterial = default(MatPairStruct);
+            buildingType = default(BuildingStruct);
         }
 
         public MapDataStore container;
@@ -289,6 +311,8 @@ public class MapDataStore {
         public int waterLevel;
         public int magmaLevel;
         int rampType;
+        public BuildingStruct buildingType;
+        public MatPairStruct buildingMaterial;
 
         public TiletypeShape shape { get { return tiletypeTokenList [tileType].shape; } }
         public TiletypeMaterial tiletypeMaterial { get { return tiletypeTokenList [tileType].material; } }
@@ -320,7 +344,9 @@ public class MapDataStore {
                            int? waterLevel = null,
                            int? magmaLevel = null,
                            MatPairStruct? construction_item = null,
-                           int? rampType = null)
+                           int? rampType = null,
+                           BuildingStruct? buildingType = null,
+                           MatPairStruct? buildingMaterial = null)
         {
             if (tileType != null) {
                 this.tileType = tileType.Value;
@@ -350,6 +376,14 @@ public class MapDataStore {
             if(rampType != null)
             {
                 this.rampType = rampType.Value;
+            }
+            if(buildingType != null)
+            {
+                this.buildingType = buildingType.Value;
+            }
+            if(buildingMaterial != null)
+            {
+                this.buildingMaterial = buildingMaterial.Value;
             }
         }
         public bool isWall {
