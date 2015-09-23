@@ -57,6 +57,7 @@ public class DFConnection : MonoBehaviour
     private RemoteFunction<dfproto.EmptyMessage> mapResetCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.BuildingList> buildingListCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.WorldMap> worldMapCall;
+    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.WorldMap> worldMapCenterCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.RegionMaps> regionMapCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.CreatureRawList> creatureRawListCall;
     private color_ostream dfNetworkOut = new color_ostream();
@@ -75,6 +76,7 @@ public class DFConnection : MonoBehaviour
     private RemoteFortressReader.ViewInfo _netViewInfo;
     private RemoteFortressReader.UnitList _netUnitList;
     private RemoteFortressReader.WorldMap _netWorldMap;
+    private RemoteFortressReader.WorldMap _netWorldMapCenter;
     private RemoteFortressReader.RegionMaps _netRegionMaps;
     private RemoteFortressReader.MapInfo _netMapInfo;
     // Special sort of queue:
@@ -192,16 +194,11 @@ public class DFConnection : MonoBehaviour
     public RemoteFortressReader.WorldMap PopWorldMapUpdate()
     {
         RemoteFortressReader.WorldMap result = null;
-        if (Monitor.TryEnter(worldMapLock))
-            try
-            {
-                result = _netWorldMap;
-                _netWorldMap = null;
-            }
-            finally
-            {
-                Monitor.Exit(worldMapLock);
-            }
+        lock (worldMapLock)
+        {
+            result = _netWorldMap;
+            _netWorldMap = null;
+        }
         return result;
     }
 
@@ -365,6 +362,7 @@ public class DFConnection : MonoBehaviour
         mapResetCall = CreateAndBind<dfproto.EmptyMessage>(networkClient, "ResetMapHashes", "RemoteFortressReader");
         buildingListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.BuildingList>(networkClient, "GetBuildingDefList", "RemoteFortressReader");
         worldMapCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.WorldMap>(networkClient, "GetWorldMap", "RemoteFortressReader");
+        worldMapCenterCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.WorldMap>(networkClient, "GetWorldMapCenter", "RemoteFortressReader");
         regionMapCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.RegionMaps>(networkClient, "GetRegionMaps", "RemoteFortressReader");
         creatureRawListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.CreatureRawList>(networkClient, "GetCreatureRaws", "RemoteFortressReader");
     }
@@ -533,8 +531,19 @@ public class DFConnection : MonoBehaviour
                 }
                 connection.viewInfoCall.execute(null, out connection._netViewInfo);
                 connection.unitListCall.execute(null, out connection._netUnitList);
-                connection.regionMapCall.execute(null, out connection._netRegionMaps);
-                connection.worldMapCall.execute(null, out connection._netWorldMap);
+                if (connection.worldMapCenterCall != null)
+                {
+                    RemoteFortressReader.WorldMap tempWorldMap;
+                    connection.worldMapCenterCall.execute(null, out tempWorldMap);
+                    if (connection._netWorldMapCenter == null || (tempWorldMap != null && (connection._netWorldMapCenter.center_x != tempWorldMap.center_x || connection._netWorldMapCenter.center_y != tempWorldMap.center_y)))
+                    {
+                        connection._netWorldMapCenter = tempWorldMap;
+                        if (connection.regionMapCall != null)
+                            connection.regionMapCall.execute(null, out connection._netRegionMaps);
+                        if (connection.worldMapCall != null)
+                            connection.worldMapCall.execute(null, out connection._netWorldMap);
+                    }
+                }
                 if (connection.EmbarkMapSize.x > 0
                     && connection.EmbarkMapSize.y > 0
                     && connection.EmbarkMapSize.z > 0)
@@ -545,7 +554,7 @@ public class DFConnection : MonoBehaviour
                     {
                         if (block.tiles.Count > 0)
                             connection.pendingLandscapeBlocks.EnqueueAndDisplace(new DFCoord(block.map_x, block.map_y, block.map_z), block);
-                        if (block.water.Count > 0 || block.magma.Count > 0)
+                        else if (block.water.Count > 0 || block.magma.Count > 0)
                             connection.pendingLiquidBlocks.EnqueueAndDisplace(new DFCoord(block.map_x, block.map_y, block.map_z), block);
                     }
                 }
@@ -668,15 +677,24 @@ public class DFConnection : MonoBehaviour
                         if (connection.unitListCall != null)
                             connection.unitListCall.execute(null, out connection._netUnitList);
                     }
-                    lock (connection.regionMapLock)
+                    if (connection.worldMapCenterCall != null)
                     {
-                        if (connection.regionMapCall != null)
-                            connection.regionMapCall.execute(null, out connection._netRegionMaps);
-                    }
-                    lock (connection.worldMapLock)
-                    {
-                        if (connection.worldMapCall != null)
-                            connection.worldMapCall.execute(null, out connection._netWorldMap);
+                        RemoteFortressReader.WorldMap tempWorldMap;
+                        connection.worldMapCenterCall.execute(null, out tempWorldMap);
+                        if (connection._netWorldMapCenter == null || (tempWorldMap != null && (connection._netWorldMapCenter.center_x != tempWorldMap.center_x || connection._netWorldMapCenter.center_y != tempWorldMap.center_y)))
+                        {
+                            connection._netWorldMapCenter = tempWorldMap;
+                            lock (connection.regionMapLock)
+                            {
+                                if (connection.regionMapCall != null)
+                                    connection.regionMapCall.execute(null, out connection._netRegionMaps);
+                            }
+                            lock (connection.worldMapLock)
+                            {
+                                if (connection.worldMapCall != null)
+                                    connection.worldMapCall.execute(null, out connection._netWorldMap);
+                            }
+                        }
                     }
                     if (connection.EmbarkMapSize.x > 0
                         && connection.EmbarkMapSize.y > 0
