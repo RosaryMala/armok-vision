@@ -10,6 +10,7 @@ public enum MeshLayer
     BaseMaterial,
     LayerMaterial,
     VeinMaterial,
+    BuildingMaterial,
     NoMaterial,
     StaticCutout,
     BaseCutout,
@@ -19,6 +20,7 @@ public enum MeshLayer
     Growth1Cutout,
     Growth2Cutout,
     Growth3Cutout,
+    BuildingMaterialCutout,
     NoMaterialCutout,
     Count
 }

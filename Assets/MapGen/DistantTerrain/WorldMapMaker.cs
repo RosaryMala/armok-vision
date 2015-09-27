@@ -53,7 +53,6 @@ public class WorldMapMaker : MonoBehaviour
 
     Mesh terrainMesh;
 
-    bool madeTerrain = false;
 
     int CoordToIndex(int x, int y)
     {
@@ -125,7 +124,6 @@ public class WorldMapMaker : MonoBehaviour
         GenerateMesh();
 
         GenerateClouds();
-        madeTerrain = true;
         //Debug.Log("Loaded World: " + worldNameEnglish);
     }
 
@@ -333,7 +331,6 @@ public class WorldMapMaker : MonoBehaviour
         terrainMesh.RecalculateTangents();
 
         meshFilter.mesh = terrainMesh;
-        madeTerrain = true;
     }
 
     void GenerateClouds()

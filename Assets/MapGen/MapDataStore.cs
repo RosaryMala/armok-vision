@@ -129,7 +129,6 @@ public class MapDataStore {
     public void StoreTiles(RemoteFortressReader.MapBlock block) {
         bool setTiles = block.tiles.Count > 0;
         bool setLiquids = block.water.Count > 0 || block.magma.Count > 0;
-        bool setBuildings = block.buildings.Count > 0;
         if (!setTiles && !setLiquids) return;
 
         for (int xx = 0; xx < 16; xx++)

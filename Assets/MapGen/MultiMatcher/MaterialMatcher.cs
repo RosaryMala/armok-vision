@@ -6,7 +6,7 @@ using UnityEngine;
 static class MaterialTokenList
 {
     static List<MaterialDefinition> _matTokenList;
-    public static List<MaterialDefinition> matTokenList
+    public static List<MaterialDefinition> MaterialTokens
     {
         set
         {
