@@ -1,12 +1,11 @@
 ﻿using RemoteFortressReader;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 static class ItemTokenList
 {
     static List<MaterialDefinition> _itemTokenList;
-    public static List<MaterialDefinition> itemTokenList
+    public static List<MaterialDefinition> ItemTokens
     {
         set
         {
@@ -24,15 +23,15 @@ static class ItemTokenList
             return _itemTokenList != null;
         }
     }
-    public static Dictionary<string, MaterialDefinition> itemLookup { get; private set; }
+    public static Dictionary<string, MaterialDefinition> ItemLookup { get; private set; }
 
     static void PopulateWordLists()
     {
-        if (itemLookup == null)
-            itemLookup = new Dictionary<string, MaterialDefinition>();
+        if (ItemLookup == null)
+            ItemLookup = new Dictionary<string, MaterialDefinition>();
         foreach (MaterialDefinition token in _itemTokenList)
         {
-            itemLookup[token.id] = token;
+            ItemLookup[token.id] = token;
         }
     }
 
@@ -46,14 +45,14 @@ public class ItemMatcher<T>
     {
         set
         {
-            if(!ItemTokenList.itemLookup.ContainsKey(token))
+            if(!ItemTokenList.ItemLookup.ContainsKey(token))
             {
                 Debug.Log("Invalid item: " + token);
                 return;
             }
             if (itemList == null)
                 itemList = new Dictionary<MatPairStruct, T>();
-            itemList[ItemTokenList.itemLookup[token].mat_pair] = value;
+            itemList[ItemTokenList.ItemLookup[token].mat_pair] = value;
         }
     }
     public T this[MatPairStruct mat]

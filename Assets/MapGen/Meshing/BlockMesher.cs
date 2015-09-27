@@ -317,31 +317,18 @@ abstract class BlockMesher {
 
                 for (int i = 0; i < (int)MeshLayer.Count; i++)
                 {
-                    MeshLayer layer = (MeshLayer)i;
-                    switch (layer)
+                    if (((MeshLayer)i == MeshLayer.BuildingMaterial || (MeshLayer)i == MeshLayer.BuildingMaterialCutout) &&
+                        (data[xx, yy, block_z].Value.buildingType == default(BuildingStruct)))
+                        continue;
+                    if (i < (int)MeshLayer.StaticCutout)
                     {
-                        case MeshLayer.StaticMaterial:
-                        case MeshLayer.BaseMaterial:
-                        case MeshLayer.LayerMaterial:
-                        case MeshLayer.VeinMaterial:
-                        case MeshLayer.NoMaterial:
-                            FillMeshBuffer(out temp.meshBuffer[bufferIndex], layer, data[xx, yy, block_z].Value);
-                            bufferIndex++;
-                            break;
-                        case MeshLayer.StaticCutout:
-                        case MeshLayer.BaseCutout:
-                        case MeshLayer.LayerCutout:
-                        case MeshLayer.VeinCutout:
-                        case MeshLayer.Growth0Cutout:
-                        case MeshLayer.Growth1Cutout:
-                        case MeshLayer.Growth2Cutout:
-                        case MeshLayer.Growth3Cutout:
-                        case MeshLayer.NoMaterialCutout:
-                            FillMeshBuffer(out temp.stencilMeshBuffer[stencilBufferIndex], layer, data[xx, yy, block_z].Value);
-                            stencilBufferIndex++;
-                            break;
-                        default:
-                            break;
+                        FillMeshBuffer(out temp.meshBuffer[bufferIndex], (MeshLayer)i, data[xx, yy, block_z].Value);
+                        bufferIndex++;
+                    }
+                    else
+                    {
+                        FillMeshBuffer(out temp.stencilMeshBuffer[stencilBufferIndex], (MeshLayer)i, data[xx, yy, block_z].Value);
+                        stencilBufferIndex++;
                     }
                 }
             }
@@ -356,16 +343,27 @@ abstract class BlockMesher {
     {
         buffer = new MeshCombineUtility.MeshInstance();
         MeshContent content = null;
-        if (!contentLoader.TileMeshConfiguration.GetValue(tile, layer, out content))
+        if (layer == MeshLayer.BuildingMaterial || layer == MeshLayer.BuildingMaterialCutout)
         {
-            buffer.meshData = null;
-            return;
+            if (!contentLoader.BuildingMeshConfiguration.GetValue(tile, layer, out content))
+            {
+                buffer.meshData = null;
+                return;
+            }
+        }
+        else
+        {
+            if (!contentLoader.TileMeshConfiguration.GetValue(tile, layer, out content))
+            {
+                buffer.meshData = null;
+                return;
+            }
         }
         buffer.meshData = content.meshData[(int)layer];
         buffer.transform = Matrix4x4.TRS(GameMap.DFtoUnityCoord(tile.position), Quaternion.identity, Vector3.one);
         Matrix4x4 shapeTextTransform = Matrix4x4.identity;
         NormalContent tileTexContent;
-        if (contentLoader.ShapeTextureConfiguration.GetValue (tile, layer, out tileTexContent))
+        if (contentLoader.ShapeTextureConfiguration.GetValue(tile, layer, out tileTexContent))
             shapeTextTransform = tileTexContent.UVTransform;
         Matrix4x4 matTexTransform = Matrix4x4.identity;
         TextureContent matTexContent;
@@ -373,52 +371,62 @@ abstract class BlockMesher {
             matTexTransform = matTexContent.UVTransform;
         ColorContent newColorContent;
         Color newColor;
-        if (contentLoader.ColorConfiguration.GetValue (tile, layer, out newColorContent)) {
+        if (contentLoader.ColorConfiguration.GetValue(tile, layer, out newColorContent))
+        {
             newColor = newColorContent.value;
-        } else {
+        }
+        else
+        {
             MatPairStruct mat;
             mat.mat_type = -1;
             mat.mat_index = -1;
-            switch (layer) {
-            case MeshLayer.StaticMaterial:
-            case MeshLayer.StaticCutout:
-                mat = tile.material;
-                break;
-            case MeshLayer.BaseMaterial:
-            case MeshLayer.BaseCutout:
-                mat = tile.base_material;
-                break;
-            case MeshLayer.LayerMaterial:
-            case MeshLayer.LayerCutout:
-                mat = tile.layer_material;
-                break;
-            case MeshLayer.VeinMaterial:
-            case MeshLayer.VeinCutout:
-                mat = tile.vein_material;
-                break;
-            case MeshLayer.NoMaterial:
-            case MeshLayer.NoMaterialCutout:
-                break;
-            case MeshLayer.Growth0Cutout:
-                break;
-            case MeshLayer.Growth1Cutout:
-                break;
-            case MeshLayer.Growth2Cutout:
-                break;
-            case MeshLayer.Growth3Cutout:
-                break;
-            default:
-                break;
+            switch (layer)
+            {
+                case MeshLayer.StaticMaterial:
+                case MeshLayer.StaticCutout:
+                    mat = tile.material;
+                    break;
+                case MeshLayer.BaseMaterial:
+                case MeshLayer.BaseCutout:
+                    mat = tile.base_material;
+                    break;
+                case MeshLayer.LayerMaterial:
+                case MeshLayer.LayerCutout:
+                    mat = tile.layer_material;
+                    break;
+                case MeshLayer.VeinMaterial:
+                case MeshLayer.VeinCutout:
+                    mat = tile.vein_material;
+                    break;
+                case MeshLayer.NoMaterial:
+                case MeshLayer.NoMaterialCutout:
+                    break;
+                case MeshLayer.Growth0Cutout:
+                    break;
+                case MeshLayer.Growth1Cutout:
+                    break;
+                case MeshLayer.Growth2Cutout:
+                    break;
+                case MeshLayer.Growth3Cutout:
+                    break;
+                case MeshLayer.BuildingMaterial:
+                case MeshLayer.BuildingMaterialCutout:
+                    mat = tile.buildingMaterial;
+                    break;
+                default:
+                    break;
             }
             MaterialDefinition mattie;
-            if (materials.TryGetValue (mat, out mattie)) {
-
+            if (materials.TryGetValue(mat, out mattie))
+            {
                 ColorDefinition color = mattie.state_color;
                 if (color == null)
                     newColor = Color.cyan;
                 else
-                    newColor = new Color (color.red / 255.0f, color.green / 255.0f, color.blue / 255.0f, 1);
-            } else {
+                    newColor = new Color(color.red / 255.0f, color.green / 255.0f, color.blue / 255.0f, 1);
+            }
+            else
+            {
                 newColor = Color.grey;
             }
         }

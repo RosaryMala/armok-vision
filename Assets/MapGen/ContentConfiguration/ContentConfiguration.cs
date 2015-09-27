@@ -95,6 +95,9 @@ abstract public class ContentConfiguration<T> where T : IContent, new()
                     output = new MaterialConfiguration<T>();
                 }
                 break;
+            case "buildingType":
+                output = new BuildingConfiguration<T>();
+                break;
             default:
                 Debug.LogError("Found unknown matching method \"" + elemRoot.Element(name).Elements().First().Name.LocalName + "\", assuming material.");
                 output = new MaterialConfiguration<T>();
