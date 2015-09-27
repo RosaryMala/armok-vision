@@ -97,6 +97,7 @@ public class ContentLoader
     public ContentConfiguration<NormalContent> ShapeTextureConfiguration { get; private set; }
     public ContentConfiguration<MeshContent> TileMeshConfiguration { get; private set; }
     public ContentConfiguration<LayerContent> MaterialLayerConfiguration { get; private set; }
+    public ContentConfiguration<MeshContent> BuildingMeshConfiguration { get; private set; }
 
 
     public ContentLoader()
@@ -186,6 +187,11 @@ public class ContentLoader
                     if (MaterialLayerConfiguration == null)
                         MaterialLayerConfiguration = ContentConfiguration<LayerContent>.GetFromRootElement(doc, "materialLayer");
                     MaterialLayerConfiguration.AddSingleContentConfig(doc);
+                    break;
+                case "buildingMeshes":
+                    if (BuildingMeshConfiguration == null)
+                        BuildingMeshConfiguration = ContentConfiguration<MeshContent>.GetFromRootElement(doc, "buildingMesh");
+                    BuildingMeshConfiguration.AddSingleContentConfig(doc);
                     break;
                 default:
                     break;

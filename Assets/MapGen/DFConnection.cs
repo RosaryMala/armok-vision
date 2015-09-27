@@ -387,7 +387,7 @@ public class DFConnection : MonoBehaviour
     {
         if (_netMaterialList != null)
         {
-            MaterialTokenList.matTokenList = _netMaterialList.material_list;
+            MaterialTokenList.MaterialTokens = _netMaterialList.material_list;
             Debug.Log("Materials fetched: " + _netMaterialList.material_list.Count);
         }
         if (_netTiletypeList != null)
@@ -397,8 +397,13 @@ public class DFConnection : MonoBehaviour
         }
         if (_netItemList != null)
         {
-            ItemTokenList.itemTokenList = _netItemList.material_list;
+            ItemTokenList.ItemTokens = _netItemList.material_list;
             Debug.Log("Itemtypes fetched: " + _netItemList.material_list.Count);
+        }
+        if(_netBuildingList != null)
+        {
+            BuildingTokenList.BuildingTokens = _netBuildingList.building_list;
+            Debug.Log("Buildingtypes fetched: " + _netBuildingList.building_list.Count);
         }
         else
         {
@@ -410,7 +415,7 @@ public class DFConnection : MonoBehaviour
             blankMaterial.mat_pair.mat_index = -1;
             List<RemoteFortressReader.MaterialDefinition> blankItemList = new List<RemoteFortressReader.MaterialDefinition>();
             blankItemList.Add(blankMaterial);
-            ItemTokenList.itemTokenList = blankItemList;
+            ItemTokenList.ItemTokens = blankItemList;
             Debug.Log("Created dummy Itemtype list.");
         }
         if (_netTiletypeList != null)
