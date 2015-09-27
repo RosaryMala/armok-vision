@@ -55,6 +55,14 @@ public class MaterialConfiguration<T> : ContentConfiguration<T> where T : IConte
                 break;
             case MeshLayer.Growth3Cutout:
                 break;
+            case MeshLayer.BuildingMaterial:
+            case MeshLayer.BuildingMaterialCutout:
+                if (materialMatcher.Get(tile.buildingMaterial, out cont))
+                {
+                    value = cont.GetValue(tile, layer);
+                    return true;
+                }
+                break;
             default:
                 break;
         }

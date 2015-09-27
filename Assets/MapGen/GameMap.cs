@@ -130,6 +130,7 @@ public class GameMap : MonoBehaviour
     // Stuff to let the material list & various meshes & whatnot be loaded from xml specs at runtime.
     Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> materials;
     Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> items;
+    Dictionary<BuildingStruct, RemoteFortressReader.BuildingDefinition> buildings;
 
     // Coordinate system stuff.
     public const float tileHeight = 3.0f;
@@ -238,9 +239,20 @@ public class GameMap : MonoBehaviour
             }
             SaveMaterialList(DFConnection.Instance.NetItemList.material_list, "ItemList.csv");
         }
+        if(DFConnection.Instance.NetBuildingList != null)
+        {
+            if (buildings == null)
+                buildings = new Dictionary<BuildingStruct, BuildingDefinition>();
+            buildings.Clear();
+            foreach(RemoteFortressReader.BuildingDefinition building in DFConnection.Instance.NetBuildingList.building_list)
+            {
+                buildings[building.building_type] = building;
+            }
+            SaveBuildingList();
+        }
 
         SaveTileTypeList();
-        SaveBuildingList();
+        
 
         UpdateView();
 
@@ -670,18 +682,20 @@ public class GameMap : MonoBehaviour
 
             cursorProperties.text += "\n";
 
-            cursorProperties.text += "Building: [";
-            cursorProperties.text += tile.buildingType.building_type + ":";
-            cursorProperties.text += tile.buildingType.building_subtype + ":";
-            cursorProperties.text += tile.buildingType.building_custom + "]\n";
-
-            if (materials.ContainsKey(tile.buildingMaterial))
+            if (tile.buildingType != default(BuildingStruct))
             {
-                cursorProperties.text += "Building Material: ";
-                cursorProperties.text += materials[tile.buildingMaterial].id + "\n";
+                if(buildings.ContainsKey(tile.buildingType))
+                cursorProperties.text += "Building: ";
+                cursorProperties.text += buildings[tile.buildingType].id + "\n";
+
+                if (materials.ContainsKey(tile.buildingMaterial))
+                {
+                    cursorProperties.text += "Building Material: ";
+                    cursorProperties.text += materials[tile.buildingMaterial].id + "\n";
+                }
+                else
+                    cursorProperties.text += "Unknown Building Material\n";
             }
-            else
-                cursorProperties.text += "Unknown Building Material\n";
         }
 
         if (unitList != null)
