@@ -7,7 +7,16 @@ public class ItemConfiguration<T> : ContentConfiguration<T> where T : IContent, 
     public override bool GetValue(MapDataStore.Tile tile, MeshLayer layer, out T value)
     {
         Content cont;
-        if (itemMatcher.Get(tile.construction_item, out cont))
+        if (layer == MeshLayer.BuildingMaterial || layer == MeshLayer.BuildingMaterialCutout)
+        {
+            //Buildings are always built from the same item type, generally.
+            if (itemMatcher.Get(new MatPairStruct(-1, -1), out cont))
+            {
+                value = cont.GetValue(tile, layer);
+                return true;
+            }
+        }
+        else if (itemMatcher.Get(tile.construction_item, out cont))
         {
             value = cont.GetValue(tile, layer);
             return true;
