@@ -1,6 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <buildingMeshes>
+    <buildingMesh file = "Chair.obj">
+        <buildingType token="Chair" />
+    </buildingMesh>
+    <buildingMesh file = "Bed.obj">
+        <buildingType token="Bed" />
+    </buildingMesh>
     <buildingMesh file = "Table.obj">
         <buildingType token="Table" />
+    </buildingMesh>
+    <buildingMesh file = "Box.obj">
+        <buildingType token="Box" />
+    </buildingMesh>
+    <buildingMesh file = "Cabinet.obj">
+        <buildingType token="Cabinet" />
+    </buildingMesh>
+    <buildingMesh file = "Statue.obj">
+        <buildingType token="Statue" />
     </buildingMesh>
 </buildingMeshes>
