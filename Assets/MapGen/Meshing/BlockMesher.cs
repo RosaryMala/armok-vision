@@ -363,8 +363,16 @@ abstract class BlockMesher {
         buffer.transform = Matrix4x4.TRS(GameMap.DFtoUnityCoord(tile.position), Quaternion.identity, Vector3.one);
         Matrix4x4 shapeTextTransform = Matrix4x4.identity;
         NormalContent tileTexContent;
-        if (contentLoader.ShapeTextureConfiguration.GetValue(tile, layer, out tileTexContent))
-            shapeTextTransform = tileTexContent.UVTransform;
+        if (layer == MeshLayer.BuildingMaterial || layer == MeshLayer.BuildingMaterialCutout)
+        {
+            if (contentLoader.BuildingShapeTextureConfiguration.GetValue(tile, layer, out tileTexContent))
+                shapeTextTransform = tileTexContent.UVTransform;
+        }
+        else
+        {
+            if (contentLoader.ShapeTextureConfiguration.GetValue(tile, layer, out tileTexContent))
+                shapeTextTransform = tileTexContent.UVTransform;
+        }
         Matrix4x4 matTexTransform = Matrix4x4.identity;
         TextureContent matTexContent;
         if (contentLoader.MaterialTextureConfiguration.GetValue(tile, layer, out matTexContent))

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<buildingShapeTextures>
+    <buildingShapeTexture normal="Flat_N.png" occlusion="Flat_O.png" specular="Matte_S.png">
+        <buildingType token="NONE" />
+    </buildingShapeTexture>
+</buildingShapeTextures>
