@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
 using UnityEngine;
-using RemoteFortressReader;
 
 public enum MatBasic
 {
@@ -98,6 +97,7 @@ public class ContentLoader
     public ContentConfiguration<MeshContent> TileMeshConfiguration { get; private set; }
     public ContentConfiguration<LayerContent> MaterialLayerConfiguration { get; private set; }
     public ContentConfiguration<MeshContent> BuildingMeshConfiguration { get; private set; }
+    public ContentConfiguration<NormalContent> BuildingShapeTextureConfiguration { get; private set; }
 
 
     public ContentLoader()
@@ -192,6 +192,11 @@ public class ContentLoader
                     if (BuildingMeshConfiguration == null)
                         BuildingMeshConfiguration = ContentConfiguration<MeshContent>.GetFromRootElement(doc, "buildingMesh");
                     BuildingMeshConfiguration.AddSingleContentConfig(doc);
+                    break;
+                case "buildingShapeTextures":
+                    if (BuildingShapeTextureConfiguration == null)
+                        BuildingShapeTextureConfiguration = ContentConfiguration<NormalContent>.GetFromRootElement(doc, "buildingShapeTexture");
+                    BuildingShapeTextureConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
                     break;
                 default:
                     break;
