@@ -87,7 +87,12 @@ public class BuildingMatcher<T> {
                 value = output;
                 return true;
             }
-
+            bld.building_type = -1; //and finally check if there's a universal default set.
+            if (buildingList.TryGetValue(bld, out output))
+            {
+                value = output;
+                return true;
+            }
         }
         value = default(T);
         return false;

@@ -92,7 +92,7 @@ public class WorldMapMaker : MonoBehaviour
         worldNameEnglish = remoteMap.name_english;
         offset = new Vector3(
         -remoteMap.center_x * 48 * GameMap.tileWidth,
-        -remoteMap.center_z * GameMap.tileHeight,
+        0,
         remoteMap.center_y * 48 * GameMap.tileWidth);
         meshRenderer.material.SetFloat("_Scale", scale);
         meshRenderer.material.SetFloat("_SeaLevel", (99 * GameMap.tileHeight) + offset.y);
