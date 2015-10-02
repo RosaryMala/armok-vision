@@ -1,36 +1,36 @@
 <?xml version="1.0"?>
 <materialTextures>
-    <materialTexture file="Grey.png">
+    <materialTexture pattern="Grey.png" specular="Matte_S.png">
         <material token="*" />
         <material token="*:*" />
         <material token="*:*:*" />
     </materialTexture>
-   <materialTexture file="Grey.png">
+   <materialTexture pattern="Grey.png" specular="Matte_S.png">
         <material token="NONE" />
-        <subObject file="Leaves.png">
+        <subObject pattern="Leaves.png" specular="Matte_S.png">
             <tiletype token="BRANCH:*:*:*:*" />
             <tiletype token="TWIG:*:*:*:*" />
             <tiletype token="SHRUB:*:*:*:*" />
             <tiletype token="SAPLING:*:*:*:*" />
         </subObject>
     </materialTexture>
-    <materialTexture file="Grey.png">
+    <materialTexture pattern="Grey.png" specular="Matte_S.png">
         <material token="PLANT:*:*" />
-        <subObject file="Grass.png">
+        <subObject pattern="Grass.png" specular="Grass_S.png">
             <tiletype token="*:*:GRASS_LIGHT:*:*" />
             <tiletype token="*:*:GRASS_DARK:*:*" />
         </subObject>
     </materialTexture>
-    <materialTexture file="Marble.png">
+    <materialTexture pattern="Marble.png" specular="Medium_S.png">
         <material token="*:MARBLE" />
     </materialTexture>
-    <materialTexture file="Stone.png">
+    <materialTexture pattern="Stone.png" specular="Stone_S.png">
         <material token="INORGANIC:*" />
     </materialTexture>
-    <materialTexture file="Wood.png">
+    <materialTexture pattern="Wood.png" specular="Matte_S.png">
         <material token="*:*:WOOD" />
     </materialTexture>
-    <materialTexture file="Grey.png">
+    <materialTexture pattern="Grey.png" specular="Mirror_S.png">
         <material token="*:IRON" />
         <material token="*:GOLD" />
         <material token="*:SILVER" />
