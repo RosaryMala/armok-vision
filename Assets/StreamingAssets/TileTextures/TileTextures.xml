@@ -1,34 +1,34 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <shapeTextures>
-    <shapeTexture normal="Bars_N.png" occlusion="Bars_O.png" specular="Medium_S.png">
+    <shapeTexture normal="Bars_N.png" occlusion="Bars_O.png" alpha="Opaque_A.png">
         <item token="BAR"/>
-        <subObject normal="Bars_N.png" occlusion="Bars_O.png" specular="Matte_S.png">
+        <subObject normal="Bars_N.png" occlusion="Bars_O.png" alpha="Opaque_A.png">
             <material token="COAL:*"/>
         </subObject>
     </shapeTexture>
-    <shapeTexture normal="Tiles_N.png" occlusion="Tiles_O.png" specular="Low_S.png">
+    <shapeTexture normal="Tiles_N.png" occlusion="Tiles_O.png" alpha="Opaque_A.png">
         <item token="BLOCKS"/>
     </shapeTexture>
-    <shapeTexture normal="Logs_N.png" occlusion="Logs_O.png" specular="Matte_S.png">
+    <shapeTexture normal="Logs_N.png" occlusion="Logs_O.png" alpha="Opaque_A.png">
         <item token="WOOD"/>
     </shapeTexture>
-    <shapeTexture normal="Boulders_N.png" occlusion="Boulders_O.png" specular="Boulders_S.png">
+    <shapeTexture normal="Boulders_N.png" occlusion="Boulders_O.png" alpha="Opaque_A.png">
         <item token="BOULDER"/>
     </shapeTexture>
-    <shapeTexture normal="Rough_N.png" occlusion="Rough_O.png" specular="Rough_S.png">
+    <shapeTexture normal="Rough_N.png" occlusion="Rough_O.png" alpha="Opaque_A.png">
         <item token="NONE"/>
-        <subObject normal="Flat_N.png" occlusion="Flat_O.png" specular="Matte_S.png">
+        <subObject normal="Flat_N.png" occlusion="Flat_O.png" alpha="Opaque_A.png">
             <material token="NONE"/>
-            <subObject normal="Leaves_N.png" occlusion="Leaves_O.png" specular="Low_S.png">
+            <subObject normal="Leaves_N.png" occlusion="Leaves_O.png" alpha="Leaves_A.png">
                 <tiletype token="BRANCH:*:*:*:*"/>
                 <tiletype token="TWIG:*:*:*:*"/>
                 <tiletype token="SHRUB:*:*:*:*"/>
                 <tiletype token="SAPLING:*:*:*:*"/>
             </subObject>
         </subObject>
-        <subObject normal="Rough_N.png" occlusion="Rough_O.png" specular="Rough_S.png">
+        <subObject normal="Rough_N.png" occlusion="Rough_O.png" alpha="Opaque_A.png">
             <material token="*:*:*" />
-            <subObject normal="Grass_N.png" occlusion="Grass_O.png" specular="Grass_S.png">
+            <subObject normal="Grass_N.png" occlusion="Grass_O.png" alpha="Opaque_A.png">
                 <tiletype token="*:*:GRASS_LIGHT:*:*" />
                 <tiletype token="*:*:GRASS_DARK:*:*" />
             </subObject>

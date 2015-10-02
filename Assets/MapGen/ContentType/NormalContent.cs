@@ -23,7 +23,7 @@ public class NormalContent : IContent
         {
             Debug.LogError("Texture Storage is Null: " + elemtype);
             return false;
-        }
+        } 
 
         XAttribute normalAtt = elemtype.Attribute("normal");
         if (normalAtt == null)
@@ -45,29 +45,29 @@ public class NormalContent : IContent
         Texture2D normalMap = new Texture2D(2, 2, TextureFormat.ARGB32, false, true);
         normalMap.LoadImage(normalData);
 
-        XAttribute specularAtt = elemtype.Attribute("specular");
-        if (specularAtt == null)
+        XAttribute alphaAtt = elemtype.Attribute("alpha");
+        if (alphaAtt == null)
         {
-            Debug.LogError("No specular map in " + elemtype);
+            Debug.LogError("No alpha map in " + elemtype);
             //Add error message here
             return false;
         }
-        string specularPath = Path.Combine(Path.GetDirectoryName(new Uri(elemtype.BaseUri).LocalPath), specularAtt.Value);
-        specularPath = Path.GetFullPath(specularPath);
+        string alphaPath = Path.Combine(Path.GetDirectoryName(new Uri(elemtype.BaseUri).LocalPath), alphaAtt.Value);
+        alphaPath = Path.GetFullPath(alphaPath);
 
-        if (!File.Exists(specularPath))
+        if (!File.Exists(alphaPath))
         {
-            Debug.LogError("File not found: " + specularPath);
+            Debug.LogError("File not found: " + alphaPath);
             return false;
         }
 
-        byte[] specularData = File.ReadAllBytes(specularPath);
-        Texture2D specularMap = new Texture2D(2, 2, TextureFormat.ARGB32, false, false);
-        specularMap.LoadImage(specularData);
+        byte[] alphaData = File.ReadAllBytes(alphaPath);
+        Texture2D alphaMap = new Texture2D(2, 2, TextureFormat.ARGB32, false, false);
+        alphaMap.LoadImage(alphaData);
 
-        if ((specularMap.width != normalMap.width) || (specularMap.height != normalMap.height))
+        if ((alphaMap.width != normalMap.width) || (alphaMap.height != normalMap.height))
         {
-            TextureScale.Bilinear(specularMap, normalMap.width, normalMap.height);
+            TextureScale.Bilinear(alphaMap, normalMap.width, normalMap.height);
         }
 
         XAttribute occlusionAtt = elemtype.Attribute("occlusion");
@@ -98,18 +98,18 @@ public class NormalContent : IContent
 
         Texture2D combinedMap = new Texture2D(normalMap.width, normalMap.height, TextureFormat.ARGB32, false, true);
 
-        combinedMap.name = normalPath + occlusionAtt.Value + specularAtt.Value;
+        combinedMap.name = normalPath + occlusionAtt.Value + alphaAtt.Value;
 
         Color[] normalColors = normalMap.GetPixels();
         Color[] occlusionColors = occlusionMap.GetPixels();
-        Color[] specularColors = specularMap.GetPixels();
+        Color[] alphaColors = alphaMap.GetPixels();
 
-        if (normalColors.Length != specularColors.Length)
+        if (normalColors.Length != alphaColors.Length)
             Debug.LogError("Maps aren't same size!");
 
         for (int i = 0; i < normalColors.Length; i++)
         {
-            normalColors[i] = new Color(occlusionColors[i].r, normalColors[i].g, specularColors[i].r, normalColors[i].r);
+            normalColors[i] = new Color(occlusionColors[i].r, normalColors[i].g, alphaColors[i].r, normalColors[i].r);
         }
 
         combinedMap.SetPixels(normalColors);
