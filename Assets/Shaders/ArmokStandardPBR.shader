@@ -29,17 +29,17 @@
 		fixed4 _Color;
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
-			// Albedo comes from a texture tinted by color
-			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-			fixed4 b = tex2D (_BumpMap, IN.uv2_BumpMap);
-			//o.Albedo = c.rgb * IN.color.rgb;
-			o.Albedo = c.rgb < 0.5 ? (2.0 * c.rgb * IN.color.rgb) : (1.0 - 2.0 * (1.0 - c.rgb) * (1.0 - IN.color.rgb));
-			o.Metallic = 1.0 - IN.color.a;
-			o.Smoothness = b.b;
-			o.Occlusion = b.r;
-			o.Normal = UnpackNormal(b.ggga);
-			o.Alpha = c.a;
-		}
+            // Albedo comes from a texture tinted by color
+            fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
+            fixed4 b = tex2D(_BumpMap, IN.uv2_BumpMap);
+            //o.Albedo = c.rgb * IN.color.rgb;
+            o.Albedo = c.rgb < 0.5 ? (2.0 * c.rgb * IN.color.rgb) : (1.0 - 2.0 * (1.0 - c.rgb) * (1.0 - IN.color.rgb));
+            o.Metallic = 1.0 - IN.color.a;
+            o.Smoothness = c.a;
+            o.Occlusion = b.r;
+            o.Normal = UnpackNormal(b.ggga);
+            o.Alpha = b.b;
+        }
 		ENDCG
 	} 
 	FallBack "Diffuse"

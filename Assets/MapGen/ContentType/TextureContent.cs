@@ -26,30 +26,68 @@ public class TextureContent : IContent
             return false;
         }
 
-        XAttribute fileAtt = elemtype.Attribute("file");
-        if (fileAtt == null)
+        XAttribute patternAtt = elemtype.Attribute("pattern");
+        if (patternAtt == null)
         {
-            Debug.LogError("No file attribute in " + elemtype);
+            Debug.LogError("No pattern attribute in " + elemtype);
             //Add error message here
             return false;
         }
-        string filePath = Path.Combine(Path.GetDirectoryName(new Uri(elemtype.BaseUri).LocalPath), fileAtt.Value);
-        filePath = Path.GetFullPath(filePath);
+        string patternPath = Path.Combine(Path.GetDirectoryName(new Uri(elemtype.BaseUri).LocalPath), patternAtt.Value);
+        patternPath = Path.GetFullPath(patternPath);
 
-        if (!File.Exists(filePath))
+        if (!File.Exists(patternPath))
         {
-            Debug.LogError("File not found: " + filePath);
+            Debug.LogError("File not found: " + patternPath);
             return false;
         }
 
-        byte[] fileData = File.ReadAllBytes(filePath);
+        byte[] patternData = File.ReadAllBytes(patternPath);
 
-        Texture2D tex = new Texture2D(2,2);
-        tex.LoadImage(fileData);
+        Texture2D patternTex = new Texture2D(2, 2);
+        patternTex.LoadImage(patternData);
+        XAttribute specularAtt = elemtype.Attribute("specular");
+        if (specularAtt == null)
+        {
+            Debug.LogError("No specular attribute in " + elemtype);
+            //Add error message here
+            return false;
+        }
+        string specularPath = Path.Combine(Path.GetDirectoryName(new Uri(elemtype.BaseUri).LocalPath), specularAtt.Value);
+        specularPath = Path.GetFullPath(specularPath);
 
-        tex.name = filePath;
+        if (!File.Exists(specularPath))
+        {
+            Debug.LogError("File not found: " + specularPath);
+            return false;
+        }
 
-        storageIndex = store.AddTexture(tex);
+        byte[] specularData = File.ReadAllBytes(specularPath);
+
+        Texture2D specularTex = new Texture2D(2, 2);
+        specularTex.LoadImage(specularData);
+
+        if (specularTex.width != patternTex.width || specularTex.height != patternTex.height)
+        {
+            TextureScale.Bilinear(specularTex, patternTex.width, patternTex.height);
+        }
+
+        Texture2D combinedMap = new Texture2D(patternTex.width, patternTex.height, TextureFormat.ARGB32, false, false);
+        combinedMap.name = patternPath + specularAtt.Value;
+
+        Color[] patternColors = patternTex.GetPixels();
+        Color[] specularColors = specularTex.GetPixels();
+
+        for (int i = 0; i < patternColors.Length; i++)
+        {
+            patternColors[i] = new Color(patternColors[i].r, patternColors[i].g, patternColors[i].b, specularColors[i].linear.r);
+        }
+
+        combinedMap.SetPixels(patternColors);
+        combinedMap.Apply();
+
+
+        storageIndex = store.AddTexture(combinedMap);
         return true;
     }
 
