@@ -164,6 +164,17 @@ public class MapDataStore {
             for (int xx = building.pos_x_min; xx <= building.pos_x_max; xx++)
                 for (int yy = building.pos_y_min; yy <= building.pos_y_max; yy++)
                 {
+
+                    if((building.building_type.building_type == 29 || building.building_type.building_type == 29)
+                        && building.room != null && building.room.extents.Count > 0)
+                    {
+                        int buildingLocalX = xx - building.room.pos_x;
+                        int buildingLocalY = yy - building.room.pos_y;
+
+                        if (building.room.extents[buildingLocalY * building.room.width + buildingLocalX] == 0)
+                            continue;
+                    }
+
                     DFCoord worldCoord = new DFCoord(xx,yy, block.map_z);
                     DFCoord localCoord = WorldToLocalSpace(worldCoord);
                     if (!InSliceBoundsLocal(localCoord))
