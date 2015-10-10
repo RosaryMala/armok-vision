@@ -1,5 +1,4 @@
-﻿using System;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 
 public class BuildingConfiguration<T> : ContentConfiguration<T> where T : IContent, new()
 {

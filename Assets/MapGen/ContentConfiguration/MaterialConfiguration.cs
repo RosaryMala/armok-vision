@@ -43,6 +43,8 @@ public class MaterialConfiguration<T> : ContentConfiguration<T> where T : IConte
                 break;
             case MeshLayer.NoMaterial:
             case MeshLayer.NoMaterialCutout:
+            case MeshLayer.NoMaterialBuildingCutout:
+            case MeshLayer.NoMaterialBuilding:
                 if (defaultMaterial == null)
                     break;
                 value = defaultMaterial.GetValue(tile, layer);

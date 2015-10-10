@@ -695,6 +695,10 @@ public class GameMap : MonoBehaviour
                 }
                 else
                     cursorProperties.text += "Unknown Building Material\n";
+
+                cursorProperties.text += "Building Coord: ";
+                cursorProperties.text += tile.buildingLocalPos + "\n";
+
             }
         }
 
