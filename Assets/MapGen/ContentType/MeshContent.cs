@@ -12,6 +12,7 @@ public enum MeshLayer
     VeinMaterial,
     BuildingMaterial,
     NoMaterial,
+    NoMaterialBuilding,
     StaticCutout,
     BaseCutout,
     LayerCutout,
@@ -22,6 +23,7 @@ public enum MeshLayer
     Growth3Cutout,
     BuildingMaterialCutout,
     NoMaterialCutout,
+    NoMaterialBuildingCutout,
     Count
 }
 
@@ -37,6 +39,15 @@ public class MeshContent : IContent
             //Add error message here
             return false;
         }
+
+        if(fileAtt.Value == "NONE")
+        {
+            //This means we don't want to actually store a mesh,
+            //but still want to use the category.
+            meshData = new MeshData[(int)MeshLayer.Count];
+            return true;
+        }
+
         string filePath = Path.Combine(Path.GetDirectoryName(new Uri(elemtype.BaseUri).LocalPath), fileAtt.Value);
         filePath = Path.GetFullPath(filePath);
 

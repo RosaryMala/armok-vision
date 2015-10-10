@@ -177,6 +177,7 @@ public class MapDataStore {
 
                     DFCoord worldCoord = new DFCoord(xx,yy, block.map_z);
                     DFCoord localCoord = WorldToLocalSpace(worldCoord);
+                    DFCoord2d buildingLocalCoord = new DFCoord2d(xx - building.pos_x_min, yy - building.pos_y_min);
                     if (!InSliceBoundsLocal(localCoord))
                     {
                         Debug.LogError(worldCoord + " is out of bounds for " + MapSize);
@@ -185,6 +186,7 @@ public class MapDataStore {
                     tilesPresent[PresentIndex(localCoord.x, localCoord.y, localCoord.z)] = true;
                     tiles[localCoord.x, localCoord.y, localCoord.z].buildingType = building.building_type;
                     tiles[localCoord.x, localCoord.y, localCoord.z].buildingMaterial = building.material;
+                    tiles[localCoord.x, localCoord.y, localCoord.z].buildingLocalPos = buildingLocalCoord;
                 }
         }
     }
@@ -249,14 +251,15 @@ public class MapDataStore {
                            MatPairStruct? construction_item = null,
                            int? rampType = null,
                            BuildingStruct? buildingType = null,
-                           MatPairStruct? buildingMaterial = null)
+                           MatPairStruct? buildingMaterial = null,
+                           DFCoord2d? buildingLocalPos = null)
     {
         DFCoord local = WorldToLocalSpace(coord);
         if (!InSliceBoundsLocal(local.x, local.y, local.z)) {
             throw new UnityException("Can't modify tile outside of slice");
         }
         tilesPresent[PresentIndex(local.x, local.y, local.z)] = true;
-        tiles[local.x, local.y, local.z].Modify(tileType, material, base_material, layer_material, vein_material, waterLevel, magmaLevel, construction_item, rampType, buildingType, buildingMaterial);
+        tiles[local.x, local.y, local.z].Modify(tileType, material, base_material, layer_material, vein_material, waterLevel, magmaLevel, construction_item, rampType, buildingType, buildingMaterial, buildingLocalPos);
     }
 
     public void Reset() {
@@ -308,6 +311,7 @@ public class MapDataStore {
             rampType = 0;
             buildingMaterial = default(MatPairStruct);
             buildingType = default(BuildingStruct);
+            buildingLocalPos = default(DFCoord2d);
         }
 
         public MapDataStore container;
@@ -323,6 +327,7 @@ public class MapDataStore {
         int rampType;
         public BuildingStruct buildingType;
         public MatPairStruct buildingMaterial;
+        public DFCoord2d buildingLocalPos;
 
         public TiletypeShape shape { get { return tiletypeTokenList [tileType].shape; } }
         public TiletypeMaterial tiletypeMaterial { get { return tiletypeTokenList [tileType].material; } }
@@ -356,7 +361,8 @@ public class MapDataStore {
                            MatPairStruct? construction_item = null,
                            int? rampType = null,
                            BuildingStruct? buildingType = null,
-                           MatPairStruct? buildingMaterial = null)
+                           MatPairStruct? buildingMaterial = null,
+                           DFCoord2d? buildingLocalPos = null)
         {
             if (tileType != null) {
                 this.tileType = tileType.Value;
@@ -395,6 +401,8 @@ public class MapDataStore {
             {
                 this.buildingMaterial = buildingMaterial.Value;
             }
+            if (buildingLocalPos != null)
+                this.buildingLocalPos = buildingLocalPos.Value;
         }
         public bool isWall {
             get {

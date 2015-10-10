@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.Linq;
 using UnityEngine;
 
@@ -97,6 +96,9 @@ abstract public class ContentConfiguration<T> where T : IContent, new()
                 break;
             case "buildingType":
                 output = new BuildingConfiguration<T>();
+                break;
+            case "buildingPosition":
+                output = new BuildingPosConfiguration<T>();
                 break;
             default:
                 Debug.LogError("Found unknown matching method \"" + elemRoot.Element(name).Elements().First().Name.LocalName + "\", assuming material.");
