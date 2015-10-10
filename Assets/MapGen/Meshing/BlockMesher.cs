@@ -317,8 +317,11 @@ abstract class BlockMesher {
 
                 for (int i = 0; i < (int)MeshLayer.Count; i++)
                 {
-                    if (((MeshLayer)i == MeshLayer.BuildingMaterial || (MeshLayer)i == MeshLayer.BuildingMaterialCutout) &&
-                        (data[xx, yy, block_z].Value.buildingType == default(BuildingStruct)))
+                    if (((MeshLayer)i == MeshLayer.BuildingMaterial
+                        || (MeshLayer)i == MeshLayer.BuildingMaterialCutout
+                        || (MeshLayer)i == MeshLayer.NoMaterialBuilding
+                        || (MeshLayer)i == MeshLayer.NoMaterialBuildingCutout)
+                        && (data[xx, yy, block_z].Value.buildingType == default(BuildingStruct)))
                         continue;
                     if (i < (int)MeshLayer.StaticCutout)
                     {
@@ -343,7 +346,11 @@ abstract class BlockMesher {
     {
         buffer = new MeshCombineUtility.MeshInstance();
         MeshContent content = null;
-        if (layer == MeshLayer.BuildingMaterial || layer == MeshLayer.BuildingMaterialCutout)
+        if (layer == MeshLayer.BuildingMaterial
+            || layer == MeshLayer.BuildingMaterialCutout
+            || layer == MeshLayer.NoMaterialBuilding
+            || layer == MeshLayer.NoMaterialBuildingCutout
+            )
         {
             if (!contentLoader.BuildingMeshConfiguration.GetValue(tile, layer, out content))
             {
@@ -363,7 +370,11 @@ abstract class BlockMesher {
         buffer.transform = Matrix4x4.TRS(GameMap.DFtoUnityCoord(tile.position), Quaternion.identity, Vector3.one);
         Matrix4x4 shapeTextTransform = Matrix4x4.identity;
         NormalContent tileTexContent;
-        if (layer == MeshLayer.BuildingMaterial || layer == MeshLayer.BuildingMaterialCutout)
+        if (layer == MeshLayer.BuildingMaterial
+            || layer == MeshLayer.BuildingMaterialCutout
+            || layer == MeshLayer.NoMaterialBuilding
+            || layer == MeshLayer.NoMaterialBuildingCutout
+            )
         {
             if (contentLoader.BuildingShapeTextureConfiguration.GetValue(tile, layer, out tileTexContent))
                 shapeTextTransform = tileTexContent.UVTransform;
@@ -408,6 +419,8 @@ abstract class BlockMesher {
                     break;
                 case MeshLayer.NoMaterial:
                 case MeshLayer.NoMaterialCutout:
+                case MeshLayer.NoMaterialBuilding:
+                case MeshLayer.NoMaterialBuildingCutout:
                     break;
                 case MeshLayer.Growth0Cutout:
                     break;
