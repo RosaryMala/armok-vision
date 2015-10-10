@@ -33,4 +33,12 @@
     <buildingMesh file = "GearAssembly.obj">
         <buildingType token="GearAssembly" />
     </buildingMesh>
+    <buildingMesh file = "NONE">
+        <buildingType token="Workshop_Jewelers" />
+        <subObject file = "WorkshopCounter.obj">
+            <buildingPosition x = "2" y = "0" />
+            <buildingPosition x = "2" y = "1" />
+            <buildingPosition x = "2" y = "2" />
+        </subObject>
+    </buildingMesh>
 </buildingMeshes>
