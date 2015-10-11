@@ -3,4 +3,12 @@
     <buildingShapeTexture normal="Flat_N.png" occlusion="Flat_O.png" alpha="Opaque_A.png">
         <buildingType token="NONE" />
     </buildingShapeTexture>
+    <buildingShapeTexture normal="Flat_N.png" occlusion="Flat_O.png" alpha="Opaque_A.png">
+        <buildingType token="Workshop_Jewelers" />
+        <subObject normal="Flat_N.png" occlusion="Flat_O.png" alpha="Jewelers_Tools_A.png">
+            <buildingPosition x = "2" y = "0" />
+            <buildingPosition x = "2" y = "1" />
+            <buildingPosition x = "2" y = "2" />
+        </subObject>
+    </buildingShapeTexture>
 </buildingShapeTextures>

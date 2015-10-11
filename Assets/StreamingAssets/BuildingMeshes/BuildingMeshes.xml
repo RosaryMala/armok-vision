@@ -63,7 +63,7 @@
     </buildingMesh>
     <buildingMesh file = "NONE">
         <buildingType token="Workshop_Jewelers" />
-        <subObject file = "WorkshopCounter.obj">
+        <subObject file = "WorkshopCounterTools.obj">
             <buildingPosition x = "2" y = "0" />
             <buildingPosition x = "2" y = "1" />
             <buildingPosition x = "2" y = "2" />
@@ -71,6 +71,12 @@
         <subObject file = "Gem.obj">
             <buildingPosition x = "1" y = "0" />
             <buildingPosition x = "0" y = "1" />
+        </subObject>
+        <subObject file = "Chair.obj">
+            <buildingPosition x = "1" y = "1" />
+        </subObject>
+        <subObject file = "Box.obj">
+            <buildingPosition x = "1" y = "2" />
         </subObject>
     </buildingMesh>
     <buildingMesh file = "NONE">
