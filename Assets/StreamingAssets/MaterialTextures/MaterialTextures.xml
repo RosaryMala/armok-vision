@@ -7,6 +7,18 @@
     </materialTexture>
    <materialTexture pattern="Grey.png" specular="Matte_S.png">
         <material token="NONE" />
+        <subObject pattern="Grey.png" specular="Matte_S.png">
+            <tiletype token="NONE" />
+            <subObject pattern="Grey.png" specular="Matte_S.png">
+                <buildingType token="Workshop_Jewelers" />
+                <subObject  pattern="Blue.png" specular="Mirror_S.png">
+                    <buildingPosition x = "1" y = "0" />
+                </subObject>
+                <subObject  pattern="Green.png" specular="Mirror_S.png">
+                    <buildingPosition x = "0" y = "1" />
+                </subObject>
+            </subObject>
+        </subObject>
         <subObject pattern="Leaves.png" specular="Matte_S.png">
             <tiletype token="BRANCH:*:*:*:*" />
             <tiletype token="TWIG:*:*:*:*" />

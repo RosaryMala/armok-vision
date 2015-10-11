@@ -5,7 +5,8 @@ using System.Xml.Linq;
 public class TileConfiguration<T> : ContentConfiguration<T> where T : IContent, new()
 {
     TiletypeMatcher<Content> tiletypeMatcher = new TiletypeMatcher<Content>();
-    Content defaultTile = new Content();
+    Content defaultTile = null;
+    Content invalidContent = new Content();
 
     protected override void ParseElementConditions(XElement elemtype, Content content)
     {
@@ -27,12 +28,27 @@ public class TileConfiguration<T> : ContentConfiguration<T> where T : IContent, 
     public override bool GetValue(MapDataStore.Tile tile, MeshLayer layer, out T value)
     {
         Content cont;
-        if(tiletypeMatcher.Get(tile.tileType, out cont))
+        switch (layer)
         {
-            value = cont.GetValue(tile, layer);
-            return true;
+            case MeshLayer.BuildingMaterial:
+            case MeshLayer.NoMaterialBuilding:
+            case MeshLayer.BuildingMaterialCutout:
+            case MeshLayer.NoMaterialBuildingCutout:
+                if (defaultTile != null)
+                {
+                    value = defaultTile.GetValue(tile, layer);
+                    return true;
+                }
+                break;
+            default:
+                if (tiletypeMatcher.Get(tile.tileType, out cont))
+                {
+                    value = cont.GetValue(tile, layer);
+                    return true;
+                }
+                break;
         }
-        value = defaultTile.GetValue(tile, layer);
+        value = invalidContent.GetValue(tile, layer);
         return false;
     }
 }
