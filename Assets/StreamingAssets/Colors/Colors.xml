@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <colors>
 
-    <color red="255" green="255" blue="255">
+    <color red="128" green="128" blue="128">
         <material token="NONE" />
         <subObject red="80" green="220" blue="80">
             <tiletype token="BRANCH:*:*:*:*" />
