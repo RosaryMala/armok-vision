@@ -5,6 +5,9 @@
         <material token="*:*" />
         <material token="*:*:*" />
     </materialTexture>
+    <materialTexture pattern="Soap.png" specular="Matte_S.png">
+        <material token="*:*:SOAP" />
+    </materialTexture>
    <materialTexture pattern="Grey.png" specular="Matte_S.png">
         <material token="NONE" />
         <subObject pattern="Grey.png" specular="Matte_S.png">
@@ -16,6 +19,11 @@
                 </subObject>
                 <subObject  pattern="Green.png" specular="Mirror_S.png">
                     <buildingPosition x = "0" y = "1" />
+                </subObject>
+                <subObject  pattern="Jewelers_Tools.png" specular="Medium_S.png">
+                    <buildingPosition x = "2" y = "0" />
+                    <buildingPosition x = "2" y = "1" />
+                    <buildingPosition x = "2" y = "2" />
                 </subObject>
             </subObject>
         </subObject>
