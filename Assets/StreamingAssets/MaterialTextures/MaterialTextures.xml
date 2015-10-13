@@ -5,6 +5,11 @@
         <material token="*:*" />
         <material token="*:*:*" />
     </materialTexture>
+    <materialTexture pattern="Grey.png" specular="Mirror_S.png">
+        <material token="GLASS_GREEN" />
+        <material token="GLASS_CLEAR" />
+        <material token="GLASS_CRYSTAL" />
+    </materialTexture>
     <materialTexture pattern="Soap.png" specular="Matte_S.png">
         <material token="*:*:SOAP" />
     </materialTexture>

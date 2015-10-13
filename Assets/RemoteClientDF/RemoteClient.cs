@@ -220,6 +220,12 @@ namespace DFHack
         {
             return new DFCoord2d(a.x & number, a.y & number);
         }
+
+        public override string ToString()
+        {
+            return string.Format("DFCoord({0},{1})", x, y);
+        }
+
     }
     // Coordinates of a MapBlock.
     // Like DFCoord, but can only reference block corners.
