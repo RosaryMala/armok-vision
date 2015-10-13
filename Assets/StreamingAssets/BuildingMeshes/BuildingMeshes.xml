@@ -18,6 +18,10 @@
     <buildingMesh file = "Statue.obj">
         <buildingType token="Statue" />
     </buildingMesh>
+    <buildingMesh file = "Window.obj">
+        <buildingType token="WindowGlass" />
+        <buildingType token="WindowGem" />
+    </buildingMesh>
     <buildingMesh file = "Bridge.obj">
         <buildingType token="Bridge" />
     </buildingMesh>
