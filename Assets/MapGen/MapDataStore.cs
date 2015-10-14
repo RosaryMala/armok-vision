@@ -273,22 +273,6 @@ public class MapDataStore {
         }
     }
 
-    public void Verify()
-    {
-        for (int x = 0; x < SliceSize.x; x++)
-        {
-            for (int y = 0; y < SliceSize.y; y++)
-            {
-                for (int z = 0; z < SliceSize.z; z++)
-                {
-                    DFCoord localTilePos = tiles[x, y, z].position - SliceOrigin;
-                    if (localTilePos.x != x || localTilePos.y != y || localTilePos.z != z)
-                        Debug.LogError("Tiles have wrong position reported:" + x + "," + y + "," + z + " vs " + localTilePos);
-                }
-            }
-        }
-    }
-
     // Helpers
     public DFCoord WorldToLocalSpace(DFCoord coord) {
         return coord - SliceOrigin;

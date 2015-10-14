@@ -16,6 +16,7 @@ public class GameMap : MonoBehaviour
     // Things to be set from the Unity Editor.
     public Material basicTerrainMaterial;   // Can be any terrain you want.
     public Material stencilTerrainMaterial; // Foliage & other stenciled materials.
+    public Material transparentTerrainMaterial; // Anything with partial transparency.
     public Material waterMaterial;
     public Material magmaMaterial;
     public Material invisibleMaterial;
@@ -38,6 +39,18 @@ public class GameMap : MonoBehaviour
         {
             if (firstPerson)
                 return stencilTerrainMaterial;
+            else if (overheadShadows)
+                return invisibleStencilMaterial;
+            else
+                return null;
+        }
+    }
+    Material TransparentTopMaterial
+    {
+        get
+        {
+            if (firstPerson)
+                return transparentTerrainMaterial;
             else if (overheadShadows)
                 return invisibleStencilMaterial;
             else
@@ -115,14 +128,15 @@ public class GameMap : MonoBehaviour
     BlockMesher mesher;
 
     // The actual unity meshes used to draw things on screen.
-    Mesh[, ,] blocks;         // Terrain data.
-    Mesh[, ,] stencilBlocks;  // Foliage &ct.
-    Mesh[, , ,] liquidBlocks; // Water & magma. Extra dimension is a liquid type.
+    Mesh[,,] blocks;         // Terrain data.
+    Mesh[,,] stencilBlocks;  // Foliage &ct.
+    Mesh[,,] transparentBlocks;  // Glass &ct.
+    Mesh[,,,] liquidBlocks; // Water & magma. Extra dimension is a liquid type.
     // Dirty flags for those meshes
-    bool[, ,] blockDirtyBits;
-    bool[, ,] liquidBlockDirtyBits;
+    bool[,,] blockDirtyBits;
+    bool[,,] liquidBlockDirtyBits;
     // Lights from magma.
-    Light[, ,] magmaGlow;
+    Light[,,] magmaGlow;
 
     DFCoord mapSize; //This is to keep track of changing size of the map.
     DFCoord mapPosition;
@@ -144,14 +158,14 @@ public class GameMap : MonoBehaviour
     {
         get
         {
-            lock(mapZOffsetLock)
+            lock (mapZOffsetLock)
             {
                 return _mapZoffset;
             }
         }
         set
         {
-            lock(mapZOffsetLock)
+            lock (mapZOffsetLock)
             {
                 _mapZoffset = value;
             }
@@ -239,12 +253,12 @@ public class GameMap : MonoBehaviour
             }
             SaveMaterialList(DFConnection.Instance.NetItemList.material_list, "ItemList.csv");
         }
-        if(DFConnection.Instance.NetBuildingList != null)
+        if (DFConnection.Instance.NetBuildingList != null)
         {
             if (buildings == null)
                 buildings = new Dictionary<BuildingStruct, BuildingDefinition>();
             buildings.Clear();
-            foreach(RemoteFortressReader.BuildingDefinition building in DFConnection.Instance.NetBuildingList.building_list)
+            foreach (RemoteFortressReader.BuildingDefinition building in DFConnection.Instance.NetBuildingList.building_list)
             {
                 buildings[building.building_type] = building;
             }
@@ -252,7 +266,7 @@ public class GameMap : MonoBehaviour
         }
 
         SaveTileTypeList();
-        
+
 
         UpdateView();
 
@@ -316,14 +330,14 @@ public class GameMap : MonoBehaviour
     }
     void UpdateBlocks()
     {
-        if(DFConnection.Instance.EmbarkMapSize != mapSize)
+        if (DFConnection.Instance.EmbarkMapSize != mapSize)
         {
             ClearMap();
             InitializeBlocks();
             mapSize = DFConnection.Instance.EmbarkMapSize;
             DFConnection.Instance.RequestMapReset();
         }
-        if(DFConnection.Instance.EmbarkMapPosition != mapPosition)
+        if (DFConnection.Instance.EmbarkMapPosition != mapPosition)
         {
             ClearMap();
             mapPosition = DFConnection.Instance.EmbarkMapPosition;
@@ -368,6 +382,7 @@ public class GameMap : MonoBehaviour
 
         blocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         stencilBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
+        transparentBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         liquidBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ, 2];
         blockDirtyBits = new bool[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         liquidBlockDirtyBits = new bool[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
@@ -530,6 +545,17 @@ public class GameMap : MonoBehaviour
                 stencilMesh.Clear();
                 newMeshes.stencilTiles.CopyToMesh(stencilMesh);
             }
+            if (newMeshes.transparentTiles != null)
+            {
+                if (transparentBlocks[block_x, block_y, block_z] == null)
+                {
+
+                    transparentBlocks[block_x, block_y, block_z] = new Mesh();
+                }
+                Mesh transparentMesh = transparentBlocks[block_x, block_y, block_z];
+                transparentMesh.Clear();
+                newMeshes.transparentTiles.CopyToMesh(transparentMesh);
+            }
             if (newMeshes.water != null)
             {
                 if (liquidBlocks[block_x, block_y, block_z, MapDataStore.WATER_INDEX] == null)
@@ -567,6 +593,11 @@ public class GameMap : MonoBehaviour
                 item.Clear();
         }
         foreach (var item in stencilBlocks)
+        {
+            if (item != null)
+                item.Clear();
+        }
+        foreach (var item in transparentBlocks)
         {
             if (item != null)
                 item.Clear();
@@ -684,8 +715,8 @@ public class GameMap : MonoBehaviour
 
             if (tile.buildingType != default(BuildingStruct))
             {
-                if(buildings.ContainsKey(tile.buildingType))
-                cursorProperties.text += "Building: ";
+                if (buildings.ContainsKey(tile.buildingType))
+                    cursorProperties.text += "Building: ";
                 cursorProperties.text += buildings[tile.buildingType].id + "\n";
 
                 if (materials.ContainsKey(tile.buildingMaterial))
@@ -786,7 +817,7 @@ public class GameMap : MonoBehaviour
                 if (creatureList[unit.id].gameObject.activeSelf) //Only update stuff if it's actually visible.
                 {
                     Vector3 position = DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z);
-                    if((flags1 & UnitFlags1.on_ground) == UnitFlags1.on_ground)
+                    if ((flags1 & UnitFlags1.on_ground) == UnitFlags1.on_ground)
                     {
                         creatureList[unit.id].transform.position = position + new Vector3(0, 0.51f, 0);
                         creatureList[unit.id].cameraFacing.enabled = false;
@@ -797,7 +828,7 @@ public class GameMap : MonoBehaviour
                         creatureList[unit.id].transform.position = position + new Vector3(0, 1.5f, 0);
                         creatureList[unit.id].cameraFacing.enabled = true;
                     }
-                    if(unit.profession_color != null)
+                    if (unit.profession_color != null)
                         creatureList[unit.id].SetColor(0, new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1));
                     if (creatureRaw != null)
                     {
@@ -817,9 +848,9 @@ public class GameMap : MonoBehaviour
         DFCoord dfPos = UnityToDFCoord(pos);
         posXTile = dfPos.x;
         posYTile = dfPos.y;
-        if(posZ != dfPos.z+1)
+        if (posZ != dfPos.z + 1)
         {
-            posZ = dfPos.z+1;
+            posZ = dfPos.z + 1;
         }
     }
 
@@ -850,6 +881,9 @@ public class GameMap : MonoBehaviour
                     if (stencilBlocks[x, y, z] != null && stencilBlocks[x, y, z].vertexCount > 0)
                         Graphics.DrawMesh(stencilBlocks[x, y, z], Vector3.zero, Quaternion.identity, stencilTerrainMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
 
+                    if (transparentBlocks[x, y, z] != null && transparentBlocks[x, y, z].vertexCount > 0)
+                        Graphics.DrawMesh(transparentBlocks[x, y, z], Vector3.zero, Quaternion.identity, transparentTerrainMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
+
                     if (liquidBlocks[x, y, z, MapDataStore.WATER_INDEX] != null && liquidBlocks[x, y, z, MapDataStore.WATER_INDEX].vertexCount > 0)
                         Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.WATER_INDEX], Vector3.zero, Quaternion.identity, waterMaterial, 4, null, 0, null, ShadowCastingMode.On, true, transform);
 
@@ -870,6 +904,9 @@ public class GameMap : MonoBehaviour
 
                     if (stencilBlocks[x, y, z] != null && stencilBlocks[x, y, z].vertexCount > 0 && StencilTopMaterial != null)
                         Graphics.DrawMesh(stencilBlocks[x, y, z], Vector3.zero, Quaternion.identity, StencilTopMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
+
+                    if (transparentBlocks[x, y, z] != null && transparentBlocks[x, y, z].vertexCount > 0 && StencilTopMaterial != null)
+                        Graphics.DrawMesh(transparentBlocks[x, y, z], Vector3.zero, Quaternion.identity, TransparentTopMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
 
                     //if (liquidBlocks[x, y, z, MapDataStore.WATER_INDEX] != null && liquidBlocks[x, y, z, MapDataStore.WATER_INDEX].vertexCount > 0)
                     //    Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.WATER_INDEX], Matrix4x4.identity, waterMaterial, 4);
