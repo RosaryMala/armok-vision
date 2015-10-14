@@ -782,7 +782,7 @@ public class GameMap : MonoBehaviour
                         creatureList[unit.id].AddTile(creatureRaw.creature_tile, color);
 
                 }
-                creatureList[unit.id].gameObject.SetActive(unit.pos_z < PosZ && unit.pos_z > (PosZ - cameraViewDist));
+                creatureList[unit.id].gameObject.SetActive(unit.pos_z < PosZ && unit.pos_z >= (PosZ - cameraViewDist));
                 if (creatureList[unit.id].gameObject.activeSelf) //Only update stuff if it's actually visible.
                 {
                     Vector3 position = DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z);
@@ -827,13 +827,22 @@ public class GameMap : MonoBehaviour
     {
         if (blocks == null)
             return;
+        int startX = PosXBlock - rangeX;
+        int startY = PosYBlock - rangeY;
+        int endX = PosXBlock + rangeX;
+        int endY = PosYBlock + rangeY;
+        if (startX < 0) startX = 0;
+        if (startY < 0) startY = 0;
+        if (endX > blocks.GetLength(0)) endX = blocks.GetLength(0);
+        if (endY > blocks.GetLength(1)) endY = blocks.GetLength(1);
+
         for (int z = posZ - cameraViewDist; z < posZ; z++)
         {
             if (z < 0) z = 0;
             if (z >= blocks.GetLength(2))
                 continue;
-            for (int x = 0; x < blocks.GetLength(0); x++)
-                for (int y = 0; y < blocks.GetLength(1); y++)
+            for (int x = startX; x < endX; x++)
+                for (int y = startY; y < endY; y++)
                 {
                     if (blocks[x, y, z] != null && blocks[x, y, z].vertexCount > 0)
                         Graphics.DrawMesh(blocks[x, y, z], Vector3.zero, Quaternion.identity, basicTerrainMaterial, 0, null, 0, null, ShadowCastingMode.On, true, transform);
@@ -853,8 +862,8 @@ public class GameMap : MonoBehaviour
             if (z < 0) z = 0;
             if (z >= blocks.GetLength(2))
                 continue;
-            for (int x = 0; x < blocks.GetLength(0); x++)
-                for (int y = 0; y < blocks.GetLength(1); y++)
+            for (int x = startX; x < endX; x++)
+                for (int y = startY; y < endY; y++)
                 {
                     if (blocks[x, y, z] != null && blocks[x, y, z].vertexCount > 0 && BasicTopMaterial != null)
                         Graphics.DrawMesh(blocks[x, y, z], Vector3.zero, Quaternion.identity, BasicTopMaterial, 0, null, 0, null, ShadowCastingMode.On, true, transform);

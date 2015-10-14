@@ -317,12 +317,6 @@ abstract class BlockMesher {
 
                 for (int i = 0; i < (int)MeshLayer.Count; i++)
                 {
-                    if (((MeshLayer)i == MeshLayer.BuildingMaterial
-                        || (MeshLayer)i == MeshLayer.BuildingMaterialCutout
-                        || (MeshLayer)i == MeshLayer.NoMaterialBuilding
-                        || (MeshLayer)i == MeshLayer.NoMaterialBuildingCutout)
-                        && (data[xx, yy, block_z].Value.buildingType == default(BuildingStruct)))
-                        continue;
                     if (i < (int)MeshLayer.StaticCutout)
                     {
                         FillMeshBuffer(out temp.meshBuffer[bufferIndex], (MeshLayer)i, data[xx, yy, block_z].Value);
@@ -352,6 +346,11 @@ abstract class BlockMesher {
             || layer == MeshLayer.NoMaterialBuildingCutout
             )
         {
+            if(tile.buildingType == default(BuildingStruct))
+            {
+                buffer.meshData = null;
+                return;
+            }
             if (!contentLoader.BuildingMeshConfiguration.GetValue(tile, layer, out content))
             {
                 buffer.meshData = null;
