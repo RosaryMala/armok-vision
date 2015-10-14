@@ -216,6 +216,8 @@ public class ContentLoader
         gameMap.basicTerrainMaterial.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
         gameMap.stencilTerrainMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
         gameMap.stencilTerrainMaterial.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
+        gameMap.transparentTerrainMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
+        gameMap.transparentTerrainMaterial.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
         gameMap.invisibleStencilMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
 
     }

@@ -24,6 +24,13 @@ public enum MeshLayer
     BuildingMaterialCutout,
     NoMaterialCutout,
     NoMaterialBuildingCutout,
+    StaticTransparent,
+    BaseTransparent,
+    LayerTransparent,
+    VeinTransparent,
+    BuildingMaterialTransparent,
+    NoMaterialTransparent,
+    NoMaterialBuildingTransparent,
     Count
 }
 

@@ -11,6 +11,7 @@ public class MaterialConfiguration<T> : ContentConfiguration<T> where T : IConte
         {
             case MeshLayer.StaticMaterial:
             case MeshLayer.StaticCutout:
+            case MeshLayer.StaticTransparent:
                 if (materialMatcher.Get(tile.material, out cont))
                 {
                     value = cont.GetValue(tile, layer);
@@ -19,6 +20,7 @@ public class MaterialConfiguration<T> : ContentConfiguration<T> where T : IConte
                 break;
             case MeshLayer.BaseMaterial:
             case MeshLayer.BaseCutout:
+            case MeshLayer.BaseTransparent:
                 if (materialMatcher.Get(tile.base_material, out cont))
                 {
                     value = cont.GetValue(tile, layer);
@@ -27,6 +29,7 @@ public class MaterialConfiguration<T> : ContentConfiguration<T> where T : IConte
                 break;
             case MeshLayer.LayerMaterial:
             case MeshLayer.LayerCutout:
+            case MeshLayer.LayerTransparent:
                 if (materialMatcher.Get(tile.layer_material, out cont))
                 {
                     value = cont.GetValue(tile, layer);
@@ -35,6 +38,7 @@ public class MaterialConfiguration<T> : ContentConfiguration<T> where T : IConte
                 break;
             case MeshLayer.VeinMaterial:
             case MeshLayer.VeinCutout:
+            case MeshLayer.VeinTransparent:
                 if (materialMatcher.Get(tile.vein_material, out cont))
                 {
                     value = cont.GetValue(tile, layer);
@@ -45,6 +49,8 @@ public class MaterialConfiguration<T> : ContentConfiguration<T> where T : IConte
             case MeshLayer.NoMaterialCutout:
             case MeshLayer.NoMaterialBuildingCutout:
             case MeshLayer.NoMaterialBuilding:
+            case MeshLayer.NoMaterialBuildingTransparent:
+            case MeshLayer.NoMaterialTransparent:
                 if (defaultMaterial == null)
                     break;
                 value = defaultMaterial.GetValue(tile, layer);
@@ -59,6 +65,7 @@ public class MaterialConfiguration<T> : ContentConfiguration<T> where T : IConte
                 break;
             case MeshLayer.BuildingMaterial:
             case MeshLayer.BuildingMaterialCutout:
+            case MeshLayer.BuildingMaterialTransparent:
                 if (materialMatcher.Get(tile.buildingMaterial, out cont))
                 {
                     value = cont.GetValue(tile, layer);
