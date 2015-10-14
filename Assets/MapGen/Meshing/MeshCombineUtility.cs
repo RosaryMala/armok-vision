@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using System;
 
 public class MeshCombineUtility
@@ -67,7 +67,8 @@ public class MeshCombineUtility
         Vector2[] uv2 = new Vector2[vertexCount];
         Color[] colors = new Color[vertexCount];
 
-        int[] triangles = new int[triangleCount];
+        List<int> triangles = new List<int>();
+        triangles.Capacity = triangleCount;
 
         int offset;
 
@@ -138,39 +139,42 @@ public class MeshCombineUtility
                 int copiedTriangles = 0;
                 for (int i = 0; i < inputtriangles.Length; i += 3)
                 {
+                    int vert0 = inputtriangles[i + 0];
+                    int vert1 = inputtriangles[i + 1];
+                    int vert2 = inputtriangles[i + 2];
                     if (((combines[combIndex].hiddenFaces & HiddenFaces.Up) == HiddenFaces.Up)
-                        && (inputVertices[inputtriangles[i + 0]].y > topThreshold)
-                        && (inputVertices[inputtriangles[i + 1]].y > topThreshold)
-                        && (inputVertices[inputtriangles[i + 2]].y > topThreshold))
+                        && (inputVertices[vert0].y > topThreshold)
+                        && (inputVertices[vert1].y > topThreshold)
+                        && (inputVertices[vert2].y > topThreshold))
                         continue;
                     if (((combines[combIndex].hiddenFaces & HiddenFaces.Down) == HiddenFaces.Down)
-                        && (inputVertices[inputtriangles[i + 0]].y < -topThreshold)
-                        && (inputVertices[inputtriangles[i + 1]].y < -topThreshold)
-                        && (inputVertices[inputtriangles[i + 2]].y < -topThreshold))
+                        && (inputVertices[vert0].y < -topThreshold)
+                        && (inputVertices[vert1].y < -topThreshold)
+                        && (inputVertices[vert2].y < -topThreshold))
                         continue;
                     if (((combines[combIndex].hiddenFaces & HiddenFaces.North) == HiddenFaces.North)
-                        && (inputVertices[inputtriangles[i + 0]].z > sideThreshold)
-                        && (inputVertices[inputtriangles[i + 1]].z > sideThreshold)
-                        && (inputVertices[inputtriangles[i + 2]].z > sideThreshold))
+                        && (inputVertices[vert0].z > sideThreshold)
+                        && (inputVertices[vert1].z > sideThreshold)
+                        && (inputVertices[vert2].z > sideThreshold))
                         continue;
                     if (((combines[combIndex].hiddenFaces & HiddenFaces.South) == HiddenFaces.South)
-                        && (inputVertices[inputtriangles[i + 0]].z < -sideThreshold)
-                        && (inputVertices[inputtriangles[i + 1]].z < -sideThreshold)
-                        && (inputVertices[inputtriangles[i + 2]].z < -sideThreshold))
+                        && (inputVertices[vert0].z < -sideThreshold)
+                        && (inputVertices[vert1].z < -sideThreshold)
+                        && (inputVertices[vert2].z < -sideThreshold))
                         continue;
                     if (((combines[combIndex].hiddenFaces & HiddenFaces.East) == HiddenFaces.East)
-                        && (inputVertices[inputtriangles[i + 0]].x > sideThreshold)
-                        && (inputVertices[inputtriangles[i + 1]].x > sideThreshold)
-                        && (inputVertices[inputtriangles[i + 2]].x > sideThreshold))
+                        && (inputVertices[vert0].x > sideThreshold)
+                        && (inputVertices[vert1].x > sideThreshold)
+                        && (inputVertices[vert2].x > sideThreshold))
                         continue;
                     if (((combines[combIndex].hiddenFaces & HiddenFaces.West) == HiddenFaces.West)
-                        && (inputVertices[inputtriangles[i + 0]].x < -sideThreshold)
-                        && (inputVertices[inputtriangles[i + 1]].x < -sideThreshold)
-                        && (inputVertices[inputtriangles[i + 2]].x < -sideThreshold))
+                        && (inputVertices[vert0].x < -sideThreshold)
+                        && (inputVertices[vert1].x < -sideThreshold)
+                        && (inputVertices[vert2].x < -sideThreshold))
                         continue;
-                    triangles[copiedTriangles + triangleOffset + 0] = inputtriangles[i + 0] + vertexOffset;
-                    triangles[copiedTriangles + triangleOffset + 1] = inputtriangles[i + 1] + vertexOffset;
-                    triangles[copiedTriangles + triangleOffset + 2] = inputtriangles[i + 2] + vertexOffset;
+                    triangles.Add(vert0 + vertexOffset);
+                    triangles.Add(vert1 + vertexOffset);
+                    triangles.Add(vert2 + vertexOffset);
                     copiedTriangles += 3;
                 }
                 triangleOffset += copiedTriangles;
@@ -186,7 +190,7 @@ public class MeshCombineUtility
             uv: uv,
             uv2: uv2,
             colors: colors,
-            triangles: triangles
+            triangles: triangles.ToArray()
             );
     }
 

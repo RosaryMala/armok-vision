@@ -11,4 +11,9 @@
             <buildingPosition x = "2" y = "2" />
         </subObject>
     </buildingShapeTexture>
+    <buildingShapeTexture normal="Flat_N.png" occlusion="Flat_O.png" alpha="Medium_A.png">
+        <buildingType token="WindowGlass" />
+        <buildingType token="WindowGem" />
+    </buildingShapeTexture>
+
 </buildingShapeTextures>
