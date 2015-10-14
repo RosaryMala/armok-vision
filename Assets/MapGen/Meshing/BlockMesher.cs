@@ -25,6 +25,7 @@ abstract class BlockMesher {
         public DFCoord location;
         public MeshData tiles;
         public MeshData stencilTiles;
+        public MeshData transparentTiles;
         public MeshData water;
         public MeshData magma;
     }
@@ -44,12 +45,15 @@ abstract class BlockMesher {
             meshBuffer =
                 new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize * (int)MeshLayer.StaticCutout];
             stencilMeshBuffer =
-                new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize * ((int) MeshLayer.Count - (int)MeshLayer.StaticCutout)];
+                new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize * ((int)MeshLayer.StaticTransparent - (int)MeshLayer.StaticCutout)];
+            transparentMeshBuffer =
+                new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize * ((int)MeshLayer.Count - (int)MeshLayer.StaticTransparent)];
             heights = new float[2, 2];
         }
 
         public MeshCombineUtility.MeshInstance[] meshBuffer { get; private set; }
         public MeshCombineUtility.MeshInstance[] stencilMeshBuffer { get; private set; }
+        public MeshCombineUtility.MeshInstance[] transparentMeshBuffer { get; private set; }
         public float[,] heights { get; private set; }
     }
 
@@ -169,15 +173,18 @@ abstract class BlockMesher {
     // ACTUAL MESHING CODE!
     // -------------------------------------------------
 
-    protected Result CreateMeshes(Request request, TempBuffers temp) {
+    protected Result CreateMeshes(Request request, TempBuffers temp)
+    {
         Result result = new Result();
         result.location = request.data.SliceOrigin;
-        if (request.liquids) {
+        if (request.liquids)
+        {
             result.water = GenerateLiquidSurface(request.data, MapDataStore.WATER_INDEX, temp);
             result.magma = GenerateLiquidSurface(request.data, MapDataStore.MAGMA_INDEX, temp);
         }
-        if (request.tiles) {
-            GenerateTiles (request.data, out result.tiles, out result.stencilTiles, temp);
+        if (request.tiles)
+        {
+            GenerateTiles(request.data, out result.tiles, out result.stencilTiles, out result.transparentTiles, temp);
         }
         return result;
     }
@@ -302,13 +309,14 @@ abstract class BlockMesher {
         }
     }
 
-    bool GenerateTiles(MapDataStore data, out MeshData tiles, out MeshData stencilTiles, TempBuffers temp)
+    bool GenerateTiles(MapDataStore data, out MeshData tiles, out MeshData stencilTiles, out MeshData transparentTiles, TempBuffers temp)
     {
         int block_x = data.SliceOrigin.x / GameMap.blockSize;
         int block_y = data.SliceOrigin.y / GameMap.blockSize;
         int block_z = data.SliceOrigin.z;
         int bufferIndex = 0;
         int stencilBufferIndex = 0;
+        int transparentBufferIndex = 0;
         for (int xx = (block_x * GameMap.blockSize); xx < (block_x + 1) * GameMap.blockSize; xx++)
             for (int yy = (block_y * GameMap.blockSize); yy < (block_y + 1) * GameMap.blockSize; yy++)
             {
@@ -322,15 +330,21 @@ abstract class BlockMesher {
                         FillMeshBuffer(out temp.meshBuffer[bufferIndex], (MeshLayer)i, data[xx, yy, block_z].Value);
                         bufferIndex++;
                     }
-                    else
+                    else if (i < (int)MeshLayer.StaticTransparent)
                     {
                         FillMeshBuffer(out temp.stencilMeshBuffer[stencilBufferIndex], (MeshLayer)i, data[xx, yy, block_z].Value);
                         stencilBufferIndex++;
+                    }
+                    else
+                    {
+                        FillMeshBuffer(out temp.transparentMeshBuffer[transparentBufferIndex], (MeshLayer)i, data[xx, yy, block_z].Value);
+                        transparentBufferIndex++;
                     }
                 }
             }
         bool dontCare, success;
         stencilTiles = MeshCombineUtility.ColorCombine(temp.stencilMeshBuffer, out dontCare);
+        transparentTiles = MeshCombineUtility.ColorCombine(temp.transparentMeshBuffer, out dontCare);
         tiles = MeshCombineUtility.ColorCombine(temp.meshBuffer, out success);
 
         return success;
@@ -344,6 +358,8 @@ abstract class BlockMesher {
             || layer == MeshLayer.BuildingMaterialCutout
             || layer == MeshLayer.NoMaterialBuilding
             || layer == MeshLayer.NoMaterialBuildingCutout
+            || layer == MeshLayer.BuildingMaterialTransparent
+            || layer == MeshLayer.NoMaterialBuildingTransparent
             )
         {
             if(tile.buildingType == default(BuildingStruct))
@@ -373,6 +389,8 @@ abstract class BlockMesher {
             || layer == MeshLayer.BuildingMaterialCutout
             || layer == MeshLayer.NoMaterialBuilding
             || layer == MeshLayer.NoMaterialBuildingCutout
+            || layer == MeshLayer.BuildingMaterialTransparent
+            || layer == MeshLayer.NoMaterialBuildingTransparent
             )
         {
             if (contentLoader.BuildingShapeTextureConfiguration.GetValue(tile, layer, out tileTexContent))
@@ -402,24 +420,30 @@ abstract class BlockMesher {
             {
                 case MeshLayer.StaticMaterial:
                 case MeshLayer.StaticCutout:
+                case MeshLayer.StaticTransparent:
                     mat = tile.material;
                     break;
                 case MeshLayer.BaseMaterial:
                 case MeshLayer.BaseCutout:
+                case MeshLayer.BaseTransparent:
                     mat = tile.base_material;
                     break;
                 case MeshLayer.LayerMaterial:
                 case MeshLayer.LayerCutout:
+                case MeshLayer.LayerTransparent:
                     mat = tile.layer_material;
                     break;
                 case MeshLayer.VeinMaterial:
                 case MeshLayer.VeinCutout:
+                case MeshLayer.VeinTransparent:
                     mat = tile.vein_material;
                     break;
                 case MeshLayer.NoMaterial:
                 case MeshLayer.NoMaterialCutout:
-                case MeshLayer.NoMaterialBuilding:
                 case MeshLayer.NoMaterialBuildingCutout:
+                case MeshLayer.NoMaterialBuilding:
+                case MeshLayer.NoMaterialBuildingTransparent:
+                case MeshLayer.NoMaterialTransparent:
                     break;
                 case MeshLayer.Growth0Cutout:
                     break;
@@ -431,6 +455,7 @@ abstract class BlockMesher {
                     break;
                 case MeshLayer.BuildingMaterial:
                 case MeshLayer.BuildingMaterialCutout:
+                case MeshLayer.BuildingMaterialTransparent:
                     mat = tile.buildingMaterial;
                     break;
                 default:
