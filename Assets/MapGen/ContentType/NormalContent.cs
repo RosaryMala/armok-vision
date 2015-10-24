@@ -125,7 +125,7 @@ public class NormalContent : IContent
         {
             store = value as TextureStorage;
             if (store == null)
-                Debug.LogError(value + "Is null, for some reason");
+                Debug.LogError(value + " is null, for some reason");
         }
     }
 }

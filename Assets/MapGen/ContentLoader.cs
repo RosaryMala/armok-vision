@@ -181,7 +181,7 @@ public class ContentLoader
                 case "tileMeshes":
                     if (TileMeshConfiguration == null)
                         TileMeshConfiguration = ContentConfiguration<MeshContent>.GetFromRootElement(doc, "tileMesh");
-                    TileMeshConfiguration.AddSingleContentConfig(doc);
+                    TileMeshConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
                     break;
                 case "materialLayers":
                     if (MaterialLayerConfiguration == null)
@@ -191,7 +191,7 @@ public class ContentLoader
                 case "buildingMeshes":
                     if (BuildingMeshConfiguration == null)
                         BuildingMeshConfiguration = ContentConfiguration<MeshContent>.GetFromRootElement(doc, "buildingMesh");
-                    BuildingMeshConfiguration.AddSingleContentConfig(doc);
+                    BuildingMeshConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
                     break;
                 case "buildingShapeTextures":
                     if (BuildingShapeTextureConfiguration == null)
@@ -220,6 +220,10 @@ public class ContentLoader
         gameMap.transparentTerrainMaterial.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
         gameMap.invisibleStencilMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
 
+
+        //get rid of any un-used textures left over.
+        Resources.UnloadUnusedAssets();
+        GC.Collect();
     }
 
 }

@@ -4,6 +4,24 @@ using DFHack;
 using System.Collections.Generic;
 using RemoteFortressReader;
 
+[System.Flags]
+public enum Directions
+{
+    None = 0,
+    NorthWest = 1,
+    North = 2,
+    NorthEast = 4,
+    East = 8,
+    SouthEast = 16,
+    South = 32,
+    SouthWest = 64,
+    West = 128,
+    NorthWestCorner = North | West | NorthWest,
+    NorthEastCorner = North | East | NorthEast,
+    SouthEastCorner = South | East | SouthEast,
+    SouthWestCorner = South | West | SouthWest
+}
+
 // A store for a section of map tiles.
 // One large instance is used as main storage for the game map;
 // Smaller slices are used temporary storage for meshing.
@@ -417,6 +435,18 @@ public class MapDataStore {
                 }
             }
         }
+        public bool isWallBuilding
+        {
+            get
+            {
+                return isWall
+                    || buildingType.building_type == 8 //Door
+                    || buildingType.building_type == 9 //Floodgate
+                    || buildingType.building_type == 16 //WindowGlass
+                    || buildingType.building_type == 17 //WindowGem
+                    ;
+            }
+        }
         public bool isFloor {
             get {
                 switch (shape) {
@@ -627,6 +657,111 @@ public class MapDataStore {
             }
             rampType = rampblut[ramplookup];
             return;
+        }
+
+        public Directions WallSides
+        {
+            get
+            {
+                Directions wallSide = Directions.None;
+                if (North != null &&
+                    North.Value.isWall)
+                {
+                    wallSide |= Directions.North;
+                }
+                if (North != null &&
+                    North.Value.East != null &&
+                    North.Value.East.Value.isWall)
+                {
+                    wallSide |= Directions.NorthEast;
+                }
+                if (East != null &&
+                    East.Value.isWall)
+                {
+                    wallSide |= Directions.East;
+                }
+                if (South != null &&
+                    South.Value.East != null &&
+                    South.Value.East.Value.isWall)
+                {
+                    wallSide |= Directions.SouthEast;
+                }
+                if (South != null &&
+                    South.Value.isWall)
+                {
+                    wallSide |= Directions.South;
+                }
+                if (South != null &&
+                    South.Value.West != null &&
+                    South.Value.West.Value.isWall)
+                {
+                    wallSide |= Directions.SouthWest;
+                }
+                if (West != null &&
+                    West.Value.isWall)
+                {
+                    wallSide |= Directions.West;
+                }
+                if (North != null &&
+                    North.Value.West != null &&
+                    North.Value.West.Value.isWall)
+                {
+                    wallSide |= Directions.NorthWest;
+                }
+                return wallSide;
+            }
+        }
+        public Directions WallBuildingSides
+        {
+            get
+            {
+                Directions wallSide = Directions.None;
+                if (North != null &&
+                    North.Value.isWallBuilding)
+                {
+                    wallSide |= Directions.North;
+                }
+                if (North != null &&
+                    North.Value.East != null &&
+                    North.Value.East.Value.isWallBuilding)
+                {
+                    wallSide |= Directions.NorthEast;
+                }
+                if (East != null &&
+                    East.Value.isWallBuilding)
+                {
+                    wallSide |= Directions.East;
+                }
+                if (South != null &&
+                    South.Value.East != null &&
+                    South.Value.East.Value.isWallBuilding)
+                {
+                    wallSide |= Directions.SouthEast;
+                }
+                if (South != null &&
+                    South.Value.isWallBuilding)
+                {
+                    wallSide |= Directions.South;
+                }
+                if (South != null &&
+                    South.Value.West != null &&
+                    South.Value.West.Value.isWallBuilding)
+                {
+                    wallSide |= Directions.SouthWest;
+                }
+                if (West != null &&
+                    West.Value.isWallBuilding)
+                {
+                    wallSide |= Directions.West;
+                }
+                if (North != null &&
+                    North.Value.West != null &&
+                    North.Value.West.Value.isWallBuilding)
+                {
+                    wallSide |= Directions.NorthWest;
+                }
+                return wallSide;
+            }
         }
     }
 }
