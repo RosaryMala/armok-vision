@@ -16,10 +16,6 @@ public enum Directions
     South = 32,
     SouthWest = 64,
     West = 128,
-    NorthWestCorner = North | West | NorthWest,
-    NorthEastCorner = North | East | NorthEast,
-    SouthEastCorner = South | East | SouthEast,
-    SouthWestCorner = South | West | SouthWest
 }
 
 // A store for a section of map tiles.

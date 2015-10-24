@@ -4,7 +4,7 @@ using System;
 
 public class MeshCombineUtility
 {
-    const float edgeThreshold = 0.1f;
+    const float edgeThreshold = 0.01f;
     const float topThreshold = (GameMap.tileHeight / 2) - edgeThreshold;
     const float sideThreshold = (GameMap.tileWidth / 2) - edgeThreshold;
 
