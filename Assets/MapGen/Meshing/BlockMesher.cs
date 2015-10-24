@@ -350,10 +350,16 @@ abstract class BlockMesher {
         return success;
     }
 
+    /// <summary>
+    /// This is the function that actually decides what mesh and texture each tile gets
+    /// </summary>
+    /// <param name="buffer">Buffer to put the chosen meshes into for combining</param>
+    /// <param name="layer">layer currently being worked on</param>
+    /// <param name="tile">The tile to get all the needed info from.</param>
     void FillMeshBuffer(out MeshCombineUtility.MeshInstance buffer, MeshLayer layer, MapDataStore.Tile tile)
     {
         buffer = new MeshCombineUtility.MeshInstance();
-        MeshContent content = null;
+        MeshContent mesh = null;
         if (layer == MeshLayer.BuildingMaterial
             || layer == MeshLayer.BuildingMaterialCutout
             || layer == MeshLayer.NoMaterialBuilding
@@ -367,7 +373,7 @@ abstract class BlockMesher {
                 buffer.meshData = null;
                 return;
             }
-            if (!contentLoader.BuildingMeshConfiguration.GetValue(tile, layer, out content))
+            if (!contentLoader.BuildingMeshConfiguration.GetValue(tile, layer, out mesh))
             {
                 buffer.meshData = null;
                 return;
@@ -375,31 +381,38 @@ abstract class BlockMesher {
         }
         else
         {
-            if (!contentLoader.TileMeshConfiguration.GetValue(tile, layer, out content))
+            if (!contentLoader.TileMeshConfiguration.GetValue(tile, layer, out mesh))
             {
                 buffer.meshData = null;
                 return;
             }
         }
-        buffer.meshData = content.meshData[(int)layer];
-        buffer.transform = Matrix4x4.TRS(GameMap.DFtoUnityCoord(tile.position), Quaternion.identity, Vector3.one);
+        buffer.meshData = mesh.MeshData[(int)layer];
+        buffer.transform = Matrix4x4.TRS(GameMap.DFtoUnityCoord(tile.position), mesh.GetRotation(tile), Vector3.one);
         Matrix4x4 shapeTextTransform = Matrix4x4.identity;
         NormalContent tileTexContent;
-        if (layer == MeshLayer.BuildingMaterial
-            || layer == MeshLayer.BuildingMaterialCutout
-            || layer == MeshLayer.NoMaterialBuilding
-            || layer == MeshLayer.NoMaterialBuildingCutout
-            || layer == MeshLayer.BuildingMaterialTransparent
-            || layer == MeshLayer.NoMaterialBuildingTransparent
-            )
+        if (mesh.NormalTexture == null)
         {
-            if (contentLoader.BuildingShapeTextureConfiguration.GetValue(tile, layer, out tileTexContent))
-                shapeTextTransform = tileTexContent.UVTransform;
+            if (layer == MeshLayer.BuildingMaterial
+                || layer == MeshLayer.BuildingMaterialCutout
+                || layer == MeshLayer.NoMaterialBuilding
+                || layer == MeshLayer.NoMaterialBuildingCutout
+                || layer == MeshLayer.BuildingMaterialTransparent
+                || layer == MeshLayer.NoMaterialBuildingTransparent
+                )
+            {
+                if (contentLoader.BuildingShapeTextureConfiguration.GetValue(tile, layer, out tileTexContent))
+                    shapeTextTransform = tileTexContent.UVTransform;
+            }
+            else
+            {
+                if (contentLoader.ShapeTextureConfiguration.GetValue(tile, layer, out tileTexContent))
+                    shapeTextTransform = tileTexContent.UVTransform;
+            }
         }
         else
         {
-            if (contentLoader.ShapeTextureConfiguration.GetValue(tile, layer, out tileTexContent))
-                shapeTextTransform = tileTexContent.UVTransform;
+            shapeTextTransform = mesh.NormalTexture.UVTransform;
         }
         Matrix4x4 matTexTransform = Matrix4x4.identity;
         TextureContent matTexContent;
