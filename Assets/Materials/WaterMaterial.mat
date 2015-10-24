@@ -8,10 +8,11 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: WaterMaterial
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: _DETAIL_MULX2 _NORMALMAP
+  m_ShaderKeywords: _ALPHAPREMULTIPLY_ON _DETAIL_MULX2 _NORMALMAP
   m_LightmapFlags: 5
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
+  m_CustomRenderQueue: 3000
+  stringTagMap:
+    RenderType: Transparent
   m_SavedProperties:
     serializedVersion: 2
     m_TexEnvs:
@@ -21,7 +22,7 @@ Material:
         second:
           m_Texture: {fileID: 0}
           m_Scale: {x: .100000001, y: .100000001}
-          m_Offset: {x: .257846564, y: .460078984}
+          m_Offset: {x: .142927408, y: .255027413}
       data:
         first:
           name: _BumpMap
@@ -142,7 +143,7 @@ Material:
       data:
         first:
           name: _DstBlend
-        second: 0
+        second: 10
       data:
         first:
           name: _Scale
@@ -162,11 +163,11 @@ Material:
       data:
         first:
           name: _ZWrite
-        second: 1
+        second: 0
       data:
         first:
           name: _Glossiness
-        second: .846000016
+        second: .986000001
       data:
         first:
           name: _BumpScale
@@ -186,7 +187,7 @@ Material:
       data:
         first:
           name: _Mode
-        second: 0
+        second: 3
       data:
         first:
           name: _Metallic
@@ -215,7 +216,7 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: .0509803928, g: .384313732, b: .639215708, a: .850980401}
+        second: {r: .0509842783, g: .384319872, b: .639220357, a: .501960814}
       data:
         first:
           name: _EmissionColorUI
