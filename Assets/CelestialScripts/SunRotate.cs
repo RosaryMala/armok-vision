@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class SunRotate : MonoBehaviour
 {
@@ -14,8 +13,8 @@ public class SunRotate : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 rotation = new Vector3(timeHolder.displayedTime.SunAngle, 0, 0);
-        Quaternion rotate = Quaternion.Euler(rotation);
+        Quaternion rotate = Quaternion.AngleAxis(timeHolder.displayedTime.SunAngle, Vector3.back);
         transform.rotation = rotate;
+        DynamicGI.UpdateEnvironment();
     }
 }

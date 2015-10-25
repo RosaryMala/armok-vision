@@ -37,7 +37,8 @@ public enum MeshLayer
 public enum RotationType
 {
     None,
-    AwayFromWall
+    AwayFromWall,
+    Door
 }
 
 public class MeshContent : IContent
@@ -57,40 +58,53 @@ public class MeshContent : IContent
             case RotationType.None:
                 return Quaternion.identity;
             case RotationType.AwayFromWall:
-                Directions wallSides = tile.WallBuildingSides;
-                Vector2 average = Vector2.zero;
-                if ((wallSides & Directions.NorthWest) == Directions.NorthWest)
-                    average += new Vector2(-1, 1);
-                if ((wallSides & Directions.North) == Directions.North)
-                    average += new Vector2(0, 1);
-                if ((wallSides & Directions.NorthEast) == Directions.NorthEast)
-                    average += new Vector2(1, 1);
+                {
+                    Directions wallSides = tile.WallBuildingSides;
+                    Vector2 average = Vector2.zero;
+                    if ((wallSides & Directions.NorthWest) == Directions.NorthWest)
+                        average += new Vector2(-1, 1);
+                    if ((wallSides & Directions.North) == Directions.North)
+                        average += new Vector2(0, 1);
+                    if ((wallSides & Directions.NorthEast) == Directions.NorthEast)
+                        average += new Vector2(1, 1);
 
-                if ((wallSides & Directions.West) == Directions.West)
-                    average += new Vector2(-1, 0);
-                if ((wallSides & Directions.East) == Directions.East)
-                    average += new Vector2(1, -0);
+                    if ((wallSides & Directions.West) == Directions.West)
+                        average += new Vector2(-1, 0);
+                    if ((wallSides & Directions.East) == Directions.East)
+                        average += new Vector2(1, -0);
 
-                if ((wallSides & Directions.SouthWest) == Directions.SouthWest)
-                    average += new Vector2(-1, -1);
-                if ((wallSides & Directions.South) == Directions.South)
-                    average += new Vector2(0, -1);
-                if ((wallSides & Directions.SouthEast) == Directions.SouthEast)
-                    average += new Vector2(1, -1);
+                    if ((wallSides & Directions.SouthWest) == Directions.SouthWest)
+                        average += new Vector2(-1, -1);
+                    if ((wallSides & Directions.South) == Directions.South)
+                        average += new Vector2(0, -1);
+                    if ((wallSides & Directions.SouthEast) == Directions.SouthEast)
+                        average += new Vector2(1, -1);
 
-                if(average.magnitude < 0.001)
-                    return Quaternion.Euler(0, 0, 0);
+                    if (average.magnitude < 0.001)
+                        return Quaternion.Euler(0, 0, 0);
 
 
-                float angle = Mathf.Atan2(average.x, average.y) * 180 / Mathf.PI;
+                    float angle = Mathf.Atan2(average.x, average.y) * 180 / Mathf.PI;
 
-                float angle90 = Mathf.Round(angle / 90) * 90;
-                float angle45 = Mathf.Round(angle / 45) * 45;
+                    float angle90 = Mathf.Round(angle / 90) * 90;
+                    float angle45 = Mathf.Round(angle / 45) * 45;
 
-                if(Mathf.Abs(angle90 - angle) < 30)
-                    return Quaternion.Euler(0, angle90, 0);
-                else
-                    return Quaternion.Euler(0, angle45, 0);
+                    if (Mathf.Abs(angle90 - angle) < 30)
+                        return Quaternion.Euler(0, angle90, 0);
+                    else
+                        return Quaternion.Euler(0, angle45, 0);
+                }
+            case RotationType.Door:
+                {
+                    Directions wallSides = tile.WallBuildingSides;
+
+                    if ((wallSides & (Directions.North | Directions.South | Directions.East | Directions.West)) == (Directions.North | Directions.South | Directions.East | Directions.West))
+                        return Quaternion.identity;
+                    if ((wallSides & (Directions.North | Directions.South)) == (Directions.North | Directions.South))
+                        return Quaternion.Euler(0, 90, 0); ;
+
+                    return Quaternion.identity;
+                }
             default:
                 break;
         }
