@@ -9,6 +9,14 @@
   <buildingMesh file="Table.obj">
     <buildingType token="Table"/>
   </buildingMesh>
+  <buildingMesh 
+    file="Door.obj" 
+    normal="Door_N.png" 
+    occlusion="Door_O.png" 
+    alpha="Opaque_A.png"
+    rotation="Door">
+    <buildingType token="Door"/>
+  </buildingMesh>
   <buildingMesh file="Box.obj">
     <buildingType token="Box"/>
   </buildingMesh>

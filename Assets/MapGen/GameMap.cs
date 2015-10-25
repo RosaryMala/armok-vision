@@ -770,8 +770,8 @@ public class GameMap : MonoBehaviour
             }
     }
 
-    Dictionary<int, AtlasSprite> creatureList;
-    public AtlasSprite creatureTemplate;
+    Dictionary<int, Transform> creatureList;
+    public Transform creatureTemplate;
 
     RemoteFortressReader.UnitList unitList = null;
 
@@ -782,7 +782,7 @@ public class GameMap : MonoBehaviour
         foreach (var unit in unitList.creature_list)
         {
             if (creatureList == null)
-                creatureList = new Dictionary<int, AtlasSprite>();
+                creatureList = new Dictionary<int, Transform>();
             UnitFlags1 flags1 = (UnitFlags1)unit.flags1;
             //UnitFlags2 flags2 = (UnitFlags2)unit.flags2;
             //UnitFlags3 flags3 = (UnitFlags3)unit.flags3;
@@ -806,14 +806,14 @@ public class GameMap : MonoBehaviour
                     creatureList[unit.id] = Instantiate(creatureTemplate);
                     creatureList[unit.id].transform.parent = gameObject.transform;
                     creatureList[unit.id].name = "Unit_" + unit.id;
-                    creatureList[unit.id].ClearMesh();
+                    creatureList[unit.id].GetComponentInChildren<AtlasSprite>().ClearMesh();
 
                     Color color = Color.white;
                     if (unit.profession_color != null)
                         color = new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1);
 
                     if (creatureRaw != null)
-                        creatureList[unit.id].AddTile(creatureRaw.creature_tile, color);
+                        creatureList[unit.id].GetComponentInChildren<AtlasSprite>().AddTile(creatureRaw.creature_tile, color);
 
                 }
                 creatureList[unit.id].gameObject.SetActive(unit.pos_z < PosZ && unit.pos_z >= (PosZ - cameraViewDist));
@@ -823,22 +823,22 @@ public class GameMap : MonoBehaviour
                     if ((flags1 & UnitFlags1.on_ground) == UnitFlags1.on_ground)
                     {
                         creatureList[unit.id].transform.position = position + new Vector3(0, 0.51f, 0);
-                        creatureList[unit.id].cameraFacing.enabled = false;
+                        creatureList[unit.id].GetComponentInChildren<AtlasSprite>().cameraFacing.enabled = false;
                         creatureList[unit.id].transform.rotation = Quaternion.Euler(90, 0, 0);
                     }
                     else
                     {
                         creatureList[unit.id].transform.position = position + new Vector3(0, 1.5f, 0);
-                        creatureList[unit.id].cameraFacing.enabled = true;
+                        creatureList[unit.id].GetComponentInChildren<AtlasSprite>().cameraFacing.enabled = true;
                     }
                     if (unit.profession_color != null)
-                        creatureList[unit.id].SetColor(0, new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1));
+                        creatureList[unit.id].GetComponentInChildren<AtlasSprite>().SetColor(0, new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1));
                     if (creatureRaw != null)
                     {
                         if (unit.is_soldier)
-                            creatureList[unit.id].SetTile(0, creatureRaw.creature_soldier_tile);
+                            creatureList[unit.id].GetComponentInChildren<AtlasSprite>().SetTile(0, creatureRaw.creature_soldier_tile);
                         else
-                            creatureList[unit.id].SetTile(0, creatureRaw.creature_tile);
+                            creatureList[unit.id].GetComponentInChildren<AtlasSprite>().SetTile(0, creatureRaw.creature_tile);
                     }
                 }
 
