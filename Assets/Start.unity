@@ -1731,7 +1731,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixedTime: 10
-  useFixedTime: 0
+  useFixedTime: 1
   realTime:
     year: 0
     currentYearTicks: 0

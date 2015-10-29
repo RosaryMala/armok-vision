@@ -179,7 +179,7 @@ public class MapDataStore {
                 for (int yy = building.pos_y_min; yy <= building.pos_y_max; yy++)
                 {
 
-                    if((building.building_type.building_type == 29 || building.building_type.building_type == 29)
+                    if((building.building_type.building_type == 29 || building.building_type.building_type == 30)
                         && building.room != null && building.room.extents.Count > 0)
                     {
                         int buildingLocalX = xx - building.room.pos_x;
