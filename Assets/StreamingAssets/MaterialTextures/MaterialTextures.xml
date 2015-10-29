@@ -31,6 +31,12 @@
                     <buildingPosition x = "2" y = "2" />
                 </subObject>
             </subObject>
+            <subObject pattern="Blue.png" specular="Matte_S.png">
+                <buildingType token="Stockpile" />
+            </subObject>
+            <subObject pattern="Green.png" specular="Matte_S.png">
+                <buildingType token="Civzone" />
+            </subObject>
         </subObject>
         <subObject pattern="Leaves.png" specular="Matte_S.png">
             <tiletype token="BRANCH:*:*:*:*" />

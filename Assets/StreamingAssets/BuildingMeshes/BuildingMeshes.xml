@@ -51,11 +51,25 @@
     <buildingType token="GearAssembly"/>
   </buildingMesh>
   <buildingMesh file="NONE">
-    <buildingType token="Workshop_Carpenters"/>
+    <buildingType token="Workshop_MetalsmithsForge"/>
     <subObject file="WorkshopCounter.obj">
-      <buildingPosition x="0" y="1"/>
-      <buildingPosition x="0" y="2"/>
-      <buildingPosition x="2" y="2"/>
+      <buildingPosition x="1" y="0"/>
+      <buildingPosition x="1" y="2"/>
+    </subObject>
+  </buildingMesh>
+  <buildingMesh file="NONE">
+    <buildingType token="Furnace"/>
+    <subObject file="Furnace_Oven.obj"
+    normal="Furnace_Oven_N.png" 
+    occlusion="Furnace_Oven_O.png" 
+    alpha="Opaque_A.png">
+      <buildingPosition x="1" y="0"/>
+    </subObject>
+    <subObject file="Furnace_Catchment.obj"
+    normal="Furnace_Catchment_N.png" 
+    occlusion="Furnace_Catchment_O.png" 
+    alpha="Opaque_A.png">
+      <buildingPosition x="2" y="0"/>
     </subObject>
   </buildingMesh>
   <buildingMesh file="NONE">
@@ -231,5 +245,12 @@
   </buildingMesh>
   <buildingMesh file="NONE">
     <buildingType token="Workshop_Tool"/>
+  </buildingMesh>
+  <buildingMesh file="Stockpile.obj"
+    normal="Flat_N.png" 
+    occlusion="Flat_O.png" 
+    alpha="Diagonals.png">
+    <buildingType token="Stockpile"/>
+    <buildingType token="Civzone"/>
   </buildingMesh>
 </buildingMeshes>
