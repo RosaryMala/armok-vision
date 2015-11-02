@@ -245,6 +245,14 @@ namespace RemoteFortressReader
       get { return _room; }
       set { _room = value; }
     }
+    private int _direction = default(int);
+    [global::ProtoBuf.ProtoMember(13, IsRequired = false, Name=@"direction", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int direction
+    {
+      get { return _direction; }
+      set { _direction = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -1205,6 +1213,22 @@ namespace RemoteFortressReader
     {
       get { return _center_z; }
       set { _center_z = value; }
+    }
+    private int _cur_year = default(int);
+    [global::ProtoBuf.ProtoMember(20, IsRequired = false, Name=@"cur_year", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int cur_year
+    {
+      get { return _cur_year; }
+      set { _cur_year = value; }
+    }
+    private int _cur_year_tick = default(int);
+    [global::ProtoBuf.ProtoMember(21, IsRequired = false, Name=@"cur_year_tick", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int cur_year_tick
+    {
+      get { return _cur_year_tick; }
+      set { _cur_year_tick = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
