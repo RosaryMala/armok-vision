@@ -732,6 +732,7 @@ public class GameMap : MonoBehaviour
 
                 cursorProperties.text += "Building Coord: ";
                 cursorProperties.text += tile.buildingLocalPos + "\n";
+                cursorProperties.text += "Building Direction: " + tile.buildingDirection + "\n";
 
             }
         }
