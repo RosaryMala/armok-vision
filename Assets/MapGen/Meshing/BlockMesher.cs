@@ -230,7 +230,7 @@ abstract class BlockMesher {
                             temp.heights[xxx, yyy] = -1;
                             continue;
                         }
-                        var tile = maybeTile.Value;
+                        var tile = maybeTile;
                         if (tile.isWall)
                         {
                             temp.heights[xxx, yyy] = -1;
@@ -327,17 +327,17 @@ abstract class BlockMesher {
                 {
                     if (i < (int)MeshLayer.StaticCutout)
                     {
-                        FillMeshBuffer(out temp.meshBuffer[bufferIndex], (MeshLayer)i, data[xx, yy, block_z].Value);
+                        FillMeshBuffer(out temp.meshBuffer[bufferIndex], (MeshLayer)i, data[xx, yy, block_z]);
                         bufferIndex++;
                     }
                     else if (i < (int)MeshLayer.StaticTransparent)
                     {
-                        FillMeshBuffer(out temp.stencilMeshBuffer[stencilBufferIndex], (MeshLayer)i, data[xx, yy, block_z].Value);
+                        FillMeshBuffer(out temp.stencilMeshBuffer[stencilBufferIndex], (MeshLayer)i, data[xx, yy, block_z]);
                         stencilBufferIndex++;
                     }
                     else
                     {
-                        FillMeshBuffer(out temp.transparentMeshBuffer[transparentBufferIndex], (MeshLayer)i, data[xx, yy, block_z].Value);
+                        FillMeshBuffer(out temp.transparentMeshBuffer[transparentBufferIndex], (MeshLayer)i, data[xx, yy, block_z]);
                         transparentBufferIndex++;
                     }
                 }
@@ -492,17 +492,17 @@ abstract class BlockMesher {
         buffer.uv1Transform = matTexTransform;
         buffer.uv2Transform = shapeTextTransform;
         buffer.hiddenFaces = MeshCombineUtility.HiddenFaces.None;
-        if (tile.North != null && tile.North.Value.isWall)
+        if (tile.North != null && tile.North.isWall)
             buffer.hiddenFaces |= MeshCombineUtility.HiddenFaces.North;
-        if (tile.South != null && tile.South.Value.isWall)
+        if (tile.South != null && tile.South.isWall)
             buffer.hiddenFaces |= MeshCombineUtility.HiddenFaces.South;
-        if (tile.East != null && tile.East.Value.isWall)
+        if (tile.East != null && tile.East.isWall)
             buffer.hiddenFaces |= MeshCombineUtility.HiddenFaces.East;
-        if (tile.West != null && tile.West.Value.isWall)
+        if (tile.West != null && tile.West.isWall)
             buffer.hiddenFaces |= MeshCombineUtility.HiddenFaces.West;
-        if (tile.Up != null && tile.Up.Value.isSolidBase)
+        if (tile.Up != null && tile.Up.isSolidBase)
             buffer.hiddenFaces |= MeshCombineUtility.HiddenFaces.Up;
-        if (tile.Down != null && tile.Down.Value.isWall)
+        if (tile.Down != null && tile.Down.isWall)
             buffer.hiddenFaces |= MeshCombineUtility.HiddenFaces.Down;
     }
 }
