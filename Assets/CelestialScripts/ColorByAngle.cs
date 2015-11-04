@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 [RequireComponent(typeof(Light))]
 public class ColorByAngle : MonoBehaviour {
@@ -10,6 +9,9 @@ public class ColorByAngle : MonoBehaviour {
 
     Light lightComponent;
 
+    Quaternion prevAngle = Quaternion.identity;
+    public float angleThreshold = 5;
+
     void Awake()
     {
         lightComponent = GetComponent<Light>();
@@ -18,9 +20,14 @@ public class ColorByAngle : MonoBehaviour {
     // Update is called once per frame
     void Update () 
     {
-        float angle = transform.rotation.eulerAngles.x;
-        angle = Mathf.Sin(angle * Mathf.PI / 180);
-        currentTemp = Mathf.Lerp(sunriseTemp, noonTemp, angle);
-        lightComponent.color = ColorTemperature.Color(currentTemp);
+        if (Quaternion.Angle(prevAngle, transform.rotation) > angleThreshold)
+        {
+            prevAngle = transform.rotation;
+            float angle = transform.rotation.eulerAngles.x;
+            angle = Mathf.Sin(angle * Mathf.PI / 180);
+            currentTemp = Mathf.Lerp(sunriseTemp, noonTemp, angle);
+            lightComponent.color = ColorTemperature.Color(currentTemp);
+            DynamicGI.UpdateEnvironment();
+        }
     }
 }
