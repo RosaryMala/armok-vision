@@ -15,6 +15,5 @@ public class SunRotate : MonoBehaviour
     {
         Quaternion rotate = Quaternion.AngleAxis(timeHolder.displayedTime.SunAngle, Vector3.back);
         transform.rotation = rotate;
-        DynamicGI.UpdateEnvironment();
     }
 }
