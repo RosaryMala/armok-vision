@@ -77,9 +77,6 @@ public class MapDataStore {
     public DFCoord SliceOrigin { get; private set; }
     // The data
     Tile[,,] tiles;
-    // An array for whether a tile is present or not; index with PresentIndex
-    // (We use this since it's cheaper than storing an array of Tile?s)
-    BitArray tilesPresent;
 
     private MapDataStore() {}
 
@@ -97,7 +94,6 @@ public class MapDataStore {
         }
         SliceSize = sliceSize;
         tiles = new Tile[SliceSize.x, SliceSize.y, SliceSize.z];
-        tilesPresent = new BitArray(PresentIndex(SliceSize.x-1, SliceSize.y-1, SliceSize.z-1)+1);
         Reset();
     }
 
@@ -119,7 +115,6 @@ public class MapDataStore {
                         tiles[localNewSliceOrigin.x + x, localNewSliceOrigin.y + y, localNewSliceOrigin.z + z].CalculateRampType(); 
                     target.tiles[x, y, z] = tiles[localNewSliceOrigin.x+x, localNewSliceOrigin.y+y, localNewSliceOrigin.z+z];
                     target.tiles[x, y, z].container = target;
-                    target.tilesPresent[target.PresentIndex(x, y, z)] = tilesPresent[PresentIndex(localNewSliceOrigin.x+x, localNewSliceOrigin.y+y, localNewSliceOrigin.z+z)];
                 }
             }
         }
@@ -156,7 +151,8 @@ public class MapDataStore {
                     return;
                 }
                 int netIndex = xx + (yy * 16);
-                tilesPresent[PresentIndex(localCoord.x, localCoord.y, localCoord.z)] = true;
+                if(tiles[localCoord.x, localCoord.y, localCoord.z] == null)
+                    tiles[localCoord.x, localCoord.y, localCoord.z] = new Tile(this, localCoord);
                 if (setTiles) {
                     tiles[localCoord.x, localCoord.y, localCoord.z].tileType = block.tiles[netIndex];
                     tiles[localCoord.x, localCoord.y, localCoord.z].material = block.materials[netIndex];
@@ -175,11 +171,13 @@ public class MapDataStore {
             }
         foreach (var building in block.buildings)
         {
+            if (building.building_type.building_type == 30)
+                continue; // We won't do civzones right now.
             for (int xx = building.pos_x_min; xx <= building.pos_x_max; xx++)
                 for (int yy = building.pos_y_min; yy <= building.pos_y_max; yy++)
                 {
 
-                    if((building.building_type.building_type == 29 || building.building_type.building_type == 30)
+                    if((building.building_type.building_type == 29)
                         && building.room != null && building.room.extents.Count > 0)
                     {
                         int buildingLocalX = xx - building.room.pos_x;
@@ -197,7 +195,8 @@ public class MapDataStore {
                         Debug.LogError(worldCoord + " is out of bounds for " + MapSize);
                         continue;
                     }
-                    tilesPresent[PresentIndex(localCoord.x, localCoord.y, localCoord.z)] = true;
+                    if (tiles[localCoord.x, localCoord.y, localCoord.z] == null)
+                        tiles[localCoord.x, localCoord.y, localCoord.z] = new Tile(this, localCoord);
                     tiles[localCoord.x, localCoord.y, localCoord.z].buildingType = building.building_type;
                     tiles[localCoord.x, localCoord.y, localCoord.z].buildingMaterial = building.material;
                     tiles[localCoord.x, localCoord.y, localCoord.z].buildingLocalPos = buildingLocalCoord;
@@ -212,16 +211,16 @@ public class MapDataStore {
 
     // Things to read and modify the map
     // Note: everything takes coordinates in world / DF space
-    public Tile? this[int x, int y, int z] {
+    public Tile this[int x, int y, int z] {
         get {
             return this[new DFCoord(x,y,z)];
         }
     }
 
-    public Tile? this[DFCoord coord] {
+    public Tile this[DFCoord coord] {
         get {
             DFCoord local = WorldToLocalSpace(coord);
-            if (InSliceBoundsLocal(local.x, local.y, local.z) && tilesPresent[PresentIndex(local.x, local.y, local.z)]) {
+            if (InSliceBoundsLocal(local.x, local.y, local.z)) {
                 return tiles[local.x, local.y, local.z];
             } else {
                 return null;
@@ -234,9 +233,9 @@ public class MapDataStore {
         if (tile == null) return 0;
         switch (liquidIndex) {
         case WATER_INDEX:
-            return tile.Value.waterLevel;
+            return tile.waterLevel;
         case MAGMA_INDEX:
-            return tile.Value.magmaLevel;
+            return tile.magmaLevel;
         default:
             throw new UnityException("No liquid with index "+liquidIndex);
         }
@@ -274,16 +273,16 @@ public class MapDataStore {
         if (!InSliceBoundsLocal(local.x, local.y, local.z)) {
             throw new UnityException("Can't modify tile outside of slice");
         }
-        tilesPresent[PresentIndex(local.x, local.y, local.z)] = true;
+        if (tiles[local.x, local.y, local.z] == null)
+            tiles[local.x, local.y, local.z] = new Tile(this, local);
         tiles[local.x, local.y, local.z].Modify(tileType, material, base_material, layer_material, vein_material, waterLevel, magmaLevel, construction_item, rampType, buildingType, buildingMaterial, buildingLocalPos, buildingDirection);
     }
 
     public void Reset() {
-        tilesPresent.SetAll(false);
         for (int x = 0; x < SliceSize.x; x++) {
             for (int y = 0; y < SliceSize.y; y++) {
                 for (int z = 0; z < SliceSize.z; z++) {
-                    tiles[x,y,z] = new Tile(this, LocalToWorldSpace(new DFCoord(x,y,z)));
+                    tiles[x,y,z] = null;
                 }
             }
         }
@@ -311,7 +310,7 @@ public class MapDataStore {
 
     // The data for a single tile of the map.
     // Nested struct because it depends heavily on its container.
-    public struct Tile
+    public class Tile
     {
         public Tile(MapDataStore container, DFCoord position) {
             this.container = container;
@@ -491,32 +490,32 @@ public class MapDataStore {
                 }
             }
         }
-        public MapDataStore.Tile? North {
+        public MapDataStore.Tile North {
             get {
                 return container[position.x, position.y - 1, position.z];
             }
         }
-        public MapDataStore.Tile? South {
+        public MapDataStore.Tile South {
             get {
                 return container[position.x, position.y + 1, position.z];
             }
         }
-        public MapDataStore.Tile? East {
+        public MapDataStore.Tile East {
             get {
                 return container[position.x + 1, position.y, position.z];
             }
         }
-        public MapDataStore.Tile? West {
+        public MapDataStore.Tile West {
             get {
                 return container[position.x - 1, position.y, position.z];
             }
         }
-        public MapDataStore.Tile? Up {
+        public MapDataStore.Tile Up {
             get {
                 return container[position.x, position.y, position.z + 1];
             }
         }
-        public MapDataStore.Tile? Down {
+        public MapDataStore.Tile Down {
             get {
                 return container[position.x, position.y, position.z - 1];
             }
@@ -548,62 +547,62 @@ public class MapDataStore {
         {
             int ramplookup = 0;
             if (North != null &&
-                North.Value.Up != null &&
-                North.Value.isWall &&
-                North.Value.Up.Value.isFloor)
+                North.Up != null &&
+                North.isWall &&
+                North.Up.isFloor)
             {
                 ramplookup ^= 1;
             }
             if (North != null &&
-                North.Value.East != null &&
-                North.Value.East.Value.Up != null &&
-                North.Value.East.Value.isWall &&
-                North.Value.East.Value.Up.Value.isFloor)
+                North.East != null &&
+                North.East.Up != null &&
+                North.East.isWall &&
+                North.East.Up.isFloor)
             {
                 ramplookup ^= 2;
             }
             if (East != null &&
-                East.Value.Up != null &&
-                East.Value.isWall &&
-                East.Value.Up.Value.isFloor)
+                East.Up != null &&
+                East.isWall &&
+                East.Up.isFloor)
             {
                 ramplookup ^= 4;
             }
             if (South != null &&
-                South.Value.East != null &&
-                South.Value.East.Value.Up != null &&
-                South.Value.East.Value.isWall &&
-                South.Value.East.Value.Up.Value.isFloor)
+                South.East != null &&
+                South.East.Up != null &&
+                South.East.isWall &&
+                South.East.Up.isFloor)
             {
                 ramplookup ^= 8;
             }
             if (South != null &&
-                South.Value.Up != null &&
-                South.Value.isWall &&
-                South.Value.Up.Value.isFloor)
+                South.Up != null &&
+                South.isWall &&
+                South.Up.isFloor)
             {
                 ramplookup ^= 16;
             }
             if (South != null &&
-                South.Value.West != null &&
-                South.Value.West.Value.Up != null &&
-                South.Value.West.Value.isWall &&
-                South.Value.West.Value.Up.Value.isFloor)
+                South.West != null &&
+                South.West.Up != null &&
+                South.West.isWall &&
+                South.West.Up.isFloor)
             {
                 ramplookup ^= 32;
             }
             if (West != null &&
-                West.Value.Up != null &&
-                West.Value.isWall &&
-                West.Value.Up.Value.isFloor)
+                West.Up != null &&
+                West.isWall &&
+                West.Up.isFloor)
             {
                 ramplookup ^= 64;
             }
             if (North != null &&
-                North.Value.West != null &&
-                North.Value.West.Value.Up != null &&
-                North.Value.West.Value.isWall &&
-                North.Value.West.Value.Up.Value.isFloor)
+                North.West != null &&
+                North.West.Up != null &&
+                North.West.isWall &&
+                North.West.Up.isFloor)
             {
                 ramplookup ^= 128;
             }
@@ -615,46 +614,46 @@ public class MapDataStore {
             }
 
             if (North != null &&
-                North.Value.isWall)
+                North.isWall)
             {
                 ramplookup ^= 1;
             }
             if (North != null &&
-                North.Value.East != null &&
-                North.Value.East.Value.isWall)
+                North.East != null &&
+                North.East.isWall)
             {
                 ramplookup ^= 2;
             }
             if (East != null &&
-                East.Value.isWall)
+                East.isWall)
             {
                 ramplookup ^= 4;
             }
             if (South != null &&
-                South.Value.East != null &&
-                South.Value.East.Value.isWall)
+                South.East != null &&
+                South.East.isWall)
             {
                 ramplookup ^= 8;
             }
             if (South != null &&
-                South.Value.isWall)
+                South.isWall)
             {
                 ramplookup ^= 16;
             }
             if (South != null &&
-                South.Value.West != null &&
-                South.Value.West.Value.isWall)
+                South.West != null &&
+                South.West.isWall)
             {
                 ramplookup ^= 32;
             }
             if (West != null &&
-                West.Value.isWall)
+                West.isWall)
             {
                 ramplookup ^= 64;
             }
             if (North != null &&
-                North.Value.West != null &&
-                North.Value.West.Value.isWall)
+                North.West != null &&
+                North.West.isWall)
             {
                 ramplookup ^= 128;
             }
@@ -668,46 +667,46 @@ public class MapDataStore {
             {
                 Directions wallSide = Directions.None;
                 if (North != null &&
-                    North.Value.isWall)
+                    North.isWall)
                 {
                     wallSide |= Directions.North;
                 }
                 if (North != null &&
-                    North.Value.East != null &&
-                    North.Value.East.Value.isWall)
+                    North.East != null &&
+                    North.East.isWall)
                 {
                     wallSide |= Directions.NorthEast;
                 }
                 if (East != null &&
-                    East.Value.isWall)
+                    East.isWall)
                 {
                     wallSide |= Directions.East;
                 }
                 if (South != null &&
-                    South.Value.East != null &&
-                    South.Value.East.Value.isWall)
+                    South.East != null &&
+                    South.East.isWall)
                 {
                     wallSide |= Directions.SouthEast;
                 }
                 if (South != null &&
-                    South.Value.isWall)
+                    South.isWall)
                 {
                     wallSide |= Directions.South;
                 }
                 if (South != null &&
-                    South.Value.West != null &&
-                    South.Value.West.Value.isWall)
+                    South.West != null &&
+                    South.West.isWall)
                 {
                     wallSide |= Directions.SouthWest;
                 }
                 if (West != null &&
-                    West.Value.isWall)
+                    West.isWall)
                 {
                     wallSide |= Directions.West;
                 }
                 if (North != null &&
-                    North.Value.West != null &&
-                    North.Value.West.Value.isWall)
+                    North.West != null &&
+                    North.West.isWall)
                 {
                     wallSide |= Directions.NorthWest;
                 }
@@ -720,46 +719,46 @@ public class MapDataStore {
             {
                 Directions wallSide = Directions.None;
                 if (North != null &&
-                    North.Value.isWallBuilding)
+                    North.isWallBuilding)
                 {
                     wallSide |= Directions.North;
                 }
                 if (North != null &&
-                    North.Value.East != null &&
-                    North.Value.East.Value.isWallBuilding)
+                    North.East != null &&
+                    North.East.isWallBuilding)
                 {
                     wallSide |= Directions.NorthEast;
                 }
                 if (East != null &&
-                    East.Value.isWallBuilding)
+                    East.isWallBuilding)
                 {
                     wallSide |= Directions.East;
                 }
                 if (South != null &&
-                    South.Value.East != null &&
-                    South.Value.East.Value.isWallBuilding)
+                    South.East != null &&
+                    South.East.isWallBuilding)
                 {
                     wallSide |= Directions.SouthEast;
                 }
                 if (South != null &&
-                    South.Value.isWallBuilding)
+                    South.isWallBuilding)
                 {
                     wallSide |= Directions.South;
                 }
                 if (South != null &&
-                    South.Value.West != null &&
-                    South.Value.West.Value.isWallBuilding)
+                    South.West != null &&
+                    South.West.isWallBuilding)
                 {
                     wallSide |= Directions.SouthWest;
                 }
                 if (West != null &&
-                    West.Value.isWallBuilding)
+                    West.isWallBuilding)
                 {
                     wallSide |= Directions.West;
                 }
                 if (North != null &&
-                    North.Value.West != null &&
-                    North.Value.West.Value.isWallBuilding)
+                    North.West != null &&
+                    North.West.isWallBuilding)
                 {
                     wallSide |= Directions.NorthWest;
                 }

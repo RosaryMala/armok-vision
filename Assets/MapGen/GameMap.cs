@@ -624,10 +624,9 @@ public class GameMap : MonoBehaviour
         cursorProperties.text += cursX + ",";
         cursorProperties.text += cursY + ",";
         cursorProperties.text += cursZ + "\n";
-        var maybeTile = MapDataStore.Main[cursX, cursY, cursZ];
-        if (maybeTile != null)
+        var tile = MapDataStore.Main[cursX, cursY, cursZ];
+        if (tile != null)
         {
-            var tile = maybeTile.Value;
             cursorProperties.text += "Tiletype:\n";
             var tiletype = DFConnection.Instance.NetTiletypeList.tiletype_list
                 [tile.tileType];

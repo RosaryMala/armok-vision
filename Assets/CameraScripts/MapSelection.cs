@@ -233,12 +233,12 @@ public class MapSelection : MonoBehaviour
                 // We are in the map.
                 haveHitMap = true;
 
-                MapDataStore.Tile? currentTile = MapDataStore.Main[currentCoord.x, currentCoord.y, currentCoord.z];
+                MapDataStore.Tile currentTile = MapDataStore.Main[currentCoord.x, currentCoord.y, currentCoord.z];
                 // Are we in a real tile?
                 if (currentTile != null)
                 {
                     // Yes.
-                    switch (currentTile.Value.shape)
+                    switch (currentTile.shape)
                     {
                         case RemoteFortressReader.TiletypeShape.EMPTY:
                         case RemoteFortressReader.TiletypeShape.NO_SHAPE:
