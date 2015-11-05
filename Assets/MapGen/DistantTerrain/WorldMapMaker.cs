@@ -67,11 +67,13 @@ public class WorldMapMaker : MonoBehaviour
 
     MeshFilter meshFilter;
     MeshRenderer meshRenderer;
+    TimeHolder timeHolder;
 
     void Awake()
     {
         meshFilter = GetComponent<MeshFilter>();
         meshRenderer = GetComponent<MeshRenderer>();
+        timeHolder = FindObjectOfType<TimeHolder>();
     }
 
     void CopyFromRemote(WorldMap remoteMap)
@@ -81,6 +83,8 @@ public class WorldMapMaker : MonoBehaviour
             Debug.Log("Didn't get world map!");
             return;
         }
+        timeHolder.realTime.Year = remoteMap.cur_year;
+        timeHolder.realTime.CurrentYearTicks = remoteMap.cur_year_tick;
         width = remoteMap.world_width;
         height = remoteMap.world_height;
         if(width * height > 65535)
@@ -134,6 +138,8 @@ public class WorldMapMaker : MonoBehaviour
             Debug.Log("Didn't get world map!");
             return;
         }
+        timeHolder.realTime.Year = remoteMap.cur_year;
+        timeHolder.realTime.CurrentYearTicks = remoteMap.cur_year_tick;
         for (int x = 0; x < width; x++)
             for (int y = 0; y < height; y++)
             {
@@ -246,15 +252,16 @@ public class WorldMapMaker : MonoBehaviour
         }
         if (worldMap != null)
         {
-            CopyFromRemote(worldMap);
-            UpdateRegionPositions(worldMap);
+            if (DFConnection.Instance.HasWorldMapPositionChanged())
+            {
+                CopyFromRemote(worldMap);
+                UpdateRegionPositions(worldMap);
+            }
+            else
+            {
+                CopyClouds(worldMap);
+            }
         }
-        //worldMap = DFConnection.Instance.PopWorldMapUpdate();
-        //if (worldMap != null)
-        //    if (madeTerrain)
-        //        CopyClouds(worldMap);
-        //    else
-        //        CopyFromRemote(worldMap);
     }
 
     void UpdateRegionPositions(WorldMap map)

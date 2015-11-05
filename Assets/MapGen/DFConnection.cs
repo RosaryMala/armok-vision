@@ -76,6 +76,7 @@ public class DFConnection : MonoBehaviour
     private RemoteFortressReader.ViewInfo _netViewInfo;
     private RemoteFortressReader.UnitList _netUnitList;
     private RemoteFortressReader.WorldMap _netWorldMap;
+    private bool _worldMapMoved = false;
     private RemoteFortressReader.WorldMap _netWorldMapCenter;
     private RemoteFortressReader.RegionMaps _netRegionMaps;
     private RemoteFortressReader.MapInfo _netMapInfo;
@@ -201,6 +202,19 @@ public class DFConnection : MonoBehaviour
         }
         return result;
     }
+
+    // Pop a world map update. The map doesn't change, but the clouds do.
+    public bool HasWorldMapPositionChanged()
+    {
+        bool result;
+        lock (worldMapLock)
+        {
+            result = _worldMapMoved;
+            _worldMapMoved = false;
+        }
+        return result;
+    }
+
 
     // Pop region map update. These change in adventure mode.
     public RemoteFortressReader.RegionMaps PopRegionMapUpdate()
@@ -543,12 +557,15 @@ public class DFConnection : MonoBehaviour
                     if (connection._netWorldMapCenter == null || (tempWorldMap != null && (connection._netWorldMapCenter.center_x != tempWorldMap.center_x || connection._netWorldMapCenter.center_y != tempWorldMap.center_y)))
                     {
                         connection._netWorldMapCenter = tempWorldMap;
+                        connection._worldMapMoved = true;
                         if (connection.regionMapCall != null)
                             connection.regionMapCall.execute(null, out connection._netRegionMaps);
-                        if (connection.worldMapCall != null)
-                            connection.worldMapCall.execute(null, out connection._netWorldMap);
+
                     }
                 }
+                if (connection.worldMapCall != null)
+                    connection.worldMapCall.execute(null, out connection._netWorldMap);
+
                 if (connection.EmbarkMapSize.x > 0
                     && connection.EmbarkMapSize.y > 0
                     && connection.EmbarkMapSize.z > 0)
@@ -689,18 +706,23 @@ public class DFConnection : MonoBehaviour
                         if (connection._netWorldMapCenter == null || (tempWorldMap != null && (connection._netWorldMapCenter.center_x != tempWorldMap.center_x || connection._netWorldMapCenter.center_y != tempWorldMap.center_y)))
                         {
                             connection._netWorldMapCenter = tempWorldMap;
+                            lock (connection.worldMapLock)
+                            {
+                                connection._worldMapMoved = true;
+                            }
                             lock (connection.regionMapLock)
                             {
                                 if (connection.regionMapCall != null)
                                     connection.regionMapCall.execute(null, out connection._netRegionMaps);
                             }
-                            lock (connection.worldMapLock)
-                            {
-                                if (connection.worldMapCall != null)
-                                    connection.worldMapCall.execute(null, out connection._netWorldMap);
-                            }
                         }
                     }
+                    if (connection.worldMapCall != null)
+                        lock (connection.worldMapLock)
+                        {
+                            connection.worldMapCall.execute(null, out connection._netWorldMap);
+                        }
+
                     if (connection.EmbarkMapSize.x > 0
                         && connection.EmbarkMapSize.y > 0
                         && connection.EmbarkMapSize.z > 0)
