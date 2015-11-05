@@ -11,7 +11,6 @@ public class TimeHolder : MonoBehaviour {
 
     void FixedUpdate()
     {
-        realTime.CurrentYearTicks ++;
         displayedTime.Year = realTime.Year;
         displayedTime.CurrentYearTicks = realTime.CurrentYearTicks;
 
