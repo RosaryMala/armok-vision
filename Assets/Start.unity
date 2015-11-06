@@ -102,7 +102,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!23 &224966260
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -329,6 +329,7 @@ MonoBehaviour:
   noonTemp: 6500
   sunriseTemp: 2000
   currentTemp: 0
+  angleThreshold: 5
 --- !u!1 &716928473
 GameObject:
   m_ObjectHideFlags: 0
@@ -640,7 +641,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &895398302
 Transform:
   m_ObjectHideFlags: 0
@@ -1731,7 +1732,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixedTime: 10
-  useFixedTime: 1
+  useFixedTime: 0
   realTime:
     year: 0
     currentYearTicks: 0
@@ -2003,7 +2004,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2121861297
 Transform:
   m_ObjectHideFlags: 0

@@ -14,6 +14,6 @@ public class SunRotate : MonoBehaviour
     void Update()
     {
         Quaternion rotate = Quaternion.AngleAxis(timeHolder.displayedTime.SunAngle, Vector3.back);
-        transform.rotation = rotate;
+        transform.localRotation = rotate;
     }
 }

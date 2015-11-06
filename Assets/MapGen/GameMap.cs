@@ -6,6 +6,7 @@ using RemoteFortressReader;
 using UnityEngine.UI;
 using System.IO;
 using UnitFlags;
+using System.Text;
 
 // The class responsible for talking to DF and meshing the data it gets.
 // Relevant vocabulary: A "map tile" is an individual square on the map.
@@ -618,120 +619,122 @@ public class GameMap : MonoBehaviour
     void ShowCursorInfo()
     {
         if (MapDataStore.Main == null)
-            return; //No map
-        cursorProperties.text = "";
-        cursorProperties.text += "Cursor: ";
-        cursorProperties.text += cursX + ",";
-        cursorProperties.text += cursY + ",";
-        cursorProperties.text += cursZ + "\n";
+            return; //No 
+
+        StringBuilder statusText = new StringBuilder();
+
+        statusText.Append("Cursor: ");
+        statusText.Append(cursX).Append(",");
+        statusText.Append(cursY).Append(",");
+        statusText.Append(cursZ).Append("\n");
         var tile = MapDataStore.Main[cursX, cursY, cursZ];
         if (tile != null)
         {
-            cursorProperties.text += "Tiletype:\n";
+            statusText.Append("Tiletype:\n");
             var tiletype = DFConnection.Instance.NetTiletypeList.tiletype_list
                 [tile.tileType];
-            cursorProperties.text += tiletype.name + "\n";
-            cursorProperties.text +=
-                tiletype.shape + ":" +
-                tiletype.special + ":" +
-                tiletype.material + ":" +
-                tiletype.variant + ":" +
-                tiletype.direction + "\n";
+            statusText.Append(tiletype.name).Append("\n");
+            statusText.Append(
+                tiletype.shape).Append(":").Append(
+                tiletype.special).Append(":").Append(
+                tiletype.material).Append(":").Append(
+                tiletype.variant).Append(":").Append(
+                tiletype.direction).Append("\n");
 
-            cursorProperties.text += tile.WallBuildingSides + "\n";
+            statusText.Append(tile.WallBuildingSides).Append("\n");
 
             var mat = tile.material;
-            cursorProperties.text += "Material: ";
-            cursorProperties.text += mat.mat_type + ",";
-            cursorProperties.text += mat.mat_index + "\n";
+            statusText.Append("Material: ");
+            statusText.Append(mat.mat_type).Append(",");
+            statusText.Append(mat.mat_index).Append("\n");
 
             if (materials.ContainsKey(mat))
             {
-                cursorProperties.text += "Material Name: ";
-                cursorProperties.text += materials[mat].id + "\n";
+                statusText.Append("Material Name: ");
+                statusText.Append(materials[mat].id).Append("\n");
             }
             else
-                cursorProperties.text += "Unknown Material\n";
+                statusText.Append("Unknown Material\n");
 
-            cursorProperties.text += "\n";
+            statusText.Append("\n");
 
             var basemat = tile.base_material;
-            cursorProperties.text += "Base Material: ";
-            cursorProperties.text += basemat.mat_type + ",";
-            cursorProperties.text += basemat.mat_index + "\n";
+            statusText.Append("Base Material: ");
+            statusText.Append(basemat.mat_type).Append(",");
+            statusText.Append(basemat.mat_index).Append("\n");
 
             if (materials.ContainsKey(basemat))
             {
-                cursorProperties.text += "Base Material Name: ";
-                cursorProperties.text += materials[basemat].id + "\n";
+                statusText.Append("Base Material Name: ");
+                statusText.Append(materials[basemat].id).Append("\n");
             }
             else
-                cursorProperties.text += "Unknown Base Material\n";
+                statusText.Append("Unknown Base Material\n");
 
-            cursorProperties.text += "\n";
+            statusText.Append("\n");
 
             var layermat = tile.layer_material;
-            cursorProperties.text += "Layer Material: ";
-            cursorProperties.text += layermat.mat_type + ",";
-            cursorProperties.text += layermat.mat_index + "\n";
+            statusText.Append("Layer Material: ");
+            statusText.Append(layermat.mat_type).Append(",");
+            statusText.Append(layermat.mat_index).Append("\n");
 
             if (materials.ContainsKey(layermat))
             {
-                cursorProperties.text += "Layer Material Name: ";
-                cursorProperties.text += materials[layermat].id + "\n";
+                statusText.Append("Layer Material Name: ");
+                statusText.Append(materials[layermat].id).Append("\n");
             }
             else
-                cursorProperties.text += "Unknown Layer Material\n";
+                statusText.Append("Unknown Layer Material\n");
 
-            cursorProperties.text += "\n";
+            statusText.Append("\n");
 
             var veinmat = tile.vein_material;
-            cursorProperties.text += "Vein Material: ";
-            cursorProperties.text += veinmat.mat_type + ",";
-            cursorProperties.text += veinmat.mat_index + "\n";
+            statusText.Append("Vein Material: ");
+            statusText.Append(veinmat.mat_type).Append(",");
+            statusText.Append(veinmat.mat_index).Append("\n");
 
             if (materials.ContainsKey(veinmat))
             {
-                cursorProperties.text += "Vein Material Name: ";
-                cursorProperties.text += materials[veinmat].id + "\n";
+                statusText.Append("Vein Material Name: ");
+                statusText.Append(materials[veinmat].id).Append("\n");
             }
             else
-                cursorProperties.text += "Unknown Vein Material\n";
+                statusText.Append("Unknown Vein Material\n");
 
-            cursorProperties.text += "\n";
+            statusText.Append("\n");
 
             var cons = tile.construction_item;
-            cursorProperties.text += "Construction Item: ";
-            cursorProperties.text += cons.mat_type + ",";
-            cursorProperties.text += cons.mat_index + "\n";
+            statusText.Append("Construction Item: ");
+            statusText.Append(cons.mat_type).Append(",");
+            statusText.Append(cons.mat_index).Append("\n");
 
             if (items.ContainsKey(cons))
             {
-                cursorProperties.text += "Construction Item Name: ";
-                cursorProperties.text += items[cons].id + "\n";
+                statusText.Append("Construction Item Name: ");
+                statusText.Append(items[cons].id).Append("\n");
             }
             else
-                cursorProperties.text += "Unknown Construction Item\n";
+                statusText.Append("Unknown Construction Item\n");
 
-            cursorProperties.text += "\n";
+            statusText.Append("\n");
 
             if (tile.buildingType != default(BuildingStruct))
             {
                 if (buildings.ContainsKey(tile.buildingType))
-                    cursorProperties.text += "Building: ";
-                cursorProperties.text += buildings[tile.buildingType].id + "\n";
+                    statusText.Append("Building: ");
+                statusText.Append(buildings[tile.buildingType].id).Append("\n");
 
                 if (materials.ContainsKey(tile.buildingMaterial))
                 {
-                    cursorProperties.text += "Building Material: ";
-                    cursorProperties.text += materials[tile.buildingMaterial].id + "\n";
+                    statusText.Append("Building Material: ");
+                    statusText.Append(materials[tile.buildingMaterial].id).Append("\n");
                 }
                 else
-                    cursorProperties.text += "Unknown Building Material\n";
+                    statusText.Append("Unknown Building Material\n");
 
-                cursorProperties.text += "Building Coord: ";
-                cursorProperties.text += tile.buildingLocalPos + "\n";
-                cursorProperties.text += "Building Direction: " + tile.buildingDirection + "\n";
+                statusText.Append("Building Coord: ");
+                statusText.Append(tile.buildingLocalPos).Append("\n");
+                statusText.Append("Building Direction: ").Append(tile.buildingDirection).Append("\n");
 
             }
         }
@@ -755,19 +758,20 @@ public class GameMap : MonoBehaviour
 
                 if (creatureRaw != null)
                 {
-                    cursorProperties.text += "Unit:   \n";
+                    statusText.Append("Unit:   \n");
 
-                    cursorProperties.text += "Race: ";
-                    cursorProperties.text += creatureRaw.creature_id + ":";
-                    cursorProperties.text += creatureRaw.caste[unit.race.mat_index].caste_id;
-                    cursorProperties.text += "\n";
+                    statusText.Append("Race: ");
+                    statusText.Append(creatureRaw.creature_id + ":");
+                    statusText.Append(creatureRaw.caste[unit.race.mat_index].caste_id);
+                    statusText.Append("\n");
 
-                    cursorProperties.text += flags1 + "\n";
-                    cursorProperties.text += flags2 + "\n";
-                    cursorProperties.text += flags3 + "\n";
+                    statusText.Append(flags1).AppendLine();
+                    statusText.Append(flags2).AppendLine();
+                    statusText.Append(flags3).AppendLine();
                 }
                 break;
             }
+        cursorProperties.text = statusText.ToString();
     }
 
     Dictionary<int, Transform> creatureList;
@@ -791,7 +795,7 @@ public class GameMap : MonoBehaviour
             {
                 if (creatureList.ContainsKey(unit.id))
                 {
-                    Destroy(creatureList[unit.id]);
+                    Destroy(creatureList[unit.id].gameObject);
                     creatureList.Remove(unit.id);
                 }
             }
