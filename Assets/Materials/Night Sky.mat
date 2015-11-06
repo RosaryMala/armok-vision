@@ -134,6 +134,10 @@ Material:
         first:
           name: _Metallic
         second: 0
+      data:
+        first:
+          name: _Alpha
+        second: .5
     m_Colors:
       data:
         first:
