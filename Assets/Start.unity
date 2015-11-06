@@ -96,6 +96,7 @@ GameObject:
   - 33: {fileID: 224966262}
   - 65: {fileID: 224966261}
   - 23: {fileID: 224966260}
+  - 114: {fileID: 224966264}
   m_Layer: 9
   m_Name: Star Cube
   m_TagString: Untagged
@@ -116,7 +117,7 @@ MeshRenderer:
   - {fileID: 2100000, guid: f961376e40f387d4988d20979a0b7d90, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 1
+  m_UseLightProbes: 0
   m_ReflectionProbeUsage: 0
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
@@ -158,6 +159,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 692705304}
   m_RootOrder: 1
+--- !u!114 &224966264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 224966259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 514e4151eb650a741a6d4fb0f0a48acc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  angleRange: 5
+  Sun: {fileID: 692705304}
 --- !u!1 &458878499
 GameObject:
   m_ObjectHideFlags: 0
@@ -294,7 +308,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 692705302}
-  m_LocalRotation: {x: 0, y: .707106829, z: 0, w: .707106709}
+  m_LocalRotation: {x: 0, y: .50000006, z: 0, w: .866025388}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1346,7 +1360,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1415142925}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -.707106829, w: .707106709}
   m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
