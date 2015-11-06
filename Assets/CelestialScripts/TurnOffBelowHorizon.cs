@@ -22,7 +22,8 @@ public class TurnOffBelowHorizon : MonoBehaviour {
     
     // Update is called once per frame
     void Update () {
-        float x = transform.rotation.eulerAngles.x;
+        
+        float x = -(90 - Vector3.Angle(transform.forward, Vector3.up));
 
         if (x > 180)
             x -= 360;
