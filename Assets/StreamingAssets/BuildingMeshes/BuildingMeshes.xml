@@ -41,7 +41,7 @@
   <buildingMesh file="Support.obj">
     <buildingType token="Support"/>
   </buildingMesh>
-  <buildingMesh file="ScrewPump.obj">
+  <buildingMesh file="built_cabinet_0.obj">
     <buildingType token="ScrewPump"/>
   </buildingMesh>
   <buildingMesh file="Well.obj">
