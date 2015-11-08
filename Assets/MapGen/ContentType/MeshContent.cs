@@ -38,7 +38,8 @@ public enum RotationType
 {
     None,
     AwayFromWall,
-    Door
+    Door,
+    BuildingDirection
 }
 
 public class MeshContent : IContent
@@ -104,6 +105,22 @@ public class MeshContent : IContent
                         return Quaternion.Euler(0, 90, 0); ;
 
                     return Quaternion.identity;
+                }
+            case RotationType.BuildingDirection:
+                {
+                    switch (tile.buildingDirection)
+                    {
+                        case RemoteFortressReader.BuildingDirection.NORTH:
+                            return Quaternion.Euler(0, 0, 0);
+                        case RemoteFortressReader.BuildingDirection.EAST:
+                            return Quaternion.Euler(0, 90, 0);
+                        case RemoteFortressReader.BuildingDirection.SOUTH:
+                            return Quaternion.Euler(0, 180, 0);
+                        case RemoteFortressReader.BuildingDirection.WEST:
+                            return Quaternion.Euler(0, -90, 0);
+                        default:
+                            return Quaternion.Euler(0, 0, 0);
+                    }
                 }
             default:
                 break;
