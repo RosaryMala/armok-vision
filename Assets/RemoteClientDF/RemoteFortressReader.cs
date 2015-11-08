@@ -245,10 +245,10 @@ namespace RemoteFortressReader
       get { return _room; }
       set { _room = value; }
     }
-    private int _direction = default(int);
+    private RemoteFortressReader.BuildingDirection _direction = RemoteFortressReader.BuildingDirection.NORTH;
     [global::ProtoBuf.ProtoMember(13, IsRequired = false, Name=@"direction", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int direction
+    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.BuildingDirection.NORTH)]
+    public RemoteFortressReader.BuildingDirection direction
     {
       get { return _direction; }
       set { _direction = value; }
@@ -595,6 +595,64 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BodySizeInfo")]
+  public partial class BodySizeInfo : global::ProtoBuf.IExtensible
+  {
+    public BodySizeInfo() {}
+    
+    private int _size_cur = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"size_cur", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int size_cur
+    {
+      get { return _size_cur; }
+      set { _size_cur = value; }
+    }
+    private int _size_base = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"size_base", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int size_base
+    {
+      get { return _size_base; }
+      set { _size_base = value; }
+    }
+    private int _area_cur = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"area_cur", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int area_cur
+    {
+      get { return _area_cur; }
+      set { _area_cur = value; }
+    }
+    private int _area_base = default(int);
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"area_base", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int area_base
+    {
+      get { return _area_base; }
+      set { _area_base = value; }
+    }
+    private int _length_cur = default(int);
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"length_cur", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int length_cur
+    {
+      get { return _length_cur; }
+      set { _length_cur = value; }
+    }
+    private int _length_base = default(int);
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"length_base", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int length_base
+    {
+      get { return _length_base; }
+      set { _length_base = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"UnitDefinition")]
   public partial class UnitDefinition : global::ProtoBuf.IExtensible
   {
@@ -686,6 +744,14 @@ namespace RemoteFortressReader
     {
       get { return _is_soldier; }
       set { _is_soldier = value; }
+    }
+    private RemoteFortressReader.BodySizeInfo _size_info = null;
+    [global::ProtoBuf.ProtoMember(12, IsRequired = false, Name=@"size_info", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.BodySizeInfo size_info
+    {
+      get { return _size_info; }
+      set { _size_info = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
@@ -1717,6 +1783,23 @@ namespace RemoteFortressReader
             
       [global::ProtoBuf.ProtoEnum(Name=@"BOTH_POLES", Value=3)]
       BOTH_POLES = 3
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"BuildingDirection")]
+    public enum BuildingDirection
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"NORTH", Value=0)]
+      NORTH = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"EAST", Value=1)]
+      EAST = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SOUTH", Value=2)]
+      SOUTH = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"WEST", Value=3)]
+      WEST = 3
     }
   
     [global::ProtoBuf.ProtoContract(Name=@"FrontType")]
