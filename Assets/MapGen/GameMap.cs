@@ -744,7 +744,7 @@ public class GameMap : MonoBehaviour
             {
                 UnitFlags1 flags1 = (UnitFlags1)unit.flags1;
                 UnitFlags2 flags2 = (UnitFlags2)unit.flags2;
-                UnitFlags3 flags3 = (UnitFlags3)unit.flags3;
+                //UnitFlags3 flags3 = (UnitFlags3)unit.flags3;
 
                 if (((flags1 & UnitFlags1.dead) == UnitFlags1.dead) ||
                     ((flags1 & UnitFlags1.left) == UnitFlags1.left))
@@ -767,7 +767,9 @@ public class GameMap : MonoBehaviour
 
                     statusText.Append(flags1).AppendLine();
                     statusText.Append(flags2).AppendLine();
-                    statusText.Append(flags3).AppendLine();
+                    //statusText.Append(flags3).AppendLine();
+                    statusText.Append("Length: ").Append(unit.size_info.length_cur).Append("/").Append(Mathf.FloorToInt(Mathf.Pow(creatureRaw.adultsize * 10000, 1.0f / 3.0f))).AppendLine();
+
                 }
                 break;
             }
@@ -824,16 +826,21 @@ public class GameMap : MonoBehaviour
                 if (creatureList[unit.id].gameObject.activeSelf) //Only update stuff if it's actually visible.
                 {
                     Vector3 position = DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z);
+                    creatureList[unit.id].transform.position = position + new Vector3(0, 0.51f, 0);
+                    float scale = unit.size_info.length_cur / 391.0f;
+                    creatureList[unit.id].transform.localScale = new Vector3(scale, scale, scale);
+                    creatureList[unit.id].GetComponentInChildren<Light>().range = scale * 10;
+                    AtlasSprite sprite = creatureList[unit.id].GetComponentInChildren<AtlasSprite>();
                     if ((flags1 & UnitFlags1.on_ground) == UnitFlags1.on_ground)
                     {
-                        creatureList[unit.id].transform.position = position + new Vector3(0, 0.51f, 0);
-                        creatureList[unit.id].GetComponentInChildren<AtlasSprite>().cameraFacing.enabled = false;
-                        creatureList[unit.id].transform.rotation = Quaternion.Euler(90, 0, 0);
+                        sprite.transform.localPosition = Vector3.zero;
+                        sprite.cameraFacing.enabled = false;
+                        sprite.transform.rotation = Quaternion.Euler(90, 0, 0);
                     }
                     else
                     {
-                        creatureList[unit.id].transform.position = position + new Vector3(0, 1.5f, 0);
-                        creatureList[unit.id].GetComponentInChildren<AtlasSprite>().cameraFacing.enabled = true;
+                        sprite.transform.localPosition = new Vector3(0, 1.0f, 0);
+                        sprite.cameraFacing.enabled = true;
                     }
                     if (unit.profession_color != null)
                         creatureList[unit.id].GetComponentInChildren<AtlasSprite>().SetColor(0, new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1));

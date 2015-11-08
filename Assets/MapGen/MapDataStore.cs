@@ -1,8 +1,8 @@
-﻿using UnityEngine;
-using System.Collections;
-using DFHack;
-using System.Collections.Generic;
+﻿using DFHack;
 using RemoteFortressReader;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 [System.Flags]
 public enum Directions
@@ -189,7 +189,7 @@ public class MapDataStore {
 
                     DFCoord worldCoord = new DFCoord(xx,yy, block.map_z);
                     DFCoord localCoord = WorldToLocalSpace(worldCoord);
-                    DFCoord2d buildingLocalCoord = new DFCoord2d(xx - building.pos_x_min, yy - building.pos_y_min);
+                    DFCoord2d buildingLocalCoord = GetRotatedLocalCoord(worldCoord, building);// = new DFCoord2d(xx - building.pos_x_min, yy - building.pos_y_min);
                     if (!InSliceBoundsLocal(localCoord))
                     {
                         Debug.LogError(worldCoord + " is out of bounds for " + MapSize);
@@ -202,6 +202,23 @@ public class MapDataStore {
                     tiles[localCoord.x, localCoord.y, localCoord.z].buildingLocalPos = buildingLocalCoord;
                     tiles[localCoord.x, localCoord.y, localCoord.z].buildingDirection = building.direction;
                 }
+        }
+    }
+
+    private DFCoord2d GetRotatedLocalCoord(DFCoord worldCoord, BuildingInstance building)
+    {
+        switch (building.direction)
+        {
+            case BuildingDirection.NORTH:
+                return new DFCoord2d(worldCoord.x - building.pos_x_min, worldCoord.y - building.pos_y_min);
+            case BuildingDirection.EAST:
+                return new DFCoord2d(worldCoord.y - building.pos_y_min, building.pos_x_max - worldCoord.x);
+            case BuildingDirection.SOUTH:
+                return new DFCoord2d(building.pos_x_max - worldCoord.x, building.pos_y_max - worldCoord.y);
+            case BuildingDirection.WEST:
+                return new DFCoord2d(building.pos_y_max - worldCoord.y, worldCoord.x - building.pos_x_min);
+            default:
+                return new DFCoord2d(worldCoord.x - building.pos_x_min, worldCoord.y - building.pos_y_min);
         }
     }
 
@@ -267,7 +284,7 @@ public class MapDataStore {
                            BuildingStruct? buildingType = null,
                            MatPairStruct? buildingMaterial = null,
                            DFCoord2d? buildingLocalPos = null,
-                           int? buildingDirection = null)
+                           BuildingDirection? buildingDirection = null)
     {
         DFCoord local = WorldToLocalSpace(coord);
         if (!InSliceBoundsLocal(local.x, local.y, local.z)) {
@@ -344,7 +361,7 @@ public class MapDataStore {
         public BuildingStruct buildingType;
         public MatPairStruct buildingMaterial;
         public DFCoord2d buildingLocalPos;
-        public int buildingDirection;
+        public BuildingDirection buildingDirection;
 
         public TiletypeShape shape { get { return tiletypeTokenList [tileType].shape; } }
         public TiletypeMaterial tiletypeMaterial { get { return tiletypeTokenList [tileType].material; } }
@@ -380,7 +397,7 @@ public class MapDataStore {
                            BuildingStruct? buildingType = null,
                            MatPairStruct? buildingMaterial = null,
                            DFCoord2d? buildingLocalPos = null,
-                           int? buildingDirection = null)
+                           BuildingDirection? buildingDirection = null)
         {
             if (tileType != null) {
                 this.tileType = tileType.Value;
