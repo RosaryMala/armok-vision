@@ -52,6 +52,19 @@
       <buildingPosition x="0" y="0"/>
     </subObject>
   </buildingMesh>
+  <buildingMesh file="NONE">
+    <buildingType token="WaterWheel"/>
+    <subObject file="WaterWheel.obj" 
+    rotation="BuildingDirection">
+      <buildingPosition x="0" y="1"/>
+    </subObject>
+  </buildingMesh>
+  <buildingMesh file="AxleHorizontal.obj" rotation="BuildingDirection">
+    <buildingType token="AxleHorizontal"/>
+  </buildingMesh>
+  <buildingMesh file="AxleVertical.obj">
+    <buildingType token="AxleVertical"/>
+  </buildingMesh>
   <buildingMesh file="Well.obj">
     <buildingType token="Well"/>
   </buildingMesh>
