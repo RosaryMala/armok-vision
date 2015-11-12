@@ -281,6 +281,9 @@ public class GameMap : MonoBehaviour
     // Run once per frame.
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.L))
+            scaleUnits = !scaleUnits;
+
         //UpdateView();
         ShowCursorInfo();
         UpdateRequestRegion();
@@ -777,7 +780,9 @@ public class GameMap : MonoBehaviour
     Dictionary<int, Transform> creatureList;
     public Transform creatureTemplate;
 
-    RemoteFortressReader.UnitList unitList = null;
+    UnitList unitList = null;
+
+    public bool scaleUnits = true;
 
     void UpdateCreatures()
     {
@@ -825,7 +830,11 @@ public class GameMap : MonoBehaviour
                 {
                     Vector3 position = DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z);
                     creatureList[unit.id].transform.position = position + new Vector3(0, 0.51f, 0);
-                    float scale = unit.size_info.length_cur / 391.0f;
+                    float scale;
+                    if (scaleUnits)
+                        scale = unit.size_info.length_cur / 391.0f;
+                    else
+                        scale = 1;
                     creatureList[unit.id].transform.localScale = new Vector3(scale, scale, scale);
                     creatureList[unit.id].GetComponentInChildren<Light>().range = scale * 10;
                     AtlasSprite sprite = creatureList[unit.id].GetComponentInChildren<AtlasSprite>();

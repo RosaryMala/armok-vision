@@ -1,8 +1,7 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Util {
+namespace Util
+{
     // Class for storing a queue of elements with unique keys;
     // E.g. map blocks for meshing, where we don't want to
     // mesh the same block twice.
