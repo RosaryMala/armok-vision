@@ -169,7 +169,7 @@ public class MapDataStore {
                     tiles[localCoord.x, localCoord.y, localCoord.z].magmaLevel = block.magma[netIndex];
                     if (tiles[localCoord.x, localCoord.y, localCoord.z].hidden != block.hidden[netIndex])
                     {
-                        tiles[localCoord.x, localCoord.y, localCoord.z].hidden = block.hidden[netIndex];
+                        tiles[localCoord.x, localCoord.y, localCoord.z].hidden = false; //block.hidden[netIndex]; //feature held off untill later.
                         setTiles = true;
                     }
                 }
