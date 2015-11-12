@@ -17,4 +17,13 @@ public class TimeHolder : MonoBehaviour {
         if(useFixedTime)
             displayedTime.DayTicks = (int)(fixedTime * 50);
     }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            useFixedTime = !useFixedTime;
+            fixedTime = realTime.DayTicks / 50.0f;
+        }
+    }
 }
