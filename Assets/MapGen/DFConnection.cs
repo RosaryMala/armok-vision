@@ -83,8 +83,7 @@ public class DFConnection : MonoBehaviour
     // Special sort of queue:
     // It pops elements in random order, but makes sure that
     // we don't bother storing two updates to the same block at once
-    private Util.UniqueQueue<DFCoord, RemoteFortressReader.MapBlock> pendingLandscapeBlocks;
-    private Util.UniqueQueue<DFCoord, RemoteFortressReader.MapBlock> pendingLiquidBlocks;
+    private Util.UniqueQueue<DFCoord, RemoteFortressReader.MapBlock> pendingBlocks;
     // Cached block request
     private RemoteFortressReader.BlockRequest blockRequest;
 
@@ -251,18 +250,11 @@ public class DFConnection : MonoBehaviour
     }
 
     // Pop a map block update; return null if there isn't one.
-    public RemoteFortressReader.MapBlock PopLandscapeMapBlockUpdate()
+    public RemoteFortressReader.MapBlock PopeMapBlockUpdate()
     {
-        lock (pendingLandscapeBlocks)
+        lock (pendingBlocks)
         {
-            return pendingLandscapeBlocks.Dequeue();
-        }
-    }
-    public RemoteFortressReader.MapBlock PopLiquidMapBlockUpdate()
-    {
-        lock (pendingLiquidBlocks)
-        {
-            return pendingLiquidBlocks.Dequeue();
+            return pendingBlocks.Dequeue();
         }
     }
 
@@ -280,8 +272,7 @@ public class DFConnection : MonoBehaviour
     {
         blockRequest = new RemoteFortressReader.BlockRequest();
         blockRequest.blocks_needed = BlocksToFetch;
-        pendingLandscapeBlocks = new Util.UniqueQueue<DFCoord, RemoteFortressReader.MapBlock>();
-        pendingLiquidBlocks = new Util.UniqueQueue<DFCoord, RemoteFortressReader.MapBlock>();
+        pendingBlocks = new Util.UniqueQueue<DFCoord, RemoteFortressReader.MapBlock>();
         networkClient = new DFHack.RemoteClient(dfNetworkOut);
         bool success = networkClient.connect();
         if (!success)
@@ -574,10 +565,7 @@ public class DFConnection : MonoBehaviour
                     connection.blockListCall.execute(connection.blockRequest, out resultList);
                     foreach (RemoteFortressReader.MapBlock block in resultList.map_blocks)
                     {
-                        if (block.tiles.Count > 0)
-                            connection.pendingLandscapeBlocks.EnqueueAndDisplace(new DFCoord(block.map_x, block.map_y, block.map_z), block);
-                        else if (block.water.Count > 0 || block.magma.Count > 0)
-                            connection.pendingLiquidBlocks.EnqueueAndDisplace(new DFCoord(block.map_x, block.map_y, block.map_z), block);
+                        connection.pendingBlocks.EnqueueAndDisplace(new DFCoord(block.map_x, block.map_y, block.map_z), block);
                     }
                 }
                 connection.networkClient.resume_game();
@@ -735,18 +723,11 @@ public class DFConnection : MonoBehaviour
                         }
                         if (resultList != null)
                         {
-                            lock (connection.pendingLandscapeBlocks)
+                            lock (connection.pendingBlocks)
                             {
                                 foreach (RemoteFortressReader.MapBlock block in resultList.map_blocks)
                                 {
-                                    connection.pendingLandscapeBlocks.EnqueueAndDisplace(new DFCoord(block.map_x, block.map_y, block.map_z), block);
-                                }
-                            }
-                            lock (connection.pendingLiquidBlocks)
-                            {
-                                foreach (RemoteFortressReader.MapBlock block in resultList.map_blocks)
-                                {
-                                    connection.pendingLiquidBlocks.EnqueueAndDisplace(new DFCoord(block.map_x, block.map_y, block.map_z), block);
+                                    connection.pendingBlocks.EnqueueAndDisplace(new DFCoord(block.map_x, block.map_y, block.map_z), block);
                                 }
                             }
                         }

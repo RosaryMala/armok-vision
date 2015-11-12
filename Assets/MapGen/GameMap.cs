@@ -351,17 +351,15 @@ public class GameMap : MonoBehaviour
         loadWatch.Start();
         while (true)
         {
-            RemoteFortressReader.MapBlock block = DFConnection.Instance.PopLandscapeMapBlockUpdate();
+            RemoteFortressReader.MapBlock block = DFConnection.Instance.PopeMapBlockUpdate();
             if (block == null) break;
-            MapDataStore.Main.StoreTiles(block);
-            SetDirtyBlock(block.map_x, block.map_y, block.map_z);
-        }
-        while (true)
-        {
-            RemoteFortressReader.MapBlock block = DFConnection.Instance.PopLiquidMapBlockUpdate();
-            if (block == null) break;
-            MapDataStore.Main.StoreTiles(block);
-            SetDirtyLiquidBlock(block.map_x, block.map_y, block.map_z);
+            bool setTiles;
+            bool setLiquids;
+            MapDataStore.Main.StoreTiles(block, out setTiles, out setLiquids);
+            if (setTiles)
+                SetDirtyBlock(block.map_x, block.map_y, block.map_z);
+            if (setLiquids)
+                SetDirtyLiquidBlock(block.map_x, block.map_y, block.map_z);
         }
         loadWatch.Stop();
         genWatch.Reset();

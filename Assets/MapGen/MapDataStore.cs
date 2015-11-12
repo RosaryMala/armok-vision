@@ -135,9 +135,9 @@ public class MapDataStore {
         return CopySlice(block.ToDFCoord(), BLOCK_SIZE);
     }
 
-    public void StoreTiles(RemoteFortressReader.MapBlock block) {
-        bool setTiles = block.tiles.Count > 0;
-        bool setLiquids = block.water.Count > 0 || block.magma.Count > 0;
+    public void StoreTiles(RemoteFortressReader.MapBlock block, out bool setTiles, out bool setLiquids) {
+        setTiles = block.tiles.Count > 0;
+        setLiquids = block.water.Count > 0 || block.magma.Count > 0;
         if (!setTiles && !setLiquids) return;
 
         for (int xx = 0; xx < 16; xx++)
@@ -167,6 +167,11 @@ public class MapDataStore {
                 if (setLiquids) {
                     tiles[localCoord.x, localCoord.y, localCoord.z].waterLevel = block.water[netIndex];
                     tiles[localCoord.x, localCoord.y, localCoord.z].magmaLevel = block.magma[netIndex];
+                    if (tiles[localCoord.x, localCoord.y, localCoord.z].hidden != block.hidden[netIndex])
+                    {
+                        tiles[localCoord.x, localCoord.y, localCoord.z].hidden = block.hidden[netIndex];
+                        setTiles = true;
+                    }
                 }
             }
         foreach (var building in block.buildings)
@@ -248,6 +253,7 @@ public class MapDataStore {
     public int GetLiquidLevel(DFCoord coord, int liquidIndex) {
         var tile = this[coord];
         if (tile == null) return 0;
+        if (tile.hidden) return 0;
         switch (liquidIndex) {
         case WATER_INDEX:
             return tile.waterLevel;
@@ -284,7 +290,8 @@ public class MapDataStore {
                            BuildingStruct? buildingType = null,
                            MatPairStruct? buildingMaterial = null,
                            DFCoord2d? buildingLocalPos = null,
-                           BuildingDirection? buildingDirection = null)
+                           BuildingDirection? buildingDirection = null,
+                           bool? hidden = null)
     {
         DFCoord local = WorldToLocalSpace(coord);
         if (!InSliceBoundsLocal(local.x, local.y, local.z)) {
@@ -292,7 +299,7 @@ public class MapDataStore {
         }
         if (tiles[local.x, local.y, local.z] == null)
             tiles[local.x, local.y, local.z] = new Tile(this, local);
-        tiles[local.x, local.y, local.z].Modify(tileType, material, base_material, layer_material, vein_material, waterLevel, magmaLevel, construction_item, rampType, buildingType, buildingMaterial, buildingLocalPos, buildingDirection);
+        tiles[local.x, local.y, local.z].Modify(tileType, material, base_material, layer_material, vein_material, waterLevel, magmaLevel, construction_item, rampType, buildingType, buildingMaterial, buildingLocalPos, buildingDirection, hidden);
     }
 
     public void Reset() {
@@ -345,6 +352,7 @@ public class MapDataStore {
             buildingType = default(BuildingStruct);
             buildingLocalPos = default(DFCoord2d);
             buildingDirection = 0;
+            hidden = false;
         }
 
         public MapDataStore container;
@@ -362,6 +370,7 @@ public class MapDataStore {
         public MatPairStruct buildingMaterial;
         public DFCoord2d buildingLocalPos;
         public BuildingDirection buildingDirection;
+        public bool hidden;
 
         public TiletypeShape shape { get { return tiletypeTokenList [tileType].shape; } }
         public TiletypeMaterial tiletypeMaterial { get { return tiletypeTokenList [tileType].material; } }
@@ -397,7 +406,8 @@ public class MapDataStore {
                            BuildingStruct? buildingType = null,
                            MatPairStruct? buildingMaterial = null,
                            DFCoord2d? buildingLocalPos = null,
-                           BuildingDirection? buildingDirection = null)
+                           BuildingDirection? buildingDirection = null,
+                           bool? hidden = null)
         {
             if (tileType != null) {
                 this.tileType = tileType.Value;
@@ -440,6 +450,8 @@ public class MapDataStore {
                 this.buildingLocalPos = buildingLocalPos.Value;
             if (buildingDirection != null)
                 this.buildingDirection = buildingDirection.Value;
+            if (hidden != null)
+                this.hidden = hidden.Value;
         }
         public bool isWall {
             get {

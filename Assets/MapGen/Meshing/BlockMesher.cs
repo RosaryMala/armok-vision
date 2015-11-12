@@ -360,6 +360,11 @@ abstract class BlockMesher {
     {
         buffer = new MeshCombineUtility.MeshInstance();
         MeshContent mesh = null;
+        if (tile.hidden)
+        {
+            buffer.meshData = null;
+            return;
+        }
         if (layer == MeshLayer.BuildingMaterial
             || layer == MeshLayer.BuildingMaterialCutout
             || layer == MeshLayer.NoMaterialBuilding
