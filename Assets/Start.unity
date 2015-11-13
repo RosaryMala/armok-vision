@@ -606,6 +606,7 @@ MonoBehaviour:
   cameraViewDist: 20
   meshingThreads: 2
   creatureTemplate: {fileID: 422910, guid: f1c56ebe0ff1ec3439724162aa0556bd, type: 2}
+  scaleUnits: 1
 --- !u!114 &861361730
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1143,7 +1144,6 @@ GameObject:
   - 92: {fileID: 1404020251}
   - 124: {fileID: 1404020250}
   - 81: {fileID: 1404020249}
-  - 114: {fileID: 1404020257}
   - 114: {fileID: 1404020247}
   - 114: {fileID: 1404020245}
   - 114: {fileID: 1404020244}
@@ -1313,31 +1313,6 @@ MonoBehaviour:
   unityCoord: {x: 0, y: 0, z: 0}
   highlightLineMaterial: {fileID: 2100000, guid: 1c9356298dc65654d87468f4b00d9831,
     type: 2}
---- !u!114 &1404020257
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1404020243}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88733af66f90b5d48979e1ee485f80cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  backfaceDepthDownsample: 5
-  ssrDownsample: 0
-  blurDownsample: 0
-  iterations: 10
-  binarySearchIterations: 4
-  pixelStride: 30
-  pixelStrideZCutoff: 100
-  pixelZSizeOffset: .100000001
-  maxRayDistance: 10
-  screenEdgeFadeStart: .75
-  eyeFadeStart: .5
-  eyeFadeEnd: .800000012
-  maxBlurRadius: 8
-  BlurQuality: 4
 --- !u!1 &1415142925
 GameObject:
   m_ObjectHideFlags: 0
