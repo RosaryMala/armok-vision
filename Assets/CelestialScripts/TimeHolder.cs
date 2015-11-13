@@ -25,5 +25,15 @@ public class TimeHolder : MonoBehaviour {
             useFixedTime = !useFixedTime;
             fixedTime = realTime.DayTicks / 50.0f;
         }
+        if (Input.GetKeyDown(KeyCode.RightBracket))
+        {
+            fixedTime = Mathf.Round(fixedTime);
+            fixedTime += 1;
+        }
+        if (Input.GetKeyDown(KeyCode.LeftBracket))
+        {
+            fixedTime = Mathf.Round(fixedTime);
+            fixedTime -= 1;
+        }
     }
 }
