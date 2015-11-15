@@ -217,6 +217,13 @@ public class GameMap : MonoBehaviour
     System.Diagnostics.Stopwatch cullTimer = new System.Diagnostics.Stopwatch();
     System.Diagnostics.Stopwatch lazyLoadTimer = new System.Diagnostics.Stopwatch();
 
+
+    TimeHolder timeHolder;
+
+    void Awake()
+    {
+        timeHolder = FindObjectOfType<TimeHolder>();
+    }
     // Does about what you'd think it does.
     void Start()
     {
@@ -615,6 +622,11 @@ public class GameMap : MonoBehaviour
         {
             Destroy(item);
         }
+        foreach (var item in creatureList)
+        {
+            Destroy(item.Value.gameObject);
+        }
+        creatureList.Clear();
         if (MapDataStore.Main != null)
             MapDataStore.Main.Reset();
     }
@@ -624,158 +636,164 @@ public class GameMap : MonoBehaviour
         if (MapDataStore.Main == null)
             return; //No 
 
+
         StringBuilder statusText = new StringBuilder();
 
-        statusText.Append("Cursor: ");
-        statusText.Append(cursX).Append(",");
-        statusText.Append(cursY).Append(",");
-        statusText.Append(cursZ).Append("\n");
-        var tile = MapDataStore.Main[cursX, cursY, cursZ];
-        if (tile != null)
+        statusText.Append(timeHolder.realTime.ToString()).AppendLine(); ;
+
+        if (cursX >= 0 && cursY >= 0 && cursZ >= 0)
         {
-            statusText.Append("Tiletype:\n");
-            var tiletype = DFConnection.Instance.NetTiletypeList.tiletype_list
-                [tile.tileType];
-            statusText.Append(tiletype.name).Append("\n");
-            statusText.Append(
-                tiletype.shape).Append(":").Append(
-                tiletype.special).Append(":").Append(
-                tiletype.material).Append(":").Append(
-                tiletype.variant).Append(":").Append(
-                tiletype.direction).Append("\n");
-
-            statusText.Append(tile.WallBuildingSides).Append("\n");
-
-            var mat = tile.material;
-            statusText.Append("Material: ");
-            statusText.Append(mat.mat_type).Append(",");
-            statusText.Append(mat.mat_index).Append("\n");
-
-            if (materials.ContainsKey(mat))
+            statusText.Append("Cursor: ");
+            statusText.Append(cursX).Append(",");
+            statusText.Append(cursY).Append(",");
+            statusText.Append(cursZ).Append("\n");
+            var tile = MapDataStore.Main[cursX, cursY, cursZ];
+            if (tile != null)
             {
-                statusText.Append("Material Name: ");
-                statusText.Append(materials[mat].id).Append("\n");
-            }
-            else
-                statusText.Append("Unknown Material\n");
+                statusText.Append("Tiletype:\n");
+                var tiletype = DFConnection.Instance.NetTiletypeList.tiletype_list
+                    [tile.tileType];
+                statusText.Append(tiletype.name).Append("\n");
+                statusText.Append(
+                    tiletype.shape).Append(":").Append(
+                    tiletype.special).Append(":").Append(
+                    tiletype.material).Append(":").Append(
+                    tiletype.variant).Append(":").Append(
+                    tiletype.direction).Append("\n");
 
-            statusText.Append("\n");
+                statusText.Append(tile.WallBuildingSides).Append("\n");
 
-            var basemat = tile.base_material;
-            statusText.Append("Base Material: ");
-            statusText.Append(basemat.mat_type).Append(",");
-            statusText.Append(basemat.mat_index).Append("\n");
+                var mat = tile.material;
+                statusText.Append("Material: ");
+                statusText.Append(mat.mat_type).Append(",");
+                statusText.Append(mat.mat_index).Append("\n");
 
-            if (materials.ContainsKey(basemat))
-            {
-                statusText.Append("Base Material Name: ");
-                statusText.Append(materials[basemat].id).Append("\n");
-            }
-            else
-                statusText.Append("Unknown Base Material\n");
-
-            statusText.Append("\n");
-
-            var layermat = tile.layer_material;
-            statusText.Append("Layer Material: ");
-            statusText.Append(layermat.mat_type).Append(",");
-            statusText.Append(layermat.mat_index).Append("\n");
-
-            if (materials.ContainsKey(layermat))
-            {
-                statusText.Append("Layer Material Name: ");
-                statusText.Append(materials[layermat].id).Append("\n");
-            }
-            else
-                statusText.Append("Unknown Layer Material\n");
-
-            statusText.Append("\n");
-
-            var veinmat = tile.vein_material;
-            statusText.Append("Vein Material: ");
-            statusText.Append(veinmat.mat_type).Append(",");
-            statusText.Append(veinmat.mat_index).Append("\n");
-
-            if (materials.ContainsKey(veinmat))
-            {
-                statusText.Append("Vein Material Name: ");
-                statusText.Append(materials[veinmat].id).Append("\n");
-            }
-            else
-                statusText.Append("Unknown Vein Material\n");
-
-            statusText.Append("\n");
-
-            var cons = tile.construction_item;
-            statusText.Append("Construction Item: ");
-            statusText.Append(cons.mat_type).Append(",");
-            statusText.Append(cons.mat_index).Append("\n");
-
-            if (items.ContainsKey(cons))
-            {
-                statusText.Append("Construction Item Name: ");
-                statusText.Append(items[cons].id).Append("\n");
-            }
-            else
-                statusText.Append("Unknown Construction Item\n");
-
-            statusText.Append("\n");
-
-            if (tile.buildingType != default(BuildingStruct))
-            {
-                if (buildings.ContainsKey(tile.buildingType))
-                    statusText.Append("Building: ");
-                statusText.Append(buildings[tile.buildingType].id).Append("\n");
-
-                if (materials.ContainsKey(tile.buildingMaterial))
+                if (materials.ContainsKey(mat))
                 {
-                    statusText.Append("Building Material: ");
-                    statusText.Append(materials[tile.buildingMaterial].id).Append("\n");
+                    statusText.Append("Material Name: ");
+                    statusText.Append(materials[mat].id).Append("\n");
                 }
                 else
-                    statusText.Append("Unknown Building Material\n");
+                    statusText.Append("Unknown Material\n");
 
-                statusText.Append("Building Coord: ");
-                statusText.Append(tile.buildingLocalPos).Append("\n");
-                statusText.Append("Building Direction: ").Append(tile.buildingDirection).Append("\n");
+                statusText.Append("\n");
 
-            }
-        }
+                var basemat = tile.base_material;
+                statusText.Append("Base Material: ");
+                statusText.Append(basemat.mat_type).Append(",");
+                statusText.Append(basemat.mat_index).Append("\n");
 
-        if (unitList != null)
-            foreach (UnitDefinition unit in unitList.creature_list)
-            {
-                UnitFlags1 flags1 = (UnitFlags1)unit.flags1;
-                UnitFlags2 flags2 = (UnitFlags2)unit.flags2;
-                //UnitFlags3 flags3 = (UnitFlags3)unit.flags3;
-
-                if (((flags1 & UnitFlags1.dead) == UnitFlags1.dead) ||
-                    ((flags1 & UnitFlags1.left) == UnitFlags1.left))
-                    continue;
-                if (unit.pos_x != cursX || unit.pos_y != cursY || unit.pos_z != cursZ)
-                    continue;
-
-                CreatureRaw creatureRaw = null;
-                if (DFConnection.Instance.NetCreatureRawList != null)
-                    creatureRaw = DFConnection.Instance.NetCreatureRawList.creature_raws[unit.race.mat_type];
-
-                if (creatureRaw != null)
+                if (materials.ContainsKey(basemat))
                 {
-                    statusText.Append("Unit:   \n");
+                    statusText.Append("Base Material Name: ");
+                    statusText.Append(materials[basemat].id).Append("\n");
+                }
+                else
+                    statusText.Append("Unknown Base Material\n");
 
-                    statusText.Append("Race: ");
-                    statusText.Append(creatureRaw.creature_id + ":");
-                    statusText.Append(creatureRaw.caste[unit.race.mat_index].caste_id);
-                    statusText.Append("\n");
+                statusText.Append("\n");
 
-                    statusText.Append(flags1).AppendLine();
-                    statusText.Append(flags2).AppendLine();
-                    //statusText.Append(flags3).AppendLine();
-                    statusText.Append("Length: ").Append(unit.size_info.length_cur).Append("/").Append(Mathf.FloorToInt(Mathf.Pow(creatureRaw.adultsize * 10000, 1.0f / 3.0f))).AppendLine();
+                var layermat = tile.layer_material;
+                statusText.Append("Layer Material: ");
+                statusText.Append(layermat.mat_type).Append(",");
+                statusText.Append(layermat.mat_index).Append("\n");
+
+                if (materials.ContainsKey(layermat))
+                {
+                    statusText.Append("Layer Material Name: ");
+                    statusText.Append(materials[layermat].id).Append("\n");
+                }
+                else
+                    statusText.Append("Unknown Layer Material\n");
+
+                statusText.Append("\n");
+
+                var veinmat = tile.vein_material;
+                statusText.Append("Vein Material: ");
+                statusText.Append(veinmat.mat_type).Append(",");
+                statusText.Append(veinmat.mat_index).Append("\n");
+
+                if (materials.ContainsKey(veinmat))
+                {
+                    statusText.Append("Vein Material Name: ");
+                    statusText.Append(materials[veinmat].id).Append("\n");
+                }
+                else
+                    statusText.Append("Unknown Vein Material\n");
+
+                statusText.Append("\n");
+
+                var cons = tile.construction_item;
+                statusText.Append("Construction Item: ");
+                statusText.Append(cons.mat_type).Append(",");
+                statusText.Append(cons.mat_index).Append("\n");
+
+                if (items.ContainsKey(cons))
+                {
+                    statusText.Append("Construction Item Name: ");
+                    statusText.Append(items[cons].id).Append("\n");
+                }
+                else
+                    statusText.Append("Unknown Construction Item\n");
+
+                statusText.Append("\n");
+
+                if (tile.buildingType != default(BuildingStruct))
+                {
+                    if (buildings.ContainsKey(tile.buildingType))
+                        statusText.Append("Building: ");
+                    statusText.Append(buildings[tile.buildingType].id).Append("\n");
+
+                    if (materials.ContainsKey(tile.buildingMaterial))
+                    {
+                        statusText.Append("Building Material: ");
+                        statusText.Append(materials[tile.buildingMaterial].id).Append("\n");
+                    }
+                    else
+                        statusText.Append("Unknown Building Material\n");
+
+                    statusText.Append("Building Coord: ");
+                    statusText.Append(tile.buildingLocalPos).Append("\n");
+                    statusText.Append("Building Direction: ").Append(tile.buildingDirection).Append("\n");
 
                 }
-                break;
             }
+
+            if (unitList != null)
+                foreach (UnitDefinition unit in unitList.creature_list)
+                {
+                    UnitFlags1 flags1 = (UnitFlags1)unit.flags1;
+                    UnitFlags2 flags2 = (UnitFlags2)unit.flags2;
+                    //UnitFlags3 flags3 = (UnitFlags3)unit.flags3;
+
+                    if (((flags1 & UnitFlags1.dead) == UnitFlags1.dead) ||
+                        ((flags1 & UnitFlags1.left) == UnitFlags1.left))
+                        continue;
+                    if (unit.pos_x != cursX || unit.pos_y != cursY || unit.pos_z != cursZ)
+                        continue;
+
+                    CreatureRaw creatureRaw = null;
+                    if (DFConnection.Instance.NetCreatureRawList != null)
+                        creatureRaw = DFConnection.Instance.NetCreatureRawList.creature_raws[unit.race.mat_type];
+
+                    if (creatureRaw != null)
+                    {
+                        statusText.Append("Unit:   \n");
+
+                        statusText.Append("Race: ");
+                        statusText.Append(creatureRaw.creature_id + ":");
+                        statusText.Append(creatureRaw.caste[unit.race.mat_index].caste_id);
+                        statusText.Append("\n");
+
+                        statusText.Append(flags1).AppendLine();
+                        statusText.Append(flags2).AppendLine();
+                        //statusText.Append(flags3).AppendLine();
+                        statusText.Append("Length: ").Append(unit.size_info.length_cur).Append("/").Append(Mathf.FloorToInt(Mathf.Pow(creatureRaw.adultsize * 10000, 1.0f / 3.0f))).AppendLine();
+
+                    }
+                    break;
+                }
+        }
         cursorProperties.text = statusText.ToString();
     }
 

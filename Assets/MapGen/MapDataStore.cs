@@ -151,9 +151,10 @@ public class MapDataStore {
                     return;
                 }
                 int netIndex = xx + (yy * 16);
-                if(tiles[localCoord.x, localCoord.y, localCoord.z] == null)
+                if (tiles[localCoord.x, localCoord.y, localCoord.z] == null)
                     tiles[localCoord.x, localCoord.y, localCoord.z] = new Tile(this, localCoord);
-                if (setTiles) {
+                if (block.tiles.Count > 0)
+                {
                     tiles[localCoord.x, localCoord.y, localCoord.z].tileType = block.tiles[netIndex];
                     tiles[localCoord.x, localCoord.y, localCoord.z].material = block.materials[netIndex];
                     tiles[localCoord.x, localCoord.y, localCoord.z].base_material = block.base_materials[netIndex];
@@ -164,13 +165,14 @@ public class MapDataStore {
                     else
                         tiles[localCoord.x, localCoord.y, localCoord.z].construction_item = new MatPairStruct(-1, -1);
                 }
-                if (setLiquids) {
+                if (setLiquids)
+                {
                     tiles[localCoord.x, localCoord.y, localCoord.z].waterLevel = block.water[netIndex];
                     tiles[localCoord.x, localCoord.y, localCoord.z].magmaLevel = block.magma[netIndex];
                     if (tiles[localCoord.x, localCoord.y, localCoord.z].hidden != block.hidden[netIndex])
                     {
-                        tiles[localCoord.x, localCoord.y, localCoord.z].hidden = false; //block.hidden[netIndex]; //feature held off untill later.
-                        setTiles = true;
+                        tiles[localCoord.x, localCoord.y, localCoord.z].hidden = false;// = block.hidden[netIndex]; //feature held off untill later.
+                        //setTiles = true;
                     }
                 }
             }

@@ -1720,14 +1720,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f51a37200dda70498a148764a15af7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fixedTime: 10
+  fixedTime: 11
   useFixedTime: 0
   realTime:
-    year: 0
-    currentYearTicks: 0
+    _ticks: 0
   displayedTime:
-    year: 0
-    currentYearTicks: 0
+    _ticks: 0
 --- !u!4 &1696498551
 Transform:
   m_ObjectHideFlags: 0

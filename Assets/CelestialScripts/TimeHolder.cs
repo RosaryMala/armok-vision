@@ -3,7 +3,7 @@ using System.Collections;
 
 public class TimeHolder : MonoBehaviour {
 
-    public float fixedTime = 11.0f;
+    public int fixedTime = 11;
     public bool useFixedTime = true;
 
     public DFTime realTime;
@@ -11,11 +11,10 @@ public class TimeHolder : MonoBehaviour {
 
     void FixedUpdate()
     {
-        displayedTime.Year = realTime.Year;
-        displayedTime.CurrentYearTicks = realTime.CurrentYearTicks;
+        displayedTime = realTime;
 
-        if(useFixedTime)
-            displayedTime.DayTicks = (int)(fixedTime * 50);
+        if (useFixedTime)
+            displayedTime.SetHour(fixedTime);
     }
 
     void Update()
@@ -23,17 +22,17 @@ public class TimeHolder : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.P))
         {
             useFixedTime = !useFixedTime;
-            fixedTime = realTime.DayTicks / 50.0f;
+            fixedTime = realTime.Hour;
         }
         if (Input.GetKeyDown(KeyCode.RightBracket))
         {
-            fixedTime = Mathf.Round(fixedTime);
             fixedTime += 1;
+            useFixedTime = true;
         }
         if (Input.GetKeyDown(KeyCode.LeftBracket))
         {
-            fixedTime = Mathf.Round(fixedTime);
             fixedTime -= 1;
+            useFixedTime = true;
         }
     }
 }
