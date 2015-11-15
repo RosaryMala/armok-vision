@@ -43,7 +43,10 @@ public class TimeHolder : MonoBehaviour {
     {
         if (useFixedTime == true)
             return; //Nothingto do.
-        fixedHour = realTime.Hour;
+        if (realTime.Minute > 30)
+            fixedHour = realTime.Hour + 1;
+        else
+            fixedHour = realTime.Hour;
         useFixedTime = true;
     }
 }
