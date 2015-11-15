@@ -1,15 +1,34 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System;
 
 [System.Serializable]
-public class DFTime
+public struct DFTime : IComparable, IFormattable,
+    IComparable<DFTime>, IEquatable<DFTime>
 {
-    public const int ticksPerYear = 403200;
-    public const int ticksPerDay = 1200;
-    public const int daysPerMonth = 28;
-    public const int ticksPerMonth = ticksPerDay * daysPerMonth;
-    public const int ticksPerHour = ticksPerDay / 24;
-    public const float ticksPerMinute = ticksPerHour / 60.0f;
+    // Number of 100ns ticks per time unit 
+    private const long TicksPerMillisecond = 10000;
+    private const long TicksPerSecond = TicksPerMillisecond * 1000;
+    private const long TicksPerMinute = TicksPerSecond * 60;
+    private const long TicksPerHour = TicksPerMinute * 60;
+    private const long TicksPerDay = TicksPerHour * 24;
+    private const long TicksPerMonth = TicksPerDay * 28;
+    private const long TicksPerYear = TicksPerMonth * 12;
+
+    private const long TicksPerDfTick = TicksPerDay / 1200;
+
+    // Number of milliseconds per time unit 
+    private const int MillisPerSecond = 1000;
+    private const int MillisPerMinute = MillisPerSecond * 60;
+    private const int MillisPerHour = MillisPerMinute * 60;
+    private const int MillisPerDay = MillisPerHour * 24;
+
+    // Number of days in a non-leap year 
+    private const int DaysPerYear = 336;
+    private const int DaysPerMonth = 28;
+
+    internal const long MinTicks = 0;
+    internal const long MaxTicks = long.MaxValue;
+
 
     public enum MonthName
     {
@@ -28,47 +47,45 @@ public class DFTime
     }
 
     [SerializeField]
-    int year;
-    [SerializeField]
-    int currentYearTicks;
+    private long _ticks;
+
+    public DFTime(long ticks)
+    {
+        this._ticks = ticks;
+    }
+
+    /// <summary>
+    /// Constructs a DF-compatible time object from a given year and df-length ticks.
+    /// </summary>
+    /// <param name="year"></param>
+    /// <param name="cur_year_ticks"></param>
+    public DFTime(int year, int cur_year_ticks)
+    {
+        _ticks = year * TicksPerYear + cur_year_ticks * TicksPerDfTick;
+    }
+
+    public DFTime(int year, int month, int day, int hour, int minute, int second = 0, int millisecond = 0)
+    {
+
+        _ticks = year * TicksPerYear + (month - 1) * TicksPerMonth + (day - 1) * TicksPerDay + hour * TicksPerHour + minute * TicksPerMinute + second * TicksPerSecond + millisecond * TicksPerMillisecond;
+    }
+
+    public long Ticks
+    {
+        get { return _ticks; }
+    }
     
     public int CurrentYearTicks
     {
         get
         {
-            return currentYearTicks;
-        }
-        set
-        {
-            if(value >= 0)
-            {
-                year += value / ticksPerYear;
-                currentYearTicks = value % ticksPerYear;
-            }
-            else
-            {
-                year += (value / ticksPerYear) - 1;
-                currentYearTicks = (value % ticksPerYear) + ticksPerYear;
-            }
+            return (int)((_ticks % TicksPerYear) / TicksPerDfTick);
         }
     }
 
     public int Year
     {
-        get { return year; }
-        set { year = value; }
-    }
-
-    public int DayTicks
-    {
-        get
-        {
-            return currentYearTicks % ticksPerDay;
-        }
-        set
-        {
-            CurrentYearTicks = CurrentYearTicks - (CurrentYearTicks % ticksPerDay) + value;
-        }
+        get { return (int)(_ticks / TicksPerYear); }
     }
 
     public MonthName MonthEnum
@@ -77,53 +94,39 @@ public class DFTime
         {
             return (MonthName)(Month-1);
         }
-        set
-        {
-            Month = ((int)value) + 1;
-        }
     }
 
     public int Month
     {
         get
         {
-            return (CurrentYearTicks / ticksPerMonth) + 1;
-        }
-        set
-        {
-            int currentMonthTicks = CurrentYearTicks % ticksPerMonth;
-            CurrentYearTicks = ((value - 1) * ticksPerMonth) + currentMonthTicks;
+            return (int)((Ticks / TicksPerMonth) % 12) + 1;
         }
     }
 
     public int Day
     {
-        get
-        {
-            return ((CurrentYearTicks / ticksPerDay) - (Month - 1) * daysPerMonth) + 1;
-        }
-        set
-        {
-            int currentMonth = CurrentYearTicks / ticksPerMonth;
-            int currentDayTicks = CurrentYearTicks % ticksPerDay;
-            CurrentYearTicks = (currentMonth * ticksPerMonth) + ((value - 1) * ticksPerDay) + currentDayTicks;
-        }
+        get { return (int)((_ticks / TicksPerDay) % 28) + 1; }
     }
 
     public int Hour
     {
-        get
-        {
-            return DayTicks / ticksPerHour;
-        }
+        get { return (int)((_ticks / TicksPerHour) % 24); }
+    }
+
+    public int Millisecond
+    {
+        get { return (int)((_ticks / TicksPerMillisecond) % 1000); }
     }
 
     public int Minute
     {
-        get
-        {
-            return (int)((DayTicks % ticksPerHour) / ticksPerMinute);
-        }
+        get { return (int)((_ticks / TicksPerMinute) % 60); }
+    }
+
+    public int Second
+    {
+        get { return (int)((_ticks / TicksPerSecond) % 60); }
     }
 
     public string DateString
@@ -134,11 +137,19 @@ public class DFTime
         }
     }
 
+    public double DayFraction
+    {
+        get
+        {
+            return (Ticks % TicksPerDay) / (double)TicksPerDay;
+        }
+    }
+
     public float SunAngle
     {
         get
         {
-            return 270-(((float)DayTicks / (float)ticksPerDay) * 360);
+            return 270-(((float)DayFraction) * 360);
         }
     }
 
@@ -157,8 +168,124 @@ public class DFTime
         }
     }
 
+    public DFTime SetHour(int hour)
+    {
+        return new DFTime(Year, Month, Day, hour, Minute, Second, Millisecond);
+    }
+
+
     public override string ToString()
     {
         return DateString + ", " + TimeString;
+    }
+
+    public int CompareTo(object obj)
+    {
+        return _ticks.CompareTo(obj);
+    }
+
+    public int CompareTo(DFTime other)
+    {
+        return _ticks.CompareTo(other.Ticks);
+    }
+
+    public bool Equals(DFTime other)
+    {
+        return _ticks.Equals(other.Ticks);
+    }
+
+    public string ToString(string format, IFormatProvider formatProvider)
+    {
+        return ((DateTime)this).ToString(format, formatProvider);
+    }
+
+    // Checks if this DFTime is equal to a given object. Returns
+    // true if the given object is a boxed DFTime and its value 
+    // is equal to the value of this DFTime. Returns false
+    // otherwise. 
+    // 
+    public override bool Equals(object value)
+    {
+        if (value is DFTime)
+        {
+            return Ticks == ((DFTime)value).Ticks;
+        }
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return _ticks.GetHashCode();
+    }
+
+    // Compares two DFTime values for equality. Returns true if
+    // the two DFTime values are equal, or false if they are
+    // not equal.
+    // 
+    public static bool Equals(DFTime t1, DFTime t2)
+    {
+        return t1.Ticks == t2.Ticks;
+    }
+
+    public static explicit operator DateTime(DFTime dfTime)
+    {
+        return new DateTime(dfTime.Year, dfTime.Month, dfTime.Day, dfTime.Hour, dfTime.Minute, dfTime.Second, dfTime.Millisecond);
+    }
+
+    public static DFTime operator +(DFTime d, TimeSpan t)
+    {
+        long ticks = d.Ticks;
+        long valueTicks = t.Ticks;
+        if (valueTicks > MaxTicks - ticks || valueTicks < MinTicks - ticks)
+        {
+            throw new ArgumentOutOfRangeException();
+        }
+        return new DFTime((Int64)(ticks + valueTicks));
+    }
+
+    public static DFTime operator -(DFTime d, TimeSpan t)
+    {
+        long ticks = d.Ticks;
+        long valueTicks = t.Ticks;
+        if (ticks - MinTicks < valueTicks || ticks - MaxTicks > valueTicks)
+        {
+            throw new ArgumentOutOfRangeException();
+        }
+        return new DFTime((Int64)(ticks - valueTicks));
+    }
+
+    public static TimeSpan operator -(DFTime d1, DFTime d2)
+    {
+        return new TimeSpan(d1.Ticks - d2.Ticks);
+    }
+
+    public static bool operator ==(DFTime d1, DFTime d2)
+    {
+        return d1.Ticks == d2.Ticks;
+    }
+
+    public static bool operator !=(DFTime d1, DFTime d2)
+    {
+        return d1.Ticks != d2.Ticks;
+    }
+
+    public static bool operator <(DFTime t1, DFTime t2)
+    {
+        return t1.Ticks < t2.Ticks;
+    }
+
+    public static bool operator <=(DFTime t1, DFTime t2)
+    {
+        return t1.Ticks <= t2.Ticks;
+    }
+
+    public static bool operator >(DFTime t1, DFTime t2)
+    {
+        return t1.Ticks > t2.Ticks;
+    }
+
+    public static bool operator >=(DFTime t1, DFTime t2)
+    {
+        return t1.Ticks >= t2.Ticks;
     }
 }
