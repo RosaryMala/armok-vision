@@ -168,12 +168,6 @@ public struct DFTime : IComparable, IFormattable,
         }
     }
 
-    public DFTime SetHour(int hour)
-    {
-        return new DFTime(Year, Month, Day, hour, Minute, Second, Millisecond);
-    }
-
-
     public override string ToString()
     {
         return DateString + ", " + TimeString;
