@@ -83,8 +83,7 @@ public class WorldMapMaker : MonoBehaviour
             Debug.Log("Didn't get world map!");
             return;
         }
-        timeHolder.realTime.Year = remoteMap.cur_year;
-        timeHolder.realTime.CurrentYearTicks = remoteMap.cur_year_tick;
+        timeHolder.realTime = new DFTime(remoteMap.cur_year, remoteMap.cur_year_tick);
         width = remoteMap.world_width;
         height = remoteMap.world_height;
         if(width * height > 65535)
@@ -131,6 +130,8 @@ public class WorldMapMaker : MonoBehaviour
         //Debug.Log("Loaded World: " + worldNameEnglish);
     }
 
+    DFTime lastUpdateTime;
+
     void CopyClouds(WorldMap remoteMap)
     {
         if (remoteMap == null)
@@ -138,8 +139,10 @@ public class WorldMapMaker : MonoBehaviour
             Debug.Log("Didn't get world map!");
             return;
         }
-        timeHolder.realTime.Year = remoteMap.cur_year;
-        timeHolder.realTime.CurrentYearTicks = remoteMap.cur_year_tick;
+        timeHolder.realTime = new DFTime(remoteMap.cur_year, remoteMap.cur_year_tick);
+        if (timeHolder.realTime - lastUpdateTime < new System.TimeSpan(1, 0, 0))
+            return;
+        lastUpdateTime = timeHolder.realTime;
         for (int x = 0; x < width; x++)
             for (int y = 0; y < height; y++)
             {
