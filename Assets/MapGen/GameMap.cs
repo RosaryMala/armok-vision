@@ -766,8 +766,11 @@ public class GameMap : MonoBehaviour
                     UnitFlags2 flags2 = (UnitFlags2)unit.flags2;
                     //UnitFlags3 flags3 = (UnitFlags3)unit.flags3;
 
-                    if (((flags1 & UnitFlags1.dead) == UnitFlags1.dead) ||
-                        ((flags1 & UnitFlags1.left) == UnitFlags1.left))
+                    if (((flags1 & UnitFlags1.dead) == UnitFlags1.dead)
+                         || ((flags1 & UnitFlags1.left) == UnitFlags1.left)
+                         || ((flags1 & UnitFlags1.caged) == UnitFlags1.caged)
+                         || ((flags1 & UnitFlags1.forest) == UnitFlags1.forest)
+                         )
                         continue;
                     if (unit.pos_x != cursX || unit.pos_y != cursY || unit.pos_z != cursZ)
                         continue;
@@ -815,8 +818,11 @@ public class GameMap : MonoBehaviour
             UnitFlags1 flags1 = (UnitFlags1)unit.flags1;
             //UnitFlags2 flags2 = (UnitFlags2)unit.flags2;
             //UnitFlags3 flags3 = (UnitFlags3)unit.flags3;
-            if (((flags1 & UnitFlags1.dead) == UnitFlags1.dead) ||
-                ((flags1 & UnitFlags1.left) == UnitFlags1.left))
+            if (((flags1 & UnitFlags1.dead) == UnitFlags1.dead)
+                 || ((flags1 & UnitFlags1.left) == UnitFlags1.left)
+                 || ((flags1 & UnitFlags1.caged) == UnitFlags1.caged)
+                 || ((flags1 & UnitFlags1.forest) == UnitFlags1.forest)
+                 )
             {
                 if (creatureList.ContainsKey(unit.id))
                 {
