@@ -1,54 +1,115 @@
-﻿using RemoteFortressReader;
-using System.Collections.Generic;
+﻿using System.Linq;
 using System.Xml.Linq;
+using UnityEngine;
 
-public class TileConfiguration<T> : ContentConfiguration<T> where T : IContent, new()
+abstract public class TileConfiguration<T> where T : IContent, new()
 {
-    TiletypeMatcher<Content> tiletypeMatcher = new TiletypeMatcher<Content>();
-    Content defaultTile = null;
-    Content invalidContent = new Content();
-
-    protected override void ParseElementConditions(XElement elemtype, Content content)
+    protected class Content
     {
-        var elemTiletypes = elemtype.Elements("tiletype");
-        foreach (XElement elemTiletype in elemTiletypes)
+        public T defaultItem { get; set; }
+        public TileConfiguration<T> overloadedItem { get; set; }
+        public T GetValue(MapDataStore.Tile tile, MeshLayer layer)
         {
-            XAttribute elemToken = elemTiletype.Attribute("token");
-            if (elemToken != null)
+            if (overloadedItem == null)
+                return defaultItem;
+            else
             {
-                if (elemToken.Value == "NONE")
-                    defaultTile = content;
+                T item;
+                if (overloadedItem.GetValue(tile, layer, out item))
+                {
+                    return item;
+                }
                 else
-                    tiletypeMatcher[elemToken.Value] = content;
-                continue;
+                    return defaultItem;
             }
         }
     }
+    abstract public bool GetValue(MapDataStore.Tile tile, MeshLayer layer, out T value);
 
-    public override bool GetValue(MapDataStore.Tile tile, MeshLayer layer, out T value)
+    abstract protected void ParseElementConditions(XElement elemtype, Content content);
+
+    string nodeName { get; set; }
+
+    void ParseContentElement(XElement elemtype, object externalStorage, object secondaryDictionary)
     {
-        Content cont;
-        switch (layer)
+        T value = new T();
+        value.ExternalStorage = externalStorage;
+        if (!value.AddTypeElement(elemtype))
         {
-            case MeshLayer.BuildingMaterial:
-            case MeshLayer.NoMaterialBuilding:
-            case MeshLayer.BuildingMaterialCutout:
-            case MeshLayer.NoMaterialBuildingCutout:
-                if (defaultTile != null)
+            Debug.LogError("Couldn't parse " + elemtype);
+            //There was an error parsing the type
+            //There's nothing to work with.
+            return;
+        }
+        value.ExternalStorage = externalStorage;
+        Content content = new Content();
+        content.defaultItem = value;
+        ParseElementConditions(elemtype, content);
+        if (elemtype.Element("subObject") != null)
+        {
+            content.overloadedItem = GetFromRootElement(elemtype, "subObject");
+            content.overloadedItem.AddSingleContentConfig(elemtype, externalStorage, secondaryDictionary);
+        }
+    }
+
+    public bool AddSingleContentConfig(XElement elemRoot, object externalStorage = null, object secondaryDictionary = null)
+    {
+        SecondaryDictionary = secondaryDictionary;
+        var elemValues = elemRoot.Elements(nodeName);
+        foreach (XElement elemValue in elemValues)
+        {
+            ParseContentElement(elemValue, externalStorage, secondaryDictionary);
+        }
+        return true;
+    }
+
+    public static TileConfiguration<T> GetFromRootElement(XElement elemRoot, XName name)
+    {
+        TileConfiguration<T> output;
+        if (elemRoot.Element(name).Elements().Count() == 0)
+        {
+            output = new TileMaterialConfiguration<T>();
+            output.nodeName = name.LocalName;
+            return output;
+        }
+        switch (elemRoot.Element(name).Elements().First().Name.LocalName)
+        {
+            case "material":
+                output = new TileMaterialConfiguration<T>();
+                break;
+            case "tiletype":
+                output = new TileTypeConfiguration<T>();
+                break;
+            case "random":
+                output = new RandomConfiguration<T>();
+                break;
+            case "ramp":
+                output = new RampConfiguration<T>();
+                break;
+            case "item":
+                if (ItemTokenList.IsValid)
+                    output = new ItemConfiguration<T>();
+                else
                 {
-                    value = defaultTile.GetValue(tile, layer);
-                    return true;
+                    Debug.LogError("Item Types not available in this version of Remotefortressreader. Please upgrade.");
+                    output = new TileMaterialConfiguration<T>();
                 }
+                break;
+            case "buildingType":
+                output = new BuildingConfiguration<T>();
+                break;
+            case "buildingPosition":
+                output = new BuildingPosConfiguration<T>();
                 break;
             default:
-                if (tiletypeMatcher.Get(tile.tileType, out cont))
-                {
-                    value = cont.GetValue(tile, layer);
-                    return true;
-                }
+                Debug.LogError("Found unknown matching method \"" + elemRoot.Element(name).Elements().First().Name.LocalName + "\", assuming material.");
+                output = new TileMaterialConfiguration<T>();
                 break;
         }
-        value = invalidContent.GetValue(tile, layer);
-        return false;
+        output.nodeName = name.LocalName;
+        return output;
     }
+
+    abstract public object SecondaryDictionary { set; }
 }
+

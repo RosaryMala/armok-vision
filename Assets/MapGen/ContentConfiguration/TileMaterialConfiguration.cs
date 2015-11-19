@@ -1,50 +1,64 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 
-public class MaterialConfiguration<T> : ContentConfiguration<T> where T : IContent, new()
+public class TileMaterialConfiguration<T> : TileConfiguration<T> where T : IContent, new()
 {
+    MaterialMatcher<T> thisMaterialMatcher;
     MaterialMatcher<Content> materialMatcher = new MaterialMatcher<Content>();
     Content defaultMaterial;
-    public override bool GetValue(MapDataStore.Tile tile, MeshLayer layer, out T value)
+
+    public override object SecondaryDictionary
+    {
+        set
+        {
+            thisMaterialMatcher = value as MaterialMatcher<T>;
+        }
+    }
+
+    bool GetMaterialRef(MatPairStruct material, MapDataStore.Tile tile, MeshLayer layer, out T value)
     {
         Content cont;
+        if (materialMatcher.Get(material, out cont))
+        {
+            if(thisMaterialMatcher == null)
+            {
+                value = cont.GetValue(tile, layer);
+                return true;
+            }
+            else if (cont.overloadedItem != null)
+            {
+                if (cont.overloadedItem.GetValue(tile, layer, out value))
+                    return true;
+            }
+        }
+        else if (thisMaterialMatcher != null && thisMaterialMatcher.Get(material, out value))
+        {
+            return true;
+        }
+        value = default(T);
+        return false;
+    }
+
+    public override bool GetValue(MapDataStore.Tile tile, MeshLayer layer, out T value)
+    {
         switch (layer)
         {
             case MeshLayer.StaticMaterial:
             case MeshLayer.StaticCutout:
             case MeshLayer.StaticTransparent:
-                if (materialMatcher.Get(tile.material, out cont))
-                {
-                    value = cont.GetValue(tile, layer);
-                    return true;
-                }
-                break;
+                return GetMaterialRef(tile.material, tile, layer, out value);
             case MeshLayer.BaseMaterial:
             case MeshLayer.BaseCutout:
             case MeshLayer.BaseTransparent:
-                if (materialMatcher.Get(tile.base_material, out cont))
-                {
-                    value = cont.GetValue(tile, layer);
-                    return true;
-                }
-                break;
+                return GetMaterialRef(tile.base_material, tile, layer, out value);
             case MeshLayer.LayerMaterial:
             case MeshLayer.LayerCutout:
             case MeshLayer.LayerTransparent:
-                if (materialMatcher.Get(tile.layer_material, out cont))
-                {
-                    value = cont.GetValue(tile, layer);
-                    return true;
-                }
-                break;
+                return GetMaterialRef(tile.layer_material, tile, layer, out value);
             case MeshLayer.VeinMaterial:
             case MeshLayer.VeinCutout:
             case MeshLayer.VeinTransparent:
-                if (materialMatcher.Get(tile.vein_material, out cont))
-                {
-                    value = cont.GetValue(tile, layer);
-                    return true;
-                }
-                break;
+                return GetMaterialRef(tile.vein_material, tile, layer, out value);
             case MeshLayer.NoMaterial:
             case MeshLayer.NoMaterialCutout:
             case MeshLayer.NoMaterialBuildingCutout:
@@ -66,12 +80,7 @@ public class MaterialConfiguration<T> : ContentConfiguration<T> where T : IConte
             case MeshLayer.BuildingMaterial:
             case MeshLayer.BuildingMaterialCutout:
             case MeshLayer.BuildingMaterialTransparent:
-                if (materialMatcher.Get(tile.buildingMaterial, out cont))
-                {
-                    value = cont.GetValue(tile, layer);
-                    return true;
-                }
-                break;
+                return GetMaterialRef(tile.buildingMaterial, tile, layer, out value);
             default:
                 break;
         }
@@ -90,7 +99,12 @@ public class MaterialConfiguration<T> : ContentConfiguration<T> where T : IConte
                 if (elemToken.Value == "NONE")
                     defaultMaterial = content;
                 else
-                    materialMatcher[elemToken.Value] = content;
+                {
+                    if (content.overloadedItem != null || thisMaterialMatcher == null)
+                        materialMatcher[elemToken.Value] = content;
+                    if (thisMaterialMatcher != null)
+                        thisMaterialMatcher[elemToken.Value] = content.defaultItem;
+                }
                 continue;
             }
 
@@ -114,7 +128,10 @@ public class MaterialConfiguration<T> : ContentConfiguration<T> where T : IConte
                 MatPairStruct material;
                 material.mat_index = (int)elemIndex;
                 material.mat_type = -1;
-                materialMatcher[material] = content;
+                if (content.overloadedItem != null || thisMaterialMatcher == null)
+                    materialMatcher[material] = content;
+                if (thisMaterialMatcher != null)
+                    thisMaterialMatcher[material] = content.defaultItem;
             }
             else
             {
@@ -171,7 +188,10 @@ public class MaterialConfiguration<T> : ContentConfiguration<T> where T : IConte
                             //make some kind of error here
                             continue;
                     }
-                    materialMatcher[token] = content;
+                    if (content.overloadedItem != null || thisMaterialMatcher == null)
+                        materialMatcher[token] = content;
+                    if (thisMaterialMatcher != null)
+                        thisMaterialMatcher[token] = content.defaultItem;
                 }
             }
         }

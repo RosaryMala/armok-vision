@@ -1,8 +1,16 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 
-public class BuildingConfiguration<T> : ContentConfiguration<T> where T : IContent, new()
+public class BuildingConfiguration<T> : TileConfiguration<T> where T : IContent, new()
 {
     BuildingMatcher<Content> buildingMatcher = new BuildingMatcher<Content>();
+
+    public override object SecondaryDictionary
+    {
+        set
+        {
+        }
+    }
 
     public override bool GetValue(MapDataStore.Tile tile, MeshLayer layer, out T value)
     {

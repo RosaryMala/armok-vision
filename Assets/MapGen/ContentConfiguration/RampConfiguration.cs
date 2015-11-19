@@ -1,9 +1,16 @@
 ﻿using System.Xml.Linq;
-using UnityEngine;
 
-public class RampConfiguration<T> : ContentConfiguration<T> where T : IContent, new()
+public class RampConfiguration<T> : TileConfiguration<T> where T : IContent, new()
 {
     Content[] rampList = new Content[26];
+
+    public override object SecondaryDictionary
+    {
+        set
+        {
+        }
+    }
+
     public override bool GetValue(MapDataStore.Tile tile, MeshLayer layer, out T value)
     {
         if (tile.shape != RemoteFortressReader.TiletypeShape.RAMP)
@@ -21,7 +28,7 @@ public class RampConfiguration<T> : ContentConfiguration<T> where T : IContent, 
         return true;
     }
 
-    protected override void ParseElementConditions(XElement elemtype, ContentConfiguration<T>.Content content)
+    protected override void ParseElementConditions(XElement elemtype, TileConfiguration<T>.Content content)
     {
         var elemRamps = elemtype.Elements("ramp");
         foreach (XElement elemRamp in elemRamps)
