@@ -1,10 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 using DFHack;
 
-public class BuildingPosConfiguration<T> : ContentConfiguration<T> where T : IContent, new()
+public class BuildingPosConfiguration<T> : TileConfiguration<T> where T : IContent, new()
 {
     Dictionary<DFCoord2d, Content> coordList = new Dictionary<DFCoord2d, Content>();
+
+    public override object SecondaryDictionary
+    {
+        set
+        {
+        }
+    }
 
     public override bool GetValue(MapDataStore.Tile tile, MeshLayer layer, out T value)
     {

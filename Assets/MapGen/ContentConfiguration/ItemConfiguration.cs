@@ -1,8 +1,16 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 
-public class ItemConfiguration<T> : ContentConfiguration<T> where T : IContent, new()
+public class ItemConfiguration<T> : TileConfiguration<T> where T : IContent, new()
 {
     ItemMatcher<Content> itemMatcher = new ItemMatcher<Content>();
+
+    public override object SecondaryDictionary
+    {
+        set
+        {
+        }
+    }
 
     public override bool GetValue(MapDataStore.Tile tile, MeshLayer layer, out T value)
     {
@@ -29,7 +37,7 @@ public class ItemConfiguration<T> : ContentConfiguration<T> where T : IContent, 
         return false;
     }
 
-    protected override void ParseElementConditions(XElement elemtype, ContentConfiguration<T>.Content content)
+    protected override void ParseElementConditions(XElement elemtype, TileConfiguration<T>.Content content)
     {
         var elemItems = elemtype.Elements("item");
         foreach (XElement elemItem in elemItems)

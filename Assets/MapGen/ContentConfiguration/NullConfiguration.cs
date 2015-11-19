@@ -1,8 +1,16 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 
-public class NullConfiguration<T> : ContentConfiguration<T> where T : IContent, new()
+public class NullConfiguration<T> : TileConfiguration<T> where T : IContent, new()
 {
-    ContentConfiguration<T>.Content content;
+    TileConfiguration<T>.Content content;
+
+    public override object SecondaryDictionary
+    {
+        set
+        {
+        }
+    }
 
     public override bool GetValue(MapDataStore.Tile tile, MeshLayer layer, out T value)
     {
@@ -10,7 +18,7 @@ public class NullConfiguration<T> : ContentConfiguration<T> where T : IContent, 
         return true;
     }
 
-    protected override void ParseElementConditions(XElement elemtype, ContentConfiguration<T>.Content content)
+    protected override void ParseElementConditions(XElement elemtype, TileConfiguration<T>.Content content)
     {
         this.content = content;
     }
