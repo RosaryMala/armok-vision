@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
-public class RandomConfiguration<T> : ContentConfiguration<T> where T : IContent, new()
+public class RandomConfiguration<T> : TileConfiguration<T> where T : IContent, new()
 {
     class RandomItem
     {
@@ -13,6 +14,13 @@ public class RandomConfiguration<T> : ContentConfiguration<T> where T : IContent
         public float intensity = 1;
     }
     List<RandomItem> items = new List<RandomItem>();
+
+    public override object SecondaryDictionary
+    {
+        set
+        {
+        }
+    }
 
     public override bool GetValue(MapDataStore.Tile tile, MeshLayer layer, out T value)
     {
@@ -38,7 +46,7 @@ public class RandomConfiguration<T> : ContentConfiguration<T> where T : IContent
         return true;
     }
 
-    protected override void ParseElementConditions(System.Xml.Linq.XElement elemtype, ContentConfiguration<T>.Content content)
+    protected override void ParseElementConditions(System.Xml.Linq.XElement elemtype, TileConfiguration<T>.Content content)
     {
         var elemRandoms = elemtype.Elements("random");
         foreach (XElement elemRandom in elemRandoms)
