@@ -89,25 +89,25 @@ public class ContentLoader
 
     TextureStorage materialTextureStorage;
     TextureStorage shapeTextureStorage;
+    MaterialMatcher<ColorContent> materialColors;
+    MaterialMatcher<TextureContent> materialTextures;
 
 
-    public ContentConfiguration<ColorContent> ColorConfiguration { get; private set; }
-    public ContentConfiguration<TextureContent> MaterialTextureConfiguration { get; private set; }
-    public ContentConfiguration<NormalContent> ShapeTextureConfiguration { get; private set; }
-    public ContentConfiguration<MeshContent> TileMeshConfiguration { get; private set; }
-    public ContentConfiguration<LayerContent> MaterialLayerConfiguration { get; private set; }
-    public ContentConfiguration<MeshContent> BuildingMeshConfiguration { get; private set; }
-    public ContentConfiguration<NormalContent> BuildingShapeTextureConfiguration { get; private set; }
+    public TileConfiguration<ColorContent> ColorConfiguration { get; private set; }
+    public TileConfiguration<TextureContent> MaterialTextureConfiguration { get; private set; }
+    public TileConfiguration<NormalContent> ShapeTextureConfiguration { get; private set; }
+    public TileConfiguration<MeshContent> TileMeshConfiguration { get; private set; }
+    public TileConfiguration<LayerContent> MaterialLayerConfiguration { get; private set; }
+    public TileConfiguration<MeshContent> BuildingMeshConfiguration { get; private set; }
+    public TileConfiguration<NormalContent> BuildingShapeTextureConfiguration { get; private set; }
 
 
     public ContentLoader()
     {
         materialTextureStorage = new TextureStorage();
         shapeTextureStorage = new TextureStorage();
-    //    colorConfiguration = new MaterialConfiguration<ColorContent>();
-    //    colorConfiguration.nodeName = "color";
-    //    materialTextureConfiguration = new MaterialConfiguration<IndexContent>();
-    //    tileTextureConfiguration = new TileConfiguration<IndexContent>();
+        materialColors = new MaterialMatcher<ColorContent>();
+        materialTextures = new MaterialMatcher<TextureContent>();
     }
 
 
@@ -164,38 +164,38 @@ public class ContentLoader
             switch (doc.Name.LocalName)
             {
                 case "colors":
-                    if(ColorConfiguration == null)
-                        ColorConfiguration = ContentConfiguration<ColorContent>.GetFromRootElement(doc, "color");
-                    ColorConfiguration.AddSingleContentConfig(doc);
+                    if (ColorConfiguration == null)
+                        ColorConfiguration = TileConfiguration<ColorContent>.GetFromRootElement(doc, "color");
+                    ColorConfiguration.AddSingleContentConfig(doc, null, materialColors);
                     break;
                 case "materialTextures":
-                    if(MaterialTextureConfiguration == null)
-                        MaterialTextureConfiguration = ContentConfiguration<TextureContent>.GetFromRootElement(doc, "materialTexture");
-                    MaterialTextureConfiguration.AddSingleContentConfig(doc, materialTextureStorage);
+                    if (MaterialTextureConfiguration == null)
+                        MaterialTextureConfiguration = TileConfiguration<TextureContent>.GetFromRootElement(doc, "materialTexture");
+                    MaterialTextureConfiguration.AddSingleContentConfig(doc, materialTextureStorage, materialTextures);
                     break;
                 case "shapeTextures":
                     if(ShapeTextureConfiguration == null)
-                        ShapeTextureConfiguration = ContentConfiguration<NormalContent>.GetFromRootElement(doc, "shapeTexture");
+                        ShapeTextureConfiguration = TileConfiguration<NormalContent>.GetFromRootElement(doc, "shapeTexture");
                     ShapeTextureConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
                     break;
                 case "tileMeshes":
                     if (TileMeshConfiguration == null)
-                        TileMeshConfiguration = ContentConfiguration<MeshContent>.GetFromRootElement(doc, "tileMesh");
+                        TileMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "tileMesh");
                     TileMeshConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
                     break;
                 case "materialLayers":
                     if (MaterialLayerConfiguration == null)
-                        MaterialLayerConfiguration = ContentConfiguration<LayerContent>.GetFromRootElement(doc, "materialLayer");
+                        MaterialLayerConfiguration = TileConfiguration<LayerContent>.GetFromRootElement(doc, "materialLayer");
                     MaterialLayerConfiguration.AddSingleContentConfig(doc);
                     break;
                 case "buildingMeshes":
                     if (BuildingMeshConfiguration == null)
-                        BuildingMeshConfiguration = ContentConfiguration<MeshContent>.GetFromRootElement(doc, "buildingMesh");
+                        BuildingMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "buildingMesh");
                     BuildingMeshConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
                     break;
                 case "buildingShapeTextures":
                     if (BuildingShapeTextureConfiguration == null)
-                        BuildingShapeTextureConfiguration = ContentConfiguration<NormalContent>.GetFromRootElement(doc, "buildingShapeTexture");
+                        BuildingShapeTextureConfiguration = TileConfiguration<NormalContent>.GetFromRootElement(doc, "buildingShapeTexture");
                     BuildingShapeTextureConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
                     break;
                 default:
