@@ -7,6 +7,8 @@ using UnityEngine.UI;
 using System.IO;
 using UnitFlags;
 using System.Text;
+using System.Globalization;
+using System.Threading;
 
 // The class responsible for talking to DF and meshing the data it gets.
 // Relevant vocabulary: A "map tile" is an individual square on the map.
@@ -146,6 +148,7 @@ public class GameMap : MonoBehaviour
     Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> materials;
     Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> items;
     Dictionary<BuildingStruct, RemoteFortressReader.BuildingDefinition> buildings;
+    Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> creatures;
 
     // Coordinate system stuff.
     public const float tileHeight = 3.0f;
@@ -247,7 +250,7 @@ public class GameMap : MonoBehaviour
             {
                 materials[material.mat_pair] = material;
             }
-            SaveMaterialList(DFConnection.Instance.NetMaterialList.material_list, "MaterialList.csv");
+            SaveMaterialList(materials, "MaterialList.csv");
         }
         // Initialize items, if available
         if (DFConnection.Instance.NetItemList != null)
@@ -255,22 +258,41 @@ public class GameMap : MonoBehaviour
             if (items == null)
                 items = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
             items.Clear();
-            foreach (RemoteFortressReader.MaterialDefinition material in DFConnection.Instance.NetItemList.material_list)
+            foreach (MaterialDefinition material in DFConnection.Instance.NetItemList.material_list)
             {
                 items[material.mat_pair] = material;
             }
-            SaveMaterialList(DFConnection.Instance.NetItemList.material_list, "ItemList.csv");
+            SaveMaterialList(items, "ItemList.csv");
         }
         if (DFConnection.Instance.NetBuildingList != null)
         {
             if (buildings == null)
                 buildings = new Dictionary<BuildingStruct, BuildingDefinition>();
             buildings.Clear();
-            foreach (RemoteFortressReader.BuildingDefinition building in DFConnection.Instance.NetBuildingList.building_list)
+            foreach (BuildingDefinition building in DFConnection.Instance.NetBuildingList.building_list)
             {
                 buildings[building.building_type] = building;
             }
             SaveBuildingList();
+        }
+        if(DFConnection.Instance.NetCreatureRawList != null)
+        {
+            if (creatures == null)
+                creatures = new Dictionary<MatPairStruct, MaterialDefinition>();
+            foreach (CreatureRaw creatureRaw in DFConnection.Instance.NetCreatureRawList.creature_raws)
+            {
+                foreach (var caste in creatureRaw.caste)
+                {
+                    MatPairStruct creatureCaste = new MatPairStruct(caste.index, creatureRaw.index);
+                    MaterialDefinition creatureDef = new MaterialDefinition();
+                    creatureDef.mat_pair = creatureCaste;
+                    creatureDef.id = creatureRaw.creature_id + ":" + caste.caste_id;
+                    creatureDef.name = caste.caste_name[0];
+                    creatureDef.state_color = creatureRaw.color;
+                    creatures[creatureCaste] = creatureDef;
+                }
+            }
+            SaveMaterialList(creatures, "CreatureList.csv");
         }
 
         SaveTileTypeList();
@@ -481,7 +503,9 @@ public class GameMap : MonoBehaviour
             }
         }
     }
-    void SaveMaterialList(List<MaterialDefinition> list, string filename)
+
+
+    void SaveMaterialList(IEnumerable<KeyValuePair<MatPairStruct, MaterialDefinition>> list, string filename)
     {
         try
         {
@@ -496,10 +520,10 @@ public class GameMap : MonoBehaviour
             foreach (var item in list)
             {
                 writer.WriteLine(
-                    item.name + ";" +
-                    item.id + ";" +
-                    item.mat_pair.mat_type + ";" +
-                    item.mat_pair.mat_index
+                    item.Value.name + ";" +
+                    item.Value.id + ";" +
+                    item.Value.mat_pair.mat_type + ";" +
+                    item.Value.mat_pair.mat_index
                     );
             }
         }
@@ -809,6 +833,8 @@ public class GameMap : MonoBehaviour
 
     void UpdateCreatures()
     {
+        CultureInfo cultureInfo = Thread.CurrentThread.CurrentCulture;
+        TextInfo textInfo = cultureInfo.TextInfo;
         unitList = DFConnection.Instance.PopUnitListUpdate();
         if (unitList == null) return;
         foreach (var unit in unitList.creature_list)
@@ -883,6 +909,13 @@ public class GameMap : MonoBehaviour
                             creatureList[unit.id].GetComponentInChildren<AtlasSprite>().SetTile(0, creatureRaw.creature_soldier_tile);
                         else
                             creatureList[unit.id].GetComponentInChildren<AtlasSprite>().SetTile(0, creatureRaw.creature_tile);
+                        Text unitText = creatureList[unit.id].GetComponentInChildren<Text>();
+                        if (unit.name == "")
+                            unitText.text = textInfo.ToTitleCase(creatureRaw.caste[unit.race.mat_index].caste_name[0]);
+                        else
+                        {
+                            unitText.text = unit.name;
+                        }
                     }
                 }
 
