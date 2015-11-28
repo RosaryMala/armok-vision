@@ -753,6 +753,30 @@ namespace RemoteFortressReader
       get { return _size_info; }
       set { _size_info = value; }
     }
+    private string _name = "";
+    [global::ProtoBuf.ProtoMember(13, IsRequired = false, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string name
+    {
+      get { return _name; }
+      set { _name = value; }
+    }
+    private int _blood_max = default(int);
+    [global::ProtoBuf.ProtoMember(14, IsRequired = false, Name=@"blood_max", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int blood_max
+    {
+      get { return _blood_max; }
+      set { _blood_max = value; }
+    }
+    private int _blood_count = default(int);
+    [global::ProtoBuf.ProtoMember(15, IsRequired = false, Name=@"blood_count", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int blood_count
+    {
+      get { return _blood_count; }
+      set { _blood_count = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

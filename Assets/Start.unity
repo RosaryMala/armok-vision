@@ -1720,7 +1720,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f51a37200dda70498a148764a15af7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fixedTime: 11
+  fixedHour: 11
   useFixedTime: 0
   realTime:
     _ticks: 0
