@@ -430,9 +430,7 @@ abstract class BlockMesher {
         }
         else
         {
-            MatPairStruct mat;
-            mat.mat_type = -1;
-            mat.mat_index = -1;
+            MatPairStruct mat = new MatPairStruct(-1, -1);
             switch (layer)
             {
                 case MeshLayer.StaticMaterial:
