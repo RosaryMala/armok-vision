@@ -9,6 +9,8 @@ using UnitFlags;
 using System.Text;
 using System.Globalization;
 using System.Threading;
+using UnityExtension;
+using Collada141;
 
 // The class responsible for talking to DF and meshing the data it gets.
 // Relevant vocabulary: A "map tile" is an individual square on the map.
@@ -275,7 +277,7 @@ public class GameMap : MonoBehaviour
             }
             SaveBuildingList();
         }
-        if(DFConnection.Instance.NetCreatureRawList != null)
+        if (DFConnection.Instance.NetCreatureRawList != null)
         {
             if (creatures == null)
                 creatures = new Dictionary<MatPairStruct, MaterialDefinition>();
@@ -283,7 +285,7 @@ public class GameMap : MonoBehaviour
             {
                 foreach (var caste in creatureRaw.caste)
                 {
-                    MatPairStruct creatureCaste = new MatPairStruct(caste.index, creatureRaw.index);
+                    MatPairStruct creatureCaste = new MatPairStruct(creatureRaw.index, caste.index);
                     MaterialDefinition creatureDef = new MaterialDefinition();
                     creatureDef.mat_pair = creatureCaste;
                     creatureDef.id = creatureRaw.creature_id + ":" + caste.caste_id;
@@ -324,8 +326,181 @@ public class GameMap : MonoBehaviour
         UpdateBlocks();
 
         DrawBlocks();
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            SaveMeshes();
+        }
     }
 
+    public Mesh testMesh;
+
+    private void SaveMeshes()
+    {
+        COLLADA exportScene = new COLLADA();
+
+        List<geometry> geometryList = new List<geometry>();
+
+        //if(testMesh!= null)
+        //{
+        //    geometry geo = COLLADA.MeshToGeometry(testMesh);
+        //    if (geo != null)
+        //        geometryList.Add(geo);
+        //}
+
+        foreach (Mesh mesh in blocks)
+        {
+            if (mesh != null)
+            {
+                geometry geo = (COLLADA.MeshToGeometry(mesh));
+                if (geo != null)
+                    geometryList.Add(geo);
+            }
+        }
+        foreach (Mesh mesh in stencilBlocks)
+        {
+            if (mesh != null)
+            {
+                geometry geo = (COLLADA.MeshToGeometry(mesh));
+                if (geo != null)
+                    geometryList.Add(geo);
+            }
+        }
+        foreach (Mesh mesh in transparentBlocks)
+        {
+            if (mesh != null)
+            {
+                geometry geo = (COLLADA.MeshToGeometry(mesh));
+                if (geo != null)
+                    geometryList.Add(geo);
+            }
+        }
+        foreach (Mesh mesh in liquidBlocks)
+        {
+            if (mesh != null)
+            {
+                geometry geo = (COLLADA.MeshToGeometry(mesh));
+                if (geo != null)
+                    geometryList.Add(geo);
+            }
+        }
+
+        library_geometries geometryLib = new library_geometries();
+        geometryLib.geometry = geometryList.ToArray();
+
+        library_visual_scenes visualSceneLib = new library_visual_scenes();
+        visual_scene visualScene = new visual_scene();
+
+        visualSceneLib.visual_scene = new visual_scene[1];
+        visualSceneLib.visual_scene[0] = visualScene;
+
+        visualScene.id = "Map";
+        visualScene.name = "Map";
+        visualScene.node = new node[geometryList.Count];
+        for (int i = 0; i < geometryList.Count; i++)
+        {
+            node thisNode = new node();
+            visualScene.node[i] = thisNode;
+            geometry thisGeometry = geometryList[i];
+            thisNode.id = thisGeometry.id.Remove(thisGeometry.id.Length - 4);
+            thisNode.name = thisGeometry.name.Remove(thisGeometry.name.Length - 6);
+            thisNode.sid = thisNode.id;
+
+            thisNode.Items = new object[1];
+            thisNode.Items[0] = COLLADA.ConvertMatrix(Matrix4x4.identity);
+
+            thisNode.instance_geometry = new instance_geometry[1];
+            thisNode.instance_geometry[0] = new instance_geometry();
+            thisNode.instance_geometry[0].url = "#" + thisGeometry.id;
+            thisNode.ItemsElementName = new ItemsChoiceType2[1];
+            thisNode.ItemsElementName[0] = ItemsChoiceType2.matrix;
+        }
+
+        COLLADAScene sceneInstance = new COLLADAScene();
+        sceneInstance.instance_visual_scene = new InstanceWithExtra();
+        sceneInstance.instance_visual_scene.url = "#" + visualScene.id;
+
+        exportScene.scene = sceneInstance;
+
+        exportScene.Items = new object[2];
+        exportScene.Items[0] = geometryLib;
+        exportScene.Items[1] = visualSceneLib;
+
+        asset assetHeader = new asset();
+        assetHeader.unit = new assetUnit();
+        assetHeader.unit.meter = 1;
+        assetHeader.unit.name = "meter";
+        assetHeader.up_axis = UpAxisType.Y_UP;
+
+        exportScene.asset = assetHeader;
+
+        if (File.Exists("Map.dae"))
+            File.Delete("Map.dae");
+        exportScene.Save("Map.dae");
+
+        Texture2D mainTex = (Texture2D)basicTerrainMaterial.GetTexture("_MainTex");
+
+        Color[] mainTexPixels = mainTex.GetPixels();
+        Color[] diffusePixels = new Color[mainTexPixels.Length];
+        Color[] roughnessPixels = new Color[mainTexPixels.Length];
+
+        for(int i = 0; i < mainTexPixels.Length; i++)
+        {
+            diffusePixels[i] = new Color(mainTexPixels[i].r, mainTexPixels[i].g, mainTexPixels[i].b, 1.0f);
+            roughnessPixels[i] = new Color(mainTexPixels[i].a, mainTexPixels[i].a, mainTexPixels[i].a, 1.0f);
+        }
+
+        Texture2D diffuseTex = new Texture2D(mainTex.width, mainTex.height);
+        Texture2D roughnessTex = new Texture2D(mainTex.width, mainTex.height);
+
+        diffuseTex.SetPixels(diffusePixels);
+        roughnessTex.SetPixels(roughnessPixels);
+
+        diffuseTex.Apply();
+        roughnessTex.Apply();
+
+        byte[] diffuseBytes = diffuseTex.EncodeToPNG();
+        byte[] roughnessBytes = roughnessTex.EncodeToPNG();
+
+        File.WriteAllBytes("pattern.png", diffuseBytes);
+        File.WriteAllBytes("specular.png", roughnessBytes);
+
+        Texture2D bumpMap = (Texture2D)basicTerrainMaterial.GetTexture("_BumpMap");
+
+        Color[] bumpMapPixels = bumpMap.GetPixels();
+        Color[] normalMapPixels = new Color[bumpMapPixels.Length];
+        Color[] ambientMapPixels = new Color[bumpMapPixels.Length];
+        Color[] alphaMapPixels = new Color[bumpMapPixels.Length];
+
+        for (int i = 0; i < bumpMapPixels.Length; i++)
+        {
+            normalMapPixels[i] = new Color(bumpMapPixels[i].a, bumpMapPixels[i].g, Mathf.Sqrt(1 - ((bumpMapPixels[i].a * 2 - 1) * (bumpMapPixels[i].a * 2 - 1)) + ((bumpMapPixels[i].g * 2 - 1) * (bumpMapPixels[i].g * 2 - 1))));
+            ambientMapPixels[i] = new Color(bumpMapPixels[i].r, bumpMapPixels[i].r, bumpMapPixels[i].r, 1.0f);
+            alphaMapPixels[i] = new Color(bumpMapPixels[i].b, bumpMapPixels[i].b, bumpMapPixels[i].b, 1.0f);
+        }
+
+        Texture2D normalTex = new Texture2D(bumpMap.width, bumpMap.height);
+        Texture2D ambientTex = new Texture2D(bumpMap.width, bumpMap.height);
+        Texture2D alphaTex = new Texture2D(bumpMap.width, bumpMap.height);
+
+        normalTex.SetPixels(normalMapPixels);
+        ambientTex.SetPixels(ambientMapPixels);
+        alphaTex.SetPixels(alphaMapPixels);
+
+        normalTex.Apply();
+        ambientTex.Apply();
+        alphaTex.Apply();
+
+        byte[] normalBytes = normalTex.EncodeToPNG();
+        byte[] ambientBytes = ambientTex.EncodeToPNG();
+        byte[] alphaBytes = alphaTex.EncodeToPNG();
+
+        File.WriteAllBytes("normal.png", normalBytes);
+        File.WriteAllBytes("occlusion.png", ambientBytes);
+        File.WriteAllBytes("alpha.png", alphaBytes);
+
+        Debug.Log("Saved map!");
+    }
 
     void OnDestroy()
     {
@@ -564,6 +739,7 @@ public class GameMap : MonoBehaviour
                 if (blocks[block_x, block_y, block_z] == null)
                 {
                     blocks[block_x, block_y, block_z] = new Mesh();
+                    blocks[block_x, block_y, block_z].name = string.Format("block_solid_{0}_{1}_{2}", block_x, block_y, block_z);
                 }
                 Mesh tileMesh = blocks[block_x, block_y, block_z];
                 tileMesh.Clear();
@@ -573,8 +749,8 @@ public class GameMap : MonoBehaviour
             {
                 if (stencilBlocks[block_x, block_y, block_z] == null)
                 {
-
                     stencilBlocks[block_x, block_y, block_z] = new Mesh();
+                    stencilBlocks[block_x, block_y, block_z].name = string.Format("block_stencil_{0}_{1}_{2}", block_x, block_y, block_z);
                 }
                 Mesh stencilMesh = stencilBlocks[block_x, block_y, block_z];
                 stencilMesh.Clear();
@@ -584,8 +760,8 @@ public class GameMap : MonoBehaviour
             {
                 if (transparentBlocks[block_x, block_y, block_z] == null)
                 {
-
                     transparentBlocks[block_x, block_y, block_z] = new Mesh();
+                    transparentBlocks[block_x, block_y, block_z].name = string.Format("block_transparent_{0}_{1}_{2}", block_x, block_y, block_z);
                 }
                 Mesh transparentMesh = transparentBlocks[block_x, block_y, block_z];
                 transparentMesh.Clear();
@@ -596,6 +772,7 @@ public class GameMap : MonoBehaviour
                 if (liquidBlocks[block_x, block_y, block_z, MapDataStore.WATER_INDEX] == null)
                 {
                     liquidBlocks[block_x, block_y, block_z, MapDataStore.WATER_INDEX] = new Mesh();
+                    liquidBlocks[block_x, block_y, block_z, MapDataStore.WATER_INDEX].name = string.Format("liquid_water_{0}_{1}_{2}", block_x, block_y, block_z);
                 }
                 Mesh waterMesh = liquidBlocks[block_x, block_y, block_z, MapDataStore.WATER_INDEX];
                 waterMesh.Clear();
@@ -606,6 +783,7 @@ public class GameMap : MonoBehaviour
                 if (liquidBlocks[block_x, block_y, block_z, MapDataStore.MAGMA_INDEX] == null)
                 {
                     liquidBlocks[block_x, block_y, block_z, MapDataStore.MAGMA_INDEX] = new Mesh();
+                    liquidBlocks[block_x, block_y, block_z, MapDataStore.MAGMA_INDEX].name = string.Format("liquid_magma_{0}_{1}_{2}", block_x, block_y, block_z);
                 }
                 Mesh magmaMesh = liquidBlocks[block_x, block_y, block_z, MapDataStore.MAGMA_INDEX];
                 magmaMesh.Clear();
@@ -646,11 +824,14 @@ public class GameMap : MonoBehaviour
         {
             Destroy(item);
         }
-        foreach (var item in creatureList)
+        if (creatureList != null)
         {
-            Destroy(item.Value.gameObject);
+            foreach (var item in creatureList)
+            {
+                Destroy(item.Value.gameObject);
+            }
+            creatureList.Clear();
         }
-        creatureList.Clear();
         if (MapDataStore.Main != null)
             MapDataStore.Main.Reset();
     }
@@ -670,115 +851,110 @@ public class GameMap : MonoBehaviour
             statusText.Append("Cursor: ");
             statusText.Append(cursX).Append(",");
             statusText.Append(cursY).Append(",");
-            statusText.Append(cursZ).Append("\n");
+            statusText.Append(cursZ).AppendLine();
             var tile = MapDataStore.Main[cursX, cursY, cursZ];
             if (tile != null)
             {
                 statusText.Append("Tiletype:\n");
                 var tiletype = DFConnection.Instance.NetTiletypeList.tiletype_list
                     [tile.tileType];
-                statusText.Append(tiletype.name).Append("\n");
+                statusText.Append(tiletype.name).AppendLine();
                 statusText.Append(
                     tiletype.shape).Append(":").Append(
                     tiletype.special).Append(":").Append(
                     tiletype.material).Append(":").Append(
                     tiletype.variant).Append(":").Append(
-                    tiletype.direction).Append("\n");
+                    tiletype.direction).AppendLine();
 
-                statusText.Append(tile.WallBuildingSides).Append("\n");
+                statusText.Append(tile.WallBuildingSides).AppendLine();
 
                 var mat = tile.material;
                 statusText.Append("Material: ");
-                statusText.Append(mat.mat_type).Append(",");
-                statusText.Append(mat.mat_index).Append("\n");
+                statusText.Append(mat);
 
                 if (materials.ContainsKey(mat))
                 {
-                    statusText.Append("Material Name: ");
-                    statusText.Append(materials[mat].id).Append("\n");
+                    statusText.Append(", ");
+                    statusText.Append(materials[mat].id).AppendLine();
                 }
                 else
-                    statusText.Append("Unknown Material\n");
+                    statusText.AppendLine();
 
-                statusText.Append("\n");
+                statusText.AppendLine();
 
                 var basemat = tile.base_material;
                 statusText.Append("Base Material: ");
-                statusText.Append(basemat.mat_type).Append(",");
-                statusText.Append(basemat.mat_index).Append("\n");
+                statusText.Append(basemat);
 
                 if (materials.ContainsKey(basemat))
                 {
-                    statusText.Append("Base Material Name: ");
-                    statusText.Append(materials[basemat].id).Append("\n");
+                    statusText.Append(", ");
+                    statusText.Append(materials[basemat].id).AppendLine();
                 }
                 else
                     statusText.Append("Unknown Base Material\n");
 
-                statusText.Append("\n");
+                statusText.AppendLine();
 
                 var layermat = tile.layer_material;
                 statusText.Append("Layer Material: ");
-                statusText.Append(layermat.mat_type).Append(",");
-                statusText.Append(layermat.mat_index).Append("\n");
+                statusText.Append(layermat);
 
                 if (materials.ContainsKey(layermat))
                 {
-                    statusText.Append("Layer Material Name: ");
-                    statusText.Append(materials[layermat].id).Append("\n");
+                    statusText.Append(", ");
+                    statusText.Append(materials[layermat].id).AppendLine();
                 }
                 else
                     statusText.Append("Unknown Layer Material\n");
 
-                statusText.Append("\n");
+                statusText.AppendLine();
 
                 var veinmat = tile.vein_material;
                 statusText.Append("Vein Material: ");
-                statusText.Append(veinmat.mat_type).Append(",");
-                statusText.Append(veinmat.mat_index).Append("\n");
+                statusText.Append(veinmat);
 
                 if (materials.ContainsKey(veinmat))
                 {
-                    statusText.Append("Vein Material Name: ");
-                    statusText.Append(materials[veinmat].id).Append("\n");
+                    statusText.Append(", ");
+                    statusText.Append(materials[veinmat].id).AppendLine();
                 }
                 else
                     statusText.Append("Unknown Vein Material\n");
 
-                statusText.Append("\n");
+                statusText.AppendLine();
 
                 var cons = tile.construction_item;
                 statusText.Append("Construction Item: ");
-                statusText.Append(cons.mat_type).Append(",");
-                statusText.Append(cons.mat_index).Append("\n");
+                statusText.Append(cons);
 
                 if (items.ContainsKey(cons))
                 {
-                    statusText.Append("Construction Item Name: ");
-                    statusText.Append(items[cons].id).Append("\n");
+                    statusText.Append(", ");
+                    statusText.Append(items[cons].id).AppendLine();
                 }
                 else
                     statusText.Append("Unknown Construction Item\n");
 
-                statusText.Append("\n");
+                statusText.AppendLine();
 
                 if (tile.buildingType != default(BuildingStruct))
                 {
                     if (buildings.ContainsKey(tile.buildingType))
                         statusText.Append("Building: ");
-                    statusText.Append(buildings[tile.buildingType].id).Append("\n");
+                    statusText.Append(buildings[tile.buildingType].id).AppendLine();
 
                     if (materials.ContainsKey(tile.buildingMaterial))
                     {
                         statusText.Append("Building Material: ");
-                        statusText.Append(materials[tile.buildingMaterial].id).Append("\n");
+                        statusText.Append(materials[tile.buildingMaterial].id).AppendLine();
                     }
                     else
                         statusText.Append("Unknown Building Material\n");
 
                     statusText.Append("Building Coord: ");
-                    statusText.Append(tile.buildingLocalPos).Append("\n");
-                    statusText.Append("Building Direction: ").Append(tile.buildingDirection).Append("\n");
+                    statusText.Append(tile.buildingLocalPos).AppendLine();
+                    statusText.Append("Building Direction: ").Append(tile.buildingDirection).AppendLine();
 
                 }
             }
@@ -810,7 +986,7 @@ public class GameMap : MonoBehaviour
                         statusText.Append("Race: ");
                         statusText.Append(creatureRaw.creature_id + ":");
                         statusText.Append(creatureRaw.caste[unit.race.mat_index].caste_id);
-                        statusText.Append("\n");
+                        statusText.AppendLine();
 
                         statusText.Append(flags1).AppendLine();
                         statusText.Append(flags2).AppendLine();
