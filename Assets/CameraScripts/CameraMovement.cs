@@ -26,7 +26,7 @@ public class CameraMovement : MonoBehaviour {
         float moveZ = Input.GetAxis("CamUpDown");
         float moveX = Input.GetAxis("CamLeftRight");
         float moveY = Input.GetAxis("CamFrontBack");
-        if(following)
+        if(following && gameMap != null)
         {
             transform.position = GameMap.DFtoUnityTileCenter(new DFCoord(gameMap.PosXTile, gameMap.PosYTile, gameMap.PosZ-1));
         }
@@ -40,7 +40,8 @@ public class CameraMovement : MonoBehaviour {
                 cameraDistance *= fasterMultiplier;
             Vector3 movement = new Vector3(moveX, moveZ, moveY);
             transform.Translate(movement * Time.deltaTime * speed * cameraDistance, Space.Self);
-            gameMap.UpdateCenter(transform.position);
+            if(gameMap != null)
+                gameMap.UpdateCenter(transform.position);
         }
 	}
 }
