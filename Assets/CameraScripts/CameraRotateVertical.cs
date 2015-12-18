@@ -18,7 +18,7 @@ public class CameraRotateVertical : MonoBehaviour
     {
         get
         {
-            if (gameMap.firstPerson)
+            if (gameMap != null && gameMap.firstPerson)
                 return firstPersonVerticalRotationMin;
             else return verticalRotationMin;
         }
@@ -27,7 +27,7 @@ public class CameraRotateVertical : MonoBehaviour
     {
         get
         {
-            if (gameMap.firstPerson)
+            if (gameMap != null && gameMap.firstPerson)
                 return firstPersonVerticalRotationMax;
             else return verticalRotationMax;
         }
