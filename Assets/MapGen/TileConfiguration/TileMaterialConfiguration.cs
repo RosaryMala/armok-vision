@@ -110,12 +110,12 @@ public class TileMaterialConfiguration<T> : TileConfiguration<T> where T : ICont
 
             //if there's no material token, fall back to the out-dated system.
             XAttribute elemValue = elemMaterial.Attribute("value");
-            MatBasic elemIndex = MatBasic.INVALID;
+            MatBasic elemType = MatBasic.INVALID;
             if (elemValue != null)
             {
-                elemIndex = ContentLoader.lookupMaterialType(elemValue.Value);
+                elemType = ContentLoader.lookupMaterialType(elemValue.Value);
             }
-            if (elemIndex == MatBasic.INVALID)
+            if (elemType == MatBasic.INVALID)
             {
                 //throw error here
                 continue;
@@ -125,9 +125,7 @@ public class TileMaterialConfiguration<T> : TileConfiguration<T> where T : ICont
             if (elemMaterial.Element("subtype") == null)
             {
                 //handle here the elements without subtypes.
-                MatPairStruct material;
-                material.mat_index = (int)elemIndex;
-                material.mat_type = -1;
+                MatPairStruct material = new MatPairStruct((int)elemType, -1);
                 if (content.overloadedItem != null || thisMaterialMatcher == null)
                     materialMatcher[material] = content;
                 if (thisMaterialMatcher != null)
@@ -146,7 +144,7 @@ public class TileMaterialConfiguration<T> : TileConfiguration<T> where T : ICont
                     }
                     string subtype = subtypeValue.Value;
                     string token = "";
-                    switch (elemIndex)
+                    switch (elemType)
                     {
                         case MatBasic.INORGANIC:
                             token = "INORGANIC:" + subtype;
