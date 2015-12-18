@@ -74,7 +74,7 @@ public class ItemMatcher<T>
                 value = output;
                 return true;
             }
-            mat.mat_type = -1; //Try once more with a more generic value.
+            mat = new MatPairStruct(mat.mat_index, -1); //Try once more with a more generic value.
             if (itemList.TryGetValue(mat, out output))
             {
                 value = output;
