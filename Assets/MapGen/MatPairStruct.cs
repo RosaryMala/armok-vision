@@ -2,15 +2,15 @@
 
 public struct MatPairStruct
 {
-    public int mat_index;
-    public int mat_type;
+    public readonly int mat_index;
+    public readonly int mat_type;
+
+    public int Type { get { return mat_type; } }
+    public int SubType { get { return mat_index; } }
 
     public static implicit operator MatPairStruct(MatPair input)
     {
-        MatPairStruct output;
-        output.mat_index = input.mat_index;
-        output.mat_type = input.mat_type;
-        return output;
+        return new MatPairStruct(input.mat_type, input.mat_index);
     }
     public static implicit operator MatPair(MatPairStruct input)
     {
@@ -21,9 +21,14 @@ public struct MatPairStruct
 
     }
 
-    public MatPairStruct(int index, int type)
+    public MatPairStruct(int type, int index)
     {
         mat_index = index;
         mat_type = type;
+    }
+
+    public override string ToString()
+    {
+        return string.Format("[{0},{1}]", mat_type, mat_index);
     }
 }

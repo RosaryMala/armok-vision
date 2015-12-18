@@ -185,7 +185,7 @@ public class MaterialMatcher<T>
                 value = output.item;
                 return true;
             }
-            mat.mat_type = -1; //Try once more with a more generic value.
+            mat = new MatPairStruct(mat.mat_index, -1); //Try once more with a more generic value.
             if (matList.TryGetValue(mat, out output))
             {
                 value = output.item;
