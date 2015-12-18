@@ -59,6 +59,13 @@
       <buildingPosition x="0" y="1"/>
     </subObject>
   </buildingMesh>
+  <buildingMesh file="NONE">
+    <buildingType token="Windmill"/>
+    <subObject file="Windmill.obj" 
+    rotation="BuildingDirection">
+      <buildingPosition x="1" y="1"/>
+    </subObject>
+  </buildingMesh>
   <buildingMesh file="AxleHorizontal.obj" rotation="BuildingDirection">
     <buildingType token="AxleHorizontal"/>
   </buildingMesh>
