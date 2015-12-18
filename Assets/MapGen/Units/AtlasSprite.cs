@@ -33,8 +33,7 @@ public class AtlasSprite : MonoBehaviour {
         uvs = new List<Vector2>();
         triangles = new List<int>();
 
-        mesh = new Mesh();
-        meshFilter.mesh = mesh;
+        mesh = meshFilter.mesh;
     }
 
     public void ClearMesh()

@@ -91,19 +91,23 @@ Material:
       data:
         first:
           name: _Cutoff
-        second: .5
-      data:
-        first:
-          name: _Parallax
-        second: .0199999996
-      data:
-        first:
-          name: _ZWrite
-        second: 1
+        second: 0.5
       data:
         first:
           name: _Glossiness
         second: 0
+      data:
+        first:
+          name: _Metallic
+        second: 0
+      data:
+        first:
+          name: _Parallax
+        second: 0.02
+      data:
+        first:
+          name: _ZWrite
+        second: 1
       data:
         first:
           name: _BumpScale
@@ -124,10 +128,6 @@ Material:
         first:
           name: _Mode
         second: 1
-      data:
-        first:
-          name: _Metallic
-        second: 0
     m_Colors:
       data:
         first:
