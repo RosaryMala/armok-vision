@@ -116,7 +116,7 @@ public class MeshCombineUtility
                     int newVert1 = getIndex(indexTranslation, combines[combIndex], vert1, vertices, normals, tangents, uvs, uv2s, colors, inputVertices, inputNormals, inputTangents, inputUVs, inputColors);
                     int newVert2 = getIndex(indexTranslation, combines[combIndex], vert2, vertices, normals, tangents, uvs, uv2s, colors, inputVertices, inputNormals, inputTangents, inputUVs, inputColors);
 
-                    if (newVert0 > 65532 || newVert1 > 65532 || newVert2 > 65532)
+                    if (newVert0 > 65531 || newVert1 > 65531 || newVert2 > 65531)
                         goto failure;
 
                     triangles.Add(newVert0);
