@@ -39,12 +39,17 @@ public enum RotationType
     None,
     AwayFromWall,
     Door,
-    BuildingDirection
+    BuildingDirection,
+    Random,
+    Random90,
+    TreeFlat,
+    TreeRound,
+    TreeRoundTall
 }
 
 public class MeshContent : IContent
 {
-
+    static OpenSimplexNoise noise;
     public MeshData[] MeshData { get; private set; }
     TextureStorage store;
 
@@ -122,10 +127,47 @@ public class MeshContent : IContent
                             return Quaternion.Euler(0, 0, 0);
                     }
                 }
+            case RotationType.Random:
+                {
+                    if (noise == null)
+                        noise = new OpenSimplexNoise();
+                    float rot = (float)noise.eval(tile.position.x, tile.position.y, tile.position.z);
+                    return Quaternion.Euler(0, rot * 360, 0);
+                }
+            case RotationType.Random90:
+                {
+                    if (noise == null)
+                        noise = new OpenSimplexNoise();
+                    float rot = (float)noise.eval(tile.position.x, tile.position.y, tile.position.z);
+                    rot = Mathf.Round(rot * 4) * 90;
+                    return Quaternion.Euler(0, rot, 0);
+                }
+            case RotationType.TreeFlat:
+                {
+                    Vector2 treeDir = new Vector2(-tile.positionOnTree.x, tile.positionOnTree.y);
+                    if (treeDir.sqrMagnitude < 0.001)
+                        return Quaternion.identity;
+
+                    float angle = Mathf.Atan2(treeDir.x, treeDir.y) * 180 / Mathf.PI;
+                    return Quaternion.Euler(0, angle, 0);
+                }
+            case RotationType.TreeRound:
+                {
+                    Vector3 treeDir = new Vector3(-tile.positionOnTree.x, tile.positionOnTree.z, tile.positionOnTree.y);
+                    if (treeDir.sqrMagnitude < 0.001)
+                        return Quaternion.identity;
+                    return Quaternion.LookRotation(treeDir, Vector3.up);
+                }
+            case RotationType.TreeRoundTall:
+                {
+                    Vector3 treeDir = new Vector3(-tile.positionOnTree.x, tile.positionOnTree.z / 2.0f, tile.positionOnTree.y);
+                    if (treeDir.sqrMagnitude < 0.001)
+                        return Quaternion.identity;
+                    return Quaternion.LookRotation(treeDir, Vector3.up);
+                }
             default:
-                break;
+                return Quaternion.identity;
         }
-        return Quaternion.identity;
     }
 
     public bool AddTypeElement(System.Xml.Linq.XElement elemtype)
