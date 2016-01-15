@@ -164,6 +164,16 @@ public class MapDataStore {
                         tiles[localCoord.x, localCoord.y, localCoord.z].construction_item = block.construction_items[netIndex];
                     else
                         tiles[localCoord.x, localCoord.y, localCoord.z].construction_item = new MatPairStruct(-1, -1);
+                    if (block.tree_percent != null && block.tree_percent.Count > netIndex)
+                    {
+                        tiles[localCoord.x, localCoord.y, localCoord.z].trunkPercent = (byte)block.tree_percent[netIndex];
+                        tiles[localCoord.x, localCoord.y, localCoord.z].positionOnTree = new DFCoord(block.tree_x[netIndex], block.tree_y[netIndex], block.tree_z[netIndex]);
+                    }
+                    else
+                    {
+                        tiles[localCoord.x, localCoord.y, localCoord.z].trunkPercent = 0;
+                        tiles[localCoord.x, localCoord.y, localCoord.z].positionOnTree = new DFCoord(0,0,0);
+                    }
                 }
                 if (setLiquids)
                 {
@@ -293,7 +303,9 @@ public class MapDataStore {
                            MatPairStruct? buildingMaterial = null,
                            DFCoord2d? buildingLocalPos = null,
                            BuildingDirection? buildingDirection = null,
-                           bool? hidden = null)
+                           bool? hidden = null,
+                           byte? trunkPercent = null,
+                           DFCoord? positionOnTree = null)
     {
         DFCoord local = WorldToLocalSpace(coord);
         if (!InSliceBoundsLocal(local.x, local.y, local.z)) {
@@ -301,7 +313,7 @@ public class MapDataStore {
         }
         if (tiles[local.x, local.y, local.z] == null)
             tiles[local.x, local.y, local.z] = new Tile(this, local);
-        tiles[local.x, local.y, local.z].Modify(tileType, material, base_material, layer_material, vein_material, waterLevel, magmaLevel, construction_item, rampType, buildingType, buildingMaterial, buildingLocalPos, buildingDirection, hidden);
+        tiles[local.x, local.y, local.z].Modify(tileType, material, base_material, layer_material, vein_material, waterLevel, magmaLevel, construction_item, rampType, buildingType, buildingMaterial, buildingLocalPos, buildingDirection, hidden, trunkPercent, positionOnTree);
     }
 
     public void Reset() {
@@ -355,6 +367,8 @@ public class MapDataStore {
             buildingLocalPos = default(DFCoord2d);
             buildingDirection = 0;
             hidden = false;
+            trunkPercent = 0;
+            positionOnTree = default(DFCoord);
         }
 
         public MapDataStore container;
@@ -373,6 +387,8 @@ public class MapDataStore {
         public DFCoord2d buildingLocalPos;
         public BuildingDirection buildingDirection;
         public bool hidden;
+        public byte trunkPercent;
+        public DFCoord positionOnTree;
 
         public TiletypeShape shape { get { return tiletypeTokenList [tileType].shape; } }
         public TiletypeMaterial tiletypeMaterial { get { return tiletypeTokenList [tileType].material; } }
@@ -409,7 +425,9 @@ public class MapDataStore {
                            MatPairStruct? buildingMaterial = null,
                            DFCoord2d? buildingLocalPos = null,
                            BuildingDirection? buildingDirection = null,
-                           bool? hidden = null)
+                           bool? hidden = null,
+                           byte? trunkPercent = null,
+                           DFCoord? positionOnTree = null)
         {
             if (tileType != null) {
                 this.tileType = tileType.Value;
@@ -454,6 +472,10 @@ public class MapDataStore {
                 this.buildingDirection = buildingDirection.Value;
             if (hidden != null)
                 this.hidden = hidden.Value;
+            if (trunkPercent != null)
+                this.trunkPercent = trunkPercent.Value;
+            if (positionOnTree != null)
+                this.positionOnTree = positionOnTree.Value;
         }
         public bool isWall {
             get {
