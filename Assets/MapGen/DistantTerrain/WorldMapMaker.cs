@@ -33,6 +33,8 @@ public class WorldMapMaker : MonoBehaviour
     bool[,] fogNormal;
     bool[,] fogThick;
 
+    public bool drawClouds = true;
+
     public Vector3 offset;
 
     RemoteFortressReader.RegionMaps regionMaps;
@@ -113,20 +115,23 @@ public class WorldMapMaker : MonoBehaviour
                 volcanism[x, y] = remoteMap.volcanism[index];
                 savagery[x, y] = remoteMap.savagery[index];
                 salinity[x, y] = remoteMap.salinity[index];
-                cumulusMedium[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_MEDIUM;
-                cumulusMulti[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_MULTI;
-                cumulusNimbus[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_NIMBUS;
-                stratusAlto[x, y] = remoteMap.clouds[index].stratus == StratusType.STRATUS_ALTO;
-                stratusProper[x, y] = remoteMap.clouds[index].stratus == StratusType.STRATUS_PROPER;
-                stratusNimbus[x, y] = remoteMap.clouds[index].stratus == StratusType.STRATUS_NIMBUS;
-                cirrus[x, y] = remoteMap.clouds[index].cirrus;
-                fogMist[x, y] = remoteMap.clouds[index].fog == FogType.FOG_MIST;
-                fogNormal[x, y] = remoteMap.clouds[index].fog == FogType.FOG_NORMAL;
-                fogThick[x, y] = remoteMap.clouds[index].fog == FogType.F0G_THICK;
+                if (drawClouds)
+                {
+                    cumulusMedium[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_MEDIUM;
+                    cumulusMulti[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_MULTI;
+                    cumulusNimbus[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_NIMBUS;
+                    stratusAlto[x, y] = remoteMap.clouds[index].stratus == StratusType.STRATUS_ALTO;
+                    stratusProper[x, y] = remoteMap.clouds[index].stratus == StratusType.STRATUS_PROPER;
+                    stratusNimbus[x, y] = remoteMap.clouds[index].stratus == StratusType.STRATUS_NIMBUS;
+                    cirrus[x, y] = remoteMap.clouds[index].cirrus;
+                    fogMist[x, y] = remoteMap.clouds[index].fog == FogType.FOG_MIST;
+                    fogNormal[x, y] = remoteMap.clouds[index].fog == FogType.FOG_NORMAL;
+                    fogThick[x, y] = remoteMap.clouds[index].fog == FogType.F0G_THICK;
+                }
             }
         GenerateMesh();
-
-        GenerateClouds();
+        if (drawClouds)
+            GenerateClouds();
         //Debug.Log("Loaded World: " + worldNameEnglish);
     }
 
@@ -262,7 +267,8 @@ public class WorldMapMaker : MonoBehaviour
             }
             else
             {
-                CopyClouds(worldMap);
+                if(drawClouds)
+                    CopyClouds(worldMap);
             }
         }
     }
