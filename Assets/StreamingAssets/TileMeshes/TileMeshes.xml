@@ -2,9 +2,14 @@
 <tileMeshes>
     <tileMesh file = "FLOOR.obj">
         <tiletype token="FLOOR:*:*:*:*" />
+        <tiletype token="BRANCH:SMOOTH:*:*:--------" />
+
     </tileMesh>
     <tileMesh file = "WALL.obj">
         <tiletype token="WALL:*:*:*:*" />
+    </tileMesh>
+    <tileMesh file = "TreeTrunkPillar.obj">
+        <tiletype token="WALL:*:TREE_MATERIAL:*:--------" />
     </tileMesh>
     <tileMesh file = "BOULDER.obj">
         <tiletype token="BOULDER:*:*:*:*" />
@@ -36,43 +41,67 @@
     <tileMesh file = "TREE.obj">
         <tiletype token="TREE_SHAPE:*:*:*:*" />
     </tileMesh>
-    <tileMesh file = "Foliage_1.obj">
+    <tileMesh file = "TreeBranches.obj" rotation = "Random90">
         <tiletype token="BRANCH:*:*:*:--------" />
-        <subObject file ="Foliage_1.obj">
-            <random/>
-        </subObject>
-        <subObject file ="Foliage_2.obj">
-            <random/>
-        </subObject>
-        <subObject file ="Foliage_3.obj">
-            <random/>
-        </subObject>
+    </tileMesh>
+    <tileMesh file = "TreeBranchEW.obj" >
+        <tiletype token="BRANCH:*:*:*:----W-E-" />
+    </tileMesh>
+    <tileMesh file = "TreeBranchSE.obj" >
+        <tiletype token="BRANCH:*:*:*:--S---E-" />
+    </tileMesh>
+    <tileMesh file = "TreeBranchSW.obj" >
+        <tiletype token="BRANCH:*:*:*:--S-W---" />
+    </tileMesh>
+    <tileMesh file = "TreeBranchSEW.obj" >
+        <tiletype token="BRANCH:*:*:*:--S-W-E-" />
+    </tileMesh>
+    <tileMesh file = "TreeBranchNE.obj" >
+        <tiletype token="BRANCH:*:*:*:N-----E-" />
+    </tileMesh>
+    <tileMesh file = "TreeBranchNW.obj" >
+        <tiletype token="BRANCH:*:*:*:N---W---" />
+    </tileMesh>
+    <tileMesh file = "TreeBranchNEW.obj" >
+        <tiletype token="BRANCH:*:*:*:N---W-E-" />
+    </tileMesh>
+    <tileMesh file = "TreeBranchNS.obj" >
+        <tiletype token="BRANCH:*:*:*:N-S-----" />
+    </tileMesh>
+    <tileMesh file = "TreeBranchNSE.obj" >
+        <tiletype token="BRANCH:*:*:*:N-S---E-" />
+    </tileMesh>
+    <tileMesh file = "TreeBranchNSW.obj" >
+        <tiletype token="BRANCH:*:*:*:N-S-W---" />
+    </tileMesh>
+    <tileMesh file = "TreeBranchNSEW.obj" >
+        <tiletype token="BRANCH:*:*:*:N-S-W-E-" />
     </tileMesh>
     <tileMesh file = "FLOOR.obj">
         <tiletype token="TRUNK_BRANCH:*:*:*:*" />
         <tiletype token="BRANCH:*:*:*:*" />
     </tileMesh>
-    
-    <tileMesh file = "Foliage_Test.obj">
+
+    <tileMesh file = "TreeTwigs.obj" rotation="Random90" >
         <tiletype token="TWIG:*:*:*:*" />
-        <subObject file ="Foliage_Small_1.obj">
-            <random/>
-        </subObject>
-        <subObject file ="Foliage_Small_2.obj">
-            <random/>
-        </subObject>
-        <subObject file ="Foliage_Small_3.obj">
-            <random/>
-        </subObject>
     </tileMesh>
-    
+
     <!--<tileMesh file = "Grass Big.obj">
         <tiletype token="FLOOR:*:GRASS_LIGHT:*:*" />
         <tiletype token="FLOOR:*:GRASS_DARK:*:*" />
     </tileMesh>-->
+    <tileMesh file = "TreeTrunkSloping_1.obj">
+        <tiletype token="RAMP:*:TREE_MATERIAL:*:*" />
+        <subObject file ="TreeTrunkSloping_1.obj">
+            <ramp index="1"/>
+        </subObject>
+    </tileMesh>
     <tileMesh file = "Ramps/RAMP_1.obj">
         <tiletype token="RAMP:*:*:*:*" />
         <subObject file ="Ramps/RAMP_1.obj">
+            <subObject file ="TreeTrunkSloping_1.obj">
+                <tiletype token="*:*:TREE_MATERIAL:*:*" />
+            </subObject>
             <ramp index="1"/>
         </subObject>
         <subObject file ="Ramps/RAMP_2.obj">
