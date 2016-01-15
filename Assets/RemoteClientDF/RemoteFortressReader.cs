@@ -396,6 +396,34 @@ namespace RemoteFortressReader
       get { return _buildings; }
     }
   
+    private readonly global::System.Collections.Generic.List<int> _tree_percent = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(20, Name=@"tree_percent", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> tree_percent
+    {
+      get { return _tree_percent; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<int> _tree_x = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(21, Name=@"tree_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> tree_x
+    {
+      get { return _tree_x; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<int> _tree_y = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(22, Name=@"tree_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> tree_y
+    {
+      get { return _tree_y; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<int> _tree_z = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(23, Name=@"tree_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> tree_z
+    {
+      get { return _tree_z; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -1384,6 +1412,14 @@ namespace RemoteFortressReader
       get { return _child_name; }
     }
   
+    private int _gender = default(int);
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"gender", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int gender
+    {
+      get { return _gender; }
+      set { _gender = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -1567,6 +1603,225 @@ namespace RemoteFortressReader
     public global::System.Collections.Generic.List<RemoteFortressReader.Army> armies
     {
       get { return _armies; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"GrowthPrint")]
+  public partial class GrowthPrint : global::ProtoBuf.IExtensible
+  {
+    public GrowthPrint() {}
+    
+    private int _priority = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"priority", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int priority
+    {
+      get { return _priority; }
+      set { _priority = value; }
+    }
+    private int _color = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"color", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int color
+    {
+      get { return _color; }
+      set { _color = value; }
+    }
+    private int _timing_start = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"timing_start", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int timing_start
+    {
+      get { return _timing_start; }
+      set { _timing_start = value; }
+    }
+    private int _timing_end = default(int);
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"timing_end", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int timing_end
+    {
+      get { return _timing_end; }
+      set { _timing_end = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"TreeGrowth")]
+  public partial class TreeGrowth : global::ProtoBuf.IExtensible
+  {
+    public TreeGrowth() {}
+    
+    private int _index = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int index
+    {
+      get { return _index; }
+      set { _index = value; }
+    }
+    private string _id = "";
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string id
+    {
+      get { return _id; }
+      set { _id = value; }
+    }
+    private string _name = "";
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string name
+    {
+      get { return _name; }
+      set { _name = value; }
+    }
+    private RemoteFortressReader.MatPair _mat = null;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"mat", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.MatPair mat
+    {
+      get { return _mat; }
+      set { _mat = value; }
+    }
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.GrowthPrint> _prints = new global::System.Collections.Generic.List<RemoteFortressReader.GrowthPrint>();
+    [global::ProtoBuf.ProtoMember(5, Name=@"prints", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.GrowthPrint> prints
+    {
+      get { return _prints; }
+    }
+  
+    private int _timing_start = default(int);
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"timing_start", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int timing_start
+    {
+      get { return _timing_start; }
+      set { _timing_start = value; }
+    }
+    private int _timing_end = default(int);
+    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"timing_end", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int timing_end
+    {
+      get { return _timing_end; }
+      set { _timing_end = value; }
+    }
+    private bool _twigs = default(bool);
+    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"twigs", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool twigs
+    {
+      get { return _twigs; }
+      set { _twigs = value; }
+    }
+    private bool _light_branches = default(bool);
+    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"light_branches", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool light_branches
+    {
+      get { return _light_branches; }
+      set { _light_branches = value; }
+    }
+    private bool _heavy_branches = default(bool);
+    [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name=@"heavy_branches", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool heavy_branches
+    {
+      get { return _heavy_branches; }
+      set { _heavy_branches = value; }
+    }
+    private bool _trunk = default(bool);
+    [global::ProtoBuf.ProtoMember(11, IsRequired = false, Name=@"trunk", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool trunk
+    {
+      get { return _trunk; }
+      set { _trunk = value; }
+    }
+    private bool _roots = default(bool);
+    [global::ProtoBuf.ProtoMember(12, IsRequired = false, Name=@"roots", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool roots
+    {
+      get { return _roots; }
+      set { _roots = value; }
+    }
+    private bool _cap = default(bool);
+    [global::ProtoBuf.ProtoMember(13, IsRequired = false, Name=@"cap", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool cap
+    {
+      get { return _cap; }
+      set { _cap = value; }
+    }
+    private bool _sapling = default(bool);
+    [global::ProtoBuf.ProtoMember(14, IsRequired = false, Name=@"sapling", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool sapling
+    {
+      get { return _sapling; }
+      set { _sapling = value; }
+    }
+    private int _trunk_height_start = default(int);
+    [global::ProtoBuf.ProtoMember(15, IsRequired = false, Name=@"trunk_height_start", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int trunk_height_start
+    {
+      get { return _trunk_height_start; }
+      set { _trunk_height_start = value; }
+    }
+    private int _trunk_height_end = default(int);
+    [global::ProtoBuf.ProtoMember(16, IsRequired = false, Name=@"trunk_height_end", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int trunk_height_end
+    {
+      get { return _trunk_height_end; }
+      set { _trunk_height_end = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"PlantRaw")]
+  public partial class PlantRaw : global::ProtoBuf.IExtensible
+  {
+    public PlantRaw() {}
+    
+    private int _index = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int index
+    {
+      get { return _index; }
+      set { _index = value; }
+    }
+    private string _id = "";
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string id
+    {
+      get { return _id; }
+      set { _id = value; }
+    }
+    private readonly global::System.Collections.Generic.List<string> _name = new global::System.Collections.Generic.List<string>();
+    [global::ProtoBuf.ProtoMember(3, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<string> name
+    {
+      get { return _name; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.TreeGrowth> _growths = new global::System.Collections.Generic.List<RemoteFortressReader.TreeGrowth>();
+    [global::ProtoBuf.ProtoMember(4, Name=@"growths", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.TreeGrowth> growths
+    {
+      get { return _growths; }
     }
   
     private global::ProtoBuf.IExtension extensionObject;
