@@ -391,7 +391,7 @@ abstract class BlockMesher {
                 return;
             }
         }
-        buffer.meshData = mesh.MeshData[(int)layer];
+        buffer.meshData = mesh.MeshData[layer];
         buffer.transform = Matrix4x4.TRS(GameMap.DFtoUnityCoord(tile.position), mesh.GetRotation(tile), Vector3.one);
         Matrix4x4 shapeTextTransform = Matrix4x4.identity;
         NormalContent tileTexContent;
@@ -459,14 +459,6 @@ abstract class BlockMesher {
                 case MeshLayer.NoMaterialBuilding:
                 case MeshLayer.NoMaterialBuildingTransparent:
                 case MeshLayer.NoMaterialTransparent:
-                    break;
-                case MeshLayer.Growth0Cutout:
-                    break;
-                case MeshLayer.Growth1Cutout:
-                    break;
-                case MeshLayer.Growth2Cutout:
-                    break;
-                case MeshLayer.Growth3Cutout:
                     break;
                 case MeshLayer.BuildingMaterial:
                 case MeshLayer.BuildingMaterialCutout:

@@ -3,6 +3,7 @@ using UnityEngine;
 using System.IO;
 using System;
 using UnityExtension;
+using System.Collections.Generic;
 
 public enum MeshLayer
 {
@@ -10,6 +11,10 @@ public enum MeshLayer
     BaseMaterial,
     LayerMaterial,
     VeinMaterial,
+    GrowthMaterial,
+    GrowthMaterial1,
+    GrowthMaterial2,
+    GrowthMaterial3,
     BuildingMaterial,
     NoMaterial,
     NoMaterialBuilding,
@@ -17,10 +22,10 @@ public enum MeshLayer
     BaseCutout,
     LayerCutout,
     VeinCutout,
-    Growth0Cutout,
-    Growth1Cutout,
-    Growth2Cutout,
-    Growth3Cutout,
+    GrowthCutout,
+    GrowthCutout1,
+    GrowthCutout2,
+    GrowthCutout3,
     BuildingMaterialCutout,
     NoMaterialCutout,
     NoMaterialBuildingCutout,
@@ -28,6 +33,10 @@ public enum MeshLayer
     BaseTransparent,
     LayerTransparent,
     VeinTransparent,
+    GrowthTransparent,
+    GrowthTransparent1,
+    GrowthTransparent2,
+    GrowthTransparent3,
     BuildingMaterialTransparent,
     NoMaterialTransparent,
     NoMaterialBuildingTransparent,
@@ -50,7 +59,7 @@ public enum RotationType
 public class MeshContent : IContent
 {
     static OpenSimplexNoise noise;
-    public MeshData[] MeshData { get; private set; }
+    public Dictionary<MeshLayer, MeshData> MeshData { get; private set; }
     TextureStorage store;
 
     NormalContent _normalTexture = null;
@@ -195,7 +204,7 @@ public class MeshContent : IContent
         {
             //This means we don't want to actually store a mesh,
             //but still want to use the category.
-            MeshData = new MeshData[(int)MeshLayer.Count];
+            MeshData = new Dictionary<MeshLayer, MeshData>();
         }
         else
         {
@@ -206,12 +215,40 @@ public class MeshContent : IContent
             var lStream = new FileStream(filePath, FileMode.Open);
             var lOBJData = OBJLoader.LoadOBJ(lStream);
             lStream.Close();
-            MeshData = new MeshData[(int)MeshLayer.Count];
+            MeshData = new Dictionary<MeshLayer, MeshData>();
             Mesh tempMesh = new Mesh();
-            for (int i = 0; i < MeshData.Length; i++)
+            foreach(MeshLayer layer in Enum.GetValues(typeof(MeshLayer)))
             {
-                tempMesh.LoadOBJ(lOBJData, ((MeshLayer)i).ToString());
-                MeshData[i] = new MeshData(tempMesh);
+                MeshLayer translatedLayer;
+                if (layer == MeshLayer.GrowthCutout1
+                    || layer == MeshLayer.GrowthCutout2
+                    || layer == MeshLayer.GrowthCutout3)
+                    translatedLayer = MeshLayer.GrowthCutout;
+                else if (layer == MeshLayer.GrowthMaterial1
+                    || layer == MeshLayer.GrowthMaterial2
+                    || layer == MeshLayer.GrowthMaterial3)
+                    translatedLayer = MeshLayer.GrowthMaterial;
+                else if (layer == MeshLayer.GrowthTransparent1
+                    || layer == MeshLayer.GrowthTransparent2
+                    || layer == MeshLayer.GrowthTransparent3)
+                    translatedLayer = MeshLayer.GrowthTransparent;
+                else translatedLayer = layer;
+                tempMesh.LoadOBJ(lOBJData, (layer.ToString()));
+                if (tempMesh == null)
+                    continue;
+                tempMesh.name = filePath + "." + layer.ToString();
+                if(translatedLayer == MeshLayer.GrowthCutout
+                    || translatedLayer == MeshLayer.GrowthMaterial
+                    || translatedLayer == MeshLayer.GrowthTransparent)
+                {
+                    for(int i = (int)translatedLayer; i < i+4; i++)
+                    {
+                        //This is because the tree growths can be in any order
+                        //So we just copy the un-numbered one onto the rest.
+                        MeshData[(MeshLayer)i] = new MeshData(tempMesh);
+                    }
+                }
+                else MeshData[layer] = new MeshData(tempMesh);
                 tempMesh.Clear();
             }
             lStream = null;
