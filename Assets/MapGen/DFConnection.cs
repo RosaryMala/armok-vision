@@ -60,6 +60,7 @@ public class DFConnection : MonoBehaviour
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.WorldMap> worldMapCenterCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.RegionMaps> regionMapCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.CreatureRawList> creatureRawListCall;
+    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.PlantRawList> plantRawListCall;
     private color_ostream dfNetworkOut = new color_ostream();
     private RemoteClient networkClient;
 
@@ -71,6 +72,7 @@ public class DFConnection : MonoBehaviour
     private RemoteFortressReader.TiletypeList _netTiletypeList;
     private RemoteFortressReader.BuildingList _netBuildingList;
     private RemoteFortressReader.CreatureRawList _netCreatureRawList;
+    private RemoteFortressReader.PlantRawList _netPlantRawList;
 
     // Changing (used like queues):
     private RemoteFortressReader.ViewInfo _netViewInfo;
@@ -138,6 +140,14 @@ public class DFConnection : MonoBehaviour
         get
         {
             return _netCreatureRawList;
+        }
+    }
+
+    public RemoteFortressReader.PlantRawList NetPlantRawList
+    {
+        get
+        {
+            return _netPlantRawList;
         }
     }
 
@@ -370,6 +380,7 @@ public class DFConnection : MonoBehaviour
         worldMapCenterCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.WorldMap>(networkClient, "GetWorldMapCenter", "RemoteFortressReader");
         regionMapCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.RegionMaps>(networkClient, "GetRegionMaps", "RemoteFortressReader");
         creatureRawListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.CreatureRawList>(networkClient, "GetCreatureRaws", "RemoteFortressReader");
+        plantRawListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.PlantRawList>(networkClient, "GetPlantRaws", "RemoteFortressReader");
     }
 
     // Get information that only needs to be read once
@@ -385,6 +396,8 @@ public class DFConnection : MonoBehaviour
             buildingListCall.execute(null, out _netBuildingList);
         if (creatureRawListCall != null)
             creatureRawListCall.execute(null, out _netCreatureRawList);
+        if (plantRawListCall != null)
+            plantRawListCall.execute(null, out _netPlantRawList);
     }
 
     // Populate lists when we connect

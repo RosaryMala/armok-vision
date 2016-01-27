@@ -9,7 +9,6 @@ using UnitFlags;
 using System.Text;
 using System.Globalization;
 using System.Threading;
-using UnityExtension;
 using Collada141;
 
 // The class responsible for talking to DF and meshing the data it gets.
@@ -212,10 +211,6 @@ public class GameMap : MonoBehaviour
         return input.x % blockSize == 0 &&
                input.y % blockSize == 0;
     }
-
-    // Used while meshing blocks
-    MeshCombineUtility.MeshInstance[] meshBuffer;
-    MeshCombineUtility.MeshInstance[] stencilMeshBuffer;
 
     // Used for random diagnostics
     System.Diagnostics.Stopwatch blockListTimer = new System.Diagnostics.Stopwatch();
