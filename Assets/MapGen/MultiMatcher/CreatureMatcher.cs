@@ -1,7 +1,5 @@
 ﻿using RemoteFortressReader;
-using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 static class CreatureTokenList
 {
