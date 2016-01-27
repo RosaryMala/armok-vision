@@ -1829,6 +1829,23 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"PlanRawList")]
+  public partial class PlanRawList : global::ProtoBuf.IExtensible
+  {
+    public PlanRawList() {}
+    
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.PlantRaw> _plant_raws = new global::System.Collections.Generic.List<RemoteFortressReader.PlantRaw>();
+    [global::ProtoBuf.ProtoMember(1, Name=@"plant_raws", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.PlantRaw> plant_raws
+    {
+      get { return _plant_raws; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
     [global::ProtoBuf.ProtoContract(Name=@"TiletypeShape")]
     public enum TiletypeShape
     {
