@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityExtension;
 
 // Stores data like a Mesh, but doesn't talk to the graphics card.
@@ -15,6 +14,7 @@ public class MeshData
     public readonly Vector2[] uv2;
     public readonly Color[] colors;
     public readonly int[] triangles;
+    public readonly string name;
 
     public MeshData (Mesh target)
     {
@@ -29,6 +29,7 @@ public class MeshData
             triangles = target.GetTriangles(0); // Will the submesh always be 0?
         else
             triangles = new int[0];
+        name = target.name;
     }
 
     public MeshData (
@@ -38,7 +39,8 @@ public class MeshData
      Vector2[] uv,
      Vector2[] uv2,
      Color[] colors,
-     int[] triangles)
+     int[] triangles,
+     string name = null)
     {
         this.vertexCount = vertices.Length;
         this.vertices = vertices;
@@ -48,6 +50,7 @@ public class MeshData
         this.uv2 = uv2;
         this.colors = colors;
         this.triangles = triangles;
+        this.name = name;
     }
 
     public void CopyToMesh(Mesh target) {
@@ -60,5 +63,6 @@ public class MeshData
         target.triangles = triangles;
         target.RecalculateBounds();
         target.RecalculateTangents();
+        target.name = name;
     }
 }
