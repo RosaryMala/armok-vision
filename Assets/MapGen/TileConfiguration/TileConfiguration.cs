@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 using UnityEngine;
 
@@ -72,7 +73,16 @@ abstract public class TileConfiguration<T> where T : IContent, new()
             output.nodeName = name.LocalName;
             return output;
         }
-        switch (elemRoot.Element(name).Elements().First().Name.LocalName)
+        string matchType = "NoMatch";
+        XElement matchElement = elemRoot.Element(name).Elements().First();
+        foreach (var element in elemRoot.Element(name).Elements())
+        {
+            if (element.Name.LocalName == "subObject") continue;
+            matchType = element.Name.LocalName;
+            matchElement = element;
+            break;
+        }
+        switch (matchType)
         {
             case "material":
                 output = new TileMaterialConfiguration<T>();
@@ -102,7 +112,8 @@ abstract public class TileConfiguration<T> where T : IContent, new()
                 output = new BuildingPosConfiguration<T>();
                 break;
             default:
-                Debug.LogError("Found unknown matching method \"" + elemRoot.Element(name).Elements().First().Name.LocalName + "\", assuming material.");
+                IXmlLineInfo lineinfo = matchElement;
+                Debug.LogError("Found unknown matching method \"" + matchType + "\" int " + elemRoot.BaseUri + ":" + lineinfo.LineNumber + "," + lineinfo.LinePosition + ", assuming material.");
                 output = new TileMaterialConfiguration<T>();
                 break;
         }
