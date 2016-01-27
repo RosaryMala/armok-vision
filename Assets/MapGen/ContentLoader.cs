@@ -97,9 +97,11 @@ public class ContentLoader
     public TileConfiguration<TextureContent> MaterialTextureConfiguration { get; private set; }
     public TileConfiguration<NormalContent> ShapeTextureConfiguration { get; private set; }
     public TileConfiguration<MeshContent> TileMeshConfiguration { get; private set; }
+    public TileConfiguration<MeshContent> GrowthMeshConfiguration { get; private set; }
     public TileConfiguration<LayerContent> MaterialLayerConfiguration { get; private set; }
     public TileConfiguration<MeshContent> BuildingMeshConfiguration { get; private set; }
     public TileConfiguration<NormalContent> BuildingShapeTextureConfiguration { get; private set; }
+    public CreatureConfiguration<MeshContent> CreatureMeshConfiguration { get; private set; }
 
 
     public ContentLoader()
@@ -158,7 +160,7 @@ public class ContentLoader
     bool ParseContentXMLFile(string path)
     {
         bool runningResult = true;
-        XElement doc = XElement.Load(path, LoadOptions.SetBaseUri);
+        XElement doc = XElement.Load(path, LoadOptions.SetBaseUri | LoadOptions.SetLineInfo);
         while (doc != null)
         {
             switch (doc.Name.LocalName)
@@ -197,6 +199,16 @@ public class ContentLoader
                     if (BuildingShapeTextureConfiguration == null)
                         BuildingShapeTextureConfiguration = TileConfiguration<NormalContent>.GetFromRootElement(doc, "buildingShapeTexture");
                     BuildingShapeTextureConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
+                    break;
+                case "creatureMeshes":
+                    if (CreatureMeshConfiguration == null)
+                        CreatureMeshConfiguration = CreatureConfiguration<MeshContent>.GetFromRootElement(doc, "creatureMesh");
+                    CreatureMeshConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
+                            break;
+                case "growthMeshes":
+                    if (GrowthMeshConfiguration == null)
+                        GrowthMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "growthMesh");
+                    GrowthMeshConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
                     break;
                 default:
                     break;
