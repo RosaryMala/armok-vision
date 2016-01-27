@@ -358,7 +358,7 @@ abstract class BlockMesher {
     void FillMeshBuffer(out MeshCombineUtility.MeshInstance buffer, MeshLayer layer, MapDataStore.Tile tile)
     {
         buffer = new MeshCombineUtility.MeshInstance();
-        MeshContent mesh = null;
+        MeshContent meshContent = null;
         if (tile.hidden)
         {
             buffer.meshData = null;
@@ -377,7 +377,7 @@ abstract class BlockMesher {
                 buffer.meshData = null;
                 return;
             }
-            if (!contentLoader.BuildingMeshConfiguration.GetValue(tile, layer, out mesh))
+            if (!contentLoader.BuildingMeshConfiguration.GetValue(tile, layer, out meshContent))
             {
                 buffer.meshData = null;
                 return;
@@ -385,17 +385,22 @@ abstract class BlockMesher {
         }
         else
         {
-            if (!contentLoader.TileMeshConfiguration.GetValue(tile, layer, out mesh))
+            if (!contentLoader.TileMeshConfiguration.GetValue(tile, layer, out meshContent))
             {
                 buffer.meshData = null;
                 return;
             }
         }
-        buffer.meshData = mesh.MeshData[layer];
-        buffer.transform = Matrix4x4.TRS(GameMap.DFtoUnityCoord(tile.position), mesh.GetRotation(tile), Vector3.one);
+        if(!meshContent.MeshData.ContainsKey(layer))
+        {
+            buffer.meshData = null;
+            return;
+        }
+        buffer.meshData = meshContent.MeshData[layer];
+        buffer.transform = Matrix4x4.TRS(GameMap.DFtoUnityCoord(tile.position), meshContent.GetRotation(tile), Vector3.one);
         Matrix4x4 shapeTextTransform = Matrix4x4.identity;
         NormalContent tileTexContent;
-        if (mesh.NormalTexture == null)
+        if (meshContent.NormalTexture == null)
         {
             if (layer == MeshLayer.BuildingMaterial
                 || layer == MeshLayer.BuildingMaterialCutout
@@ -416,7 +421,7 @@ abstract class BlockMesher {
         }
         else
         {
-            shapeTextTransform = mesh.NormalTexture.UVTransform;
+            shapeTextTransform = meshContent.NormalTexture.UVTransform;
         }
         Matrix4x4 matTexTransform = Matrix4x4.identity;
         TextureContent matTexContent;
