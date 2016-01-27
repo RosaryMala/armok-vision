@@ -2,7 +2,7 @@
 using UnityExtension;
 
 // Stores data like a Mesh, but doesn't talk to the graphics card.
-public class MeshData
+public class CPUMesh
 {
     // Everything is readonly because this will be accessed from
     // multiple threads, and we don't want race conditions
@@ -16,7 +16,7 @@ public class MeshData
     public readonly int[] triangles;
     public readonly string name;
 
-    public MeshData (Mesh target)
+    public CPUMesh (Mesh target)
     {
         vertexCount = target.vertexCount;
         vertices = target.vertices;
@@ -32,7 +32,7 @@ public class MeshData
         name = target.name;
     }
 
-    public MeshData (
+    public CPUMesh (
      Vector3[] vertices,
      Vector3[] normals,
      Vector4[] tangents,

@@ -22,11 +22,11 @@ abstract class BlockMesher {
 
     public struct Result {
         public DFCoord location;
-        public MeshData tiles;
-        public MeshData stencilTiles;
-        public MeshData transparentTiles;
-        public MeshData water;
-        public MeshData magma;
+        public CPUMesh tiles;
+        public CPUMesh stencilTiles;
+        public CPUMesh transparentTiles;
+        public CPUMesh water;
+        public CPUMesh magma;
     }
 
     protected struct Request {
@@ -192,7 +192,7 @@ abstract class BlockMesher {
     {
         return (x * (GameMap.blockSize + 1)) + y;
     }
-    MeshData GenerateLiquidSurface(MapDataStore data, int liquid_select, TempBuffers temp)
+    CPUMesh GenerateLiquidSurface(MapDataStore data, int liquid_select, TempBuffers temp)
     {
         int block_x = data.SliceOrigin.x / GameMap.blockSize;
         int block_y = data.SliceOrigin.y / GameMap.blockSize;
@@ -296,7 +296,7 @@ abstract class BlockMesher {
                 finalFaces.Add(coord2Index(xx, yy + 1));
             }
         if (finalFaces.Count > 0) {
-            return new MeshData(vertices: finalVertices,
+            return new CPUMesh(vertices: finalVertices,
                                 normals: finalNormals,
                                 tangents: null,
                                 uv: finalUVs,
@@ -308,7 +308,7 @@ abstract class BlockMesher {
         }
     }
 
-    bool GenerateTiles(MapDataStore data, out MeshData tiles, out MeshData stencilTiles, out MeshData transparentTiles, TempBuffers temp)
+    bool GenerateTiles(MapDataStore data, out CPUMesh tiles, out CPUMesh stencilTiles, out CPUMesh transparentTiles, TempBuffers temp)
     {
         int block_x = data.SliceOrigin.x / GameMap.blockSize;
         int block_y = data.SliceOrigin.y / GameMap.blockSize;
