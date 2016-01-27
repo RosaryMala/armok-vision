@@ -22,7 +22,7 @@ public class MeshCombineUtility
     }
     public struct MeshInstance
     {
-        public MeshData meshData;
+        public CPUMesh meshData;
         public Matrix4x4 transform;
         public Color color;
         public Matrix4x4 uv1Transform;
@@ -30,7 +30,7 @@ public class MeshCombineUtility
         public HiddenFaces hiddenFaces;
     }
 
-    public static MeshData ColorCombine(MeshInstance[] combines, out bool success)
+    public static CPUMesh ColorCombine(MeshInstance[] combines, out bool success)
     {
         int length = combines.Length;
         int vertexCount = 0;
@@ -128,7 +128,7 @@ public class MeshCombineUtility
             indexTranslation.Clear();
         }
         success = true;
-        return new MeshData(
+        return new CPUMesh(
             vertices: vertices.ToArray(),
             normals: normals.ToArray(),
             tangents: tangents.ToArray(),
@@ -139,7 +139,7 @@ public class MeshCombineUtility
             );
         failure:
         success = false;
-        return new MeshData(
+        return new CPUMesh(
             vertices: vertices.ToArray(),
             normals: normals.ToArray(),
             tangents: tangents.ToArray(),

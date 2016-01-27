@@ -59,7 +59,7 @@ public enum RotationType
 public class MeshContent : IContent
 {
     static OpenSimplexNoise noise;
-    public Dictionary<MeshLayer, MeshData> MeshData { get; private set; }
+    public Dictionary<MeshLayer, CPUMesh> MeshData { get; private set; }
     TextureStorage store;
 
     NormalContent _normalTexture = null;
@@ -204,7 +204,7 @@ public class MeshContent : IContent
         {
             //This means we don't want to actually store a mesh,
             //but still want to use the category.
-            MeshData = new Dictionary<MeshLayer, MeshData>();
+            MeshData = new Dictionary<MeshLayer, CPUMesh>();
         }
         else
         {
@@ -215,7 +215,7 @@ public class MeshContent : IContent
             var lStream = new FileStream(filePath, FileMode.Open);
             var lOBJData = OBJLoader.LoadOBJ(lStream);
             lStream.Close();
-            MeshData = new Dictionary<MeshLayer, MeshData>();
+            MeshData = new Dictionary<MeshLayer, CPUMesh>();
             Mesh tempMesh = new Mesh();
             foreach(MeshLayer layer in Enum.GetValues(typeof(MeshLayer)))
             {
@@ -241,14 +241,14 @@ public class MeshContent : IContent
                     || translatedLayer == MeshLayer.GrowthMaterial
                     || translatedLayer == MeshLayer.GrowthTransparent)
                 {
-                    for(int i = (int)translatedLayer; i < i+4; i++)
+                    for(int i = (int)translatedLayer; i < (int)translatedLayer + 4; i++)
                     {
                         //This is because the tree growths can be in any order
                         //So we just copy the un-numbered one onto the rest.
-                        MeshData[(MeshLayer)i] = new MeshData(tempMesh);
+                        MeshData[(MeshLayer)i] = new CPUMesh(tempMesh);
                     }
                 }
-                else MeshData[layer] = new MeshData(tempMesh);
+                else MeshData[layer] = new CPUMesh(tempMesh);
                 tempMesh.Clear();
             }
             lStream = null;
