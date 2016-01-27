@@ -14,11 +14,30 @@ public class CreatureRaceConfiguration<T> : CreatureConfiguration<T> where T : I
 
     public override bool GetValue(UnitDefinition unit, out T value)
     {
-        throw new NotImplementedException();
+        Content cont;
+        if(raceStorage.TryGetValue(unit.race, out cont))
+        {
+            value = cont.GetValue(unit);
+            return true;
+        }
+        else
+        {
+            value = default(T);
+            return false;
+        }
     }
 
     protected override void ParseElementConditions(XElement elemtype, Content content)
     {
-        throw new NotImplementedException();
+        var elemCreatures = elemtype.Elements("creature");
+        foreach (XElement elemCreature in elemCreatures)
+        {
+            XAttribute elemGameID = elemCreature.Attribute("gameID");
+            if (elemGameID != null)
+            {
+                raceStorage[elemGameID.Value] = content;
+            }
+        }
+
     }
 }
