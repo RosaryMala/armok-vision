@@ -234,6 +234,7 @@ MonoBehaviour:
   height: 0
   worldName: 
   worldNameEnglish: 
+  drawClouds: 1
   offset: {x: 0, y: 0, z: 0}
   cloudPrafab: {fileID: 11429096, guid: 81483fb545a1d2c42ab4bcdf87c47fab, type: 2}
   regionPrefab: {fileID: 11445684, guid: 90bab0905d33d714694a6059b62f28d2, type: 2}
@@ -541,7 +542,7 @@ MonoBehaviour:
   cursX: -30000
   cursY: -30000
   cursZ: -30000
-  worldMap: {fileID: 0}
+  worldMap: {fileID: 458878501}
   posXTile: 0
   posYTile: 0
   posZ: 0
@@ -552,7 +553,7 @@ MonoBehaviour:
   blocksToProcess: 1
   cameraViewDist: 20
   meshingThreads: 2
-  testMesh: {fileID: 4300000, guid: ba8fe7bab5fe0d341a7a4e173e3fb9cd, type: 3}
+  testMesh: {fileID: 0}
   creatureTemplate: {fileID: 422910, guid: f1c56ebe0ff1ec3439724162aa0556bd, type: 2}
   scaleUnits: 1
 --- !u!114 &861361730
