@@ -28,7 +28,7 @@ public class MapSelection : MonoBehaviour
     //Handle mouse dragging here.
     void Update()
     {
-        if (!DFConnection.Connected || !gameMap.enabled) return;
+        if (!DFConnection.Connected || gameMap == null || !gameMap.enabled) return;
 
         //mouseWorldPosition = GetMouseWorldPosition(Input.mousePosition);
 
@@ -120,7 +120,7 @@ public class MapSelection : MonoBehaviour
     // (For now)
     void OnPostRender()
     {
-        if (!DFConnection.Connected || !gameMap.enabled) return;
+        if (!DFConnection.Connected || gameMap == null || !gameMap.enabled) return;
         Ray mouseRay = GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
 
         DFCoord currentTarget;
