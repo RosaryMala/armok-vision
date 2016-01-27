@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public static class TiletypeTokenList
 {
@@ -82,8 +83,6 @@ public class TiletypeMatcher<T>
         {
             if (optionList.ContainsKey(direction))
                 TrySetMatch(match, optionList[direction].id);
-            else
-                Debug.LogError(direction + " is not a valid tile direction.");
         }
     }
 
