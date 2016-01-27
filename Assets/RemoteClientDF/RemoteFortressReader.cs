@@ -1810,13 +1810,14 @@ namespace RemoteFortressReader
       get { return _id; }
       set { _id = value; }
     }
-    private readonly global::System.Collections.Generic.List<string> _name = new global::System.Collections.Generic.List<string>();
-    [global::ProtoBuf.ProtoMember(3, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<string> name
+    private string _name = "";
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string name
     {
       get { return _name; }
+      set { _name = value; }
     }
-  
     private readonly global::System.Collections.Generic.List<RemoteFortressReader.TreeGrowth> _growths = new global::System.Collections.Generic.List<RemoteFortressReader.TreeGrowth>();
     [global::ProtoBuf.ProtoMember(4, Name=@"growths", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.TreeGrowth> growths
@@ -1829,10 +1830,10 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"PlanRawList")]
-  public partial class PlanRawList : global::ProtoBuf.IExtensible
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"PlantRawList")]
+  public partial class PlantRawList : global::ProtoBuf.IExtensible
   {
-    public PlanRawList() {}
+    public PlantRawList() {}
     
     private readonly global::System.Collections.Generic.List<RemoteFortressReader.PlantRaw> _plant_raws = new global::System.Collections.Generic.List<RemoteFortressReader.PlantRaw>();
     [global::ProtoBuf.ProtoMember(1, Name=@"plant_raws", DataFormat = global::ProtoBuf.DataFormat.Default)]
