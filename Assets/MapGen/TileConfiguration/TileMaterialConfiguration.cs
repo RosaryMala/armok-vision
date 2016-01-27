@@ -18,7 +18,7 @@ public class TileMaterialConfiguration<T> : TileConfiguration<T> where T : ICont
     bool GetMaterialRef(MatPairStruct material, MapDataStore.Tile tile, MeshLayer layer, out T value)
     {
         Content cont;
-        if (materialMatcher.Get(material, out cont))
+        if (materialMatcher.TryGetValue(material, out cont))
         {
             if(thisMaterialMatcher == null)
             {
@@ -31,7 +31,7 @@ public class TileMaterialConfiguration<T> : TileConfiguration<T> where T : ICont
                     return true;
             }
         }
-        else if (thisMaterialMatcher != null && thisMaterialMatcher.Get(material, out value))
+        else if (thisMaterialMatcher != null && thisMaterialMatcher.TryGetValue(material, out value))
         {
             return true;
         }
@@ -69,14 +69,6 @@ public class TileMaterialConfiguration<T> : TileConfiguration<T> where T : ICont
                     break;
                 value = defaultMaterial.GetValue(tile, layer);
                 return true;
-            case MeshLayer.Growth0Cutout:
-                break;
-            case MeshLayer.Growth1Cutout:
-                break;
-            case MeshLayer.Growth2Cutout:
-                break;
-            case MeshLayer.Growth3Cutout:
-                break;
             case MeshLayer.BuildingMaterial:
             case MeshLayer.BuildingMaterialCutout:
             case MeshLayer.BuildingMaterialTransparent:
