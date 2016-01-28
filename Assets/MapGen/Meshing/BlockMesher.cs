@@ -1,8 +1,8 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
-using DFHack;
-using System.Threading;
+﻿using DFHack;
 using RemoteFortressReader;
+using System.Collections.Generic;
+using System.Threading;
+using UnityEngine;
 
 // Two implementations: single and multithreaded.
 // All of the actual meshing code is exactly the same;
