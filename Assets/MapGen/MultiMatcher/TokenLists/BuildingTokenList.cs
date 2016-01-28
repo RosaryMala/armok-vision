@@ -20,10 +20,7 @@ namespace TokenLists
 
         public static bool IsValid
         {
-            get
-            {
-                return _buildingTokenList != null;
-            }
+            get { return _buildingTokenList != null; }
         }
 
         public static Dictionary<string, BuildingDefinition> BuildingLookup { get; private set; }
