@@ -163,7 +163,7 @@ public class MapDataStore {
                     if (block.construction_items != null && block.construction_items.Count > netIndex)
                         tiles[localCoord.x, localCoord.y, localCoord.z].construction_item = block.construction_items[netIndex];
                     else
-                        tiles[localCoord.x, localCoord.y, localCoord.z].construction_item = new MatPairStruct(-1, -1);
+                        tiles[localCoord.x, localCoord.y, localCoord.z].construction_item = new IntPair(-1, -1);
                     if (block.tree_percent != null && block.tree_percent.Count > netIndex)
                     {
                         tiles[localCoord.x, localCoord.y, localCoord.z].trunkPercent = (byte)block.tree_percent[netIndex];
@@ -291,16 +291,16 @@ public class MapDataStore {
 
     public void InitOrModifyTile(DFCoord coord,
                            int? tileType = null,
-                           MatPairStruct? material = null,
-                           MatPairStruct? base_material = null,
-                           MatPairStruct? layer_material = null,
-                           MatPairStruct? vein_material = null,
+                           IntPair? material = null,
+                           IntPair? base_material = null,
+                           IntPair? layer_material = null,
+                           IntPair? vein_material = null,
                            int? waterLevel = null,
                            int? magmaLevel = null,
-                           MatPairStruct? construction_item = null,
+                           IntPair? construction_item = null,
                            int? rampType = null,
                            BuildingStruct? buildingType = null,
-                           MatPairStruct? buildingMaterial = null,
+                           IntPair? buildingMaterial = null,
                            DFCoord2d? buildingLocalPos = null,
                            BuildingDirection? buildingDirection = null,
                            bool? hidden = null,
@@ -354,15 +354,15 @@ public class MapDataStore {
             this.container = container;
             this.position = position;
             tileType = default(int);
-            material = default(MatPairStruct);
-            base_material = default(MatPairStruct);
-            layer_material = default(MatPairStruct);
-            vein_material = default(MatPairStruct);
-            construction_item = default(MatPairStruct);
+            material = default(IntPair);
+            base_material = default(IntPair);
+            layer_material = default(IntPair);
+            vein_material = default(IntPair);
+            construction_item = default(IntPair);
             waterLevel = default(int);
             magmaLevel = default(int);
             rampType = 0;
-            buildingMaterial = default(MatPairStruct);
+            buildingMaterial = default(IntPair);
             buildingType = default(BuildingStruct);
             buildingLocalPos = default(DFCoord2d);
             buildingDirection = 0;
@@ -374,16 +374,16 @@ public class MapDataStore {
         public MapDataStore container;
         public DFCoord position;
         public int tileType;
-        public MatPairStruct material;
-        public MatPairStruct base_material;
-        public MatPairStruct layer_material;
-        public MatPairStruct vein_material;
-        public MatPairStruct construction_item;
+        public IntPair material;
+        public IntPair base_material;
+        public IntPair layer_material;
+        public IntPair vein_material;
+        public IntPair construction_item;
         public int waterLevel;
         public int magmaLevel;
         int rampType;
         public BuildingStruct buildingType;
-        public MatPairStruct buildingMaterial;
+        public IntPair buildingMaterial;
         public DFCoord2d buildingLocalPos;
         public BuildingDirection buildingDirection;
         public bool hidden;
@@ -413,16 +413,16 @@ public class MapDataStore {
         }
 
         public void Modify (int? tileType = null,
-                           MatPairStruct? material = null,
-                           MatPairStruct? base_material = null,
-                           MatPairStruct? layer_material = null,
-                           MatPairStruct? vein_material = null,
+                           IntPair? material = null,
+                           IntPair? base_material = null,
+                           IntPair? layer_material = null,
+                           IntPair? vein_material = null,
                            int? waterLevel = null,
                            int? magmaLevel = null,
-                           MatPairStruct? construction_item = null,
+                           IntPair? construction_item = null,
                            int? rampType = null,
                            BuildingStruct? buildingType = null,
-                           MatPairStruct? buildingMaterial = null,
+                           IntPair? buildingMaterial = null,
                            DFCoord2d? buildingLocalPos = null,
                            BuildingDirection? buildingDirection = null,
                            bool? hidden = null,
