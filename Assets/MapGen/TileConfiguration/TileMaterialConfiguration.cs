@@ -15,7 +15,7 @@ public class TileMaterialConfiguration<T> : TileConfiguration<T> where T : ICont
         }
     }
 
-    bool GetMaterialRef(MatPairStruct material, MapDataStore.Tile tile, MeshLayer layer, out T value)
+    bool GetMaterialRef(IntPair material, MapDataStore.Tile tile, MeshLayer layer, out T value)
     {
         Content cont;
         if (materialMatcher.TryGetValue(material, out cont))
@@ -117,7 +117,7 @@ public class TileMaterialConfiguration<T> : TileConfiguration<T> where T : ICont
             if (elemMaterial.Element("subtype") == null)
             {
                 //handle here the elements without subtypes.
-                MatPairStruct material = new MatPairStruct((int)elemType, -1);
+                IntPair material = new IntPair((int)elemType, -1);
                 if (content.overloadedItem != null || thisMaterialMatcher == null)
                     materialMatcher[material] = content;
                 if (thisMaterialMatcher != null)
