@@ -1,24 +1,27 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
-using RemoteFortressReader;
+﻿using RemoteFortressReader;
 using System;
+using System.Collections.Generic;
 
-static class PlantTokenList {
-    static List<PlantRaw> _plantRawList;
-    public static List<PlantRaw> PlantRawList
+namespace TokenLists
+{
+    static class PlantTokenList
     {
-        set
+        static List<PlantRaw> _plantRawList;
+        public static List<PlantRaw> PlantRawList
         {
-            if(_plantRawList != value)
+            set
             {
-                _plantRawList = value;
-                PopulateWordLists();
+                if (_plantRawList != value)
+                {
+                    _plantRawList = value;
+                    PopulateWordLists();
+                }
             }
         }
-    }
 
-    private static void PopulateWordLists()
-    {
-        throw new NotImplementedException();
+        private static void PopulateWordLists()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
