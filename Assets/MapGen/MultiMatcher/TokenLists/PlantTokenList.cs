@@ -17,7 +17,7 @@ static class PlantTokenList {
         }
     }
 
-    private void PopulateWordLists()
+    private static void PopulateWordLists()
     {
         throw new NotImplementedException();
     }
