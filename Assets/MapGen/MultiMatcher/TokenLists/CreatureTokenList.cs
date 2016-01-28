@@ -18,9 +18,9 @@ namespace TokenLists
             }
         }
 
-        private static Dictionary<string, Dictionary<string, MatPairStruct>> _casteIds;
+        private static Dictionary<string, Dictionary<string, IntPair>> _casteIds;
 
-        public static Dictionary<string, Dictionary<string, MatPairStruct>> CasteIDs
+        public static Dictionary<string, Dictionary<string, IntPair>> CasteIDs
         {
             get
             {
@@ -30,12 +30,12 @@ namespace TokenLists
 
 
 
-        static void AddCreature(string race, string caste, MatPairStruct id)
+        static void AddCreature(string race, string caste, IntPair id)
         {
             if (_casteIds == null)
-                _casteIds = new Dictionary<string, Dictionary<string, MatPairStruct>>();
+                _casteIds = new Dictionary<string, Dictionary<string, IntPair>>();
             if (!_casteIds.ContainsKey(race))
-                _casteIds[race] = new Dictionary<string, MatPairStruct>();
+                _casteIds[race] = new Dictionary<string, IntPair>();
             _casteIds[race][caste] = id;
         }
 
@@ -45,11 +45,11 @@ namespace TokenLists
             {
                 foreach (var caste in race.caste)
                 {
-                    MatPairStruct id = new MatPairStruct(race.index, caste.index);
+                    IntPair id = new IntPair(race.index, caste.index);
                     if (_casteIds == null)
-                        _casteIds = new Dictionary<string, Dictionary<string, MatPairStruct>>();
+                        _casteIds = new Dictionary<string, Dictionary<string, IntPair>>();
                     if (!_casteIds.ContainsKey(race.creature_id))
-                        _casteIds[race.creature_id] = new Dictionary<string, MatPairStruct>();
+                        _casteIds[race.creature_id] = new Dictionary<string, IntPair>();
                     _casteIds[race.creature_id][caste.caste_id] = id;
                 }
             }
