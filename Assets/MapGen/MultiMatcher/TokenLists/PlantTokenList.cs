@@ -18,6 +18,10 @@ namespace TokenLists
                 }
             }
         }
+        public static bool IsValid
+        {
+            get { return _plantRawList != null; }
+        }
 
         private static void PopulateWordLists()
         {
