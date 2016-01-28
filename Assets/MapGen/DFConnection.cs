@@ -1,11 +1,12 @@
-using UnityEngine;
 using DFHack;
 using System.Collections.Generic;
+using System.Threading;
+using TokenLists;
+using UnityEngine;
 
 // Class for async communication with DF.
 // Will eventually run actual communication on a separate thread.
 // Singleton-y - attached to a GameObject.
-using System.Threading;
 
 public class DFConnection : MonoBehaviour
 {
