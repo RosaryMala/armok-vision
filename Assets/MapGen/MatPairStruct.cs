@@ -1,6 +1,6 @@
 ﻿using RemoteFortressReader;
 
-public struct MatPairStruct
+public struct IntPair
 {
     public readonly int mat_index;
     public readonly int mat_type;
@@ -8,11 +8,11 @@ public struct MatPairStruct
     public int Type { get { return mat_type; } }
     public int SubType { get { return mat_index; } }
 
-    public static implicit operator MatPairStruct(MatPair input)
+    public static implicit operator IntPair(MatPair input)
     {
-        return new MatPairStruct(input.mat_type, input.mat_index);
+        return new IntPair(input.mat_type, input.mat_index);
     }
-    public static implicit operator MatPair(MatPairStruct input)
+    public static implicit operator MatPair(IntPair input)
     {
         MatPair output = new MatPair();
         output.mat_index = input.mat_index;
@@ -21,7 +21,7 @@ public struct MatPairStruct
 
     }
 
-    public MatPairStruct(int type, int index)
+    public IntPair(int type, int index)
     {
         mat_index = index;
         mat_type = type;
