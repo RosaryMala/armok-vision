@@ -60,7 +60,7 @@ abstract class BlockMesher {
     // These will be accessed from multiple threads, but DON'T need to be
     // locked, since they don't change after being loaded.
     protected readonly ContentLoader contentLoader;
-    protected readonly Dictionary<IntPair, RemoteFortressReader.MaterialDefinition> materials;
+    protected readonly Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> materials;
 
     // Some queues.
     // All of these need to be locked before access.
@@ -86,7 +86,7 @@ abstract class BlockMesher {
         Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
 
         // Load materials
-        materials = new Dictionary<IntPair, RemoteFortressReader.MaterialDefinition>();
+        materials = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
         foreach (RemoteFortressReader.MaterialDefinition material in DFConnection.Instance.NetMaterialList.material_list)
         {
             materials[material.mat_pair] = material;
@@ -435,7 +435,7 @@ abstract class BlockMesher {
         }
         else
         {
-            IntPair mat = new IntPair(-1, -1);
+            MatPairStruct mat = new MatPairStruct(-1, -1);
             switch (layer)
             {
                 case MeshLayer.StaticMaterial:

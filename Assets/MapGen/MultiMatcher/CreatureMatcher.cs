@@ -8,12 +8,12 @@ public class CreatureRaceMatcher<T>
         public T item;
         public int difference;
     }
-    Dictionary<IntPair, RaceMatch> creatureRaceList;
+    Dictionary<MatPairStruct, RaceMatch> creatureRaceList;
 
-    void TrySetMatch(RaceMatch match, IntPair mat)
+    void TrySetMatch(RaceMatch match, MatPairStruct mat)
     {
         if (creatureRaceList == null)
-            creatureRaceList = new Dictionary<IntPair, RaceMatch>();
+            creatureRaceList = new Dictionary<MatPairStruct, RaceMatch>();
         if (creatureRaceList.ContainsKey(mat))
         {
             if (creatureRaceList[mat].difference < match.difference)//overwrite existing exact matches
@@ -22,7 +22,7 @@ public class CreatureRaceMatcher<T>
         creatureRaceList[mat] = match;
     }
 
-    void Setwords(string race, Dictionary<string, IntPair> wordList, RaceMatch match)
+    void Setwords(string race, Dictionary<string, MatPairStruct> wordList, RaceMatch match)
     {
         if (race == "*")
         {
@@ -77,19 +77,19 @@ public class CreatureRaceMatcher<T>
             }
         }
     }
-    public T this[IntPair caste]
+    public T this[MatPairStruct caste]
     {
         set
         {
             if (creatureRaceList == null)
-                creatureRaceList = new Dictionary<IntPair, RaceMatch>();
+                creatureRaceList = new Dictionary<MatPairStruct, RaceMatch>();
             RaceMatch newItem;
             newItem.item = value;
             newItem.difference = 0;
             creatureRaceList[caste] = newItem;
         }
     }
-    public bool TryGetValue(IntPair caste, out T value)
+    public bool TryGetValue(MatPairStruct caste, out T value)
     {
         if (creatureRaceList != null)
         {
@@ -99,7 +99,7 @@ public class CreatureRaceMatcher<T>
                 value = output.item;
                 return true;
             }
-            caste = new IntPair(caste.mat_type, -1);
+            caste = new MatPairStruct(caste.mat_type, -1);
             if (creatureRaceList.TryGetValue(caste, out output))
             {
                 value = output.item;
