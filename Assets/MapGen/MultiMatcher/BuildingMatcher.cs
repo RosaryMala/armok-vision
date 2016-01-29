@@ -37,19 +37,19 @@ public class BuildingMatcher<T> {
                 value = output;
                 return true;
             }
-            bld.building_custom = -1; //Try once more with a more generic value.
+            bld = new BuildingStruct(bld.building_type, bld.building_subtype, -1);//Try once more with a more generic value.
             if (buildingList.TryGetValue(bld, out output))
             {
                 value = output;
                 return true;
             }
-            bld.building_subtype = -1; //and even more generic
+            bld = new BuildingStruct(bld.building_type, -1, -1); //and even more generic
             if (buildingList.TryGetValue(bld, out output))
             {
                 value = output;
                 return true;
             }
-            bld.building_type = -1; //and finally check if there's a universal default set.
+            bld = new BuildingStruct(-1, -1, -1); //and finally check if there's a universal default set.
             if (buildingList.TryGetValue(bld, out output))
             {
                 value = output;
