@@ -2,17 +2,13 @@
 
 public struct BuildingStruct
 {
-    public int building_type;
-    public int building_subtype;
-    public int building_custom;
+    public readonly int building_type;
+    public readonly int building_subtype;
+    public readonly int building_custom;
 
     public static implicit operator BuildingStruct(BuildingType input)
     {
-        BuildingStruct output;
-        output.building_type = input.building_type;
-        output.building_subtype = input.building_subtype;
-        output.building_custom = input.building_custom;
-        return output;
+        return new BuildingStruct(input.building_type, input.building_subtype, input.building_custom);
     }
 
     public static implicit operator BuildingType(BuildingStruct input)
