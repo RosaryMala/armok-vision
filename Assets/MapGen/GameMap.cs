@@ -294,6 +294,7 @@ public class GameMap : MonoBehaviour
 
         SaveTileTypeList();
 
+        SavePlantList();
 
         UpdateView();
 
@@ -695,6 +696,55 @@ public class GameMap : MonoBehaviour
                     item.Value.mat_pair.mat_type + ";" +
                     item.Value.mat_pair.mat_index
                     );
+            }
+        }
+    }
+
+    void SavePlantList()
+    {
+        if (DFConnection.Instance.NetPlantRawList == null)
+            return;
+        try
+        {
+            File.Delete("PlantList.csv");
+        }
+        catch (IOException)
+        {
+            return;
+        }
+        using (StreamWriter writer = new StreamWriter("PlantList.csv"))
+        {
+            foreach (var plant in TokenLists.PlantTokenList.GrowthIDs)
+            {
+                foreach (var growth in plant.Value)
+                {
+                    foreach (var print in growth.Value)
+                    {
+                        writer.Write(plant.Key);
+                        writer.Write(":");
+                        writer.Write(growth.Key);
+                        writer.Write(":");
+                        writer.Write(print.Key);
+                        writer.Write(";");
+                        writer.Write(print.Value);
+                        writer.Write(";");
+                        var index = print.Value;
+                        if (index.building_type >= 0)
+                        {
+                            PlantRaw plantRaw = DFConnection.Instance.NetPlantRawList.plant_raws[index.building_type];
+                            if (index.building_type >= 0 && index.building_subtype >= 0 && index.building_custom >= 0)
+                            {
+                                var printRaw = plantRaw.growths[index.building_subtype].prints[index.building_custom];
+                                writer.Write(CharacterConverter.Convert((byte)printRaw.tile));
+                            }
+                            else
+                            {
+                                writer.Write(CharacterConverter.Convert((byte)plantRaw.tile));
+                            }
+                        }
+                        writer.WriteLine();
+                    }
+                }
             }
         }
     }
