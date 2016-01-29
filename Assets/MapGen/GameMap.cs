@@ -146,10 +146,10 @@ public class GameMap : MonoBehaviour
     DFCoord mapPosition;
 
     // Stuff to let the material list & various meshes & whatnot be loaded from xml specs at runtime.
-    Dictionary<IntPair, RemoteFortressReader.MaterialDefinition> materials;
-    Dictionary<IntPair, RemoteFortressReader.MaterialDefinition> items;
+    Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> materials;
+    Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> items;
     Dictionary<BuildingStruct, RemoteFortressReader.BuildingDefinition> buildings;
-    Dictionary<IntPair, RemoteFortressReader.MaterialDefinition> creatures;
+    Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> creatures;
 
     // Coordinate system stuff.
     public const float tileHeight = 3.0f;
@@ -241,7 +241,7 @@ public class GameMap : MonoBehaviour
         if (DFConnection.Instance.NetMaterialList != null)
         {
             if (materials == null)
-                materials = new Dictionary<IntPair, RemoteFortressReader.MaterialDefinition>();
+                materials = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
             materials.Clear();
             foreach (RemoteFortressReader.MaterialDefinition material in DFConnection.Instance.NetMaterialList.material_list)
             {
@@ -253,7 +253,7 @@ public class GameMap : MonoBehaviour
         if (DFConnection.Instance.NetItemList != null)
         {
             if (items == null)
-                items = new Dictionary<IntPair, RemoteFortressReader.MaterialDefinition>();
+                items = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
             items.Clear();
             foreach (MaterialDefinition material in DFConnection.Instance.NetItemList.material_list)
             {
@@ -275,12 +275,12 @@ public class GameMap : MonoBehaviour
         if (DFConnection.Instance.NetCreatureRawList != null)
         {
             if (creatures == null)
-                creatures = new Dictionary<IntPair, MaterialDefinition>();
+                creatures = new Dictionary<MatPairStruct, MaterialDefinition>();
             foreach (CreatureRaw creatureRaw in DFConnection.Instance.NetCreatureRawList.creature_raws)
             {
                 foreach (var caste in creatureRaw.caste)
                 {
-                    IntPair creatureCaste = new IntPair(creatureRaw.index, caste.index);
+                    MatPairStruct creatureCaste = new MatPairStruct(creatureRaw.index, caste.index);
                     MaterialDefinition creatureDef = new MaterialDefinition();
                     creatureDef.mat_pair = creatureCaste;
                     creatureDef.id = creatureRaw.creature_id + ":" + caste.caste_id;
@@ -676,7 +676,7 @@ public class GameMap : MonoBehaviour
     }
 
 
-    void SaveMaterialList(IEnumerable<KeyValuePair<IntPair, MaterialDefinition>> list, string filename)
+    void SaveMaterialList(IEnumerable<KeyValuePair<MatPairStruct, MaterialDefinition>> list, string filename)
     {
         try
         {
