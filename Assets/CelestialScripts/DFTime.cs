@@ -47,7 +47,7 @@ public struct DFTime : IComparable, IFormattable,
     }
 
     [SerializeField]
-    private long _ticks;
+    private readonly long _ticks;
 
     public DFTime(long ticks)
     {
