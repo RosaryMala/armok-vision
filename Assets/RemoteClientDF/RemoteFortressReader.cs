@@ -1647,6 +1647,14 @@ namespace RemoteFortressReader
       get { return _timing_end; }
       set { _timing_end = value; }
     }
+    private int _tile = default(int);
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"tile", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int tile
+    {
+      get { return _tile; }
+      set { _tile = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -1825,6 +1833,14 @@ namespace RemoteFortressReader
       get { return _growths; }
     }
   
+    private int _tile = default(int);
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"tile", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int tile
+    {
+      get { return _tile; }
+      set { _tile = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

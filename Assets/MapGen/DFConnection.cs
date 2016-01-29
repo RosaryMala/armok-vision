@@ -419,11 +419,6 @@ public class DFConnection : MonoBehaviour
             ItemTokenList.ItemTokens = _netItemList.material_list;
             Debug.Log("Itemtypes fetched: " + _netItemList.material_list.Count);
         }
-        if(_netBuildingList != null)
-        {
-            BuildingTokenList.BuildingTokens = _netBuildingList.building_list;
-            Debug.Log("Buildingtypes fetched: " + _netBuildingList.building_list.Count);
-        }
         else
         {
             RemoteFortressReader.MaterialDefinition blankMaterial = new RemoteFortressReader.MaterialDefinition();
@@ -437,8 +432,17 @@ public class DFConnection : MonoBehaviour
             ItemTokenList.ItemTokens = blankItemList;
             Debug.Log("Created dummy Itemtype list.");
         }
+        if (_netBuildingList != null)
+        {
+            BuildingTokenList.BuildingTokens = _netBuildingList.building_list;
+            Debug.Log("Buildingtypes fetched: " + _netBuildingList.building_list.Count);
+        }
+
         if (_netTiletypeList != null)
             MapDataStore.tiletypeTokenList = _netTiletypeList.tiletype_list;
+
+        if (_netPlantRawList != null)
+            PlantTokenList.PlantRawList = _netPlantRawList.plant_raws;
 
         //Debug.Log("Buildingtypes fetched: " + _netBuildingList.building_list.Count);
         //Debug.Log("Creature Raws fetched: " + _netCreatureRawList.creature_raws.Count);
