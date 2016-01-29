@@ -22,7 +22,7 @@ public class ItemConfiguration<T> : TileConfiguration<T> where T : IContent, new
             )
         {
             //Buildings are always built from the same item type, generally.
-            if (itemMatcher.Get(new IntPair(-1, -1), out cont))
+            if (itemMatcher.Get(new MatPairStruct(-1, -1), out cont))
             {
                 value = cont.GetValue(tile, layer);
                 return true;
