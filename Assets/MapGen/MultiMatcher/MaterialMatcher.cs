@@ -10,12 +10,12 @@ public class MaterialMatcher<T>
         public int difference;
     }
 
-    Dictionary<MatPairStruct, MaterialMatch> matList;
+    Dictionary<IntPair, MaterialMatch> matList;
 
-    void TrySetMatch(MaterialMatch match, MatPairStruct mat)
+    void TrySetMatch(MaterialMatch match, IntPair mat)
     {
         if (matList == null)
-            matList = new Dictionary<MatPairStruct, MaterialMatch>();
+            matList = new Dictionary<IntPair, MaterialMatch>();
         if (matList.ContainsKey(mat))
         {
             if (matList[mat].difference < match.difference)//overwrite existing exact matches
@@ -96,7 +96,7 @@ public class MaterialMatcher<T>
             }
         }
     }
-    public T this[MatPairStruct mat]
+    public T this[IntPair mat]
     {
         //get
         //{
@@ -108,7 +108,7 @@ public class MaterialMatcher<T>
         set
         {
             if (matList == null)
-                matList = new Dictionary<MatPairStruct, MaterialMatch>();
+                matList = new Dictionary<IntPair, MaterialMatch>();
             MaterialMatch newItem;
             newItem.item = value;
             newItem.difference = 0; //a material pair will always be an exact match.
@@ -116,7 +116,7 @@ public class MaterialMatcher<T>
 
         }
     }
-    public bool TryGetValue(MatPairStruct mat, out T value)
+    public bool TryGetValue(IntPair mat, out T value)
     {
         if (matList != null)
         {
@@ -126,7 +126,7 @@ public class MaterialMatcher<T>
                 value = output.item;
                 return true;
             }
-            mat = new MatPairStruct(mat.mat_type, -1); //Try once more with a more generic value.
+            mat = new IntPair(mat.mat_type, -1); //Try once more with a more generic value.
             if (matList.TryGetValue(mat, out output))
             {
                 value = output.item;
