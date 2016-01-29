@@ -32,6 +32,9 @@
                 <tiletype token="*:*:GRASS_LIGHT:*:*" />
                 <tiletype token="*:*:GRASS_DARK:*:*" />
             </subObject>
+            <subObject normal="Flat_N.png" occlusion="Flat_O.png" alpha="Opaque_A.png">
+                <tiletype token="*:SMOOTH:*:*:*" />
+            </subObject>
         </subObject>
     </shapeTexture>
 </shapeTextures>
