@@ -1,13 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Threading;
 
 public class TimeHolder : MonoBehaviour {
 
     public int fixedHour = 11;
     public bool useFixedTime = true;
-
+    
     public DFTime realTime;
-    public DFTime displayedTime;
+    static long _displayedTimeTicks;
+
+    public static DFTime DisplayedTime
+    {
+        get
+        {
+            return new DFTime(_displayedTimeTicks);
+        }
+        set
+        {
+            Interlocked.Exchange(ref _displayedTimeTicks, value.Ticks);
+        }
+    }
 
     void Update()
     {
@@ -34,9 +47,9 @@ public class TimeHolder : MonoBehaviour {
             fixedHour += 24;
 
         if (useFixedTime)
-            displayedTime = new DFTime(realTime.Year, realTime.Month, realTime.Day, fixedHour, 0);
+            DisplayedTime = new DFTime(realTime.Year, realTime.Month, realTime.Day, fixedHour, 0);
         else
-            displayedTime = realTime;
+            DisplayedTime = realTime;
     }
 
     void StopTime()
