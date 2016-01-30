@@ -3,7 +3,6 @@
     <tileMesh file = "FLOOR.obj">
         <tiletype token="FLOOR:*:*:*:*" />
         <tiletype token="BRANCH:SMOOTH:*:*:--------" />
-
     </tileMesh>
     <tileMesh file = "WALL.obj">
         <tiletype token="WALL:*:*:*:*" />
