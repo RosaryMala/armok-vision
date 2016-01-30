@@ -14,7 +14,7 @@ namespace TokenLists
             "Green",
             "Cyan",
             "Red",
-            "Megenta",
+            "Magenta",
             "Brown",
             "LightGrey",
             "DarkGrey",
