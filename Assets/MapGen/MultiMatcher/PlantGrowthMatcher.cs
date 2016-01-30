@@ -42,18 +42,18 @@ public class PlantGrowthMatcher<T>
     }
     void Setwords(string word, string suffix, Dictionary<string, Dictionary<string, BuildingStruct>> wordList, GrowthMatch match)
     {
-        if (suffix == "*")
+        if (word == "*")
         {
             match.difference |= 2;
             foreach (var item in wordList.Values)
             {
-                Setwords(word, item, match);
+                Setwords(suffix, item, match);
             }
         }
         else
         {
-            if (wordList.ContainsKey(suffix))
-                Setwords(word, wordList[suffix], match);
+            if (wordList.ContainsKey(word))
+                Setwords(suffix, wordList[word], match);
         }
     }
     void Setwords(string prefix, string word, string suffix, GrowthMatch match)

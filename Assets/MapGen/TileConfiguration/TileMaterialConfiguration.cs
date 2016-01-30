@@ -1,8 +1,9 @@
-﻿using System;
+﻿using RemoteFortressReader;
 using System.Xml.Linq;
 
 public class TileMaterialConfiguration<T> : TileConfiguration<T> where T : IContent, new()
 {
+    const int PlantType = 419;
     MaterialMatcher<T> thisMaterialMatcher;
     MaterialMatcher<Content> materialMatcher = new MaterialMatcher<Content>();
     Content defaultMaterial;
@@ -41,6 +42,9 @@ public class TileMaterialConfiguration<T> : TileConfiguration<T> where T : ICont
 
     public override bool GetValue(MapDataStore.Tile tile, MeshLayer layer, out T value)
     {
+        MatPairStruct mat = tile.material;
+        int plantIndex = mat.mat_index;
+
         switch (layer)
         {
             case MeshLayer.StaticMaterial:
@@ -73,6 +77,58 @@ public class TileMaterialConfiguration<T> : TileConfiguration<T> where T : ICont
             case MeshLayer.BuildingMaterialCutout:
             case MeshLayer.BuildingMaterialTransparent:
                 return GetMaterialRef(tile.buildingMaterial, tile, layer, out value);
+            case MeshLayer.GrowthMaterial:
+            case MeshLayer.GrowthCutout:
+            case MeshLayer.GrowthTransparent:
+                if ((mat.mat_type != PlantType)
+                    || DFConnection.Instance.NetPlantRawList == null
+                    || DFConnection.Instance.NetPlantRawList.plant_raws.Count <= plantIndex
+                    || DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths.Count <= 0
+                    || DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths[0].mat == null)
+                {
+                    value = default(T);
+                    return false;
+                }
+                return GetMaterialRef(DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths[0].mat, tile, layer, out value);
+            case MeshLayer.GrowthMaterial1:
+            case MeshLayer.GrowthCutout1:
+            case MeshLayer.GrowthTransparent1:
+                if ((mat.mat_type != PlantType)
+                    || DFConnection.Instance.NetPlantRawList == null
+                    || DFConnection.Instance.NetPlantRawList.plant_raws.Count <= plantIndex
+                    || DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths.Count <= 1
+                    || DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths[0].mat == null)
+                {
+                    value = default(T);
+                    return false;
+                }
+                return GetMaterialRef(DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths[1].mat, tile, layer, out value);
+            case MeshLayer.GrowthMaterial2:
+            case MeshLayer.GrowthCutout2:
+            case MeshLayer.GrowthTransparent2:
+                if ((mat.mat_type != PlantType)
+                    || DFConnection.Instance.NetPlantRawList == null
+                    || DFConnection.Instance.NetPlantRawList.plant_raws.Count <= plantIndex
+                    || DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths.Count <= 2
+                    || DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths[0].mat == null)
+                {
+                    value = default(T);
+                    return false;
+                }
+                return GetMaterialRef(DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths[2].mat, tile, layer, out value);
+            case MeshLayer.GrowthMaterial3:
+            case MeshLayer.GrowthCutout3:
+            case MeshLayer.GrowthTransparent3:
+                if ((mat.mat_type != PlantType)
+                    || DFConnection.Instance.NetPlantRawList == null
+                    || DFConnection.Instance.NetPlantRawList.plant_raws.Count <= plantIndex
+                    || DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths.Count <= 3
+                    || DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths[0].mat == null)
+                {
+                    value = default(T);
+                    return false;
+                }
+                return GetMaterialRef(DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths[3].mat, tile, layer, out value);
             default:
                 break;
         }

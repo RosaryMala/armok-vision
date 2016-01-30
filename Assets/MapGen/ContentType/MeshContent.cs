@@ -234,7 +234,7 @@ public class MeshContent : IContent
                     translatedLayer = MeshLayer.GrowthTransparent;
                 else translatedLayer = layer;
                 tempMesh.LoadOBJ(lOBJData, (layer.ToString()));
-                if (tempMesh == null)
+                if (tempMesh == null || tempMesh.vertexCount == 0)
                     continue;
                 tempMesh.name = filePath + "." + layer.ToString();
                 if(translatedLayer == MeshLayer.GrowthCutout

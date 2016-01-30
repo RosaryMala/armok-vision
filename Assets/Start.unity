@@ -552,7 +552,7 @@ MonoBehaviour:
   rangeZdown: 5
   blocksToProcess: 1
   cameraViewDist: 20
-  meshingThreads: 2
+  meshingThreads: 0
   testMesh: {fileID: 0}
   creatureTemplate: {fileID: 422910, guid: f1c56ebe0ff1ec3439724162aa0556bd, type: 2}
   scaleUnits: 1
@@ -1466,10 +1466,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fixedHour: 11
   useFixedTime: 0
-  realTime:
-    _ticks: 0
-  displayedTime:
-    _ticks: 0
 --- !u!4 &1696498551
 Transform:
   m_ObjectHideFlags: 0

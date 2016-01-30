@@ -16,6 +16,13 @@ class PlantGrowthConfiguration<T> : TileConfiguration<T> where T : IContent, new
 
     public override bool GetValue(MapDataStore.Tile tile, MeshLayer layer, out T value)
     {
+        //let's just get rid of dead trees right away
+        if(tile.special == TiletypeSpecial.DEAD
+            || tile.special == TiletypeSpecial.SMOOTH_DEAD)
+        {
+            value = default(T);
+            return false;
+        }
         int growthLayer = int.MaxValue;
         switch (layer)
         {
@@ -100,6 +107,11 @@ class PlantGrowthConfiguration<T> : TileConfiguration<T> where T : IContent, new
                         }
                         break;
                     case TiletypeShape.BRANCH:
+                        if(tile.special == TiletypeSpecial.SMOOTH)
+                        {
+                            value = default(T);
+                            return false;
+                        }
                         if (tile.direction == "--------")
                         {
                             if (!growth.light_branches)
