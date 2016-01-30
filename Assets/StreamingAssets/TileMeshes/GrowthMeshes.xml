@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<growthMeshes>
+  <growthMesh
+    file = "Foliage_New.obj"
+    normal="Leaves_N.png"
+    occlusion="Leaves_O.png"
+    alpha="Leaves_A.png"
+    rotation="TreeRoundTall"
+    >
+    <growth token="*:LEAVES:*" />
+    <growth token="*:FEATHERS:*" />
+  </growthMesh>
+</growthMeshes>

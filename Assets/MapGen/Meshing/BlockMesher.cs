@@ -364,34 +364,70 @@ abstract class BlockMesher {
             buffer.meshData = null;
             return;
         }
-        if (layer == MeshLayer.BuildingMaterial
-            || layer == MeshLayer.BuildingMaterialCutout
-            || layer == MeshLayer.NoMaterialBuilding
-            || layer == MeshLayer.NoMaterialBuildingCutout
-            || layer == MeshLayer.BuildingMaterialTransparent
-            || layer == MeshLayer.NoMaterialBuildingTransparent
-            )
+        switch (layer)
         {
-            if(tile.buildingType == default(BuildingStruct))
-            {
-                buffer.meshData = null;
-                return;
-            }
-            if (!contentLoader.BuildingMeshConfiguration.GetValue(tile, layer, out meshContent))
-            {
-                buffer.meshData = null;
-                return;
-            }
+            case MeshLayer.GrowthMaterial:
+            case MeshLayer.GrowthMaterial1:
+            case MeshLayer.GrowthMaterial2:
+            case MeshLayer.GrowthMaterial3:
+            case MeshLayer.GrowthCutout:
+            case MeshLayer.GrowthCutout1:
+            case MeshLayer.GrowthCutout2:
+            case MeshLayer.GrowthCutout3:
+            case MeshLayer.GrowthTransparent:
+            case MeshLayer.GrowthTransparent1:
+            case MeshLayer.GrowthTransparent2:
+            case MeshLayer.GrowthTransparent3:
+                {
+                    switch (tile.tiletypeMaterial)
+                    {
+                        case TiletypeMaterial.PLANT:
+                        case TiletypeMaterial.ROOT:
+                        case TiletypeMaterial.TREE_MATERIAL:
+                        case TiletypeMaterial.MUSHROOM:
+                            if (!contentLoader.GrowthMeshConfiguration.GetValue(tile, layer, out meshContent))
+                            {
+                                buffer.meshData = null;
+                                return;
+                            }
+                            break;
+                        default:
+                            buffer.meshData = null;
+                            return;
+                    }
+                }
+                break;
+            case MeshLayer.BuildingMaterial:
+            case MeshLayer.NoMaterialBuilding:
+            case MeshLayer.BuildingMaterialCutout:
+            case MeshLayer.NoMaterialBuildingCutout:
+            case MeshLayer.BuildingMaterialTransparent:
+            case MeshLayer.NoMaterialBuildingTransparent:
+                {
+                    if (tile.buildingType == default(BuildingStruct))
+                    {
+                        buffer.meshData = null;
+                        return;
+                    }
+                    if (!contentLoader.BuildingMeshConfiguration.GetValue(tile, layer, out meshContent))
+                    {
+                        buffer.meshData = null;
+                        return;
+                    }
+                }
+                break;
+            default:
+                {
+                    if (!contentLoader.TileMeshConfiguration.GetValue(tile, layer, out meshContent))
+                    {
+                        buffer.meshData = null;
+                        return;
+                    }
+                }
+                break;
         }
-        else
-        {
-            if (!contentLoader.TileMeshConfiguration.GetValue(tile, layer, out meshContent))
-            {
-                buffer.meshData = null;
-                return;
-            }
-        }
-        if(!meshContent.MeshData.ContainsKey(layer))
+
+        if (!meshContent.MeshData.ContainsKey(layer))
         {
             buffer.meshData = null;
             return;
