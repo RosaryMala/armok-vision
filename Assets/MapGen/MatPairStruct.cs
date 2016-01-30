@@ -10,6 +10,8 @@ public struct MatPairStruct
 
     public static implicit operator MatPairStruct(MatPair input)
     {
+        if (input == null)
+            return new MatPairStruct(-1, -1);
         return new MatPairStruct(input.mat_type, input.mat_index);
     }
     public static implicit operator MatPair(MatPairStruct input)
