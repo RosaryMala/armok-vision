@@ -818,5 +818,87 @@ public class MapDataStore {
                 return wallSide;
             }
         }
+
+        public bool GrowthAppliesEver(TreeGrowth growth)
+        {
+            if (special == TiletypeSpecial.DEAD
+                || special == TiletypeSpecial.SMOOTH_DEAD)
+            {
+                return false;
+            }
+            switch (tiletypeMaterial)
+            {
+                case TiletypeMaterial.PLANT:
+                    switch (shape)
+                    {
+                        case TiletypeShape.SAPLING:
+                            if (!growth.sapling)
+                                return false;
+                            break;
+                        case TiletypeShape.SHRUB:
+                            //so far as I can understand, this is always on
+                            break;
+                        default:
+                            return false;
+                    }
+                    break;
+                case TiletypeMaterial.ROOT:
+                    if (!growth.roots)
+                        return false;
+                    break;
+                case TiletypeMaterial.TREE_MATERIAL:
+                    switch (shape)
+                    {
+                        case TiletypeShape.WALL:
+                        case TiletypeShape.RAMP:
+                        case TiletypeShape.TRUNK_BRANCH:
+                            if (!growth.trunk)
+                                return false;
+                            break;
+                        case TiletypeShape.BRANCH:
+                            if (special == TiletypeSpecial.SMOOTH)
+                                return false;
+                            if (direction == "--------")
+                            {
+                                if (!growth.light_branches)
+                                    return false;
+                            }
+                            else if (!growth.heavy_branches)
+                                return false;
+                            break;
+                        case TiletypeShape.TWIG:
+                            if (!growth.twigs)
+                                return false;
+                            break;
+                        default:
+                            return false;
+                    }
+                    break;
+                case TiletypeMaterial.MUSHROOM:
+                    if (!growth.cap)
+                        return false;
+                    break;
+                default:
+                    return false;
+            }
+
+            if ((growth.trunk_height_start != -1 && growth.trunk_height_start > trunkPercent) || (growth.trunk_height_end != -1 && growth.trunk_height_end < trunkPercent))
+                return false;
+
+            return true;
+        }
+
+        public bool GrowthAppliesNow(TreeGrowth growth)
+        {
+            if (!GrowthAppliesEver(growth))
+                return false;
+            int currentTicks = TimeHolder.DisplayedTime.CurrentYearTicks;
+            if ((growth.timing_start != -1 && growth.timing_start > currentTicks) || (growth.timing_end != -1 && growth.timing_end < currentTicks))
+            {
+                return false;
+            }
+            return true;
+
+        }
     }
 }
