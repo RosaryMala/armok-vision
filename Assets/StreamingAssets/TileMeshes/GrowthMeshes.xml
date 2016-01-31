@@ -22,4 +22,16 @@
             <tiletype token="SHRUB:*:*:*:*"/>
         </subObject>
     </growthMesh>
+    <growthMesh file="Fruit.obj"
+                normal="Flat_N.png"
+                occlusion="Flat_O.png"
+                alpha="Opaque_A.png"
+                rotation="Random90">
+            <growth token="*:CONE:*"/>
+            <growth token="*:FRUIT:*"/>
+            <growth token="*:NUT:*"/>
+            <growth token="*:POLLEN_CONE:*"/>
+            <growth token="*:SEED_CONE:*"/>
+            <growth token="*:SEED:*"/>
+    </growthMesh>
 </growthMeshes>
