@@ -344,6 +344,7 @@ public class GameMap : MonoBehaviour
         //        geometryList.Add(geo);
         //}
 
+        Debug.Log("Starting mesh export");
         foreach (Mesh mesh in blocks)
         {
             if (mesh != null)
@@ -353,6 +354,7 @@ public class GameMap : MonoBehaviour
                     geometryList.Add(geo);
             }
         }
+        Debug.Log("Added opaque blocks");
         foreach (Mesh mesh in stencilBlocks)
         {
             if (mesh != null)
@@ -362,6 +364,7 @@ public class GameMap : MonoBehaviour
                     geometryList.Add(geo);
             }
         }
+        Debug.Log("Added stencil blocks");
         foreach (Mesh mesh in transparentBlocks)
         {
             if (mesh != null)
@@ -371,6 +374,7 @@ public class GameMap : MonoBehaviour
                     geometryList.Add(geo);
             }
         }
+        Debug.Log("Added transparent blocks");
         foreach (Mesh mesh in liquidBlocks)
         {
             if (mesh != null)
@@ -380,9 +384,11 @@ public class GameMap : MonoBehaviour
                     geometryList.Add(geo);
             }
         }
+        Debug.Log("Added liquid blocks");
 
         library_geometries geometryLib = new library_geometries();
         geometryLib.geometry = geometryList.ToArray();
+        Debug.Log("Added geometry to library");
 
         library_visual_scenes visualSceneLib = new library_visual_scenes();
         visual_scene visualScene = new visual_scene();
@@ -411,6 +417,7 @@ public class GameMap : MonoBehaviour
             thisNode.ItemsElementName = new ItemsChoiceType2[1];
             thisNode.ItemsElementName[0] = ItemsChoiceType2.matrix;
         }
+        Debug.Log("Added geometry to scene");
 
         COLLADAScene sceneInstance = new COLLADAScene();
         sceneInstance.instance_visual_scene = new InstanceWithExtra();
@@ -429,10 +436,12 @@ public class GameMap : MonoBehaviour
         assetHeader.up_axis = UpAxisType.Y_UP;
 
         exportScene.asset = assetHeader;
+        Debug.Log("Setup Scene");
 
         if (File.Exists("Map.dae"))
             File.Delete("Map.dae");
         exportScene.Save("Map.dae");
+        Debug.Log("Saved Scene");
 
         Texture2D mainTex = (Texture2D)basicTerrainMaterial.GetTexture("_MainTex");
 
@@ -460,6 +469,7 @@ public class GameMap : MonoBehaviour
 
         File.WriteAllBytes("pattern.png", diffuseBytes);
         File.WriteAllBytes("specular.png", roughnessBytes);
+        Debug.Log("Saved Maintex");
 
         Texture2D bumpMap = (Texture2D)basicTerrainMaterial.GetTexture("_BumpMap");
 
@@ -494,6 +504,7 @@ public class GameMap : MonoBehaviour
         File.WriteAllBytes("normal.png", normalBytes);
         File.WriteAllBytes("occlusion.png", ambientBytes);
         File.WriteAllBytes("alpha.png", alphaBytes);
+        Debug.Log("Saved DetailTex");
 
         Debug.Log("Saved map!");
     }
