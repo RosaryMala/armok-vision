@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
+using System;
 
 namespace Collada141
 {
@@ -8,97 +10,103 @@ namespace Collada141
     {
         public static geometry MeshToGeometry(Mesh inputMesh)
         {
-            string meshName = "Mesh-" + inputMesh.GetInstanceID();
+            string meshID = "Mesh-" + inputMesh.GetInstanceID();
+            string meshName = "Unnamed";
+            if (inputMesh.name != "")
+                meshName = inputMesh.name;
 
             geometry outputGeometry = new geometry();
             mesh outputMesh = new mesh();
 
-            outputGeometry.id = meshName + "-lib";
-            outputGeometry.name = inputMesh.name + "-mesh";
+            outputGeometry.id = meshID + "-lib";
+            outputGeometry.name = meshName + "-mesh";
             outputGeometry.Item = outputMesh;
 
+            triangles triangleList = new triangles();
 
             //vertex Positions
-            List<source> sourceList = new List<source>();
-            var inputVertices = inputMesh.vertices;
-            if (inputVertices.Length == 0)
-                return null;
-            sourceList.Add(ArrayToSource(inputMesh.vertices, meshName + "-POSITION"));
-
-            vertices vertexList = new vertices();
-            vertexList.id = meshName + "-VERTEX";
-            vertexList.input = new InputLocal[1];
-            vertexList.input[0] = new InputLocal();
-            vertexList.input[0].semantic = "POSITION";
-            vertexList.input[0].source = "#" + sourceList[0].id;
-            outputMesh.vertices = vertexList;
-
-            List<InputLocalOffset> offsetList = new List<InputLocalOffset>();
-
             {
-                InputLocalOffset offset = new InputLocalOffset();
-                offset.semantic = "VERTEX";
-                offset.offset = 0;
-                offset.source = "#" + vertexList.id;
-                offsetList.Add(offset);
+                List<source> sourceList = new List<source>();
+                var inputVertices = inputMesh.vertices;
+                if (inputVertices.Length == 0)
+                    return null;
+                sourceList.Add(ArrayToSource(inputMesh.vertices, meshID + "-POSITION"));
+
+                vertices vertexList = new vertices();
+                vertexList.id = meshID + "-VERTEX";
+                vertexList.input = new InputLocal[1];
+                vertexList.input[0] = new InputLocal();
+                vertexList.input[0].semantic = "POSITION";
+                vertexList.input[0].source = "#" + sourceList[0].id;
+                outputMesh.vertices = vertexList;
+
+                List<InputLocalOffset> offsetList = new List<InputLocalOffset>();
+
+                {
+                    InputLocalOffset offset = new InputLocalOffset();
+                    offset.semantic = "VERTEX";
+                    offset.offset = 0;
+                    offset.source = "#" + vertexList.id;
+                    offsetList.Add(offset);
+                }
+
+                var inputNormals = inputMesh.normals;
+                if (inputNormals.Length > 0)
+                {
+                    var array = ArrayToSource(inputNormals, meshID + "-Normal0");
+                    InputLocalOffset offset = new InputLocalOffset();
+                    offset.semantic = "NORMAL";
+                    offset.offset = (ulong)sourceList.Count;
+                    offset.source = "#" + array.id;
+                    sourceList.Add(array);
+                    offsetList.Add(offset);
+                }
+                var inputUV1s = inputMesh.uv;
+                if (inputUV1s.Length > 0)
+                {
+                    var array = ArrayToSource(inputUV1s, meshID + "-UV0");
+                    InputLocalOffset offset = new InputLocalOffset();
+                    offset.semantic = "TEXCOORD";
+                    offset.offset = (ulong)sourceList.Count;
+                    offset.source = "#" + array.id;
+                    offset.set = 0;
+                    offset.setSpecified = true;
+                    sourceList.Add(array);
+                    offsetList.Add(offset);
+                }
+                var inputUV2s = inputMesh.uv2;
+                if (inputUV2s.Length > 0)
+                {
+                    var array = ArrayToSource(inputUV2s, meshID + "-UV1");
+                    InputLocalOffset offset = new InputLocalOffset();
+                    offset.semantic = "TEXCOORD";
+                    offset.offset = (ulong)sourceList.Count;
+                    offset.source = "#" + array.id;
+                    offset.set = 1;
+                    offset.setSpecified = true;
+                    sourceList.Add(array);
+                    offsetList.Add(offset);
+                }
+                var inputColors = inputMesh.colors;
+                if (inputColors.Length > 0)
+                {
+                    var array = ArrayToSource(inputColors, meshID + "-VERTEX_COLOR0");
+                    InputLocalOffset offset = new InputLocalOffset();
+                    offset.semantic = "COLOR";
+                    offset.offset = (ulong)sourceList.Count;
+                    offset.source = "#" + array.id;
+                    offset.set = 0;
+                    offset.setSpecified = true;
+                    sourceList.Add(array);
+                    offsetList.Add(offset);
+                }
+
+                outputMesh.source = sourceList.ToArray();
+
+                triangleList.input = offsetList.ToArray();
+
             }
 
-            var inputNormals = inputMesh.normals;
-            if(inputNormals.Length > 0)
-            {
-                var array = ArrayToSource(inputNormals, meshName + "-Normal0");
-                InputLocalOffset offset = new InputLocalOffset();
-                offset.semantic = "NORMAL";
-                offset.offset = (ulong)sourceList.Count;
-                offset.source = "#" + array.id;
-                sourceList.Add(array);
-                offsetList.Add(offset);
-            }
-            var inputUV1s = inputMesh.uv;
-            if (inputUV1s.Length > 0)
-            {
-                var array = ArrayToSource(inputUV1s, meshName + "-UV0");
-                InputLocalOffset offset = new InputLocalOffset();
-                offset.semantic = "TEXCOORD";
-                offset.offset = (ulong)sourceList.Count;
-                offset.source = "#" + array.id;
-                offset.set = 0;
-                offset.setSpecified = true;
-                sourceList.Add(array);
-                offsetList.Add(offset);
-            }
-            var inputUV2s = inputMesh.uv2;
-            if (inputUV2s.Length > 0)
-            {
-                var array = ArrayToSource(inputUV2s, meshName + "-UV1");
-                InputLocalOffset offset = new InputLocalOffset();
-                offset.semantic = "TEXCOORD";
-                offset.offset = (ulong)sourceList.Count;
-                offset.source = "#" + array.id;
-                offset.set = 1;
-                offset.setSpecified = true;
-                sourceList.Add(array);
-                offsetList.Add(offset);
-            }
-            var inputColors = inputMesh.colors;
-            if (inputColors.Length > 0)
-            {
-                var array = ArrayToSource(inputColors, meshName + "-VERTEX_COLOR0");
-                InputLocalOffset offset = new InputLocalOffset();
-                offset.semantic = "COLOR";
-                offset.offset = (ulong)sourceList.Count;
-                offset.source = "#" + array.id;
-                offset.set = 0;
-                offset.setSpecified = true;
-                sourceList.Add(array);
-                offsetList.Add(offset);
-            }
-
-            outputMesh.source = sourceList.ToArray();
-
-
-            triangles triangleList = new triangles();
-            triangleList.input = offsetList.ToArray();
 
             var inputTriangles = inputMesh.triangles;
 
@@ -107,21 +115,7 @@ namespace Collada141
             if (triangleList.count == 0)
                 return null;
 
-            StringBuilder pString = new StringBuilder();
-
-            for(int i = 0; i < inputTriangles.Length; i++)
-            {
-                for(int j = 0; j < triangleList.input.Length; j++)
-                {
-                    pString.Append(inputTriangles[i]).Append(" ");
-                }
-                if (i % 3 == 2)
-                    pString.AppendLine();
-                else
-                    pString.Append("   ");
-            }
-
-            triangleList.p = pString.ToString();
+            triangleList.p = string.Join(" ", Array.ConvertAll(inputTriangles, i => i.ToString()));
 
             outputMesh.Items = new object[1];
             outputMesh.Items[0] = triangleList;

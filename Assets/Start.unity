@@ -546,8 +546,8 @@ MonoBehaviour:
   posXTile: 0
   posYTile: 0
   posZ: 0
-  rangeX: 4
-  rangeY: 3
+  rangeX: 6
+  rangeY: 6
   rangeZup: 1
   rangeZdown: 5
   blocksToProcess: 1
