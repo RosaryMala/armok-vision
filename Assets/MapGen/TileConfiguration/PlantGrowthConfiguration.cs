@@ -60,104 +60,14 @@ class PlantGrowthConfiguration<T> : TileConfiguration<T> where T : IContent, new
             return false;
         }
         TreeGrowth growth = DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths[growthLayer];
-        int currentTicks = TimeHolder.DisplayedTime.CurrentYearTicks;
-        if ((growth.timing_start != -1 && growth.timing_start > currentTicks) || (growth.timing_end != -1 && growth.timing_end < currentTicks))
+
+        if(!tile.GrowthAppliesNow(growth))
         {
             value = default(T);
             return false;
         }
 
-        switch (tile.tiletypeMaterial)
-        {
-            case TiletypeMaterial.PLANT:
-                switch (tile.shape)
-                {
-                    case TiletypeShape.SAPLING:
-                        if (!growth.sapling)
-                        {
-                            value = default(T);
-                            return false;
-                        }
-                        break;
-                    case TiletypeShape.SHRUB:
-                        //so far as I can understand, this is always on
-                        break;
-                    default:
-                        value = default(T);
-                        return false;
-                }
-                break;
-            case TiletypeMaterial.ROOT:
-                if (!growth.roots)
-                {
-                    value = default(T);
-                    return false;
-                }
-                break;
-            case TiletypeMaterial.TREE_MATERIAL:
-                switch (tile.shape)
-                {
-                    case TiletypeShape.WALL:
-                    case TiletypeShape.RAMP:
-                    case TiletypeShape.TRUNK_BRANCH:
-                        if (!growth.trunk)
-                        {
-                            value = default(T);
-                            return false;
-                        }
-                        break;
-                    case TiletypeShape.BRANCH:
-                        if(tile.special == TiletypeSpecial.SMOOTH)
-                        {
-                            value = default(T);
-                            return false;
-                        }
-                        if (tile.direction == "--------")
-                        {
-                            if (!growth.light_branches)
-                            {
-                                value = default(T);
-                                return false;
-                            }
-                        }
-                        else
-                        {
-                            if (!growth.heavy_branches)
-                            {
-                                value = default(T);
-                                return false;
-                            }
-                        }
-                        break;
-                    case TiletypeShape.TWIG:
-                        if (!growth.twigs)
-                        {
-                            value = default(T);
-                            return false;
-                        }
-                        break;
-                    default:
-                        value = default(T);
-                        return false;
-                }
-                break;
-            case TiletypeMaterial.MUSHROOM:
-                if(!growth.cap)
-                {
-                    value = default(T);
-                    return false;
-                }
-                break;
-            default:
-                value = default(T);
-                return false;
-        }
-        
-        if((growth.trunk_height_start != -1 && growth.trunk_height_start > tile.trunkPercent) || (growth.trunk_height_end != -1 && growth.trunk_height_end < tile.trunkPercent))
-        {
-            value = default(T);
-            return false;
-        }
+        int currentTicks = TimeHolder.DisplayedTime.CurrentYearTicks;
 
         GrowthPrint print = null;
         int printIndex = 0;
