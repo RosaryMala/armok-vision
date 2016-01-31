@@ -63,6 +63,7 @@ public class CPUMesh
         target.triangles = triangles;
         target.RecalculateBounds();
         target.RecalculateTangents();
-        target.name = name;
+        if(target.name == "")
+            target.name = name;
     }
 }
