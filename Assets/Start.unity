@@ -103,7 +103,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!23 &224966260
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -493,6 +493,7 @@ GameObject:
   - 114: {fileID: 861361729}
   - 114: {fileID: 861361730}
   - 114: {fileID: 861361731}
+  - 114: {fileID: 861361732}
   m_Layer: 0
   m_Name: GameMapObject
   m_TagString: Untagged
@@ -552,10 +553,10 @@ MonoBehaviour:
   rangeZdown: 5
   blocksToProcess: 1
   cameraViewDist: 20
-  meshingThreads: 0
   testMesh: {fileID: 0}
   creatureTemplate: {fileID: 422910, guid: f1c56ebe0ff1ec3439724162aa0556bd, type: 2}
   scaleUnits: 1
+  drawUnits: 0
 --- !u!114 &861361730
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -589,6 +590,17 @@ MonoBehaviour:
   allowDrag: 1
   frequency: 0.5
   nbDecimal: 1
+--- !u!114 &861361732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 861361727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7226c90f07cb9844acc35ecf3459461, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &895398301
 GameObject:
   m_ObjectHideFlags: 0
@@ -978,7 +990,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10e38d62d238e445a9a8002799fa9d78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BlocksToFetch: 4
+  BlocksToFetch: 10
   RunOnAlternateThread: 1
 --- !u!4 &1201785584
 Transform:
@@ -1007,7 +1019,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!215 &1255736700
 ReflectionProbe:
   m_ObjectHideFlags: 0
@@ -1495,7 +1507,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1821707393
 Transform:
   m_ObjectHideFlags: 0
@@ -1569,7 +1581,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1885883865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1642,6 +1654,7 @@ GameObject:
   - 222: {fileID: 1986774942}
   - 114: {fileID: 1986774941}
   - 114: {fileID: 1986774944}
+  - 114: {fileID: 1986774945}
   m_Layer: 5
   m_Name: Status Text
   m_TagString: Untagged
@@ -1719,6 +1732,17 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 1, y: -1}
   m_UseGraphicAlpha: 1
+--- !u!114 &1986774945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1986774940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6ad41feeed74f458eef2424b3c2955, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2121861296
 GameObject:
   m_ObjectHideFlags: 0
@@ -1734,7 +1758,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2121861297
 Transform:
   m_ObjectHideFlags: 0
