@@ -124,7 +124,6 @@ public class GameMap : MonoBehaviour
     public int rangeZdown = 5;
     public int blocksToProcess = 1;
     public int cameraViewDist = 25;
-    public int meshingThreads = 0;
 
     // Stored view information
     RemoteFortressReader.ViewInfo view;
@@ -236,7 +235,7 @@ public class GameMap : MonoBehaviour
     {
         Debug.Log("Connected");
         enabled = true;
-        mesher = BlockMesher.GetMesher(meshingThreads);
+        mesher = BlockMesher.GetMesher(GameSettings.Meshing.meshingThreads);
         // Initialize materials, if available
         if (DFConnection.Instance.NetMaterialList != null)
         {
@@ -763,7 +762,7 @@ public class GameMap : MonoBehaviour
     // Have the mesher mesh all dirty tiles in the region
     void EnqueueMeshUpdates()
     {
-        for (int zz = DFConnection.Instance.RequestRegionMin.z; zz < DFConnection.Instance.RequestRegionMax.z; zz++)
+        for (int zz = DFConnection.Instance.RequestRegionMax.z-1; zz >= DFConnection.Instance.RequestRegionMin.z; zz--)
             for (int yy = DFConnection.Instance.RequestRegionMin.y; yy <= DFConnection.Instance.RequestRegionMax.y; yy++)
                 for (int xx = DFConnection.Instance.RequestRegionMin.x; xx <= DFConnection.Instance.RequestRegionMax.x; xx++)
                 {
@@ -775,7 +774,10 @@ public class GameMap : MonoBehaviour
                     {
                         continue;
                     }
-                    mesher.Enqueue(new DFCoord(xx * 16, yy * 16, zz), blockDirtyBits[xx, yy, zz], liquidBlockDirtyBits[xx, yy, zz]);
+
+                    //If we were not able to add it to the queue, don't try any more till next fame.
+                    if (!mesher.Enqueue(new DFCoord(xx * 16, yy * 16, zz), blockDirtyBits[xx, yy, zz], liquidBlockDirtyBits[xx, yy, zz]))
+                        return;
                     blockDirtyBits[xx, yy, zz] = false;
                     liquidBlockDirtyBits[xx, yy, zz] = false;
                 }
@@ -1065,8 +1067,12 @@ public class GameMap : MonoBehaviour
 
     public bool scaleUnits = true;
 
+    public bool drawUnits = true;
+
     void UpdateCreatures()
     {
+        if (!drawUnits)
+            return;
         CultureInfo cultureInfo = Thread.CurrentThread.CurrentCulture;
         TextInfo textInfo = cultureInfo.TextInfo;
         unitList = DFConnection.Instance.PopUnitListUpdate();
@@ -1181,6 +1187,8 @@ public class GameMap : MonoBehaviour
         if (endX > blocks.GetLength(0)) endX = blocks.GetLength(0);
         if (endY > blocks.GetLength(1)) endY = blocks.GetLength(1);
 
+        int drawnBlocks = 0;
+
         for (int z = posZ - cameraViewDist; z < posZ; z++)
         {
             if (z < 0) z = 0;
@@ -1190,19 +1198,34 @@ public class GameMap : MonoBehaviour
                 for (int y = startY; y < endY; y++)
                 {
                     if (blocks[x, y, z] != null && blocks[x, y, z].vertexCount > 0)
+                    {
                         Graphics.DrawMesh(blocks[x, y, z], Vector3.zero, Quaternion.identity, basicTerrainMaterial, 0, null, 0, null, ShadowCastingMode.On, true, transform);
+                        drawnBlocks++;
+                    }
 
                     if (stencilBlocks[x, y, z] != null && stencilBlocks[x, y, z].vertexCount > 0)
+                    {
                         Graphics.DrawMesh(stencilBlocks[x, y, z], Vector3.zero, Quaternion.identity, stencilTerrainMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
+                        drawnBlocks++;
+                    }
 
                     if (transparentBlocks[x, y, z] != null && transparentBlocks[x, y, z].vertexCount > 0)
+                    {
                         Graphics.DrawMesh(transparentBlocks[x, y, z], Vector3.zero, Quaternion.identity, transparentTerrainMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
+                        drawnBlocks++;
+                    }
 
                     if (liquidBlocks[x, y, z, MapDataStore.WATER_INDEX] != null && liquidBlocks[x, y, z, MapDataStore.WATER_INDEX].vertexCount > 0)
+                    {
                         Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.WATER_INDEX], Vector3.zero, Quaternion.identity, waterMaterial, 4, null, 0, null, ShadowCastingMode.On, true, transform);
+                        drawnBlocks++;
+                    }
 
                     if (liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX] != null && liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX].vertexCount > 0)
+                    {
                         Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX], Vector3.zero, Quaternion.identity, magmaMaterial, 4, null, 0, null, ShadowCastingMode.On, true, transform);
+                        drawnBlocks++;
+                    }
                 }
         }
         if (firstPerson || overheadShadows)
@@ -1215,10 +1238,16 @@ public class GameMap : MonoBehaviour
                     for (int y = startY; y < endY; y++)
                     {
                         if (blocks[x, y, z] != null && blocks[x, y, z].vertexCount > 0 && BasicTopMaterial != null)
+                        {
                             Graphics.DrawMesh(blocks[x, y, z], Vector3.zero, Quaternion.identity, BasicTopMaterial, 0, null, 0, null, ShadowCastingMode.On, true, transform);
+                            drawnBlocks++;
+                        }
 
                         if (stencilBlocks[x, y, z] != null && stencilBlocks[x, y, z].vertexCount > 0 && StencilTopMaterial != null)
+                        {
                             Graphics.DrawMesh(stencilBlocks[x, y, z], Vector3.zero, Quaternion.identity, StencilTopMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
+                            drawnBlocks++;
+                        }
 
                         //if (transparentBlocks[x, y, z] != null && transparentBlocks[x, y, z].vertexCount > 0 && StencilTopMaterial != null)
                         //    Graphics.DrawMesh(transparentBlocks[x, y, z], Vector3.zero, Quaternion.identity, TransparentTopMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
@@ -1230,6 +1259,7 @@ public class GameMap : MonoBehaviour
                         //    Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX], Matrix4x4.identity, magmaMaterial, 4);
                     }
             }
+        StatsReadout.BlocksDrawn = drawnBlocks;
     }
 
 }
