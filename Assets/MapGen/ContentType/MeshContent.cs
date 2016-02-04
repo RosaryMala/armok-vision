@@ -169,10 +169,14 @@ public class MeshContent : IContent
                 }
             case RotationType.TreeRoundTall:
                 {
+                    if (noise == null)
+                        noise = new OpenSimplexNoise();
+                    float mainRot = (float)noise.eval(tile.position.x, tile.position.y, tile.position.z);
+                    Vector3 smallRot = new Vector3((float)noise.eval(tile.position.x, tile.position.y, tile.position.z * 17), (float)noise.eval(tile.position.x * 17, tile.position.y, tile.position.z), 0);
                     Vector3 treeDir = new Vector3(-tile.positionOnTree.x, tile.positionOnTree.z / 2.0f, tile.positionOnTree.y);
                     if (treeDir.sqrMagnitude < 0.001)
                         return Quaternion.identity;
-                    return Quaternion.LookRotation(treeDir, Vector3.up);
+                    return Quaternion.LookRotation(treeDir, Vector3.up) * Quaternion.Euler(smallRot * 15) * Quaternion.AngleAxis(mainRot * 360.0f, Vector3.back);
                 }
             default:
                 return Quaternion.identity;
