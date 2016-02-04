@@ -7,15 +7,21 @@ public class GameSettings : MonoBehaviour
 {
     public static class Meshing
     {
-        public static volatile int meshingThreads = 2;
-        public static volatile int queueLimit = 4;
+        public static int meshingThreads = 2;
+        public static int queueLimit = 4;
     }
 
     public static class Rendering
     {
-        public static volatile int drawRangeSide = 4;
-        public static volatile int drawRangeUp = 1;
-        public static volatile int drawRangeDown = 5;
+        public static int drawRangeSide = 4;
+        public static int drawRangeUp = 1;
+        public static int drawRangeDown = 5;
+    }
+
+    public static class Units
+    {
+        public static bool drawUnits = true;
+        public static bool scaleUnits = true;
     }
 
     static void DeserializeIni(string filename)
@@ -45,6 +51,15 @@ public class GameSettings : MonoBehaviour
             if (drawRangeSideString != null)
                 Rendering.drawRangeDown = int.Parse(drawRangeDownString);
         }
+        if(data.Sections.ContainsSection("Units"))
+        {
+            string drawUnitsString = data["Units"]["drawUnits"];
+            if (drawUnitsString != null)
+                Units.drawUnits = bool.Parse(drawUnitsString);
+            string scaleUnitsString = data["Units"]["scaleUnits"];
+            if (scaleUnitsString != null)
+                Units.scaleUnits = bool.Parse(scaleUnitsString);
+        }
     }
 
     static void SerializeIni(string filename)
@@ -65,6 +80,10 @@ public class GameSettings : MonoBehaviour
         data["Rendering"]["drawRangeSide"] = Rendering.drawRangeSide.ToString();
         data["Rendering"]["drawRangeUp"] = Rendering.drawRangeUp.ToString();
         data["Rendering"]["drawRangeDown"] = Rendering.drawRangeDown.ToString();
+
+        data.Sections.AddSection("Units");
+        data["Units"]["drawUnits"] = Units.drawUnits.ToString();
+        data["Units"]["scaleUnits"] = Units.drawUnits.ToString();
 
         parser.WriteFile(filename, data);
     }

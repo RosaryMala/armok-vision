@@ -1059,11 +1059,9 @@ public class GameMap : MonoBehaviour
 
     public bool scaleUnits = true;
 
-    public bool drawUnits = true;
-
     void UpdateCreatures()
     {
-        if (!drawUnits)
+        if (!GameSettings.Units.drawUnits)
             return;
         CultureInfo cultureInfo = Thread.CurrentThread.CurrentCulture;
         TextInfo textInfo = cultureInfo.TextInfo;
