@@ -102,7 +102,7 @@ abstract class BlockMesher {
     public abstract void Terminate();
 
     // Enqueue a block for meshing; inclde 
-    public void Enqueue(DFCoord targetLocation, bool tiles, bool liquids) {
+    public bool Enqueue(DFCoord targetLocation, bool tiles, bool liquids) {
         if (!GameMap.IsBlockCorner(targetLocation)) {
             throw new UnityException("Can't enqueue non-block-corners");
         }
@@ -118,9 +118,17 @@ abstract class BlockMesher {
 
         // In case we displace another block update
         Request redundant;
-        lock (requestQueue) {
+        lock (requestQueue)
+        {
             // Will be { tiles: false, liquids: false, data: null } if we don't have anything queued
             redundant = requestQueue[targetLocation];
+
+            //if there's no existing queue member, don't add more than needed.
+            if (redundant.data == null)
+            {
+                if (requestQueue.Count >= GameSettings.Meshing.queueLimit)
+                    return false;
+            }
 
             Request meshRequest = new Request();
             // If either request wanted liquids, do liquids;
@@ -136,6 +144,7 @@ abstract class BlockMesher {
                 recycledBlocks.Push(redundant.data);
             }
         }
+        return true;
     }
 
     public Result? Dequeue() {
@@ -552,6 +561,7 @@ sealed class SingleThreadedMesher : BlockMesher {
     }
 
     public override void Poll() {
+        StatsReadout.QueueLength = requestQueue.Count;
         if (requestQueue.Count == 0) return;
         Request req = requestQueue.Dequeue();
         resultQueue.Enqueue(CreateMeshes(req, temp));
@@ -593,17 +603,23 @@ sealed class MultiThreadedMesher : BlockMesher {
         // Allocate our buffers
         TempBuffers temp = new TempBuffers();
         temp.Init();
-
+        long[] times = new long[10];
+        int index = 0;
+        System.Diagnostics.Stopwatch watch;
         // Loop forever
         while (!finished) {
             Request? maybeWorkItem;
             // Check for an item
-            lock (requestQueue) {
-                if (requestQueue.Count > 0) {
+            lock (requestQueue)
+            {
+                if (requestQueue.Count > 0)
+                {
                     maybeWorkItem = requestQueue.Dequeue();
-                } else {
+                }
+                else {
                     maybeWorkItem = null;
                 }
+                StatsReadout.QueueLength = requestQueue.Count;
             }
             if (!maybeWorkItem.HasValue) {
                 // Wait a bit; TODO tune SLEEP_TIME
@@ -612,7 +628,20 @@ sealed class MultiThreadedMesher : BlockMesher {
             }
             // We've got something to do!
             Request workItem = maybeWorkItem.Value;
+            watch = System.Diagnostics.Stopwatch.StartNew();
             Result result = CreateMeshes(workItem, temp);
+            watch.Stop();
+            times[index] = watch.ElapsedTicks;
+            index++;
+            if (index >= times.Length)
+                index = 0;
+            long average = 0;
+            foreach (long item in times)
+            {
+                average += item;
+            }
+            average /= times.Length;
+            StatsReadout.BlockProcessTime = new System.TimeSpan(average);
             lock (resultQueue) {
                 resultQueue.Enqueue(result);
             }
