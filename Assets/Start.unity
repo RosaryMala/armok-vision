@@ -552,7 +552,7 @@ MonoBehaviour:
   rangeZdown: 5
   blocksToProcess: 1
   cameraViewDist: 20
-  meshingThreads: 0
+  meshingThreads: 2
   testMesh: {fileID: 0}
   creatureTemplate: {fileID: 422910, guid: f1c56ebe0ff1ec3439724162aa0556bd, type: 2}
   scaleUnits: 1
