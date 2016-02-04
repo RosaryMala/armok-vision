@@ -117,15 +117,6 @@ public class GameMap : MonoBehaviour
         }
     }
 
-    // Preferences:
-    public int rangeX = 4;
-    public int rangeY = 4;
-    public int rangeZup = 0;
-    public int rangeZdown = 5;
-    public int blocksToProcess = 1;
-    public int cameraViewDist = 25;
-    public int meshingThreads = 0;
-
     // Stored view information
     RemoteFortressReader.ViewInfo view;
 
@@ -236,7 +227,7 @@ public class GameMap : MonoBehaviour
     {
         Debug.Log("Connected");
         enabled = true;
-        mesher = BlockMesher.GetMesher(meshingThreads);
+        mesher = BlockMesher.GetMesher(GameSettings.Meshing.meshingThreads);
         // Initialize materials, if available
         if (DFConnection.Instance.NetMaterialList != null)
         {
@@ -535,14 +526,14 @@ public class GameMap : MonoBehaviour
     {
         DFConnection.Instance.SetRequestRegion(
             new BlockCoord(
-                PosXBlock - rangeX,
-                PosYBlock - rangeY,
-                posZ - rangeZdown
+                PosXBlock - GameSettings.Rendering.drawRangeSide,
+                PosYBlock - GameSettings.Rendering.drawRangeSide,
+                posZ - GameSettings.Rendering.drawRangeDown
             ),
             new BlockCoord(
-                PosXBlock + rangeX,
-                PosYBlock + rangeY,
-                posZ + rangeZup
+                PosXBlock + GameSettings.Rendering.drawRangeSide,
+                PosYBlock + GameSettings.Rendering.drawRangeSide,
+                posZ + GameSettings.Rendering.drawRangeUp
             ));
     }
     void UpdateBlocks()
@@ -763,10 +754,13 @@ public class GameMap : MonoBehaviour
     // Have the mesher mesh all dirty tiles in the region
     void EnqueueMeshUpdates()
     {
-        int xmin = PosXBlock - rangeX, xmax = PosXBlock + rangeX;
-        int ymin = PosYBlock - rangeY, ymax = PosYBlock + rangeY;
-        int zmin = posZ - rangeZdown, zmax = posZ + rangeZup;
-        for (int zz = zmin; zz < zmax; zz++)
+        int xmin = PosXBlock - GameSettings.Rendering.drawRangeSide;
+        int xmax = PosXBlock + GameSettings.Rendering.drawRangeSide;
+        int ymin = PosYBlock - GameSettings.Rendering.drawRangeSide;
+        int ymax = PosYBlock + GameSettings.Rendering.drawRangeSide;
+        int zmin = posZ - GameSettings.Rendering.drawRangeDown;
+        int zmax = posZ + GameSettings.Rendering.drawRangeUp;
+        for (int zz = zmax; zz >= zmin; zz--)
             for (int yy = ymin; yy <= ymax; yy++)
                 for (int xx = xmin; xx <= xmax; xx++)
                 {
@@ -778,7 +772,10 @@ public class GameMap : MonoBehaviour
                     {
                         continue;
                     }
-                    mesher.Enqueue(new DFCoord(xx * 16, yy * 16, zz), blockDirtyBits[xx, yy, zz], liquidBlockDirtyBits[xx, yy, zz]);
+
+                    //If we were not able to add it to the queue, don't try any more till next fame.
+                    if (!mesher.Enqueue(new DFCoord(xx * 16, yy * 16, zz), blockDirtyBits[xx, yy, zz], liquidBlockDirtyBits[xx, yy, zz]))
+                        return;
                     blockDirtyBits[xx, yy, zz] = false;
                     liquidBlockDirtyBits[xx, yy, zz] = false;
                 }
@@ -1068,8 +1065,12 @@ public class GameMap : MonoBehaviour
 
     public bool scaleUnits = true;
 
+    public bool drawUnits = true;
+
     void UpdateCreatures()
     {
+        if (!drawUnits)
+            return;
         CultureInfo cultureInfo = Thread.CurrentThread.CurrentCulture;
         TextInfo textInfo = cultureInfo.TextInfo;
         unitList = DFConnection.Instance.PopUnitListUpdate();
@@ -1114,7 +1115,7 @@ public class GameMap : MonoBehaviour
                         creatureList[unit.id].GetComponentInChildren<AtlasSprite>().AddTile(creatureRaw.creature_tile, color);
 
                 }
-                creatureList[unit.id].gameObject.SetActive(unit.pos_z < PosZ && unit.pos_z >= (PosZ - cameraViewDist));
+                creatureList[unit.id].gameObject.SetActive(unit.pos_z < PosZ && unit.pos_z >= (PosZ - GameSettings.Rendering.drawRangeDown));
                 if (creatureList[unit.id].gameObject.activeSelf) //Only update stuff if it's actually visible.
                 {
                     Vector3 position = DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z);
@@ -1175,16 +1176,18 @@ public class GameMap : MonoBehaviour
     {
         if (blocks == null)
             return;
-        int startX = PosXBlock - rangeX;
-        int startY = PosYBlock - rangeY;
-        int endX = PosXBlock + rangeX;
-        int endY = PosYBlock + rangeY;
+        int startX = PosXBlock - GameSettings.Rendering.drawRangeSide;
+        int startY = PosYBlock - GameSettings.Rendering.drawRangeSide;
+        int endX = PosXBlock + GameSettings.Rendering.drawRangeSide;
+        int endY = PosYBlock + GameSettings.Rendering.drawRangeSide;
         if (startX < 0) startX = 0;
         if (startY < 0) startY = 0;
         if (endX > blocks.GetLength(0)) endX = blocks.GetLength(0);
         if (endY > blocks.GetLength(1)) endY = blocks.GetLength(1);
 
-        for (int z = posZ - cameraViewDist; z < posZ; z++)
+        int drawnBlocks = 0;
+
+        for (int z = posZ - GameSettings.Rendering.drawRangeDown; z < posZ; z++)
         {
             if (z < 0) z = 0;
             if (z >= blocks.GetLength(2))
@@ -1193,23 +1196,38 @@ public class GameMap : MonoBehaviour
                 for (int y = startY; y < endY; y++)
                 {
                     if (blocks[x, y, z] != null && blocks[x, y, z].vertexCount > 0)
+                    {
                         Graphics.DrawMesh(blocks[x, y, z], Vector3.zero, Quaternion.identity, basicTerrainMaterial, 0, null, 0, null, ShadowCastingMode.On, true, transform);
+                        drawnBlocks++;
+                    }
 
                     if (stencilBlocks[x, y, z] != null && stencilBlocks[x, y, z].vertexCount > 0)
+                    {
                         Graphics.DrawMesh(stencilBlocks[x, y, z], Vector3.zero, Quaternion.identity, stencilTerrainMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
+                        drawnBlocks++;
+                    }
 
                     if (transparentBlocks[x, y, z] != null && transparentBlocks[x, y, z].vertexCount > 0)
+                    {
                         Graphics.DrawMesh(transparentBlocks[x, y, z], Vector3.zero, Quaternion.identity, transparentTerrainMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
+                        drawnBlocks++;
+                    }
 
                     if (liquidBlocks[x, y, z, MapDataStore.WATER_INDEX] != null && liquidBlocks[x, y, z, MapDataStore.WATER_INDEX].vertexCount > 0)
+                    {
                         Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.WATER_INDEX], Vector3.zero, Quaternion.identity, waterMaterial, 4, null, 0, null, ShadowCastingMode.On, true, transform);
+                        drawnBlocks++;
+                    }
 
                     if (liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX] != null && liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX].vertexCount > 0)
+                    {
                         Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX], Vector3.zero, Quaternion.identity, magmaMaterial, 4, null, 0, null, ShadowCastingMode.On, true, transform);
+                        drawnBlocks++;
+                    }
                 }
         }
         if (firstPerson || overheadShadows)
-            for (int z = posZ; z <= posZ + cameraViewDist; z++)
+            for (int z = posZ; z <= posZ + GameSettings.Rendering.drawRangeUp; z++)
             {
                 if (z < 0) z = 0;
                 if (z >= blocks.GetLength(2))
@@ -1218,10 +1236,16 @@ public class GameMap : MonoBehaviour
                     for (int y = startY; y < endY; y++)
                     {
                         if (blocks[x, y, z] != null && blocks[x, y, z].vertexCount > 0 && BasicTopMaterial != null)
+                        {
                             Graphics.DrawMesh(blocks[x, y, z], Vector3.zero, Quaternion.identity, BasicTopMaterial, 0, null, 0, null, ShadowCastingMode.On, true, transform);
+                            drawnBlocks++;
+                        }
 
                         if (stencilBlocks[x, y, z] != null && stencilBlocks[x, y, z].vertexCount > 0 && StencilTopMaterial != null)
+                        {
                             Graphics.DrawMesh(stencilBlocks[x, y, z], Vector3.zero, Quaternion.identity, StencilTopMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
+                            drawnBlocks++;
+                        }
 
                         //if (transparentBlocks[x, y, z] != null && transparentBlocks[x, y, z].vertexCount > 0 && StencilTopMaterial != null)
                         //    Graphics.DrawMesh(transparentBlocks[x, y, z], Vector3.zero, Quaternion.identity, TransparentTopMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
@@ -1233,6 +1257,7 @@ public class GameMap : MonoBehaviour
                         //    Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX], Matrix4x4.identity, magmaMaterial, 4);
                     }
             }
+        StatsReadout.BlocksDrawn = drawnBlocks;
     }
 
 }
