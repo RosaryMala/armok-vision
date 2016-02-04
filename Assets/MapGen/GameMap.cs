@@ -227,7 +227,7 @@ public class GameMap : MonoBehaviour
     {
         Debug.Log("Connected");
         enabled = true;
-        mesher = BlockMesher.GetMesher(GameSettings.Meshing.meshingThreads);
+        mesher = BlockMesher.GetMesher(GameSettings.Instance.meshing.meshingThreads);
         // Initialize materials, if available
         if (DFConnection.Instance.NetMaterialList != null)
         {
@@ -300,7 +300,7 @@ public class GameMap : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.L))
-            scaleUnits = !scaleUnits;
+            GameSettings.Instance.units.scaleUnits = !GameSettings.Instance.units.scaleUnits;
         if (Input.GetKeyDown(KeyCode.O))
             overheadShadows = !overheadShadows;
 
@@ -526,14 +526,14 @@ public class GameMap : MonoBehaviour
     {
         DFConnection.Instance.SetRequestRegion(
             new BlockCoord(
-                PosXBlock - GameSettings.Rendering.drawRangeSide,
-                PosYBlock - GameSettings.Rendering.drawRangeSide,
-                posZ - GameSettings.Rendering.drawRangeDown
+                PosXBlock - GameSettings.Instance.rendering.drawRangeSide,
+                PosYBlock - GameSettings.Instance.rendering.drawRangeSide,
+                posZ - GameSettings.Instance.rendering.drawRangeDown
             ),
             new BlockCoord(
-                PosXBlock + GameSettings.Rendering.drawRangeSide,
-                PosYBlock + GameSettings.Rendering.drawRangeSide,
-                posZ + GameSettings.Rendering.drawRangeUp
+                PosXBlock + GameSettings.Instance.rendering.drawRangeSide,
+                PosYBlock + GameSettings.Instance.rendering.drawRangeSide,
+                posZ + GameSettings.Instance.rendering.drawRangeUp
             ));
     }
     void UpdateBlocks()
@@ -1057,11 +1057,9 @@ public class GameMap : MonoBehaviour
 
     UnitList unitList = null;
 
-    public bool scaleUnits = true;
-
     void UpdateCreatures()
     {
-        if (!GameSettings.Units.drawUnits)
+        if (!GameSettings.Instance.units.drawUnits)
             return;
         CultureInfo cultureInfo = Thread.CurrentThread.CurrentCulture;
         TextInfo textInfo = cultureInfo.TextInfo;
@@ -1107,13 +1105,13 @@ public class GameMap : MonoBehaviour
                         creatureList[unit.id].GetComponentInChildren<AtlasSprite>().AddTile(creatureRaw.creature_tile, color);
 
                 }
-                creatureList[unit.id].gameObject.SetActive(unit.pos_z < PosZ && unit.pos_z >= (PosZ - GameSettings.Rendering.drawRangeDown));
+                creatureList[unit.id].gameObject.SetActive(unit.pos_z < PosZ && unit.pos_z >= (PosZ - GameSettings.Instance.rendering.drawRangeDown));
                 if (creatureList[unit.id].gameObject.activeSelf) //Only update stuff if it's actually visible.
                 {
                     Vector3 position = DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z);
                     creatureList[unit.id].transform.position = position + new Vector3(0, 0.51f, 0);
                     float scale;
-                    if (scaleUnits)
+                    if (GameSettings.Instance.units.scaleUnits)
                         scale = unit.size_info.length_cur / 391.0f;
                     else
                         scale = 1;
@@ -1168,10 +1166,10 @@ public class GameMap : MonoBehaviour
     {
         if (blocks == null)
             return;
-        int startX = PosXBlock - GameSettings.Rendering.drawRangeSide;
-        int startY = PosYBlock - GameSettings.Rendering.drawRangeSide;
-        int endX = PosXBlock + GameSettings.Rendering.drawRangeSide;
-        int endY = PosYBlock + GameSettings.Rendering.drawRangeSide;
+        int startX = PosXBlock - GameSettings.Instance.rendering.drawRangeSide;
+        int startY = PosYBlock - GameSettings.Instance.rendering.drawRangeSide;
+        int endX = PosXBlock + GameSettings.Instance.rendering.drawRangeSide;
+        int endY = PosYBlock + GameSettings.Instance.rendering.drawRangeSide;
         if (startX < 0) startX = 0;
         if (startY < 0) startY = 0;
         if (endX > blocks.GetLength(0)) endX = blocks.GetLength(0);
@@ -1179,7 +1177,7 @@ public class GameMap : MonoBehaviour
 
         int drawnBlocks = 0;
 
-        for (int z = posZ - GameSettings.Rendering.drawRangeDown; z < posZ; z++)
+        for (int z = posZ - GameSettings.Instance.rendering.drawRangeDown; z < posZ; z++)
         {
             if (z < 0) z = 0;
             if (z >= blocks.GetLength(2))
@@ -1219,7 +1217,7 @@ public class GameMap : MonoBehaviour
                 }
         }
         if (firstPerson || overheadShadows)
-            for (int z = posZ; z <= posZ + GameSettings.Rendering.drawRangeUp; z++)
+            for (int z = posZ; z <= posZ + GameSettings.Instance.rendering.drawRangeUp; z++)
             {
                 if (z < 0) z = 0;
                 if (z >= blocks.GetLength(2))
