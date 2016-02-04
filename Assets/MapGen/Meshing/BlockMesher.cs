@@ -126,7 +126,7 @@ abstract class BlockMesher {
             //if there's no existing queue member, don't add more than needed.
             if (redundant.data == null)
             {
-                if (requestQueue.Count >= GameSettings.Meshing.queueLimit)
+                if (requestQueue.Count >= GameSettings.Instance.meshing.queueLimit)
                     return false;
             }
 
