@@ -117,14 +117,6 @@ public class GameMap : MonoBehaviour
         }
     }
 
-    // Preferences:
-    public int rangeX = 4;
-    public int rangeY = 4;
-    public int rangeZup = 0;
-    public int rangeZdown = 5;
-    public int blocksToProcess = 1;
-    public int cameraViewDist = 25;
-
     // Stored view information
     RemoteFortressReader.ViewInfo view;
 
@@ -534,14 +526,14 @@ public class GameMap : MonoBehaviour
     {
         DFConnection.Instance.SetRequestRegion(
             new BlockCoord(
-                PosXBlock - rangeX,
-                PosYBlock - rangeY,
-                posZ - rangeZdown
+                PosXBlock - GameSettings.Rendering.drawRangeSide,
+                PosYBlock - GameSettings.Rendering.drawRangeSide,
+                posZ - GameSettings.Rendering.drawRangeDown
             ),
             new BlockCoord(
-                PosXBlock + rangeX,
-                PosYBlock + rangeY,
-                posZ + rangeZup
+                PosXBlock + GameSettings.Rendering.drawRangeSide,
+                PosYBlock + GameSettings.Rendering.drawRangeSide,
+                posZ + GameSettings.Rendering.drawRangeUp
             ));
     }
     void UpdateBlocks()
@@ -1117,7 +1109,7 @@ public class GameMap : MonoBehaviour
                         creatureList[unit.id].GetComponentInChildren<AtlasSprite>().AddTile(creatureRaw.creature_tile, color);
 
                 }
-                creatureList[unit.id].gameObject.SetActive(unit.pos_z < PosZ && unit.pos_z >= (PosZ - cameraViewDist));
+                creatureList[unit.id].gameObject.SetActive(unit.pos_z < PosZ && unit.pos_z >= (PosZ - GameSettings.Rendering.drawRangeDown));
                 if (creatureList[unit.id].gameObject.activeSelf) //Only update stuff if it's actually visible.
                 {
                     Vector3 position = DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z);
@@ -1178,10 +1170,10 @@ public class GameMap : MonoBehaviour
     {
         if (blocks == null)
             return;
-        int startX = PosXBlock - rangeX;
-        int startY = PosYBlock - rangeY;
-        int endX = PosXBlock + rangeX;
-        int endY = PosYBlock + rangeY;
+        int startX = PosXBlock - GameSettings.Rendering.drawRangeSide;
+        int startY = PosYBlock - GameSettings.Rendering.drawRangeSide;
+        int endX = PosXBlock + GameSettings.Rendering.drawRangeSide;
+        int endY = PosYBlock + GameSettings.Rendering.drawRangeSide;
         if (startX < 0) startX = 0;
         if (startY < 0) startY = 0;
         if (endX > blocks.GetLength(0)) endX = blocks.GetLength(0);
@@ -1189,7 +1181,7 @@ public class GameMap : MonoBehaviour
 
         int drawnBlocks = 0;
 
-        for (int z = posZ - cameraViewDist; z < posZ; z++)
+        for (int z = posZ - GameSettings.Rendering.drawRangeDown; z < posZ; z++)
         {
             if (z < 0) z = 0;
             if (z >= blocks.GetLength(2))
@@ -1229,7 +1221,7 @@ public class GameMap : MonoBehaviour
                 }
         }
         if (firstPerson || overheadShadows)
-            for (int z = posZ; z <= posZ + cameraViewDist; z++)
+            for (int z = posZ; z <= posZ + GameSettings.Rendering.drawRangeUp; z++)
             {
                 if (z < 0) z = 0;
                 if (z >= blocks.GetLength(2))
