@@ -311,7 +311,23 @@ namespace DFHack
         {
             return this == (BlockCoord)obj;
         }
+
+        public struct Range {
+            public readonly BlockCoord Min;
+            public readonly BlockCoord Max;
+
+            public Range (BlockCoord min, BlockCoord max) {
+                Min = min;
+                Max = max;
+            }
+
+            public override string ToString ()
+            {
+                return string.Format ("BlockCoord.Range({0},{1})", Min, Max);
+            }
+        }
     }
+
     /* Protocol description:
      *
      * 1. Handshake
