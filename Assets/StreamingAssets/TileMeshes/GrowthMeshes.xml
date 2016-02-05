@@ -39,7 +39,7 @@
                 occlusion="Palm_O.png"
                 alpha="Palm_A.png"
                 rotation="Random">
-            <growth token="DATE_PALM:LEAVES:*"/>
-            <growth token="PALM:LEAVES:*"/>
+        <growth token="DATE_PALM:LEAVES:*"/>
+        <growth token="PALM:LEAVES:*"/>
     </growthMesh>
 </growthMeshes>
