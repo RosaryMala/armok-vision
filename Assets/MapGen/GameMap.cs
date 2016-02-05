@@ -558,7 +558,7 @@ public class GameMap : MonoBehaviour
         loadWatch.Start();
         while (true)
         {
-            RemoteFortressReader.MapBlock block = DFConnection.Instance.PopeMapBlockUpdate();
+            RemoteFortressReader.MapBlock block = DFConnection.Instance.PopMapBlockUpdate();
             if (block == null) break;
             bool setTiles;
             bool setLiquids;
@@ -754,9 +754,15 @@ public class GameMap : MonoBehaviour
     // Have the mesher mesh all dirty tiles in the region
     void EnqueueMeshUpdates()
     {
-        for (int zz = DFConnection.Instance.RequestRegionMax.z-1; zz >= DFConnection.Instance.RequestRegionMin.z; zz--)
-            for (int yy = DFConnection.Instance.RequestRegionMin.y; yy <= DFConnection.Instance.RequestRegionMax.y; yy++)
-                for (int xx = DFConnection.Instance.RequestRegionMin.x; xx <= DFConnection.Instance.RequestRegionMax.x; xx++)
+        int xmin = PosXBlock - GameSettings.Rendering.drawRangeSide;
+        int xmax = PosXBlock + GameSettings.Rendering.drawRangeSide;
+        int ymin = PosYBlock - GameSettings.Rendering.drawRangeSide;
+        int ymax = PosYBlock + GameSettings.Rendering.drawRangeSide;
+        int zmin = posZ - GameSettings.Rendering.drawRangeDown;
+        int zmax = posZ + GameSettings.Rendering.drawRangeUp;
+        for (int zz = zmax; zz >= zmin; zz--)
+            for (int yy = ymin; yy <= ymax; yy++)
+                for (int xx = xmin; xx <= xmax; xx++)
                 {
                     if (xx < 0 || yy < 0 || zz < 0 || xx >= blocks.GetLength(0) || yy >= blocks.GetLength(1) || zz >= blocks.GetLength(2))
                     {
