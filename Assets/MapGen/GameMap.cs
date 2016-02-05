@@ -754,12 +754,12 @@ public class GameMap : MonoBehaviour
     // Have the mesher mesh all dirty tiles in the region
     void EnqueueMeshUpdates()
     {
-        int xmin = PosXBlock - GameSettings.Rendering.drawRangeSide;
-        int xmax = PosXBlock + GameSettings.Rendering.drawRangeSide;
-        int ymin = PosYBlock - GameSettings.Rendering.drawRangeSide;
-        int ymax = PosYBlock + GameSettings.Rendering.drawRangeSide;
-        int zmin = posZ - GameSettings.Rendering.drawRangeDown;
-        int zmax = posZ + GameSettings.Rendering.drawRangeUp;
+        int xmin = PosXBlock - GameSettings.Instance.rendering.drawRangeSide;
+        int xmax = PosXBlock + GameSettings.Instance.rendering.drawRangeSide;
+        int ymin = PosYBlock - GameSettings.Instance.rendering.drawRangeSide;
+        int ymax = PosYBlock + GameSettings.Instance.rendering.drawRangeSide;
+        int zmin = posZ - GameSettings.Instance.rendering.drawRangeDown;
+        int zmax = posZ + GameSettings.Instance.rendering.drawRangeUp;
         for (int zz = zmax; zz >= zmin; zz--)
             for (int yy = ymin; yy <= ymax; yy++)
                 for (int xx = xmin; xx <= xmax; xx++)
