@@ -56,20 +56,20 @@ public class PlantGrowthMatcher<T>
                 Setwords(suffix, wordList[word], match);
         }
     }
-    void Setwords(string prefix, string word, string suffix, GrowthMatch match)
+    void Setwords(string plant, string growth, string color, GrowthMatch match)
     {
-        if (prefix == "*")
+        if (plant == "*")
         {
             match.difference |= 1;
             foreach (var item in PlantTokenList.GrowthIDs.Values)
             {
-                Setwords(word, suffix, item, match);
+                Setwords(growth, color, item, match);
             }
         }
         else
         {
-            if (MaterialTokenList.tripleWords.ContainsKey(prefix))
-                Setwords(word, suffix, PlantTokenList.GrowthIDs[prefix], match);
+            if (PlantTokenList.GrowthIDs.ContainsKey(plant))
+                Setwords(growth, color, PlantTokenList.GrowthIDs[plant], match);
         }
     }
 
@@ -81,20 +81,8 @@ public class PlantGrowthMatcher<T>
             GrowthMatch newItem;
             newItem.item = value;
             newItem.difference = 0;
-            switch (parts.Length)
-            {
-                case 1:
-                    Setwords(parts[0], "", "", newItem);
-                    break;
-                case 2:
-                    Setwords(parts[0], parts[1], "", newItem);
-                    break;
-                case 3:
-                    Setwords(parts[0], parts[1], parts[2], newItem);
-                    break;
-                default:
-                    break;
-            }
+            if (parts.Length == 3)
+                Setwords(parts[0], parts[1], parts[2], newItem);
         }
     }
     public T this[BuildingStruct growth]
