@@ -19,12 +19,6 @@
         <item token="NONE"/>
         <subObject normal="Flat_N.png" occlusion="Flat_O.png" alpha="Opaque_A.png">
             <material token="NONE"/>
-            <subObject normal="Leaves_N.png" occlusion="Leaves_O.png" alpha="Leaves_A.png">
-                <tiletype token="BRANCH:*:*:*:*"/>
-                <tiletype token="TWIG:*:*:*:*"/>
-                <tiletype token="SHRUB:*:*:*:*"/>
-                <tiletype token="SAPLING:*:*:*:*"/>
-            </subObject>
         </subObject>
         <subObject normal="Rough_N.png" occlusion="Rough_O.png" alpha="Opaque_A.png">
             <material token="*:*:*" />
