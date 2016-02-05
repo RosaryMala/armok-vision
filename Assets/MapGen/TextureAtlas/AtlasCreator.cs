@@ -361,7 +361,7 @@ public class AtlasCreator
 			SaveAtlas(atlas, name);		
 #else
             if (atlas != result[result.Count - 1])
-                atlas.texture.Apply(true, true);
+                atlas.texture.Apply(true, false);
             else
                 atlas.texture.Apply(true, false);
 #endif

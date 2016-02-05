@@ -40,6 +40,13 @@ public class TextureStorage
     public void BuildAtlas(string name, TextureFormat format = TextureFormat.RGBA32, Color defaultColor = default(Color), bool linear = false)
     {
         AtlasCreator.Atlas[] atlasList = AtlasCreator.CreateAtlas(name, textureList.ToArray(), null, format, defaultColor, linear);
+        if(atlasList.Length > 1)
+        {
+            for(int i = 0; i < atlasList.Length; i++)
+            {
+                AtlasCreator.SaveAtlas(atlasList[i], i+name);
+            }
+        }
         atlas = atlasList[0];
         textureList.Clear();
 
@@ -52,7 +59,12 @@ public class TextureStorage
 
         foreach (var item in texIndexToName)
         {
-            texIndexToAtlasIndex[item.Key] = nameToAtlasIndex[item.Value];
+            if(nameToAtlasIndex.ContainsKey(item.Value))
+                texIndexToAtlasIndex[item.Key] = nameToAtlasIndex[item.Value];
+            else
+            {
+                Debug.LogError("What the fuck");
+            }
         }
 
         //AtlasCreator.SaveAtlas(atlas, name);

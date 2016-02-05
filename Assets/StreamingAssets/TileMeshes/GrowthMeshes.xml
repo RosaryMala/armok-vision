@@ -34,4 +34,12 @@
             <growth token="*:SEED_CONE:*"/>
             <growth token="*:SEED:*"/>
     </growthMesh>
+    <growthMesh file="Palm_Leaves.obj"
+                normal="Palm_N.png"
+                occlusion="Palm_O.png"
+                alpha="Palm_A.png"
+                rotation="Random">
+            <growth token="DATE_PALM:LEAVES:*"/>
+            <growth token="PALM:LEAVES:*"/>
+    </growthMesh>
 </growthMeshes>
