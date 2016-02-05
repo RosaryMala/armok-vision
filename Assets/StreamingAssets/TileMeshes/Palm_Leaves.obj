@@ -2,7 +2,7 @@
 # File Created: 05.02.2016 22:34:18
 
 #
-# object GrowthMaterial
+# object GrowthCutout
 #
 
 v  0.5361 0.0000 -0.4474
@@ -787,7 +787,7 @@ vt 0.6667 1.0000 0.0000
 vt 0.9900 1.0000 0.0000
 # 20 texture coords
 
-g GrowthMaterial
+g GrowthCutout
 f 1/1/1 2/2/2 3/3/3 
 f 3/3/3 4/4/4 1/1/1 
 f 2/2/2 5/5/5 6/6/6 
