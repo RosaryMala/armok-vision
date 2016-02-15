@@ -45,6 +45,25 @@ public class NormalContent : IContent
         Texture2D normalMap = new Texture2D(2, 2, TextureFormat.ARGB32, false, true);
         normalMap.LoadImage(normalData);
 
+        if (normalMap.width > GameSettings.Instance.rendering.maxTextureSize || normalMap.height > GameSettings.Instance.rendering.maxTextureSize)
+        {
+            if (normalMap.width > normalMap.height)
+            {
+                TextureScale.Bilinear(
+                    normalMap,
+                    GameSettings.Instance.rendering.maxTextureSize,
+                    GameSettings.Instance.rendering.maxTextureSize * normalMap.height / normalMap.width);
+            }
+            else
+            {
+                TextureScale.Bilinear(
+                    normalMap,
+                    GameSettings.Instance.rendering.maxTextureSize * normalMap.width / normalMap.height,
+                    GameSettings.Instance.rendering.maxTextureSize);
+            }
+        }
+
+
         XAttribute alphaAtt = elemtype.Attribute("alpha");
         if (alphaAtt == null)
         {
