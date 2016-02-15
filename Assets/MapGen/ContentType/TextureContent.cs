@@ -46,6 +46,25 @@ public class TextureContent : IContent
 
         Texture2D patternTex = new Texture2D(2, 2);
         patternTex.LoadImage(patternData);
+
+        if(patternTex.width > GameSettings.Instance.rendering.maxTextureSize || patternTex.height > GameSettings.Instance.rendering.maxTextureSize)
+        {
+            if(patternTex.width > patternTex.height)
+            {
+                TextureScale.Bilinear(
+                    patternTex,
+                    GameSettings.Instance.rendering.maxTextureSize,
+                    GameSettings.Instance.rendering.maxTextureSize * patternTex.height / patternTex.width);
+            }
+            else
+            {
+                TextureScale.Bilinear(
+                    patternTex,
+                    GameSettings.Instance.rendering.maxTextureSize * patternTex.width / patternTex.height,
+                    GameSettings.Instance.rendering.maxTextureSize);
+            }
+        }
+
         XAttribute specularAtt = elemtype.Attribute("specular");
         if (specularAtt == null)
         {
