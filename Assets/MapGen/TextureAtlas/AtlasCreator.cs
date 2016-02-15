@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class AtlasCreator
 {
-    public static int AtlasSize = 2046;
 
     public class AtlasNode
     {
@@ -18,7 +17,7 @@ public class AtlasCreator
         public int sortIndex = 0;
         public string name = "Unknown";
 
-        private static readonly int TEXTURE_PADDING = 16;
+        private static readonly int TEXTURE_PADDING = 0;
         private static readonly bool BLEED = true;
 
         // The insert function traverses the tree looking for a place to insert the texture. 
@@ -295,10 +294,10 @@ public class AtlasCreator
             if (_atlas == null)
             {
                 _atlas = new Atlas();
-                _atlas.texture = new Texture2D(AtlasSize, AtlasSize, format, true, linear);
+                _atlas.texture = new Texture2D(GameSettings.Instance.rendering.textureAtlasSize, GameSettings.Instance.rendering.textureAtlasSize, format, true, linear);
                 if(defaultColor != default(Color))
                 {
-                    Color[] fillcolors = new Color[AtlasSize * AtlasSize];
+                    Color[] fillcolors = new Color[GameSettings.Instance.rendering.textureAtlasSize * GameSettings.Instance.rendering.textureAtlasSize];
                     for(int i = 0; i < fillcolors.Length; i++)
                     {
                         fillcolors[i] = defaultColor;
@@ -307,7 +306,7 @@ public class AtlasCreator
                 }
                 _atlas.texture.filterMode = FilterMode.Bilinear;
                 _atlas.root = new AtlasNode();
-                _atlas.root.rc = new Rect(0, 0, AtlasSize, AtlasSize);
+                _atlas.root.rc = new Rect(0, 0, GameSettings.Instance.rendering.textureAtlasSize, GameSettings.Instance.rendering.textureAtlasSize);
             }
             startWith = null;
 
