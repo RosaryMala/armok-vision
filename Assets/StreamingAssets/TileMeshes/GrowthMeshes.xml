@@ -41,5 +41,7 @@
                 rotation="Random">
         <growth token="DATE_PALM:LEAVES:*"/>
         <growth token="PALM:LEAVES:*"/>
+        <growth token="ABACA:LEAVES:*"/>
+        <growth token="BANANA:LEAVES:*"/>
     </growthMesh>
 </growthMeshes>
