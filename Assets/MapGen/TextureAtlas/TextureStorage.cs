@@ -40,7 +40,7 @@ public class TextureStorage
     public void BuildAtlas(string name, TextureFormat format = TextureFormat.RGBA32, Color defaultColor = default(Color), bool linear = false)
     {
         AtlasCreator.Atlas[] atlasList = AtlasCreator.CreateAtlas(name, textureList.ToArray(), null, format, defaultColor, linear);
-        if(atlasList.Length > 1)
+        if((atlasList.Length > 1) || (GameSettings.Instance.rendering.debugTextureAtlas))
         {
             for(int i = 0; i < atlasList.Length; i++)
             {
