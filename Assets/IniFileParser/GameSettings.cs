@@ -21,6 +21,12 @@ public class GameSettings : MonoBehaviour
         public int drawRangeDown = 5;
         public int maxTextureSize = 512;
         public int textureAtlasSize = 2048;
+        public bool debugTextureAtlas = false;
+    }
+    [Serializable]
+    public class CameraSettings
+    {
+        public float fieldOfView = 70;
     }
 
     [Serializable]
@@ -36,27 +42,14 @@ public class GameSettings : MonoBehaviour
         public Meshing meshing = new Meshing();
         public Rendering rendering = new Rendering();
         public Units units = new Units();
+        public CameraSettings camera = new CameraSettings();
     }
 
     public static Settings Instance { get; private set; }
 
     public Settings localInstance = new Settings();
 
-    new GameObject gameObject
-    {
-        get
-        {
-            return base.gameObject;
-        }
-    }
-    [JsonIgnore]
-    new Component rigidbody
-    {
-        get
-        {
-            return GetComponent<Rigidbody>();
-        }
-    }
+    public Camera mainCamera;
 
     static void DeserializeIni(string filename)
     {
@@ -81,6 +74,8 @@ public class GameSettings : MonoBehaviour
     public void Awake()
     {
         Instance = localInstance;
+        Instance.camera.fieldOfView = mainCamera.fieldOfView;
         DeserializeIni("Config.json");
+        mainCamera.fieldOfView = Instance.camera.fieldOfView;
     }
 }

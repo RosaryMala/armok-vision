@@ -547,16 +547,8 @@ MonoBehaviour:
   posXTile: 0
   posYTile: 0
   posZ: 0
-  rangeX: 6
-  rangeY: 6
-  rangeZup: 1
-  rangeZdown: 5
-  blocksToProcess: 1
-  cameraViewDist: 20
   testMesh: {fileID: 0}
   creatureTemplate: {fileID: 422910, guid: f1c56ebe0ff1ec3439724162aa0556bd, type: 2}
-  scaleUnits: 1
-  drawUnits: 0
 --- !u!114 &861361730
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -601,6 +593,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7226c90f07cb9844acc35ecf3459461, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  localInstance:
+    meshing:
+      meshingThreads: 2
+      queueLimit: 4
+    rendering:
+      drawRangeSide: 4
+      drawRangeUp: 1
+      drawRangeDown: 5
+      maxTextureSize: 512
+      textureAtlasSize: 2048
+      debugTextureAtlas: 0
+    units:
+      drawUnits: 1
+      scaleUnits: 1
+    camera:
+      fieldOfView: 70
+  mainCamera: {fileID: 1485797796}
 --- !u!1 &895398301
 GameObject:
   m_ObjectHideFlags: 0
@@ -1109,6 +1118,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 1
+--- !u!20 &1485797796 stripped
+Camera:
+  m_PrefabParentObject: {fileID: 2024094, guid: cbcacdf4d5c2d1e4a8ea4ac440b8e52d,
+    type: 2}
+  m_PrefabInternal: {fileID: 951871553}
 --- !u!1 &1503824698
 GameObject:
   m_ObjectHideFlags: 0
