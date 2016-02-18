@@ -19,9 +19,13 @@ public class GameSettings : MonoBehaviour
         public int drawRangeSide = 4;
         public int drawRangeUp = 1;
         public int drawRangeDown = 5;
+        public int maxBlocksToDraw = int.MaxValue;
         public int maxTextureSize = 512;
         public int textureAtlasSize = 2048;
         public bool debugTextureAtlas = false;
+        public bool drawClouds = true;
+        public bool drawDistantTerrain = true;
+        public bool drawShadows = true;
     }
     [Serializable]
     public class CameraSettings
@@ -51,6 +55,8 @@ public class GameSettings : MonoBehaviour
 
     public Camera mainCamera;
 
+    public Light[] LightList;
+
     static void DeserializeIni(string filename)
     {
         if (!File.Exists(filename))
@@ -77,5 +83,22 @@ public class GameSettings : MonoBehaviour
         Instance.camera.fieldOfView = mainCamera.fieldOfView;
         DeserializeIni("Config.json");
         mainCamera.fieldOfView = Instance.camera.fieldOfView;
+        SetShadows(Instance.rendering.drawShadows);
+    }
+
+    void SetShadows(bool input)
+    {
+        foreach (Light item in LightList)
+        {
+            switch (input)
+            {
+                case true:
+                    item.shadows = LightShadows.Hard;
+                    break;
+                default:
+                    item.shadows = LightShadows.None;
+                    break;
+            }
+        }
     }
 }

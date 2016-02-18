@@ -55,9 +55,7 @@ public class GameMap : MonoBehaviour
         {
             if (firstPerson)
                 return transparentTerrainMaterial;
-            else if (overheadShadows)
-                return invisibleStencilMaterial;
-            else
+            else 
                 return null;
         }
     }
@@ -754,20 +752,31 @@ public class GameMap : MonoBehaviour
     // Have the mesher mesh all dirty tiles in the region
     void EnqueueMeshUpdates()
     {
-        int xmin = PosXBlock - GameSettings.Instance.rendering.drawRangeSide;
-        int xmax = PosXBlock + GameSettings.Instance.rendering.drawRangeSide;
-        int ymin = PosYBlock - GameSettings.Instance.rendering.drawRangeSide;
-        int ymax = PosYBlock + GameSettings.Instance.rendering.drawRangeSide;
-        int zmin = posZ - GameSettings.Instance.rendering.drawRangeDown;
-        int zmax = posZ + GameSettings.Instance.rendering.drawRangeUp;
-        for (int zz = zmax; zz >= zmin; zz--)
+        int xmin = Mathf.Clamp(PosXBlock - GameSettings.Instance.rendering.drawRangeSide, 0, blocks.GetLength(0) - 1);
+        int xmax = Mathf.Clamp(PosXBlock + GameSettings.Instance.rendering.drawRangeSide, 0, blocks.GetLength(0) - 1);
+        int ymin = Mathf.Clamp(PosYBlock - GameSettings.Instance.rendering.drawRangeSide, 0, blocks.GetLength(1) - 1);
+        int ymax = Mathf.Clamp(PosYBlock + GameSettings.Instance.rendering.drawRangeSide, 0, blocks.GetLength(1) - 1);
+        int zmin = Mathf.Clamp(posZ - GameSettings.Instance.rendering.drawRangeDown, 0, blocks.GetLength(2) - 1);
+        int zmax = Mathf.Clamp(posZ + GameSettings.Instance.rendering.drawRangeUp, 0, blocks.GetLength(2) - 1);
+        for (int zz = posZ - 1; zz >= zmin; zz--)
             for (int yy = ymin; yy <= ymax; yy++)
                 for (int xx = xmin; xx <= xmax; xx++)
                 {
-                    if (xx < 0 || yy < 0 || zz < 0 || xx >= blocks.GetLength(0) || yy >= blocks.GetLength(1) || zz >= blocks.GetLength(2))
+                    if (!blockDirtyBits[xx, yy, zz] && !liquidBlockDirtyBits[xx, yy, zz])
                     {
                         continue;
                     }
+
+                    //If we were not able to add it to the queue, don't try any more till next fame.
+                    if (!mesher.Enqueue(new DFCoord(xx * 16, yy * 16, zz), blockDirtyBits[xx, yy, zz], liquidBlockDirtyBits[xx, yy, zz]))
+                        return;
+                    blockDirtyBits[xx, yy, zz] = false;
+                    liquidBlockDirtyBits[xx, yy, zz] = false;
+                }
+        for (int zz = posZ; zz < zmax; zz++)
+            for (int yy = ymin; yy <= ymax; yy++)
+                for (int xx = xmin; xx <= xmax; xx++)
+                {
                     if (!blockDirtyBits[xx, yy, zz] && !liquidBlockDirtyBits[xx, yy, zz])
                     {
                         continue;
@@ -1183,75 +1192,105 @@ public class GameMap : MonoBehaviour
 
         int drawnBlocks = 0;
 
-        for (int z = posZ - GameSettings.Instance.rendering.drawRangeDown; z < posZ; z++)
+        for (int z = posZ - 1; z >= posZ - GameSettings.Instance.rendering.drawRangeDown; z--)
         {
             if (z < 0) z = 0;
             if (z >= blocks.GetLength(2))
                 continue;
             for (int x = startX; x < endX; x++)
+            {
+                if (drawnBlocks >= GameSettings.Instance.rendering.maxBlocksToDraw)
+                    break;
                 for (int y = startY; y < endY; y++)
                 {
+                    if (drawnBlocks >= GameSettings.Instance.rendering.maxBlocksToDraw)
+                        break;
+                    bool drewBlock = false;
                     if (blocks[x, y, z] != null && blocks[x, y, z].vertexCount > 0)
                     {
                         Graphics.DrawMesh(blocks[x, y, z], Vector3.zero, Quaternion.identity, basicTerrainMaterial, 0, null, 0, null, ShadowCastingMode.On, true, transform);
-                        drawnBlocks++;
+                        drewBlock = true;
                     }
 
                     if (stencilBlocks[x, y, z] != null && stencilBlocks[x, y, z].vertexCount > 0)
                     {
                         Graphics.DrawMesh(stencilBlocks[x, y, z], Vector3.zero, Quaternion.identity, stencilTerrainMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
-                        drawnBlocks++;
+                        drewBlock = true;
                     }
 
                     if (transparentBlocks[x, y, z] != null && transparentBlocks[x, y, z].vertexCount > 0)
                     {
                         Graphics.DrawMesh(transparentBlocks[x, y, z], Vector3.zero, Quaternion.identity, transparentTerrainMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
-                        drawnBlocks++;
+                        drewBlock = true;
                     }
 
                     if (liquidBlocks[x, y, z, MapDataStore.WATER_INDEX] != null && liquidBlocks[x, y, z, MapDataStore.WATER_INDEX].vertexCount > 0)
                     {
                         Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.WATER_INDEX], Vector3.zero, Quaternion.identity, waterMaterial, 4, null, 0, null, ShadowCastingMode.On, true, transform);
-                        drawnBlocks++;
+                        drewBlock = true;
                     }
 
                     if (liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX] != null && liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX].vertexCount > 0)
                     {
                         Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX], Vector3.zero, Quaternion.identity, magmaMaterial, 4, null, 0, null, ShadowCastingMode.On, true, transform);
-                        drawnBlocks++;
+                        drewBlock = true;
                     }
+                    if (drewBlock)
+                        drawnBlocks++;
                 }
+            }
         }
-        if (firstPerson || overheadShadows)
+        if (firstPerson || (overheadShadows && GameSettings.Instance.rendering.drawShadows))
             for (int z = posZ; z <= posZ + GameSettings.Instance.rendering.drawRangeUp; z++)
             {
                 if (z < 0) z = 0;
                 if (z >= blocks.GetLength(2))
                     continue;
                 for (int x = startX; x < endX; x++)
+                {
+                    if (drawnBlocks >= GameSettings.Instance.rendering.maxBlocksToDraw)
+                        break;
                     for (int y = startY; y < endY; y++)
                     {
+                        if (drawnBlocks >= GameSettings.Instance.rendering.maxBlocksToDraw)
+                            break;
+                        bool drewBlock = false;
                         if (blocks[x, y, z] != null && blocks[x, y, z].vertexCount > 0 && BasicTopMaterial != null)
                         {
                             Graphics.DrawMesh(blocks[x, y, z], Vector3.zero, Quaternion.identity, BasicTopMaterial, 0, null, 0, null, ShadowCastingMode.On, true, transform);
-                            drawnBlocks++;
+                            drewBlock = true;
                         }
 
                         if (stencilBlocks[x, y, z] != null && stencilBlocks[x, y, z].vertexCount > 0 && StencilTopMaterial != null)
                         {
                             Graphics.DrawMesh(stencilBlocks[x, y, z], Vector3.zero, Quaternion.identity, StencilTopMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
-                            drawnBlocks++;
+                            drewBlock = true;
                         }
 
-                        //if (transparentBlocks[x, y, z] != null && transparentBlocks[x, y, z].vertexCount > 0 && StencilTopMaterial != null)
-                        //    Graphics.DrawMesh(transparentBlocks[x, y, z], Vector3.zero, Quaternion.identity, TransparentTopMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
+                        if (transparentBlocks[x, y, z] != null && transparentBlocks[x, y, z].vertexCount > 0 && TransparentTopMaterial != null)
+                        {
+                            Graphics.DrawMesh(transparentBlocks[x, y, z], Vector3.zero, Quaternion.identity, TransparentTopMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
+                            drewBlock = true;
+                        }
 
-                        //if (liquidBlocks[x, y, z, MapDataStore.WATER_INDEX] != null && liquidBlocks[x, y, z, MapDataStore.WATER_INDEX].vertexCount > 0)
-                        //    Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.WATER_INDEX], Matrix4x4.identity, waterMaterial, 4);
+                        if (firstPerson)
+                        {
+                            if (liquidBlocks[x, y, z, MapDataStore.WATER_INDEX] != null && liquidBlocks[x, y, z, MapDataStore.WATER_INDEX].vertexCount > 0)
+                            {
+                                Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.WATER_INDEX], Matrix4x4.identity, waterMaterial, 4);
+                                drewBlock = true;
+                            }
 
-                        //if (liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX] != null && liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX].vertexCount > 0)
-                        //    Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX], Matrix4x4.identity, magmaMaterial, 4);
+                            if (liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX] != null && liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX].vertexCount > 0)
+                            {
+                                Graphics.DrawMesh(liquidBlocks[x, y, z, MapDataStore.MAGMA_INDEX], Matrix4x4.identity, magmaMaterial, 4);
+                                drewBlock = true;
+                            }
+                        }
+                        if (drewBlock)
+                            drawnBlocks++;
                     }
+                }
             }
         StatsReadout.BlocksDrawn = drawnBlocks;
     }

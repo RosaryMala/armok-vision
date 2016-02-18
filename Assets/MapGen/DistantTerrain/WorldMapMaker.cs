@@ -33,8 +33,6 @@ public class WorldMapMaker : MonoBehaviour
     bool[,] fogNormal;
     bool[,] fogThick;
 
-    public bool drawClouds = true;
-
     public Vector3 offset;
 
     RemoteFortressReader.RegionMaps regionMaps;
@@ -86,6 +84,8 @@ public class WorldMapMaker : MonoBehaviour
             return;
         }
         timeHolder.realTime = new DFTime(remoteMap.cur_year, remoteMap.cur_year_tick);
+        if (!GameSettings.Instance.rendering.drawDistantTerrain)
+            return;
         width = remoteMap.world_width;
         height = remoteMap.world_height;
         if(width * height > 65535)
@@ -115,7 +115,7 @@ public class WorldMapMaker : MonoBehaviour
                 volcanism[x, y] = remoteMap.volcanism[index];
                 savagery[x, y] = remoteMap.savagery[index];
                 salinity[x, y] = remoteMap.salinity[index];
-                if (drawClouds)
+                if (GameSettings.Instance.rendering.drawClouds)
                 {
                     cumulusMedium[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_MEDIUM;
                     cumulusMulti[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_MULTI;
@@ -130,7 +130,7 @@ public class WorldMapMaker : MonoBehaviour
                 }
             }
         GenerateMesh();
-        if (drawClouds)
+        if (GameSettings.Instance.rendering.drawClouds)
             GenerateClouds();
         //Debug.Log("Loaded World: " + worldNameEnglish);
     }
@@ -267,7 +267,7 @@ public class WorldMapMaker : MonoBehaviour
             }
             else
             {
-                if(drawClouds)
+                if(GameSettings.Instance.rendering.drawClouds)
                     CopyClouds(worldMap);
             }
         }
@@ -275,6 +275,9 @@ public class WorldMapMaker : MonoBehaviour
 
     void UpdateRegionPositions(WorldMap map)
     {
+        if (!GameSettings.Instance.rendering.drawDistantTerrain)
+            return;
+
         foreach (var item in DetailRegions)
         {
             RegionMaker region = item.Value;
@@ -284,6 +287,9 @@ public class WorldMapMaker : MonoBehaviour
 
     void GenerateRegionMeshes()
     {
+        if (!GameSettings.Instance.rendering.drawDistantTerrain)
+            return;
+
         foreach (WorldMap map in regionMaps.world_maps)
         {
             DFCoord2d pos = new DFCoord2d(map.map_x, map.map_y);
