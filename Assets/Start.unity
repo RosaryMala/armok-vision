@@ -103,7 +103,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!23 &224966260
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -234,7 +234,6 @@ MonoBehaviour:
   height: 0
   worldName: 
   worldNameEnglish: 
-  drawClouds: 1
   offset: {x: 0, y: 0, z: 0}
   cloudPrafab: {fileID: 11429096, guid: 81483fb545a1d2c42ab4bcdf87c47fab, type: 2}
   regionPrefab: {fileID: 11445684, guid: 90bab0905d33d714694a6059b62f28d2, type: 2}
@@ -604,12 +603,18 @@ MonoBehaviour:
       maxTextureSize: 512
       textureAtlasSize: 2048
       debugTextureAtlas: 0
+      drawClouds: 1
+      drawDistantTerrain: 1
+      drawShadows: 1
     units:
       drawUnits: 1
       scaleUnits: 1
     camera:
       fieldOfView: 70
   mainCamera: {fileID: 1485797796}
+  LightList:
+  - {fileID: 895398303}
+  - {fileID: 692705303}
 --- !u!1 &895398301
 GameObject:
   m_ObjectHideFlags: 0
@@ -1028,7 +1033,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!215 &1255736700
 ReflectionProbe:
   m_ObjectHideFlags: 0
@@ -1521,7 +1526,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1821707393
 Transform:
   m_ObjectHideFlags: 0
@@ -1772,7 +1777,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2121861297
 Transform:
   m_ObjectHideFlags: 0
