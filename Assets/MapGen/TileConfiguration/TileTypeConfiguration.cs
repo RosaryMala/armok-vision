@@ -1,7 +1,4 @@
-﻿using RemoteFortressReader;
-using System.Collections.Generic;
-using System.Xml.Linq;
-using System;
+﻿using System.Xml.Linq;
 
 public class TileTypeConfiguration<T> : TileConfiguration<T> where T : IContent, new()
 {

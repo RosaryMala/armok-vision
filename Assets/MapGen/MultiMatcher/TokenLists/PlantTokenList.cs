@@ -70,6 +70,8 @@ namespace TokenLists
                     int printIndex = 0;
                     foreach (GrowthPrint growthPrintRaw in growthRaw.prints)
                     {
+                        if (growthPrintRaw.color >= 16)
+                            UnityEngine.Debug.LogError("What the hell is color " + growthPrintRaw.color);
                         AddPlant(plantRaw.id, growthRaw.id, ColorTable[growthPrintRaw.color], new BuildingStruct(plantRaw.index, growthRaw.index, printIndex));
                         printIndex++;
                     }

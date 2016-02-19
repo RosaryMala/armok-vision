@@ -46,12 +46,12 @@ abstract public class TileConfiguration<T> where T : IContent, new()
         value.ExternalStorage = externalStorage;
         Content content = new Content();
         content.defaultItem = value;
-        ParseElementConditions(elemtype, content);
         if (elemtype.Element("subObject") != null)
         {
             content.overloadedItem = GetFromRootElement(elemtype, "subObject");
             content.overloadedItem.AddSingleContentConfig(elemtype, externalStorage, secondaryDictionary);
         }
+        ParseElementConditions(elemtype, content);
     }
 
     public bool AddSingleContentConfig(XElement elemRoot, object externalStorage = null, object secondaryDictionary = null)
