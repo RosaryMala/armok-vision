@@ -600,12 +600,15 @@ MonoBehaviour:
       drawRangeSide: 4
       drawRangeUp: 1
       drawRangeDown: 5
+      maxBlocksToDraw: 2147483647
       maxTextureSize: 512
       textureAtlasSize: 2048
       debugTextureAtlas: 0
       drawClouds: 1
       drawDistantTerrain: 1
       drawShadows: 1
+      vSyncCount: 0
+      targetFrameRate: 60
     units:
       drawUnits: 1
       scaleUnits: 1

@@ -20,3 +20,5 @@
 /.vs
 *.ods
 /Config.json
+/Map.dae
+/Map.fbx
