@@ -645,8 +645,7 @@
     <color red="208" green="52" blue="79">
         <material token="PLANT:BAYBERRY:FRUIT"/>
     </color>
-    <!--<color red="45" green="87" blue="37">-->
-    <color red="255" green="87" blue="255">
+    <color red="45" green="87" blue="37">
         <material token="PLANT:CHERRY:LEAF"/>
         <subObject red="255" green="255" blue="0">
             <growth token="*:*:Yellow"/>
