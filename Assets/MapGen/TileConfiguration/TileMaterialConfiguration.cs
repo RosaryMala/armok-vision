@@ -32,7 +32,7 @@ public class TileMaterialConfiguration<T> : TileConfiguration<T> where T : ICont
                     return true;
             }
         }
-        else if (thisMaterialMatcher != null && thisMaterialMatcher.TryGetValue(material, out value))
+        if (thisMaterialMatcher != null && thisMaterialMatcher.TryGetValue(material, out value))
         {
             return true;
         }
