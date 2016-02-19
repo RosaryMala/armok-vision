@@ -26,6 +26,8 @@ public class GameSettings : MonoBehaviour
         public bool drawClouds = true;
         public bool drawDistantTerrain = true;
         public bool drawShadows = true;
+        public int vSyncCount = 0;
+        public int targetFrameRate = 60;
     }
     [Serializable]
     public class CameraSettings
@@ -84,6 +86,8 @@ public class GameSettings : MonoBehaviour
         DeserializeIni("Config.json");
         mainCamera.fieldOfView = Instance.camera.fieldOfView;
         SetShadows(Instance.rendering.drawShadows);
+        Application.targetFrameRate = Instance.rendering.targetFrameRate;
+        QualitySettings.vSyncCount = Instance.rendering.vSyncCount;
     }
 
     void SetShadows(bool input)

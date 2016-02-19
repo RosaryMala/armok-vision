@@ -1,5 +1,4 @@
-﻿using System;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using RemoteFortressReader;
 
 class PlantGrowthConfiguration<T> : TileConfiguration<T> where T : IContent, new()
@@ -49,6 +48,8 @@ class PlantGrowthConfiguration<T> : TileConfiguration<T> where T : IContent, new
             default:
                 break;
         }
+        if (typeof(T) == typeof(UnityEngine.Color))
+            UnityEngine.Debug.Log("Hey!");
         MatPairStruct mat = tile.material;
         int plantIndex = mat.mat_index;
         if ((mat.mat_type != PlantType)

@@ -4,6 +4,12 @@
 
     <color red="80" green="220" blue="80">
         <material token="PLANT:*:LEAF"/>
+        <subObject red="128" green="128" blue="0">
+            <growth token="*:*:Brown"/>
+        </subObject>
+        <subObject red="128" green="0" blue="0">
+            <growth token="*:*:Red"/>
+        </subObject>
     </color>
     <color red="80" green="220" blue="80">
         <material token="PLANT:*:BUDS"/>
@@ -76,6 +82,15 @@
     </color>
     <color red="72" green="172" blue="41">
         <material token="PLANT:OAK:LEAF"/>
+        <subObject red="255" green="255" blue="0">
+            <growth token="*:*:Yellow"/>
+        </subObject>
+        <subObject red="255" green="0" blue="0">
+            <growth token="*:*:LightRed"/>
+        </subObject>
+        <subObject red="128" green="0" blue="0">
+            <growth token="*:*:Red"/>
+        </subObject>
     </color>
     <color red="160" green="235" blue="60">
         <material token="PLANT:OAK:FLOWER"/>
@@ -112,6 +127,15 @@
     </color>
     <color red="80" green="220" blue="80">
         <material token="PLANT:MAPLE:LEAF"/>
+        <subObject red="255" green="255" blue="0">
+            <growth token="*:*:Yellow"/>
+        </subObject>
+        <subObject red="255" green="0" blue="0">
+            <growth token="*:*:LightRed"/>
+        </subObject>
+        <subObject red="128" green="0" blue="0">
+            <growth token="*:*:Red"/>
+        </subObject>
     </color>
     <color red="108" green="198" blue="78">
         <material token="PLANT:MAPLE:FLOWER"/>
@@ -146,6 +170,15 @@
 
     <color red="38" green="178" blue="82">
         <material token="PLANT:LARCH:NEEDLE"/>
+        <subObject red="255" green="255" blue="0">
+            <growth token="*:*:Yellow"/>
+        </subObject>
+        <subObject red="255" green="0" blue="0">
+            <growth token="*:*:LightRed"/>
+        </subObject>
+        <subObject red="128" green="0" blue="0">
+            <growth token="*:*:Red"/>
+        </subObject>
     </color>
     <color red="233" green="177" blue="122">
         <material token="PLANT:LARCH:SEED_CONE"/>
@@ -155,6 +188,15 @@
     </color>
     <color red="53" green="176" blue="58">
         <material token="PLANT:CHESTNUT:LEAF"/>
+        <subObject red="255" green="255" blue="0">
+            <growth token="*:*:Yellow"/>
+        </subObject>
+        <subObject red="255" green="0" blue="0">
+            <growth token="*:*:LightRed"/>
+        </subObject>
+        <subObject red="128" green="0" blue="0">
+            <growth token="*:*:Red"/>
+        </subObject>
     </color>
     <color red="230" green="230" blue="121">
         <material token="PLANT:CHESTNUT:POLLEN_CATKINS"/>
@@ -167,6 +209,15 @@
     </color>
     <color red="40" green="134" blue="50">
         <material token="PLANT:ALDER:LEAF"/>
+        <subObject red="255" green="255" blue="0">
+            <growth token="*:*:Yellow"/>
+        </subObject>
+        <subObject red="255" green="0" blue="0">
+            <growth token="*:*:LightRed"/>
+        </subObject>
+        <subObject red="128" green="0" blue="0">
+            <growth token="*:*:Red"/>
+        </subObject>
     </color>
     <color red="202" green="230" blue="147">
         <material token="PLANT:ALDER:POLLEN_CATKINS"/>
@@ -179,6 +230,15 @@
     </color>
     <color red="36" green="102" blue="43">
         <material token="PLANT:BIRCH:LEAF"/>
+        <subObject red="255" green="255" blue="0">
+            <growth token="*:*:Yellow"/>
+        </subObject>
+        <subObject red="255" green="0" blue="0">
+            <growth token="*:*:LightRed"/>
+        </subObject>
+        <subObject red="128" green="0" blue="0">
+            <growth token="*:*:Red"/>
+        </subObject>
     </color>
     <color red="96" green="183" blue="67">
         <material token="PLANT:BIRCH:POLLEN_CATKINS"/>
@@ -188,6 +248,15 @@
     </color>
     <color red="50" green="158" blue="43">
         <material token="PLANT:ASH:LEAF"/>
+        <subObject red="255" green="255" blue="0">
+            <growth token="*:*:Yellow"/>
+        </subObject>
+        <subObject red="255" green="0" blue="0">
+            <growth token="*:*:LightRed"/>
+        </subObject>
+        <subObject red="128" green="0" blue="0">
+            <growth token="*:*:Red"/>
+        </subObject>
     </color>
     <color red="233" green="226" blue="212">
         <material token="PLANT:ASH:FLOWER"/>
@@ -492,6 +561,15 @@
     </color>
     <color red="79" green="186" blue="77">
         <material token="PLANT:POMEGRANATE:LEAF"/>
+        <subObject red="255" green="255" blue="0">
+            <growth token="*:*:Yellow"/>
+        </subObject>
+        <subObject red="255" green="0" blue="0">
+            <growth token="*:*:LightRed"/>
+        </subObject>
+        <subObject red="128" green="0" blue="0">
+            <growth token="*:*:Red"/>
+        </subObject>
     </color>
     <color red="255" green="87" blue="52">
         <material token="PLANT:POMEGRANATE:FLOWER"/>
@@ -503,6 +581,15 @@
     <!-- new trees - TEMPERATE -->
     <color red="64" green="178" blue="68">
         <material token="PLANT:ALMOND:LEAF"/>
+        <subObject red="255" green="255" blue="0">
+            <growth token="*:*:Yellow"/>
+        </subObject>
+        <subObject red="255" green="0" blue="0">
+            <growth token="*:*:LightRed"/>
+        </subObject>
+        <subObject red="128" green="0" blue="0">
+            <growth token="*:*:Red"/>
+        </subObject>
     </color>
     <color red="255" green="123" blue="218">
         <material token="PLANT:ALMOND:FLOWER"/>
@@ -512,6 +599,15 @@
     </color>
     <color red="58" green="167" blue="47">
         <material token="PLANT:APPLE:LEAF"/>
+        <subObject red="255" green="255" blue="0">
+            <growth token="*:*:Yellow"/>
+        </subObject>
+        <subObject red="255" green="0" blue="0">
+            <growth token="*:*:LightRed"/>
+        </subObject>
+        <subObject red="128" green="0" blue="0">
+            <growth token="*:*:Red"/>
+        </subObject>
     </color>
     <color red="255" green="213" blue="209">
         <material token="PLANT:APPLE:FLOWER"/>
@@ -521,6 +617,15 @@
     </color>
     <color red="82" green="188" blue="71">
         <material token="PLANT:APRICOT:LEAF"/>
+        <subObject red="255" green="255" blue="0">
+            <growth token="*:*:Yellow"/>
+        </subObject>
+        <subObject red="255" green="0" blue="0">
+            <growth token="*:*:LightRed"/>
+        </subObject>
+        <subObject red="128" green="0" blue="0">
+            <growth token="*:*:Red"/>
+        </subObject>
     </color>
     <color red="248" green="228" blue="212">
         <material token="PLANT:APRICOT:FLOWER"/>
@@ -530,12 +635,28 @@
     </color>
     <color red="36" green="104" blue="45">
         <material token="PLANT:BAYBERRY:LEAF"/>
+        <subObject red="128" green="128" blue="0">
+            <growth token="*:*:Brown"/>
+        </subObject>
+        <subObject red="128" green="0" blue="0">
+            <growth token="*:*:Red"/>
+        </subObject>
     </color>
     <color red="208" green="52" blue="79">
         <material token="PLANT:BAYBERRY:FRUIT"/>
     </color>
-    <color red="45" green="87" blue="37">
+    <!--<color red="45" green="87" blue="37">-->
+    <color red="255" green="87" blue="255">
         <material token="PLANT:CHERRY:LEAF"/>
+        <subObject red="255" green="255" blue="0">
+            <growth token="*:*:Yellow"/>
+        </subObject>
+        <subObject red="255" green="0" blue="0">
+            <growth token="*:*:LightRed"/>
+        </subObject>
+        <subObject red="128" green="0" blue="0">
+            <growth token="*:*:Red"/>
+        </subObject>
     </color>
     <color red="255" green="230" blue="242">
         <material token="PLANT:CHERRY:FLOWER"/>
@@ -545,6 +666,15 @@
     </color>
     <color red="44" green="218" blue="52">
         <material token="PLANT:GINKGO:LEAF"/>
+        <subObject red="255" green="255" blue="0">
+            <growth token="*:*:Yellow"/>
+        </subObject>
+        <subObject red="255" green="0" blue="0">
+            <growth token="*:*:LightRed"/>
+        </subObject>
+        <subObject red="128" green="0" blue="0">
+            <growth token="*:*:Red"/>
+        </subObject>
     </color>
     <color red="134" green="228" blue="138">
         <material token="PLANT:GINKGO:POLLEN_CATKINS"/>
@@ -554,6 +684,15 @@
     </color>
     <color red="74" green="178" blue="79">
         <material token="PLANT:HAZEL:LEAF"/>
+        <subObject red="255" green="255" blue="0">
+            <growth token="*:*:Yellow"/>
+        </subObject>
+        <subObject red="255" green="0" blue="0">
+            <growth token="*:*:LightRed"/>
+        </subObject>
+        <subObject red="128" green="0" blue="0">
+            <growth token="*:*:Red"/>
+        </subObject>
     </color>
     <color red="238" green="230" blue="194">
         <material token="PLANT:HAZEL:POLLEN_CATKINS"/>
@@ -563,6 +702,15 @@
     </color>
     <color red="43" green="156" blue="97">
         <material token="PLANT:PEACH:LEAF"/>
+        <subObject red="255" green="255" blue="0">
+            <growth token="*:*:Yellow"/>
+        </subObject>
+        <subObject red="255" green="0" blue="0">
+            <growth token="*:*:LightRed"/>
+        </subObject>
+        <subObject red="128" green="0" blue="0">
+            <growth token="*:*:Red"/>
+        </subObject>
     </color>
     <color red="255" green="176" blue="194">
         <material token="PLANT:PEACH:FLOWER"/>
@@ -572,6 +720,15 @@
     </color>
     <color red="47" green="139" blue="38">
         <material token="PLANT:PEAR:LEAF"/>
+        <subObject red="255" green="255" blue="0">
+            <growth token="*:*:Yellow"/>
+        </subObject>
+        <subObject red="255" green="0" blue="0">
+            <growth token="*:*:LightRed"/>
+        </subObject>
+        <subObject red="128" green="0" blue="0">
+            <growth token="*:*:Red"/>
+        </subObject>
     </color>
     <color red="255" green="255" blue="233">
         <material token="PLANT:PEAR:FLOWER"/>
@@ -581,6 +738,15 @@
     </color>
     <color red="41" green="94" blue="64">
         <material token="PLANT:PECAN:LEAF"/>
+        <subObject red="255" green="255" blue="0">
+            <growth token="*:*:Yellow"/>
+        </subObject>
+        <subObject red="255" green="0" blue="0">
+            <growth token="*:*:LightRed"/>
+        </subObject>
+        <subObject red="128" green="0" blue="0">
+            <growth token="*:*:Red"/>
+        </subObject>
     </color>
     <color red="126" green="73" blue="50">
         <material token="PLANT:PECAN:NUT"/>
@@ -596,6 +762,15 @@
     </color>
     <color red="43" green="126" blue="64">
         <material token="PLANT:PLUM:LEAF"/>
+        <subObject red="255" green="255" blue="0">
+            <growth token="*:*:Yellow"/>
+        </subObject>
+        <subObject red="255" green="0" blue="0">
+            <growth token="*:*:LightRed"/>
+        </subObject>
+        <subObject red="128" green="0" blue="0">
+            <growth token="*:*:Red"/>
+        </subObject>
     </color>
     <color red="255" green="205" blue="217">
         <material token="PLANT:PLUM:FLOWER"/>
@@ -605,6 +780,15 @@
     </color>
     <color red="77" green="136" blue="38">
         <material token="PLANT:SAND_PEAR:LEAF"/>
+        <subObject red="255" green="255" blue="0">
+            <growth token="*:*:Yellow"/>
+        </subObject>
+        <subObject red="255" green="0" blue="0">
+            <growth token="*:*:LightRed"/>
+        </subObject>
+        <subObject red="128" green="0" blue="0">
+            <growth token="*:*:Red"/>
+        </subObject>
     </color>
     <color red="255" green="255" blue="233">
         <material token="PLANT:SAND_PEAR:FLOWER"/>
@@ -614,6 +798,15 @@
     </color>
     <color red="88" green="186" blue="52">
         <material token="PLANT:WALNUT:LEAF"/>
+        <subObject red="255" green="255" blue="0">
+            <growth token="*:*:Yellow"/>
+        </subObject>
+        <subObject red="255" green="0" blue="0">
+            <growth token="*:*:LightRed"/>
+        </subObject>
+        <subObject red="128" green="0" blue="0">
+            <growth token="*:*:Red"/>
+        </subObject>
     </color>
     <color red="255" green="255" blue="134">
         <material token="PLANT:WALNUT:FLOWER"/>
