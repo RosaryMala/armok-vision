@@ -44,4 +44,27 @@
         <growth token="ABACA:LEAVES:*"/>
         <growth token="BANANA:LEAVES:*"/>
     </growthMesh>
+    <growthMesh file="Foliage_New_Layer2.obj"
+                normal="Flowers_N.png"
+                occlusion="Flowers_O.png"
+                alpha="Flowers_A.png"
+                rotation="TreeRoundTall">
+        <growth token="*:FLOWER:*"/>
+        <growth token="*:FLOWERS:*"/>
+        <subObject file="SAPLING.obj"
+                   normal="Leaves_N.png"
+                   occlusion="Leaves_O.png"
+                   alpha="Leaves_A.png"
+                   rotation="Random">
+            <tiletype token="SAPLING:*:*:*:*"/>
+        </subObject>
+        <subObject file="BUSH.obj"
+                   normal="Leaves_N.png"
+                   occlusion="Leaves_O.png"
+                   alpha="Leaves_A.png"
+                   rotation="Random">
+            <tiletype token="SHRUB:*:*:*:*"/>
+        </subObject>
+    </growthMesh>
+
 </growthMeshes>
