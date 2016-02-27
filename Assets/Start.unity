@@ -313,7 +313,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 692705302}
-  m_LocalRotation: {x: 0, y: 0.50000006, z: 0, w: 0.8660254}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071067}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -481,6 +481,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 10
+--- !u!1 &831823944
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 831823945}
+  m_Layer: 0
+  m_Name: Longitude Axis
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &831823945
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 831823944}
+  m_LocalRotation: {x: -0.27059808, y: 0.2705981, z: 0.65328157, w: 0.65328145}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1415142926}
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
 --- !u!1 &861361727
 GameObject:
   m_ObjectHideFlags: 0
@@ -1107,13 +1135,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1415142925}
-  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071067}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 692705304}
-  m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_Father: {fileID: 831823945}
+  m_RootOrder: 0
 --- !u!114 &1415142927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1126,6 +1154,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 1
+  longitude: 0
+  axialTilt: 23.4
+  longitudeAxis: {fileID: 831823945}
+  seasonAxis: {fileID: 692705304}
 --- !u!20 &1485797796 stripped
 Camera:
   m_PrefabParentObject: {fileID: 2024094, guid: cbcacdf4d5c2d1e4a8ea4ac440b8e52d,
