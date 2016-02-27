@@ -1348,6 +1348,14 @@ namespace RemoteFortressReader
       get { return _cur_year_tick; }
       set { _cur_year_tick = value; }
     }
+    private RemoteFortressReader.WorldPoles _world_poles = RemoteFortressReader.WorldPoles.NO_POLES;
+    [global::ProtoBuf.ProtoMember(22, IsRequired = false, Name=@"world_poles", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.WorldPoles.NO_POLES)]
+    public RemoteFortressReader.WorldPoles world_poles
+    {
+      get { return _world_poles; }
+      set { _world_poles = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
