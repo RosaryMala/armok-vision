@@ -51,7 +51,7 @@ public struct DFTime : IComparable, IFormattable,
 
     public DFTime(long ticks)
     {
-        this._ticks = ticks;
+        _ticks = ticks;
     }
 
     /// <summary>
@@ -281,5 +281,17 @@ public struct DFTime : IComparable, IFormattable,
     public static bool operator >=(DFTime t1, DFTime t2)
     {
         return t1.Ticks >= t2.Ticks;
+    }
+
+    public float SolsticeAngle
+    {
+        get
+        {
+            float angle = (_ticks % TicksPerYear) * 360.0f / TicksPerYear;
+            angle -= 105;
+            if (angle < 0)
+                angle += 360;
+            return angle;
+        }
     }
 }
