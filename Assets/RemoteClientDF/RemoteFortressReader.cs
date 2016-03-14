@@ -1050,6 +1050,22 @@ namespace RemoteFortressReader
       get { return _cursor_pos_z; }
       set { _cursor_pos_z = value; }
     }
+    private int _follow_unit_id = -1;
+    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"follow_unit_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(-1)]
+    public int follow_unit_id
+    {
+      get { return _follow_unit_id; }
+      set { _follow_unit_id = value; }
+    }
+    private int _follow_item_id = -1;
+    [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name=@"follow_item_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(-1)]
+    public int follow_item_id
+    {
+      get { return _follow_item_id; }
+      set { _follow_item_id = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
