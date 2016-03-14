@@ -304,7 +304,7 @@ public class GameMap : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.O))
             overheadShadows = !overheadShadows;
 
-        //UpdateView();
+        UpdateView();
         ShowCursorInfo();
         UpdateRequestRegion();
         blockListTimer.Reset();
@@ -515,6 +515,20 @@ public class GameMap : MonoBehaviour
         if (newView == null) return;
         //Debug.Log("Got view");
         view = newView;
+
+        if (view.follow_unit_id != -1 && lastUnitList != null)
+        {
+            foreach (var unit in lastUnitList.creature_list)
+            {
+                if (unit.id == view.follow_unit_id)
+                {
+                    posXTile = unit.pos_x;
+                    posYTile = unit.pos_y;
+                    posZ = unit.pos_z + 1;
+                    return;
+                }
+            }
+        }
 
         posXTile = (view.view_pos_x + (view.view_size_x / 2));
         posYTile = (view.view_pos_y + (view.view_size_y / 2));
@@ -1136,6 +1150,7 @@ public class GameMap : MonoBehaviour
     Dictionary<int, Transform> creatureList;
     public Transform creatureTemplate;
 
+    UnitList lastUnitList = null;
     UnitList unitList = null;
 
     void UpdateCreatures()
@@ -1146,6 +1161,7 @@ public class GameMap : MonoBehaviour
         TextInfo textInfo = cultureInfo.TextInfo;
         unitList = DFConnection.Instance.PopUnitListUpdate();
         if (unitList == null) return;
+        lastUnitList = unitList;
         foreach (var unit in unitList.creature_list)
         {
             if (creatureList == null)
