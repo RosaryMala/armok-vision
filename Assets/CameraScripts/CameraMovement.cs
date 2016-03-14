@@ -7,7 +7,7 @@ public class CameraMovement : MonoBehaviour
     GameMap gameMap;
     public Transform cameraPos;
     bool following = true;
-    public float followSpeed = 0.25f;
+    public float followSpeed = 0.5f;
     public float followSnapDistance = 10;
     public float speed = 10;
     public float minDistance = 5;
