@@ -304,7 +304,10 @@ public class GameMap : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.O))
             overheadShadows = !overheadShadows;
 
-        UpdateView();
+        var camera = FindObjectOfType<CameraMovement>();
+
+        if (camera.following)
+            UpdateView();
         ShowCursorInfo();
         UpdateRequestRegion();
         blockListTimer.Reset();
@@ -313,6 +316,11 @@ public class GameMap : MonoBehaviour
         UpdateBlocks();
 
         DrawBlocks();
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            camera.following = true;
+        }
 
         if (Input.GetKeyDown(KeyCode.M))
         {
