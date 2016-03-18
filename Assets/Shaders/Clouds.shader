@@ -56,7 +56,7 @@
 		void surf (Input IN, inout SurfaceOutputStandard o) {
 			fixed n = 0;
 			if(IN.color.a > 0 || IN.color.a < 1)
-				n = fnoise(IN.worldPos);
+				n = fnoise(IN.worldPos * 0.001);
 			// Albedo comes from a texture tinted by color
 			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 			o.Albedo = c.rgb;

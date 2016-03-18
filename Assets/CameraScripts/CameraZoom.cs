@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.VR;
 
 public class CameraZoom : MonoBehaviour
 {
@@ -40,6 +41,13 @@ public class CameraZoom : MonoBehaviour
                 if (gameMap != null)
                     gameMap.firstPerson = false;
             }
+        }
+
+        if(VRSettings.enabled)
+        {
+            Vector3 angles = transform.rotation.eulerAngles;
+            angles = new Vector3(0, angles.y, 0);
+            transform.rotation = Quaternion.Euler(angles);
         }
     }
 }
