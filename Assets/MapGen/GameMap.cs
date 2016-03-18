@@ -27,40 +27,7 @@ public class GameMap : MonoBehaviour
     public Material magmaMaterial;
     public Material invisibleMaterial;
     public Material invisibleStencilMaterial;
-    Material BasicTopMaterial
-    {
-        get
-        {
-            if (firstPerson)
-                return basicTerrainMaterial;
-            else if (overheadShadows)
-                return invisibleMaterial;
-            else
-                return null;
-        }
-    }
-    Material StencilTopMaterial
-    {
-        get
-        {
-            if (firstPerson)
-                return stencilTerrainMaterial;
-            else if (overheadShadows)
-                return invisibleStencilMaterial;
-            else
-                return null;
-        }
-    }
-    Material TransparentTopMaterial
-    {
-        get
-        {
-            if (firstPerson)
-                return transparentTerrainMaterial;
-            else 
-                return null;
-        }
-    }
+
     public Light magmaGlowPrefab;
     public Text genStatus;
     public Text cursorProperties;
@@ -215,8 +182,6 @@ public class GameMap : MonoBehaviour
     void Awake()
     {
         timeHolder = FindObjectOfType<TimeHolder>();
-        VRSettings.loadedDevice = VRDeviceType.Oculus;
-        VRSettings.enabled = true;
     }
     // Does about what you'd think it does.
     void Start()
@@ -1246,6 +1211,46 @@ public class GameMap : MonoBehaviour
         }
     }
 
+    private bool DrawSingleBlock(int xx, int yy, int zz, bool phantom, Vector3 pos)
+    {
+        return DrawSingleBlock(xx, yy, zz, phantom, Matrix4x4.TRS(pos, Quaternion.identity, Vector3.one));
+    }
+
+    private bool DrawSingleBlock(int xx, int yy, int zz, bool phantom, Matrix4x4 LocalTransform)
+    {
+        bool drewBlock = false;
+        if (blocks[xx, yy, zz] != null && blocks[xx, yy, zz].vertexCount > 0)
+        {
+            Graphics.DrawMesh(blocks[xx, yy, zz], LocalTransform, phantom ? invisibleMaterial : basicTerrainMaterial, 0, null, 0, null, ShadowCastingMode.On, true, transform);
+            drewBlock = true;
+        }
+
+        if (stencilBlocks[xx, yy, zz] != null && stencilBlocks[xx, yy, zz].vertexCount > 0)
+        {
+            Graphics.DrawMesh(stencilBlocks[xx, yy, zz], LocalTransform, phantom ? invisibleStencilMaterial : stencilTerrainMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
+            drewBlock = true;
+        }
+
+        if (transparentBlocks[xx, yy, zz] != null && transparentBlocks[xx, yy, zz].vertexCount > 0 && !phantom)
+        {
+            Graphics.DrawMesh(transparentBlocks[xx, yy, zz], LocalTransform, transparentTerrainMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
+            drewBlock = true;
+        }
+
+        if (liquidBlocks[xx, yy, zz, MapDataStore.WATER_INDEX] != null && liquidBlocks[xx, yy, zz, MapDataStore.WATER_INDEX].vertexCount > 0 && !phantom)
+        {
+            Graphics.DrawMesh(liquidBlocks[xx, yy, zz, MapDataStore.WATER_INDEX], LocalTransform, waterMaterial, 4, null, 0, null, ShadowCastingMode.On, true, transform);
+            drewBlock = true;
+        }
+
+        if (liquidBlocks[xx, yy, zz, MapDataStore.MAGMA_INDEX] != null && liquidBlocks[xx, yy, zz, MapDataStore.MAGMA_INDEX].vertexCount > 0 && !phantom)
+        {
+            Graphics.DrawMesh(liquidBlocks[xx, yy, zz, MapDataStore.MAGMA_INDEX], LocalTransform, magmaMaterial, 4, null, 0, null, ShadowCastingMode.On, true, transform);
+            drewBlock = true;
+        }
+        return drewBlock;
+    }
+
     private void DrawBlocks()
     {
         if (blocks == null)
@@ -1270,39 +1275,10 @@ public class GameMap : MonoBehaviour
                     break;
                 for (int yy = ymin; yy < ymax; yy++)
                 {
+                    Vector3 pos = DFtoUnityCoord(xx * blockSize, yy * blockSize, zz);
                     if (drawnBlocks >= GameSettings.Instance.rendering.maxBlocksToDraw)
                         break;
-                    bool drewBlock = false;
-                    if (blocks[xx, yy, zz] != null && blocks[xx, yy, zz].vertexCount > 0)
-                    {
-                        Graphics.DrawMesh(blocks[xx, yy, zz], Vector3.zero, Quaternion.identity, basicTerrainMaterial, 0, null, 0, null, ShadowCastingMode.On, true, transform);
-                        drewBlock = true;
-                    }
-
-                    if (stencilBlocks[xx, yy, zz] != null && stencilBlocks[xx, yy, zz].vertexCount > 0)
-                    {
-                        Graphics.DrawMesh(stencilBlocks[xx, yy, zz], Vector3.zero, Quaternion.identity, stencilTerrainMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
-                        drewBlock = true;
-                    }
-
-                    if (transparentBlocks[xx, yy, zz] != null && transparentBlocks[xx, yy, zz].vertexCount > 0)
-                    {
-                        Graphics.DrawMesh(transparentBlocks[xx, yy, zz], Vector3.zero, Quaternion.identity, transparentTerrainMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
-                        drewBlock = true;
-                    }
-
-                    if (liquidBlocks[xx, yy, zz, MapDataStore.WATER_INDEX] != null && liquidBlocks[xx, yy, zz, MapDataStore.WATER_INDEX].vertexCount > 0)
-                    {
-                        Graphics.DrawMesh(liquidBlocks[xx, yy, zz, MapDataStore.WATER_INDEX], Vector3.zero, Quaternion.identity, waterMaterial, 4, null, 0, null, ShadowCastingMode.On, true, transform);
-                        drewBlock = true;
-                    }
-
-                    if (liquidBlocks[xx, yy, zz, MapDataStore.MAGMA_INDEX] != null && liquidBlocks[xx, yy, zz, MapDataStore.MAGMA_INDEX].vertexCount > 0)
-                    {
-                        Graphics.DrawMesh(liquidBlocks[xx, yy, zz, MapDataStore.MAGMA_INDEX], Vector3.zero, Quaternion.identity, magmaMaterial, 4, null, 0, null, ShadowCastingMode.On, true, transform);
-                        drewBlock = true;
-                    }
-                    if (drewBlock)
+                    if (DrawSingleBlock(xx, yy, zz, false, pos))
                         drawnBlocks++;
                 }
             }
@@ -1321,40 +1297,9 @@ public class GameMap : MonoBehaviour
                     {
                         if (drawnBlocks >= GameSettings.Instance.rendering.maxBlocksToDraw)
                             break;
-                        bool drewBlock = false;
-                        if (blocks[xx, yy, zz] != null && blocks[xx, yy, zz].vertexCount > 0 && BasicTopMaterial != null)
-                        {
-                            Graphics.DrawMesh(blocks[xx, yy, zz], Vector3.zero, Quaternion.identity, BasicTopMaterial, 0, null, 0, null, ShadowCastingMode.On, true, transform);
-                            drewBlock = true;
-                        }
+                        Vector3 pos = DFtoUnityCoord(xx * blockSize, yy * blockSize, zz);
 
-                        if (stencilBlocks[xx, yy, zz] != null && stencilBlocks[xx, yy, zz].vertexCount > 0 && StencilTopMaterial != null)
-                        {
-                            Graphics.DrawMesh(stencilBlocks[xx, yy, zz], Vector3.zero, Quaternion.identity, StencilTopMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
-                            drewBlock = true;
-                        }
-
-                        if (transparentBlocks[xx, yy, zz] != null && transparentBlocks[xx, yy, zz].vertexCount > 0 && TransparentTopMaterial != null)
-                        {
-                            Graphics.DrawMesh(transparentBlocks[xx, yy, zz], Vector3.zero, Quaternion.identity, TransparentTopMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
-                            drewBlock = true;
-                        }
-
-                        if (firstPerson)
-                        {
-                            if (liquidBlocks[xx, yy, zz, MapDataStore.WATER_INDEX] != null && liquidBlocks[xx, yy, zz, MapDataStore.WATER_INDEX].vertexCount > 0)
-                            {
-                                Graphics.DrawMesh(liquidBlocks[xx, yy, zz, MapDataStore.WATER_INDEX], Matrix4x4.identity, waterMaterial, 4);
-                                drewBlock = true;
-                            }
-
-                            if (liquidBlocks[xx, yy, zz, MapDataStore.MAGMA_INDEX] != null && liquidBlocks[xx, yy, zz, MapDataStore.MAGMA_INDEX].vertexCount > 0)
-                            {
-                                Graphics.DrawMesh(liquidBlocks[xx, yy, zz, MapDataStore.MAGMA_INDEX], Matrix4x4.identity, magmaMaterial, 4);
-                                drewBlock = true;
-                            }
-                        }
-                        if (drewBlock)
+                        if (DrawSingleBlock(xx, yy, zz, (!firstPerson), pos))
                             drawnBlocks++;
                     }
                 }

@@ -282,7 +282,7 @@ abstract class BlockMesher {
                 finalNormals[coord2Index(xx, yy)] = new Vector3(sx, GameMap.tileWidth * 2, -sy);
                 finalNormals[coord2Index(xx, yy)].Normalize();
 
-                finalVertices[coord2Index(xx, yy)] = GameMap.DFtoUnityCoord(((block_x * GameMap.blockSize) + xx), ((block_y * GameMap.blockSize) + yy), block_z);
+                finalVertices[coord2Index(xx, yy)] = GameMap.DFtoUnityCoord(xx, yy, -GameMap.MapZOffset);
                 finalVertices[coord2Index(xx, yy)].x -= GameMap.tileWidth / 2.0f;
                 finalVertices[coord2Index(xx, yy)].z += GameMap.tileWidth / 2.0f;
                 finalVertices[coord2Index(xx, yy)].y += height;
@@ -335,17 +335,17 @@ abstract class BlockMesher {
                 {
                     if (i < (int)MeshLayer.StaticCutout)
                     {
-                        FillMeshBuffer(out temp.meshBuffer[bufferIndex], (MeshLayer)i, data[xx, yy, block_z]);
+                        FillMeshBuffer(out temp.meshBuffer[bufferIndex], (MeshLayer)i, data[xx, yy, block_z], GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize), yy - (block_y * GameMap.blockSize), -GameMap.MapZOffset));
                         bufferIndex++;
                     }
                     else if (i < (int)MeshLayer.StaticTransparent)
                     {
-                        FillMeshBuffer(out temp.stencilMeshBuffer[stencilBufferIndex], (MeshLayer)i, data[xx, yy, block_z]);
+                        FillMeshBuffer(out temp.stencilMeshBuffer[stencilBufferIndex], (MeshLayer)i, data[xx, yy, block_z], GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize), yy - (block_y * GameMap.blockSize), -GameMap.MapZOffset));
                         stencilBufferIndex++;
                     }
                     else
                     {
-                        FillMeshBuffer(out temp.transparentMeshBuffer[transparentBufferIndex], (MeshLayer)i, data[xx, yy, block_z]);
+                        FillMeshBuffer(out temp.transparentMeshBuffer[transparentBufferIndex], (MeshLayer)i, data[xx, yy, block_z], GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize), yy - (block_y * GameMap.blockSize), -GameMap.MapZOffset));
                         transparentBufferIndex++;
                     }
                 }
@@ -364,7 +364,7 @@ abstract class BlockMesher {
     /// <param name="buffer">Buffer to put the chosen meshes into for combining</param>
     /// <param name="layer">layer currently being worked on</param>
     /// <param name="tile">The tile to get all the needed info from.</param>
-    void FillMeshBuffer(out MeshCombineUtility.MeshInstance buffer, MeshLayer layer, MapDataStore.Tile tile)
+    void FillMeshBuffer(out MeshCombineUtility.MeshInstance buffer, MeshLayer layer, MapDataStore.Tile tile, Vector3 pos)
     {
         buffer = new MeshCombineUtility.MeshInstance();
         MeshContent meshContent = null;
@@ -442,7 +442,7 @@ abstract class BlockMesher {
             return;
         }
         buffer.meshData = meshContent.MeshData[layer];
-        buffer.transform = Matrix4x4.TRS(GameMap.DFtoUnityCoord(tile.position), meshContent.GetRotation(tile), Vector3.one);
+        buffer.transform = Matrix4x4.TRS(pos, meshContent.GetRotation(tile), Vector3.one);
         Matrix4x4 shapeTextTransform = Matrix4x4.identity;
         NormalContent tileTexContent;
         if (meshContent.NormalTexture == null)
