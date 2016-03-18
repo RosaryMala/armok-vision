@@ -442,7 +442,16 @@ public sealed class DFConnection : MonoBehaviour
         }
         instance = this;
 
-        ConnectAndInit();
+        try
+        {
+            ConnectAndInit();
+        }
+        catch (UnityException e)
+        {
+
+            Debug.LogError(e.Message);
+        }
+        
     }
 
     void Update()
