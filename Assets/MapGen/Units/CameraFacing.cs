@@ -13,6 +13,7 @@ public class CameraFacing : MonoBehaviour
 
     public enum Axis { up, down, left, right, forward, back };
     public bool reverseFace = false;
+    public bool stayVertical = false;
     public Axis axis = Axis.up;
 
     // return a direction based upon chosen axis
@@ -48,6 +49,8 @@ public class CameraFacing : MonoBehaviour
         // rotates the object relative to the camera
         Vector3 targetPos = transform.position + referenceCamera.transform.rotation * (reverseFace ? Vector3.forward : Vector3.back);
         Vector3 targetOrientation = referenceCamera.transform.rotation * GetAxis(axis);
+        if (stayVertical)
+            targetPos = new Vector3(targetPos.x, transform.position.y, targetPos.z);
         transform.LookAt(targetPos, targetOrientation);
     }
 }
