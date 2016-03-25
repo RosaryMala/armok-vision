@@ -1050,6 +1050,22 @@ namespace RemoteFortressReader
       get { return _cursor_pos_z; }
       set { _cursor_pos_z = value; }
     }
+    private int _follow_unit_id = (int)-1;
+    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"follow_unit_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue((int)-1)]
+    public int follow_unit_id
+    {
+      get { return _follow_unit_id; }
+      set { _follow_unit_id = value; }
+    }
+    private int _follow_item_id = (int)-1;
+    [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name=@"follow_item_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue((int)-1)]
+    public int follow_item_id
+    {
+      get { return _follow_item_id; }
+      set { _follow_item_id = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -1866,6 +1882,139 @@ namespace RemoteFortressReader
       get { return _plant_raws; }
     }
   
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ScreenTile")]
+  public partial class ScreenTile : global::ProtoBuf.IExtensible
+  {
+    public ScreenTile() {}
+    
+    private uint _character = default(uint);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"character", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(uint))]
+    public uint character
+    {
+      get { return _character; }
+      set { _character = value; }
+    }
+    private uint _foreground = default(uint);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"foreground", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(uint))]
+    public uint foreground
+    {
+      get { return _foreground; }
+      set { _foreground = value; }
+    }
+    private uint _background = default(uint);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"background", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(uint))]
+    public uint background
+    {
+      get { return _background; }
+      set { _background = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ScreenCapture")]
+  public partial class ScreenCapture : global::ProtoBuf.IExtensible
+  {
+    public ScreenCapture() {}
+    
+    private uint _width = default(uint);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"width", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(uint))]
+    public uint width
+    {
+      get { return _width; }
+      set { _width = value; }
+    }
+    private uint _height = default(uint);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"height", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(uint))]
+    public uint height
+    {
+      get { return _height; }
+      set { _height = value; }
+    }
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.ScreenTile> _tiles = new global::System.Collections.Generic.List<RemoteFortressReader.ScreenTile>();
+    [global::ProtoBuf.ProtoMember(3, Name=@"tiles", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.ScreenTile> tiles
+    {
+      get { return _tiles; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"KeyboardEvent")]
+  public partial class KeyboardEvent : global::ProtoBuf.IExtensible
+  {
+    public KeyboardEvent() {}
+    
+    private uint _type = default(uint);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(uint))]
+    public uint type
+    {
+      get { return _type; }
+      set { _type = value; }
+    }
+    private uint _which = default(uint);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"which", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(uint))]
+    public uint which
+    {
+      get { return _which; }
+      set { _which = value; }
+    }
+    private uint _state = default(uint);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"state", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(uint))]
+    public uint state
+    {
+      get { return _state; }
+      set { _state = value; }
+    }
+    private uint _scancode = default(uint);
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"scancode", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(uint))]
+    public uint scancode
+    {
+      get { return _scancode; }
+      set { _scancode = value; }
+    }
+    private uint _sym = default(uint);
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"sym", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(uint))]
+    public uint sym
+    {
+      get { return _sym; }
+      set { _sym = value; }
+    }
+    private uint _mod = default(uint);
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"mod", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(uint))]
+    public uint mod
+    {
+      get { return _mod; }
+      set { _mod = value; }
+    }
+    private uint _unicode = default(uint);
+    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"unicode", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(uint))]
+    public uint unicode
+    {
+      get { return _unicode; }
+      set { _unicode = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
