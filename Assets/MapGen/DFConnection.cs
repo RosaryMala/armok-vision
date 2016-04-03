@@ -66,6 +66,7 @@ public sealed class DFConnection : MonoBehaviour
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.CreatureRawList> creatureRawListCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.PlantRawList> plantRawListCall;
     private RemoteFunction<RemoteFortressReader.KeyboardEvent> keyboardEventCall;
+    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.ScreenCapture> copyScreenCall;
     private color_ostream dfNetworkOut = new color_ostream();
     private RemoteClient networkClient;
 
@@ -86,6 +87,7 @@ public sealed class DFConnection : MonoBehaviour
     private SingleBuffer<RemoteFortressReader.RegionMaps> netRegionMaps;
     private RingBuffer<RemoteFortressReader.MapBlock> pendingBlocks
         = new RingBuffer<RemoteFortressReader.MapBlock>(1024);
+    private SingleBuffer<RemoteFortressReader.ScreenCapture> netScreenCapture;
     private EventBuffer worldMapMoved;
 
     // Input queues
@@ -160,6 +162,11 @@ public sealed class DFConnection : MonoBehaviour
     public RemoteFortressReader.ViewInfo PopViewInfoUpdate()
     {
         return netViewInfo.Pop();
+    }
+
+    public RemoteFortressReader.ScreenCapture PopScreenUpdate()
+    {
+        return netScreenCapture.Pop();
     }
 
     /// <summary>
@@ -268,6 +275,12 @@ public sealed class DFConnection : MonoBehaviour
             viewInfoCall.execute(null, out viewInfo);
             netViewInfo.Set(viewInfo);
         }
+        if(copyScreenCall != null)
+        {
+            RemoteFortressReader.ScreenCapture screenCapture;
+            copyScreenCall.execute(null, out screenCapture);
+            netScreenCapture.Set(screenCapture);
+        }
         if (unitListCall != null)
         {
             RemoteFortressReader.UnitList unitList;
@@ -375,6 +388,7 @@ public sealed class DFConnection : MonoBehaviour
         creatureRawListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.CreatureRawList>(networkClient, "GetCreatureRaws", "RemoteFortressReader");
         plantRawListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.PlantRawList>(networkClient, "GetPlantRaws", "RemoteFortressReader");
         keyboardEventCall = CreateAndBind<RemoteFortressReader.KeyboardEvent>(networkClient, "PassKeyboardEvent", "RemoteFortressReader");
+        copyScreenCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.ScreenCapture>(networkClient, "CopyScreen", "RemoteFortressReader");
     }
 
     /// <summary>
@@ -479,45 +493,50 @@ public sealed class DFConnection : MonoBehaviour
         connectionManager.Poll();
     }
 
+    public bool logKeyEvents;
+
     // OnGUI is called for rendering and handling GUI events
     public void OnGUI()
     {
-        Event e = Event.current;
-        if(e.isKey)
+        if (logKeyEvents)
         {
-            RemoteFortressReader.KeyboardEvent dfEvent = new RemoteFortressReader.KeyboardEvent();
-            switch (e.type)
+            Event e = Event.current;
+            if (e.isKey)
             {
-                case EventType.KeyDown:
-                    dfEvent.type = 2;
-                    dfEvent.state = 0;
-                    break;
-                case EventType.KeyUp:
-                    dfEvent.type = 3;
-                    dfEvent.state = 0;
-                    break;
+                RemoteFortressReader.KeyboardEvent dfEvent = new RemoteFortressReader.KeyboardEvent();
+                switch (e.type)
+                {
+                    case EventType.KeyDown:
+                        dfEvent.type = 2;
+                        dfEvent.state = 0;
+                        break;
+                    case EventType.KeyUp:
+                        dfEvent.type = 3;
+                        dfEvent.state = 0;
+                        break;
+                }
+                SDL.Mod mod = SDL.Mod.KMOD_NONE;
+                if (e.shift)
+                    mod |= SDL.Mod.KMOD_SHIFT;
+                if (e.control)
+                    mod |= SDL.Mod.KMOD_CTRL;
+                if (e.alt)
+                    mod |= SDL.Mod.KMOD_ALT;
+                if (e.command)
+                    mod |= SDL.Mod.KMOD_META;
+                if (e.capsLock)
+                    mod |= SDL.Mod.KMOD_CAPS;
+
+                dfEvent.mod = (uint)mod;
+                dfEvent.scancode = (uint)e.keyCode;
+                dfEvent.sym = (uint)e.keyCode;
+                dfEvent.unicode = e.character;
+
+                if (e.keyCode == KeyCode.None && e.character != '\0')
+                    StartCoroutine(delayedKeyboardEvent(dfEvent)); // Unity doesn't give any keyboard events for character up, but DF expect it.
+                else
+                    keyPresses.Enqueue(dfEvent);
             }
-            SDL.Mod mod = SDL.Mod.KMOD_NONE;
-            if (e.shift)
-                mod |= SDL.Mod.KMOD_SHIFT;
-            if (e.control)
-                mod |= SDL.Mod.KMOD_CTRL;
-            if (e.alt)
-                mod |= SDL.Mod.KMOD_ALT;
-            if (e.command)
-                mod |= SDL.Mod.KMOD_META;
-            if (e.capsLock)
-                mod |= SDL.Mod.KMOD_CAPS;
-
-            dfEvent.mod = (uint)mod;
-            dfEvent.scancode = (uint)e.keyCode;
-            dfEvent.sym = (uint)e.keyCode;
-            dfEvent.unicode = e.character;
-
-            if (e.keyCode == KeyCode.None && e.character != '\0')
-                StartCoroutine(delayedKeyboardEvent(dfEvent)); // Unity doesn't give any keyboard events for character up, but DF expect it.
-            else
-                keyPresses.Enqueue(dfEvent);
         }
     }
 
@@ -590,6 +609,12 @@ public sealed class DFConnection : MonoBehaviour
             RemoteFortressReader.ViewInfo viewInfo;
             viewInfoCall.execute(null, out viewInfo);
             netViewInfo.Set(viewInfo);
+        }
+        if (copyScreenCall != null)
+        {
+            RemoteFortressReader.ScreenCapture screenCapture;
+            copyScreenCall.execute(null, out screenCapture);
+            netScreenCapture.Set(screenCapture);
         }
 
         if (unitListCall != null)
