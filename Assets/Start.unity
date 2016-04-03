@@ -1293,6 +1293,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BlocksToFetch: 10
   RunOnAlternateThread: 1
+  logKeyEvents: 1
 --- !u!4 &1201785584
 Transform:
   m_ObjectHideFlags: 0
@@ -1375,6 +1376,9 @@ GameObject:
   - 4: {fileID: 1383803863}
   - 114: {fileID: 1383803865}
   - 114: {fileID: 1383803864}
+  - 33: {fileID: 1383803867}
+  - 114: {fileID: 1383803866}
+  - 23: {fileID: 1383803868}
   m_Layer: 0
   m_Name: CameraPivot
   m_TagString: Untagged
@@ -1426,6 +1430,57 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotateSpeed: 10
   moveSpeed: 1
+--- !u!114 &1383803866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1383803862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92a3920257a00ad4899753cd5cfb42ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  width: 0
+  height: 0
+  tiles: 
+  fgColors: 
+  bgColors: 
+  tilewidth: 2
+  tileheight: 3
+--- !u!33 &1383803867
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1383803862}
+  m_Mesh: {fileID: 0}
+--- !u!23 &1383803868
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1383803862}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 72f460a6704a27440afac560e540ff96, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 1
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
 --- !u!4 &1404020253
 Transform:
   m_ObjectHideFlags: 0
