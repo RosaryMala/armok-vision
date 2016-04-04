@@ -43,6 +43,8 @@ public class TileRenderer : MonoBehaviour
 
     void CaptureScreen()
     {
+        if (DFConnection.Instance == null)
+            return;
         var capture = DFConnection.Instance.PopScreenUpdate();
         if (capture == null)
             return;
