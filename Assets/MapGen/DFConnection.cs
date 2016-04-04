@@ -493,12 +493,10 @@ public sealed class DFConnection : MonoBehaviour
         connectionManager.Poll();
     }
 
-    public bool logKeyEvents;
-
     // OnGUI is called for rendering and handling GUI events
     public void OnGUI()
     {
-        if (logKeyEvents)
+        if (GameSettings.Instance.game.showDFScreen)
         {
             Event e = Event.current;
             if (e.isKey)
