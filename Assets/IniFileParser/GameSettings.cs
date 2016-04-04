@@ -1,8 +1,7 @@
-﻿using System.IO;
-using UnityEngine;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
-using System.Runtime.Serialization;
+using System.IO;
+using UnityEngine;
 
 public class GameSettings : MonoBehaviour
 {
@@ -43,17 +42,22 @@ public class GameSettings : MonoBehaviour
     }
 
     [Serializable]
+    public class Game
+    {
+        public bool showDFScreen = true;
+    }
+
+    [Serializable]
     public class Settings
     {
         public Meshing meshing = new Meshing();
         public Rendering rendering = new Rendering();
         public Units units = new Units();
         public CameraSettings camera = new CameraSettings();
+        public Game game = new Game();
     }
 
-    public static Settings Instance { get; private set; }
-
-    public Settings localInstance = new Settings();
+    public static Settings Instance = new Settings();
 
     public Camera mainCamera;
 
@@ -81,7 +85,6 @@ public class GameSettings : MonoBehaviour
     // Awake is called when the script instance is being loaded
     public void Awake()
     {
-        Instance = localInstance;
         Instance.camera.fieldOfView = mainCamera.fieldOfView;
         DeserializeIni("Config.json");
         mainCamera.fieldOfView = Instance.camera.fieldOfView;

@@ -264,18 +264,45 @@ public class GameMap : MonoBehaviour
         InitializeBlocks();
     }
 
+    public GameObject dfScreen;
+
     // Run once per frame.
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
-            GameSettings.Instance.units.scaleUnits = !GameSettings.Instance.units.scaleUnits;
-        if (Input.GetKeyDown(KeyCode.O))
-            overheadShadows = !overheadShadows;
+
+        if (Input.GetKeyDown(KeyCode.BackQuote))
+        {
+            GameSettings.Instance.game.showDFScreen = !GameSettings.Instance.game.showDFScreen;
+
+            dfScreen.SetActive(GameSettings.Instance.game.showDFScreen);
+        }
 
         var camera = FindObjectOfType<CameraMovement>();
 
-        if (camera.following)
+        if (camera.following || GameSettings.Instance.game.showDFScreen)
             UpdateView();
+
+
+        if (!GameSettings.Instance.game.showDFScreen)
+        {
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                GameSettings.Instance.units.scaleUnits = !GameSettings.Instance.units.scaleUnits;
+            }
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                overheadShadows = !overheadShadows;
+            }
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                camera.following = true;
+            }
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                SaveMeshes();
+            }
+        }
+
         ShowCursorInfo();
         UpdateRequestRegion();
         blockListTimer.Reset();
@@ -285,15 +312,6 @@ public class GameMap : MonoBehaviour
 
         DrawBlocks();
 
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            camera.following = true;
-        }
-
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            SaveMeshes();
-        }
     }
 
     public Mesh testMesh;
