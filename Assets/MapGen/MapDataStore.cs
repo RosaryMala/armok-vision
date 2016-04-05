@@ -110,6 +110,8 @@ public class MapDataStore {
         for (int x = 0; x < newSliceSize.x; x++) {
             for (int y = 0; y < newSliceSize.y; y++) {
                 for (int z = 0; z < newSliceSize.z; z++) {
+                    if (tiles[localNewSliceOrigin.x + x, localNewSliceOrigin.y + y, localNewSliceOrigin.z + z] == null)
+                        continue;
                     //pre-calculate it before we copy, because afterwards we won't have contextual data.
                     if (tiles[localNewSliceOrigin.x + x, localNewSliceOrigin.y + y, localNewSliceOrigin.z + z].shape == TiletypeShape.RAMP)
                         tiles[localNewSliceOrigin.x + x, localNewSliceOrigin.y + y, localNewSliceOrigin.z + z].CalculateRampType(); 
@@ -181,8 +183,8 @@ public class MapDataStore {
                     tiles[localCoord.x, localCoord.y, localCoord.z].magmaLevel = block.magma[netIndex];
                     if (tiles[localCoord.x, localCoord.y, localCoord.z].hidden != block.hidden[netIndex])
                     {
-                        tiles[localCoord.x, localCoord.y, localCoord.z].hidden = false;// = block.hidden[netIndex]; //feature held off untill later.
-                        //setTiles = true;
+                        tiles[localCoord.x, localCoord.y, localCoord.z].hidden  = block.hidden[netIndex];
+                        setTiles = true;
                     }
                 }
             }
