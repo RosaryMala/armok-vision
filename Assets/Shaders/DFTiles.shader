@@ -4,6 +4,7 @@
 	{
         _MainTex("Texture", 2D) = "white" {}
         _Pallet("Pallet", 2D) = "white" {}
+        _Threshold("Threshold", Range(0,1)) = 0.5
     }
 	SubShader
 	{
@@ -38,6 +39,7 @@
             sampler2D _MainTex;
             sampler2D _Pallet;
             float4 _MainTex_ST;
+            float _Threshold;
 			
 			v2f vert (appdata v)
 			{
@@ -55,7 +57,7 @@
                 fixed4 bgCol = tex2D(_Pallet, float2(i.color.g, 0.5));
                 // sample the texture
 				fixed4 texCol = tex2D(_MainTex, i.uv);
-                fixed4 col = (texCol * fgCol) * texCol.a + ((1 - texCol.a) * bgCol);
+                fixed4 col = ((texCol * fgCol) * step(_Threshold, texCol.a)) + (step(texCol.a, _Threshold) * bgCol);
 				// apply fog
 				UNITY_APPLY_FOG(i.fogCoord, col);
 				return col;

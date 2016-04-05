@@ -1196,7 +1196,12 @@ public class GameMap : MonoBehaviour
                         creatureList[unit.id].GetComponentInChildren<AtlasSprite>().AddTile(creatureRaw.creature_tile, color);
 
                 }
-                creatureList[unit.id].gameObject.SetActive(unit.pos_z < PosZ && unit.pos_z >= (PosZ - GameSettings.Instance.rendering.drawRangeDown));
+                var tile = MapDataStore.Main[unit.pos_x, unit.pos_y, unit.pos_z];
+                creatureList[unit.id].gameObject.SetActive(
+                    unit.pos_z < PosZ && unit.pos_z >= (PosZ - GameSettings.Instance.rendering.drawRangeDown)
+                    && (tile != null ? !tile.hidden : false)
+                    );
+
                 if (creatureList[unit.id].gameObject.activeSelf) //Only update stuff if it's actually visible.
                 {
                     Vector3 position = DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z);
@@ -1224,7 +1229,7 @@ public class GameMap : MonoBehaviour
                         creatureList[unit.id].GetComponentInChildren<AtlasSprite>().SetColor(0, new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1));
                     if (creatureRaw != null)
                     {
-                        if (unit.is_soldier)
+                        if (unit.is_soldier && creatureRaw.creature_soldier_tile != 0)
                             creatureList[unit.id].GetComponentInChildren<AtlasSprite>().SetTile(0, creatureRaw.creature_soldier_tile);
                         else
                             creatureList[unit.id].GetComponentInChildren<AtlasSprite>().SetTile(0, creatureRaw.creature_tile);
