@@ -1196,7 +1196,9 @@ public class GameMap : MonoBehaviour
                         creatureList[unit.id].GetComponentInChildren<AtlasSprite>().AddTile(creatureRaw.creature_tile, color);
 
                 }
-                var tile = MapDataStore.Main[unit.pos_x, unit.pos_y, unit.pos_z];
+                MapDataStore.Tile tile = null;
+                if(MapDataStore.Main != null)
+                    tile = MapDataStore.Main[unit.pos_x, unit.pos_y, unit.pos_z];
                 creatureList[unit.id].gameObject.SetActive(
                     unit.pos_z < PosZ && unit.pos_z >= (PosZ - GameSettings.Instance.rendering.drawRangeDown)
                     && (tile != null ? !tile.hidden : false)
@@ -1268,31 +1270,31 @@ public class GameMap : MonoBehaviour
         bool drewBlock = false;
         if (blocks[xx, yy, zz] != null && blocks[xx, yy, zz].vertexCount > 0)
         {
-            Graphics.DrawMesh(blocks[xx, yy, zz], LocalTransform, phantom ? invisibleMaterial : basicTerrainMaterial, 0, null, 0, null, ShadowCastingMode.On, true, transform);
+            Graphics.DrawMesh(blocks[xx, yy, zz], LocalTransform, phantom ? invisibleMaterial : basicTerrainMaterial, 0);
             drewBlock = true;
         }
 
         if (stencilBlocks[xx, yy, zz] != null && stencilBlocks[xx, yy, zz].vertexCount > 0)
         {
-            Graphics.DrawMesh(stencilBlocks[xx, yy, zz], LocalTransform, phantom ? invisibleStencilMaterial : stencilTerrainMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
+            Graphics.DrawMesh(stencilBlocks[xx, yy, zz], LocalTransform, phantom ? invisibleStencilMaterial : stencilTerrainMaterial, 0);
             drewBlock = true;
         }
 
         if (transparentBlocks[xx, yy, zz] != null && transparentBlocks[xx, yy, zz].vertexCount > 0 && !phantom)
         {
-            Graphics.DrawMesh(transparentBlocks[xx, yy, zz], LocalTransform, transparentTerrainMaterial, 1, null, 0, null, ShadowCastingMode.On, true, transform);
+            Graphics.DrawMesh(transparentBlocks[xx, yy, zz], LocalTransform, transparentTerrainMaterial, 0);
             drewBlock = true;
         }
 
         if (liquidBlocks[xx, yy, zz, MapDataStore.WATER_INDEX] != null && liquidBlocks[xx, yy, zz, MapDataStore.WATER_INDEX].vertexCount > 0 && !phantom)
         {
-            Graphics.DrawMesh(liquidBlocks[xx, yy, zz, MapDataStore.WATER_INDEX], LocalTransform, waterMaterial, 4, null, 0, null, ShadowCastingMode.On, true, transform);
+            Graphics.DrawMesh(liquidBlocks[xx, yy, zz, MapDataStore.WATER_INDEX], LocalTransform, waterMaterial, 4);
             drewBlock = true;
         }
 
         if (liquidBlocks[xx, yy, zz, MapDataStore.MAGMA_INDEX] != null && liquidBlocks[xx, yy, zz, MapDataStore.MAGMA_INDEX].vertexCount > 0 && !phantom)
         {
-            Graphics.DrawMesh(liquidBlocks[xx, yy, zz, MapDataStore.MAGMA_INDEX], LocalTransform, magmaMaterial, 4, null, 0, null, ShadowCastingMode.On, true, transform);
+            Graphics.DrawMesh(liquidBlocks[xx, yy, zz, MapDataStore.MAGMA_INDEX], LocalTransform, magmaMaterial, 4);
             drewBlock = true;
         }
         return drewBlock;
