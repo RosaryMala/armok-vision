@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: DFTiles
-  m_Shader: {fileID: 4800000, guid: 048ad5257b187f149a3fe25be6f8427b, type: 3}
+  m_Shader: {fileID: 4800000, guid: 2e9f5f50258644047b2b1cf0201747d5, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 5
   m_CustomRenderQueue: 2000
@@ -34,6 +34,13 @@ Material:
           name: _DetailNormalMap
         second:
           m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _Pallet
+        second:
+          m_Texture: {fileID: 2800000, guid: 2f65b509ec700fc4a908269fdabf325e, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
@@ -78,13 +85,6 @@ Material:
           m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _Pallet
-        second:
-          m_Texture: {fileID: 2800000, guid: 2f65b509ec700fc4a908269fdabf325e, type: 3}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
     m_Floats:
       data:
         first:
@@ -97,6 +97,10 @@ Material:
       data:
         first:
           name: _Cutoff
+        second: 0.5
+      data:
+        first:
+          name: _Threshold
         second: 0.5
       data:
         first:
@@ -134,10 +138,6 @@ Material:
         first:
           name: _Mode
         second: 0
-      data:
-        first:
-          name: _Threshold
-        second: 0.5
     m_Colors:
       data:
         first:
@@ -146,4 +146,8 @@ Material:
       data:
         first:
           name: _Color
+        second: {r: 0, g: 0, b: 0, a: 1}
+      data:
+        first:
+          name: _Light
         second: {r: 1, g: 1, b: 1, a: 1}
