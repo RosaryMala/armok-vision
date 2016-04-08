@@ -307,7 +307,7 @@ Transform:
 --- !u!1 &654332372
 GameObject:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_PrefabParentObject: {fileID: 186070, guid: cbcacdf4d5c2d1e4a8ea4ac440b8e52d, type: 2}
   m_PrefabInternal: {fileID: 0}
   serializedVersion: 4
   m_Component:
@@ -323,7 +323,7 @@ GameObject:
 --- !u!4 &654332373
 Transform:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_PrefabParentObject: {fileID: 498518, guid: cbcacdf4d5c2d1e4a8ea4ac440b8e52d, type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 654332372}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -336,7 +336,8 @@ Transform:
 --- !u!114 &654332374
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_PrefabParentObject: {fileID: 11479806, guid: cbcacdf4d5c2d1e4a8ea4ac440b8e52d,
+    type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 654332372}
   m_Enabled: 1
@@ -443,7 +444,7 @@ MonoBehaviour:
 --- !u!1 &771652859
 GameObject:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_PrefabParentObject: {fileID: 102002, guid: cbcacdf4d5c2d1e4a8ea4ac440b8e52d, type: 2}
   m_PrefabInternal: {fileID: 0}
   serializedVersion: 4
   m_Component:
@@ -461,7 +462,7 @@ GameObject:
 --- !u!4 &771652860
 Transform:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_PrefabParentObject: {fileID: 485190, guid: cbcacdf4d5c2d1e4a8ea4ac440b8e52d, type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 771652859}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -473,7 +474,8 @@ Transform:
 --- !u!114 &771652861
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_PrefabParentObject: {fileID: 11428514, guid: cbcacdf4d5c2d1e4a8ea4ac440b8e52d,
+    type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 771652859}
   m_Enabled: 1
@@ -491,7 +493,8 @@ MonoBehaviour:
 --- !u!23 &771652862
 MeshRenderer:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_PrefabParentObject: {fileID: 2363160, guid: cbcacdf4d5c2d1e4a8ea4ac440b8e52d,
+    type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 771652859}
   m_Enabled: 1
@@ -517,7 +520,8 @@ MeshRenderer:
 --- !u!33 &771652863
 MeshFilter:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_PrefabParentObject: {fileID: 3376642, guid: cbcacdf4d5c2d1e4a8ea4ac440b8e52d,
+    type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 771652859}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
@@ -1572,7 +1576,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294965503
+    m_Bits: 4294967295
   m_RenderingPath: 3
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1856,7 +1860,7 @@ GameObject:
   - 114: {fileID: 1688073731}
   m_Layer: 0
   m_Name: Far Terrain Camera
-  m_TagString: MainCamera
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
