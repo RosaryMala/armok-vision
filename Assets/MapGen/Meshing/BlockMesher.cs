@@ -310,6 +310,7 @@ abstract class BlockMesher {
                                 tangents: null,
                                 uv: finalUVs,
                                 uv2: null,
+                                uv3: null,
                                 colors: null,
                                 triangles: finalFaces.ToArray());
         } else {
@@ -443,9 +444,9 @@ abstract class BlockMesher {
         }
         buffer.meshData = meshContent.MeshData[layer];
         buffer.transform = Matrix4x4.TRS(pos, meshContent.GetRotation(tile), Vector3.one);
-        Matrix4x4 shapeTextTransform = Matrix4x4.identity;
+        Matrix4x4 shapeTextTransform = contentLoader.DefaultShapeTexTransform;
         NormalContent tileTexContent;
-        if (meshContent.NormalTexture == null)
+        if (meshContent.ShapeTexture == null)
         {
             if (layer == MeshLayer.BuildingMaterial
                 || layer == MeshLayer.BuildingMaterialCutout
@@ -466,12 +467,39 @@ abstract class BlockMesher {
         }
         else
         {
-            shapeTextTransform = meshContent.NormalTexture.UVTransform;
+            shapeTextTransform = meshContent.ShapeTexture.UVTransform;
         }
-        Matrix4x4 matTexTransform = Matrix4x4.identity;
-        TextureContent matTexContent;
-        if (contentLoader.MaterialTextureConfiguration.GetValue(tile, layer, out matTexContent))
-            matTexTransform = matTexContent.UVTransform;
+
+        Matrix4x4 matTexTransform = contentLoader.DefaultMatTexTransform;
+        if (meshContent.MaterialTexture != null
+            && (layer == MeshLayer.NoMaterial
+            || layer == MeshLayer.NoMaterialBuilding
+            || layer == MeshLayer.NoMaterialBuildingCutout
+            || layer == MeshLayer.NoMaterialBuildingTransparent
+            || layer == MeshLayer.NoMaterialCutout
+            || layer == MeshLayer.NoMaterialTransparent))
+        {
+            matTexTransform = meshContent.MaterialTexture.UVTransform;
+        }
+        else
+        {
+            TextureContent matTexContent;
+
+            if (contentLoader.MaterialTextureConfiguration.GetValue(tile, layer, out matTexContent))
+                matTexTransform = matTexContent.UVTransform;
+        }
+
+        Matrix4x4 specialTexTransform = Matrix4x4.identity;
+        
+        if(meshContent.SpecialTexture != null)
+        {
+            specialTexTransform = meshContent.SpecialTexture.UVTransform;
+        }
+        else
+        {
+            specialTexTransform = contentLoader.DefaultSpecialTexTransform;
+        }
+
         ColorContent newColorContent;
         Color newColor;
         if (contentLoader.ColorConfiguration.GetValue(tile, layer, out newColorContent))
@@ -535,6 +563,7 @@ abstract class BlockMesher {
         buffer.color = newColor;
         buffer.uv1Transform = matTexTransform;
         buffer.uv2Transform = shapeTextTransform;
+        buffer.uv3Transform = specialTexTransform;
         buffer.hiddenFaces = MeshCombineUtility.HiddenFaces.None;
         if (tile.North != null && tile.North.isWall)
             buffer.hiddenFaces |= MeshCombineUtility.HiddenFaces.North;

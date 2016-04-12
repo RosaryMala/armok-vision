@@ -27,6 +27,7 @@ public class MeshCombineUtility
         public Color color;
         public Matrix4x4 uv1Transform;
         public Matrix4x4 uv2Transform;
+        public Matrix4x4 uv3Transform;
         public HiddenFaces hiddenFaces;
     }
 
@@ -59,6 +60,7 @@ public class MeshCombineUtility
         List<Vector4> tangents = new List<Vector4>(vertexCount);
         List<Vector2> uvs = new List<Vector2>(vertexCount);
         List<Vector2> uv2s = new List<Vector2>(vertexCount);
+        List<Vector2> uv3s = new List<Vector2>(vertexCount);
         List<Color> colors = new List<Color>(vertexCount);
 
         Dictionary<int, int> indexTranslation = new Dictionary<int, int>(maxVertices);
@@ -112,9 +114,9 @@ public class MeshCombineUtility
                         && (inputVertices[vert2].x < -sideThreshold))
                         continue;
 
-                    int newVert0 = getIndex(indexTranslation, combines[combIndex], vert0, vertices, normals, tangents, uvs, uv2s, colors, inputVertices, inputNormals, inputTangents, inputUVs, inputColors);
-                    int newVert1 = getIndex(indexTranslation, combines[combIndex], vert1, vertices, normals, tangents, uvs, uv2s, colors, inputVertices, inputNormals, inputTangents, inputUVs, inputColors);
-                    int newVert2 = getIndex(indexTranslation, combines[combIndex], vert2, vertices, normals, tangents, uvs, uv2s, colors, inputVertices, inputNormals, inputTangents, inputUVs, inputColors);
+                    int newVert0 = getIndex(indexTranslation, combines[combIndex], vert0, vertices, normals, tangents, uvs, uv2s, uv3s, colors, inputVertices, inputNormals, inputTangents, inputUVs, inputColors);
+                    int newVert1 = getIndex(indexTranslation, combines[combIndex], vert1, vertices, normals, tangents, uvs, uv2s, uv3s, colors, inputVertices, inputNormals, inputTangents, inputUVs, inputColors);
+                    int newVert2 = getIndex(indexTranslation, combines[combIndex], vert2, vertices, normals, tangents, uvs, uv2s, uv3s, colors, inputVertices, inputNormals, inputTangents, inputUVs, inputColors);
 
                     if (newVert0 > 65531 || newVert1 > 65531 || newVert2 > 65531)
                         goto failure;
@@ -134,6 +136,7 @@ public class MeshCombineUtility
             tangents: tangents.ToArray(),
             uv: uvs.ToArray(),
             uv2: uv2s.ToArray(),
+            uv3: uv3s.ToArray(),
             colors: colors.ToArray(),
             triangles: triangles.ToArray()
             );
@@ -145,12 +148,13 @@ public class MeshCombineUtility
             tangents: tangents.ToArray(),
             uv: uvs.ToArray(),
             uv2: uv2s.ToArray(),
+            uv3: uv3s.ToArray(),
             colors: colors.ToArray(),
             triangles: triangles.ToArray()
             );
     }
 
-    private static int getIndex(Dictionary<int, int> indexTranslation, MeshInstance meshInstance, int inputVert, List<Vector3> vertices, List<Vector3> normals, List<Vector4> tangents, List<Vector2> uvs, List<Vector2> uv2s, List<Color> colors, Vector3[] inputVertices, Vector3[] inputNormals, Vector4[] inputTangents, Vector2[] inputUVs, Color[] inputColors)
+    private static int getIndex(Dictionary<int, int> indexTranslation, MeshInstance meshInstance, int inputVert, List<Vector3> vertices, List<Vector3> normals, List<Vector4> tangents, List<Vector2> uvs, List<Vector2> uv2s, List<Vector2> uv3s, List<Color> colors, Vector3[] inputVertices, Vector3[] inputNormals, Vector4[] inputTangents, Vector2[] inputUVs, Color[] inputColors)
     {
         int newVert;
         if (indexTranslation.ContainsKey(inputVert))
@@ -172,6 +176,7 @@ public class MeshCombineUtility
             tangents.Add(invTranspose.MultiplyVector(new Vector4(p.x, p.y, p.z, p4.w)));
             uvs.Add(meshInstance.uv1Transform.MultiplyPoint(inputUVs[inputVert]));
             uv2s.Add(meshInstance.uv2Transform.MultiplyPoint(inputUVs[inputVert]));
+            uv3s.Add(meshInstance.uv3Transform.MultiplyPoint(inputUVs[inputVert]));
             if (inputColors.Length > 0)
                 colors.Add(meshInstance.color * inputColors[inputVert]);
             else

@@ -29,7 +29,6 @@ public class NormalContent : IContent
         if (normalAtt == null)
         {
             Debug.LogError("No normal map in " + elemtype);
-            //Add error message here
             return false;
         }
         string normalPath = Path.Combine(Path.GetDirectoryName(new Uri(elemtype.BaseUri).LocalPath), normalAtt.Value);

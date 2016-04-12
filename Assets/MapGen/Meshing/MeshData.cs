@@ -12,6 +12,7 @@ public class CPUMesh
     public readonly Vector4[] tangents;
     public readonly Vector2[] uv;
     public readonly Vector2[] uv2;
+    public readonly Vector2[] uv3;
     public readonly Color[] colors;
     public readonly int[] triangles;
     public readonly string name;
@@ -24,6 +25,7 @@ public class CPUMesh
         tangents = target.tangents;
         uv = target.uv;
         uv2 = target.uv2;
+        uv3 = target.uv3;
         colors = target.colors;
         if(target.GetTopology(0) == MeshTopology.Triangles)
             triangles = target.GetTriangles(0); // Will the submesh always be 0?
@@ -38,6 +40,7 @@ public class CPUMesh
      Vector4[] tangents,
      Vector2[] uv,
      Vector2[] uv2,
+     Vector2[] uv3,
      Color[] colors,
      int[] triangles,
      string name = null)
@@ -48,6 +51,7 @@ public class CPUMesh
         this.tangents = tangents;
         this.uv = uv;
         this.uv2 = uv2;
+        this.uv3 = uv3;
         this.colors = colors;
         this.triangles = triangles;
         this.name = name;
@@ -59,6 +63,7 @@ public class CPUMesh
         target.tangents = tangents;
         target.uv = uv;
         target.uv2 = uv2;
+        target.uv3 = uv3;
         target.colors = colors;
         target.triangles = triangles;
         target.RecalculateBounds();

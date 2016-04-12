@@ -58,12 +58,32 @@ public enum RotationType
 
 public class MeshContent : IContent
 {
+    public struct TextureStorageContainer
+    {
+        public readonly TextureStorage materialStore;
+        public readonly TextureStorage shapeStore;
+        public readonly TextureStorage specialStore;
+
+        public TextureStorageContainer(TextureStorage material, TextureStorage shape, TextureStorage special)
+        {
+            materialStore = material;
+            shapeStore = shape;
+            specialStore = special;
+        }
+    }
     static OpenSimplexNoise noise;
     public Dictionary<MeshLayer, CPUMesh> MeshData { get; private set; }
-    TextureStorage store;
+
+    TextureStorageContainer storeContainer;
 
     NormalContent _normalTexture = null;
-    public NormalContent NormalTexture { get { return _normalTexture; } }
+    public NormalContent ShapeTexture { get { return _normalTexture; } }
+
+    TextureContent _matTexture = null;
+    public TextureContent MaterialTexture { get { return _matTexture; } }
+
+    SpecialMapContent _specialTexture = null;
+    public SpecialMapContent SpecialTexture { get { return _specialTexture; } }
 
     RotationType rotationType = RotationType.None;
     public Quaternion GetRotation(MapDataStore.Tile tile)
@@ -192,17 +212,41 @@ public class MeshContent : IContent
             return false;
         }
 
-        if (store != null
+
+        if (storeContainer.shapeStore != null
             && (elemtype.Attribute("normal") != null
             || elemtype.Attribute("occlusion") != null
             || elemtype.Attribute("alpha") != null
             ))
         {
             _normalTexture = new NormalContent();
-            _normalTexture.ExternalStorage = store;
+            _normalTexture.ExternalStorage = storeContainer.shapeStore;
             if (!_normalTexture.AddTypeElement(elemtype))
                 _normalTexture = null;
         }
+
+        if (storeContainer.shapeStore != null
+            && (elemtype.Attribute("metallic") != null
+            || elemtype.Attribute("illumination") != null
+            ))
+        {
+            _specialTexture = new SpecialMapContent();
+            _specialTexture.ExternalStorage = storeContainer.specialStore;
+            if (!_specialTexture.AddTypeElement(elemtype))
+                _specialTexture = null;
+        }
+
+        if (storeContainer.materialStore != null
+            && (elemtype.Attribute("pattern") != null
+            || elemtype.Attribute("specular") != null
+            ))
+        {
+            _matTexture = new TextureContent();
+            _matTexture.ExternalStorage = storeContainer.materialStore;
+            if (!_matTexture.AddTypeElement(elemtype))
+                _matTexture = null;
+        }
+
 
         if (fileAtt.Value == "NONE")
         {
@@ -282,7 +326,10 @@ public class MeshContent : IContent
     {
         set
         {
-            store = value as TextureStorage;
+            if (value is TextureStorageContainer)
+            {
+                storeContainer = (TextureStorageContainer)value;
+            }
         }
     }
 }
