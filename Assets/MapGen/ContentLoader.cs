@@ -89,9 +89,37 @@ public class ContentLoader
 
     TextureStorage materialTextureStorage;
     TextureStorage shapeTextureStorage;
+    TextureStorage specialTextureStorage;
     MaterialMatcher<ColorContent> materialColors;
     MaterialMatcher<TextureContent> materialTextures;
 
+    int defaultMatTexIndex;
+
+    public Matrix4x4 DefaultMatTexTransform
+    {
+        get
+        {
+            return materialTextureStorage.getUVTransform(defaultMatTexIndex);
+        }
+    }
+    int defaultShapeTexIndex;
+
+    public Matrix4x4 DefaultShapeTexTransform
+    {
+        get
+        {
+            return shapeTextureStorage.getUVTransform(defaultShapeTexIndex);
+        }
+    }
+    int defaultSpecialTexIndex;
+
+    public Matrix4x4 DefaultSpecialTexTransform
+    {
+        get
+        {
+            return specialTextureStorage.getUVTransform(defaultSpecialTexIndex);
+        }
+    }
 
     public TileConfiguration<ColorContent> ColorConfiguration { get; private set; }
     public TileConfiguration<TextureContent> MaterialTextureConfiguration { get; private set; }
@@ -108,8 +136,28 @@ public class ContentLoader
     {
         materialTextureStorage = new TextureStorage();
         shapeTextureStorage = new TextureStorage();
+        specialTextureStorage = new TextureStorage();
         materialColors = new MaterialMatcher<ColorContent>();
         materialTextures = new MaterialMatcher<TextureContent>();
+
+
+
+        defaultMatTexIndex = materialTextureStorage.AddTexture(CreateFlatTexture(new Color(0.5f, 0.5f, 0.5f, 0)));
+        defaultShapeTexIndex = shapeTextureStorage.AddTexture(CreateFlatTexture(new Color(1f, 0.5f, 1f, 0.5f)));
+        defaultSpecialTexIndex = specialTextureStorage.AddTexture(Texture2D.blackTexture);
+    }
+
+    Texture2D CreateFlatTexture(Color color)
+    {
+        Texture2D tex = new Texture2D(4, 4);
+        var pix = tex.GetPixels();
+        for(int i = 0; i < pix.Length; i++)
+        {
+            pix[i] = color;
+        }
+        tex.SetPixels(pix);
+        tex.Apply();
+        return tex;
     }
 
 
@@ -183,7 +231,7 @@ public class ContentLoader
                 case "tileMeshes":
                     if (TileMeshConfiguration == null)
                         TileMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "tileMesh");
-                    TileMeshConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
+                    TileMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage, specialTextureStorage));
                     break;
                 case "materialLayers":
                     if (MaterialLayerConfiguration == null)
@@ -193,7 +241,7 @@ public class ContentLoader
                 case "buildingMeshes":
                     if (BuildingMeshConfiguration == null)
                         BuildingMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "buildingMesh");
-                    BuildingMeshConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
+                    BuildingMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage, specialTextureStorage));
                     break;
                 case "buildingShapeTextures":
                     if (BuildingShapeTextureConfiguration == null)
@@ -203,7 +251,7 @@ public class ContentLoader
                 case "creatureMeshes":
                     if (CreatureMeshConfiguration == null)
                         CreatureMeshConfiguration = CreatureConfiguration<MeshContent>.GetFromRootElement(doc, "creatureMesh");
-                    CreatureMeshConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
+                    CreatureMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage, specialTextureStorage));
                             break;
                 case "growthMeshes":
                     if (GrowthMeshConfiguration == null)
@@ -222,14 +270,18 @@ public class ContentLoader
     {
         materialTextureStorage.BuildAtlas("MaterialTexture");
         shapeTextureStorage.BuildAtlas("ShapeTexture", TextureFormat.RGBA32, new Color(1.0f, 0.5f, 0.0f, 0.5f), true);
+        specialTextureStorage.BuildAtlas("SpecialTexture");
 
         GameMap gameMap = GameObject.FindObjectOfType<GameMap>();
         gameMap.basicTerrainMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
         gameMap.basicTerrainMaterial.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
+        gameMap.basicTerrainMaterial.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
         gameMap.stencilTerrainMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
         gameMap.stencilTerrainMaterial.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
+        gameMap.stencilTerrainMaterial.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
         gameMap.transparentTerrainMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
         gameMap.transparentTerrainMaterial.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
+        gameMap.transparentTerrainMaterial.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
         gameMap.invisibleStencilMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
 
 

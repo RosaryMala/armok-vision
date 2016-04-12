@@ -11,7 +11,6 @@ using System.Globalization;
 using System.Threading;
 using Collada141;
 using MapGen;
-using UnityEngine.VR;
 
 // The class responsible for talking to DF and meshing the data it gets.
 // Relevant vocabulary: A "map tile" is an individual square on the map.
