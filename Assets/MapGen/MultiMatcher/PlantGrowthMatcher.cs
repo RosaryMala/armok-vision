@@ -1,7 +1,5 @@
-﻿using RemoteFortressReader;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TokenLists;
-using System;
 
 public class PlantGrowthMatcher<T>
 {
@@ -77,6 +75,8 @@ public class PlantGrowthMatcher<T>
     {
         set
         {
+            if (PlantTokenList.GrowthIDs == null)
+                return;
             string[] parts = token.Split(':');
             GrowthMatch newItem;
             newItem.item = value;
