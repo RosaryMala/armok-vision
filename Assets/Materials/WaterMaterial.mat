@@ -22,7 +22,7 @@ Material:
         second:
           m_Texture: {fileID: 0}
           m_Scale: {x: 0.1, y: 0.1}
-          m_Offset: {x: 1.1660906, y: 2.0806797}
+          m_Offset: {x: 0.29774398, y: 0.531269}
       data:
         first:
           name: _BumpMap
@@ -186,15 +186,15 @@ Material:
         second: 0
       data:
         first:
-          name: _EmissionScaleUI
-        second: 0
-      data:
-        first:
           name: _Mode
         second: 3
       data:
         first:
           name: _Metallic
+        second: 0
+      data:
+        first:
+          name: _EmissionScaleUI
         second: 0
       data:
         first:
