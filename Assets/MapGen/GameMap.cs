@@ -205,7 +205,8 @@ public class GameMap : MonoBehaviour
             {
                 materials[material.mat_pair] = material;
             }
-            SaveMaterialList(materials, "MaterialList.csv");
+            if (GameSettings.Instance.debug.saveMaterialList)
+                SaveMaterialList(materials, "MaterialList.csv");
         }
         // Initialize items, if available
         if (DFConnection.Instance.NetItemList != null)
@@ -217,7 +218,8 @@ public class GameMap : MonoBehaviour
             {
                 items[material.mat_pair] = material;
             }
-            SaveMaterialList(items, "ItemList.csv");
+            if (GameSettings.Instance.debug.saveItemList)
+                SaveMaterialList(items, "ItemList.csv");
         }
         if (DFConnection.Instance.NetBuildingList != null)
         {
@@ -228,7 +230,8 @@ public class GameMap : MonoBehaviour
             {
                 buildings[building.building_type] = building;
             }
-            SaveBuildingList();
+            if (GameSettings.Instance.debug.saveBuildingList)
+                SaveBuildingList();
         }
         if (DFConnection.Instance.NetCreatureRawList != null)
         {
@@ -247,12 +250,15 @@ public class GameMap : MonoBehaviour
                     creatures[creatureCaste] = creatureDef;
                 }
             }
-            SaveMaterialList(creatures, "CreatureList.csv");
+            if (GameSettings.Instance.debug.saveCreatureList)
+                SaveMaterialList(creatures, "CreatureList.csv");
         }
 
-        SaveTileTypeList();
+        if (GameSettings.Instance.debug.saveTiletypeList)
+            SaveTileTypeList();
 
-        SavePlantList();
+        if (GameSettings.Instance.debug.savePlantList)
+            SavePlantList();
 
         UpdateView();
 
@@ -433,7 +439,7 @@ public class GameMap : MonoBehaviour
         Color[] diffusePixels = new Color[mainTexPixels.Length];
         Color[] roughnessPixels = new Color[mainTexPixels.Length];
 
-        for(int i = 0; i < mainTexPixels.Length; i++)
+        for (int i = 0; i < mainTexPixels.Length; i++)
         {
             diffusePixels[i] = new Color(mainTexPixels[i].r, mainTexPixels[i].g, mainTexPixels[i].b, 1.0f);
             roughnessPixels[i] = new Color(mainTexPixels[i].a, mainTexPixels[i].a, mainTexPixels[i].a, 1.0f);
@@ -629,7 +635,7 @@ public class GameMap : MonoBehaviour
             {
                 schedule.Add(growth.timing_start);
                 schedule.Add(growth.timing_end);
-                foreach(GrowthPrint print in growth.prints)
+                foreach (GrowthPrint print in growth.prints)
                 {
                     schedule.Add(print.timing_start);
                     schedule.Add(print.timing_end);
@@ -984,7 +990,7 @@ public class GameMap : MonoBehaviour
         statusText.Append("Real Time: ").Append(timeHolder.realTime.ToString()).AppendLine();
         statusText.Append("Displayed Time: ").Append(TimeHolder.DisplayedTime.ToString()).AppendLine();
 
-        if (cursX >= 0 && cursY >= 0 && cursZ >= 0)
+        if (cursX >= 0 && cursY >= 0 && cursZ >= 0 && GameSettings.Instance.debug.drawDebugInfo)
         {
             statusText.Append("Cursor: ");
             statusText.Append(cursX).Append(",");
@@ -1196,7 +1202,7 @@ public class GameMap : MonoBehaviour
 
                 }
                 MapDataStore.Tile tile = null;
-                if(MapDataStore.Main != null)
+                if (MapDataStore.Main != null)
                     tile = MapDataStore.Main[unit.pos_x, unit.pos_y, unit.pos_z];
                 creatureList[unit.id].gameObject.SetActive(
                     unit.pos_z < PosZ && unit.pos_z >= (PosZ - GameSettings.Instance.rendering.drawRangeDown)

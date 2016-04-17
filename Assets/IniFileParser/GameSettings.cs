@@ -44,7 +44,18 @@ public class GameSettings : MonoBehaviour
     [Serializable]
     public class Game
     {
-        public bool showDFScreen = true;
+        public bool showDFScreen = false;
+    }
+    [Serializable]
+    public class Debug
+    {
+        public bool drawDebugInfo = false;
+        public bool saveBuildingList = false;
+        public bool saveCreatureList = false;
+        public bool saveItemList = false;
+        public bool saveMaterialList = false;
+        public bool savePlantList = false;
+        public bool saveTiletypeList = false;
     }
 
     [Serializable]
@@ -55,6 +66,7 @@ public class GameSettings : MonoBehaviour
         public Units units = new Units();
         public CameraSettings camera = new CameraSettings();
         public Game game = new Game();
+        public Debug debug = new Debug();
     }
 
     public static Settings Instance = new Settings();
