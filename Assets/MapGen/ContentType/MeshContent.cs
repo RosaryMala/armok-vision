@@ -225,7 +225,7 @@ public class MeshContent : IContent
                 _normalTexture = null;
         }
 
-        if (storeContainer.shapeStore != null
+        if (storeContainer.specialStore != null
             && (elemtype.Attribute("metallic") != null
             || elemtype.Attribute("illumination") != null
             ))
