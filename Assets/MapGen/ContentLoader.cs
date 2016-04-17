@@ -256,7 +256,7 @@ public class ContentLoader
                 case "growthMeshes":
                     if (GrowthMeshConfiguration == null)
                         GrowthMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "growthMesh");
-                    GrowthMeshConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
+                    GrowthMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage, specialTextureStorage));
                     break;
                 default:
                     break;
