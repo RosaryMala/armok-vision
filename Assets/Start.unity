@@ -312,7 +312,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 654332373}
-  - 114: {fileID: 654332374}
   m_Layer: 0
   m_Name: CameraCenter
   m_TagString: Untagged
@@ -327,27 +326,12 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 654332372}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -101}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1404020253}
   m_Father: {fileID: 261136869}
   m_RootOrder: 0
---- !u!114 &654332374
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11479806, guid: cbcacdf4d5c2d1e4a8ea4ac440b8e52d,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 654332372}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdbac23c6f40d2b498e1a5ee3c44d6f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  zoomLevel: 2
-  zoomSpeed: 0.5
-  firstPersonThreshold: 1
 --- !u!1 &692705302
 GameObject:
   m_ObjectHideFlags: 0
@@ -466,7 +450,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 771652859}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 25}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1383803863}
@@ -488,8 +472,8 @@ MonoBehaviour:
   tiles: 
   fgColors: 
   bgColors: 
-  tilewidth: 2
-  tileheight: 2
+  tilewidth: 0.03
+  tileheight: 0.03
 --- !u!23 &771652862
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1439,6 +1423,7 @@ GameObject:
   - 4: {fileID: 1383803863}
   - 114: {fileID: 1383803865}
   - 114: {fileID: 1383803864}
+  - 114: {fileID: 1383803866}
   m_Layer: 0
   m_Name: CameraPivot
   m_TagString: Untagged
@@ -1454,7 +1439,7 @@ Transform:
   m_GameObject: {fileID: 1383803862}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 135, y: 378, z: -110}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_Children:
   - {fileID: 261136869}
   - {fileID: 901009144}
@@ -1494,6 +1479,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotateSpeed: 10
   moveSpeed: 1
+--- !u!114 &1383803866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1383803862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 620858b8e04cf4942814e635c47e9721, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zoomLevel: 2
+  zoomSpeed: 0.5
+  firstPersonThreshold: 1
+  viewCamera: {fileID: 654332373}
 --- !u!4 &1404020253
 Transform:
   m_ObjectHideFlags: 0
@@ -1676,6 +1676,7 @@ Canvas:
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
