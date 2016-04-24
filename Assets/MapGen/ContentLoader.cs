@@ -130,7 +130,7 @@ public class ContentLoader
     public TileConfiguration<MeshContent> BuildingMeshConfiguration { get; private set; }
     public TileConfiguration<NormalContent> BuildingShapeTextureConfiguration { get; private set; }
     public CreatureConfiguration<MeshContent> CreatureMeshConfiguration { get; private set; }
-
+    public TileConfiguration<MeshContent> DesignationMeshConfiguration { get; private set; }
 
     public ContentLoader()
     {
@@ -258,6 +258,12 @@ public class ContentLoader
                         GrowthMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "growthMesh");
                     GrowthMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage, specialTextureStorage));
                     break;
+                case "designationMeshes":
+                    if (DesignationMeshConfiguration == null)
+                        DesignationMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "designationMesh");
+                    DesignationMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage, specialTextureStorage));
+                    break;
+
                 default:
                     break;
             }

@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<designationMeshes>
+    <designationMesh file="WALL.obj"
+                pattern="black.png"
+                specular="black.png">
+        <designation type="Hidden"/>
+    </designationMesh>
+</designationMeshes>

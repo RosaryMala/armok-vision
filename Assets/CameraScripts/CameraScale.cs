@@ -38,7 +38,7 @@ public class CameraScale : MonoBehaviour
             }
             else
             {
-                viewCamera.transform.localPosition = new Vector3(0, 0, -1);
+                viewCamera.transform.localPosition = new Vector3(0, 0, -1.5f);
                 transform.localScale = Vector3.one * Mathf.Pow(10, zoomLevel);
                 if (gameMap != null)
                     gameMap.firstPerson = false;
