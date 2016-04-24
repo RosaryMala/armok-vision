@@ -115,6 +115,9 @@ abstract public class TileConfiguration<T> where T : IContent, new()
             case "growth":
                 output = new PlantGrowthConfiguration<T>();
                 break;
+            case "designation":
+                output = new TileDesignationConfiguration<T>();
+                break;
             default:
                 IXmlLineInfo lineinfo = matchElement;
                 Debug.LogError("Found unknown matching method \"" + matchType + "\" int " + elemRoot.BaseUri + ":" + lineinfo.LineNumber + "," + lineinfo.LinePosition + ", assuming material.");

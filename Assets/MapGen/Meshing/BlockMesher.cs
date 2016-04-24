@@ -369,9 +369,27 @@ abstract class BlockMesher {
     {
         buffer = new MeshCombineUtility.MeshInstance();
         MeshContent meshContent = null;
-        if (tile.hidden)
+        if(contentLoader.DesignationMeshConfiguration.GetValue(tile, layer, out meshContent))
         {
-            buffer.meshData = null;
+            if(!meshContent.MeshData.ContainsKey(layer))
+            {
+                buffer.meshData = null;
+                return;
+            }
+            buffer.meshData = meshContent.MeshData[layer];
+            buffer.transform = Matrix4x4.TRS(pos, meshContent.GetRotation(tile), Vector3.one);
+            if (meshContent.MaterialTexture != null)
+                buffer.uv1Transform = meshContent.MaterialTexture.UVTransform;
+            else
+                buffer.uv1Transform = contentLoader.DefaultMatTexTransform;
+            if (meshContent.ShapeTexture != null)
+                buffer.uv2Transform = meshContent.ShapeTexture.UVTransform;
+            else
+                buffer.uv2Transform = contentLoader.DefaultShapeTexTransform;
+            if (meshContent.SpecialTexture != null)
+                buffer.uv3Transform = meshContent.SpecialTexture.UVTransform;
+            else
+                buffer.uv3Transform = contentLoader.DefaultSpecialTexTransform;
             return;
         }
         switch (layer)

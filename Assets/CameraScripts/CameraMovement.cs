@@ -13,6 +13,8 @@ public class CameraMovement : MonoBehaviour
     public float minDistance = 5;
     public float fasterMultiplier = 10;
 
+    public CameraScale cameraScale;
+
     void Awake()
     {
         gameMap = FindObjectOfType<GameMap>();
@@ -55,7 +57,7 @@ public class CameraMovement : MonoBehaviour
         if (moveZ != 0.0f || moveY != 0.0f || moveX != 0.0f)
         {
             following = false;
-            float cameraDistance = cameraPos.localPosition.z * -1.0f;
+            float cameraDistance = Mathf.Pow(10, cameraScale.zoomLevel);
             if (cameraDistance < minDistance)
                 cameraDistance = minDistance;
             if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
