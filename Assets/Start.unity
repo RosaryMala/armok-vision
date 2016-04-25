@@ -436,7 +436,7 @@ GameObject:
   - 33: {fileID: 771652863}
   - 23: {fileID: 771652862}
   - 114: {fileID: 771652861}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: TileRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1905,7 +1905,7 @@ Camera:
   m_Depth: -2
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 2304
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0

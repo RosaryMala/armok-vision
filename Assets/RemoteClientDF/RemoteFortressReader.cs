@@ -424,6 +424,13 @@ namespace RemoteFortressReader
       get { return _tree_z; }
     }
   
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.TileDigDesignation> _tile_dig_designation = new global::System.Collections.Generic.List<RemoteFortressReader.TileDigDesignation>();
+    [global::ProtoBuf.ProtoMember(24, Name=@"tile_dig_designation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.TileDigDesignation> tile_dig_designation
+    {
+      get { return _tile_dig_designation; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -2270,6 +2277,32 @@ namespace RemoteFortressReader
             
       [global::ProtoBuf.ProtoEnum(Name=@"WEST", Value=3)]
       WEST = 3
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"TileDigDesignation")]
+    public enum TileDigDesignation
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"NO_DIG", Value=0)]
+      NO_DIG = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DEFAULT_DIG", Value=1)]
+      DEFAULT_DIG = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"UP_DOWN_STAIR_DIG", Value=2)]
+      UP_DOWN_STAIR_DIG = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CHANNEL_DIG", Value=3)]
+      CHANNEL_DIG = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"RAMP_DIG", Value=4)]
+      RAMP_DIG = 4,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DOWN_STAIR_DIG", Value=5)]
+      DOWN_STAIR_DIG = 5,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"UP_STAIR_DIG", Value=6)]
+      UP_STAIR_DIG = 6
     }
   
     [global::ProtoBuf.ProtoContract(Name=@"FrontType")]
