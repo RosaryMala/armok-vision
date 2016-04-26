@@ -59,12 +59,6 @@ public class WorldMapMaker : MonoBehaviour
         return x + y * width;
     }
 
-    Vector3[] vertexPositions;
-    Vector2[] vertexUV;
-    Vector2[] vertexUV2;
-    Color[] vertexColors;
-    List<int> triangles;
-
     MeshFilter meshFilter;
     MeshRenderer meshRenderer;
     TimeHolder timeHolder;
@@ -307,46 +301,188 @@ public class WorldMapMaker : MonoBehaviour
 
     void GenerateMesh()
     {
-        vertexPositions = new Vector3[width * height];
-        vertexColors = new Color[width * height];
-        vertexUV = new Vector2[width * height];
-        vertexUV2 = new Vector2[width * height];
+        int length = width * height * 4;
+        List<Vector3> vertices = new List<Vector3>(length);
+        List<Color> colors = new List<Color>(length);
+        List<Vector2> uvs = new List<Vector2>(length);
+        List<Vector2> uv2s = new List<Vector2>(length);
+        List<int> triangles = new List<int>(length);
         for (int x = 0; x < width; x++)
+        {
             for (int y = 0; y < height; y++)
-            {
-                int index = CoordToIndex(x, y);
-                vertexPositions[index] = (new Vector3(
-                    x * 16 * 48 * GameMap.tileWidth,
-                    elevation[x, y] * GameMap.tileHeight,
-                    -y * 16 * 48 * GameMap.tileWidth) + offset) * scale;
-                //vertexColors[index] = cloudStriped[x, y] ? Color.white : Color.black;// * cloudFog[x, y] / 3.0f;
-                vertexColors[index] = Color.white;
-                vertexUV2[index] = new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100;
-                vertexUV[index] = new Vector2(x, y);
-            }
-
-        if (triangles == null)
-            triangles = new List<int>();
-        triangles.Clear();
-        for (int x = 0; x < width - 1; x++)
-            for (int y = 0; y < height - 1; y++)
             {
                 if (DetailRegions.ContainsKey(new DFCoord2d(x, y)))
                     continue;
-                triangles.Add(CoordToIndex(x, y));
-                triangles.Add(CoordToIndex(x + 1, y));
-                triangles.Add(CoordToIndex(x + 1, y + 1));
 
-                triangles.Add(CoordToIndex(x, y));
-                triangles.Add(CoordToIndex(x + 1, y + 1));
-                triangles.Add(CoordToIndex(x, y + 1));
+                int index = vertices.Count;
+                for (int i = 0; i < 2; i++)
+                    for (int j = 0; j < 2; j++)
+                    {
+                        vertices.Add((new Vector3(
+                    (x + i) * 48 * 16 * GameMap.tileWidth,
+                    elevation[x, y] * GameMap.tileHeight,
+                    -(y + j) * 48 * 16 * GameMap.tileWidth) + offset) * scale);
+
+                        colors.Add(Color.white);
+
+                        uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                        uvs.Add(new Vector2(x + i, y + j));
+                    }
+                triangles.Add(index);
+                triangles.Add(index + 2);
+                triangles.Add(index + 1);
+
+                triangles.Add(index + 1);
+                triangles.Add(index + 2);
+                triangles.Add(index + 3);
+
+                int north = 0;
+                if (y > 0 && !DetailRegions.ContainsKey(new DFCoord2d(x, y - 1)))
+                    north = elevation[x, y - 1];
+                if (north < elevation[x, y])
+                {
+                    index = vertices.Count;
+                    vertices.Add((new Vector3(x * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale);
+                    vertices.Add((new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale);
+                    vertices.Add((new Vector3(x * 48 * 16 * GameMap.tileWidth, north * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale);
+                    vertices.Add((new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, north * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale);
+
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uvs.Add(new Vector2(x, y));
+                    uvs.Add(new Vector2(x + 1, y));
+                    uvs.Add(new Vector2(x, y));
+                    uvs.Add(new Vector2(x + 1, y));
+
+                    triangles.Add(index);
+                    triangles.Add(index + 2);
+                    triangles.Add(index + 1);
+
+                    triangles.Add(index + 1);
+                    triangles.Add(index + 2);
+                    triangles.Add(index + 3);
+                }
+
+                int south = 0;
+                if (y < height - 1 && !DetailRegions.ContainsKey(new DFCoord2d(x, y+1)))
+                    south = elevation[x, y + 1];
+                if (south < elevation[x, y])
+                {
+                    index = vertices.Count;
+                    vertices.Add((new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale);
+                    vertices.Add((new Vector3(x * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale);
+                    vertices.Add((new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, south * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale);
+                    vertices.Add((new Vector3(x * 48 * 16 * GameMap.tileWidth, south * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale);
+
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uvs.Add(new Vector2(x, y));
+                    uvs.Add(new Vector2(x + 1, y));
+                    uvs.Add(new Vector2(x, y));
+                    uvs.Add(new Vector2(x + 1, y));
+
+                    triangles.Add(index);
+                    triangles.Add(index + 2);
+                    triangles.Add(index + 1);
+
+                    triangles.Add(index + 1);
+                    triangles.Add(index + 2);
+                    triangles.Add(index + 3);
+                }
+
+                int east = 0;
+                if (x < width - 1 && !DetailRegions.ContainsKey(new DFCoord2d(x + 1, y)))
+                    east = elevation[x + 1, y];
+                if (east < elevation[x, y])
+                {
+                    index = vertices.Count;
+                    vertices.Add((new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale);
+                    vertices.Add((new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale);
+                    vertices.Add((new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, east * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale);
+                    vertices.Add((new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, east * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale);
+
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uvs.Add(new Vector2(x, y));
+                    uvs.Add(new Vector2(x + 1, y));
+                    uvs.Add(new Vector2(x, y));
+                    uvs.Add(new Vector2(x + 1, y));
+
+                    triangles.Add(index);
+                    triangles.Add(index + 2);
+                    triangles.Add(index + 1);
+
+                    triangles.Add(index + 1);
+                    triangles.Add(index + 2);
+                    triangles.Add(index + 3);
+                }
+                int west = 0;
+                if (x > 0 && !DetailRegions.ContainsKey(new DFCoord2d(x-1, y)))
+                    west = elevation[x - 1, y];
+                if (west < elevation[x, y])
+                {
+                    index = vertices.Count;
+                    vertices.Add((new Vector3(x * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale);
+                    vertices.Add((new Vector3(x * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale);
+                    vertices.Add((new Vector3(x * 48 * 16 * GameMap.tileWidth, west * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale);
+                    vertices.Add((new Vector3(x * 48 * 16 * GameMap.tileWidth, west * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale);
+
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uvs.Add(new Vector2(x, y));
+                    uvs.Add(new Vector2(x + 1, y));
+                    uvs.Add(new Vector2(x, y));
+                    uvs.Add(new Vector2(x + 1, y));
+
+                    triangles.Add(index);
+                    triangles.Add(index + 2);
+                    triangles.Add(index + 1);
+
+                    triangles.Add(index + 1);
+                    triangles.Add(index + 2);
+                    triangles.Add(index + 3);
+                }
+                if (vertices.Count >= (65535 - 20))
+                    break;
             }
+            if (vertices.Count >= (65535 - 20))
+                break;
+
+        }
 
         terrainMesh = new Mesh();
-        terrainMesh.vertices = vertexPositions;
-        terrainMesh.colors = vertexColors;
-        terrainMesh.uv = vertexUV;
-        terrainMesh.uv2 = vertexUV2;
+        terrainMesh.vertices = vertices.ToArray();
+        terrainMesh.colors = colors.ToArray();
+        terrainMesh.uv = uvs.ToArray();
+        terrainMesh.uv2 = uv2s.ToArray();
         terrainMesh.triangles = triangles.ToArray();
 
         terrainMesh.RecalculateNormals();

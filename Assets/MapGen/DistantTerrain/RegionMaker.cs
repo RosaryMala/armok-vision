@@ -1,4 +1,5 @@
-﻿using RemoteFortressReader;
+﻿using DFHack;
+using RemoteFortressReader;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityExtension;
@@ -24,18 +25,14 @@ public class RegionMaker : MonoBehaviour
     public Vector3 offset;
     Vector3 embarkTileOffset;
 
+    DFCoord regionOrigin;
+
     Mesh terrainMesh;
 
     int CoordToIndex(int x, int y)
     {
         return x + y * width;
     }
-
-    Vector3[] vertexPositions;
-    Vector2[] vertexUV;
-    Vector2[] vertexUV2;
-    Color[] vertexColors;
-    List<int> triangles;
 
     MeshFilter meshFilter;
     MeshRenderer meshRenderer;
@@ -44,6 +41,17 @@ public class RegionMaker : MonoBehaviour
     {
         meshFilter = GetComponent<MeshFilter>();
         meshRenderer = GetComponent<MeshRenderer>();
+    }
+
+    DFCoord fortOrigin = new DFCoord(-1, -1, -1);
+
+    public void Update()
+    {
+        if(fortOrigin != DFConnection.Instance.EmbarkMapPosition)
+        {
+            fortOrigin = DFConnection.Instance.EmbarkMapPosition;
+            GenerateMesh();
+        }
     }
 
     public void SetPosition(WorldMap mainMap)
@@ -71,6 +79,7 @@ public class RegionMaker : MonoBehaviour
         height = remoteMap.world_height;
         worldNameEnglish = remoteMap.name_english;
         embarkTileOffset = new Vector3((remoteMap.map_x * 16), 0, -(remoteMap.map_y * 16));
+        regionOrigin = new DFCoord(remoteMap.map_x * 16, remoteMap.map_y * 16, 0);
         SetPosition(mainMap);
         meshRenderer.material.SetFloat("_Scale", scale);
         meshRenderer.material.SetFloat("_SeaLevel", (99 * GameMap.tileHeight) + offset.y);
@@ -119,47 +128,206 @@ public class RegionMaker : MonoBehaviour
     //    CopyFromRemote(DFConnection.Instance.NetWorldMap, DFConnection.Instance.NetMapInfo);
     //}
 
+    bool IsInCoords(DFCoord min, DFCoord max, int x, int y)
+    {
+        if (x < min.x)
+            return false;
+        if (y < min.y)
+            return false;
+        if (x >= max.x)
+            return false;
+        if (y >= max.y)
+            return false;
+        return true;
+    }
+
     void GenerateMesh()
     {
-        width = Mathf.Clamp(width, 0, 255);
-        height = Mathf.Clamp(height, 0, 255);
-        vertexPositions = new Vector3[width * height];
-        vertexColors = new Color[width * height];
-        vertexUV = new Vector2[width * height];
-        vertexUV2 = new Vector2[width * height];
-        for (int x = 0; x < width; x++)
-            for (int y = 0; y < height; y++)
+        int h = height - 1;
+        int w = width - 1;
+        int length = width * height * 4;
+        List<Vector3> vertices = new List<Vector3>(length);
+        List<Color> colors = new List<Color>(length);
+        List<Vector2> uvs = new List<Vector2>(length);
+        List<Vector2> uv2s = new List<Vector2>(length);
+        List<int> triangles = new List<int>(length);
+
+        DFCoord fortMin = DFConnection.Instance.EmbarkMapPosition - regionOrigin;
+        DFCoord fortMax = fortMin + (DFConnection.Instance.EmbarkMapSize / 3);
+
+        for (int x = 0; x < w; x++)
+        {
+            for (int y = 0; y < h; y++)
             {
-                int index = CoordToIndex(x, y);
-                vertexPositions[index] = new Vector3(
-                    x * 48 * GameMap.tileWidth,
+                if (IsInCoords(fortMin, fortMax, x, y))
+                    continue;
+                int index = vertices.Count;
+                for (int i = 0; i < 2; i++)
+                    for (int j = 0; j < 2; j++)
+                    {
+                        vertices.Add(new Vector3(
+                    (x + i) * 48 * GameMap.tileWidth,
                     elevation[x, y] * GameMap.tileHeight,
-                    -y * 48 * GameMap.tileWidth) * scale;
-                //vertexColors[index] = cloudStriped[x, y] ? Color.white : Color.black;// * cloudFog[x, y] / 3.0f;
-                vertexColors[index] = Color.white;
-                vertexUV2[index] = new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100;
-                vertexUV[index] = new Vector2(x, y);
-            }
+                    -(y + j) * 48 * GameMap.tileWidth) * scale);
 
-        if (triangles == null)
-            triangles = new List<int>();
-        triangles.Clear();
-        for (int x = 0; x < width - 1; x++)
-            for (int y = 0; y < height - 1; y++)
-            {
-                triangles.Add(CoordToIndex(x, y));
-                triangles.Add(CoordToIndex(x + 1, y));
-                triangles.Add(CoordToIndex(x + 1, y + 1));
+                        colors.Add(Color.white);
 
-                triangles.Add(CoordToIndex(x, y));
-                triangles.Add(CoordToIndex(x + 1, y + 1));
-                triangles.Add(CoordToIndex(x, y + 1));
+                        uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                        uvs.Add(new Vector2(x + i, y + j));
+                    }
+                triangles.Add(index);
+                triangles.Add(index + 2);
+                triangles.Add(index + 1);
+
+                triangles.Add(index + 1);
+                triangles.Add(index + 2);
+                triangles.Add(index + 3);
+
+                int north = 0;
+                if (y > 0 && !IsInCoords(fortMin, fortMax, x, y - 1))
+                    north = elevation[x, y - 1];
+                if (north < elevation[x, y])
+                {
+                    index = vertices.Count;
+                    vertices.Add(new Vector3(x * 48 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -y * 48 * GameMap.tileWidth) * scale);
+                    vertices.Add(new Vector3((x + 1) * 48 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -y * 48 * GameMap.tileWidth) * scale);
+                    vertices.Add(new Vector3(x * 48 * GameMap.tileWidth, north * GameMap.tileHeight, -y * 48 * GameMap.tileWidth) * scale);
+                    vertices.Add(new Vector3((x + 1) * 48 * GameMap.tileWidth, north * GameMap.tileHeight, -y * 48 * GameMap.tileWidth) * scale);
+
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uvs.Add(new Vector2(x, y));
+                    uvs.Add(new Vector2(x + 1, y));
+                    uvs.Add(new Vector2(x, y));
+                    uvs.Add(new Vector2(x + 1, y));
+
+                    triangles.Add(index);
+                    triangles.Add(index + 2);
+                    triangles.Add(index + 1);
+
+                    triangles.Add(index + 1);
+                    triangles.Add(index + 2);
+                    triangles.Add(index + 3);
+                }
+
+                int south = 0;
+                if (y < h - 1 && !IsInCoords(fortMin, fortMax, x, y + 1))
+                    south = elevation[x, y + 1];
+                if (south < elevation[x, y])
+                {
+                    index = vertices.Count;
+                    vertices.Add(new Vector3((x + 1) * 48 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -(y + 1) * 48 * GameMap.tileWidth) * scale);
+                    vertices.Add(new Vector3(x * 48 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -(y + 1) * 48 * GameMap.tileWidth) * scale);
+                    vertices.Add(new Vector3((x + 1) * 48 * GameMap.tileWidth, south * GameMap.tileHeight, -(y + 1) * 48 * GameMap.tileWidth) * scale);
+                    vertices.Add(new Vector3(x * 48 * GameMap.tileWidth, south * GameMap.tileHeight, -(y + 1) * 48 * GameMap.tileWidth) * scale);
+
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uvs.Add(new Vector2(x, y));
+                    uvs.Add(new Vector2(x + 1, y));
+                    uvs.Add(new Vector2(x, y));
+                    uvs.Add(new Vector2(x + 1, y));
+
+                    triangles.Add(index);
+                    triangles.Add(index + 2);
+                    triangles.Add(index + 1);
+
+                    triangles.Add(index + 1);
+                    triangles.Add(index + 2);
+                    triangles.Add(index + 3);
+                }
+
+                int east = 0;
+                if (x < w - 1 && !IsInCoords(fortMin, fortMax, x + 1, y))
+                    east = elevation[x + 1, y];
+                if (east < elevation[x, y])
+                {
+                    index = vertices.Count;
+                    vertices.Add(new Vector3((x + 1) * 48 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -y * 48 * GameMap.tileWidth) * scale);
+                    vertices.Add(new Vector3((x + 1) * 48 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -(y + 1) * 48 * GameMap.tileWidth) * scale);
+                    vertices.Add(new Vector3((x + 1) * 48 * GameMap.tileWidth, east * GameMap.tileHeight, -y * 48 * GameMap.tileWidth) * scale);
+                    vertices.Add(new Vector3((x + 1) * 48 * GameMap.tileWidth, east * GameMap.tileHeight, -(y + 1) * 48 * GameMap.tileWidth) * scale);
+
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uvs.Add(new Vector2(x, y));
+                    uvs.Add(new Vector2(x + 1, y));
+                    uvs.Add(new Vector2(x, y));
+                    uvs.Add(new Vector2(x + 1, y));
+
+                    triangles.Add(index);
+                    triangles.Add(index + 2);
+                    triangles.Add(index + 1);
+
+                    triangles.Add(index + 1);
+                    triangles.Add(index + 2);
+                    triangles.Add(index + 3);
+                }
+                int west = 0;
+                if (x > 0 && !IsInCoords(fortMin, fortMax, x - 1, y))
+                    west = elevation[x - 1, y];
+                if (west < elevation[x, y])
+                {
+                    index = vertices.Count;
+                    vertices.Add(new Vector3(x * 48 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -(y + 1) * 48 * GameMap.tileWidth) * scale);
+                    vertices.Add(new Vector3(x * 48 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -y * 48 * GameMap.tileWidth) * scale);
+                    vertices.Add(new Vector3(x * 48 * GameMap.tileWidth, west * GameMap.tileHeight, -(y + 1) * 48 * GameMap.tileWidth) * scale);
+                    vertices.Add(new Vector3(x * 48 * GameMap.tileWidth, west * GameMap.tileHeight, -y * 48 * GameMap.tileWidth) * scale);
+
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+                    colors.Add(Color.white);
+
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
+                    uvs.Add(new Vector2(x, y));
+                    uvs.Add(new Vector2(x + 1, y));
+                    uvs.Add(new Vector2(x, y));
+                    uvs.Add(new Vector2(x + 1, y));
+
+                    triangles.Add(index);
+                    triangles.Add(index + 2);
+                    triangles.Add(index + 1);
+
+                    triangles.Add(index + 1);
+                    triangles.Add(index + 2);
+                    triangles.Add(index + 3);
+                }
+                if (vertices.Count >= (65535 - 20))
+                    break;
             }
+            if (vertices.Count >= (65535 - 20))
+                break;
+        }
         terrainMesh = new Mesh();
-        terrainMesh.vertices = vertexPositions;
-        terrainMesh.colors = vertexColors;
-        terrainMesh.uv = vertexUV;
-        terrainMesh.uv2 = vertexUV2;
+        terrainMesh.vertices = vertices.ToArray();
+        terrainMesh.colors = colors.ToArray();
+        terrainMesh.uv = uvs.ToArray();
+        terrainMesh.uv2 = uv2s.ToArray();
         terrainMesh.triangles = triangles.ToArray();
 
         terrainMesh.RecalculateNormals();
