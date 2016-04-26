@@ -13,10 +13,17 @@ CGINCLUDE
 #pragma fragmentoption ARB_precision_hint_fastest
 #include "UnityCG.cginc"
 
-sampler2D _MainTex;
+//undef USE_LOCAL_TONEMAPPING if you dont want to use local tonemapping.
+//tweaking these values down will trade stability for less bokeh (see Tonemap/ToneMapInvert methods below).
+#ifndef SHADER_API_MOBILE
+    #define USE_LOCAL_TONEMAPPING
+#endif
+#define LOCAL_TONEMAP_START_LUMA 1.0
+#define LOCAL_TONEMAP_RANGE_LUMA 5.0
+
 sampler2D _SecondTex;
 sampler2D _ThirdTex;
-sampler2D _CameraDepthTexture;
+
 uniform half4 _MainTex_TexelSize;
 uniform half4 _BlurCoe;
 uniform half4 _BlurParams;
@@ -27,6 +34,20 @@ uniform float4 _Offsets;
 uniform half4 _MainTex_ST;
 uniform half4 _SecondTex_ST;
 uniform half4 _ThirdTex_ST;
+
+#if (SHADER_TARGET >= 50 && !defined(SHADER_API_PSSL))
+    #define USE_TEX2DOBJECT_FOR_COC
+#endif
+
+#if defined(USE_TEX2DOBJECT_FOR_COC)
+    Texture2D _CameraDepthTexture;
+    SamplerState sampler_CameraDepthTexture;
+    Texture2D _MainTex;
+    SamplerState sampler_MainTex;
+#else
+    sampler2D _MainTex;
+    sampler2D _CameraDepthTexture;
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 // Verter Shaders and declaration
@@ -125,6 +146,54 @@ v2fBlur vertBlurPlusMinus (appdata_img v)
 // Helpers
 ///////////////////////////////////////////////////////////////////////////////
 
+inline half4 FetchMainTex(float2 uv)
+{
+#if defined(USE_TEX2DOBJECT_FOR_COC)
+    return _MainTex.SampleLevel(sampler_MainTex, uv, 0);
+#else
+    return tex2Dlod (_MainTex, float4(uv,0,0));
+#endif
+}
+
+inline half2 GetBilinearFetchTexOffsetFromAbsCoc(half4 absCoc)
+{
+    half4 cocWeights = absCoc * absCoc * absCoc;
+
+    half2 offset = 0;
+    offset += cocWeights.r * float2(-1,+1);
+    offset += cocWeights.g * float2(+1,+1);
+    offset += cocWeights.b * float2(+1,-1);
+    offset += cocWeights.a * float2(-1,-1);
+    offset = clamp((half2)-1,(half2)1, offset);
+    offset *= 0.5;
+    return offset;
+}
+
+inline half4 FetchColorAndCocFromMainTex(float2 uv, float2 offsetFromKernelCenter)
+{
+    //bilinear
+    half4 fetch =  FetchMainTex(uv);
+
+//coc can't be linearly interpolated while doing "scatter and gather" or we will have haloing where coc vary sharply.
+#if defined(USE_SPECIAL_FETCH_FOR_COC)
+
+    #if defined(USE_TEX2DOBJECT_FOR_COC)
+        half4 allCoc   = _MainTex.GatherAlpha(sampler_MainTex, uv);
+        half cocAB  = (abs(allCoc.r)<abs(allCoc.g))?allCoc.r:allCoc.g;
+        half cocCD  = (abs(allCoc.b)<abs(allCoc.a))?allCoc.b:allCoc.a;
+        half coc = (abs(cocAB)<abs(cocCD))?cocAB:cocCD;
+    #else
+        //no gather available -> instead point sample the coc from the fartest away texel (not as good).
+        half2 bilinearCenter = floor(uv * _MainTex_TexelSize.zw - 0.5) + 1.0;
+        half2 cocUV = bilinearCenter + 0.5 * sign(offsetFromKernelCenter);
+        half coc = tex2Dlod (_MainTex, float4( cocUV * _MainTex_TexelSize.xy,0,0)).a;
+    #endif
+
+    fetch.a = coc;
+#endif
+    return fetch;
+}
+
 inline half3 getBoostAmount(half4 colorAndCoc)
 {
     half boost = colorAndCoc.a * (colorAndCoc.a < 0.0f ?_BoostParams.x:_BoostParams.y);
@@ -132,9 +201,8 @@ inline half3 getBoostAmount(half4 colorAndCoc)
     return luma < _BoostParams.z ? half3(0.0h, 0.0h, 0.0h):colorAndCoc.rgb * boost.rrr;
 }
 
-inline half GetCocFromDepth(half2 uv, bool useExplicit)
+inline half GetCocFromZValue(half d, bool useExplicit)
 {
-    half d = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, uv);
     d = Linear01Depth (d);
 
     if (useExplicit)
@@ -154,6 +222,54 @@ inline half GetCocFromDepth(half2 uv, bool useExplicit)
     }
 }
 
+inline half GetCocFromDepth(half2 uv, bool useExplicit)
+{
+#if defined(USE_TEX2DOBJECT_FOR_COC)
+    half d = _CameraDepthTexture.SampleLevel(sampler_CameraDepthTexture, uv, 0);
+#else
+    half d = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, uv);
+#endif
+    return GetCocFromZValue(d,useExplicit);
+}
+
+#if (SHADER_TARGET < 50 && !defined(SHADER_API_PSSL))
+    half rcp(half x) { return 1 / x; }
+#endif
+
+//from http://graphicrants.blogspot.dk/2013/12/tone-mapping.html
+inline half3 Tonemap(half3 color)
+{
+#ifdef USE_LOCAL_TONEMAPPING
+    half a = LOCAL_TONEMAP_START_LUMA;
+    half b = LOCAL_TONEMAP_RANGE_LUMA;
+
+    half luma = max(color.r, max(color.g, color.b));
+    if (luma <= a)
+        return color;
+
+    return color * rcp(luma) * (a*a - b * luma) / (2*a - b - luma);
+#else
+    return color;
+#endif
+}
+
+inline half3 ToneMapInvert(half3 color)
+{
+#ifdef USE_LOCAL_TONEMAPPING
+    half a = LOCAL_TONEMAP_START_LUMA;
+    half b = LOCAL_TONEMAP_RANGE_LUMA;
+
+    half luma = max(color.r, max(color.g, color.b));
+    if (luma <= a)
+        return color;
+
+    return color * rcp(luma) * (a*a - (2*a - b) * luma) / (b - luma);
+#else
+    return color;
+#endif
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // Directional (hexagonal/octogonal) bokeh
 ///////////////////////////////////////////////////////////////////////////////
@@ -162,9 +278,9 @@ inline half GetCocFromDepth(half2 uv, bool useExplicit)
 #define SAMPLE_NUM_M    11
 #define SAMPLE_NUM_H    16
 
-half4 shapeDirectionalBlur(half2 uv, bool mergePass, int numSample, bool sampleDilatedFG)
+inline half4 shapeDirectionalBlur(half2 uv, bool mergePass, int numSample, bool sampleDilatedFG)
 {
-    half4 centerTap = tex2Dlod (_MainTex, float4(uv,0,0));
+    half4 centerTap = FetchMainTex(uv);
     half  fgCoc  = centerTap.a;
     half  fgBlendFromPreviousPass = centerTap.a * _Offsets.z;
     if (sampleDilatedFG)
@@ -197,7 +313,7 @@ half4 shapeDirectionalBlur(half2 uv, bool mergePass, int numSample, bool sampleD
         half2 kVal = lerp(_Offsets.xy, -_Offsets.xy, t);
         half2 offset = kVal * range;
         half2 texCoord = uv + offset;
-        half4 sample0 = tex2Dlod(_MainTex, half4(texCoord,0,0));
+        half4 sample0 = FetchColorAndCocFromMainTex(texCoord, offset);
         if (sampleDilatedFG)
         {
             sample0.a = tex2Dlod(_SecondTex, half4(texCoord,0,0)).g;
@@ -228,68 +344,68 @@ half4 shapeDirectionalBlur(half2 uv, bool mergePass, int numSample, bool sampleD
     {
         finalColor = min(finalColor, tex2Dlod(_ThirdTex, half4(uv,0,0)).rgb);
     }
-    
+
     finalColor = lerp(centerTap.rgb, finalColor, saturate(bgBlend+fgBlend));
     fgBlend = max(fgBlendFromPreviousPass, fgBlend);
     return half4(finalColor, (sampleDilatedFG||mergePass)?fgBlend:centerTap.a);
 }
 
-half4 fragShapeLowQuality(v2fDepth i) : COLOR
+half4 fragShapeLowQuality(v2fDepth i) : SV_Target
 {
     return shapeDirectionalBlur(i.uv, false, SAMPLE_NUM_L, false);
 }
 
-half4 fragShapeLowQualityDilateFg(v2fDepth i) : COLOR
+half4 fragShapeLowQualityDilateFg(v2fDepth i) : SV_Target
 {
     return shapeDirectionalBlur(i.uv, false, SAMPLE_NUM_L, true);
 }
 
-half4 fragShapeLowQualityMerge(v2fDepth i) : COLOR
+half4 fragShapeLowQualityMerge(v2fDepth i) : SV_Target
 {
     return shapeDirectionalBlur(i.uv, true, SAMPLE_NUM_L, false);
 }
 
-half4 fragShapeLowQualityMergeDilateFg(v2fDepth i) : COLOR
+half4 fragShapeLowQualityMergeDilateFg(v2fDepth i) : SV_Target
 {
     return shapeDirectionalBlur(i.uv, true, SAMPLE_NUM_L, true);
 }
 
-half4 fragShapeMediumQuality(v2fDepth i) : COLOR
+half4 fragShapeMediumQuality(v2fDepth i) : SV_Target
 {
     return shapeDirectionalBlur(i.uv, false, SAMPLE_NUM_M, false);
 }
 
-half4 fragShapeMediumQualityDilateFg(v2fDepth i) : COLOR
+half4 fragShapeMediumQualityDilateFg(v2fDepth i) : SV_Target
 {
     return shapeDirectionalBlur(i.uv, false, SAMPLE_NUM_M, true);
 }
 
-half4 fragShapeMediumQualityMerge(v2fDepth i) : COLOR
+half4 fragShapeMediumQualityMerge(v2fDepth i) : SV_Target
 {
     return shapeDirectionalBlur(i.uv, true, SAMPLE_NUM_M, false);
 }
 
-half4 fragShapeMediumQualityMergeDilateFg(v2fDepth i) : COLOR
+half4 fragShapeMediumQualityMergeDilateFg(v2fDepth i) : SV_Target
 {
     return shapeDirectionalBlur(i.uv, true, SAMPLE_NUM_M, true);
 }
 
-half4 fragShapeHighQuality(v2fDepth i) : COLOR
+half4 fragShapeHighQuality(v2fDepth i) : SV_Target
 {
     return shapeDirectionalBlur(i.uv, false, SAMPLE_NUM_H, false);
 }
 
-half4 fragShapeHighQualityDilateFg(v2fDepth i) : COLOR
+half4 fragShapeHighQualityDilateFg(v2fDepth i) : SV_Target
 {
     return shapeDirectionalBlur(i.uv, false, SAMPLE_NUM_H, true);
 }
 
-half4 fragShapeHighQualityMerge(v2fDepth i) : COLOR
+half4 fragShapeHighQualityMerge(v2fDepth i) : SV_Target
 {
     return shapeDirectionalBlur(i.uv, true, SAMPLE_NUM_H, false);
 }
 
-half4 fragShapeHighQualityMergeDilateFg(v2fDepth i) : COLOR
+half4 fragShapeHighQualityMergeDilateFg(v2fDepth i) : SV_Target
 {
     return shapeDirectionalBlur(i.uv, true, SAMPLE_NUM_H, true);
 }
@@ -352,9 +468,9 @@ static const half3 DiscBokeh48[48] =
     half3( 0.30488h,-0.12629h, 0.33h)
 };
 
-inline float4 circleCocBokeh(float2 uv, bool sampleDilatedFG, int increment)
+inline half4 circleCocBokeh(half2 uv, bool sampleDilatedFG, int increment)
 {
-    half4 centerTap = tex2Dlod(_MainTex, half4(uv,0,0));
+    half4 centerTap = FetchMainTex(uv);
     half  fgCoc  = centerTap.a;
     if (sampleDilatedFG)
     {
@@ -381,7 +497,7 @@ inline float4 circleCocBokeh(float2 uv, bool sampleDilatedFG, int increment)
     for (int l = 0; l < 48; l+= increment)
     {
         half2 sampleUV = uv + DiscBokeh48[l].xy * poissonScale.xy;
-        half4 sample0  = tex2Dlod(_MainTex, half4(sampleUV,0,0));
+        half4 sample0  = FetchColorAndCocFromMainTex(sampleUV, DiscBokeh48[l].xy);
 
         half isNear = max(0.0h, -sample0.a);
         half distanceFactor = saturate(-0.5f * abs(sample0.a - centerTap.a) * DiscBokeh48[l].z + 1.0f);
@@ -407,22 +523,22 @@ inline float4 circleCocBokeh(float2 uv, bool sampleDilatedFG, int increment)
     return returnValue;
 }
 
-float4 fragCircleBlurWithDilatedFg (v2fDepth i) : SV_Target
+half4 fragCircleBlurWithDilatedFg (v2fDepth i) : SV_Target
 {
     return circleCocBokeh(i.uv, true, 1);
 }
 
-float4 fragCircleBlur (v2fDepth i) : SV_Target
+half4 fragCircleBlur (v2fDepth i) : SV_Target
 {
     return circleCocBokeh(i.uv, false, 1);
 }
 
-float4 fragCircleBlurWithDilatedFgLowQuality (v2fDepth i) : SV_Target
+half4 fragCircleBlurWithDilatedFgLowQuality (v2fDepth i) : SV_Target
 {
     return circleCocBokeh(i.uv, true, 2);
 }
 
-float4 fragCircleBlurLowQuality (v2fDepth i) : SV_Target
+half4 fragCircleBlurLowQuality (v2fDepth i) : SV_Target
 {
     return circleCocBokeh(i.uv, false, 2);
 }
@@ -445,9 +561,9 @@ static const half2 DiscPrefilter[DISC_PREFILTER_SAMPLE] =
     half2(0.5827708f, 0.7599297f)
 };
 
-float4 fragCocPrefilter (v2fDepth i) : SV_Target
+half4 fragCocPrefilter (v2fDepth i) : SV_Target
 {
-    half4 centerTap = tex2Dlod(_MainTex, half4(i.uv.xy,0,0));
+    half4 centerTap = FetchMainTex(i.uv);
     half  radius = 0.33h * 0.5h * (centerTap.a < 0.0f ? -(centerTap.a * _BlurCoe.x):(centerTap.a * _BlurCoe.y));
     half2 poissonScale = radius * _MainTex_TexelSize.xy;
 
@@ -461,7 +577,7 @@ float4 fragCocPrefilter (v2fDepth i) : SV_Target
     for (int l = 0; l < DISC_PREFILTER_SAMPLE; l++)
     {
         half2 sampleUV = i.uv + DiscPrefilter[l].xy * poissonScale.xy;
-        half4 sample0 = tex2Dlod(_MainTex, half4(sampleUV.xy,0,0));
+        half4 sample0 = FetchColorAndCocFromMainTex(sampleUV, DiscPrefilter[l].xy);
         half weight = max(sample0.a * centerTap.a,0.0h);
         sum += sample0.rgb * weight;
         sampleCount += weight;
@@ -475,14 +591,34 @@ float4 fragCocPrefilter (v2fDepth i) : SV_Target
 // Final merge and upsample
 ///////////////////////////////////////////////////////////////////////////////
 
-float4 upSampleConvolved(half2 uv, bool useBicubic)
+inline half4 upSampleConvolved(half2 uv, bool useBicubic, bool useExplicit)
 {
+    half2 convolvedTexelPos    = uv * _Convolved_TexelSize.xy;
+    half2 convolvedTexelCenter = floor( convolvedTexelPos ) + 0.5;
+    half2 convolvedTexelOffsetFromCenter = convolvedTexelPos - convolvedTexelCenter;
+    half2 offsetFromCoc = 0;
+
+#if defined(USE_TEX2DOBJECT_FOR_COC)
+    half2 cocUV = (convolvedTexelOffsetFromCenter * _Convolved_TexelSize.zw) + uv;
+    half4 coc = _CameraDepthTexture.GatherRed(sampler_CameraDepthTexture, cocUV);
+    coc.r = GetCocFromZValue(coc.r, useExplicit);
+    coc.g = GetCocFromZValue(coc.g, useExplicit);
+    coc.b = GetCocFromZValue(coc.b, useExplicit);
+    coc.a = GetCocFromZValue(coc.a, useExplicit);
+
+    half4 absCoc = abs(coc);
+    offsetFromCoc = GetBilinearFetchTexOffsetFromAbsCoc(absCoc) * 0.5;
+    uv += offsetFromCoc * _Convolved_TexelSize.zw;
+#endif
+
     if (useBicubic)
     {
         //bicubic upsampling (B-spline)
-        half2 convolvedTexelPos    = uv * _Convolved_TexelSize.xy;
-        half2 convolvedTexelCenter = floor( convolvedTexelPos - 0.5h ) + 0.5h;
-        half2 f  = convolvedTexelPos - convolvedTexelCenter;
+        //adding offsetFromCoc "antialias" haloing from bright in focus region on dark out of focus region.
+        //however its a hack as we should consider all the COC of the bicubic region and kill the bicubic
+        //interpolation to avoid in any leaking but that would be too expensive, so when this is a problem
+        //one should rather disable bicubic interpolation.
+        half2 f  = convolvedTexelOffsetFromCenter + offsetFromCoc;
         half2 f2 = f * f;
         half2 f3 = f * f2;
 
@@ -510,10 +646,12 @@ float4 upSampleConvolved(half2 uv, bool useBicubic)
     }
 }
 
-float4 circleCocMerge (half2 uv, bool useExplicit, bool useBicubic)
+inline half4 dofMerge (half2 uv, bool useExplicit, bool useBicubic)
 {
-    half4 convolvedTap = upSampleConvolved(uv, useBicubic);
-    half4 sourceTap    = tex2Dlod(_MainTex, half4(uv,0,0));
+    half4 convolvedTap = upSampleConvolved(uv, useBicubic, useExplicit);
+    convolvedTap.rgb = ToneMapInvert(convolvedTap.rgb);
+
+    half4 sourceTap    = FetchMainTex(uv);
     half  coc          = GetCocFromDepth(uv, useExplicit);
 
     sourceTap.rgb += getBoostAmount(half4(sourceTap.rgb, coc));
@@ -524,46 +662,61 @@ float4 circleCocMerge (half2 uv, bool useExplicit, bool useBicubic)
     return (blendValue < 1e-2f) ? sourceTap : half4(returnValue.rgb, sourceTap.a);
 }
 
-float4 fragMergeBicubic (v2fDepth i) : SV_Target
+half4 fragMergeBicubic (v2fDepth i) : SV_Target
 {
-    return circleCocMerge(i.uv, false, true);
+    return dofMerge(i.uv, false, true);
 }
 
-float4 fragMergeExplicitBicubic (v2fDepth i) : SV_Target
+half4 fragMergeExplicitBicubic (v2fDepth i) : SV_Target
 {
-    return circleCocMerge(i.uv, true, true);
+    return dofMerge(i.uv, true, true);
 }
 
-float4 fragMerge (v2fDepth i) : SV_Target
+half4 fragMerge (v2fDepth i) : SV_Target
 {
-    return circleCocMerge(i.uv, false, false);
+    return dofMerge(i.uv, false, false);
 }
 
-float4 fragMergeExplicit (v2fDepth i) : SV_Target
+half4 fragMergeExplicit (v2fDepth i) : SV_Target
 {
-    return circleCocMerge(i.uv, true, false);
+    return dofMerge(i.uv, true, false);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Downsampling and COC computation
 ///////////////////////////////////////////////////////////////////////////////
 
-half4 captureCoc(half2 uvColor, half2 uvDepth, bool useExplicit)
+inline half4 captureCoc(half2 uvColor, half2 uvDepth, bool useExplicit)
 {
-    half4 color = tex2Dlod (_MainTex, half4(uvColor, 0, 0 ));
+    /*****************/
+    /* coc.a | coc.b */
+    /* coc.r | coc.g */
+    /*****************/
+#if defined(USE_TEX2DOBJECT_FOR_COC)
+    half4 coc = _CameraDepthTexture.GatherRed(sampler_CameraDepthTexture, uvDepth);
+    coc.r = GetCocFromZValue(coc.r, useExplicit);
+    coc.g = GetCocFromZValue(coc.g, useExplicit);
+    coc.b = GetCocFromZValue(coc.b, useExplicit);
+    coc.a = GetCocFromZValue(coc.a, useExplicit);
+#else
+    half4 coc;
+    coc.r = GetCocFromDepth(uvDepth + _MainTex_TexelSize.xy * half2(-0.25f,+0.25f), useExplicit);
+    coc.g = GetCocFromDepth(uvDepth + _MainTex_TexelSize.xy * half2(+0.25f,+0.25f), useExplicit);
+    coc.b = GetCocFromDepth(uvDepth + _MainTex_TexelSize.xy * half2(+0.25f,-0.25f), useExplicit);
+    coc.a = GetCocFromDepth(uvDepth + _MainTex_TexelSize.xy * half2(-0.25f,-0.25f), useExplicit);
+#endif
 
-    //TODO should use gather4 on supported platform!
-    //TODO do only 1 tap on high resolution mode
-    half cocA = GetCocFromDepth(uvDepth + _MainTex_TexelSize.xy * half2(+0.25f,+0.25f), useExplicit);
-    half cocB = GetCocFromDepth(uvDepth + _MainTex_TexelSize.xy * half2(+0.25f,-0.25f), useExplicit);
-    half cocC = GetCocFromDepth(uvDepth + _MainTex_TexelSize.xy * half2(-0.25f,+0.25f), useExplicit);
-    half cocD = GetCocFromDepth(uvDepth + _MainTex_TexelSize.xy * half2(-0.25f,-0.25f), useExplicit);
+    half4 absCoc = abs(coc);
+    half2 offset = GetBilinearFetchTexOffsetFromAbsCoc(absCoc) * _MainTex_TexelSize.xy;
+    half4 color = FetchMainTex(uvColor + offset);
 
-    half cocAB = (abs(cocA)<abs(cocB))?cocA:cocB;
-    half cocCD = (abs(cocC)<abs(cocD))?cocC:cocD;
-    color.a    = (abs(cocAB)<abs(cocCD))?cocAB:cocCD;
+    half cocRG = (absCoc.r<absCoc.g)?coc.r:coc.g;
+    half cocBA = (absCoc.b<absCoc.a)?coc.b:coc.a;
+    color.a    = (abs(cocRG)<abs(cocBA))?cocRG:cocBA;
 
     color.rgb += getBoostAmount(color);
+    color.rgb = Tonemap(color);
+
     return color;
 }
 
@@ -581,18 +734,18 @@ half4 fragCaptureCocExplicit (v2f i) : SV_Target
 // Coc visualisation
 ///////////////////////////////////////////////////////////////////////////////
 
-inline float4 visualizeCoc(half2 uv, bool useExplicit)
+inline half4 visualizeCoc(half2 uv, bool useExplicit)
 {
     half coc = GetCocFromDepth(uv, useExplicit);
     return (coc < 0)? half4(-coc, -coc, 0, 1.0) : half4(0, coc, coc, 1.0);
 }
 
-float4 fragVisualizeCoc(v2fDepth i) : SV_Target
+half4 fragVisualizeCoc(v2fDepth i) : SV_Target
 {
     return visualizeCoc(i.uv, false);
 }
 
-float4 fragVisualizeCocExplicit(v2fDepth i) : SV_Target
+half4 fragVisualizeCocExplicit(v2fDepth i) : SV_Target
 {
     return visualizeCoc(i.uv, true);
 }
@@ -604,9 +757,9 @@ float4 fragVisualizeCocExplicit(v2fDepth i) : SV_Target
 inline half2 fgCocSourceChannel(half2 uv, bool fromAlpha)
 {
     if (fromAlpha)
-        return tex2Dlod(_MainTex, half4(uv,0,0)).aa;
+        return FetchMainTex(uv).aa;
     else
-        return tex2Dlod(_MainTex, half4(uv,0,0)).rg;
+        return FetchMainTex(uv).rg;
 }
 
 inline half2 weigthedFGCocBlur(v2fBlur i, bool fromAlpha)
@@ -639,12 +792,12 @@ inline half2 weigthedFGCocBlur(v2fBlur i, bool fromAlpha)
     return half2(fgCoc,fgCoc00.g);
 }
 
-float4 fragDilateFgCocFromColor (v2fBlur i) : SV_Target
+half4 fragDilateFgCocFromColor (v2fBlur i) : SV_Target
 {
     return weigthedFGCocBlur(i,true).xyxy;
 }
 
-float4 fragDilateFgCoc (v2fBlur i) : SV_Target
+half4 fragDilateFgCoc (v2fBlur i) : SV_Target
 {
     return weigthedFGCocBlur(i,false).xyxy;
 }
@@ -653,26 +806,26 @@ float4 fragDilateFgCoc (v2fBlur i) : SV_Target
 // Texture Bokeh related
 ///////////////////////////////////////////////////////////////////////////////
 
-float4 fragBlurAlphaWeighted (v2fBlur i) : SV_Target
+half4 fragBlurAlphaWeighted (v2fBlur i) : SV_Target
 {
-    const float ALPHA_WEIGHT = 2.0f;
-    float4 sum = float4 (0,0,0,0);
-    float w = 0;
-    float weights = 0;
-    const float G_WEIGHTS[6] = {1.0, 0.8, 0.675, 0.5, 0.2, 0.075};
+    const half ALPHA_WEIGHT = 2.0;
+    half4 sum = half4 (0,0,0,0);
+    half w = 0;
+    half weights = 0;
+    const half G_WEIGHTS[6] = {1.0, 0.8, 0.675, 0.5, 0.2, 0.075};
 
-    float4 sampleA = tex2D(_MainTex, i.uv.xy);
+    half4 sampleA = FetchMainTex(i.uv.xy);
 
-    float4 sampleB = tex2D(_MainTex, i.uv01.xy);
-    float4 sampleC = tex2D(_MainTex, i.uv01.zw);
-    float4 sampleD = tex2D(_MainTex, i.uv23.xy);
-    float4 sampleE = tex2D(_MainTex, i.uv23.zw);
-    float4 sampleF = tex2D(_MainTex, i.uv45.xy);
-    float4 sampleG = tex2D(_MainTex, i.uv45.zw);
-    float4 sampleH = tex2D(_MainTex, i.uv67.xy);
-    float4 sampleI = tex2D(_MainTex, i.uv67.zw);
-    float4 sampleJ = tex2D(_MainTex, i.uv89.xy);
-    float4 sampleK = tex2D(_MainTex, i.uv89.zw);
+    half4 sampleB = FetchMainTex(i.uv01.xy);
+    half4 sampleC = FetchMainTex(i.uv01.zw);
+    half4 sampleD = FetchMainTex(i.uv23.xy);
+    half4 sampleE = FetchMainTex(i.uv23.zw);
+    half4 sampleF = FetchMainTex(i.uv45.xy);
+    half4 sampleG = FetchMainTex(i.uv45.zw);
+    half4 sampleH = FetchMainTex(i.uv67.xy);
+    half4 sampleI = FetchMainTex(i.uv67.zw);
+    half4 sampleJ = FetchMainTex(i.uv89.xy);
+    half4 sampleK = FetchMainTex(i.uv89.zw);
 
     w = sampleA.a * G_WEIGHTS[0]; sum += sampleA * w; weights += w;
     w = saturate(ALPHA_WEIGHT*sampleB.a) * G_WEIGHTS[1]; sum += sampleB * w; weights += w;
@@ -686,20 +839,20 @@ float4 fragBlurAlphaWeighted (v2fBlur i) : SV_Target
     w = saturate(ALPHA_WEIGHT*sampleJ.a) * G_WEIGHTS[5]; sum += sampleJ * w; weights += w;
     w = saturate(ALPHA_WEIGHT*sampleK.a) * G_WEIGHTS[5]; sum += sampleK * w; weights += w;
 
-    sum /= weights + 1e-4f;
+    sum /= weights + 1e-4;
 
     sum.a = sampleA.a;
-    if(sampleA.a<1e-2f) sum.rgb = sampleA.rgb;
+    if(sampleA.a<1e-2) sum.rgb = sampleA.rgb;
 
     return sum;
 }
 
-float4 fragBoxBlur (v2f i) : SV_Target
+half4 fragBoxBlur (v2f i) : SV_Target
 {
-    float4 returnValue = tex2D(_MainTex, i.uv1.xy + 0.75*_MainTex_TexelSize.xy);
-    returnValue += tex2D(_MainTex, i.uv1.xy - 0.75*_MainTex_TexelSize.xy);
-    returnValue += tex2D(_MainTex, i.uv1.xy + 0.75*_MainTex_TexelSize.xy * float2(1,-1));
-    returnValue += tex2D(_MainTex, i.uv1.xy - 0.75*_MainTex_TexelSize.xy * float2(1,-1));
+    half4 returnValue = FetchMainTex(i.uv1.xy + 0.75*_MainTex_TexelSize.xy);
+    returnValue += FetchMainTex(i.uv1.xy - 0.75*_MainTex_TexelSize.xy);
+    returnValue += FetchMainTex(i.uv1.xy + 0.75*_MainTex_TexelSize.xy * half2(1,-1));
+    returnValue += FetchMainTex(i.uv1.xy - 0.75*_MainTex_TexelSize.xy * half2(1,-1));
     return returnValue/4;
 }
 
@@ -709,6 +862,305 @@ ENDCG
 
 SubShader
 {
+    Tags { "Name" = "MainSubShader_SM5" }
+    //if adding or removing a pass please also update the fallback subshader below
+
+    ZTest Always Cull Off ZWrite Off Fog { Mode Off } Lighting Off Blend Off
+
+    // 1
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vertBlurPlusMinus
+        #pragma fragment fragBlurAlphaWeighted
+        ENDCG
+    }
+
+    // 2
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vert_d
+        #pragma fragment fragBoxBlur
+        ENDCG
+    }
+
+    // 3
+    Pass
+    {
+      CGPROGRAM
+      #pragma vertex vertBlurPlusMinus
+      #pragma fragment fragDilateFgCocFromColor
+      ENDCG
+    }
+
+    // 4
+    Pass
+    {
+      CGPROGRAM
+      #pragma vertex vertBlurPlusMinus
+      #pragma fragment fragDilateFgCoc
+      ENDCG
+    }
+
+    // 5
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vert_d
+        #pragma fragment fragCaptureCoc
+        #pragma target 5.0
+        ENDCG
+    }
+
+    // 6
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vert_d
+        #pragma fragment fragCaptureCocExplicit
+        #pragma target 5.0
+        ENDCG
+    }
+
+    // 7
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vert
+        #pragma fragment fragVisualizeCoc
+        ENDCG
+    }
+
+    // 8
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vert
+        #pragma fragment fragVisualizeCocExplicit
+        ENDCG
+    }
+
+    // 9
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vert
+        #pragma fragment fragCocPrefilter
+        #pragma target 5.0
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
+        ENDCG
+    }
+
+    // 10
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vert
+        #pragma fragment fragCircleBlur
+        #pragma target 5.0
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
+        ENDCG
+    }
+
+    // 11
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vert
+        #pragma fragment fragCircleBlurWithDilatedFg
+        #pragma target 5.0
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
+        ENDCG
+    }
+
+    // 12
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vert
+        #pragma fragment fragCircleBlurLowQuality
+        #pragma target 5.0
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
+        ENDCG
+    }
+
+    // 13
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vert
+        #pragma fragment fragCircleBlurWithDilatedFgLowQuality
+        #pragma target 5.0
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
+        ENDCG
+    }
+
+    // 14
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vertNoFlip
+        #pragma fragment fragMerge
+        #pragma target 5.0
+        ENDCG
+    }
+
+    // 15
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vertNoFlip
+        #pragma fragment fragMergeExplicit
+        #pragma target 5.0
+        ENDCG
+    }
+
+    // 16
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vertNoFlip
+        #pragma fragment fragMergeBicubic
+        #pragma target 5.0
+        ENDCG
+    }
+
+    // 17
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vertNoFlip
+        #pragma fragment fragMergeExplicitBicubic
+        #pragma target 5.0
+        ENDCG
+    }
+
+    // 18
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vert
+        #pragma fragment fragShapeLowQuality
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
+        ENDCG
+    }
+
+    // 19
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vert
+        #pragma fragment fragShapeLowQualityDilateFg
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
+        ENDCG
+    }
+
+    // 20
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vert
+        #pragma fragment fragShapeLowQualityMerge
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
+        ENDCG
+    }
+
+    // 21
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vert
+        #pragma fragment fragShapeLowQualityMergeDilateFg
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
+        ENDCG
+    }
+
+    // 22
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vert
+        #pragma fragment fragShapeMediumQuality
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
+        ENDCG
+    }
+
+    // 23
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vert
+        #pragma fragment fragShapeMediumQualityDilateFg
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
+        ENDCG
+    }
+
+    // 24
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vert
+        #pragma fragment fragShapeMediumQualityMerge
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
+        ENDCG
+    }
+
+    // 25
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vert
+        #pragma fragment fragShapeMediumQualityMergeDilateFg
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
+        ENDCG
+    }
+
+    // 26
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vert
+        #pragma fragment fragShapeHighQuality
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
+        ENDCG
+    }
+
+    // 27
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vert
+        #pragma fragment fragShapeHighQualityDilateFg
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
+        ENDCG
+    }
+
+    // 28
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vert
+        #pragma fragment fragShapeHighQualityMerge
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
+        ENDCG
+    }
+
+    // 29
+    Pass
+    {
+        CGPROGRAM
+        #pragma vertex vert
+        #pragma fragment fragShapeHighQualityMergeDilateFg
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
+        ENDCG
+    }
+}
+
+SubShader
+{
+    Tags { "Name" = "FallbackSubShader_SM3" }
+    //if adding or removing a pass please also update the main subshader above
 
     ZTest Always Cull Off ZWrite Off Fog { Mode Off } Lighting Off Blend Off
 
@@ -790,6 +1242,7 @@ SubShader
         CGPROGRAM
         #pragma vertex vert
         #pragma fragment fragCocPrefilter
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
         ENDCG
     }
 
@@ -799,6 +1252,7 @@ SubShader
         CGPROGRAM
         #pragma vertex vert
         #pragma fragment fragCircleBlur
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
         ENDCG
     }
 
@@ -808,6 +1262,7 @@ SubShader
         CGPROGRAM
         #pragma vertex vert
         #pragma fragment fragCircleBlurWithDilatedFg
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
         ENDCG
     }
 
@@ -817,6 +1272,7 @@ SubShader
         CGPROGRAM
         #pragma vertex vert
         #pragma fragment fragCircleBlurLowQuality
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
         ENDCG
     }
 
@@ -826,6 +1282,7 @@ SubShader
         CGPROGRAM
         #pragma vertex vert
         #pragma fragment fragCircleBlurWithDilatedFgLowQuality
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
         ENDCG
     }
 
@@ -871,6 +1328,7 @@ SubShader
         CGPROGRAM
         #pragma vertex vert
         #pragma fragment fragShapeLowQuality
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
         ENDCG
     }
 
@@ -880,6 +1338,7 @@ SubShader
         CGPROGRAM
         #pragma vertex vert
         #pragma fragment fragShapeLowQualityDilateFg
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
         ENDCG
     }
 
@@ -889,6 +1348,7 @@ SubShader
         CGPROGRAM
         #pragma vertex vert
         #pragma fragment fragShapeLowQualityMerge
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
         ENDCG
     }
 
@@ -898,6 +1358,7 @@ SubShader
         CGPROGRAM
         #pragma vertex vert
         #pragma fragment fragShapeLowQualityMergeDilateFg
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
         ENDCG
     }
 
@@ -907,6 +1368,7 @@ SubShader
         CGPROGRAM
         #pragma vertex vert
         #pragma fragment fragShapeMediumQuality
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
         ENDCG
     }
 
@@ -916,6 +1378,7 @@ SubShader
         CGPROGRAM
         #pragma vertex vert
         #pragma fragment fragShapeMediumQualityDilateFg
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
         ENDCG
     }
 
@@ -925,6 +1388,7 @@ SubShader
         CGPROGRAM
         #pragma vertex vert
         #pragma fragment fragShapeMediumQualityMerge
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
         ENDCG
     }
 
@@ -934,6 +1398,7 @@ SubShader
         CGPROGRAM
         #pragma vertex vert
         #pragma fragment fragShapeMediumQualityMergeDilateFg
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
         ENDCG
     }
 
@@ -943,6 +1408,7 @@ SubShader
         CGPROGRAM
         #pragma vertex vert
         #pragma fragment fragShapeHighQuality
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
         ENDCG
     }
 
@@ -952,6 +1418,7 @@ SubShader
         CGPROGRAM
         #pragma vertex vert
         #pragma fragment fragShapeHighQualityDilateFg
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
         ENDCG
     }
 
@@ -961,6 +1428,7 @@ SubShader
         CGPROGRAM
         #pragma vertex vert
         #pragma fragment fragShapeHighQualityMerge
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
         ENDCG
     }
 
@@ -970,6 +1438,7 @@ SubShader
         CGPROGRAM
         #pragma vertex vert
         #pragma fragment fragShapeHighQualityMergeDilateFg
+        #pragma multi_compile __ USE_SPECIAL_FETCH_FOR_COC
         ENDCG
     }
 }

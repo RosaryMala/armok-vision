@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace UnityStandardAssets.CinematicEffects
 {
-    public class RenderTexureUtility
+    public class RenderTextureUtility
     {
         //Temporary render texture handling
         private List<RenderTexture> m_TemporaryRTs = new List<RenderTexture>();
@@ -33,7 +33,7 @@ namespace UnityStandardAssets.CinematicEffects
             RenderTexture.ReleaseTemporary(rt);
         }
 
-        public void ReleaseAllTemporyRenderTexutres()
+        public void ReleaseAllTemporaryRenderTextures()
         {
             for (int i = 0; i < m_TemporaryRTs.Count; ++i)
                 RenderTexture.ReleaseTemporary(m_TemporaryRTs[i]);

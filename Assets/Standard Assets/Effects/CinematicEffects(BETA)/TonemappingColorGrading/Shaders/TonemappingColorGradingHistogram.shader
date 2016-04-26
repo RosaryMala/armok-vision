@@ -18,12 +18,12 @@ Shader "Hidden/TonemappingColorGradingHistogram"
             };
 
             StructuredBuffer<uint4> _Histogram;
-            half2 _Size;
+            float2 _Size;
             uint _Channel;
-            half4 _ColorR;
-            half4 _ColorG;
-            half4 _ColorB;
-            half4 _ColorL;
+            float4 _ColorR;
+            float4 _ColorG;
+            float4 _ColorB;
+            float4 _ColorL;
 
             v_data vert(appdata_img v)
             {
@@ -33,43 +33,43 @@ Shader "Hidden/TonemappingColorGradingHistogram"
                 return o;
             }
 
-            half4 frag_channel(v_data i) : COLOR
+            float4 frag_channel(v_data i) : SV_Target
             {
-                const half4 COLORS[4] = { _ColorR, _ColorG, _ColorB, _ColorL };
+                const float4 COLORS[4] = { _ColorR, _ColorG, _ColorB, _ColorL };
 
-                half remapI = i.uv.x * 255.0;
+                float remapI = i.uv.x * 255.0;
                 uint index = floor(remapI);
-                half delta = frac(remapI);
-                half v1 = _Histogram[index][_Channel];
-                half v2 = _Histogram[min(index + 1, 255)][_Channel];
-                half h = v1 * (1.0 - delta) + v2 * delta;
+                float delta = frac(remapI);
+                float v1 = _Histogram[index][_Channel];
+                float v2 = _Histogram[min(index + 1, 255)][_Channel];
+                float h = v1 * (1.0 - delta) + v2 * delta;
                 uint y = (uint)round(i.uv.y * _Size.y);
 
-                half4 color = half4(0.0, 0.0, 0.0, 0.0);
-                half fill = step(y, h);
+                float4 color = float4(0.0, 0.0, 0.0, 0.0);
+                float fill = step(y, h);
                 color = lerp(color, COLORS[_Channel], fill);
                 return color;
             }
 
-            half4 frag_rgb(v_data i) : COLOR
+            float4 frag_rgb(v_data i) : SV_Target
             {
-                const half4 COLORS[3] = { _ColorR, _ColorG, _ColorB };
+                const float4 COLORS[3] = { _ColorR, _ColorG, _ColorB };
 
-                half4 targetColor = half4(0.0, 0.0, 0.0, 0.0);
-                half4 emptyColor = half4(0.0, 0.0, 0.0, 0.0);
-                half fill = 0;
+                float4 targetColor = float4(0.0, 0.0, 0.0, 0.0);
+                float4 emptyColor = float4(0.0, 0.0, 0.0, 0.0);
+                float fill = 0;
 
                 for (int j = 0; j < 3; j++)
                 {
-                    half remapI = i.uv.x * 255.0;
+                    float remapI = i.uv.x * 255.0;
                     uint index = floor(remapI);
-                    half delta = frac(remapI);
-                    half v1 = _Histogram[index][j];
-                    half v2 = _Histogram[min(index + 1, 255)][j];
-                    half h = v1 * (1.0 - delta) + v2 * delta;
+                    float delta = frac(remapI);
+                    float v1 = _Histogram[index][j];
+                    float v2 = _Histogram[min(index + 1, 255)][j];
+                    float h = v1 * (1.0 - delta) + v2 * delta;
                     uint y = (uint)round(i.uv.y * _Size.y);
-                    half fill = step(y, h);
-                    half4 color = lerp(emptyColor, COLORS[j], fill);
+                    float fill = step(y, h);
+                    float4 color = lerp(emptyColor, COLORS[j], fill);
                     targetColor += color;
                 }
 
@@ -78,7 +78,7 @@ Shader "Hidden/TonemappingColorGradingHistogram"
 
         ENDCG
 
-        // 0 - Channel
+        // (0) Channel
         Pass
         {
             CGPROGRAM
@@ -89,7 +89,7 @@ Shader "Hidden/TonemappingColorGradingHistogram"
             ENDCG
         }
 
-        // 1 - RGB
+        // (1) RGB
         Pass
         {
             CGPROGRAM

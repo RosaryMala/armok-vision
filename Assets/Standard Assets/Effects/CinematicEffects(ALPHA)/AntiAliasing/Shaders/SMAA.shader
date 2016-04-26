@@ -1,409 +1,382 @@
-Shader "Hidden/SMAA" {
-    Properties {
-        _MainTex ("", 2D) = "black" {}
+Shader "Hidden/Subpixel Morphological Anti-aliasing"
+{
+    Properties
+    {
+        _MainTex ("Base (RGB)", 2D) = "white" {}
     }
 
     CGINCLUDE
 
-    #include "UnityCG.cginc"
+        #pragma fragmentoption ARB_precision_hint_fastest
+        #pragma target 3.0
+        #pragma glsl
+        #pragma exclude_renderers flash
 
-    ///////// from SMAA.fx
-    float4 _PixelSize;
+        sampler2D _MainTex;
+        sampler2D _BlendTex;
+        sampler2D _AreaTex;
+        sampler2D _SearchTex;
+        sampler2D _AccumulationTex;
 
-    #define SMAA_PIXEL_SIZE _PixelSize.xy
-    #define SMAA_PRESET_HIGH 1
+        sampler2D _CameraDepthTexture;
 
-    // porting the DX9 version of functions
-    #define SMAA_HLSL_3 1
-    #define SMAA_ONLY_COMPILE_PS 1
+        float4 _MainTex_TexelSize;
 
-    #include "SMAA.cginc"
+        float4 _Metrics; // 1f / width, 1f / height, width, height
+        float4 _Params1; // SMAA_THRESHOLD, SMAA_DEPTH_THRESHOLD, SMAA_MAX_SEARCH_STEPS, SMAA_MAX_SEARCH_STEPS_DIAG
+        float2 _Params2; // SMAA_CORNER_ROUNDING, SMAA_LOCAL_CONTRAST_ADAPTATION_FACTOR
+        float3 _Params3; // SMAA_PREDICATION_THRESHOLD, SMAA_PREDICATION_SCALE, SMAA_PREDICATION_STRENGTH
 
-    sampler2D _CameraDepthTexture;
-    sampler2D_float _CameraMotionVectors;
-    sampler2D _VelTex;
+        float4x4 _ReprojectionMatrix;
+        float4 _SubsampleIndices;
 
-    sampler2D colorTex;
-    sampler2D edgesTex;
-    sampler2D blendTex;
-    sampler2D areaTex;
-    sampler2D searchTex;
-    sampler2D accumTex;
-    sampler2D smaaTex;
+        #define SMAA_RT_METRICS _Metrics
+        #define SMAA_THRESHOLD _Params1.x
+        #define SMAA_DEPTH_THRESHOLD _Params1.y
+        #define SMAA_MAX_SEARCH_STEPS _Params1.z
+        #define SMAA_MAX_SEARCH_STEPS_DIAG _Params1.w
+        #define SMAA_CORNER_ROUNDING _Params2.x
+        #define SMAA_LOCAL_CONTRAST_ADAPTATION_FACTOR _Params2.y
+        #define SMAA_PREDICATION_THRESHOLD _Params3.x
+        #define SMAA_PREDICATION_SCALE _Params3.y
+        #define SMAA_PREDICATION_STRENGTH _Params3.z
 
-    int _JitterOffset;
+        // Can't use SMAA_HLSL_3 as it won't compile with OpenGL, so lets make our own set of defines for Unity
+        #define SMAA_CUSTOM_SL
 
-    float4 _MainTex_TexelSize;
-    float4x4 _ToPrevViewProjCombined; // combined
+        #define mad(a, b, c) (a * b + c)
+        #define SMAATexture2D(tex) sampler2D tex
+        #define SMAATexturePass2D(tex) tex
+        #define SMAASampleLevelZero(tex, coord) tex2Dlod(tex, float4(coord, 0.0, 0.0))
+        #define SMAASampleLevelZeroPoint(tex, coord) tex2Dlod(tex, float4(coord, 0.0, 0.0))
+        #define SMAASampleLevelZeroOffset(tex, coord, offset) tex2Dlod(tex, float4(coord + offset * SMAA_RT_METRICS.xy, 0.0, 0.0))
+        #define SMAASample(tex, coord) tex2D(tex, coord)
+        #define SMAASamplePoint(tex, coord) tex2D(tex, coord)
+        #define SMAASampleOffset(tex, coord, offset) tex2D(tex, coord + offset * SMAA_RT_METRICS.xy)
 
-    float4 _PixelOffset;
-    float _TemporalAccum;
+        #define SMAA_FLATTEN UNITY_FLATTEN
+        #define SMAA_BRANCH UNITY_BRANCH
+        // SMAA_CUSTOM_SL
 
-        float _DepthThreshold;
+        #define SMAA_AREATEX_SELECT(sample) sample.rg
+        #define SMAA_SEARCHTEX_SELECT(sample) sample.a
+        #define SMAA_INCLUDE_VS 0
 
-    struct v2f {
-        half4 pos : SV_POSITION;
-        half2 uv : TEXCOORD0;
-    };
-
-    sampler2D _MainTex; // set implicitly in Graphics.Blit()
-    v2f vert( appdata_img v )
-    {
-        v2f o;
-        o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
-        o.uv = v.texcoord.xy;
-        return o;
-    }
-
-    half4 fragCopy(v2f i) : SV_Target
-    {
-        half4 color = tex2D (_MainTex, i.uv);
-        return color;
-    }
-
-    half4 fragBlack(v2f i) : SV_Target
-    {
-        return float4(0,0,0,0);
-    }
-
-    half4 DX9_SMAALumaEdgeDetectionPS(v2f i) : SV_Target
-    {
-        float2 texcoord = i.uv;
-        float4 offset[3];
-
-        offset[0] = texcoord.xyxy + SMAA_PIXEL_SIZE.xyxy * float4(-1.0, 0.0, 0.0, -1.0);
-        offset[1] = texcoord.xyxy + SMAA_PIXEL_SIZE.xyxy * float4( 1.0, 0.0, 0.0,  1.0);
-        offset[2] = texcoord.xyxy + SMAA_PIXEL_SIZE.xyxy * float4(-2.0, 0.0, 0.0, -2.0);
-
-        half4 color = SMAALumaEdgeDetectionPS(texcoord,offset,colorTex);
-
-        return color;
-    }
-
-
-    half4 DX9_SMAAColorEdgeDetectionPS(v2f i) : SV_Target
-    {
-        float2 texcoord = i.uv;
-        float4 offset[3];
-
-        offset[0] = texcoord.xyxy + SMAA_PIXEL_SIZE.xyxy * float4(-1.0, 0.0, 0.0, -1.0);
-        offset[1] = texcoord.xyxy + SMAA_PIXEL_SIZE.xyxy * float4( 1.0, 0.0, 0.0,  1.0);
-        offset[2] = texcoord.xyxy + SMAA_PIXEL_SIZE.xyxy * float4(-2.0, 0.0, 0.0, -2.0);
-
-        half4 color = SMAAColorEdgeDetectionPS(texcoord,offset,colorTex);
-
-        return color;
-    }
-
-    half4 DX9_SMAADepthEdgeDetectionPS(v2f i) : SV_Target
-    {
-        float2 texcoord = i.uv;
-        float4 offset[3];
-
-        offset[0] = texcoord.xyxy + SMAA_PIXEL_SIZE.xyxy * float4(-1.0, 0.0, 0.0, -1.0);
-        offset[1] = texcoord.xyxy + SMAA_PIXEL_SIZE.xyxy * float4( 1.0, 0.0, 0.0,  1.0);
-        offset[2] = texcoord.xyxy + SMAA_PIXEL_SIZE.xyxy * float4(-2.0, 0.0, 0.0, -2.0);
-
-        half4 color = SMAADepthEdgeDetectionPS(texcoord,offset,_CameraDepthTexture,_DepthThreshold);
-
-        return color;
-    }
-
-    half4 DX9_SMAABlendingWeightCalculationPS(v2f i) : SV_Target
-    {
-        float2 texcoord = i.uv;
-
-        float2 pixcoord;
-        float4 offset[3];
-
-        pixcoord = texcoord / SMAA_PIXEL_SIZE;
-
-        // these are taken from SMAABlendingWeightCalculationVS
-
-        // We will use these offsets for the searches later on (see @PSEUDO_GATHER4):
-        offset[0] = texcoord.xyxy + SMAA_PIXEL_SIZE.xyxy * float4(-0.25, -0.125,  1.25, -0.125);
-        offset[1] = texcoord.xyxy + SMAA_PIXEL_SIZE.xyxy * float4(-0.125, -0.25, -0.125,  1.25);
-
-        // And these for the searches, they indicate the ends of the loops:
-        offset[2] = float4(offset[0].xz, offset[1].yw) +
-                    float4(-2.0, 2.0, -2.0, 2.0) *
-                    SMAA_PIXEL_SIZE.xxyy * float(SMAA_MAX_SEARCH_STEPS);
-
-        int4 jitterData = int4(_JitterOffset,_JitterOffset,_JitterOffset,0);
-
-        half4 color = SMAABlendingWeightCalculationPS(texcoord, pixcoord, offset, edgesTex, areaTex, searchTex, jitterData);
-
-        return color;
-    }
-
-    half4 DX9_SMAANeighborhoodBlendingPS(v2f i) : SV_Target
-    {
-        float2 texcoord = i.uv;
-
-        float4 offset[2];
-        offset[0] = texcoord.xyxy + SMAA_PIXEL_SIZE.xyxy * float4(-1.0, 0.0, 0.0, -1.0);
-        offset[1] = texcoord.xyxy + SMAA_PIXEL_SIZE.xyxy * float4( 1.0, 0.0, 0.0,  1.0);
-
-        half4 color = SMAANeighborhoodBlendingPS(texcoord, offset, colorTex, blendTex);
-        return color;
-    }
-
-    float PixelsFromEdge(float2 uv)
-    {
-        float distX = min(uv.x,1.0-uv.x) / SMAA_PIXEL_SIZE.x;
-        float distY = min(uv.y,1.0-uv.y) / SMAA_PIXEL_SIZE.y;
-
-        float bestDist = min(distX,distY);
-        return bestDist;
-    }
-
-    float K;
-
-    float3 FetchPreviousUvWeight(float2 currUv)
-    {
-        float2 depth_uv = currUv;
-
-        #if UNITY_UV_STARTS_AT_TOP
-        //if (_MainTex_TexelSize.y < 0)
+        struct vInput
         {
-            depth_uv.y = 1 - depth_uv.y;
-        }
-        #endif
+            float4 pos : POSITION;
+            float2 uv : TEXCOORD0;
+        };
 
-        // read depth
-        float d = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, depth_uv);
-
-        // calculate position from pixel from depth
-        float3 clipPos = float3(depth_uv.x*2.0-1.0, depth_uv.y*2.0-1.0, d);
-
-        // only 1 matrix mul:
-        float4 prevClipPos = mul(_ToPrevViewProjCombined, float4(clipPos, 1.0));
-        prevClipPos.xyz /= prevClipPos.w;
-
-        float2 prevUv = prevClipPos.xyz*.5f+.5f;
-        #if UNITY_UV_STARTS_AT_TOP
-        //if (_MainTex_TexelSize.y < 0)
+        struct fInput_edge
         {
-            prevUv.y = 1.0f - prevUv.y;
-        }
-        #endif
+            float4 pos : SV_POSITION;
+            float2 uv : TEXCOORD0;
+            float4 offset[3] : TEXCOORD1;
+        };
 
-        float distFromEdge = PixelsFromEdge(prevUv);
-        float weight = saturate(distFromEdge - .5f);
-
-        float distSqr = dot(prevUv - currUv, prevUv - currUv);
-
-        // 1% of the screen seems like a good number
-        float rho = 0.01;
-        float invRR = 1.0f/(rho*rho);
-        float distW = exp(-invRR * distSqr);
-
-        weight *= distW;
-
-       // weight = 0.5 * max(0, 1 - K * sqrt(abs(length(currUv) - length(prevUv))));
-
-        return float3(prevUv,weight);
-    }
-
-    // color is the current value, accum is the previous accumulation
-    half4 ClampAccumulation(float2 texcoord, half4 accum, half4 color)
-    {
-        // get the corner pixels for max/max
-        float3 pixelUL = tex2D(colorTex, texcoord + float2( 0.5f, 0.5f)*SMAA_PIXEL_SIZE.xy).rgb;
-        float3 pixelUR = tex2D(colorTex, texcoord + float2(-0.5f, 0.5f)*SMAA_PIXEL_SIZE.xy).rgb;
-        float3 pixelDL = tex2D(colorTex, texcoord + float2( 0.5f,-0.5f)*SMAA_PIXEL_SIZE.xy).rgb;
-        float3 pixelDR = tex2D(colorTex, texcoord + float2(-0.5f,-0.5f)*SMAA_PIXEL_SIZE.xy).rgb;
-
-        float3 colorMax = max(color,max(max(pixelUL,pixelUR),max(pixelDL,pixelDR)));
-        float3 colorMin = min(color,min(min(pixelUL,pixelUR),min(pixelDL,pixelDR)));
-
-        // since we are sampling half way to the pixels, we need to multiply by 2.0 on the intensity
-        // which gives a rough guess as to min and max color in a 1 pixel radius
-        float scale = 2.0f;
-        colorMin = color + scale*(colorMin - color);
-        colorMax = color + scale*(colorMax - color);
-
-        accum.rgb = max(colorMin,min(colorMax,accum.rgb));
-        return accum;
-    }
-
-    // same as above, but also blend with accumulation buffer
-    half4 DX9_SMAANeighborhoodBlendingAccumPS(v2f i) : SV_Target
-    {
-        float2 uv = i.uv;
-
-        #if UNITY_UV_STARTS_AT_TOP
-            uv.y = 1 - uv.y;
-        #endif
-
-        float4 position = float4(2. * uv - 1., SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, uv), 1.);
-        float4 previousPosition = mul(_ToPrevViewProjCombined, position);
-
-        previousPosition.xyz /= previousPosition.w;
-
-        uv = previousPosition.xy * .5 + .5;
-
-        #if UNITY_UV_STARTS_AT_TOP
-            uv.y = 1. - uv.y;
-        #endif
-
-        // Inverse velocity from the current position to the previous position
-        float2 velocity = uv - i.uv;
-
-        half4 current = SMAASample(colorTex, i.uv);
-        half4 previous = SMAASample(colorTex, uv);
-
-        float delta = abs(current.a * current.a - previous.a * previous.a) / 5.0;
-        float weight = .5 * SMAASaturate(1. - (sqrt(delta) * K)); // K ~= SMAA_REPROJECTION_WEIGHT_SCALE
-
-        //return half4(.5 * (uv - i.uv) + .5, 0., 1.);
-        return lerp(current, previous, weight);
-    }
-
-
-    half4 DX9_SMAADebugDepthPS(v2f i) : SV_Target
-    {
-        return SMAASampleDepth_Unity(i.uv, _CameraDepthTexture, i.uv);
-    }
-
-
-
-    // same as above, but also blend with accumulation buffer
-    half4 fragAccumulateOffset(v2f i) : SV_Target
-    {
-        float3 prevUvWeight = FetchPreviousUvWeight(i.uv);
-        float  prevWeight = prevUvWeight.z;
-        float2 prevUv = prevUvWeight.xy;
-
-        half4 accum = tex2D (accumTex, prevUv);
-        half4 color = tex2D (smaaTex, i.uv + _PixelOffset.xy);
-
-        // get better accumulation
+        fInput_edge vert_edge(vInput i)
         {
-            half4 clampAccum = ClampAccumulation(i.uv + _PixelOffset.xy,accum,color);
+            fInput_edge o;
+            o.pos = mul(UNITY_MATRIX_MVP, i.pos);
+            o.uv = i.uv;
 
-            half2 edgeData = tex2D (edgesTex, i.uv + SMAA_PIXEL_SIZE.xy*0.5f);
-            float edgeVal = saturate(max(edgeData.x,edgeData.y));
+            #if UNITY_UV_STARTS_AT_TOP
+            if (_MainTex_TexelSize.y < 0)
+                o.uv.y = 1.0 - i.uv.y;
+            #endif
 
-            accum = lerp(clampAccum,accum,edgeVal);
+            o.offset[0] = mad(SMAA_RT_METRICS.xyxy, float4(-1.0, 0.0, 0.0, -1.0), o.uv.xyxy);
+            o.offset[1] = mad(SMAA_RT_METRICS.xyxy, float4( 1.0, 0.0, 0.0,  1.0), o.uv.xyxy);
+            o.offset[2] = mad(SMAA_RT_METRICS.xyxy, float4(-2.0, 0.0, 0.0, -2.0), o.uv.xyxy);
+            return o;
         }
-
-        float t = _TemporalAccum;
-        t = t + (1.0f-t)*(1.0f-prevWeight);
-
-        half4 res = accum * (1.0f-t) + color * t;
-
-        return res;
-    }
 
     ENDCG
 
-Subshader {
- // 0 - just copy
- Pass {
-      ZTest Always Cull Off ZWrite Off
+    SubShader
+    {
+        ZTest Always Cull Off ZWrite Off
+        Fog { Mode off }
 
-      CGPROGRAM
-      #pragma vertex vert
-      #pragma fragment fragCopy
-      ENDCG
-  }
+        // (0) Clear
+        Pass
+        {
+            CGPROGRAM
 
-  // 1 - luma detection
- Pass {
-      ZTest Always Cull Off ZWrite Off
+                #pragma vertex vert_img
+                #pragma fragment frag
+                #include "UnityCG.cginc"
 
-      CGPROGRAM
-      #pragma vertex vert
-      #pragma fragment DX9_SMAALumaEdgeDetectionPS
-      ENDCG
-  }
+                float4 frag(v2f_img i) : SV_Target
+                {
+                    return float4(0.0, 0.0, 0.0, 0.0);
+                }
 
-  // 2 - just clear to black, necessary becuase luma detection will discard
- Pass {
-      ZTest Always Cull Off ZWrite Off
-
-      CGPROGRAM
-      #pragma vertex vert
-      #pragma fragment fragBlack
-      ENDCG
-  }
-
-  // 3 - weight calculation
- Pass {
-      ZTest Always Cull Off ZWrite Off
-
-      CGPROGRAM
-      #pragma vertex vert
-      #pragma fragment DX9_SMAABlendingWeightCalculationPS
-      ENDCG
-  }
-
-  // 4 - apply weights and blend
- Pass {
-      ZTest Always Cull Off ZWrite Off
-
-      CGPROGRAM
-      #pragma vertex vert
-      #pragma fragment DX9_SMAANeighborhoodBlendingPS
-      ENDCG
-  }
-
-  // 5 - apply weights and blend
- Pass {
-      ZTest Always Cull Off ZWrite Off
-
-      CGPROGRAM
-      #pragma vertex vert
-      #pragma fragment DX9_SMAANeighborhoodBlendingAccumPS
-      ENDCG
-  }
-
-  // 6 - color detection
- Pass {
-      ZTest Always Cull Off ZWrite Off
-
-      CGPROGRAM
-      #pragma vertex vert
-      #pragma fragment DX9_SMAAColorEdgeDetectionPS
-      ENDCG
-  }
-
-  // 7 - merge previous frame with current frame (with offset)
- Pass {
-      ZTest Always Cull Off ZWrite Off
-
-      CGPROGRAM
-      #pragma vertex vert
-      #pragma fragment fragAccumulateOffset
-      ENDCG
-  }
+            ENDCG
+        }
 
 
-  // 8 - depth detection
-  Pass {
-      ZTest Always Cull Off ZWrite Off
+        // -----------------------------------------------------------------------------
+        // Edge Detection
 
-      CGPROGRAM
-      #pragma vertex vert
-      #pragma fragment DX9_SMAADepthEdgeDetectionPS
-      ENDCG
-  }
+        // (1) Luma
+        Pass
+        {
+            // TODO: Stencil not working
+        //  Stencil
+        //  {
+        //      Pass replace
+        //      Ref 1
+        //  }
 
-  // 9 - debug depth
-  Pass {
-      ZTest Always Cull Off ZWrite Off
+            CGPROGRAM
 
-      CGPROGRAM
-      #pragma vertex vert
-      #pragma fragment DX9_SMAADebugDepthPS
-      ENDCG
-  }
+                #pragma vertex vert_edge
+                #pragma fragment frag
+                #pragma multi_compile __ USE_PREDICATION
+
+                #if USE_PREDICATION
+                #define SMAA_PREDICATION 1
+                #else
+                #define SMAA_PREDICATION 0
+                #endif
+
+                #include "UnityCG.cginc"
+                #include "SMAA.cginc"
+
+                float4 frag(fInput_edge i) : SV_Target
+                {
+                    #if SMAA_PREDICATION
+                    return float4(SMAALumaEdgeDetectionPS(i.uv, i.offset, _MainTex, _CameraDepthTexture), 0.0, 0.0);
+                    #else
+                    return float4(SMAALumaEdgeDetectionPS(i.uv, i.offset, _MainTex), 0.0, 0.0);
+                    #endif
+                }
+
+            ENDCG
+        }
+
+        // (2) Color
+        Pass
+        {
+            // TODO: Stencil not working
+        //  Stencil
+        //  {
+        //      Pass replace
+        //      Ref 1
+        //  }
+
+            CGPROGRAM
+
+                #pragma vertex vert_edge
+                #pragma fragment frag
+                #pragma multi_compile __ USE_PREDICATION
+
+                #if USE_PREDICATION
+                #define SMAA_PREDICATION 1
+                #else
+                #define SMAA_PREDICATION 0
+                #endif
+
+                #include "UnityCG.cginc"
+                #include "SMAA.cginc"
+
+                float4 frag(fInput_edge i) : SV_Target
+                {
+                    #if SMAA_PREDICATION
+                    return float4(SMAAColorEdgeDetectionPS(i.uv, i.offset, _MainTex, _CameraDepthTexture), 0.0, 0.0);
+                    #else
+                    return float4(SMAAColorEdgeDetectionPS(i.uv, i.offset, _MainTex), 0.0, 0.0);
+                    #endif
+                }
+
+            ENDCG
+        }
+
+        // (3) Depth
+        Pass
+        {
+            // TODO: Stencil not working
+        //  Stencil
+        //  {
+        //      Pass replace
+        //      Ref 1
+        //  }
+
+            CGPROGRAM
+
+                #pragma vertex vert_edge
+                #pragma fragment frag
+
+                #define SMAA_PREDICATION 0
+
+                #include "UnityCG.cginc"
+                #include "SMAA.cginc"
+
+                float4 frag(fInput_edge i) : SV_Target
+                {
+                    return float4(SMAADepthEdgeDetectionPS(i.uv, i.offset, _CameraDepthTexture), 0.0, 0.0);
+                }
+
+            ENDCG
+        }
 
 
+        // -----------------------------------------------------------------------------
+        // Blend Weights Calculation
 
+        // (4)
+        Pass
+        {
+            // TODO: Stencil not working
+        //  Stencil
+        //  {
+        //      Pass keep
+        //      Comp equal
+        //      Ref 1
+        //  }
+
+            CGPROGRAM
+
+                #pragma vertex vert
+                #pragma fragment frag
+                #pragma multi_compile __ USE_DIAG_SEARCH
+                #pragma multi_compile __ USE_CORNER_DETECTION
+
+                #if !defined(USE_DIAG_SEARCH)
+                #define SMAA_DISABLE_DIAG_DETECTION
+                #endif
+
+                #if !defined(USE_CORNER_DETECTION)
+                #define SMAA_DISABLE_CORNER_DETECTION
+                #endif
+
+                #include "UnityCG.cginc"
+                #include "SMAA.cginc"
+
+                struct fInput
+                {
+                    float4 pos : SV_POSITION;
+                    float2 uv : TEXCOORD0;
+                    float2 pixcoord : TEXCOORD1;
+                    float4 offset[3] : TEXCOORD2;
+                };
+
+                fInput vert(vInput i)
+                {
+                    fInput o;
+                    o.pos = mul(UNITY_MATRIX_MVP, i.pos);
+                    o.uv = i.uv;
+                    o.pixcoord = o.uv * SMAA_RT_METRICS.zw;
+
+                    // We will use these offsets for the searches later on (see @PSEUDO_GATHER4):
+                    o.offset[0] = mad(SMAA_RT_METRICS.xyxy, float4(-0.25, -0.125,  1.25, -0.125), o.uv.xyxy);
+                    o.offset[1] = mad(SMAA_RT_METRICS.xyxy, float4(-0.125, -0.25, -0.125,  1.25), o.uv.xyxy);
+
+                    // And these for the searches, they indicate the ends of the loops:
+                    o.offset[2] = mad(SMAA_RT_METRICS.xxyy, float4(-2.0, 2.0, -2.0, 2.0) * float(SMAA_MAX_SEARCH_STEPS),
+                                    float4(o.offset[0].xz, o.offset[1].yw));
+
+                    return o;
+                }
+
+                float4 frag(fInput i) : SV_Target
+                {
+                    return SMAABlendingWeightCalculationPS(i.uv, i.pixcoord, i.offset, _MainTex, _AreaTex, _SearchTex,
+                                    _SubsampleIndices);
+                }
+
+            ENDCG
+        }
+
+
+        // -----------------------------------------------------------------------------
+        // Neighborhood Blending
+
+        // (5)
+        Pass
+        {
+            CGPROGRAM
+
+                #pragma vertex vert
+                #pragma fragment frag
+
+                #pragma multi_compile __ USE_UV_BASED_REPROJECTION
+
+                #if defined (USE_UV_BASED_REPROJECTION)
+                #define SMAA_UV_BASED_REPROJECTION 1
+                #endif
+
+                #include "UnityCG.cginc"
+                #include "SMAA.cginc"
+
+                struct fInput
+                {
+                    float4 pos : SV_POSITION;
+                    float2 uv : TEXCOORD0;
+                    float4 offset : TEXCOORD1;
+                };
+
+                fInput vert(vInput i)
+                {
+                    fInput o;
+                    o.pos = mul(UNITY_MATRIX_MVP, i.pos);
+                    o.uv = i.uv;
+                    o.offset = mad(SMAA_RT_METRICS.xyxy, float4(1.0, 0.0, 0.0, 1.0), o.uv.xyxy);
+                    return o;
+                }
+
+                float4 frag(fInput i) : SV_Target
+                {
+                    return SMAANeighborhoodBlendingPS(i.uv, i.offset, _MainTex, _BlendTex);
+                }
+
+            ENDCG
+        }
+
+        // -----------------------------------------------------------------------------
+        // Accumulation Resolve
+
+        // (6)
+        Pass
+        {
+            CGPROGRAM
+
+                #pragma vertex vert
+                #pragma fragment frag
+
+                #pragma multi_compile __ USE_UV_BASED_REPROJECTION
+
+                #if defined (USE_UV_BASED_REPROJECTION)
+                #define SMAA_UV_BASED_REPROJECTION 1
+                #endif
+
+                #include "UnityCG.cginc"
+                #include "SMAA.cginc"
+
+                struct fInput
+                {
+                    float4 pos : SV_POSITION;
+                    float2 uv : TEXCOORD0;
+                };
+
+                fInput vert(vInput i)
+                {
+                    fInput o;
+                    o.pos = mul(UNITY_MATRIX_MVP, i.pos);
+                    o.uv = i.uv;
+                    return o;
+                }
+
+                float4 frag(fInput i) : SV_Target
+                {
+                    return SMAAResolvePS(i.uv, _MainTex, _AccumulationTex);
+                }
+
+            ENDCG
+        }
+    }
+
+    FallBack off
 }
-
-Fallback off
-
-} // shader

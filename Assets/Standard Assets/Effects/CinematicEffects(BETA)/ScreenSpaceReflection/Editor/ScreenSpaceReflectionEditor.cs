@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -78,31 +79,25 @@ namespace UnityStandardAssets.CinematicEffects
     [CustomEditor(typeof(ScreenSpaceReflection))]
     internal class ScreenSpaceReflectionEditor : Editor
     {
-        private static class StaticFieldFinder<T>
-        {
-            public static FieldInfo GetField<TValue>(Expression<Func<T, TValue>> selector)
-            {
-                Expression body = selector;
-                if (body is LambdaExpression)
-                {
-                    body = ((LambdaExpression)body).Body;
-                }
-                switch (body.NodeType)
-                {
-                    case ExpressionType.MemberAccess:
-                        return (FieldInfo)((MemberExpression)body).Member;
-                    default:
-                        throw new InvalidOperationException();
-                }
-            }
-        }
-
         private enum SettingsMode
         {
             HighQuality,
             Default,
             Performance,
             Custom,
+        }
+
+        [NonSerialized]
+        private List<SerializedProperty> m_Properties = new List<SerializedProperty>();
+
+        void OnEnable()
+        {
+            var settings = FieldFinder<ScreenSpaceReflection>.GetField(x => x.settings);
+            foreach (var setting in settings.FieldType.GetFields())
+            {
+                var prop = settings.Name + "." + setting.Name;
+                m_Properties.Add(serializedObject.FindProperty(prop));
+            }
         }
 
         public override void OnInspectorGUI()
@@ -126,15 +121,10 @@ namespace UnityStandardAssets.CinematicEffects
             if (EditorGUI.EndChangeCheck())
                 Apply(settingsMode);
 
-            // move into the settings fields...
-            var settings = StaticFieldFinder<ScreenSpaceReflection>.GetField(x => x.settings);
+            // move into the m_Settings fields...
+            foreach (var property in m_Properties)
+                EditorGUILayout.PropertyField(property);
 
-            foreach (var setting in settings.FieldType.GetFields())
-            {
-                var prop = settings.Name + "." + setting.Name;
-                var settingsProperty = serializedObject.FindProperty(prop);
-                EditorGUILayout.PropertyField(settingsProperty);
-            }
             serializedObject.ApplyModifiedProperties();
         }
 
