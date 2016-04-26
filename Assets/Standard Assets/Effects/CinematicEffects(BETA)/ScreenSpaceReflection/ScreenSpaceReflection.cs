@@ -349,20 +349,31 @@ namespace UnityStandardAssets.CinematicEffects
         private RenderTexture m_PreviousHitBuffer;
         private RenderTexture m_PreviousReflectionBuffer;
 
-        public Shader ssrShader;
-        private Material m_SSRMaterial;
-
         [NonSerialized]
-        private RenderTexureUtility m_RTU = new RenderTexureUtility();
+        private RenderTextureUtility m_RTU = new RenderTextureUtility();
 
-        public Material ssrMaterial
+        [SerializeField]
+        private Shader m_Shader;
+        public Shader shader
         {
             get
             {
-                if (m_SSRMaterial == null)
-                    m_SSRMaterial = ImageEffectHelper.CheckShaderAndCreateMaterial(ssrShader);
+                if (m_Shader == null)
+                    m_Shader = Shader.Find("Hidden/ScreenSpaceReflection");
 
-                return m_SSRMaterial;
+                return m_Shader;
+            }
+        }
+
+        private Material m_Material;
+        public Material material
+        {
+            get
+            {
+                if (m_Material == null)
+                    m_Material = ImageEffectHelper.CheckShaderAndCreateMaterial(shader);
+
+                return m_Material;
             }
         }
 
@@ -389,15 +400,11 @@ namespace UnityStandardAssets.CinematicEffects
         }
 
 
-        protected void OnEnable()
+        private void OnEnable()
         {
-            if (ssrShader == null)
-                ssrShader = Shader.Find("Hidden/ScreenSpaceReflection");
-
-            if (!ImageEffectHelper.IsSupported(ssrShader, true, true, this))
+            if (!ImageEffectHelper.IsSupported(shader, false, true, this))
             {
                 enabled = false;
-                Debug.LogWarning("The image effect " + ToString() + " has been disabled as it's not supported on the current platform.");
                 return;
             }
 
@@ -406,8 +413,8 @@ namespace UnityStandardAssets.CinematicEffects
 
         void OnDisable()
         {
-            if (m_SSRMaterial)
-                DestroyImmediate(m_SSRMaterial);
+            if (m_Material)
+                DestroyImmediate(m_Material);
             if (m_PreviousDepthBuffer)
                 DestroyImmediate(m_PreviousDepthBuffer);
             if (m_PreviousHitBuffer)
@@ -415,7 +422,7 @@ namespace UnityStandardAssets.CinematicEffects
             if (m_PreviousReflectionBuffer)
                 DestroyImmediate(m_PreviousReflectionBuffer);
 
-            m_SSRMaterial = null;
+            m_Material = null;
             m_PreviousDepthBuffer = null;
             m_PreviousHitBuffer = null;
             m_PreviousReflectionBuffer = null;
@@ -446,7 +453,7 @@ namespace UnityStandardAssets.CinematicEffects
         [ImageEffectOpaque]
         public void OnRenderImage(RenderTexture source, RenderTexture destination)
         {
-            if (ssrMaterial == null)
+            if (material == null)
             {
                 Graphics.Blit(source, destination);
                 return;
@@ -474,8 +481,8 @@ namespace UnityStandardAssets.CinematicEffects
             // Has the nice benefit of allowing us to control the filtering mode as well.
             RenderTexture bilateralKeyTexture = m_RTU.GetTemporaryRenderTexture(rtW, rtH, 0, RenderTextureFormat.ARGB32);
             bilateralKeyTexture.filterMode = FilterMode.Point;
-            Graphics.Blit(source, bilateralKeyTexture, ssrMaterial, (int)PassIndex.BilateralKeyPack);
-            ssrMaterial.SetTexture("_NormalAndRoughnessTexture", bilateralKeyTexture);
+            Graphics.Blit(source, bilateralKeyTexture, material, (int)PassIndex.BilateralKeyPack);
+            material.SetTexture("_NormalAndRoughnessTexture", bilateralKeyTexture);
 
             float sWidth = source.width;
             float sHeight = source.height;
@@ -487,7 +494,7 @@ namespace UnityStandardAssets.CinematicEffects
             rtW = rtW / downsampleAmount;
             rtH = rtH / downsampleAmount;
 
-            ssrMaterial.SetVector("_SourceToTempUV", new Vector4(sourceToTempUV.x, sourceToTempUV.y, 1.0f / sourceToTempUV.x, 1.0f / sourceToTempUV.y));
+            material.SetVector("_SourceToTempUV", new Vector4(sourceToTempUV.x, sourceToTempUV.y, 1.0f / sourceToTempUV.x, 1.0f / sourceToTempUV.y));
 
 
             Matrix4x4 P = GetComponent<Camera>().projectionMatrix;
@@ -499,7 +506,7 @@ namespace UnityStandardAssets.CinematicEffects
 
             /** The height in pixels of a 1m object if viewed from 1m away. */
             float pixelsPerMeterAtOneMeter = sWidth / (-2.0f * (float)(Math.Tan(GetComponent<Camera>().fieldOfView / 180.0 * Math.PI * 0.5)));
-            ssrMaterial.SetFloat("_PixelsPerMeterAtOneMeter", pixelsPerMeterAtOneMeter);
+            material.SetFloat("_PixelsPerMeterAtOneMeter", pixelsPerMeterAtOneMeter);
 
 
             float sx = sWidth / 2.0f;
@@ -513,28 +520,28 @@ namespace UnityStandardAssets.CinematicEffects
 
             Matrix4x4 projectToPixelMatrix = warpToScreenSpaceMatrix * P;
 
-            ssrMaterial.SetVector("_ScreenSize", new Vector2(sWidth, sHeight));
-            ssrMaterial.SetVector("_ReflectionBufferSize", new Vector2(rtW, rtH));
+            material.SetVector("_ScreenSize", new Vector2(sWidth, sHeight));
+            material.SetVector("_ReflectionBufferSize", new Vector2(rtW, rtH));
             Vector2 invScreenSize = new Vector2((float)(1.0 / sWidth), (float)(1.0 / sHeight));
 
             Matrix4x4 worldToCameraMatrix = GetComponent<Camera>().worldToCameraMatrix;
             Matrix4x4 cameraToWorldMatrix = GetComponent<Camera>().worldToCameraMatrix.inverse;
-            ssrMaterial.SetVector("_InvScreenSize", invScreenSize);
-            ssrMaterial.SetVector("_ProjInfo", projInfo); // used for unprojection
-            ssrMaterial.SetMatrix("_ProjectToPixelMatrix", projectToPixelMatrix);
-            ssrMaterial.SetMatrix("_WorldToCameraMatrix", worldToCameraMatrix);
-            ssrMaterial.SetMatrix("_CameraToWorldMatrix", cameraToWorldMatrix);
-            ssrMaterial.SetInt("_EnableRefine", settings.advancedSettings.reduceBanding ? 1 : 0);
-            ssrMaterial.SetInt("_AdditiveReflection", settings.basicSettings.additiveReflection ? 1 : 0);
-            ssrMaterial.SetInt("_ImproveCorners", settings.advancedSettings.improveCorners ? 1 : 0);
-            ssrMaterial.SetFloat("_ScreenEdgeFading", settings.basicSettings.screenEdgeFading);
-            ssrMaterial.SetFloat("_MipBias", mipBias);
-            ssrMaterial.SetInt("_UseOcclusion", useOcclusion ? 1 : 0);
-            ssrMaterial.SetInt("_BilateralUpsampling", settings.advancedSettings.bilateralUpsample ? 1 : 0);
-            ssrMaterial.SetInt("_FallbackToSky", fallbackToSky ? 1 : 0);
-            ssrMaterial.SetInt("_TreatBackfaceHitAsMiss", settings.advancedSettings.treatBackfaceHitAsMiss ? 1 : 0);
-            ssrMaterial.SetInt("_AllowBackwardsRays", settings.advancedSettings.allowBackwardsRays ? 1 : 0);
-            ssrMaterial.SetInt("_TraceEverywhere", settings.advancedSettings.traceEverywhere ? 1 : 0);
+            material.SetVector("_InvScreenSize", invScreenSize);
+            material.SetVector("_ProjInfo", projInfo); // used for unprojection
+            material.SetMatrix("_ProjectToPixelMatrix", projectToPixelMatrix);
+            material.SetMatrix("_WorldToCameraMatrix", worldToCameraMatrix);
+            material.SetMatrix("_CameraToWorldMatrix", cameraToWorldMatrix);
+            material.SetInt("_EnableRefine", settings.advancedSettings.reduceBanding ? 1 : 0);
+            material.SetInt("_AdditiveReflection", settings.basicSettings.additiveReflection ? 1 : 0);
+            material.SetInt("_ImproveCorners", settings.advancedSettings.improveCorners ? 1 : 0);
+            material.SetFloat("_ScreenEdgeFading", settings.basicSettings.screenEdgeFading);
+            material.SetFloat("_MipBias", mipBias);
+            material.SetInt("_UseOcclusion", useOcclusion ? 1 : 0);
+            material.SetInt("_BilateralUpsampling", settings.advancedSettings.bilateralUpsample ? 1 : 0);
+            material.SetInt("_FallbackToSky", fallbackToSky ? 1 : 0);
+            material.SetInt("_TreatBackfaceHitAsMiss", settings.advancedSettings.treatBackfaceHitAsMiss ? 1 : 0);
+            material.SetInt("_AllowBackwardsRays", settings.advancedSettings.allowBackwardsRays ? 1 : 0);
+            material.SetInt("_TraceEverywhere", settings.advancedSettings.traceEverywhere ? 1 : 0);
 
             float z_f = GetComponent<Camera>().farClipPlane;
             float z_n = GetComponent<Camera>().nearClipPlane;
@@ -543,10 +550,10 @@ namespace UnityStandardAssets.CinematicEffects
                 new Vector3(z_n, -1.0f, 1.0f) :
                 new Vector3(z_n * z_f, z_n - z_f, z_f);
 
-            ssrMaterial.SetVector("_CameraClipInfo", cameraClipInfo);
-            ssrMaterial.SetFloat("_MaxRayTraceDistance", settings.basicSettings.maxDistance);
-            ssrMaterial.SetFloat("_FadeDistance", settings.basicSettings.fadeDistance);
-            ssrMaterial.SetFloat("_LayerThickness", settings.reflectionSettings.widthModifier);
+            material.SetVector("_CameraClipInfo", cameraClipInfo);
+            material.SetFloat("_MaxRayTraceDistance", settings.basicSettings.maxDistance);
+            material.SetFloat("_FadeDistance", settings.basicSettings.fadeDistance);
+            material.SetFloat("_LayerThickness", settings.reflectionSettings.widthModifier);
 
             const int maxMip = 5;
             RenderTexture[] reflectionBuffers;
@@ -563,41 +570,41 @@ namespace UnityStandardAssets.CinematicEffects
                 reflectionBuffers[i].filterMode = settings.advancedSettings.bilateralUpsample ? FilterMode.Point : FilterMode.Bilinear;
             }
 
-            ssrMaterial.SetInt("_EnableSSR", 1);
-            ssrMaterial.SetInt("_DebugMode", (int)settings.debugSettings.debugMode);
+            material.SetInt("_EnableSSR", 1);
+            material.SetInt("_DebugMode", (int)settings.debugSettings.debugMode);
 
-            ssrMaterial.SetInt("_TraceBehindObjects", settings.advancedSettings.traceBehindObjects ? 1 : 0);
+            material.SetInt("_TraceBehindObjects", settings.advancedSettings.traceBehindObjects ? 1 : 0);
 
-            ssrMaterial.SetInt("_MaxSteps", settings.reflectionSettings.maxSteps);
+            material.SetInt("_MaxSteps", settings.reflectionSettings.maxSteps);
 
             RenderTexture rayHitTexture = m_RTU.GetTemporaryRenderTexture(rtW, rtH);
 
             // We have 5 passes for different step sizes
             int tracePass = Mathf.Clamp(settings.reflectionSettings.rayStepSize, 0, 4);
-            Graphics.Blit(source, rayHitTexture, ssrMaterial, tracePass);
+            Graphics.Blit(source, rayHitTexture, material, tracePass);
 
-            ssrMaterial.SetTexture("_HitPointTexture", rayHitTexture);
+            material.SetTexture("_HitPointTexture", rayHitTexture);
             // Resolve the hitpoints into the mirror reflection buffer
-            Graphics.Blit(source, reflectionBuffers[0], ssrMaterial, (int)PassIndex.HitPointToReflections);
+            Graphics.Blit(source, reflectionBuffers[0], material, (int)PassIndex.HitPointToReflections);
 
-            ssrMaterial.SetTexture("_ReflectionTexture0", reflectionBuffers[0]);
-            ssrMaterial.SetInt("_FullResolutionFiltering", fullResolutionFiltering ? 1 : 0);
+            material.SetTexture("_ReflectionTexture0", reflectionBuffers[0]);
+            material.SetInt("_FullResolutionFiltering", fullResolutionFiltering ? 1 : 0);
 
-            ssrMaterial.SetFloat("_MaxRoughness", 1.0f - settings.reflectionSettings.smoothFallbackThreshold);
-            ssrMaterial.SetFloat("_RoughnessFalloffRange", settings.reflectionSettings.smoothFallbackDistance);
+            material.SetFloat("_MaxRoughness", 1.0f - settings.reflectionSettings.smoothFallbackThreshold);
+            material.SetFloat("_RoughnessFalloffRange", settings.reflectionSettings.smoothFallbackDistance);
 
-            ssrMaterial.SetFloat("_SSRMultiplier", settings.basicSettings.reflectionMultiplier);
+            material.SetFloat("_SSRMultiplier", settings.basicSettings.reflectionMultiplier);
 
             RenderTexture[] edgeTextures = new RenderTexture[maxMip];
             if (settings.advancedSettings.bilateralUpsample && useEdgeDetector)
             {
                 edgeTextures[0] = m_RTU.GetTemporaryRenderTexture(rtW, rtH);
-                Graphics.Blit(source, edgeTextures[0], ssrMaterial, (int)PassIndex.EdgeGeneration);
+                Graphics.Blit(source, edgeTextures[0], material, (int)PassIndex.EdgeGeneration);
                 for (int i = 1; i < maxMip; ++i)
                 {
                     edgeTextures[i] = m_RTU.GetTemporaryRenderTexture(rtW >> i, rtH >> i);
-                    ssrMaterial.SetInt("_LastMip", i - 1);
-                    Graphics.Blit(edgeTextures[i - 1], edgeTextures[i], ssrMaterial, (int)PassIndex.MinMipGeneration);
+                    material.SetInt("_LastMip", i - 1);
+                    Graphics.Blit(edgeTextures[i - 1], edgeTextures[i], material, (int)PassIndex.MinMipGeneration);
                 }
             }
 
@@ -606,12 +613,12 @@ namespace UnityStandardAssets.CinematicEffects
                 RenderTexture filteredReflections = m_RTU.GetTemporaryRenderTexture(reflectionBuffers[0].width, reflectionBuffers[0].height, 0, reflectionBuffers[0].format);
                 filteredReflections.filterMode = reflectionBuffers[0].filterMode;
                 reflectionBuffers[0].filterMode = FilterMode.Bilinear;
-                Graphics.Blit(reflectionBuffers[0], filteredReflections, ssrMaterial, (int)PassIndex.PoissonBlur);
+                Graphics.Blit(reflectionBuffers[0], filteredReflections, material, (int)PassIndex.PoissonBlur);
 
                 // Replace the unfiltered buffer with the newly filtered one.
                 m_RTU.ReleaseTemporaryRenderTexture(reflectionBuffers[0]);
                 reflectionBuffers[0] = filteredReflections;
-                ssrMaterial.SetTexture("_ReflectionTexture0", reflectionBuffers[0]);
+                material.SetTexture("_ReflectionTexture0", reflectionBuffers[0]);
             }
 
             // Generate the blurred low-resolution buffers
@@ -630,18 +637,18 @@ namespace UnityStandardAssets.CinematicEffects
                 for (int j = 0; j < (fullResolutionFiltering ? (i * i) : 1); ++j)
                 {
                     // Currently we blur at the resolution of the previous mip level, we could save bandwidth by blurring directly to the lower resolution.
-                    ssrMaterial.SetVector("_Axis", new Vector4(1.0f, 0.0f, 0.0f, 0.0f));
-                    ssrMaterial.SetFloat("_CurrentMipLevel", i - 1.0f);
+                    material.SetVector("_Axis", new Vector4(1.0f, 0.0f, 0.0f, 0.0f));
+                    material.SetFloat("_CurrentMipLevel", i - 1.0f);
 
-                    Graphics.Blit(inputTex, hBlur, ssrMaterial, (int)PassIndex.Blur);
+                    Graphics.Blit(inputTex, hBlur, material, (int)PassIndex.Blur);
 
-                    ssrMaterial.SetVector("_Axis", new Vector4(0.0f, 1.0f, 0.0f, 0.0f));
+                    material.SetVector("_Axis", new Vector4(0.0f, 1.0f, 0.0f, 0.0f));
 
                     inputTex = reflectionBuffers[i];
-                    Graphics.Blit(hBlur, inputTex, ssrMaterial, (int)PassIndex.Blur);
+                    Graphics.Blit(hBlur, inputTex, material, (int)PassIndex.Blur);
                 }
 
-                ssrMaterial.SetTexture("_ReflectionTexture" + i, reflectionBuffers[i]);
+                material.SetTexture("_ReflectionTexture" + i, reflectionBuffers[i]);
 
                 m_RTU.ReleaseTemporaryRenderTexture(hBlur);
             }
@@ -650,47 +657,47 @@ namespace UnityStandardAssets.CinematicEffects
             if (settings.advancedSettings.bilateralUpsample && useEdgeDetector)
             {
                 for (int i = 0; i < maxMip; ++i)
-                    ssrMaterial.SetTexture("_EdgeTexture" + i, edgeTextures[i]);
+                    material.SetTexture("_EdgeTexture" + i, edgeTextures[i]);
             }
-            ssrMaterial.SetInt("_UseEdgeDetector", useEdgeDetector ? 1 : 0);
+            material.SetInt("_UseEdgeDetector", useEdgeDetector ? 1 : 0);
 
             RenderTexture averageRayDistanceBuffer = m_RTU.GetTemporaryRenderTexture(source.width, source.height, 0, RenderTextureFormat.RHalf);
             if (computeAverageRayDistance)
             {
-                Graphics.Blit(source, averageRayDistanceBuffer, ssrMaterial, (int)PassIndex.AverageRayDistanceGeneration);
+                Graphics.Blit(source, averageRayDistanceBuffer, material, (int)PassIndex.AverageRayDistanceGeneration);
             }
-            ssrMaterial.SetInt("_UseAverageRayDistance", computeAverageRayDistance ? 1 : 0);
-            ssrMaterial.SetTexture("_AverageRayDistanceBuffer", averageRayDistanceBuffer);
+            material.SetInt("_UseAverageRayDistance", computeAverageRayDistance ? 1 : 0);
+            material.SetTexture("_AverageRayDistanceBuffer", averageRayDistanceBuffer);
             bool resolveDiffersFromTraceRes = (settings.advancedSettings.resolution == SSRResolution.HalfTraceFullResolve);
             RenderTexture finalReflectionBuffer = m_RTU.GetTemporaryRenderTexture(resolveDiffersFromTraceRes ? source.width : rtW, resolveDiffersFromTraceRes ? source.height : rtH, 0, intermediateFormat);
 
-            ssrMaterial.SetFloat("_FresnelFade", settings.reflectionSettings.fresnelFade);
-            ssrMaterial.SetFloat("_FresnelFadePower", settings.reflectionSettings.fresnelFadePower);
-            ssrMaterial.SetFloat("_DistanceBlur", settings.reflectionSettings.distanceBlur);
-            ssrMaterial.SetInt("_HalfResolution", (settings.advancedSettings.resolution != SSRResolution.FullResolution) ? 1 : 0);
-            ssrMaterial.SetInt("_HighlightSuppression", settings.advancedSettings.highlightSuppression ? 1 : 0);
-            Graphics.Blit(reflectionBuffers[0], finalReflectionBuffer, ssrMaterial, (int)PassIndex.CompositeSSR);
-            ssrMaterial.SetTexture("_FinalReflectionTexture", finalReflectionBuffer);
+            material.SetFloat("_FresnelFade", settings.reflectionSettings.fresnelFade);
+            material.SetFloat("_FresnelFadePower", settings.reflectionSettings.fresnelFadePower);
+            material.SetFloat("_DistanceBlur", settings.reflectionSettings.distanceBlur);
+            material.SetInt("_HalfResolution", (settings.advancedSettings.resolution != SSRResolution.FullResolution) ? 1 : 0);
+            material.SetInt("_HighlightSuppression", settings.advancedSettings.highlightSuppression ? 1 : 0);
+            Graphics.Blit(reflectionBuffers[0], finalReflectionBuffer, material, (int)PassIndex.CompositeSSR);
+            material.SetTexture("_FinalReflectionTexture", finalReflectionBuffer);
 
 
             RenderTexture temporallyFilteredBuffer = m_RTU.GetTemporaryRenderTexture(resolveDiffersFromTraceRes ? source.width : rtW, resolveDiffersFromTraceRes ? source.height : rtH, 0, intermediateFormat);
             if (doTemporalFilterThisFrame)
             {
-                ssrMaterial.SetInt("_UseTemporalConfidence", settings.advancedSettings.useTemporalConfidence ? 1 : 0);
-                ssrMaterial.SetFloat("_TemporalAlpha", settings.advancedSettings.temporalFilterStrength);
-                ssrMaterial.SetMatrix("_CurrentCameraToPreviousCamera", m_PreviousWorldToCameraMatrix * cameraToWorldMatrix);
-                ssrMaterial.SetTexture("_PreviousReflectionTexture", m_PreviousReflectionBuffer);
-                ssrMaterial.SetTexture("_PreviousCSZBuffer", m_PreviousDepthBuffer);
-                Graphics.Blit(source, temporallyFilteredBuffer, ssrMaterial, (int)PassIndex.TemporalFilter);
+                material.SetInt("_UseTemporalConfidence", settings.advancedSettings.useTemporalConfidence ? 1 : 0);
+                material.SetFloat("_TemporalAlpha", settings.advancedSettings.temporalFilterStrength);
+                material.SetMatrix("_CurrentCameraToPreviousCamera", m_PreviousWorldToCameraMatrix * cameraToWorldMatrix);
+                material.SetTexture("_PreviousReflectionTexture", m_PreviousReflectionBuffer);
+                material.SetTexture("_PreviousCSZBuffer", m_PreviousDepthBuffer);
+                Graphics.Blit(source, temporallyFilteredBuffer, material, (int)PassIndex.TemporalFilter);
 
-                ssrMaterial.SetTexture("_FinalReflectionTexture", temporallyFilteredBuffer);
+                material.SetTexture("_FinalReflectionTexture", temporallyFilteredBuffer);
             }
 
             if (settings.advancedSettings.temporalFilterStrength > 0.0)
             {
                 m_PreviousWorldToCameraMatrix = worldToCameraMatrix;
                 PreparePreviousBuffers(source.width, source.height);
-                Graphics.Blit(source, m_PreviousDepthBuffer, ssrMaterial, (int)PassIndex.BlitDepthAsCSZ);
+                Graphics.Blit(source, m_PreviousDepthBuffer, material, (int)PassIndex.BlitDepthAsCSZ);
                 Graphics.Blit(rayHitTexture, m_PreviousHitBuffer);
                 Graphics.Blit(doTemporalFilterThisFrame ? temporallyFilteredBuffer : finalReflectionBuffer, m_PreviousReflectionBuffer);
 
@@ -698,9 +705,9 @@ namespace UnityStandardAssets.CinematicEffects
             }
 
 
-            Graphics.Blit(source, destination, ssrMaterial, (int)PassIndex.CompositeFinal);
+            Graphics.Blit(source, destination, material, (int)PassIndex.CompositeFinal);
 
-            m_RTU.ReleaseAllTemporyRenderTexutres();
+            m_RTU.ReleaseAllTemporaryRenderTextures();
         }
     }
 }

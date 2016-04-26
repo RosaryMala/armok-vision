@@ -1,62 +1,142 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using UnityEditor;
-using UnityEditorInternal;
-using UnityEngine;
-
 namespace UnityStandardAssets.CinematicEffects
 {
-    [CustomPropertyDrawer(typeof(TonemappingColorGrading.ColorWheelGroup))]
-    class ColorWheelGroupDrawer : PropertyDrawer
+    using UnityEngine;
+    using UnityEditor;
+    using UnityEditorInternal;
+    using System.Reflection;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    [CanEditMultipleObjects, CustomEditor(typeof(TonemappingColorGrading))]
+    public class TonemappingColorGradingEditor : Editor
     {
-        private int m_RenderSizePerWheel;
-        private int m_NumberOfWheels;
-
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        #region Property drawers
+        [CustomPropertyDrawer(typeof(TonemappingColorGrading.ColorWheelGroup))]
+        private class ColorWheelGroupDrawer : PropertyDrawer
         {
-            var wheelAttribute = (TonemappingColorGrading.ColorWheelGroup)attribute;
-            property.isExpanded = true;
+            int m_RenderSizePerWheel;
+            int m_NumberOfWheels;
 
-            m_NumberOfWheels = property.CountInProperty() - 1;
-            if (m_NumberOfWheels == 0)
-                return 0;
-
-            m_RenderSizePerWheel = Mathf.FloorToInt((EditorGUIUtility.currentViewWidth) / m_NumberOfWheels) - 30;
-            m_RenderSizePerWheel = Mathf.Clamp(m_RenderSizePerWheel, wheelAttribute.minSizePerWheel, wheelAttribute.maxSizePerWheel);
-            return TonemappingColorGradingEditor.ColorWheel.GetColorWheelHeight(m_RenderSizePerWheel);
-        }
-
-        // Draw the property inside the given rect
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-        {
-            if (m_NumberOfWheels == 0)
-                return;
-
-            var width = position.width;
-            Rect newPosition = new Rect(position.x, position.y, width / m_NumberOfWheels, position.height);
-            foreach (SerializedProperty prop in property)
+            public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
             {
-                if (prop.propertyType == SerializedPropertyType.Color)
-                    prop.colorValue = TonemappingColorGradingEditor.ColorWheel.DoGUI(newPosition, prop.displayName, prop.colorValue, m_RenderSizePerWheel);
-                newPosition.x += width / m_NumberOfWheels;
+                var wheelAttribute = (TonemappingColorGrading.ColorWheelGroup)attribute;
+                property.isExpanded = true;
+
+                m_NumberOfWheels = property.CountInProperty() - 1;
+                if (m_NumberOfWheels == 0)
+                    return 0f;
+
+                m_RenderSizePerWheel = Mathf.FloorToInt((EditorGUIUtility.currentViewWidth) / m_NumberOfWheels) - 30;
+                m_RenderSizePerWheel = Mathf.Clamp(m_RenderSizePerWheel, wheelAttribute.minSizePerWheel, wheelAttribute.maxSizePerWheel);
+                m_RenderSizePerWheel = Mathf.FloorToInt(pixelRatio * m_RenderSizePerWheel);
+                return ColorWheel.GetColorWheelHeight(m_RenderSizePerWheel);
+            }
+
+            public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+            {
+                if (m_NumberOfWheels == 0)
+                    return;
+
+                var width = position.width;
+                Rect newPosition = new Rect(position.x, position.y, width / m_NumberOfWheels, position.height);
+
+                foreach (SerializedProperty prop in property)
+                {
+                    if (prop.propertyType == SerializedPropertyType.Color)
+                        prop.colorValue = ColorWheel.DoGUI(newPosition, prop.displayName, prop.colorValue, m_RenderSizePerWheel);
+
+                    newPosition.x += width / m_NumberOfWheels;
+                }
             }
         }
-    }
 
-    [CustomEditor(typeof(TonemappingColorGrading))]
-    [CanEditMultipleObjects]
-    class TonemappingColorGradingEditor : Editor
-    {
-        static Styles s_Styles;
-        class Styles
+        [CustomPropertyDrawer(typeof(TonemappingColorGrading.IndentedGroup))]
+        private class IndentedGroupDrawer : PropertyDrawer
+        {
+            public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+            {
+                return 0f;
+            }
+
+            public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+            {
+                EditorGUILayout.LabelField(label, EditorStyles.boldLabel);
+
+                EditorGUI.indentLevel++;
+
+                foreach (SerializedProperty prop in property)
+                    EditorGUILayout.PropertyField(prop);
+
+                EditorGUI.indentLevel--;
+            }
+        }
+
+        [CustomPropertyDrawer(typeof(TonemappingColorGrading.ChannelMixer))]
+        private class ChannelMixerDrawer : PropertyDrawer
+        {
+            public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+            {
+                return 0f;
+            }
+
+            public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+            {
+                // TODO: Hardcoded variable names, rewrite this function
+                if (property.type != "ChannelMixerSettings")
+                    return;
+
+                SerializedProperty currentChannel = property.FindPropertyRelative("currentChannel");
+                int intCurrentChannel = currentChannel.intValue;
+
+                EditorGUILayout.LabelField(label, EditorStyles.boldLabel);
+
+                EditorGUI.indentLevel++;
+
+                EditorGUILayout.BeginHorizontal();
+                {
+                    EditorGUILayout.PrefixLabel("Channel");
+                    if (GUILayout.Toggle(intCurrentChannel == 0, "Red", EditorStyles.miniButtonLeft)) intCurrentChannel = 0;
+                    if (GUILayout.Toggle(intCurrentChannel == 1, "Green", EditorStyles.miniButtonMid)) intCurrentChannel = 1;
+                    if (GUILayout.Toggle(intCurrentChannel == 2, "Blue", EditorStyles.miniButtonRight)) intCurrentChannel = 2;
+                }
+                EditorGUILayout.EndHorizontal();
+
+                SerializedProperty serializedChannel = property.FindPropertyRelative("channels").GetArrayElementAtIndex(intCurrentChannel);
+                currentChannel.intValue = intCurrentChannel;
+
+                Vector3 v = serializedChannel.vector3Value;
+                v.x = EditorGUILayout.Slider("Red", v.x, -2f, 2f);
+                v.y = EditorGUILayout.Slider("Green", v.y, -2f, 2f);
+                v.z = EditorGUILayout.Slider("Blue", v.z, -2f, 2f);
+                serializedChannel.vector3Value = v;
+
+                EditorGUI.indentLevel--;
+            }
+        }
+
+        [CustomPropertyDrawer(typeof(TonemappingColorGrading.Curve))]
+        private class CurveDrawer : PropertyDrawer
+        {
+            public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+            {
+                TonemappingColorGrading.Curve attribute = (TonemappingColorGrading.Curve)base.attribute;
+
+                if (property.propertyType != SerializedPropertyType.AnimationCurve)
+                {
+                    EditorGUI.LabelField(position, label.text, "Use ClampCurve with an AnimationCurve.");
+                    return;
+                }
+
+                property.animationCurveValue = EditorGUI.CurveField(position, label, property.animationCurveValue, attribute.color, new Rect(0f, 0f, 1f, 1f));
+            }
+        }
+        #endregion
+
+        #region Styling
+        private static Styles s_Styles;
+        private class Styles
         {
             public GUIStyle thumb2D = "ColorPicker2DThumb";
-            public GUIStyle pickerBox = "ColorPickerBox";
-            public GUIStyle thumbHoriz = "ColorPickerHorizThumb";
-            public GUIStyle header = "ShurikenModuleTitle";
-            public GUIStyle headerCheckbox = "ShurikenCheckMark";
             public Vector2 thumb2DSize;
 
             internal Styles()
@@ -65,16 +145,60 @@ namespace UnityStandardAssets.CinematicEffects
                         !Mathf.Approximately(thumb2D.fixedWidth, 0f) ? thumb2D.fixedWidth : thumb2D.padding.horizontal,
                         !Mathf.Approximately(thumb2D.fixedHeight, 0f) ? thumb2D.fixedHeight : thumb2D.padding.vertical
                         );
-
-                header.font = (new GUIStyle("Label")).font;
-                header.border = new RectOffset(15, 7, 4, 4);
-                header.fixedHeight = 22;
-                header.contentOffset = new Vector2(20f, -2f);
             }
         }
 
+        public static readonly Color masterCurveColor = new Color(1f, 1f, 1f, 2f);
+        public static readonly Color redCurveColor = new Color(1f, 0f, 0f, 2f);
+        public static readonly Color greenCurveColor = new Color(0f, 1f, 0f, 2f);
+        public static readonly Color blueCurveColor = new Color(0f, 1f, 1f, 2f);
+        #endregion
+
+        private TonemappingColorGrading concreteTarget
+        {
+            get { return target as TonemappingColorGrading; }
+        }
+
+        private static float pixelRatio
+        {
+            get
+            {
+                #if !(UNITY_3 || UNITY_4 || UNITY_5_0 || UNITY_5_1 || UNITY_5_2 || UNITY_5_3)
+                return EditorGUIUtility.pixelsPerPoint;
+                #else
+                return 1f;
+                #endif
+            }
+        }
+
+        private bool isHistogramSupported
+        {
+            get
+            {
+                return concreteTarget.histogramComputeShader != null
+                       && ImageEffectHelper.supportsDX11
+                       && concreteTarget.histogramShader != null
+                       && concreteTarget.histogramShader.isSupported;
+            }
+        }
+
+        private enum HistogramMode
+        {
+            Red = 0,
+            Green = 1,
+            Blue = 2,
+            Luminance = 3,
+            RGB,
+        }
+
+        private HistogramMode m_HistogramMode = HistogramMode.RGB;
+        private Rect m_HistogramRect;
+        private Material m_HistogramMaterial;
+        private ComputeBuffer m_HistogramBuffer;
+        private RenderTexture m_HistogramTexture;
+
         // settings group <setting, property reference>
-        Dictionary<FieldInfo, List<SerializedProperty>> m_GroupFields = new Dictionary<FieldInfo, List<SerializedProperty>>();
+        private Dictionary<FieldInfo, List<SerializedProperty>> m_GroupFields = new Dictionary<FieldInfo, List<SerializedProperty>>();
 
         private void PopulateMap(FieldInfo group)
         {
@@ -94,57 +218,38 @@ namespace UnityStandardAssets.CinematicEffects
             }
         }
 
-        void OnEnable()
+        private void OnEnable()
         {
             var settingsGroups = typeof(TonemappingColorGrading).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(x => x.GetCustomAttributes(typeof(TonemappingColorGrading.SettingsGroup), false).Any());
+
             foreach (var settingGroup in settingsGroups)
                 PopulateMap(settingGroup);
 
-            // Histogram
             concreteTarget.onFrameEndEditorOnly = OnFrameEnd;
-            m_CPUHistogram = new CPUHistogram();
-            m_GPUHistogram = new GPUHistogram(concreteTarget.histogramShader, concreteTarget.histogramComputeShader);
         }
 
-        // Cleanup
-        void OnDisable()
+        private void OnDisable()
         {
             concreteTarget.onFrameEndEditorOnly = null;
-            if (m_CPUHistogram != null)
-                m_CPUHistogram.Destroy();
-            if (m_GPUHistogram != null)
-                m_GPUHistogram.Destroy();
+
+            if (m_HistogramMaterial != null)
+                DestroyImmediate(m_HistogramMaterial);
+
+            if (m_HistogramTexture != null)
+                DestroyImmediate(m_HistogramTexture);
+
+            if (m_HistogramBuffer != null)
+                m_HistogramBuffer.Release();
         }
 
-        private bool Header(SerializedProperty group, SerializedProperty enabledField)
+        private void SetLUTImportSettings(TextureImporter importer)
         {
-            var display = group == null || group.isExpanded;
-            var enabled = enabledField != null && enabledField.boolValue;
-            var title = group == null ? "Unknown Group" : ObjectNames.NicifyVariableName(group.displayName);
-
-            Rect rect = GUILayoutUtility.GetRect(16f, 22f, s_Styles.header);
-            GUI.Box(rect, title, s_Styles.header);
-
-            Rect toggleRect = new Rect(rect.x + 4f, rect.y + 4f, 13f, 13f);
-            if (Event.current.type == EventType.Repaint)
-                s_Styles.headerCheckbox.Draw(toggleRect, false, false, enabled, false);
-
-            Event e = Event.current;
-            if (e.type == EventType.MouseDown)
-            {
-                if (toggleRect.Contains(e.mousePosition) && enabledField != null)
-                {
-                    enabledField.boolValue = !enabledField.boolValue;
-                    e.Use();
-                }
-                else if (rect.Contains(e.mousePosition) && group != null)
-                {
-                    display = !display;
-                    group.isExpanded = !group.isExpanded;
-                    e.Use();
-                }
-            }
-            return display;
+            importer.textureType = TextureImporterType.Advanced;
+            importer.anisoLevel = 0;
+            importer.mipmapEnabled = false;
+            importer.linearTexture = true;
+            importer.textureFormat = TextureImporterFormat.RGB24;
+            importer.SaveAndReimport();
         }
 
         private void DrawFields()
@@ -155,21 +260,66 @@ namespace UnityStandardAssets.CinematicEffects
                 var groupProperty = serializedObject.FindProperty(group.Key.Name);
 
                 GUILayout.Space(5);
-                bool display = Header(groupProperty, enabledField);
+                bool display = EditorGUIHelper.Header(groupProperty, enabledField);
                 if (!display)
                     continue;
 
-                //Special case for the filmic curve
-                if (group.Key.GetCustomAttributes(false).Any(x => x.GetType() == typeof(TonemappingColorGrading.DrawFilmicCurveAttribute)))
-                    DrawFilmicCurve(concreteTarget);
-
                 GUILayout.BeginHorizontal();
-                GUILayout.Space(10);
-                GUILayout.BeginVertical();
-                GUILayout.Space(3);
-                foreach (var field in group.Value.Where(x => x.propertyPath != group.Key.Name + ".enabled"))
-                    EditorGUILayout.PropertyField(field);
-                GUILayout.EndVertical();
+                {
+                    GUILayout.Space(10);
+                    GUILayout.BeginVertical();
+                    {
+                        GUILayout.Space(3);
+                        foreach (var field in group.Value.Where(x => x.propertyPath != group.Key.Name + ".enabled"))
+                        {
+                            // Special case for the tonemapping curve field
+                            if (group.Key.FieldType == typeof(TonemappingColorGrading.TonemappingSettings) &&
+                                field.propertyType == SerializedPropertyType.AnimationCurve &&
+                                concreteTarget.tonemapping.tonemapper != TonemappingColorGrading.Tonemapper.Curve)
+                                continue;
+
+                            EditorGUILayout.PropertyField(field);
+                        }
+
+                        // Bake button
+                        if (group.Key.FieldType == typeof(TonemappingColorGrading.ColorGradingSettings))
+                        {
+                            EditorGUI.BeginDisabledGroup(!enabledField.boolValue);
+
+                            if (GUILayout.Button("Export LUT as PNG", EditorStyles.miniButton))
+                            {
+                                string path = EditorUtility.SaveFilePanelInProject("Export LUT as PNG", "LUT.png", "png", "Please enter a file name to save the LUT texture to");
+
+                                if (!string.IsNullOrEmpty(path))
+                                {
+                                    Texture2D lut = concreteTarget.BakeLUT();
+
+                                    if (!concreteTarget.isGammaColorSpace)
+                                    {
+                                        var pixels = lut.GetPixels();
+
+                                        for (int i = 0; i < pixels.Length; i++)
+                                            pixels[i] = pixels[i].linear;
+
+                                        lut.SetPixels(pixels);
+                                        lut.Apply();
+                                    }
+
+                                    byte[] bytes = lut.EncodeToPNG();
+                                    System.IO.File.WriteAllBytes(path, bytes);
+                                    DestroyImmediate(lut);
+
+                                    AssetDatabase.Refresh();
+                                    TextureImporter importer = (TextureImporter)AssetImporter.GetAtPath(path);
+                                    SetLUTImportSettings(importer);
+                                }
+                            }
+
+                            EditorGUI.EndDisabledGroup();
+                        }
+                    }
+                    GUILayout.EndVertical();
+                }
                 GUILayout.EndHorizontal();
             }
         }
@@ -180,170 +330,71 @@ namespace UnityStandardAssets.CinematicEffects
                 s_Styles = new Styles();
 
             serializedObject.Update();
-            GUILayout.Label("All following effects will use LDR color buffers", EditorStyles.miniBoldLabel);
 
-            var texture = serializedObject.FindProperty("m_UserLutTexture");
+            GUILayout.Label("All following effects will use LDR color buffers.", EditorStyles.miniBoldLabel);
 
-            //if (TonemappingColorGrading.Mode.GenerateLUT != (TonemappingColorGrading.Mode) mode.enumValueIndex)
-            EditorGUILayout.PropertyField(texture);
-            //else
+            if (concreteTarget.tonemapping.enabled)
+            {
+                Camera camera = concreteTarget.GetComponent<Camera>();
+
+                if (camera != null && !camera.hdr)
+                    EditorGUILayout.HelpBox("The camera is not HDR enabled. This will likely break the tonemapper.", MessageType.Warning);
+                else if (!concreteTarget.validRenderTextureFormat)
+                    EditorGUILayout.HelpBox("The input to tonemapper is not in HDR. Make sure that all effects prior to this are executed in HDR.", MessageType.Warning);
+            }
+
+            if (concreteTarget.lut.enabled && concreteTarget.lut.texture != null)
+            {
+                if (!concreteTarget.validUserLutSize)
+                {
+                    EditorGUILayout.HelpBox("Invalid LUT size. Should be \"height = sqrt(width)\" (e.g. 256x16).", MessageType.Error);
+                }
+                else
+                {
+                    // Checks import settings on the lut, offers to fix them if invalid
+                    TextureImporter importer = (TextureImporter)AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(concreteTarget.lut.texture));
+                    bool valid = importer.anisoLevel == 0
+                        && importer.mipmapEnabled == false
+                        && importer.linearTexture == true
+                        && (importer.textureFormat == TextureImporterFormat.RGB24 || importer.textureFormat == TextureImporterFormat.AutomaticTruecolor);
+
+                    if (!valid)
+                    {
+                        EditorGUILayout.HelpBox("Invalid LUT import settings.", MessageType.Warning);
+
+                        GUILayout.Space(-32);
+                        EditorGUILayout.BeginHorizontal();
+                        {
+                            GUILayout.FlexibleSpace();
+                            if (GUILayout.Button("Fix", GUILayout.Width(60)))
+                            {
+                                SetLUTImportSettings(importer);
+                                AssetDatabase.Refresh();
+                            }
+                            GUILayout.Space(8);
+                        }
+                        EditorGUILayout.EndHorizontal();
+                        GUILayout.Space(11);
+                    }
+                }
+            }
+
             DrawFields();
 
-            if (concreteTarget.filmicCurve.enabled)
-            {
-                var camera = concreteTarget.GetComponent<Camera>();
-                if (camera != null && !camera.hdr)
-                    EditorGUILayout.HelpBox("The camera is not HDR enabled. This will likely break the Tonemapper.", MessageType.Warning);
-                else if (!concreteTarget.validRenderTextureFormat)
-                    EditorGUILayout.HelpBox("The input to Tonemapper is not in HDR. Make sure that all effects prior to this are executed in HDR.", MessageType.Warning);
-            }
             serializedObject.ApplyModifiedProperties();
         }
 
-        public static void DrawFilmicCurve(TonemappingColorGrading target)
+        private static readonly GUIContent k_HistogramTitle = new GUIContent("Histogram");
+        public override GUIContent GetPreviewTitle()
         {
-            const int h = 128;
-            const int h1 = h - 1;
-            Rect rect;
-
-            EditorGUILayout.BeginHorizontal();
-            {
-                GUILayout.FlexibleSpace();
-                rect = GUILayoutUtility.GetRect(Mathf.Min(EditorGUIUtility.currentViewWidth - 50f, 512f), h);
-                GUILayout.FlexibleSpace();
-            }
-            EditorGUILayout.EndHorizontal();
-
-            // Background
-            GUI.Box(rect, GUIContent.none);
-
-            // Curve points
-            int w = Mathf.FloorToInt(rect.width);
-            Vector3[] c = new Vector3[w];
-
-            float lutA = TonemappingColorGrading.GetLutA();
-
-            TonemappingColorGrading.SimplePolyFunc polyToe;
-            TonemappingColorGrading.SimplePolyFunc polyLinear;
-            TonemappingColorGrading.SimplePolyFunc polyShoulder;
-
-            var curveData = target.filmicCurve;
-
-            const float gammaSpace = 2.2f;
-
-            float x0 = Mathf.Pow(1.0f / 3.0f, gammaSpace);
-            const float shoulderBase = .7f;
-            float x1 = Mathf.Pow(shoulderBase, gammaSpace);
-            float gammaHighY = Mathf.Pow(shoulderBase, 1.0f + (curveData.lutShoulder) * 1.0f);
-            float y1 = Mathf.Pow(gammaHighY, gammaSpace);
-
-            float t = x0 / x1;
-            float lin = t * y1;
-            float low = lin * (1.0f - curveData.toe * .5f);
-            var y0 = low;
-
-            float dx = x1 - x0;
-            float dy = y1 - y0;
-
-            float m = 0.0f;
-            if (dx > 0 && dy > 0)
-                m = dy / dx;
-
-            // Linear section, power is 1, slope is m
-            polyLinear.x0 = x0;
-            polyLinear.y0 = y0;
-            polyLinear.A = m;
-            polyLinear.B = 1.0f;
-            polyLinear.signX = 1.0f;
-            polyLinear.signY = 1.0f;
-            polyLinear.logA = Mathf.Log(m);
-
-            // Toe
-            polyToe = polyLinear;
-            polyToe.Initialize(x0, y0, m);
-
-            float linearW = target.GetWhitePoint();
-
-            // Shoulder, first think about it "backwards"
-            float offsetX = linearW - x1;
-            float offsetY = 1.0f - y1;
-
-            polyShoulder = polyLinear;
-            polyShoulder.Initialize(offsetX, offsetY, m);
-
-            // Flip horizontal
-            polyShoulder.signX = -1.0f;
-            polyShoulder.x0 = -linearW;
-
-            // Flip vertical
-            polyShoulder.signY = -1.0f;
-            polyShoulder.y0 = 1.0f;
-
-            float oneOverDim = 1.0f / (1.0f * w - 1.0f);
-
-            for (int i = 0; i < w; i++)
-            {
-                float src = (i * 1.0f) * oneOverDim;
-                float dst = target.EvalFilmicHelper(src, lutA,
-                        polyToe,
-                        polyLinear,
-                        polyShoulder,
-                        x0, x1, linearW);
-
-                dst = Mathf.LinearToGammaSpace(dst);
-                dst = Mathf.Clamp01(dst);
-                c[i] = new Vector3(rect.x + i, rect.y + (h - dst * h1), 0f);
-            }
-
-            // Curve drawing
-            Handles.color = EditorGUIUtility.isProSkin ? Color.white : Color.black;
-            Handles.DrawAAPolyLine(2f, c);
-        }
-
-        CPUHistogram m_CPUHistogram;
-        GPUHistogram m_GPUHistogram;
-
-        private IHistogram histogram
-        {
-            get
-            {
-                if (SupportsGPUHistogram())
-                    return m_GPUHistogram;
-                return m_CPUHistogram;
-            }
-        }
-
-        public enum HistogramMode
-        {
-            Red = 0,
-            Green = 1,
-            Blue = 2,
-            Luminance = 3,
-            RGB,
-        }
-
-        private bool m_LogHistogram;
-        private bool m_RefreshHistogramOnPlay;
-        private HistogramMode m_HistogramMode = HistogramMode.RGB;
-        private bool SupportsGPUHistogram()
-        {
-            return concreteTarget.histogramComputeShader != null
-                   && SystemInfo.supportsComputeShaders
-                   && concreteTarget.histogramShader != null
-                   && concreteTarget.histogramShader.isSupported;
-        }
-
-        TonemappingColorGrading concreteTarget
-        {
-            get { return target as TonemappingColorGrading; }
+            return k_HistogramTitle;
         }
 
         public override bool HasPreviewGUI()
         {
-            return targets.Length == 1 && concreteTarget != null && concreteTarget.enabled;
+            return isHistogramSupported && targets.Length == 1 && concreteTarget != null && concreteTarget.enabled;
         }
 
-        Rect m_HistogramRect;
         public override void OnPreviewGUI(Rect r, GUIStyle background)
         {
             serializedObject.Update();
@@ -363,16 +414,15 @@ namespace UnityStandardAssets.CinematicEffects
                         width, height
                         );
 
-                histogram.DoGUI(m_HistogramRect, m_LogHistogram, m_HistogramMode);
+                if (m_HistogramTexture != null)
+                    GUI.DrawTexture(m_HistogramRect, m_HistogramTexture);
             }
 
             // Toolbar
             GUILayout.BeginHorizontal();
             EditorGUI.BeginChangeCheck();
             {
-                concreteTarget.debugClamp = GUILayout.Toggle(concreteTarget.debugClamp, new GUIContent("Clipping", "Turns all overexposed pixels pink in the game view"), EditorStyles.miniButtonLeft);
-                m_LogHistogram = GUILayout.Toggle(m_LogHistogram, new GUIContent("Log", "Logarithmic histogram"), EditorStyles.miniButtonMid);
-                m_RefreshHistogramOnPlay = GUILayout.Toggle(m_RefreshHistogramOnPlay, new GUIContent("Refresh on Play", "Keep refreshing the histogram in play mode; this will impact performances"), EditorStyles.miniButtonRight);
+                concreteTarget.histogramRefreshOnPlay = GUILayout.Toggle(concreteTarget.histogramRefreshOnPlay, new GUIContent("Refresh on Play", "Keep refreshing the histogram in play mode; this may impact performances."), EditorStyles.miniButton);
                 GUILayout.FlexibleSpace();
                 m_HistogramMode = (HistogramMode)EditorGUILayout.EnumPopup(m_HistogramMode);
             }
@@ -384,66 +434,134 @@ namespace UnityStandardAssets.CinematicEffects
                 InternalEditorUtility.RepaintAllViews();
         }
 
-        private void OnFrameEnd(RenderTexture source, Material tonemapMaterial)
+        private void OnFrameEnd(RenderTexture source)
         {
-            if (Application.isPlaying && !m_RefreshHistogramOnPlay)
+            if (Application.isPlaying && !concreteTarget.histogramRefreshOnPlay)
                 return;
 
-            if (Mathf.Approximately(m_HistogramRect.width, 0) || Mathf.Approximately(m_HistogramRect.height, 0))
+            if (Mathf.Approximately(m_HistogramRect.width, 0) || Mathf.Approximately(m_HistogramRect.height, 0) || !isHistogramSupported)
                 return;
 
-            int pass = (int)(concreteTarget.fastMode ? TonemappingColorGrading.Passes.OneD : TonemappingColorGrading.Passes.ThreeD);
-
-            int rw = SupportsGPUHistogram() ? 512 : 160;
-            RenderTexture rtt = RenderTexture.GetTemporary(rw, rw, 0, RenderTextureFormat.ARGB32);
-            Graphics.Blit(source, rtt, tonemapMaterial, pass);
-
-            histogram.Update(source, m_HistogramRect, m_LogHistogram, m_HistogramMode);
-
+            // No need to process the full frame to get an histogram, resize the input to a max-size of 512
+            int rw = Mathf.Min(Mathf.Max(source.width, source.height), 512);
+            RenderTexture rt = RenderTexture.GetTemporary(rw, rw, 0);
+            Graphics.Blit(source, rt);
+            UpdateHistogram(rt, m_HistogramRect, m_HistogramMode);
             Repaint();
+            RenderTexture.ReleaseTemporary(rt);
             RenderTexture.active = null;
-            RenderTexture.ReleaseTemporary(rtt);
+        }
+
+        private static readonly int[] k_EmptyBuffer = new int[256 << 2];
+        void UpdateHistogram(RenderTexture source, Rect rect, HistogramMode mode)
+        {
+            if (m_HistogramMaterial == null)
+                m_HistogramMaterial = ImageEffectHelper.CheckShaderAndCreateMaterial(concreteTarget.histogramShader);
+
+            if (m_HistogramBuffer == null)
+                m_HistogramBuffer = new ComputeBuffer(256, sizeof(uint) << 2);
+
+            m_HistogramBuffer.SetData(k_EmptyBuffer);
+
+            ComputeShader cs = concreteTarget.histogramComputeShader;
+
+            int kernel = cs.FindKernel("KHistogramGather");
+            cs.SetBuffer(kernel, "_Histogram", m_HistogramBuffer);
+            cs.SetTexture(kernel, "_Source", source);
+
+            int[] channels = null;
+            switch (mode)
+            {
+                case HistogramMode.Luminance:
+                    channels = new[] { 0, 0, 0, 1 };
+                    break;
+                case HistogramMode.RGB:
+                    channels = new[] { 1, 1, 1, 0 };
+                    break;
+                case HistogramMode.Red:
+                    channels = new[] { 1, 0, 0, 0 };
+                    break;
+                case HistogramMode.Green:
+                    channels = new[] { 0, 1, 0, 0 };
+                    break;
+                case HistogramMode.Blue:
+                    channels = new[] { 0, 0, 1, 0 };
+                    break;
+            }
+
+            cs.SetInts("_Channels", channels);
+            cs.SetInt("_IsLinear", concreteTarget.isGammaColorSpace ? 0 : 1);
+            cs.Dispatch(kernel, Mathf.CeilToInt(source.width / 32f), Mathf.CeilToInt(source.height / 32f), 1);
+
+            kernel = cs.FindKernel("KHistogramScale");
+            cs.SetBuffer(kernel, "_Histogram", m_HistogramBuffer);
+            cs.SetFloat("_Height", rect.height);
+            cs.Dispatch(kernel, 1, 1, 1);
+
+            if (m_HistogramTexture == null)
+            {
+                DestroyImmediate(m_HistogramTexture);
+                m_HistogramTexture = new RenderTexture((int)rect.width, (int)rect.height, 0, RenderTextureFormat.ARGB32);
+                m_HistogramTexture.hideFlags = HideFlags.HideAndDontSave;
+            }
+
+            m_HistogramMaterial.SetBuffer("_Histogram", m_HistogramBuffer);
+            m_HistogramMaterial.SetVector("_Size", new Vector2(m_HistogramTexture.width, m_HistogramTexture.height));
+            m_HistogramMaterial.SetColor("_ColorR", redCurveColor);
+            m_HistogramMaterial.SetColor("_ColorG", greenCurveColor);
+            m_HistogramMaterial.SetColor("_ColorB", blueCurveColor);
+            m_HistogramMaterial.SetColor("_ColorL", masterCurveColor);
+            m_HistogramMaterial.SetInt("_Channel", (int)mode);
+            Graphics.Blit(m_HistogramTexture, m_HistogramTexture, m_HistogramMaterial, (mode == HistogramMode.RGB) ? 1 : 0);
         }
 
         public static class ColorWheel
         {
             // Constants
-            const float PI_2 = Mathf.PI / 2f;
-            const float PI2 = Mathf.PI * 2f;
+            private const float PI_2 = Mathf.PI / 2f;
+            private const float PI2 = Mathf.PI * 2f;
 
-            // Hue Wheel
-            static Texture2D s_WheelTexture;
-            static float s_LastDiameter;
-            private static GUIStyle s_centeredStyle;
+            // hue Wheel
+            private static Texture2D s_WheelTexture;
+            private static float s_LastDiameter;
+            private static GUIStyle s_CenteredStyle;
 
             public static Color DoGUI(Rect area, string title, Color color, float diameter)
             {
                 var labelrect = area;
                 labelrect.height = EditorGUIUtility.singleLineHeight;
 
-                if (s_centeredStyle == null)
+                if (s_CenteredStyle == null)
                 {
-                    s_centeredStyle = new GUIStyle(GUI.skin.GetStyle("Label"))
+                    s_CenteredStyle = new GUIStyle(GUI.skin.GetStyle("Label"))
                     {
                         alignment = TextAnchor.UpperCenter
                     };
                 }
-                GUI.Label(labelrect, title, s_centeredStyle);
 
-                // figure out the wheel draw area
+                GUI.Label(labelrect, title, s_CenteredStyle);
+
+                // Figure out the wheel draw area
                 var wheelDrawArea = area;
                 wheelDrawArea.y += EditorGUIUtility.singleLineHeight;
                 wheelDrawArea.height = diameter;
+
                 if (wheelDrawArea.width > wheelDrawArea.height)
                 {
                     wheelDrawArea.x += (wheelDrawArea.width - wheelDrawArea.height) / 2.0f;
                     wheelDrawArea.width = area.height;
                 }
+
                 wheelDrawArea.width = wheelDrawArea.height;
 
                 var radius = diameter / 2.0f;
                 Vector3 hsv;
                 Color.RGBToHSV(color, out hsv.x, out hsv.y, out hsv.z);
+
+                // Retina/HDPI screens handling
+                wheelDrawArea.width /= pixelRatio;
+                wheelDrawArea.height /= pixelRatio;
+                float scaledRadius = radius / pixelRatio;
 
                 if (Event.current.type == EventType.Repaint)
                 {
@@ -459,17 +577,20 @@ namespace UnityStandardAssets.CinematicEffects
                     // Thumb
                     Vector2 thumbPos = Vector2.zero;
                     float theta = hsv.x * PI2;
-                    float len = hsv.y * radius;
+                    float len = hsv.y * scaledRadius;
                     thumbPos.x = Mathf.Cos(theta + PI_2);
                     thumbPos.y = Mathf.Sin(theta - PI_2);
                     thumbPos *= len;
                     Vector2 thumbSize = s_Styles.thumb2DSize;
                     Color oldColor = GUI.color;
                     GUI.color = Color.black;
-                    s_Styles.thumb2D.Draw(new Rect(wheelDrawArea.x + radius + thumbPos.x - thumbSize.x / 2f, wheelDrawArea.y + radius + thumbPos.y - thumbSize.y / 2f, thumbSize.x, thumbSize.y), false, false, false, false);
+                    Vector2 thumbSizeH = thumbSize / 2f;
+                    Handles.color = Color.white;
+                    Handles.DrawAAPolyLine(new Vector2(wheelDrawArea.x + scaledRadius + thumbSizeH.x, wheelDrawArea.y + scaledRadius + thumbSizeH.y), new Vector2(wheelDrawArea.x + scaledRadius + thumbPos.x, wheelDrawArea.y + scaledRadius + thumbPos.y));
+                    s_Styles.thumb2D.Draw(new Rect(wheelDrawArea.x + scaledRadius + thumbPos.x - thumbSizeH.x, wheelDrawArea.y + scaledRadius + thumbPos.y - thumbSizeH.y, thumbSize.x, thumbSize.y), false, false, false, false);
                     GUI.color = oldColor;
                 }
-                hsv = GetInput(wheelDrawArea, hsv, radius);
+                hsv = GetInput(wheelDrawArea, hsv, scaledRadius);
 
                 var sliderDrawArea = wheelDrawArea;
                 sliderDrawArea.y = sliderDrawArea.yMax;
@@ -480,15 +601,16 @@ namespace UnityStandardAssets.CinematicEffects
                 return color;
             }
 
-            static readonly int thumbHash = "colorWheelThumb".GetHashCode();
-            static Vector3 GetInput(Rect bounds, Vector3 hsv, float radius)
+            private static readonly int k_ThumbHash = "colorWheelThumb".GetHashCode();
+
+            private static Vector3 GetInput(Rect bounds, Vector3 hsv, float radius)
             {
                 Event e = Event.current;
-
-                var id = GUIUtility.GetControlID(thumbHash, FocusType.Passive, bounds);
+                var id = GUIUtility.GetControlID(k_ThumbHash, FocusType.Passive, bounds);
 
                 Vector2 mousePos = e.mousePosition;
                 Vector2 relativePos = mousePos - new Vector2(bounds.x, bounds.y);
+
                 if (e.type == EventType.MouseDown && e.button == 0 && GUIUtility.hotControl == 0)
                 {
                     if (bounds.Contains(mousePos))
@@ -508,6 +630,7 @@ namespace UnityStandardAssets.CinematicEffects
                 {
                     Vector2 center = new Vector2(bounds.x + radius, bounds.y + radius);
                     float dist = Vector2.Distance(center, mousePos);
+
                     if (dist <= radius)
                     {
                         e.Use();
@@ -523,17 +646,17 @@ namespace UnityStandardAssets.CinematicEffects
                 return hsv;
             }
 
-            static void GetWheelHueSaturation(float x, float y, float radius, out float hue, out float saturation)
+            private static void GetWheelHueSaturation(float x, float y, float radius, out float hue, out float saturation)
             {
                 float dx = (x - radius) / radius;
                 float dy = (y - radius) / radius;
-                float d = Mathf.Sqrt((dx * dx + dy * dy));
+                float d = Mathf.Sqrt(dx * dx + dy * dy);
                 hue = Mathf.Atan2(dx, -dy);
                 hue = 1f - ((hue > 0) ? hue : PI2 + hue) / PI2;
                 saturation = Mathf.Clamp01(d);
             }
 
-            static void UpdateHueWheel(int diameter)
+            private static void UpdateHueWheel(int diameter)
             {
                 CleanTexture(s_WheelTexture);
                 s_WheelTexture = MakeTexture(diameter);
@@ -558,7 +681,7 @@ namespace UnityStandardAssets.CinematicEffects
                             continue;
                         }
 
-                        // Red (0) on top, counter-clockwise (industry standard)
+                        // red (0) on top, counter-clockwise (industry standard)
                         float saturation = d;
                         float hue = Mathf.Atan2(dx, dy);
                         hue = 1f - ((hue > 0) ? hue : PI2 + hue) / PI2;
@@ -575,19 +698,18 @@ namespace UnityStandardAssets.CinematicEffects
                 s_WheelTexture.Apply();
             }
 
-            static Texture2D MakeTexture(int dimension)
+            private static Texture2D MakeTexture(int dimension)
             {
-                Texture2D tex = new Texture2D(dimension, dimension, TextureFormat.ARGB32, false, true)
+                return new Texture2D(dimension, dimension, TextureFormat.ARGB32, false, true)
                 {
                     filterMode = FilterMode.Point,
                     wrapMode = TextureWrapMode.Clamp,
                     hideFlags = HideFlags.HideAndDontSave,
                     alphaIsTransparency = true
                 };
-                return tex;
             }
 
-            static void CleanTexture(Texture2D texture)
+            private static void CleanTexture(Texture2D texture)
             {
                 if (texture != null)
                     DestroyImmediate(texture);
@@ -597,320 +719,6 @@ namespace UnityStandardAssets.CinematicEffects
             {
                 // wheel height + title label + alpha slider
                 return renderSizePerWheel + 2 * EditorGUIUtility.singleLineHeight;
-            }
-        }
-
-        interface IHistogram
-        {
-            void DoGUI(Rect rect, bool log, HistogramMode mode);
-            void Update(RenderTexture source, Rect rect, bool log, HistogramMode mode);
-            void Destroy();
-        }
-
-        private static readonly Color s_MasterCurveColor = new Color(1f, 1f, 1f, 2f);
-        private static readonly Color s_RedCurveColor = new Color(1f, 0f, 0f, 2f);
-        private static readonly Color s_GreenCurveColor = new Color(0f, 1f, 0f, 2f);
-        private static readonly Color s_BlueCurveColor = new Color(0f, 1f, 1f, 2f);
-
-        class CPUHistogram : IHistogram
-        {
-            int[] m_Histogram = new int[256];
-            int[] m_HistogramRGB = new int[256 * 3];
-            Texture2D m_TempTexture;
-
-            public void DoGUI(Rect rect, bool log, HistogramMode mode)
-            {
-                if (mode == HistogramMode.RGB)
-                    DoGUIrgb(rect, log);
-                else
-                    DoGUImono(rect, log, mode);
-            }
-
-            void DoGUImono(Rect rect, bool log, HistogramMode mode)
-            {
-                // Scale histogram values
-                int[] scaledHistogram = new int[256];
-
-                int max = 0;
-                for (int i = 0; i < 256; i++)
-                    max = (max < m_Histogram[i]) ? m_Histogram[i] : max;
-
-                scaledHistogram = new int[256];
-
-                if (log)
-                {
-                    float factor = rect.height / Mathf.Log10(max);
-
-                    for (int i = 0; i < 256; i++)
-                        scaledHistogram[i] = (m_Histogram[i] == 0) ? 0 : Mathf.Max(Mathf.RoundToInt(Mathf.Log10(m_Histogram[i]) * factor), 1);
-                }
-                else
-                {
-                    float factor = rect.height / max;
-
-                    for (int i = 0; i < 256; i++)
-                        scaledHistogram[i] = Mathf.Max(Mathf.RoundToInt(m_Histogram[i] * factor), 1);
-                }
-
-                // Color
-                if (mode == HistogramMode.Red)
-                    Handles.color = s_RedCurveColor;
-                else if (mode == HistogramMode.Green)
-                    Handles.color = s_GreenCurveColor;
-                else if (mode == HistogramMode.Blue)
-                    Handles.color = s_BlueCurveColor;
-                else
-                    Handles.color = s_MasterCurveColor;
-
-                // Base line
-                Vector2 p1 = new Vector2(rect.x - 1, rect.yMax);
-                Vector2 p2 = new Vector2(rect.xMax - 1, rect.yMax);
-                Handles.DrawLine(p1, p2);
-
-                // Histogram
-                for (int i = 0; i < (int)rect.width; i++)
-                {
-                    float remapI = (float)i / rect.width * 255f;
-                    int index = Mathf.FloorToInt(remapI);
-                    float fract = remapI - (float)index;
-                    float v1 = scaledHistogram[index];
-                    float v2 = scaledHistogram[Mathf.Min(index + 1, 255)];
-                    float h = v1 * (1.0f - fract) + v2 * fract;
-                    Handles.DrawLine(
-                        new Vector2(rect.x + i, rect.yMax),
-                        new Vector2(rect.x + i, rect.yMin + (rect.height - h))
-                        );
-                }
-            }
-
-            void DoGUIrgb(Rect rect, bool log)
-            {
-                // Scale histogram values
-                Vector3 max = Vector3.zero;
-                for (int i = 0; i < 256; i++)
-                {
-                    max.x = (max.x < m_HistogramRGB[i]) ? m_HistogramRGB[i] : max.x;
-                    max.y = (max.y < m_HistogramRGB[i + 256]) ? m_HistogramRGB[i + 256] : max.y;
-                    max.z = (max.z < m_HistogramRGB[i + 512]) ? m_HistogramRGB[i + 512] : max.z;
-                }
-
-                Vector3[] scaledHistogramRGB = new Vector3[256];
-
-                if (log)
-                {
-                    Vector3 factor = new Vector3(
-                            rect.height / Mathf.Log10(max.x),
-                            rect.height / Mathf.Log10(max.y),
-                            rect.height / Mathf.Log10(max.z)
-                            );
-
-                    for (int i = 0; i < 256; i++)
-                    {
-                        scaledHistogramRGB[i] = new Vector3(
-                                (m_HistogramRGB[i] == 0) ? 0 : Mathf.Max(Mathf.RoundToInt(Mathf.Log10(m_HistogramRGB[i]) * factor.x), 1),
-                                (m_HistogramRGB[i + 256] == 0) ? 0 : Mathf.Max(Mathf.RoundToInt(Mathf.Log10(m_HistogramRGB[i + 256]) * factor.y), 1),
-                                (m_HistogramRGB[i + 512] == 0) ? 0 : Mathf.Max(Mathf.RoundToInt(Mathf.Log10(m_HistogramRGB[i + 512]) * factor.z), 1)
-                                );
-                    }
-                }
-                else
-                {
-                    Vector3 factor = new Vector3(rect.height / max.x, rect.height / max.y, rect.height / max.z);
-
-                    for (int i = 0; i < 256; i++)
-                    {
-                        scaledHistogramRGB[i] = new Vector3(
-                                Mathf.Max(Mathf.RoundToInt(m_HistogramRGB[i] * factor.x), 1),
-                                Mathf.Max(Mathf.RoundToInt(m_HistogramRGB[i + 256] * factor.y), 1),
-                                Mathf.Max(Mathf.RoundToInt(m_HistogramRGB[i + 512] * factor.z), 1)
-                                );
-                    }
-                }
-
-                // Base line
-                Handles.color = s_MasterCurveColor;
-                Vector2 p1 = new Vector2(rect.x - 1, rect.yMax);
-                Vector2 p2 = new Vector2(rect.xMax - 1, rect.yMax);
-                Handles.DrawLine(p1, p2);
-                Color[] colors = { s_RedCurveColor, s_GreenCurveColor, s_BlueCurveColor };
-
-                // Histogram
-                for (int i = 0; i < (int)rect.width; i++)
-                {
-                    int[] heights = new int[3];
-
-                    for (int j = 0; j < 3; j++)
-                    {
-                        float remapI = (float)i / rect.width * 255f;
-                        int index = Mathf.FloorToInt(remapI);
-                        float fract = remapI - (float)index;
-                        float v1 = scaledHistogramRGB[index][j];
-                        float v2 = scaledHistogramRGB[Mathf.Min(index + 1, 255)][j];
-                        heights[j] = (int)(v1 * (1.0f - fract) + v2 * fract);
-                    }
-
-                    int[] indices = { 0, 1, 2 };
-                    Array.Sort<int>(indices, (a, b) => heights[a].CompareTo(heights[b]));
-
-                    Handles.color = s_MasterCurveColor;
-                    Handles.DrawLine(
-                        new Vector2(rect.x + i, rect.yMax),
-                        new Vector2(rect.x + i, rect.yMin + (rect.height - heights[indices[0]]))
-                        );
-
-                    Handles.color = colors[indices[2]] + colors[indices[1]];
-                    Handles.DrawLine(
-                        new Vector2(rect.x + i, rect.yMin + (rect.height - heights[indices[0]])),
-                        new Vector2(rect.x + i, rect.yMin + (rect.height - heights[indices[1]]))
-                        );
-
-                    Handles.color = colors[indices[2]];
-                    Handles.DrawLine(
-                        new Vector2(rect.x + i, rect.yMin + (rect.height - heights[indices[1]])),
-                        new Vector2(rect.x + i, rect.yMin + (rect.height - heights[indices[2]]))
-                        );
-                }
-            }
-
-            public void Update(RenderTexture source, Rect rect, bool log, HistogramMode mode)
-            {
-                if (m_TempTexture == null || m_TempTexture.height != source.height || m_TempTexture.width != source.width)
-                {
-                    DestroyImmediate(m_TempTexture);
-                    m_TempTexture = new Texture2D(source.width, source.height, TextureFormat.RGB24, false);
-                    m_TempTexture.anisoLevel = 0;
-                    m_TempTexture.wrapMode = TextureWrapMode.Clamp;
-                    m_TempTexture.filterMode = FilterMode.Bilinear;
-                    m_TempTexture.hideFlags = HideFlags.HideAndDontSave;
-                }
-
-                // Grab the screen content for the camera
-                RenderTexture.active = source;
-                m_TempTexture.ReadPixels(new Rect(0, 0, source.width, source.height), 0, 0, false);
-                m_TempTexture.Apply();
-                RenderTexture.active = null;
-
-                // Raw histogram
-                Color[] pixels = m_TempTexture.GetPixels();
-
-                switch (mode)
-                {
-                    case HistogramMode.Luminance:
-                        Array.Clear(m_Histogram, 0, 256);
-                        for (int i = 0; i < pixels.Length; i++)
-                        {
-                            Color c = pixels[i];
-                            m_Histogram[(int)((c.r * 0.2125f + c.g * 0.7154f + c.b * 0.0721f) * 255)]++;
-                        }
-                        break;
-                    case HistogramMode.RGB:
-                        Array.Clear(m_HistogramRGB, 0, 256 * 3);
-                        for (int i = 0; i < pixels.Length; i++)
-                        {
-                            Color c = pixels[i];
-                            m_HistogramRGB[(int)(c.r * 255)]++;
-                            m_HistogramRGB[(int)(c.g * 255) + 256]++;
-                            m_HistogramRGB[(int)(c.b * 255) + 512]++;
-                        }
-                        break;
-                    case HistogramMode.Red:
-                        Array.Clear(m_Histogram, 0, 256);
-                        for (int i = 0; i < pixels.Length; i++)
-                            m_Histogram[(int)(pixels[i].r * 255)]++;
-                        break;
-                    case HistogramMode.Green:
-                        Array.Clear(m_Histogram, 0, 256);
-                        for (int i = 0; i < pixels.Length; i++)
-                            m_Histogram[(int)(pixels[i].g * 255)]++;
-                        break;
-                    case HistogramMode.Blue:
-                        Array.Clear(m_Histogram, 0, 256);
-                        for (int i = 0; i < pixels.Length; i++)
-                            m_Histogram[(int)(pixels[i].b * 255)]++;
-                        break;
-                }
-            }
-
-            public void Destroy()
-            {
-                if (m_TempTexture != null)
-                    DestroyImmediate(m_TempTexture);
-            }
-        }
-
-        class GPUHistogram : IHistogram
-        {
-            RenderTexture m_RT;
-            Material m_Material;
-            Shader m_Shader;
-            ComputeShader m_ComputeShader;
-            ComputeBuffer m_Buffer;
-
-            public GPUHistogram(Shader shader, ComputeShader computeShader)
-            {
-                m_Shader = shader;
-                m_ComputeShader = computeShader;
-            }
-
-            public void DoGUI(Rect rect, bool log, HistogramMode mode)
-            {
-                if (m_RT != null)
-                    GUI.DrawTexture(rect, m_RT);
-            }
-
-            public void Update(RenderTexture source, Rect rect, bool log, HistogramMode mode)
-            {
-                if (m_Material == null)
-                {
-                    m_Material = new Material(m_Shader);
-                    m_Material.hideFlags = HideFlags.HideAndDontSave;
-                }
-
-                if (m_Buffer == null)
-                    m_Buffer = new ComputeBuffer(256, sizeof(uint) << 2);
-
-                m_Buffer.SetData(new uint[256 << 2]);
-
-                ComputeShader cs = m_ComputeShader;
-
-                int kernel = cs.FindKernel("KHistogram");
-                cs.SetBuffer(kernel, "_Histogram", m_Buffer);
-                cs.SetTexture(kernel, "_Source", source);
-                cs.SetInt("_IsLinear", (QualitySettings.activeColorSpace == ColorSpace.Linear) ? 1 : 0);
-                cs.Dispatch(kernel, source.width >> 4, source.height >> 4, 1);
-
-                kernel = cs.FindKernel(log ? "KScale_Log" : "KScale");
-                cs.SetBuffer(kernel, "_Histogram", m_Buffer);
-                cs.SetFloat("_Height", rect.height);
-                cs.Dispatch(kernel, 1, 1, 1);
-
-                if (m_RT == null || m_RT.height != rect.height || m_RT.width != rect.width)
-                {
-                    DestroyImmediate(m_RT);
-                    m_RT = new RenderTexture((int)rect.width, (int)rect.height, 0, RenderTextureFormat.ARGB32);
-                    m_RT.hideFlags = HideFlags.HideAndDontSave;
-                }
-
-                m_Material.SetBuffer("_Histogram", m_Buffer);
-                m_Material.SetVector("_Size", new Vector2(m_RT.width, m_RT.height));
-                m_Material.SetColor("_ColorR", s_RedCurveColor);
-                m_Material.SetColor("_ColorG", s_GreenCurveColor);
-                m_Material.SetColor("_ColorB", s_BlueCurveColor);
-                m_Material.SetColor("_ColorL", s_MasterCurveColor);
-                m_Material.SetInt("_Channel", (int)mode);
-                Graphics.Blit(m_RT, m_RT, m_Material, (mode == HistogramMode.RGB) ? 1 : 0);
-            }
-
-            public void Destroy()
-            {
-                if (m_RT != null)
-                    DestroyImmediate(m_RT);
-
-                if (m_Material != null)
-                    DestroyImmediate(m_Material);
-
-                if (m_Buffer != null)
-                    m_Buffer.Release();
             }
         }
     }
