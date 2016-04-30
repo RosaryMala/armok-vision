@@ -52,6 +52,9 @@ public class WorldMapMaker : MonoBehaviour
     public MeshFilter terrainPrefab;
     List<MeshFilter> terrainChunks = new List<MeshFilter>();
 
+    public MeshFilter waterPrefab;
+    List<MeshFilter> waterChunks = new List<MeshFilter>();
+
     public Material terrainMat;
 
     int CoordToIndex(int x, int y)
@@ -308,13 +311,23 @@ public class WorldMapMaker : MonoBehaviour
         List<Vector2> uv2s = new List<Vector2>(length);
         List<int> triangles = new List<int>(length);
 
+        List<Vector3> waterVerts = new List<Vector3>();
+        List<Vector2> waterUvs = new List<Vector2>();
+        List<int> waterTris = new List<int>();
+
         foreach(MeshFilter mf in terrainChunks)
+        {
+            if (mf.mesh != null)
+                mf.mesh.Clear();
+        }
+        foreach(MeshFilter mf in waterChunks)
         {
             if (mf.mesh != null)
                 mf.mesh.Clear();
         }
 
         int chunkIndex = 0;
+        int waterChunkIndex = 0;
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
@@ -358,37 +371,63 @@ public class WorldMapMaker : MonoBehaviour
                     chunkIndex++;
                 }
 
-                int index = vertices.Count;
-                for (int i = 0; i < 2; i++)
-                    for (int j = 0; j < 2; j++)
+                //If the vertex lists are already full, make a chunk with what we have, and keep going
+                if (waterVerts.Count >= (65535 - 20))
+                {
+                    if (waterChunks.Count <= waterChunkIndex)
                     {
-                        vertices.Add((new Vector3(
-                    (x + i) * 48 * 16 * GameMap.tileWidth,
-                    elevation[x, y] * GameMap.tileHeight,
-                    -(y + j) * 48 * 16 * GameMap.tileWidth) + offset) * scale);
+                        waterChunks.Add(Instantiate<MeshFilter>(waterPrefab));
+                        waterChunks[waterChunkIndex].transform.parent = transform;
+                        waterChunks[waterChunkIndex].gameObject.name = "WaterChunk" + waterChunkIndex;
 
-                        colors.Add(Color.white);
-
-                        uv2s.Add(new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100);
-                        uvs.Add(new Vector2(x + i, y + j));
                     }
-                triangles.Add(index);
-                triangles.Add(index + 2);
-                triangles.Add(index + 1);
+                    MeshFilter mf = waterChunks[waterChunkIndex];
 
-                triangles.Add(index + 1);
-                triangles.Add(index + 2);
-                triangles.Add(index + 3);
+                    if (mf.mesh == null)
+                        mf.mesh = new Mesh();
+
+                    Mesh waterMesh = mf.mesh;
+
+                    waterMesh.vertices = waterVerts.ToArray();
+                    waterMesh.uv = waterUvs.ToArray();
+                    waterMesh.triangles = waterTris.ToArray();
+
+                    waterMesh.RecalculateNormals();
+                    waterMesh.RecalculateTangents();
+
+                    mf.mesh = waterMesh;
+
+                    waterVerts.Clear();
+                    waterUvs.Clear();
+                    waterTris.Clear();
+                    waterChunkIndex++;
+                }
+
+
 
                 Vector2 biome = new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100;
+
+                Vector3 vert1 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+                Vector3 vert2 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+
+
+                RegionMaker.AddHorizontalQuad(vert1, vert2, biome, Color.white, vertices, colors, uvs, uv2s, triangles);
+
+                if(elevation[x,y] < 99)
+                {
+                    vert1 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, 99 * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+                    vert2 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, 99 * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+
+                    RegionMaker.AddHorizontalQuad(vert1, vert2, biome, Color.white, waterVerts, null, waterUvs, null, waterTris);
+                }
 
                 int north = 0;
                 if (y > 0 && !DetailRegions.ContainsKey(new DFCoord2d(x, y - 1)))
                     north = elevation[x, y - 1];
                 if (north < elevation[x, y])
                 {
-                    Vector3 vert1 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale;
-                    Vector3 vert2 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, north * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+                    vert1 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+                    vert2 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, north * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale;
 
                     RegionMaker.AddVerticalQuad(vert1, vert2, biome, Color.white, vertices, colors, uvs, uv2s, triangles);
                 }
@@ -398,9 +437,8 @@ public class WorldMapMaker : MonoBehaviour
                     south = elevation[x, y + 1];
                 if (south < elevation[x, y])
                 {
-                    index = vertices.Count;
-                    Vector3 vert1 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale;
-                    Vector3 vert2 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, south * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+                    vert1 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+                    vert2 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, south * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale;
 
                     RegionMaker.AddVerticalQuad(vert1, vert2, biome, Color.white, vertices, colors, uvs, uv2s, triangles);
                 }
@@ -410,8 +448,8 @@ public class WorldMapMaker : MonoBehaviour
                     east = elevation[x + 1, y];
                 if (east < elevation[x, y])
                 {
-                    Vector3 vert1 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale;
-                    Vector3 vert2 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, east * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+                    vert1 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+                    vert2 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, east * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale;
 
                     RegionMaker.AddVerticalQuad(vert1, vert2, biome, Color.white, vertices, colors, uvs, uv2s, triangles);
                 }
@@ -420,8 +458,8 @@ public class WorldMapMaker : MonoBehaviour
                     west = elevation[x - 1, y];
                 if (west < elevation[x, y])
                 {
-                    Vector3 vert1 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale;
-                    Vector3 vert2 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, west * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+                    vert1 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+                    vert2 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, west * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale;
 
                     RegionMaker.AddVerticalQuad(vert1, vert2, biome, Color.white, vertices, colors, uvs, uv2s, triangles);
                 }
@@ -451,6 +489,36 @@ public class WorldMapMaker : MonoBehaviour
             terrainMesh.RecalculateTangents();
 
             mf.mesh = terrainMesh;
+        }
+
+        {
+            if (waterChunks.Count <= waterChunkIndex)
+            {
+                waterChunks.Add(Instantiate<MeshFilter>(waterPrefab));
+                waterChunks[waterChunkIndex].transform.parent = transform;
+                waterChunks[waterChunkIndex].gameObject.name = "WaterChunk" + waterChunkIndex;
+
+            }
+            MeshFilter mf = waterChunks[waterChunkIndex];
+
+            if (mf.mesh == null)
+                mf.mesh = new Mesh();
+
+            Mesh waterMesh = mf.mesh;
+
+            waterMesh.vertices = waterVerts.ToArray();
+            waterMesh.uv = waterUvs.ToArray();
+            waterMesh.triangles = waterTris.ToArray();
+
+            waterMesh.RecalculateNormals();
+            waterMesh.RecalculateTangents();
+
+            mf.mesh = waterMesh;
+
+            waterVerts.Clear();
+            waterUvs.Clear();
+            waterTris.Clear();
+            waterChunkIndex++;
         }
     }
 
