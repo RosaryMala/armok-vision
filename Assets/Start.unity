@@ -222,6 +222,52 @@ MonoBehaviour:
   firstPersonVerticalRotationMax: 89
   mouseSpeed: 10
   rotationX: 45
+--- !u!1001 &440228480
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 488560, guid: d73214e57194a894ba605c8be22450c9, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 488560, guid: d73214e57194a894ba605c8be22450c9, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 488560, guid: d73214e57194a894ba605c8be22450c9, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 488560, guid: d73214e57194a894ba605c8be22450c9, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 488560, guid: d73214e57194a894ba605c8be22450c9, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 488560, guid: d73214e57194a894ba605c8be22450c9, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 488560, guid: d73214e57194a894ba605c8be22450c9, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 488560, guid: d73214e57194a894ba605c8be22450c9, type: 2}
+      propertyPath: m_RootOrder
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 170612, guid: d73214e57194a894ba605c8be22450c9, type: 2}
+      propertyPath: m_Name
+      value: WorldChunk
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: d73214e57194a894ba605c8be22450c9, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &458878499
 GameObject:
   m_ObjectHideFlags: 0
@@ -286,6 +332,7 @@ MonoBehaviour:
   cloudPrafab: {fileID: 11429096, guid: 81483fb545a1d2c42ab4bcdf87c47fab, type: 2}
   regionPrefab: {fileID: 11445684, guid: 90bab0905d33d714694a6059b62f28d2, type: 2}
   terrainPrefab: {fileID: 3345160, guid: ca070c912bf1ee84e96d71de7b55d40d, type: 2}
+  waterPrefab: {fileID: 3315368, guid: d73214e57194a894ba605c8be22450c9, type: 2}
   terrainMat: {fileID: 2100000, guid: 5c4766ae81bd7be4199757857af3a8d8, type: 2}
 --- !u!33 &458878502
 MeshFilter:
