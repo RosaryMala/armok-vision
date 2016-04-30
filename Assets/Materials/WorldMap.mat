@@ -95,6 +95,10 @@ Material:
     m_Floats:
       data:
         first:
+          name: _Scale
+        second: 1
+      data:
+        first:
           name: _SrcBlend
         second: 1
       data:
@@ -103,16 +107,12 @@ Material:
         second: 0
       data:
         first:
-          name: _Scale
-        second: .00100000005
-      data:
-        first:
           name: _Cutoff
-        second: .5
+        second: 0.5
       data:
         first:
           name: _Parallax
-        second: .0199999996
+        second: 0.02
       data:
         first:
           name: _ZWrite
@@ -120,7 +120,7 @@ Material:
       data:
         first:
           name: _Glossiness
-        second: .200000003
+        second: 0.2
       data:
         first:
           name: _BumpScale
@@ -148,7 +148,7 @@ Material:
       data:
         first:
           name: _SeaLevel
-        second: 0
+        second: 297
     m_Colors:
       data:
         first:
@@ -157,7 +157,7 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: .21708478, g: .699999988, b: .133823529, a: 1}
+        second: {r: 0.21708478, g: 0.7, b: 0.13382353, a: 1}
       data:
         first:
           name: _OceanColor
@@ -165,12 +165,12 @@ Material:
       data:
         first:
           name: _BeachColor
-        second: {r: .996551752, g: .89741385, b: .703448296, a: 1}
+        second: {r: 0.99655175, g: 0.89741385, b: 0.7034483, a: 1}
       data:
         first:
           name: _OceanShallowColor
-        second: {r: .0509842783, g: .384319872, b: .639220357, a: .850980401}
+        second: {r: 0.05098428, g: 0.38431987, b: 0.63922036, a: 0.8509804}
       data:
         first:
           name: _OceanDeepColor
-        second: {r: .0376797579, g: .284030467, b: .472413778, a: .850980401}
+        second: {r: 0.037679758, g: 0.28403047, b: 0.47241378, a: 0.8509804}
