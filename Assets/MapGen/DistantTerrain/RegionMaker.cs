@@ -9,7 +9,7 @@ using System;
 [RequireComponent(typeof(MeshRenderer))]
 public class RegionMaker : MonoBehaviour
 {
-    public float scale = 0.01f;
+    public float scale;
     public int width;
     public int height;
     public string worldNameEnglish;
@@ -22,6 +22,7 @@ public class RegionMaker : MonoBehaviour
     int[,] volcanism;
     int[,] savagery;
     int[,] salinity;
+    RiverTile[,] rivers;
 
     public Vector3 offset;
     Vector3 embarkTileOffset;
@@ -69,7 +70,10 @@ public class RegionMaker : MonoBehaviour
             offset = embarkTileOffset * 48 * GameMap.tileWidth;
         }
 
-        transform.position = offset * scale;
+        offset += new Vector3(-0.5f, 0, 0.5f) * GameMap.tileWidth;
+
+        transform.position = offset;
+        transform.localScale = new Vector3(scale, scale, scale);
     }
 
     public void CopyFromRemote(WorldMap remoteMap, WorldMap mainMap)
@@ -99,6 +103,8 @@ public class RegionMaker : MonoBehaviour
                 volcanism[x, y] = remoteMap.volcanism[index];
                 savagery[x, y] = remoteMap.savagery[index];
                 salinity[x, y] = remoteMap.salinity[index];
+                if (remoteMap.river_tiles != null && remoteMap.river_tiles.Count > index)
+                    rivers[x, y] = remoteMap.river_tiles[index];
             }
         GenerateMesh();
     }
@@ -114,6 +120,7 @@ public class RegionMaker : MonoBehaviour
         volcanism = new int[width, height];
         savagery = new int[width, height];
         salinity = new int[width, height];
+        rivers = new RiverTile[width, height];
     }
 
     //// Does about what you'd think it does.
@@ -143,20 +150,29 @@ public class RegionMaker : MonoBehaviour
         return true;
     }
 
+    List<Vector3> vertices = new List<Vector3>();
+    List<Color> colors = new List<Color>();
+    List<Vector2> uvCoords = new List<Vector2>();
+    List<Vector2> uvCoords2 = new List<Vector2>();
+    List<int> triangles = new List<int>();
+
+    List<Vector3> waterVerts = new List<Vector3>();
+    List<Vector2> waterUvs = new List<Vector2>();
+    List<int> waterTris = new List<int>();
+
+
     void GenerateMesh()
     {
         int h = height - 1;
         int w = width - 1;
-        int length = width * height * 4;
-        List<Vector3> vertices = new List<Vector3>(length);
-        List<Color> colors = new List<Color>(length);
-        List<Vector2> uvs = new List<Vector2>(length);
-        List<Vector2> uv2s = new List<Vector2>(length);
-        List<int> triangles = new List<int>(length);
-
-        List<Vector3> waterVerts = new List<Vector3>();
-        List<Vector2> waterUvs = new List<Vector2>();
-        List<int> waterTris = new List<int>();
+        vertices.Clear();
+        colors.Clear();
+        uvCoords.Clear();
+        uvCoords2.Clear();
+        triangles.Clear();
+        waterVerts.Clear();
+        waterUvs.Clear();
+        waterTris.Clear();
 
         DFCoord fortMin = DFConnection.Instance.EmbarkMapPosition - regionOrigin;
         DFCoord fortMax = fortMin + (DFConnection.Instance.EmbarkMapSize / 3);
@@ -170,63 +186,46 @@ public class RegionMaker : MonoBehaviour
 
                 Vector2 biome = new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100;
 
-                Vector3 vert1 = new Vector3(x * 48 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -y * 48 * GameMap.tileWidth) * scale;
-                Vector3 vert2 = new Vector3((x + 1) * 48 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -(y + 1) * 48 * GameMap.tileWidth) * scale;
+                Vector3 vert1 = new Vector3(x * 48 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -y * 48 * GameMap.tileWidth);
+                Vector3 vert2 = new Vector3((x + 1) * 48 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -(y + 1) * 48 * GameMap.tileWidth);
 
+                byte riverSides = 0;
 
-                AddHorizontalQuad(vert1, vert2, biome, Color.white, vertices, colors, uvs, uv2s, triangles);
-
-                if (elevation[x, y] < 99)
+                if (rivers[x, y] != null)
                 {
-                    vert1 = new Vector3(x * 48 * GameMap.tileWidth, 99 * GameMap.tileHeight, -y * 48 * GameMap.tileWidth) * scale;
-                    vert2 = new Vector3((x + 1) * 48 * GameMap.tileWidth, 99 * GameMap.tileHeight, -(y + 1) * 48 * GameMap.tileWidth) * scale;
-
-                    AddHorizontalQuad(vert1, vert2, biome, Color.white, waterVerts, null, waterUvs, null, waterTris);
+                    if (rivers[x, y].north.min_pos >= 0)
+                        riverSides |= 1;
+                    if (rivers[x, y].east.min_pos >= 0)
+                        riverSides |= 2;
+                    if (rivers[x, y].south.min_pos >= 0)
+                        riverSides |= 4;
+                    if (rivers[x, y].west.min_pos >= 0)
+                        riverSides |= 8;
                 }
 
                 int north = 0;
                 if (y > 0 && !IsInCoords(fortMin, fortMax, x, y - 1))
                     north = elevation[x, y - 1];
-                if (north < elevation[x, y])
-                {
-                    vert1 = new Vector3(x * 48 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -y * 48 * GameMap.tileWidth) * scale;
-                    vert2 = new Vector3((x + 1) * 48 * GameMap.tileWidth, north * GameMap.tileHeight, -y * 48 * GameMap.tileWidth) * scale;
-
-                    AddVerticalQuad(vert1, vert2, biome, Color.white, vertices, colors, uvs, uv2s, triangles);
-                }
 
                 int south = 0;
                 if (y < h - 1 && !IsInCoords(fortMin, fortMax, x, y + 1))
                     south = elevation[x, y + 1];
-                if (south < elevation[x, y])
-                {
-                    vert1 = new Vector3((x + 1) * 48 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -(y + 1) * 48 * GameMap.tileWidth) * scale;
-                    vert2 = new Vector3(x * 48 * GameMap.tileWidth, south * GameMap.tileHeight, -(y + 1) * 48 * GameMap.tileWidth) * scale;
-
-                    AddVerticalQuad(vert1, vert2, biome, Color.white, vertices, colors, uvs, uv2s, triangles);
-                }
 
                 int east = 0;
                 if (x < w - 1 && !IsInCoords(fortMin, fortMax, x + 1, y))
                     east = elevation[x + 1, y];
-                if (east < elevation[x, y])
-                {
-                    vert1 = new Vector3((x + 1) * 48 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -y * 48 * GameMap.tileWidth) * scale;
-                    vert2 = new Vector3((x + 1) * 48 * GameMap.tileWidth, east * GameMap.tileHeight, -(y + 1) * 48 * GameMap.tileWidth) * scale;
-
-                    AddVerticalQuad(vert1, vert2, biome, Color.white, vertices, colors, uvs, uv2s, triangles);
-                }
 
                 int west = 0;
                 if (x > 0 && !IsInCoords(fortMin, fortMax, x - 1, y))
                     west = elevation[x - 1, y];
-                if (west < elevation[x, y])
-                {
-                    vert1 = new Vector3(x * 48 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -(y + 1) * 48 * GameMap.tileWidth) * scale;
-                    vert2 = new Vector3(x * 48 * GameMap.tileWidth, west * GameMap.tileHeight, -y * 48 * GameMap.tileWidth) * scale;
 
-                    AddVerticalQuad(vert1, vert2, biome, Color.white, vertices, colors, uvs, uv2s, triangles);
+                if (riverSides == 0)
+                    AddFlatTile(vert1, biome, north * GameMap.tileHeight, east * GameMap.tileHeight, south * GameMap.tileHeight, west * GameMap.tileHeight);
+                else;
+                {
+
                 }
+
                 if (vertices.Count >= (65535 - 20))
                     break;
             }
@@ -236,8 +235,8 @@ public class RegionMaker : MonoBehaviour
         terrainMesh = new Mesh();
         terrainMesh.vertices = vertices.ToArray();
         terrainMesh.colors = colors.ToArray();
-        terrainMesh.uv = uvs.ToArray();
-        terrainMesh.uv2 = uv2s.ToArray();
+        terrainMesh.uv = uvCoords.ToArray();
+        terrainMesh.uv2 = uvCoords2.ToArray();
         terrainMesh.triangles = triangles.ToArray();
 
         terrainMesh.RecalculateNormals();
@@ -276,6 +275,56 @@ public class RegionMaker : MonoBehaviour
             waterTris.Clear();
         }
 
+    }
+
+    private void AddFlatTile(Vector3 vert1, Vector2 biome, float north, float east, float south, float west)
+    {
+        Vector3 vert2 = vert1 + new Vector3(48 * GameMap.tileWidth, 0, -48 * GameMap.tileWidth);
+
+        Vector3 vert3;
+        Vector3 vert4;
+
+        AddHorizontalQuad(vert1, vert2, biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+
+        if (vert1.y < 99 * GameMap.tileHeight)
+        {
+            vert3 = new Vector3(vert1.x, 99 * GameMap.tileHeight, vert1.z);
+            vert4 = new Vector3(vert2.x, 99 * GameMap.tileHeight, vert2.z);
+
+            AddHorizontalQuad(vert3, vert4, biome, Color.white, waterVerts, null, waterUvs, null, waterTris);
+        }
+
+        if (north < vert1.y)
+        {
+            vert3 = vert1;
+            vert4 = new Vector3(vert2.x, north, vert1.z);
+
+            AddVerticalQuad(vert3, vert4, biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+        }
+
+        if (south < vert1.y)
+        {
+            vert3 = vert2;
+            vert4 = new Vector3(vert1.x, south, vert2.z);
+
+            AddVerticalQuad(vert3, vert4, biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+        }
+
+        if (east < vert1.y)
+        {
+            vert3 = new Vector3(vert2.x, vert1.y, vert1.z);
+            vert4 = new Vector3(vert2.x, east, vert2.z);
+
+            AddVerticalQuad(vert3, vert4, biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+        }
+
+        if (west < vert1.y)
+        {
+            vert3 = new Vector3(vert1.x, vert1.y, vert2.z);
+            vert4 = new Vector3(vert1.x, west, vert1.z);
+
+            AddVerticalQuad(vert3, vert4, biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+        }
     }
 
     public static void AddHorizontalQuad(Vector3 vert1, Vector3 vert2, Vector2 biome, Color color, List<Vector3> vertices, List<Color> colors, List<Vector2> uvs, List<Vector2> uv2s, List<int> triangles)
