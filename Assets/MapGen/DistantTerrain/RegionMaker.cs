@@ -196,7 +196,6 @@ public class RegionMaker : MonoBehaviour
                 Vector2 biome = new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100;
 
                 Vector3 vert1 = new Vector3(x * 48 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -y * 48 * GameMap.tileWidth);
-                Vector3 vert2 = new Vector3((x + 1) * 48 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -(y + 1) * 48 * GameMap.tileWidth);
 
                 Sides riverSides = 0;
 
@@ -515,155 +514,47 @@ public class RegionMaker : MonoBehaviour
                     waterTris.Add(waterIndex + 2);
                 }
                 break;
+            case Sides.North:
+                AddRiverEnd(verts[0, 0], verts[1, 0], verts[2, 0], verts[3, 0], verts[3, 3], verts[0, 3], biome, waterLevel, north, east, south, west);
+                break;
+            case Sides.East:
+                AddRiverEnd(verts[3, 0], verts[3, 1], verts[3, 2], verts[3, 3], verts[0, 3], verts[0, 0], biome, waterLevel, east, south, west, north);
+                break;
+            case Sides.South:
+                AddRiverEnd(verts[3, 3], verts[2, 3], verts[1, 3], verts[0, 3], verts[0, 0], verts[3, 0], biome, waterLevel, south, west, north, east);
+                break;
+            case Sides.West:
+                AddRiverEnd(verts[0, 3], verts[0, 2], verts[0, 1], verts[0, 0], verts[3, 0], verts[3, 3], biome, waterLevel, west, north, east, south);
+                break;
             case Sides.North | Sides.East:
-                    AddRiverCorner(verts[0, 0], verts[1, 0], verts[2, 0], verts[3, 0], verts[3, 1], verts[3, 2], verts[3, 3], verts[0, 3], biome, waterLevel, north, east, south, west);
+                AddRiverCorner(verts[0, 0], verts[1, 0], verts[2, 0], verts[3, 0], verts[3, 1], verts[3, 2], verts[3, 3], verts[0, 3], biome, waterLevel, north, east, south, west);
                 break;
             case Sides.East | Sides.South:
-                    AddRiverCorner(verts[3, 0], verts[3, 1], verts[3, 2], verts[3, 3], verts[2, 3], verts[1, 3], verts[0, 3], verts[0, 0], biome, waterLevel, east, south, west, north);
+                AddRiverCorner(verts[3, 0], verts[3, 1], verts[3, 2], verts[3, 3], verts[2, 3], verts[1, 3], verts[0, 3], verts[0, 0], biome, waterLevel, east, south, west, north);
                 break;
             case Sides.South | Sides.West:
-                    AddRiverCorner(verts[3, 3], verts[2, 3], verts[1, 3], verts[0, 3], verts[0, 2], verts[0, 1], verts[0, 0], verts[3, 0], biome, waterLevel, south, west, north, east);
+                AddRiverCorner(verts[3, 3], verts[2, 3], verts[1, 3], verts[0, 3], verts[0, 2], verts[0, 1], verts[0, 0], verts[3, 0], biome, waterLevel, south, west, north, east);
                 break;
             case Sides.West | Sides.North:
-                    AddRiverCorner(verts[0, 3], verts[0, 2], verts[0, 1], verts[0, 0], verts[1, 0], verts[2, 0], verts[3, 0], verts[3, 3], biome, waterLevel, west, north, east, south);
+                AddRiverCorner(verts[0, 3], verts[0, 2], verts[0, 1], verts[0, 0], verts[1, 0], verts[2, 0], verts[3, 0], verts[3, 3], biome, waterLevel, west, north, east, south);
                 break;
             case Sides.North | Sides.East | Sides.South:
-                AddRiverTee(verts[0, 0], verts[1, 0], verts[2, 0], verts[3, 0], verts[3, 1], verts[3, 2], verts[3, 3], verts[2, 3], verts[1, 3], verts[0, 3], biome, waterLevel, north, east, south, west);
+                AddRiverTee(verts[0, 0], verts[1, 0], verts[2, 0], verts[3, 0], verts[3, 1], verts[3, 2], verts[3, 3], verts[2, 3], verts[1, 3], verts[0, 3], biome, waterLevel, north, east, south, west, riverTile.north.elevation, riverTile.east.elevation, riverTile.south.elevation);
                 break;
             case Sides.East | Sides.South | Sides.West:
-                AddRiverTee(verts[3, 0], verts[3, 1], verts[3, 2], verts[3, 3], verts[2, 3], verts[1, 3], verts[0, 3], verts[0, 2], verts[0, 1], verts[0, 0], biome, waterLevel, east, south, west, north);
+                AddRiverTee(verts[3, 0], verts[3, 1], verts[3, 2], verts[3, 3], verts[2, 3], verts[1, 3], verts[0, 3], verts[0, 2], verts[0, 1], verts[0, 0], biome, waterLevel, east, south, west, north, riverTile.east.elevation, riverTile.south.elevation, riverTile.west.elevation);
                 break;
             case Sides.South | Sides.West | Sides.North:
-                AddRiverTee(verts[3, 3], verts[2, 3], verts[1, 3], verts[0, 3], verts[0, 2], verts[0, 1], verts[0, 0], verts[1, 0], verts[2, 0], verts[3, 0], biome, waterLevel, south, west, north, east);
+                AddRiverTee(verts[3, 3], verts[2, 3], verts[1, 3], verts[0, 3], verts[0, 2], verts[0, 1], verts[0, 0], verts[1, 0], verts[2, 0], verts[3, 0], biome, waterLevel, south, west, north, east, riverTile.south.elevation, riverTile.west.elevation, riverTile.north.elevation);
                 break;
             case Sides.West | Sides.North | Sides.East:
-                AddRiverTee(verts[0, 3], verts[0, 2], verts[0, 1], verts[0, 0], verts[1, 0], verts[2, 0], verts[3, 0], verts[3, 1], verts[3, 2], verts[3, 3], biome, waterLevel, west, north, east, south);
+                AddRiverTee(verts[0, 3], verts[0, 2], verts[0, 1], verts[0, 0], verts[1, 0], verts[2, 0], verts[3, 0], verts[3, 1], verts[3, 2], verts[3, 3], biome, waterLevel, west, north, east, south, riverTile.west.elevation, riverTile.north.elevation, riverTile.east.elevation);
                 break;
             case Sides.North | Sides.East | Sides.South | Sides.West:
                 break;
             default:
                 break;
         }
-    }
-
-    private void AddRiverTee(Vector3 vert1, Vector3 vert2, Vector3 vert3, Vector3 vert4, Vector3 vert5, Vector3 vert6, Vector3 vert7, Vector3 vert8, Vector3 vert9, Vector3 vert10, Vector2 biome, int waterLevel, float north, float east, float south, float west)
-    {
-        int index = vertices.Count;
-        int waterIndex = waterVerts.Count;
-
-        vertices.Add(vert1);
-        vertices.Add(vert2);
-        vertices.Add(vert3);
-        vertices.Add(vert4);
-        vertices.Add(vert5);
-        vertices.Add(vert6);
-        vertices.Add(vert7);
-        vertices.Add(vert8);
-        vertices.Add(vert9);
-        vertices.Add(vert10);
-
-        vertices.Add(new Vector3(vert2.x, (waterLevel - 1) * GameMap.tileHeight, vert2.z)); //10
-        vertices.Add(new Vector3(vert3.x, (waterLevel - 1) * GameMap.tileHeight, vert3.z)); //11
-        vertices.Add(new Vector3(vert5.x, (waterLevel - 1) * GameMap.tileHeight, vert5.z)); //12
-        vertices.Add(new Vector3(vert6.x, (waterLevel - 1) * GameMap.tileHeight, vert6.z)); //13
-        vertices.Add(new Vector3(vert8.x, (waterLevel - 1) * GameMap.tileHeight, vert8.z)); //14
-        vertices.Add(new Vector3(vert9.x, (waterLevel - 1) * GameMap.tileHeight, vert9.z)); //15
-
-        for (int i = 0; i < 16; i++)
-        {
-            uvCoords.Add(new Vector2(vertices[index + i].x, vertices[index + i].z));
-            uvCoords2.Add(biome);
-            colors.Add(Color.white);
-        }
-
-        triangles.Add(index + 0);
-        triangles.Add(index + 1);
-        triangles.Add(index + 9);
-
-        triangles.Add(index + 1);
-        triangles.Add(index + 8);
-        triangles.Add(index + 9);
-
-        triangles.Add(index + 2);
-        triangles.Add(index + 3);
-        triangles.Add(index + 4);
-
-        triangles.Add(index + 5);
-        triangles.Add(index + 6);
-        triangles.Add(index + 7);
-
-        triangles.Add(index + 10 + 0);
-        triangles.Add(index + 10 + 4);
-        triangles.Add(index + 10 + 5);
-
-        triangles.Add(index + 10 + 0);
-        triangles.Add(index + 10 + 1);
-        triangles.Add(index + 10 + 4);
-
-        triangles.Add(index + 10 + 1);
-        triangles.Add(index + 10 + 2);
-        triangles.Add(index + 10 + 4);
-
-        triangles.Add(index + 10 + 2);
-        triangles.Add(index + 10 + 3);
-        triangles.Add(index + 10 + 4);
-
-        //now the river banks
-        AddVerticalQuad(vert2, new Vector3(vert9.x, (waterLevel - 1) * GameMap.tileHeight, vert9.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
-        AddVerticalQuad(vert5, new Vector3(vert3.x, (waterLevel - 1) * GameMap.tileHeight, vert3.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
-        AddVerticalQuad(vert8, new Vector3(vert6.x, (waterLevel - 1) * GameMap.tileHeight, vert6.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
-
-        //Tile edges
-        if (north < vert1.y)
-        {
-            AddVerticalQuad(vert1, new Vector3(vert2.x, north, vert2.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
-            AddVerticalQuad(vert3, new Vector3(vert4.x, north, vert4.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
-        }
-
-        if (south < vert1.y)
-        {
-            AddVerticalQuad(vert7, new Vector3(vert8.x, south, vert8.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
-            AddVerticalQuad(vert9, new Vector3(vert10.x, south, vert10.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
-        }
-
-        if (east < vert1.y)
-        {
-            AddVerticalQuad(vert4, new Vector3(vert5.x, east, vert5.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
-            AddVerticalQuad(vert6, new Vector3(vert7.x, east, vert7.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
-        }
-
-        if (west < vert1.y)
-        {
-            AddVerticalQuad(vert10, new Vector3(vert1.x, west, vert1.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
-        }
-
-        //and now for the river
-        waterVerts.Add(new Vector3(vert2.x, (waterLevel - 0) * GameMap.tileHeight, vert2.z)); //10
-        waterVerts.Add(new Vector3(vert3.x, (waterLevel - 0) * GameMap.tileHeight, vert3.z)); //11
-        waterVerts.Add(new Vector3(vert5.x, (waterLevel - 0) * GameMap.tileHeight, vert5.z)); //12
-        waterVerts.Add(new Vector3(vert6.x, (waterLevel - 0) * GameMap.tileHeight, vert6.z)); //13
-        waterVerts.Add(new Vector3(vert8.x, (waterLevel - 0) * GameMap.tileHeight, vert8.z)); //14
-        waterVerts.Add(new Vector3(vert9.x, (waterLevel - 0) * GameMap.tileHeight, vert9.z)); //15
-
-        for (int i = 0; i < 6; i++)
-            waterUvs.Add(new Vector2(waterVerts[waterIndex + i].x, waterVerts[waterIndex + i].z));
-
-        waterTris.Add(waterIndex + 0);
-        waterTris.Add(waterIndex + 4);
-        waterTris.Add(waterIndex + 5);
-
-        waterTris.Add(waterIndex + 0);
-        waterTris.Add(waterIndex + 1);
-        waterTris.Add(waterIndex + 4);
-
-        waterTris.Add(waterIndex + 1);
-        waterTris.Add(waterIndex + 2);
-        waterTris.Add(waterIndex + 4);
-
-        waterTris.Add(waterIndex + 2);
-        waterTris.Add(waterIndex + 3);
-        waterTris.Add(waterIndex + 4);
-
     }
 
     Vector3 FindEllipseCorner(Vector3 center, Vector3 sideA, Vector3 sideB)
@@ -684,6 +575,96 @@ public class RegionMaker : MonoBehaviour
             z = -z;
 
         return center + new Vector3(x, 0, z);
+    }
+
+    private void AddRiverEnd(Vector3 vert1, Vector3 vert2, Vector3 vert3, Vector3 vert4, Vector3 vert5, Vector3 vert6, Vector2 biome, int waterLevel, float north, float east, float south, float west)
+    {
+        int index = vertices.Count;
+        int waterIndex = waterVerts.Count;
+
+        Vector3 center = (vert1 + vert4 + vert5 + vert6) / 4;
+
+        vertices.Add(center);
+        vertices.Add(vert1);
+        vertices.Add(vert2);
+        vertices.Add(vert3);
+        vertices.Add(vert4);
+        vertices.Add(vert5);
+        vertices.Add(vert6);
+
+        vertices.Add(new Vector3(vert2.x, (waterLevel - 1) * GameMap.tileHeight, vert2.z));
+        vertices.Add(new Vector3(vert3.x, (waterLevel - 1) * GameMap.tileHeight, vert3.z));
+        vertices.Add(new Vector3(center.x, (waterLevel - 1) * GameMap.tileHeight, center.z));
+
+        for (int i = 0; i < 10; i++)
+        {
+            uvCoords.Add(new Vector2(vertices[index + i].x, vertices[index + i].z));
+            uvCoords2.Add(biome);
+            colors.Add(Color.white);
+        }
+
+        triangles.Add(index + 0);
+        triangles.Add(index + 1);
+        triangles.Add(index + 2);
+
+        triangles.Add(index + 0);
+        triangles.Add(index + 3);
+        triangles.Add(index + 4);
+
+        triangles.Add(index + 0);
+        triangles.Add(index + 4);
+        triangles.Add(index + 5);
+
+        triangles.Add(index + 0);
+        triangles.Add(index + 5);
+        triangles.Add(index + 6);
+
+        triangles.Add(index + 0);
+        triangles.Add(index + 6);
+        triangles.Add(index + 1);
+
+        triangles.Add(index + 7 + 0);
+        triangles.Add(index + 7 + 1);
+        triangles.Add(index + 7 + 2);
+
+        //now the river banks
+        AddVerticalQuad(center, new Vector3(vert3.x, (waterLevel - 1) * GameMap.tileHeight, vert3.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+        AddVerticalQuad(vert2, new Vector3(center.x, (waterLevel - 1) * GameMap.tileHeight, center.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+
+        //Tile edges
+        if (north < vert1.y)
+        {
+            AddVerticalQuad(vert1, new Vector3(vert2.x, north, vert2.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+            AddVerticalQuad(vert3, new Vector3(vert4.x, north, vert4.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+        }
+
+        if (south < vert1.y)
+        {
+            AddVerticalQuad(vert5, new Vector3(vert6.x, south, vert6.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+        }
+
+        if (east < vert1.y)
+        {
+            AddVerticalQuad(vert4, new Vector3(vert5.x, east, vert5.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+        }
+
+        if (west < vert1.y)
+        {
+            AddVerticalQuad(vert6, new Vector3(vert1.x, west, vert1.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+        }
+
+        //and now for the river
+        waterVerts.Add(new Vector3(vert2.x, (waterLevel - 0) * GameMap.tileHeight, vert2.z));
+        waterVerts.Add(new Vector3(vert3.x, (waterLevel - 0) * GameMap.tileHeight, vert3.z));
+        waterVerts.Add(new Vector3(center.x, (waterLevel - 0) * GameMap.tileHeight, center.z));
+
+        for (int i = 0; i < 3; i++)
+            waterUvs.Add(new Vector2(waterVerts[waterIndex + i].x, waterVerts[waterIndex + i].z));
+
+        waterTris.Add(waterIndex + 0 + 0);
+        waterTris.Add(waterIndex + 0 + 1);
+        waterTris.Add(waterIndex + 0 + 2);
+
     }
 
     private void AddRiverCorner(Vector3 vert1, Vector3 vert2, Vector3 vert3, Vector3 vert4, Vector3 vert5, Vector3 vert6, Vector3 vert7, Vector3 vert8, Vector2 biome, int waterLevel, float north, float east, float south, float west)
@@ -822,6 +803,173 @@ public class RegionMaker : MonoBehaviour
         waterTris.Add(waterIndex + 4);
     }
 
+    private void AddRiverTee(Vector3 vert1, Vector3 vert2, Vector3 vert3, Vector3 vert4, Vector3 vert5, Vector3 vert6, Vector3 vert7, Vector3 vert8, Vector3 vert9, Vector3 vert10, Vector2 biome, int waterLevel, float north, float east, float south, float west, int waterLevelNorth, int waterLevelEast, int waterLevelSouth)
+    {
+        int index = vertices.Count;
+        int waterIndex = waterVerts.Count;
+
+        vertices.Add(vert1);
+        vertices.Add(vert2);
+        vertices.Add(vert3);
+        vertices.Add(vert4);
+        vertices.Add(vert5);
+        vertices.Add(vert6);
+        vertices.Add(vert7);
+        vertices.Add(vert8);
+        vertices.Add(vert9);
+        vertices.Add(vert10);
+
+        vertices.Add(new Vector3(vert2.x, (waterLevel - 1) * GameMap.tileHeight, vert2.z)); //10
+        vertices.Add(new Vector3(vert3.x, (waterLevel - 1) * GameMap.tileHeight, vert3.z)); //11
+        vertices.Add(new Vector3(vert5.x, (waterLevel - 1) * GameMap.tileHeight, vert5.z)); //12
+        vertices.Add(new Vector3(vert6.x, (waterLevel - 1) * GameMap.tileHeight, vert6.z)); //13
+        vertices.Add(new Vector3(vert8.x, (waterLevel - 1) * GameMap.tileHeight, vert8.z)); //14
+        vertices.Add(new Vector3(vert9.x, (waterLevel - 1) * GameMap.tileHeight, vert9.z)); //15
+
+        for (int i = 0; i < 16; i++)
+        {
+            uvCoords.Add(new Vector2(vertices[index + i].x, vertices[index + i].z));
+            uvCoords2.Add(biome);
+            colors.Add(Color.white);
+        }
+
+        triangles.Add(index + 0);
+        triangles.Add(index + 1);
+        triangles.Add(index + 9);
+
+        triangles.Add(index + 1);
+        triangles.Add(index + 8);
+        triangles.Add(index + 9);
+
+        triangles.Add(index + 2);
+        triangles.Add(index + 3);
+        triangles.Add(index + 4);
+
+        triangles.Add(index + 5);
+        triangles.Add(index + 6);
+        triangles.Add(index + 7);
+
+        triangles.Add(index + 10 + 0);
+        triangles.Add(index + 10 + 4);
+        triangles.Add(index + 10 + 5);
+
+        triangles.Add(index + 10 + 0);
+        triangles.Add(index + 10 + 1);
+        triangles.Add(index + 10 + 4);
+
+        triangles.Add(index + 10 + 1);
+        triangles.Add(index + 10 + 2);
+        triangles.Add(index + 10 + 4);
+
+        triangles.Add(index + 10 + 2);
+        triangles.Add(index + 10 + 3);
+        triangles.Add(index + 10 + 4);
+
+        //now the river banks
+        AddVerticalQuad(vert2, new Vector3(vert9.x, (waterLevel - 1) * GameMap.tileHeight, vert9.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+        AddVerticalQuad(vert5, new Vector3(vert3.x, (waterLevel - 1) * GameMap.tileHeight, vert3.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+        AddVerticalQuad(vert8, new Vector3(vert6.x, (waterLevel - 1) * GameMap.tileHeight, vert6.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+
+        //waterfalls
+        if (waterLevelNorth > waterLevel)
+        {
+            AddVerticalQuad(new Vector3(vert3.x, (waterLevelNorth - 1) * GameMap.tileHeight, vert3.z), new Vector3(vert2.x, (waterLevel - 1) * GameMap.tileHeight, vert2.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+        }
+        if (waterLevelEast > waterLevel)
+        {
+            AddVerticalQuad(new Vector3(vert6.x, (waterLevelEast - 1) * GameMap.tileHeight, vert6.z), new Vector3(vert5.x, (waterLevel - 1) * GameMap.tileHeight, vert5.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+        }
+        if (waterLevelSouth > waterLevel)
+        {
+            AddVerticalQuad(new Vector3(vert9.x, (waterLevelSouth - 1) * GameMap.tileHeight, vert9.z), new Vector3(vert8.x, (waterLevel - 1) * GameMap.tileHeight, vert8.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+        }
+
+        //Tile edges
+        if (north < vert1.y)
+        {
+            AddVerticalQuad(vert1, new Vector3(vert2.x, north, vert2.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+            AddVerticalQuad(vert3, new Vector3(vert4.x, north, vert4.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+        }
+
+        if (south < vert1.y)
+        {
+            AddVerticalQuad(vert7, new Vector3(vert8.x, south, vert8.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+            AddVerticalQuad(vert9, new Vector3(vert10.x, south, vert10.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+        }
+
+        if (east < vert1.y)
+        {
+            AddVerticalQuad(vert4, new Vector3(vert5.x, east, vert5.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+            AddVerticalQuad(vert6, new Vector3(vert7.x, east, vert7.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+        }
+
+        if (west < vert1.y)
+        {
+            AddVerticalQuad(vert10, new Vector3(vert1.x, west, vert1.z), biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
+        }
+
+        //and now for the river
+        waterVerts.Add(new Vector3(vert2.x, (waterLevel - 0) * GameMap.tileHeight, vert2.z)); //10
+        waterVerts.Add(new Vector3(vert3.x, (waterLevel - 0) * GameMap.tileHeight, vert3.z)); //11
+        waterVerts.Add(new Vector3(vert5.x, (waterLevel - 0) * GameMap.tileHeight, vert5.z)); //12
+        waterVerts.Add(new Vector3(vert6.x, (waterLevel - 0) * GameMap.tileHeight, vert6.z)); //13
+        waterVerts.Add(new Vector3(vert8.x, (waterLevel - 0) * GameMap.tileHeight, vert8.z)); //14
+        waterVerts.Add(new Vector3(vert9.x, (waterLevel - 0) * GameMap.tileHeight, vert9.z)); //15
+
+        for (int i = 0; i < 6; i++)
+            waterUvs.Add(new Vector2(waterVerts[waterIndex + i].x, waterVerts[waterIndex + i].z));
+
+        waterTris.Add(waterIndex + 0);
+        waterTris.Add(waterIndex + 4);
+        waterTris.Add(waterIndex + 5);
+
+        waterTris.Add(waterIndex + 0);
+        waterTris.Add(waterIndex + 1);
+        waterTris.Add(waterIndex + 4);
+
+        waterTris.Add(waterIndex + 1);
+        waterTris.Add(waterIndex + 2);
+        waterTris.Add(waterIndex + 4);
+
+        waterTris.Add(waterIndex + 2);
+        waterTris.Add(waterIndex + 3);
+        waterTris.Add(waterIndex + 4);
+
+        //waterfalls again!
+        if (waterLevelNorth > waterLevel)
+        {
+            AddQuad(
+                new Vector3(vert2.x, waterLevelNorth * GameMap.tileHeight, vert2.z),
+                new Vector3(vert3.x, waterLevelNorth * GameMap.tileHeight, vert3.z),
+                new Vector3(vert3.x, waterLevel * GameMap.tileHeight, vert3.z) - ((vert1 - vert10) / 48),
+                new Vector3(vert2.x, waterLevel * GameMap.tileHeight, vert2.z) - ((vert1 - vert10) / 48),
+                biome, Color.white, waterVerts, null, waterUvs, null, waterTris
+                );
+        }
+        if (waterLevelEast > waterLevel)
+        {
+            AddQuad(
+                new Vector3(vert5.x, waterLevelEast * GameMap.tileHeight, vert5.z),
+                new Vector3(vert6.x, waterLevelEast * GameMap.tileHeight, vert6.z),
+                new Vector3(vert6.x, waterLevel * GameMap.tileHeight, vert6.z) - ((vert4 - vert1) / 48),
+                new Vector3(vert5.x, waterLevel * GameMap.tileHeight, vert5.z) - ((vert4 - vert1) / 48),
+                biome, Color.white, waterVerts, null, waterUvs, null, waterTris
+                );
+        }
+        if (waterLevelSouth > waterLevel)
+        {
+            AddQuad(
+                new Vector3(vert8.x, waterLevelSouth * GameMap.tileHeight, vert8.z),
+                new Vector3(vert9.x, waterLevelSouth * GameMap.tileHeight, vert9.z),
+                new Vector3(vert9.x, waterLevel * GameMap.tileHeight, vert9.z) - ((vert10 - vert1) / 48),
+                new Vector3(vert8.x, waterLevel * GameMap.tileHeight, vert8.z) - ((vert10 - vert1) / 48),
+                biome, Color.white, waterVerts, null, waterUvs, null, waterTris
+                );
+        }
+
+    }
+
+
     private void AddFlatTile(Vector3 vert1, Vector2 biome, float north, float east, float south, float west)
     {
         Vector3 vert2 = vert1 + new Vector3(48 * GameMap.tileWidth, 0, -48 * GameMap.tileWidth);
@@ -872,44 +1020,37 @@ public class RegionMaker : MonoBehaviour
         }
     }
 
-    public static void AddHorizontalQuad(Vector3 vert1, Vector3 vert2, Vector2 biome, Color color, List<Vector3> vertices, List<Color> colors, List<Vector2> uvs, List<Vector2> uv2s, List<int> triangles)
+    public static void AddQuad(Vector3 vert1, Vector3 vert2, Vector3 vert3, Vector3 vert4, Vector2 biome, Color color, List<Vector3> vertices, List<Color> colors, List<Vector2> uvs, List<Vector2> uv2s, List<int> triangles)
     {
         int index = vertices.Count;
-        vertices.Add(new Vector3(vert1.x, vert1.y, vert1.z));
-        vertices.Add(new Vector3(vert2.x, vert1.y, vert1.z));
-        vertices.Add(new Vector3(vert1.x, vert2.y, vert2.z));
-        vertices.Add(new Vector3(vert2.x, vert2.y, vert2.z));
+        vertices.Add(vert1);
+        vertices.Add(vert2);
+        vertices.Add(vert3);
+        vertices.Add(vert4);
 
-        if (colors != null)
+        for(int i = 0; i < 4; i++)
         {
-            colors.Add(color);
-            colors.Add(color);
-            colors.Add(color);
-            colors.Add(color);
-        }
-
-        if (uv2s != null)
-        {
-            uv2s.Add(biome);
-            uv2s.Add(biome);
-            uv2s.Add(biome);
-            uv2s.Add(biome);
-        }
-        if (uvs != null)
-        {
-            uvs.Add(new Vector2(vert1.x, vert1.z));
-            uvs.Add(new Vector2(vert2.x, vert1.z));
-            uvs.Add(new Vector2(vert1.x, vert2.z));
-            uvs.Add(new Vector2(vert2.x, vert2.z));
+            if (colors != null)
+                colors.Add(color);
+            if (uv2s != null)
+                uv2s.Add(biome);
+            if (uvs != null)
+                uvs.Add(new Vector2(vertices[index+i].x, vertices[index + i].z));
         }
 
         triangles.Add(index);
         triangles.Add(index + 1);
-        triangles.Add(index + 2);
+        triangles.Add(index + 3);
 
         triangles.Add(index + 1);
-        triangles.Add(index + 3);
         triangles.Add(index + 2);
+        triangles.Add(index + 3);
+
+    }
+
+    public static void AddHorizontalQuad(Vector3 vert1, Vector3 vert2, Vector2 biome, Color color, List<Vector3> vertices, List<Color> colors, List<Vector2> uvs, List<Vector2> uv2s, List<int> triangles)
+    {
+        AddQuad(new Vector3(vert1.x, vert1.y, vert1.z), new Vector3(vert2.x, vert1.y, vert1.z),  new Vector3(vert2.x, vert2.y, vert2.z), new Vector3(vert1.x, vert2.y, vert2.z), biome, color, vertices, colors, uvs, uv2s, triangles);
     }
 
     public static void AddVerticalQuad(Vector3 vert1, Vector3 vert2, Vector2 biome, Color color, List<Vector3> vertices, List<Color> colors, List<Vector2> uvs, List<Vector2> uv2s, List<int> triangles)
