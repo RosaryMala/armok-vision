@@ -318,9 +318,6 @@ public class RegionMaker : MonoBehaviour
         verts[3, 1] = verts[3, 0] + new Vector3(0, 0, -riverTile.east.min_pos * GameMap.tileWidth);
         verts[3, 2] = verts[3, 0] + new Vector3(0, 0, -(riverTile.east.max_pos + 1) * GameMap.tileWidth);
 
-        int index = vertices.Count;
-        int waterIndex = waterVerts.Count;
-
         switch (riverSides)
         {
             case Sides.North | Sides.South:
