@@ -25,6 +25,9 @@ abstract class BlockMesher {
         public CPUMesh tiles;
         public CPUMesh stencilTiles;
         public CPUMesh transparentTiles;
+        public CPUMesh topTiles;
+        public CPUMesh topStencilTiles;
+        public CPUMesh topTransparentTiles;
         public CPUMesh water;
         public CPUMesh magma;
     }
@@ -192,7 +195,7 @@ abstract class BlockMesher {
         }
         if (request.tiles)
         {
-            GenerateTiles(request.data, out result.tiles, out result.stencilTiles, out result.transparentTiles, temp);
+            GenerateTiles(request.data, out result.tiles, out result.stencilTiles, out result.transparentTiles, out result.topTiles, out result.topStencilTiles, out result.topTransparentTiles, temp);
         }
         return result;
     }
@@ -318,7 +321,7 @@ abstract class BlockMesher {
         }
     }
 
-    bool GenerateTiles(MapDataStore data, out CPUMesh tiles, out CPUMesh stencilTiles, out CPUMesh transparentTiles, TempBuffers temp)
+    bool GenerateTiles(MapDataStore data, out CPUMesh tiles, out CPUMesh stencilTiles, out CPUMesh transparentTiles, out CPUMesh topTiles, out CPUMesh topStencilTiles, out CPUMesh topTransparentTiles, TempBuffers temp)
     {
         int block_x = data.SliceOrigin.x / GameMap.blockSize;
         int block_y = data.SliceOrigin.y / GameMap.blockSize;
@@ -352,9 +355,12 @@ abstract class BlockMesher {
                 }
             }
         bool dontCare, success;
-        stencilTiles = MeshCombineUtility.ColorCombine(temp.stencilMeshBuffer, out dontCare);
-        transparentTiles = MeshCombineUtility.ColorCombine(temp.transparentMeshBuffer, out dontCare);
-        tiles = MeshCombineUtility.ColorCombine(temp.meshBuffer, out success);
+        stencilTiles = MeshCombineUtility.ColorCombine(temp.stencilMeshBuffer, out dontCare, false);
+        topStencilTiles = MeshCombineUtility.ColorCombine(temp.stencilMeshBuffer, out dontCare, true);
+        transparentTiles = MeshCombineUtility.ColorCombine(temp.transparentMeshBuffer, out dontCare, false);
+        topTransparentTiles = MeshCombineUtility.ColorCombine(temp.transparentMeshBuffer, out dontCare, true);
+        topTiles = MeshCombineUtility.ColorCombine(temp.meshBuffer, out dontCare, true);
+        tiles = MeshCombineUtility.ColorCombine(temp.meshBuffer, out success, false);
 
         return success;
     }

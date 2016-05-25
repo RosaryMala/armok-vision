@@ -31,7 +31,7 @@ public class MeshCombineUtility
         public HiddenFaces hiddenFaces;
     }
 
-    public static CPUMesh ColorCombine(MeshInstance[] combines, out bool success)
+    public static CPUMesh ColorCombine(MeshInstance[] combines, out bool success, bool topLayer = false)
     {
         int length = combines.Length;
         int vertexCount = 0;
@@ -77,17 +77,27 @@ public class MeshCombineUtility
                 var inputUVs = combines[combIndex].meshData.uv;
                 var inputColors = combines[combIndex].meshData.colors;
                 var inputTangents = combines[combIndex].meshData.tangents;
-                int copiedTriangles = 0;
                 for (int i = 0; i < inputtriangles.Length; i += 3)
                 {
                     int vert0 = inputtriangles[i + 0];
                     int vert1 = inputtriangles[i + 1];
                     int vert2 = inputtriangles[i + 2];
-                    if (((combines[combIndex].hiddenFaces & HiddenFaces.Up) == HiddenFaces.Up)
-                        && (inputVertices[vert0].y > topThreshold)
-                        && (inputVertices[vert1].y > topThreshold)
-                        && (inputVertices[vert2].y > topThreshold))
-                        continue;
+                    if (topLayer)
+                    {
+                        if (!(((combines[combIndex].hiddenFaces & HiddenFaces.Up) == HiddenFaces.Up)
+                            && (inputVertices[vert0].y > topThreshold)
+                            && (inputVertices[vert1].y > topThreshold)
+                            && (inputVertices[vert2].y > topThreshold)))
+                            continue;
+                    }
+                    else
+                    {
+                        if (((combines[combIndex].hiddenFaces & HiddenFaces.Up) == HiddenFaces.Up)
+                            && (inputVertices[vert0].y > topThreshold)
+                            && (inputVertices[vert1].y > topThreshold)
+                            && (inputVertices[vert2].y > topThreshold))
+                            continue;
+                    }
                     if (((combines[combIndex].hiddenFaces & HiddenFaces.Down) == HiddenFaces.Down)
                         && (inputVertices[vert0].y < -topThreshold)
                         && (inputVertices[vert1].y < -topThreshold)
@@ -124,7 +134,6 @@ public class MeshCombineUtility
                     triangles.Add(newVert0);
                     triangles.Add(newVert1);
                     triangles.Add(newVert2);
-                    copiedTriangles += 3;
                 }
             }
             indexTranslation.Clear();

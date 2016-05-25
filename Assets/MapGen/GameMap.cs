@@ -92,6 +92,9 @@ public class GameMap : MonoBehaviour
     Mesh[,,] blocks;         // Terrain data.
     Mesh[,,] stencilBlocks;  // Foliage &ct.
     Mesh[,,] transparentBlocks;  // Glass &ct.
+    Mesh[,,] topBlocks;         // Terrain data.
+    Mesh[,,] topStencilBlocks;  // Foliage &ct.
+    Mesh[,,] topTransparentBlocks;  // Glass &ct.
     Mesh[,,,] liquidBlocks; // Water & magma. Extra dimension is a liquid type.
     // Dirty flags for those meshes
     bool[,,] blockDirtyBits;
@@ -609,6 +612,9 @@ public class GameMap : MonoBehaviour
         blocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         stencilBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         transparentBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
+        topBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
+        topStencilBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
+        topTransparentBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         liquidBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ, 2];
         blockDirtyBits = new bool[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         blockUpdateSchedules = new UpdateSchedule[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
@@ -891,6 +897,17 @@ public class GameMap : MonoBehaviour
                 tileMesh.Clear();
                 newMeshes.tiles.CopyToMesh(tileMesh);
             }
+            if (newMeshes.topTiles != null)
+            {
+                if (topBlocks[block_x, block_y, block_z] == null)
+                {
+                    topBlocks[block_x, block_y, block_z] = new Mesh();
+                    topBlocks[block_x, block_y, block_z].name = string.Format("block_solid_top_{0}_{1}_{2}", block_x, block_y, block_z);
+                }
+                Mesh tileMesh = topBlocks[block_x, block_y, block_z];
+                tileMesh.Clear();
+                newMeshes.topTiles.CopyToMesh(tileMesh);
+            }
             if (newMeshes.stencilTiles != null)
             {
                 if (stencilBlocks[block_x, block_y, block_z] == null)
@@ -902,6 +919,17 @@ public class GameMap : MonoBehaviour
                 stencilMesh.Clear();
                 newMeshes.stencilTiles.CopyToMesh(stencilMesh);
             }
+            if (newMeshes.topStencilTiles != null)
+            {
+                if (topStencilBlocks[block_x, block_y, block_z] == null)
+                {
+                    topStencilBlocks[block_x, block_y, block_z] = new Mesh();
+                    topStencilBlocks[block_x, block_y, block_z].name = string.Format("block_stencil_top_{0}_{1}_{2}", block_x, block_y, block_z);
+                }
+                Mesh stencilMesh = topStencilBlocks[block_x, block_y, block_z];
+                stencilMesh.Clear();
+                newMeshes.topStencilTiles.CopyToMesh(stencilMesh);
+            }
             if (newMeshes.transparentTiles != null)
             {
                 if (transparentBlocks[block_x, block_y, block_z] == null)
@@ -912,6 +940,17 @@ public class GameMap : MonoBehaviour
                 Mesh transparentMesh = transparentBlocks[block_x, block_y, block_z];
                 transparentMesh.Clear();
                 newMeshes.transparentTiles.CopyToMesh(transparentMesh);
+            }
+            if (newMeshes.topTransparentTiles != null)
+            {
+                if (topTransparentBlocks[block_x, block_y, block_z] == null)
+                {
+                    topTransparentBlocks[block_x, block_y, block_z] = new Mesh();
+                    topTransparentBlocks[block_x, block_y, block_z].name = string.Format("block_transparent_top_{0}_{1}_{2}", block_x, block_y, block_z);
+                }
+                Mesh transparentMesh = topTransparentBlocks[block_x, block_y, block_z];
+                transparentMesh.Clear();
+                newMeshes.topTransparentTiles.CopyToMesh(transparentMesh);
             }
             if (newMeshes.water != null)
             {
@@ -1281,16 +1320,31 @@ public class GameMap : MonoBehaviour
             Graphics.DrawMesh(blocks[xx, yy, zz], LocalTransform, phantom ? invisibleMaterial : basicTerrainMaterial, 0);
             drewBlock = true;
         }
+        if (topBlocks[xx, yy, zz] != null && topBlocks[xx, yy, zz].vertexCount > 0 && zz == posZ - 1)
+        {
+            Graphics.DrawMesh(topBlocks[xx, yy, zz], LocalTransform, phantom ? invisibleMaterial : basicTerrainMaterial, 0);
+            drewBlock = true;
+        }
 
         if (stencilBlocks[xx, yy, zz] != null && stencilBlocks[xx, yy, zz].vertexCount > 0)
         {
             Graphics.DrawMesh(stencilBlocks[xx, yy, zz], LocalTransform, phantom ? invisibleStencilMaterial : stencilTerrainMaterial, 0);
             drewBlock = true;
         }
+        if (topStencilBlocks[xx, yy, zz] != null && topStencilBlocks[xx, yy, zz].vertexCount > 0 && zz == posZ - 1)
+        {
+            Graphics.DrawMesh(topStencilBlocks[xx, yy, zz], LocalTransform, phantom ? invisibleStencilMaterial : stencilTerrainMaterial, 0);
+            drewBlock = true;
+        }
 
         if (transparentBlocks[xx, yy, zz] != null && transparentBlocks[xx, yy, zz].vertexCount > 0 && !phantom)
         {
             Graphics.DrawMesh(transparentBlocks[xx, yy, zz], LocalTransform, transparentTerrainMaterial, 0);
+            drewBlock = true;
+        }
+        if (topTransparentBlocks[xx, yy, zz] != null && topTransparentBlocks[xx, yy, zz].vertexCount > 0 && !phantom && zz == posZ - 1)
+        {
+            Graphics.DrawMesh(topTransparentBlocks[xx, yy, zz], LocalTransform, transparentTerrainMaterial, 0);
             drewBlock = true;
         }
 
