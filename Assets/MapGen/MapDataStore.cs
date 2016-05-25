@@ -285,26 +285,12 @@ public class MapDataStore {
                 else if (value.container != this)
                 {
                     if (_tiles[local.x, local.y, local.z] == null)
-                        _tiles[local.x, local.y, local.z] = new Tile(this, coord);
+                        _tiles[local.x, local.y, local.z] = new Tile(value);
+                    else
+                        _tiles[local.x, local.y, local.z].CopyFrom(value);
                     Tile tile = _tiles[local.x, local.y, local.z];
                     tile.container = this;
                     tile.position = coord;
-                    tile.tileType = value.tileType;
-                    tile.material = value.material;
-                    tile.base_material = value.base_material;
-                    tile.layer_material = value.layer_material;
-                    tile.vein_material = value.vein_material;
-                    tile.construction_item = value.construction_item;
-                    tile.waterLevel = value.waterLevel;
-                    tile.magmaLevel = value.magmaLevel;
-                    tile.RampType = value.RampType;
-                    tile.buildingType = value.buildingType;
-                    tile.buildingMaterial = value.buildingMaterial;
-                    tile.buildingLocalPos = value.buildingLocalPos;
-                    tile.buildingDirection = value.buildingDirection;
-                    tile.hidden = value.hidden;
-                    tile.trunkPercent = value.trunkPercent;
-                    tile.positionOnTree = value.positionOnTree;
                 }
                 else
                     _tiles[local.x, local.y, local.z] = value;
@@ -418,6 +404,33 @@ public class MapDataStore {
             hidden = false;
             trunkPercent = 0;
             positionOnTree = default(DFCoord);
+        }
+
+        public Tile(Tile orig)
+        {
+            CopyFrom(orig);
+        }
+
+        public void CopyFrom(Tile orig)
+        {
+            container = orig.container;
+            position = orig.position;
+            tileType = orig.tileType;
+            material = orig.material;
+            base_material = orig.base_material;
+            layer_material = orig.layer_material;
+            vein_material = orig.vein_material;
+            construction_item = orig.construction_item;
+            waterLevel = orig.waterLevel;
+            magmaLevel = orig.magmaLevel;
+            RampType = orig.RampType;
+            buildingType = orig.buildingType;
+            buildingMaterial = orig.buildingMaterial;
+            buildingLocalPos = orig.buildingLocalPos;
+            buildingDirection = orig.buildingDirection;
+            hidden = orig.hidden;
+            trunkPercent = orig.trunkPercent;
+            positionOnTree = orig.positionOnTree;
         }
 
         public MapDataStore container;
