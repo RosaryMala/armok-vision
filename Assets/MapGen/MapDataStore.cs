@@ -76,7 +76,7 @@ public class MapDataStore {
     // accessing the main map)
     public DFCoord SliceOrigin { get; private set; }
     // The data
-    Tile[,,] tiles;
+    Tile[,,] _tiles;
 
     private MapDataStore() {}
 
@@ -93,7 +93,7 @@ public class MapDataStore {
             sliceSize.z = 1;
         }
         SliceSize = sliceSize;
-        tiles = new Tile[SliceSize.x, SliceSize.y, SliceSize.z];
+        _tiles = new Tile[SliceSize.x, SliceSize.y, SliceSize.z];
         Reset();
     }
 
@@ -107,20 +107,19 @@ public class MapDataStore {
         if (!InSliceBoundsLocal(localNewSliceOrigin) || !InSliceBoundsLocal(localNewSliceOrigin + newSliceSize - new DFCoord(1,1,1))) {
             throw new UnityException("Can't slice outside of our slice bounds");
         }
-        for (int x = 0; x < newSliceSize.x; x++) {
-            for (int y = 0; y < newSliceSize.y; y++) {
-                for (int z = 0; z < newSliceSize.z; z++) {
-                    if (tiles[localNewSliceOrigin.x + x, localNewSliceOrigin.y + y, localNewSliceOrigin.z + z] == null)
+        target.SliceOrigin = newSliceOrigin;
+        for (int x = newSliceOrigin.x; x < newSliceSize.x + newSliceOrigin.x; x++) {
+            for (int y = newSliceOrigin.y; y < newSliceSize.y+ newSliceOrigin.y; y++) {
+                for (int z = newSliceOrigin.z; z < newSliceSize.z + newSliceOrigin.z; z++) {
+                    if (this[x, y, z] == null)
                         continue;
                     //pre-calculate it before we copy, because afterwards we won't have contextual data.
-                    if (tiles[localNewSliceOrigin.x + x, localNewSliceOrigin.y + y, localNewSliceOrigin.z + z].shape == TiletypeShape.RAMP)
-                        tiles[localNewSliceOrigin.x + x, localNewSliceOrigin.y + y, localNewSliceOrigin.z + z].CalculateRampType(); 
-                    target.tiles[x, y, z] = tiles[localNewSliceOrigin.x+x, localNewSliceOrigin.y+y, localNewSliceOrigin.z+z];
-                    target.tiles[x, y, z].container = target;
+                    if (this[x,y,z].shape == TiletypeShape.RAMP)
+                        this[x, y, z].CalculateRampType();
+                    target[x, y, z] = this[x,y,z];
                 }
             }
         }
-        target.SliceOrigin = newSliceOrigin;
     }
 
     public void CopySliceTo(BlockCoord block, MapDataStore target) {
@@ -146,44 +145,43 @@ public class MapDataStore {
             for (int yy = 0; yy < 16; yy++)
             {
                 DFCoord worldCoord = new DFCoord(block.map_x + xx, block.map_y + yy, block.map_z);
-                DFCoord localCoord = WorldToLocalSpace(worldCoord);
-                if (!InSliceBoundsLocal(localCoord))
+                if (!InSliceBounds(worldCoord))
                 {
                     Debug.LogError(worldCoord + " is out of bounds for " + MapSize);
                     return;
                 }
                 int netIndex = xx + (yy * 16);
-                if (tiles[localCoord.x, localCoord.y, localCoord.z] == null)
-                    tiles[localCoord.x, localCoord.y, localCoord.z] = new Tile(this, localCoord);
+                if (this[worldCoord] == null)
+                    this[worldCoord] = new Tile(this, worldCoord);
                 if (block.tiles.Count > 0)
                 {
-                    tiles[localCoord.x, localCoord.y, localCoord.z].tileType = block.tiles[netIndex];
-                    tiles[localCoord.x, localCoord.y, localCoord.z].material = block.materials[netIndex];
-                    tiles[localCoord.x, localCoord.y, localCoord.z].base_material = block.base_materials[netIndex];
-                    tiles[localCoord.x, localCoord.y, localCoord.z].layer_material = block.layer_materials[netIndex];
-                    tiles[localCoord.x, localCoord.y, localCoord.z].vein_material = block.vein_materials[netIndex];
+                    this[worldCoord].tileType = block.tiles[netIndex];
+                    this[worldCoord].material = block.materials[netIndex];
+                    this[worldCoord].base_material = block.base_materials[netIndex];
+                    this[worldCoord].layer_material = block.layer_materials[netIndex];
+                    this[worldCoord].vein_material = block.vein_materials[netIndex];
                     if (block.construction_items != null && block.construction_items.Count > netIndex)
-                        tiles[localCoord.x, localCoord.y, localCoord.z].construction_item = block.construction_items[netIndex];
+                        this[worldCoord].construction_item = block.construction_items[netIndex];
                     else
-                        tiles[localCoord.x, localCoord.y, localCoord.z].construction_item = new MatPairStruct(-1, -1);
+                        this[worldCoord].construction_item = new MatPairStruct(-1, -1);
                     if (block.tree_percent != null && block.tree_percent.Count > netIndex)
                     {
-                        tiles[localCoord.x, localCoord.y, localCoord.z].trunkPercent = (byte)block.tree_percent[netIndex];
-                        tiles[localCoord.x, localCoord.y, localCoord.z].positionOnTree = new DFCoord(block.tree_x[netIndex], block.tree_y[netIndex], block.tree_z[netIndex]);
+                        this[worldCoord].trunkPercent = (byte)block.tree_percent[netIndex];
+                        this[worldCoord].positionOnTree = new DFCoord(block.tree_x[netIndex], block.tree_y[netIndex], block.tree_z[netIndex]);
                     }
                     else
                     {
-                        tiles[localCoord.x, localCoord.y, localCoord.z].trunkPercent = 0;
-                        tiles[localCoord.x, localCoord.y, localCoord.z].positionOnTree = new DFCoord(0,0,0);
+                        this[worldCoord].trunkPercent = 0;
+                        this[worldCoord].positionOnTree = new DFCoord(0,0,0);
                     }
                 }
                 if (setLiquids)
                 {
-                    tiles[localCoord.x, localCoord.y, localCoord.z].waterLevel = block.water[netIndex];
-                    tiles[localCoord.x, localCoord.y, localCoord.z].magmaLevel = block.magma[netIndex];
-                    if (tiles[localCoord.x, localCoord.y, localCoord.z].hidden != block.hidden[netIndex])
+                    this[worldCoord].waterLevel = block.water[netIndex];
+                    this[worldCoord].magmaLevel = block.magma[netIndex];
+                    if (this[worldCoord].hidden != block.hidden[netIndex])
                     {
-                        tiles[localCoord.x, localCoord.y, localCoord.z].hidden  = block.hidden[netIndex];
+                        this[worldCoord].hidden  = block.hidden[netIndex];
                         setTiles = true;
                     }
                 }
@@ -207,19 +205,18 @@ public class MapDataStore {
                     }
 
                     DFCoord worldCoord = new DFCoord(xx,yy, block.map_z);
-                    DFCoord localCoord = WorldToLocalSpace(worldCoord);
                     DFCoord2d buildingLocalCoord = GetRotatedLocalCoord(worldCoord, building);// = new DFCoord2d(xx - building.pos_x_min, yy - building.pos_y_min);
-                    if (!InSliceBoundsLocal(localCoord))
+                    if (!InSliceBounds(worldCoord))
                     {
                         Debug.LogError(worldCoord + " is out of bounds for " + MapSize);
                         continue;
                     }
-                    if (tiles[localCoord.x, localCoord.y, localCoord.z] == null)
-                        tiles[localCoord.x, localCoord.y, localCoord.z] = new Tile(this, localCoord);
-                    tiles[localCoord.x, localCoord.y, localCoord.z].buildingType = building.building_type;
-                    tiles[localCoord.x, localCoord.y, localCoord.z].buildingMaterial = building.material;
-                    tiles[localCoord.x, localCoord.y, localCoord.z].buildingLocalPos = buildingLocalCoord;
-                    tiles[localCoord.x, localCoord.y, localCoord.z].buildingDirection = building.direction;
+                    if (this[worldCoord] == null)
+                        this[worldCoord] = new Tile(this, worldCoord);
+                    this[worldCoord].buildingType = building.building_type;
+                    this[worldCoord].buildingMaterial = building.material;
+                    this[worldCoord].buildingLocalPos = buildingLocalCoord;
+                    this[worldCoord].buildingDirection = building.direction;
                 }
         }
     }
@@ -247,19 +244,70 @@ public class MapDataStore {
 
     // Things to read and modify the map
     // Note: everything takes coordinates in world / DF space
-    public Tile this[int x, int y, int z] {
-        get {
-            return this[new DFCoord(x,y,z)];
+    public Tile this[int x, int y, int z]
+    {
+        get
+        {
+            return this[new DFCoord(x, y, z)];
+        }
+        private set
+        {
+            this[new DFCoord(x, y, z)] = value;
         }
     }
 
-    public Tile this[DFCoord coord] {
-        get {
+    public Tile this[DFCoord coord]
+    {
+        get
+        {
             DFCoord local = WorldToLocalSpace(coord);
-            if (InSliceBoundsLocal(local.x, local.y, local.z)) {
-                return tiles[local.x, local.y, local.z];
-            } else {
+            if (InSliceBoundsLocal(local.x, local.y, local.z))
+            {
+                return _tiles[local.x, local.y, local.z];
+            }
+            else
+            {
                 return null;
+            }
+        }
+        private set
+        {
+            DFCoord local = WorldToLocalSpace(coord);
+            if (InSliceBoundsLocal(local.x, local.y, local.z))
+            {
+                if (value == null)
+                    _tiles[local.x, local.y, local.z] = value;
+                else if (value.container == null)
+                {
+                    value.container = this;
+                    _tiles[local.x, local.y, local.z] = value;
+                }
+                else if (value.container != this)
+                {
+                    if (_tiles[local.x, local.y, local.z] == null)
+                        _tiles[local.x, local.y, local.z] = new Tile(this, coord);
+                    Tile tile = _tiles[local.x, local.y, local.z];
+                    tile.container = this;
+                    tile.position = coord;
+                    tile.tileType = value.tileType;
+                    tile.material = value.material;
+                    tile.base_material = value.base_material;
+                    tile.layer_material = value.layer_material;
+                    tile.vein_material = value.vein_material;
+                    tile.construction_item = value.construction_item;
+                    tile.waterLevel = value.waterLevel;
+                    tile.magmaLevel = value.magmaLevel;
+                    tile.RampType = value.RampType;
+                    tile.buildingType = value.buildingType;
+                    tile.buildingMaterial = value.buildingMaterial;
+                    tile.buildingLocalPos = value.buildingLocalPos;
+                    tile.buildingDirection = value.buildingDirection;
+                    tile.hidden = value.hidden;
+                    tile.trunkPercent = value.trunkPercent;
+                    tile.positionOnTree = value.positionOnTree;
+                }
+                else
+                    _tiles[local.x, local.y, local.z] = value;
             }
         }
     }
@@ -309,20 +357,19 @@ public class MapDataStore {
                            byte? trunkPercent = null,
                            DFCoord? positionOnTree = null)
     {
-        DFCoord local = WorldToLocalSpace(coord);
-        if (!InSliceBoundsLocal(local.x, local.y, local.z)) {
+        if (!InSliceBounds(coord)) {
             throw new UnityException("Can't modify tile outside of slice");
         }
-        if (tiles[local.x, local.y, local.z] == null)
-            tiles[local.x, local.y, local.z] = new Tile(this, local);
-        tiles[local.x, local.y, local.z].Modify(tileType, material, base_material, layer_material, vein_material, waterLevel, magmaLevel, construction_item, rampType, buildingType, buildingMaterial, buildingLocalPos, buildingDirection, hidden, trunkPercent, positionOnTree);
+        if (this[coord] == null)
+            this[coord]= new Tile(this, coord);
+        this[coord].Modify(tileType, material, base_material, layer_material, vein_material, waterLevel, magmaLevel, construction_item, rampType, buildingType, buildingMaterial, buildingLocalPos, buildingDirection, hidden, trunkPercent, positionOnTree);
     }
 
     public void Reset() {
         for (int x = 0; x < SliceSize.x; x++) {
             for (int y = 0; y < SliceSize.y; y++) {
                 for (int z = 0; z < SliceSize.z; z++) {
-                    tiles[x,y,z] = null;
+                    this[x,y,z] = null;
                 }
             }
         }
