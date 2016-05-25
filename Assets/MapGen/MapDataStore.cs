@@ -74,7 +74,22 @@ public class MapDataStore {
     // The origin of this slice of the map; subtracted from indices when indexed
     // (So that code using slices of the map can use the same coordinates as when
     // accessing the main map)
-    public DFCoord SliceOrigin { get; private set; }
+    DFCoord _sliceOrigin;
+    public DFCoord SliceOrigin
+    {
+        get
+        {
+            return _sliceOrigin;
+        }
+        private set
+        {
+            _sliceOrigin = value;
+            MinCoord = _sliceOrigin - new DFCoord(1,1,1);
+            MaxCoord = _sliceOrigin + SliceSize + new DFCoord(1, 1, 1);
+        }
+    }
+    DFCoord MinCoord { get; set; }
+    DFCoord MaxCoord { get; set; }
     // The data
     Tile[,,] _tiles;
 
@@ -93,7 +108,7 @@ public class MapDataStore {
             sliceSize.z = 1;
         }
         SliceSize = sliceSize;
-        _tiles = new Tile[SliceSize.x, SliceSize.y, SliceSize.z];
+        _tiles = new Tile[SliceSize.x + 2, SliceSize.y + 2, SliceSize.z + 2]; //add two so we get edges.
         Reset();
     }
 
@@ -108,9 +123,9 @@ public class MapDataStore {
             throw new UnityException("Can't slice outside of our slice bounds");
         }
         target.SliceOrigin = newSliceOrigin;
-        for (int x = newSliceOrigin.x; x < newSliceSize.x + newSliceOrigin.x; x++) {
-            for (int y = newSliceOrigin.y; y < newSliceSize.y+ newSliceOrigin.y; y++) {
-                for (int z = newSliceOrigin.z; z < newSliceSize.z + newSliceOrigin.z; z++) {
+        for (int x = target.MinCoord.x; x < target.MaxCoord.x; x++) {
+            for (int y = target.MinCoord.y; y < target.MaxCoord.y; y++) {
+                for (int z = target.MinCoord.z; z < target.MaxCoord.z; z++) {
                     if (this[x, y, z] == null)
                         continue;
                     //pre-calculate it before we copy, because afterwards we won't have contextual data.
@@ -362,17 +377,21 @@ public class MapDataStore {
     }
 
     // Helpers
-    public DFCoord WorldToLocalSpace(DFCoord coord) {
-        return coord - SliceOrigin;
+    public DFCoord WorldToLocalSpace(DFCoord coord)
+    {
+        return coord - SliceOrigin + new DFCoord(1, 1, 1);
     }
-    public DFCoord LocalToWorldSpace(DFCoord coord) {
-        return coord + SliceOrigin;
+    public DFCoord LocalToWorldSpace(DFCoord coord)
+    {
+        return coord + SliceOrigin - new DFCoord(1, 1, 1);
     }
     // These take local space coordinates:
-    bool InSliceBoundsLocal(int x, int y, int z) {
-        return 0 <= x && x < SliceSize.x &&
-                0 <= y && y < SliceSize.y &&
-                0 <= z && z < SliceSize.z;
+    bool InSliceBoundsLocal(int x, int y, int z)
+    {
+        return
+            0 <= x && x < SliceSize.x + 2 &&
+            0 <= y && y < SliceSize.y + 2 &&
+            0 <= z && z < SliceSize.z + 2;
     }
     bool InSliceBoundsLocal(DFCoord coord) {
         return InSliceBoundsLocal(coord.x, coord.y, coord.z);
