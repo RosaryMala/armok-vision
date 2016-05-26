@@ -3,6 +3,7 @@ using RemoteFortressReader;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using System;
 
 // Two implementations: single and multithreaded.
 // All of the actual meshing code is exactly the same;
@@ -396,6 +397,7 @@ abstract class BlockMesher {
                 buffer.uv3Transform = meshContent.SpecialTexture.UVTransform;
             else
                 buffer.uv3Transform = contentLoader.DefaultSpecialTexTransform;
+            buffer.hiddenFaces = CalculateHiddenFaces(tile);
             return;
         }
         switch (layer)
@@ -588,19 +590,25 @@ abstract class BlockMesher {
         buffer.uv1Transform = matTexTransform;
         buffer.uv2Transform = shapeTextTransform;
         buffer.uv3Transform = specialTexTransform;
-        buffer.hiddenFaces = MeshCombineUtility.HiddenFaces.None;
-        if (tile.North != null && tile.North.isWall)
-            buffer.hiddenFaces |= MeshCombineUtility.HiddenFaces.North;
-        if (tile.South != null && tile.South.isWall)
-            buffer.hiddenFaces |= MeshCombineUtility.HiddenFaces.South;
-        if (tile.East != null && tile.East.isWall)
-            buffer.hiddenFaces |= MeshCombineUtility.HiddenFaces.East;
-        if (tile.West != null && tile.West.isWall)
-            buffer.hiddenFaces |= MeshCombineUtility.HiddenFaces.West;
-        if (tile.Up != null && tile.Up.isSolidBase)
-            buffer.hiddenFaces |= MeshCombineUtility.HiddenFaces.Up;
-        if (tile.Down != null && tile.Down.isWall)
-            buffer.hiddenFaces |= MeshCombineUtility.HiddenFaces.Down;
+        buffer.hiddenFaces = CalculateHiddenFaces(tile);
+    }
+
+    private MeshCombineUtility.HiddenFaces CalculateHiddenFaces(MapDataStore.Tile tile)
+    {
+        MeshCombineUtility.HiddenFaces hiddenFaces = MeshCombineUtility.HiddenFaces.None;
+        if (tile.North != null && (tile.North.isWall || tile.North.hidden))
+            hiddenFaces |= MeshCombineUtility.HiddenFaces.North;
+        if (tile.South != null && (tile.South.isWall || tile.South.hidden))
+            hiddenFaces |= MeshCombineUtility.HiddenFaces.South;
+        if (tile.East != null && (tile.East.isWall || tile.East.hidden))
+            hiddenFaces |= MeshCombineUtility.HiddenFaces.East;
+        if (tile.West != null && (tile.West.isWall || tile.West.hidden))
+            hiddenFaces |= MeshCombineUtility.HiddenFaces.West;
+        if (tile.Up != null && (tile.Up.isSolidBase || tile.Up.hidden))
+            hiddenFaces |= MeshCombineUtility.HiddenFaces.Up;
+        if (tile.Down != null && (tile.Down.isWall || tile.Down.hidden))
+            hiddenFaces |= MeshCombineUtility.HiddenFaces.Down;
+        return hiddenFaces;
     }
 }
 
