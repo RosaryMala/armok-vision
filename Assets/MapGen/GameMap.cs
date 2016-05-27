@@ -1054,6 +1054,8 @@ public class GameMap : MonoBehaviour
 
                 statusText.Append("Tree: ").Append(tile.positionOnTree).Append(" (").Append(tile.trunkPercent).Append("%)").AppendLine();
 
+                statusText.Append("Desingation: ").Append(tile.digDesignation).AppendLine();
+
                 statusText.Append(tile.WallBuildingSides).AppendLine();
 
                 var mat = tile.material;
