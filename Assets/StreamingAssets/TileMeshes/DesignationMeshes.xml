@@ -5,4 +5,9 @@
                 specular="black.png">
         <designation type="Hidden"/>
     </designationMesh>
+    <designationMesh file="WALL.obj"
+                pattern="Dig.png"
+                specular="black.png">
+        <designation type="Default"/>
+    </designationMesh>
 </designationMeshes>

@@ -199,6 +199,15 @@ public class MapDataStore {
                         this[worldCoord].hidden  = block.hidden[netIndex];
                         setTiles = true;
                     }
+                    if (block.tile_dig_designation != null && block.tile_dig_designation.Count > netIndex)
+                    {
+                        if (this[worldCoord].digDesignation != block.tile_dig_designation[netIndex])
+                        {
+                            this[worldCoord].digDesignation = block.tile_dig_designation[netIndex];
+                            setTiles = true;
+                        }
+                    }
+
                 }
             }
         foreach (var building in block.buildings)
@@ -356,14 +365,33 @@ public class MapDataStore {
                            BuildingDirection? buildingDirection = null,
                            bool? hidden = null,
                            byte? trunkPercent = null,
-                           DFCoord? positionOnTree = null)
+                           DFCoord? positionOnTree = null,
+                           TileDigDesignation? digDesignation = null)
     {
         if (!InSliceBounds(coord)) {
             throw new UnityException("Can't modify tile outside of slice");
         }
         if (this[coord] == null)
-            this[coord]= new Tile(this, coord);
-        this[coord].Modify(tileType, material, base_material, layer_material, vein_material, waterLevel, magmaLevel, construction_item, rampType, buildingType, buildingMaterial, buildingLocalPos, buildingDirection, hidden, trunkPercent, positionOnTree);
+            this[coord] = new Tile(this, coord);
+        this[coord].Modify(
+            tileType,
+            material,
+            base_material,
+            layer_material,
+            vein_material,
+            waterLevel,
+            magmaLevel,
+            construction_item,
+            rampType,
+            buildingType,
+            buildingMaterial,
+            buildingLocalPos,
+            buildingDirection,
+            hidden,
+            trunkPercent,
+            positionOnTree,
+            digDesignation
+            );
     }
 
     public void Reset() {
@@ -423,6 +451,7 @@ public class MapDataStore {
             hidden = false;
             trunkPercent = 0;
             positionOnTree = default(DFCoord);
+            digDesignation = TileDigDesignation.NO_DIG;
         }
 
         public Tile(Tile orig)
@@ -450,6 +479,7 @@ public class MapDataStore {
             hidden = orig.hidden;
             trunkPercent = orig.trunkPercent;
             positionOnTree = orig.positionOnTree;
+            digDesignation = orig.digDesignation;
         }
 
         public MapDataStore container;
@@ -470,6 +500,7 @@ public class MapDataStore {
         public bool hidden;
         public byte trunkPercent;
         public DFCoord positionOnTree;
+        public TileDigDesignation digDesignation;
 
         public TiletypeShape shape { get { return tiletypeTokenList [tileType].shape; } }
         public TiletypeMaterial tiletypeMaterial { get { return tiletypeTokenList [tileType].material; } }
@@ -508,7 +539,8 @@ public class MapDataStore {
                            BuildingDirection? buildingDirection = null,
                            bool? hidden = null,
                            byte? trunkPercent = null,
-                           DFCoord? positionOnTree = null)
+                           DFCoord? positionOnTree = null,
+                           TileDigDesignation? digDesignation = null)
         {
             if (tileType != null) {
                 this.tileType = tileType.Value;
@@ -557,6 +589,8 @@ public class MapDataStore {
                 this.trunkPercent = trunkPercent.Value;
             if (positionOnTree != null)
                 this.positionOnTree = positionOnTree.Value;
+            if (digDesignation != null)
+                this.digDesignation = digDesignation.Value;
         }
         public bool isWall {
             get {
