@@ -1470,6 +1470,13 @@ namespace RemoteFortressReader
       get { return _river_tiles; }
     }
   
+    private readonly global::System.Collections.Generic.List<int> _water_elevation = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(24, Name=@"water_elevation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> water_elevation
+    {
+      get { return _water_elevation; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

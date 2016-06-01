@@ -14,6 +14,7 @@ public class RegionMaker : MonoBehaviour
     public int height;
     public string worldNameEnglish;
     int[,] elevation;
+    int[,] water_elevation;
     int[,] rainfall;
     int[,] vegetation;
     int[,] temperature;
@@ -95,6 +96,10 @@ public class RegionMaker : MonoBehaviour
             {
                 int index = y * width + x;
                 elevation[x, y] = remoteMap.elevation[index];
+                if (remoteMap.water_elevation != null && remoteMap.water_elevation.Count > index)
+                    water_elevation[x, y] = remoteMap.water_elevation[index];
+                else
+                    water_elevation[x, y] = 99;
                 rainfall[x, y] = remoteMap.rainfall[index];
                 vegetation[x, y] = remoteMap.vegetation[index];
                 temperature[x, y] = remoteMap.temperature[index];
@@ -112,6 +117,7 @@ public class RegionMaker : MonoBehaviour
     void InitArrays()
     {
         elevation = new int[width, height];
+        water_elevation = new int[width, height];
         rainfall = new int[width, height];
         vegetation = new int[width, height];
         temperature = new int[width, height];
@@ -228,7 +234,7 @@ public class RegionMaker : MonoBehaviour
                     west = elevation[x - 1, y];
 
                 if (riverSides == 0)
-                    AddFlatTile(vert1, biome, north * GameMap.tileHeight, east * GameMap.tileHeight, south * GameMap.tileHeight, west * GameMap.tileHeight);
+                    AddFlatTile(vert1, biome, north * GameMap.tileHeight, east * GameMap.tileHeight, south * GameMap.tileHeight, west * GameMap.tileHeight, water_elevation[x,y]);
                 else
                 {
                     AddRiverTile(riverSides, rivers[x,y], vert1, biome, north * GameMap.tileHeight, east * GameMap.tileHeight, south * GameMap.tileHeight, west * GameMap.tileHeight);
@@ -915,7 +921,7 @@ public class RegionMaker : MonoBehaviour
 
     }
 
-    private void AddFlatTile(Vector3 vert1, Vector2 biome, float north, float east, float south, float west)
+    private void AddFlatTile(Vector3 vert1, Vector2 biome, float north, float east, float south, float west, int waterLevel)
     {
         Vector3 vert2 = vert1 + new Vector3(48 * GameMap.tileWidth, 0, -48 * GameMap.tileWidth);
 
@@ -924,10 +930,10 @@ public class RegionMaker : MonoBehaviour
 
         AddHorizontalQuad(vert1, vert2, biome, Color.white, vertices, colors, uvCoords, uvCoords2, triangles);
 
-        if (vert1.y < 99 * GameMap.tileHeight)
+        if (vert1.y < waterLevel * GameMap.tileHeight)
         {
-            vert3 = new Vector3(vert1.x, 99 * GameMap.tileHeight, vert1.z);
-            vert4 = new Vector3(vert2.x, 99 * GameMap.tileHeight, vert2.z);
+            vert3 = new Vector3(vert1.x, waterLevel * GameMap.tileHeight, vert1.z);
+            vert4 = new Vector3(vert2.x, waterLevel * GameMap.tileHeight, vert2.z);
 
             AddHorizontalQuad(vert3, vert4, biome, Color.white, waterVerts, null, waterUvs, null, waterTris);
         }

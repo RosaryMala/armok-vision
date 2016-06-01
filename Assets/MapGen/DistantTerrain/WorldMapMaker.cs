@@ -12,6 +12,7 @@ public class WorldMapMaker : MonoBehaviour
     public string worldName;
     public string worldNameEnglish;
     int[,] elevation;
+    int[,] water_elevation;
     int[,] rainfall;
     int[,] vegetation;
     int[,] temperature;
@@ -81,11 +82,6 @@ public class WorldMapMaker : MonoBehaviour
             return;
         width = remoteMap.world_width;
         height = remoteMap.world_height;
-        if(width * height > 65535)
-        {
-            width = Mathf.Clamp(width, 0, 255);
-            height = Mathf.Clamp(height, 0, 255);
-        }
         worldName = remoteMap.name;
         worldNameEnglish = remoteMap.name_english;
         offset = new Vector3(
@@ -102,6 +98,10 @@ public class WorldMapMaker : MonoBehaviour
             {
                 int index = y * remoteMap.world_width + x;
                 elevation[x, y] = remoteMap.elevation[index];
+                if (remoteMap.water_elevation != null && remoteMap.water_elevation.Count > index)
+                    water_elevation[x, y] = remoteMap.water_elevation[index];
+                else
+                    water_elevation[x, y] = 99;
                 rainfall[x, y] = remoteMap.rainfall[index];
                 vegetation[x, y] = remoteMap.vegetation[index];
                 temperature[x, y] = remoteMap.temperature[index];
@@ -167,6 +167,9 @@ public class WorldMapMaker : MonoBehaviour
     {
         if (elevation == null)
             elevation = new int[width, height];
+
+        if (water_elevation == null)
+            water_elevation = new int[width, height];
 
         if (rainfall == null)
             rainfall = new int[width, height];
@@ -251,9 +254,10 @@ public class WorldMapMaker : MonoBehaviour
     {
         regionMaps = DFConnection.Instance.PopRegionMapUpdate();
         worldMap = DFConnection.Instance.PopWorldMapUpdate();
-        if (regionMaps != null && worldMap != null)
+        if (regionMaps != null)
         {
             GenerateRegionMeshes();
+            GenerateMesh();
         }
         if (worldMap != null)
         {
@@ -415,10 +419,10 @@ public class WorldMapMaker : MonoBehaviour
 
                 RegionMaker.AddHorizontalQuad(vert1, vert2, biome, Color.white, vertices, colors, uvs, uv2s, triangles);
 
-                if(elevation[x,y] < 99)
+                if(elevation[x,y] < water_elevation[x,y])
                 {
-                    vert1 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, 99 * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale;
-                    vert2 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, 99 * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+                    vert1 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, water_elevation[x, y] * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+                    vert2 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, water_elevation[x, y] * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale;
 
                     RegionMaker.AddHorizontalQuad(vert1, vert2, biome, Color.white, waterVerts, null, waterUvs, null, waterTris);
                 }
