@@ -281,7 +281,7 @@ public class GameMap : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.BackQuote))
+        if (Input.GetButtonDown("ToggleDF"))
         {
             GameSettings.Instance.game.showDFScreen = !GameSettings.Instance.game.showDFScreen;
 
@@ -296,19 +296,19 @@ public class GameMap : MonoBehaviour
 
         if (!GameSettings.Instance.game.showDFScreen)
         {
-            if (Input.GetKeyDown(KeyCode.L))
+            if (Input.GetButtonDown("ScaleUnits"))
             {
                 GameSettings.Instance.units.scaleUnits = !GameSettings.Instance.units.scaleUnits;
             }
-            if (Input.GetKeyDown(KeyCode.O))
+            if (Input.GetButtonDown("OverheadShadows"))
             {
                 overheadShadows = !overheadShadows;
             }
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetButtonDown("FollowDF"))
             {
                 camera.following = true;
             }
-            if (Input.GetKeyDown(KeyCode.M))
+            if (Input.GetButtonDown("SaveMeshes") && Input.GetButton("Mod"))
             {
                 SaveMeshes();
             }
