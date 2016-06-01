@@ -24,19 +24,19 @@ public class TimeHolder : MonoBehaviour {
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetButtonDown("PauseTime"))
         {
             if (useFixedTime == false)
                 StopTime();
             else
                 useFixedTime = false;
         }
-        if (Input.GetKeyDown(KeyCode.RightBracket))
+        if (Input.GetButtonDown("TimeForward"))
         {
             StopTime();
             fixedHour += 1;
         }
-        if (Input.GetKeyDown(KeyCode.LeftBracket))
+        if (Input.GetButtonDown("TimeReverse"))
         {
             StopTime();
             fixedHour -= 1;
