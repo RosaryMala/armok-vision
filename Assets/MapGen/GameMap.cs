@@ -1049,6 +1049,9 @@ public class GameMap : MonoBehaviour
 
                 statusText.Append("Desingation: ").Append(tile.digDesignation).AppendLine();
 
+                if(tile.hidden)
+                    statusText.Append("Hidden").AppendLine();
+
                 statusText.Append(tile.WallBuildingSides).AppendLine();
 
                 var mat = tile.material;
