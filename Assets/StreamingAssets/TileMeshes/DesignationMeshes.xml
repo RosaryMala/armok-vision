@@ -2,12 +2,16 @@
 <designationMeshes>
     <designationMesh file="WALL.obj"
                 pattern="black.png"
-                specular="black.png">
+                specular="black.png"
+                metallic="black.png"
+                illumination="Flat_O.png">
         <designation type="Hidden"/>
     </designationMesh>
     <designationMesh file="WALL.obj"
                 pattern="Dig.png"
-                specular="black.png">
+                specular="black.png"
+                metallic="black.png"
+                illumination="Flat_O.png">
         <designation type="Default"/>
     </designationMesh>
 </designationMeshes>
