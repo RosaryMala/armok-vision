@@ -1,4 +1,5 @@
 using DFHack;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
@@ -112,7 +113,7 @@ public sealed class DFConnection : MonoBehaviour
     private DFCoord embarkMapPosition = new DFCoord(-1, -1, -1);
 
     // Mutexes for changing / nullable objects
-    private Object mapInfoLock = new Object();
+    private UnityEngine.Object mapInfoLock = new UnityEngine.Object();
 
     // Cached block request
     private readonly RemoteFortressReader.BlockRequest blockRequest
@@ -552,6 +553,21 @@ public sealed class DFConnection : MonoBehaviour
         Disconnect();
     }
 
+    long _timeTicks;
+
+    public DFTime DFTime
+    {
+        get
+        {
+            return new DFTime(_timeTicks);
+        }
+        set
+        {
+            Interlocked.Exchange(ref _timeTicks, value.Ticks);
+        }
+    }
+    DateTime nextRegionUpdate = DateTime.MaxValue;
+
     /// <summary>
     /// Performs a single update.
     /// </summary>
@@ -626,29 +642,44 @@ public sealed class DFConnection : MonoBehaviour
         {
             RemoteFortressReader.WorldMap tempWorldMap;
             worldMapCenterCall.execute(null, out tempWorldMap);
+            if (tempWorldMap != null)
+                DFTime = new DFTime(tempWorldMap.cur_year, tempWorldMap.cur_year_tick);
             if (netWorldMapCenter == null || (tempWorldMap != null &&
                     (netWorldMapCenter.center_x != tempWorldMap.center_x
                     || netWorldMapCenter.center_y != tempWorldMap.center_y)))
             {
+                if ((netWorldMapCenter == null || (netWorldMapCenter.name != tempWorldMap.name)) && worldMapCall != null)
+                {
+                    RemoteFortressReader.WorldMap worldMap;
+                    worldMapCall.execute(null, out worldMap);
+                    netWorldMap.Set(worldMap);
+                }
 
                 netWorldMapCenter = tempWorldMap;
 
                 worldMapMoved.Set();
-
                 if (regionMapCall != null)
                 {
                     RemoteFortressReader.RegionMaps regionMaps;
                     regionMapCall.execute(null, out regionMaps);
                     netRegionMaps.Set(regionMaps);
                 }
+                nextRegionUpdate = DateTime.Now.AddSeconds(0.2); //add another region map update after this one, to get delayed regions.s
             }
         }
-        if (worldMapCall != null)
+
+
+        if (nextRegionUpdate < DateTime.Now)
         {
-            RemoteFortressReader.WorldMap worldMap;
-            worldMapCall.execute(null, out worldMap);
-            netWorldMap.Set(worldMap);
+            if (regionMapCall != null)
+            {
+                RemoteFortressReader.RegionMaps regionMaps;
+                regionMapCall.execute(null, out regionMaps);
+                netRegionMaps.Set(regionMaps);
+            }
+            nextRegionUpdate = DateTime.MaxValue;
         }
+
 
         if (keyboardEventCall != null)
         {

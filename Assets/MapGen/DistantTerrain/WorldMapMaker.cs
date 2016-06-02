@@ -63,13 +63,6 @@ public class WorldMapMaker : MonoBehaviour
         return x + y * width;
     }
 
-    TimeHolder timeHolder;
-
-    void Awake()
-    {
-        timeHolder = FindObjectOfType<TimeHolder>();
-    }
-
     void CopyFromRemote(WorldMap remoteMap)
     {
         if (remoteMap == null)
@@ -77,7 +70,6 @@ public class WorldMapMaker : MonoBehaviour
             Debug.Log("Didn't get world map!");
             return;
         }
-        timeHolder.realTime = new DFTime(remoteMap.cur_year, remoteMap.cur_year_tick);
         if (!GameSettings.Instance.rendering.drawDistantTerrain)
             return;
         width = remoteMap.world_width;
@@ -141,10 +133,6 @@ public class WorldMapMaker : MonoBehaviour
             Debug.Log("Didn't get world map!");
             return;
         }
-        timeHolder.realTime = new DFTime(remoteMap.cur_year, remoteMap.cur_year_tick);
-        if (timeHolder.realTime - lastUpdateTime < new System.TimeSpan(1, 0, 0))
-            return;
-        lastUpdateTime = timeHolder.realTime;
         for (int x = 0; x < width; x++)
             for (int y = 0; y < height; y++)
             {

@@ -178,13 +178,6 @@ public class GameMap : MonoBehaviour
     System.Diagnostics.Stopwatch cullTimer = new System.Diagnostics.Stopwatch();
     System.Diagnostics.Stopwatch lazyLoadTimer = new System.Diagnostics.Stopwatch();
 
-
-    TimeHolder timeHolder;
-
-    void Awake()
-    {
-        timeHolder = FindObjectOfType<TimeHolder>();
-    }
     // Does about what you'd think it does.
     void Start()
     {
@@ -1029,7 +1022,7 @@ public class GameMap : MonoBehaviour
 
         StringBuilder statusText = new StringBuilder();
 
-        statusText.Append("Real Time: ").Append(timeHolder.realTime.ToString()).AppendLine();
+        statusText.Append("Real Time: ").Append(DFConnection.Instance.DFTime.ToString()).AppendLine();
         statusText.Append("Displayed Time: ").Append(TimeHolder.DisplayedTime.ToString()).AppendLine();
 
         if (cursX >= 0 && cursY >= 0 && cursZ >= 0 && GameSettings.Instance.debug.drawDebugInfo)
