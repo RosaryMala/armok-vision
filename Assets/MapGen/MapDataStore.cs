@@ -127,7 +127,10 @@ public class MapDataStore {
             for (int y = target.MinCoord.y; y < target.MaxCoord.y; y++) {
                 for (int z = target.MinCoord.z; z < target.MaxCoord.z; z++) {
                     if (this[x, y, z] == null)
+                    {
+                        target[x, y, z] = null;
                         continue;
+                    }
                     //pre-calculate it before we copy, because afterwards we won't have contextual data.
                     if (this[x,y,z].shape == TiletypeShape.RAMP)
                         this[x, y, z].CalculateRampType();
