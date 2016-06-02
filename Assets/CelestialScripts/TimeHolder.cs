@@ -7,9 +7,10 @@ public class TimeHolder : MonoBehaviour {
     public int fixedHour = 11;
     public bool useFixedTime = true;
     
-    public DFTime realTime;
     static long _displayedTimeTicks;
 
+    DFTime realTime = new DFTime();
+    
     public static DFTime DisplayedTime
     {
         get
@@ -45,6 +46,8 @@ public class TimeHolder : MonoBehaviour {
             fixedHour -= 24;
         if (fixedHour < 0)
             fixedHour += 24;
+
+        realTime = DFConnection.Instance.DFTime;
 
         if (useFixedTime)
             DisplayedTime = new DFTime(realTime.Year, realTime.Month, realTime.Day, fixedHour, 0);
