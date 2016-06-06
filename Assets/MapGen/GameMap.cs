@@ -1,16 +1,15 @@
-using UnityEngine;
-using UnityEngine.Rendering;
-using System.Collections.Generic;
-using DFHack;
-using RemoteFortressReader;
-using UnityEngine.UI;
-using System.IO;
-using UnitFlags;
-using System.Text;
-using System.Globalization;
-using System.Threading;
 using Collada141;
+using DFHack;
 using MapGen;
+using RemoteFortressReader;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Text;
+using System.Threading;
+using UnitFlags;
+using UnityEngine;
+using UnityEngine.UI;
 
 // The class responsible for talking to DF and meshing the data it gets.
 // Relevant vocabulary: A "map tile" is an individual square on the map.

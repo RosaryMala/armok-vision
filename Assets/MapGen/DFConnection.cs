@@ -648,7 +648,7 @@ public sealed class DFConnection : MonoBehaviour
                     (netWorldMapCenter.center_x != tempWorldMap.center_x
                     || netWorldMapCenter.center_y != tempWorldMap.center_y)))
             {
-                if ((netWorldMapCenter == null || (netWorldMapCenter.name != tempWorldMap.name)) && worldMapCall != null)
+                if (worldMapCall != null)
                 {
                     RemoteFortressReader.WorldMap worldMap;
                     worldMapCall.execute(null, out worldMap);
