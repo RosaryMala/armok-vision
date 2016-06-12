@@ -13,5 +13,10 @@
                 metallic="black.png"
                 illumination="Flat_O.png">
         <designation type="Default"/>
+        <designation type="UpDownStairs"/>
+        <designation type="Channel"/>
+        <designation type="Ramp"/>
+        <designation type="DownStairs"/>
+        <designation type="UpStairs"/>
     </designationMesh>
 </designationMeshes>
