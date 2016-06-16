@@ -9,21 +9,44 @@ using System;
 [RequireComponent(typeof(MeshRenderer))]
 public class RegionMaker : MonoBehaviour
 {
+    class RegionTile
+    {
+        public int elevation;
+        public int water_elevation;
+        public int rainfall;
+        public int vegetation;
+        public int temperature;
+        public int evilness;
+        public int drainage;
+        public int volcanism;
+        public int savagery;
+        public int salinity;
+        public RiverTile rivers;
+
+        public RegionTile(WorldMap remoteMap, int index)
+        {
+            elevation = remoteMap.elevation[index];
+            if (remoteMap.water_elevation != null && remoteMap.water_elevation.Count > index)
+                water_elevation = remoteMap.water_elevation[index];
+            else
+                water_elevation = 99;
+            rainfall = remoteMap.rainfall[index];
+            vegetation = remoteMap.vegetation[index];
+            temperature = remoteMap.temperature[index];
+            evilness = remoteMap.evilness[index];
+            drainage = remoteMap.drainage[index];
+            volcanism = remoteMap.volcanism[index];
+            savagery = remoteMap.savagery[index];
+            salinity = remoteMap.salinity[index];
+            if (remoteMap.river_tiles != null && remoteMap.river_tiles.Count > index)
+                rivers = remoteMap.river_tiles[index];
+        }
+    }
     public float scale;
     public int width;
     public int height;
     public string worldNameEnglish;
-    int[,] elevation;
-    int[,] water_elevation;
-    int[,] rainfall;
-    int[,] vegetation;
-    int[,] temperature;
-    int[,] evilness;
-    int[,] drainage;
-    int[,] volcanism;
-    int[,] savagery;
-    int[,] salinity;
-    RiverTile[,] rivers;
+    RegionTile[,] tiles;
 
     public Vector3 offset;
     Vector3 embarkTileOffset;
@@ -95,38 +118,14 @@ public class RegionMaker : MonoBehaviour
             for (int y = 0; y < height; y++)
             {
                 int index = y * width + x;
-                elevation[x, y] = remoteMap.elevation[index];
-                if (remoteMap.water_elevation != null && remoteMap.water_elevation.Count > index)
-                    water_elevation[x, y] = remoteMap.water_elevation[index];
-                else
-                    water_elevation[x, y] = 99;
-                rainfall[x, y] = remoteMap.rainfall[index];
-                vegetation[x, y] = remoteMap.vegetation[index];
-                temperature[x, y] = remoteMap.temperature[index];
-                evilness[x, y] = remoteMap.evilness[index];
-                drainage[x, y] = remoteMap.drainage[index];
-                volcanism[x, y] = remoteMap.volcanism[index];
-                savagery[x, y] = remoteMap.savagery[index];
-                salinity[x, y] = remoteMap.salinity[index];
-                if (remoteMap.river_tiles != null && remoteMap.river_tiles.Count > index)
-                    rivers[x, y] = remoteMap.river_tiles[index];
+                tiles[x, y] = new RegionTile(remoteMap, index);
             }
         GenerateMesh();
     }
 
     void InitArrays()
     {
-        elevation = new int[width, height];
-        water_elevation = new int[width, height];
-        rainfall = new int[width, height];
-        vegetation = new int[width, height];
-        temperature = new int[width, height];
-        evilness = new int[width, height];
-        drainage = new int[width, height];
-        volcanism = new int[width, height];
-        savagery = new int[width, height];
-        salinity = new int[width, height];
-        rivers = new RiverTile[width, height];
+        tiles = new RegionTile[width, height];
     }
 
     //// Does about what you'd think it does.
@@ -198,46 +197,49 @@ public class RegionMaker : MonoBehaviour
             {
                 if (IsInCoords(fortMin, fortMax, x, y))
                     continue;
+                RegionTile tile = tiles[x, y];
+                if (tile == null)
+                    continue;
 
-                Vector2 biome = new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100;
+                Vector2 biome = new Vector2(tile.rainfall, 100 - tile.drainage) / 100;
 
-                Vector3 vert1 = new Vector3(x * 48 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -y * 48 * GameMap.tileWidth);
+                Vector3 vert1 = new Vector3(x * 48 * GameMap.tileWidth, tile.elevation * GameMap.tileHeight, -y * 48 * GameMap.tileWidth);
 
                 Sides riverSides = 0;
 
-                if (rivers[x, y] != null)
+                if (tile.rivers != null)
                 {
-                    if (rivers[x, y].north.min_pos >= 0)
+                    if (tile.rivers.north.min_pos >= 0)
                         riverSides |= Sides.North;
-                    if (rivers[x, y].east.min_pos >= 0)
+                    if (tile.rivers.east.min_pos >= 0)
                         riverSides |= Sides.East;
-                    if (rivers[x, y].south.min_pos >= 0)
+                    if (tile.rivers.south.min_pos >= 0)
                         riverSides |= Sides.South;
-                    if (rivers[x, y].west.min_pos >= 0)
+                    if (tile.rivers.west.min_pos >= 0)
                         riverSides |= Sides.West;
                 }
 
                 int north = 0;
                 if (y > 0 && !IsInCoords(fortMin, fortMax, x, y - 1))
-                    north = elevation[x, y - 1];
+                    north = tiles[x, y - 1].elevation;
 
                 int south = 0;
                 if (y < h - 1 && !IsInCoords(fortMin, fortMax, x, y + 1))
-                    south = elevation[x, y + 1];
+                    south = tiles[x, y + 1].elevation;
 
                 int east = 0;
                 if (x < w - 1 && !IsInCoords(fortMin, fortMax, x + 1, y))
-                    east = elevation[x + 1, y];
+                    east = tiles[x + 1, y].elevation;
 
                 int west = 0;
                 if (x > 0 && !IsInCoords(fortMin, fortMax, x - 1, y))
-                    west = elevation[x - 1, y];
+                    west = tiles[x - 1, y].elevation;
 
                 if (riverSides == 0)
-                    AddFlatTile(vert1, biome, north * GameMap.tileHeight, east * GameMap.tileHeight, south * GameMap.tileHeight, west * GameMap.tileHeight, water_elevation[x,y]);
+                    AddFlatTile(vert1, biome, north * GameMap.tileHeight, east * GameMap.tileHeight, south * GameMap.tileHeight, west * GameMap.tileHeight, tile.water_elevation);
                 else
                 {
-                    AddRiverTile(riverSides, rivers[x,y], vert1, biome, north * GameMap.tileHeight, east * GameMap.tileHeight, south * GameMap.tileHeight, west * GameMap.tileHeight);
+                    AddRiverTile(riverSides, tile.rivers, vert1, biome, north * GameMap.tileHeight, east * GameMap.tileHeight, south * GameMap.tileHeight, west * GameMap.tileHeight);
                 }
 
                 if (vertices.Count >= (65535 - 20))
