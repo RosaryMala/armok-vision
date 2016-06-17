@@ -1482,6 +1482,153 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"RegionTile")]
+  public partial class RegionTile : global::ProtoBuf.IExtensible
+  {
+    public RegionTile() {}
+    
+    private int _elevation = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"elevation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int elevation
+    {
+      get { return _elevation; }
+      set { _elevation = value; }
+    }
+    private int _rainfall = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"rainfall", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int rainfall
+    {
+      get { return _rainfall; }
+      set { _rainfall = value; }
+    }
+    private int _vegetation = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"vegetation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int vegetation
+    {
+      get { return _vegetation; }
+      set { _vegetation = value; }
+    }
+    private int _temperature = default(int);
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"temperature", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int temperature
+    {
+      get { return _temperature; }
+      set { _temperature = value; }
+    }
+    private int _evilness = default(int);
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"evilness", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int evilness
+    {
+      get { return _evilness; }
+      set { _evilness = value; }
+    }
+    private int _drainage = default(int);
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"drainage", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int drainage
+    {
+      get { return _drainage; }
+      set { _drainage = value; }
+    }
+    private int _volcanism = default(int);
+    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"volcanism", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int volcanism
+    {
+      get { return _volcanism; }
+      set { _volcanism = value; }
+    }
+    private int _savagery = default(int);
+    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"savagery", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int savagery
+    {
+      get { return _savagery; }
+      set { _savagery = value; }
+    }
+    private int _salinity = default(int);
+    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"salinity", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int salinity
+    {
+      get { return _salinity; }
+      set { _salinity = value; }
+    }
+    private RemoteFortressReader.RiverTile _river_tiles = null;
+    [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name=@"river_tiles", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.RiverTile river_tiles
+    {
+      get { return _river_tiles; }
+      set { _river_tiles = value; }
+    }
+    private int _water_elevation = default(int);
+    [global::ProtoBuf.ProtoMember(11, IsRequired = false, Name=@"water_elevation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int water_elevation
+    {
+      get { return _water_elevation; }
+      set { _water_elevation = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"RegionMap")]
+  public partial class RegionMap : global::ProtoBuf.IExtensible
+  {
+    public RegionMap() {}
+    
+    private int _map_x = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"map_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int map_x
+    {
+      get { return _map_x; }
+      set { _map_x = value; }
+    }
+    private int _map_y = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"map_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int map_y
+    {
+      get { return _map_y; }
+      set { _map_y = value; }
+    }
+    private string _name = "";
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string name
+    {
+      get { return _name; }
+      set { _name = value; }
+    }
+    private string _name_english = "";
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"name_english", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string name_english
+    {
+      get { return _name_english; }
+      set { _name_english = value; }
+    }
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.RegionTile> _tiles = new global::System.Collections.Generic.List<RemoteFortressReader.RegionTile>();
+    [global::ProtoBuf.ProtoMember(5, Name=@"tiles", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.RegionTile> tiles
+    {
+      get { return _tiles; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"RegionMaps")]
   public partial class RegionMaps : global::ProtoBuf.IExtensible
   {
@@ -1492,6 +1639,13 @@ namespace RemoteFortressReader
     public global::System.Collections.Generic.List<RemoteFortressReader.WorldMap> world_maps
     {
       get { return _world_maps; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.RegionMap> _region_maps = new global::System.Collections.Generic.List<RemoteFortressReader.RegionMap>();
+    [global::ProtoBuf.ProtoMember(2, Name=@"region_maps", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.RegionMap> region_maps
+    {
+      get { return _region_maps; }
     }
   
     private global::ProtoBuf.IExtension extensionObject;
