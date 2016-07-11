@@ -67,7 +67,7 @@ namespace DFHack
 
     struct RPCMessageHeader
     {
-        public const int MAX_MESSAGE_SIZE = 8 * 1048576;
+        public const int MAX_MESSAGE_SIZE = 64 * 1048576;
 
         public Int16 id;
         public Int32 size;
@@ -104,9 +104,9 @@ namespace DFHack
             z = inz;
         }
 
-        public override string ToString ()
+        public override string ToString()
         {
-            return string.Format("DFCoord({0},{1},{2})",x,y,z);
+            return string.Format("DFCoord({0},{1},{2})", x, y, z);
         }
 
         public static bool operator <(DFCoord a, DFCoord b)
@@ -149,10 +149,12 @@ namespace DFHack
         {
             return new DFCoord(a.x, a.y, a.z + number);
         }
-        public static bool operator ==(DFCoord a, DFCoord b) {
+        public static bool operator ==(DFCoord a, DFCoord b)
+        {
             return a.x == b.x && a.y == b.y && a.z == b.z;
         }
-        public static bool operator !=(DFCoord a, DFCoord b) {
+        public static bool operator !=(DFCoord a, DFCoord b)
+        {
             return a.x != b.x || a.y != b.y || a.z != b.z;
         }
         public override int GetHashCode()
@@ -241,21 +243,24 @@ namespace DFHack
             z = inz;
         }
 
-        public static BlockCoord FromDFCoord(DFCoord coord) {
-            if (coord.x % GameMap.blockSize != 0 || coord.y % GameMap.blockSize != 0) {
-                throw new InvalidOperationException("Can't make a block coord from a non-block-corner");
-            }
-            return new BlockCoord(coord.x / GameMap.blockSize, coord.y / GameMap.blockSize, coord.z);
-        }
+        //public static BlockCoord FromDFCoord(DFCoord coord)
+        //{
+        //    if (coord.x % GameMap.blockSize != 0 || coord.y % GameMap.blockSize != 0)
+        //    {
+        //        throw new InvalidOperationException("Can't make a block coord from a non-block-corner");
+        //    }
+        //    return new BlockCoord(coord.x / GameMap.blockSize, coord.y / GameMap.blockSize, coord.z);
+        //}
 
-        public DFCoord ToDFCoord() {
-            return new DFCoord(x * GameMap.blockSize, y * GameMap.blockSize, z);
-        }
+        //public DFCoord ToDFCoord()
+        //{
+        //    return new DFCoord(x * GameMap.blockSize, y * GameMap.blockSize, z);
+        //}
 
-        public override string ToString ()
-        {
-            return string.Format("BlockCoord({0}[{1}],{2}[{3}],{4})", x, x * GameMap.blockSize, y, y * GameMap.blockSize, z);
-        }
+        //public override string ToString ()
+        //{
+        //    return string.Format("BlockCoord({0}[{1}],{2}[{3}],{4})", x, x * GameMap.blockSize, y, y * GameMap.blockSize, z);
+        //}
 
         public static bool operator <(BlockCoord a, BlockCoord b)
         {
@@ -297,10 +302,12 @@ namespace DFHack
         {
             return new BlockCoord(a.x, a.y, a.z + number);
         }
-        public static bool operator ==(BlockCoord a, BlockCoord b) {
+        public static bool operator ==(BlockCoord a, BlockCoord b)
+        {
             return a.x == b.x && a.y == b.y && a.z == b.z;
         }
-        public static bool operator !=(BlockCoord a, BlockCoord b) {
+        public static bool operator !=(BlockCoord a, BlockCoord b)
+        {
             return a.x != b.x || a.y != b.y || a.z != b.z;
         }
         public override int GetHashCode()
@@ -312,18 +319,20 @@ namespace DFHack
             return this == (BlockCoord)obj;
         }
 
-        public struct Range {
+        public struct Range
+        {
             public readonly BlockCoord Min;
             public readonly BlockCoord Max;
 
-            public Range (BlockCoord min, BlockCoord max) {
+            public Range(BlockCoord min, BlockCoord max)
+            {
                 Min = min;
                 Max = max;
             }
 
-            public override string ToString ()
+            public override string ToString()
             {
-                return string.Format ("BlockCoord.Range({0},{1})", Min, Max);
+                return string.Format("BlockCoord.Range({0},{1})", Min, Max);
             }
         }
     }
@@ -519,7 +528,7 @@ namespace DFHack
             return (got == fullsz);
         }
 
-        protected command_result execute<Input, Output>(color_ostream outString, Input input,out Output output)
+        protected command_result execute<Input, Output>(color_ostream outString, Input input, out Output output)
             where Input : class, message_type, new()
             where Output : class, message_type, new()
         {
@@ -538,7 +547,7 @@ namespace DFHack
                 output = default(Output);
                 return command_result.CR_LINK_FAILURE;
             }
-            
+
             MemoryStream sendStream = new MemoryStream();
 
             ProtoBuf.Serializer.Serialize<Input>(sendStream, input);
@@ -689,7 +698,7 @@ namespace DFHack
                 base.output = value;
             }
         }
-        
+
         public RemoteFunction() : base(new Input(), new Output()) { }
 
         public command_result execute()
@@ -789,9 +798,9 @@ namespace DFHack
             if (size == 0)
                 return true;
             int left = size;
-            for (; left > 0; )
+            for (; left > 0;)
             {
-                int cnt = socket.Receive(buf, size-left, left, SocketFlags.None);
+                int cnt = socket.Receive(buf, size - left, left, SocketFlags.None);
                 if (cnt <= 0) return false;
                 left -= cnt;
             }
@@ -883,9 +892,12 @@ namespace DFHack
                 Socket tempSocket =
                     new Socket(ipe.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
-                try {
+                try
+                {
                     tempSocket.Connect(ipe);
-                } catch (SocketException) {
+                }
+                catch (SocketException)
+                {
                     // Often thrown if DF is inactive.
                     continue;
                 }
