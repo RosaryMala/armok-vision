@@ -451,10 +451,16 @@ public sealed class DFConnection : MonoBehaviour
         }
 
         if (netTiletypeList != null)
+        {
             MapDataStore.tiletypeTokenList = netTiletypeList.tiletype_list;
+            Debug.Log("Tiletypes fetched: " + netTiletypeList.tiletype_list.Count);
+        }
 
         if (netPlantRawList != null)
+        {
             PlantTokenList.PlantRawList = netPlantRawList.plant_raws;
+            Debug.Log("Plant Raws fetched: " + netPlantRawList.plant_raws.Count);
+        }
 
         //Debug.Log("Buildingtypes fetched: " + netBuildingList.building_list.Count);
         //Debug.Log("Creature Raws fetched: " + netCreatureRawList.creature_raws.Count);
