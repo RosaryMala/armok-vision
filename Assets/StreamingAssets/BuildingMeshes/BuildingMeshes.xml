@@ -120,13 +120,20 @@
     </buildingMesh>
     <buildingMesh file="NONE">
         <buildingType token="Workshop_Masons"/>
-        <subObject file="WorkshopCounter.obj">
+        <subObject file="WorkshopCounterHammerChisel.obj"
+                   normal="WorkshopCounterHammerChisel_N.png"
+                   occlusion="WorkshopCounterHammerChisel_O.png"
+                   alpha="Opaque_A.png"
+                  pattern="WorkshopCounterHammerChisel_P.png"
+                  specular="WorkshopCounterHammerChisel_S.png"
+                   metallic="WorkshopCounterHammerChisel_M.png"
+                   illumination="black.png">
             <buildingPosition x="2"
                               y="0"/>
             <buildingPosition x="0"
                               y="1"/>
             <buildingPosition x="2"
-                              y="2"/>
+                              y="1"/>
         </subObject>
     </buildingMesh>
     <buildingMesh file="NONE">
