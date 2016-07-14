@@ -333,6 +333,7 @@ MonoBehaviour:
   regionPrefab: {fileID: 11445684, guid: 90bab0905d33d714694a6059b62f28d2, type: 2}
   terrainPrefab: {fileID: 3345160, guid: ca070c912bf1ee84e96d71de7b55d40d, type: 2}
   waterPrefab: {fileID: 3315368, guid: d73214e57194a894ba605c8be22450c9, type: 2}
+  regionWaterPrefab: {fileID: 3315368, guid: b53c58eddeeccdc47a22a351cd1ff95d, type: 2}
   terrainMat: {fileID: 2100000, guid: 5c4766ae81bd7be4199757857af3a8d8, type: 2}
 --- !u!33 &458878502
 MeshFilter:
@@ -352,7 +353,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
 --- !u!1 &654332372
 GameObject:
   m_ObjectHideFlags: 0
@@ -379,6 +380,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1404020253}
+  - {fileID: 1688073733}
   m_Father: {fileID: 261136869}
   m_RootOrder: 0
 --- !u!1 &692705302
@@ -689,7 +691,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
 --- !u!1 &831823944
 GameObject:
   m_ObjectHideFlags: 0
@@ -717,7 +719,7 @@ Transform:
   m_Children:
   - {fileID: 1415142926}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 10
 --- !u!1 &861361727
 GameObject:
   m_ObjectHideFlags: 0
@@ -1574,7 +1576,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   zoomLevel: 2
   zoomSpeed: 0.5
-  firstPersonThreshold: 1
+  firstPersonThreshold: -1
   viewCamera: {fileID: 654332373}
 --- !u!4 &1404020253
 Transform:
@@ -1658,7 +1660,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294965759
+    m_Bits: 4294966527
   m_RenderingPath: 3
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1939,7 +1941,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 1688073733}
   - 20: {fileID: 1688073732}
-  - 114: {fileID: 1688073731}
   m_Layer: 0
   m_Name: Far Terrain Camera
   m_TagString: Untagged
@@ -1947,21 +1948,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1688073731
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1688073730}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 388cd15d08e1116498d480e6b476e356, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parentTransform: {fileID: 1404020253}
-  scaleFactor: 1
-  scaleClipPlanes: 0
-  ignoreRotation: 0
 --- !u!20 &1688073732
 Camera:
   m_ObjectHideFlags: 0
@@ -1978,7 +1964,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 1000
+  near clip plane: 10
   far clip plane: 1000000
   field of view: 60
   orthographic: 0
@@ -1986,7 +1972,7 @@ Camera:
   m_Depth: -2
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 2304
+    m_Bits: 3328
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -2007,8 +1993,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1255736701}
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_Father: {fileID: 654332373}
+  m_RootOrder: 1
 --- !u!1 &1696498549
 GameObject:
   m_ObjectHideFlags: 0
@@ -2202,7 +2188,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
 --- !u!1 &1986774940
 GameObject:
   m_ObjectHideFlags: 0

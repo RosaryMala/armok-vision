@@ -11,7 +11,7 @@ GameObject:
   - 33: {fileID: 3363552}
   - 23: {fileID: 2347724}
   - 114: {fileID: 11445684}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: RegionBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
