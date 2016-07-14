@@ -120,20 +120,48 @@
     </buildingMesh>
     <buildingMesh file="NONE">
         <buildingType token="Workshop_Masons"/>
-        <subObject file="WorkshopCounterHammerChisel.obj"
-                   normal="WorkshopCounterHammerChisel_N.png"
-                   occlusion="WorkshopCounterHammerChisel_O.png"
-                   alpha="Opaque_A.png"
-                  pattern="WorkshopCounterHammerChisel_P.png"
-                  specular="WorkshopCounterHammerChisel_S.png"
-                   metallic="WorkshopCounterHammerChisel_M.png"
-                   illumination="black.png">
+        <subObject file="NONE">
+            <subObject file="WorkshopCounterHammerChisel.obj"
+                       normal="WorkshopCounterHammerChisel_N.png"
+                       occlusion="WorkshopCounterHammerChisel_O.png"
+                       alpha="Opaque_A.png"
+                       pattern="WorkshopCounterHammerChisel_P.png"
+                       specular="WorkshopCounterHammerChisel_S.png"
+                       metallic="WorkshopCounterHammerChisel_M.png"
+                       illumination="black.png"
+                       rotation="Random90">
+                <random/>
+            </subObject>
+            <subObject file="WorkshopCounterSetSquare.obj"
+                       normal="Flat_N.png"
+                       occlusion="WorkshopCounterSetSquare_O.png"
+                       alpha="Opaque_A.png"
+                       pattern="WorkshopCounterSetSquare_P.png"
+                       specular="WorkshopCounterSetSquare_S.png"
+                       rotation="Random90">
+                <random/>
+            </subObject>
+            <subObject file="WorkshopCounter.obj">
+                <random/>
+            </subObject>
             <buildingPosition x="2"
                               y="0"/>
             <buildingPosition x="0"
                               y="1"/>
             <buildingPosition x="2"
                               y="1"/>
+        </subObject>
+        <subObject file="Chair.obj">
+            <buildingPosition x="1"
+                              y="1"/>
+        </subObject>
+        <subObject file="WorkshopMasonStone.obj"
+                   normal="WorkshopMasonStone_N.png"
+                   occlusion="WorkshopMasonStone_O.png"
+                   alpha="Opaque_A.png"
+                   rotation="Random">
+            <buildingPosition x="1"
+                              y="2"/>
         </subObject>
     </buildingMesh>
     <buildingMesh file="NONE">
