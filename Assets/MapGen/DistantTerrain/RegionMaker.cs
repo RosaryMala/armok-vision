@@ -264,7 +264,7 @@ public class RegionMaker : MonoBehaviour
         {
             if (waterChunk ==  null)
             {
-                waterChunk = Instantiate<MeshFilter>(parentMap.waterPrefab);
+                waterChunk = Instantiate<MeshFilter>(parentMap.regionWaterPrefab);
                 waterChunk.transform.parent = transform;
                 waterChunk.gameObject.name = "Water ";
                 waterChunk.transform.localPosition = Vector3.zero;

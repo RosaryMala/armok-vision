@@ -54,6 +54,7 @@ public class WorldMapMaker : MonoBehaviour
     List<MeshFilter> terrainChunks = new List<MeshFilter>();
 
     public MeshFilter waterPrefab;
+    public MeshFilter regionWaterPrefab;
     List<MeshFilter> waterChunks = new List<MeshFilter>();
 
     public Material terrainMat;
