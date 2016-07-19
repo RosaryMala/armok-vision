@@ -351,9 +351,16 @@
     </buildingMesh>
     <buildingMesh file="NONE">
         <buildingType token="Workshop_Still"/>
-        <subObject file="WorkshopCounter.obj">
-            <buildingPosition x="0"
-                              y="0"/>
+        <subObject file="Still.obj"
+                   normal="Flat_N.png"
+                   occlusion="Still_O.png"
+                   alpha="Opaque_A.png"
+                   pattern="Still_P.png"
+                   specular="Medium_S.png"
+                   metallic="Still_M.png"
+                   illumination="black.png">
+            <buildingPosition x="1"
+                              y="1"/>
         </subObject>
     </buildingMesh>
     <buildingMesh file="NONE">
