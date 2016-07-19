@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -71,7 +72,7 @@ public class GameSettings : MonoBehaviour
 
     public static Settings Instance = new Settings();
 
-    public Camera mainCamera;
+    public List<Camera> mainCameras;
 
     public Light[] LightList;
 
@@ -97,9 +98,12 @@ public class GameSettings : MonoBehaviour
     // Awake is called when the script instance is being loaded
     public void Awake()
     {
-        Instance.camera.fieldOfView = mainCamera.fieldOfView;
+        Instance.camera.fieldOfView = mainCameras[0].fieldOfView;
         DeserializeIni("Config.json");
-        mainCamera.fieldOfView = Instance.camera.fieldOfView;
+        foreach (Camera camera in mainCameras)
+        {
+            camera.fieldOfView = Instance.camera.fieldOfView;
+        }
         SetShadows(Instance.rendering.drawShadows);
         Application.targetFrameRate = Instance.rendering.targetFrameRate;
         QualitySettings.vSyncCount = Instance.rendering.vSyncCount;
