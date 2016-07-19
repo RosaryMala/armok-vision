@@ -117,6 +117,47 @@
     </buildingMesh>
     <buildingMesh file="NONE">
         <buildingType token="Workshop_Farmers"/>
+        <subObject file="WorkshopFarmersSpindle.obj"
+                   normal="Flat_N.png"
+                   occlusion="WorkshopFarmersSpindle_O.png"
+                   alpha="Opaque_A.png"
+                   pattern="Cyan.png"
+                   specular="Medium_S.png">
+            <buildingPosition x="0"
+                              y="2"/>
+        </subObject>
+        <subObject file="WorkshopFarmersStanchion.obj"
+                   normal="Flat_N.png"
+                   occlusion="WorkshopFarmersStanchion_O.png"
+                   alpha="Opaque_A.png">
+            <buildingPosition x="1"
+                              y="0"/>
+        </subObject>
+        <subObject file="WorkshopFarmersGrate.obj"
+                   normal="Flat_N.png"
+                   occlusion="WorkshopFarmersGrate_O.png"
+                   alpha="Opaque_A.png"
+                   pattern="Yellow.png"
+                   specular="Medium_S.png">
+            <buildingPosition x="2"
+                              y="0"/>
+        </subObject>
+        <subObject file="WorkshopFarmersBench.obj"
+                   normal="Flat_N.png"
+                   occlusion="WorkshopFarmersBench_O.png"
+                   alpha="Opaque_A.png">
+            <buildingPosition x="1"
+                              y="2"/>
+        </subObject>
+        <subObject file="WorkshopFarmersSpool.obj"
+                   normal="Flat_N.png"
+                   occlusion="WorkshopFarmersSpool_O.png"
+                   alpha="Opaque_A.png"
+                   pattern="Cyan.png"
+                   specular="Medium_S.png">
+            <buildingPosition x="2"
+                              y="2"/>
+        </subObject>
     </buildingMesh>
     <buildingMesh file="NONE">
         <buildingType token="Workshop_Masons"/>
