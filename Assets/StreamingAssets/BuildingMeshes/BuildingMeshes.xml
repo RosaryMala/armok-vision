@@ -391,11 +391,14 @@
     </buildingMesh>
     <buildingMesh file="NONE">
         <buildingType token="Workshop_Ashery"/>
-        <subObject file="WorkshopCounter.obj">
+        <subObject file="WorkshopAshery.obj"
+                   pattern="WorkshopAshery_P.png"
+                   specular="Medium_S.png"
+                   normal="Flat_N.png"
+                   occlusion="WorkshopAshery_O.png"
+                   alpha="Opaque_A.png">
             <buildingPosition x="1"
-                              y="0"/>
-            <buildingPosition x="0"
-                              y="2"/>
+                              y="1"/>
         </subObject>
     </buildingMesh>
     <buildingMesh file="NONE">
