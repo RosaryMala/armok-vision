@@ -1524,6 +1524,13 @@ namespace RemoteFortressReader
       get { return _water_elevation; }
     }
   
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.RegionTile> _region_tiles = new global::System.Collections.Generic.List<RemoteFortressReader.RegionTile>();
+    [global::ProtoBuf.ProtoMember(25, Name=@"region_tiles", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.RegionTile> region_tiles
+    {
+      get { return _region_tiles; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -1622,6 +1629,21 @@ namespace RemoteFortressReader
       get { return _water_elevation; }
       set { _water_elevation = value; }
     }
+    private RemoteFortressReader.MatPair _surface_material = null;
+    [global::ProtoBuf.ProtoMember(12, IsRequired = false, Name=@"surface_material", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.MatPair surface_material
+    {
+      get { return _surface_material; }
+      set { _surface_material = value; }
+    }
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _plant_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
+    [global::ProtoBuf.ProtoMember(13, Name=@"plant_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> plant_materials
+    {
+      get { return _plant_materials; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

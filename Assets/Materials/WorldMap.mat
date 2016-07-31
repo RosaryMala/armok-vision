@@ -7,10 +7,10 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: WorldMap
-  m_Shader: {fileID: 4800000, guid: c0748bb0d39b17c4c9f2adab3178b78e, type: 3}
+  m_Shader: {fileID: 4800000, guid: f2f8b3e7159175d4fbf0f01eb343088d, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 5
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 2000
   stringTagMap: {}
   m_SavedProperties:
     serializedVersion: 2

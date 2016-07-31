@@ -47,6 +47,7 @@ public enum MatBasic
 
 public class ContentLoader
 {
+    public static ContentLoader Instance { get; set; }
 
     public static MatBasic lookupMaterialType(string value)
     {

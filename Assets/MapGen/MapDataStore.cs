@@ -197,9 +197,9 @@ public class MapDataStore {
                 {
                     this[worldCoord].waterLevel = block.water[netIndex];
                     this[worldCoord].magmaLevel = block.magma[netIndex];
-                    if (this[worldCoord].hidden != block.hidden[netIndex])
+                    if (this[worldCoord].Hidden != block.hidden[netIndex])
                     {
-                        this[worldCoord].hidden  = block.hidden[netIndex];
+                        this[worldCoord].Hidden  = block.hidden[netIndex];
                         setTiles = true;
                     }
                     if (block.tile_dig_designation != null && block.tile_dig_designation.Count > netIndex)
@@ -328,7 +328,7 @@ public class MapDataStore {
     public int GetLiquidLevel(DFCoord coord, int liquidIndex) {
         var tile = this[coord];
         if (tile == null) return 0;
-        if (tile.hidden) return 0;
+        if (tile.Hidden) return 0;
         switch (liquidIndex) {
         case WATER_INDEX:
             return tile.waterLevel;
@@ -451,7 +451,7 @@ public class MapDataStore {
             buildingType = default(BuildingStruct);
             buildingLocalPos = default(DFCoord2d);
             buildingDirection = 0;
-            hidden = false;
+            Hidden = false;
             trunkPercent = 0;
             positionOnTree = default(DFCoord);
             digDesignation = TileDigDesignation.NO_DIG;
@@ -479,7 +479,7 @@ public class MapDataStore {
             buildingMaterial = orig.buildingMaterial;
             buildingLocalPos = orig.buildingLocalPos;
             buildingDirection = orig.buildingDirection;
-            hidden = orig.hidden;
+            Hidden = orig.Hidden;
             trunkPercent = orig.trunkPercent;
             positionOnTree = orig.positionOnTree;
             digDesignation = orig.digDesignation;
@@ -500,7 +500,21 @@ public class MapDataStore {
         public MatPairStruct buildingMaterial;
         public DFCoord2d buildingLocalPos;
         public BuildingDirection buildingDirection;
-        public bool hidden;
+        private bool _hidden;
+        public bool Hidden
+        {
+            get
+            {
+                if (GameSettings.Instance.rendering.showHiddenTiles)
+                    return false;
+                else
+                    return _hidden;
+            }
+            set
+            {
+                _hidden = value;
+            }
+        }
         public byte trunkPercent;
         public DFCoord positionOnTree;
         public TileDigDesignation digDesignation;
@@ -587,7 +601,7 @@ public class MapDataStore {
             if (buildingDirection != null)
                 this.buildingDirection = buildingDirection.Value;
             if (hidden != null)
-                this.hidden = hidden.Value;
+                this.Hidden = hidden.Value;
             if (trunkPercent != null)
                 this.trunkPercent = trunkPercent.Value;
             if (positionOnTree != null)
