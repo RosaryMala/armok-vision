@@ -383,9 +383,9 @@ public sealed class DFConnection : MonoBehaviour
         mapInfoCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.MapInfo>(networkClient, "GetMapInfo", "RemoteFortressReader");
         mapResetCall = CreateAndBind<dfproto.EmptyMessage>(networkClient, "ResetMapHashes", "RemoteFortressReader");
         buildingListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.BuildingList>(networkClient, "GetBuildingDefList", "RemoteFortressReader");
-        worldMapCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.WorldMap>(networkClient, "GetWorldMap", "RemoteFortressReader");
+        worldMapCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.WorldMap>(networkClient, "GetWorldMapNew", "RemoteFortressReader");
         worldMapCenterCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.WorldMap>(networkClient, "GetWorldMapCenter", "RemoteFortressReader");
-        regionMapCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.RegionMaps>(networkClient, "GetRegionMaps", "RemoteFortressReader");
+        regionMapCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.RegionMaps>(networkClient, "GetRegionMapsNew", "RemoteFortressReader");
         creatureRawListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.CreatureRawList>(networkClient, "GetCreatureRaws", "RemoteFortressReader");
         plantRawListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.PlantRawList>(networkClient, "GetPlantRaws", "RemoteFortressReader");
         keyboardEventCall = CreateAndBind<RemoteFortressReader.KeyboardEvent>(networkClient, "PassKeyboardEvent", "RemoteFortressReader");

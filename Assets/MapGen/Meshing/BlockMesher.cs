@@ -63,7 +63,6 @@ abstract class BlockMesher {
     // Stuff for runtime configuration.
     // These will be accessed from multiple threads, but DON'T need to be
     // locked, since they don't change after being loaded.
-    protected readonly ContentLoader contentLoader;
     protected readonly Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> materials;
 
     // Some queues.
@@ -81,11 +80,11 @@ abstract class BlockMesher {
         resultQueue = new Queue<Result>();
 
         // Load meshes
-        contentLoader = new ContentLoader();
+        ContentLoader.Instance = new ContentLoader();
         System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         watch.Start();
-        contentLoader.ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt");
-        contentLoader.FinalizeTextureAtlases();
+        ContentLoader.Instance.ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt");
+        ContentLoader.Instance.FinalizeTextureAtlases();
         watch.Stop();
         Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
 
@@ -376,7 +375,7 @@ abstract class BlockMesher {
     {
         buffer = new MeshCombineUtility.MeshInstance();
         MeshContent meshContent = null;
-        if(contentLoader.DesignationMeshConfiguration.GetValue(tile, layer, out meshContent))
+        if(ContentLoader.Instance.DesignationMeshConfiguration.GetValue(tile, layer, out meshContent))
         {
             if(!meshContent.MeshData.ContainsKey(layer))
             {
@@ -388,15 +387,15 @@ abstract class BlockMesher {
             if (meshContent.MaterialTexture != null)
                 buffer.uv1Transform = meshContent.MaterialTexture.UVTransform;
             else
-                buffer.uv1Transform = contentLoader.DefaultMatTexTransform;
+                buffer.uv1Transform = ContentLoader.Instance.DefaultMatTexTransform;
             if (meshContent.ShapeTexture != null)
                 buffer.uv2Transform = meshContent.ShapeTexture.UVTransform;
             else
-                buffer.uv2Transform = contentLoader.DefaultShapeTexTransform;
+                buffer.uv2Transform = ContentLoader.Instance.DefaultShapeTexTransform;
             if (meshContent.SpecialTexture != null)
                 buffer.uv3Transform = meshContent.SpecialTexture.UVTransform;
             else
-                buffer.uv3Transform = contentLoader.DefaultSpecialTexTransform;
+                buffer.uv3Transform = ContentLoader.Instance.DefaultSpecialTexTransform;
             buffer.hiddenFaces = CalculateHiddenFaces(tile);
             return;
         }
@@ -421,7 +420,7 @@ abstract class BlockMesher {
                         case TiletypeMaterial.ROOT:
                         case TiletypeMaterial.TREE_MATERIAL:
                         case TiletypeMaterial.MUSHROOM:
-                            if (!contentLoader.GrowthMeshConfiguration.GetValue(tile, layer, out meshContent))
+                            if (!ContentLoader.Instance.GrowthMeshConfiguration.GetValue(tile, layer, out meshContent))
                             {
                                 buffer.meshData = null;
                                 return;
@@ -445,7 +444,7 @@ abstract class BlockMesher {
                         buffer.meshData = null;
                         return;
                     }
-                    if (!contentLoader.BuildingMeshConfiguration.GetValue(tile, layer, out meshContent))
+                    if (!ContentLoader.Instance.BuildingMeshConfiguration.GetValue(tile, layer, out meshContent))
                     {
                         buffer.meshData = null;
                         return;
@@ -454,7 +453,7 @@ abstract class BlockMesher {
                 break;
             default:
                 {
-                    if (!contentLoader.TileMeshConfiguration.GetValue(tile, layer, out meshContent))
+                    if (!ContentLoader.Instance.TileMeshConfiguration.GetValue(tile, layer, out meshContent))
                     {
                         buffer.meshData = null;
                         return;
@@ -470,7 +469,7 @@ abstract class BlockMesher {
         }
         buffer.meshData = meshContent.MeshData[layer];
         buffer.transform = Matrix4x4.TRS(pos, meshContent.GetRotation(tile), Vector3.one);
-        Matrix4x4 shapeTextTransform = contentLoader.DefaultShapeTexTransform;
+        Matrix4x4 shapeTextTransform = ContentLoader.Instance.DefaultShapeTexTransform;
         NormalContent tileTexContent;
         if (meshContent.ShapeTexture == null)
         {
@@ -482,12 +481,12 @@ abstract class BlockMesher {
                 || layer == MeshLayer.NoMaterialBuildingTransparent
                 )
             {
-                if (contentLoader.BuildingShapeTextureConfiguration.GetValue(tile, layer, out tileTexContent))
+                if (ContentLoader.Instance.BuildingShapeTextureConfiguration.GetValue(tile, layer, out tileTexContent))
                     shapeTextTransform = tileTexContent.UVTransform;
             }
             else
             {
-                if (contentLoader.ShapeTextureConfiguration.GetValue(tile, layer, out tileTexContent))
+                if (ContentLoader.Instance.ShapeTextureConfiguration.GetValue(tile, layer, out tileTexContent))
                     shapeTextTransform = tileTexContent.UVTransform;
             }
         }
@@ -496,7 +495,7 @@ abstract class BlockMesher {
             shapeTextTransform = meshContent.ShapeTexture.UVTransform;
         }
 
-        Matrix4x4 matTexTransform = contentLoader.DefaultMatTexTransform;
+        Matrix4x4 matTexTransform = ContentLoader.Instance.DefaultMatTexTransform;
         if (meshContent.MaterialTexture != null
             && (layer == MeshLayer.NoMaterial
             || layer == MeshLayer.NoMaterialBuilding
@@ -511,7 +510,7 @@ abstract class BlockMesher {
         {
             TextureContent matTexContent;
 
-            if (contentLoader.MaterialTextureConfiguration.GetValue(tile, layer, out matTexContent))
+            if (ContentLoader.Instance.MaterialTextureConfiguration.GetValue(tile, layer, out matTexContent))
                 matTexTransform = matTexContent.UVTransform;
         }
 
@@ -523,12 +522,12 @@ abstract class BlockMesher {
         }
         else
         {
-            specialTexTransform = contentLoader.DefaultSpecialTexTransform;
+            specialTexTransform = ContentLoader.Instance.DefaultSpecialTexTransform;
         }
 
         ColorContent newColorContent;
         Color newColor;
-        if (contentLoader.ColorConfiguration.GetValue(tile, layer, out newColorContent))
+        if (ContentLoader.Instance.ColorConfiguration.GetValue(tile, layer, out newColorContent))
         {
             newColor = newColorContent.value;
         }
@@ -596,17 +595,17 @@ abstract class BlockMesher {
     private MeshCombineUtility.HiddenFaces CalculateHiddenFaces(MapDataStore.Tile tile)
     {
         MeshCombineUtility.HiddenFaces hiddenFaces = MeshCombineUtility.HiddenFaces.None;
-        if (tile.North != null && (tile.North.isWall || tile.North.hidden))
+        if (tile.North != null && (tile.North.isWall || tile.North.Hidden))
             hiddenFaces |= MeshCombineUtility.HiddenFaces.North;
-        if (tile.South != null && (tile.South.isWall || tile.South.hidden))
+        if (tile.South != null && (tile.South.isWall || tile.South.Hidden))
             hiddenFaces |= MeshCombineUtility.HiddenFaces.South;
-        if (tile.East != null && (tile.East.isWall || tile.East.hidden))
+        if (tile.East != null && (tile.East.isWall || tile.East.Hidden))
             hiddenFaces |= MeshCombineUtility.HiddenFaces.East;
-        if (tile.West != null && (tile.West.isWall || tile.West.hidden))
+        if (tile.West != null && (tile.West.isWall || tile.West.Hidden))
             hiddenFaces |= MeshCombineUtility.HiddenFaces.West;
-        if (tile.Up != null && (tile.Up.isSolidBase || tile.Up.hidden))
+        if (tile.Up != null && (tile.Up.isSolidBase || tile.Up.Hidden))
             hiddenFaces |= MeshCombineUtility.HiddenFaces.Up;
-        if (tile.Down != null && (tile.Down.isWall || tile.Down.hidden))
+        if (tile.Down != null && (tile.Down.isWall || tile.Down.Hidden))
             hiddenFaces |= MeshCombineUtility.HiddenFaces.Down;
         return hiddenFaces;
     }

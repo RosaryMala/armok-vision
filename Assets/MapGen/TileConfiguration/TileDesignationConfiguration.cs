@@ -75,7 +75,7 @@ public class TileDesignationConfiguration<T> : TileConfiguration<T> where T : IC
             default:
                 break;
         }
-        if(tile.hidden)
+        if(tile.Hidden)
         {
             if(designationBlocks.ContainsKey(DesignationTypes.Hidden))
             {

@@ -11,16 +11,7 @@ public class WorldMapMaker : MonoBehaviour
     public int height;
     public string worldName;
     public string worldNameEnglish;
-    int[,] elevation;
-    int[,] water_elevation;
-    int[,] rainfall;
-    int[,] vegetation;
-    int[,] temperature;
-    int[,] evilness;
-    int[,] drainage;
-    int[,] volcanism;
-    int[,] savagery;
-    int[,] salinity;
+    RegionTile[,] regionTiles;
     bool[,] cumulusMedium;
     bool[,] cumulusMulti;
     bool[,] cumulusNimbus;
@@ -34,8 +25,8 @@ public class WorldMapMaker : MonoBehaviour
 
     public Vector3 offset;
 
-    RemoteFortressReader.RegionMaps regionMaps;
-    RemoteFortressReader.WorldMap worldMap;
+    RegionMaps regionMaps;
+    WorldMap worldMap;
 
     public CloudMaker cloudPrafab;
 
@@ -90,19 +81,7 @@ public class WorldMapMaker : MonoBehaviour
             for (int y = 0; y < height; y++)
             {
                 int index = y * remoteMap.world_width + x;
-                elevation[x, y] = remoteMap.elevation[index];
-                if (remoteMap.water_elevation != null && remoteMap.water_elevation.Count > index)
-                    water_elevation[x, y] = remoteMap.water_elevation[index];
-                else
-                    water_elevation[x, y] = 99;
-                rainfall[x, y] = remoteMap.rainfall[index];
-                vegetation[x, y] = remoteMap.vegetation[index];
-                temperature[x, y] = remoteMap.temperature[index];
-                evilness[x, y] = remoteMap.evilness[index];
-                drainage[x, y] = remoteMap.drainage[index];
-                volcanism[x, y] = remoteMap.volcanism[index];
-                savagery[x, y] = remoteMap.savagery[index];
-                salinity[x, y] = remoteMap.salinity[index];
+                regionTiles[x,y] = remoteMap.region_tiles[index];
                 if (GameSettings.Instance.rendering.drawClouds)
                 {
                     cumulusMedium[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_MEDIUM;
@@ -117,7 +96,8 @@ public class WorldMapMaker : MonoBehaviour
                     fogThick[x, y] = remoteMap.clouds[index].fog == FogType.F0G_THICK;
                 }
             }
-        GenerateMesh();
+        if(ContentLoader.Instance != null)
+            GenerateMesh();
 
 
         if (GameSettings.Instance.rendering.drawClouds)
@@ -154,35 +134,8 @@ public class WorldMapMaker : MonoBehaviour
 
     void InitArrays()
     {
-        if (elevation == null)
-            elevation = new int[width, height];
-
-        if (water_elevation == null)
-            water_elevation = new int[width, height];
-
-        if (rainfall == null)
-            rainfall = new int[width, height];
-
-        if (vegetation == null)
-            vegetation = new int[width, height];
-
-        if (temperature == null)
-            temperature = new int[width, height];
-
-        if (evilness == null)
-            evilness = new int[width, height];
-
-        if (drainage == null)
-            drainage = new int[width, height];
-
-        if (volcanism == null)
-            volcanism = new int[width, height];
-
-        if (savagery == null)
-            savagery = new int[width, height];
-
-        if (salinity == null)
-            salinity = new int[width, height];
+        if (regionTiles == null)
+            regionTiles = new RegionTile[width, height];
 
         if (cumulusMedium == null)
             cumulusMedium = new bool[width, height];
@@ -213,7 +166,6 @@ public class WorldMapMaker : MonoBehaviour
 
         if (fogThick == null)
             fogThick = new bool[width, height];
-
     }
 
     // Does about what you'd think it does.
@@ -241,6 +193,8 @@ public class WorldMapMaker : MonoBehaviour
 
     void Update()
     {
+        if (ContentLoader.Instance == null)
+            return;
         regionMaps = DFConnection.Instance.PopRegionMapUpdate();
         worldMap = DFConnection.Instance.PopWorldMapUpdate();
         if (regionMaps != null)
@@ -280,14 +234,14 @@ public class WorldMapMaker : MonoBehaviour
         if (!GameSettings.Instance.rendering.drawDistantTerrain)
             return;
 
-        foreach (WorldMap map in regionMaps.world_maps)
+        foreach (RegionMap map in regionMaps.region_maps)
         {
             DFCoord2d pos = new DFCoord2d(map.map_x, map.map_y);
             if (DetailRegions.ContainsKey(pos))
             {
                 continue;
             }
-            RegionMaker region = Instantiate<RegionMaker>(regionPrefab);
+            RegionMaker region = Instantiate(regionPrefab);
             region.CopyFromRemote(map, worldMap);
             region.name = region.worldNameEnglish;
             region.transform.parent = transform;
@@ -398,65 +352,89 @@ public class WorldMapMaker : MonoBehaviour
                     waterChunkIndex++;
                 }
 
+                MapDataStore.Tile fakeTile = new MapDataStore.Tile(null, new DFCoord(0, 0, 0));
 
+                fakeTile.material = regionTiles[x, y].surface_material;
 
-                Vector2 biome = new Vector2(rainfall[x, y], 100 - drainage[x, y]) / 100;
+                ColorContent colorContent;
+                ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorContent);
+                Color terrainColor = colorContent.value;
 
-                Vector3 vert1 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale;
-                Vector3 vert2 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+                Color plantColor = Color.black;
+                float vegitation = regionTiles[x, y].vegetation / 100.0f;
 
-
-                RegionMaker.AddHorizontalQuad(vert1, vert2, biome, Color.white, vertices, colors, uvs, uv2s, triangles);
-
-                if(elevation[x,y] < water_elevation[x,y])
+                foreach (var item in regionTiles[x, y].plant_materials)
                 {
-                    vert1 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, water_elevation[x, y] * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale;
-                    vert2 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, water_elevation[x, y] * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+                    fakeTile.material = item;
+                    ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorContent);
+                    plantColor += colorContent.value;
+                }
+                if (regionTiles[x, y].plant_materials.Count == 0)
+                    vegitation = 0;
+                else
+                    plantColor /= regionTiles[x, y].plant_materials.Count;
 
-                    RegionMaker.AddHorizontalQuad(vert1, vert2, biome, Color.white, waterVerts, null, waterUvs, null, waterTris);
+
+
+                    terrainColor = Color.Lerp(terrainColor, plantColor, vegitation);
+
+                Vector2 biome = new Vector2(regionTiles[x, y].rainfall, 100 - regionTiles[x, y].drainage) / 100;
+
+                Vector3 vert1 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, regionTiles[x, y].elevation * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+                Vector3 vert2 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, regionTiles[x, y].elevation * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+
+
+                RegionMaker.AddHorizontalQuad(vert1, vert2, biome, terrainColor, vertices, colors, uvs, uv2s, triangles);
+
+                if(regionTiles[x, y].elevation < regionTiles[x, y].water_elevation)
+                {
+                    vert1 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, regionTiles[x, y].water_elevation * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+                    vert2 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, regionTiles[x, y].water_elevation * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+
+                    RegionMaker.AddHorizontalQuad(vert1, vert2, biome, terrainColor, waterVerts, null, waterUvs, null, waterTris);
                 }
 
                 int north = 0;
                 if (y > 0 && !DetailRegions.ContainsKey(new DFCoord2d(x, y - 1)))
-                    north = elevation[x, y - 1];
-                if (north < elevation[x, y])
+                    north = regionTiles[x, y - 1].elevation;
+                if (north < regionTiles[x, y].elevation)
                 {
-                    vert1 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+                    vert1 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, regionTiles[x, y].elevation * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale;
                     vert2 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, north * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale;
 
-                    RegionMaker.AddVerticalQuad(vert1, vert2, biome, Color.white, vertices, colors, uvs, uv2s, triangles);
+                    RegionMaker.AddVerticalQuad(vert1, vert2, biome, terrainColor, vertices, colors, uvs, uv2s, triangles);
                 }
 
                 int south = 0;
                 if (y < height - 1 && !DetailRegions.ContainsKey(new DFCoord2d(x, y + 1)))
-                    south = elevation[x, y + 1];
-                if (south < elevation[x, y])
+                    south = regionTiles[x, y + 1].elevation;
+                if (south < regionTiles[x, y].elevation)
                 {
-                    vert1 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+                    vert1 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, regionTiles[x, y].elevation * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale;
                     vert2 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, south * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale;
 
-                    RegionMaker.AddVerticalQuad(vert1, vert2, biome, Color.white, vertices, colors, uvs, uv2s, triangles);
+                    RegionMaker.AddVerticalQuad(vert1, vert2, biome, terrainColor, vertices, colors, uvs, uv2s, triangles);
                 }
 
                 int east = 0;
                 if (x < width - 1 && !DetailRegions.ContainsKey(new DFCoord2d(x + 1, y)))
-                    east = elevation[x + 1, y];
-                if (east < elevation[x, y])
+                    east = regionTiles[x + 1, y].elevation;
+                if (east < regionTiles[x, y].elevation)
                 {
-                    vert1 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+                    vert1 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, regionTiles[x, y].elevation * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale;
                     vert2 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, east * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale;
 
-                    RegionMaker.AddVerticalQuad(vert1, vert2, biome, Color.white, vertices, colors, uvs, uv2s, triangles);
+                    RegionMaker.AddVerticalQuad(vert1, vert2, biome, terrainColor, vertices, colors, uvs, uv2s, triangles);
                 }
                 int west = 0;
-                if (x > 0 && !DetailRegions.ContainsKey(new DFCoord2d(x-1, y)))
-                    west = elevation[x - 1, y];
-                if (west < elevation[x, y])
+                if (x > 0 && !DetailRegions.ContainsKey(new DFCoord2d(x - 1, y)))
+                    west = regionTiles[x - 1, y].elevation;
+                if (west < regionTiles[x, y].elevation)
                 {
-                    vert1 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, elevation[x, y] * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale;
+                    vert1 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, regionTiles[x, y].elevation * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth) + offset) * scale;
                     vert2 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, west * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth) + offset) * scale;
 
-                    RegionMaker.AddVerticalQuad(vert1, vert2, biome, Color.white, vertices, colors, uvs, uv2s, triangles);
+                    RegionMaker.AddVerticalQuad(vert1, vert2, biome, terrainColor, vertices, colors, uvs, uv2s, triangles);
                 }
             }
         }

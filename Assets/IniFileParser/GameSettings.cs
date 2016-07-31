@@ -28,6 +28,7 @@ public class GameSettings : MonoBehaviour
         public bool drawShadows = true;
         public int vSyncCount = 0;
         public int targetFrameRate = 60;
+        public bool showHiddenTiles = false;
     }
     [Serializable]
     public class CameraSettings

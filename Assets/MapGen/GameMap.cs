@@ -1048,7 +1048,7 @@ public class GameMap : MonoBehaviour
 
                 statusText.Append("Desingation: ").Append(tile.digDesignation).AppendLine();
 
-                if(tile.hidden)
+                if(tile.Hidden)
                     statusText.Append("Hidden").AppendLine();
 
                 statusText.Append(tile.WallBuildingSides).AppendLine();
@@ -1245,7 +1245,7 @@ public class GameMap : MonoBehaviour
                     tile = MapDataStore.Main[unit.pos_x, unit.pos_y, unit.pos_z];
                 creatureList[unit.id].gameObject.SetActive(
                     unit.pos_z < PosZ && unit.pos_z >= (PosZ - GameSettings.Instance.rendering.drawRangeDown)
-                    && (tile != null ? !tile.hidden : false)
+                    && (tile != null ? !tile.Hidden : false)
                     );
 
                 if (creatureList[unit.id].gameObject.activeSelf) //Only update stuff if it's actually visible.
