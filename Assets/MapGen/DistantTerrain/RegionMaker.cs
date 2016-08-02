@@ -311,27 +311,28 @@ public class RegionMaker : MonoBehaviour
                         case SiteRealizationBuildingType.warehouse:
                         case SiteRealizationBuildingType.well:
                         case SiteRealizationBuildingType.vault:
-                        case SiteRealizationBuildingType.great_tower:
                         case SiteRealizationBuildingType.tree_house:
                         case SiteRealizationBuildingType.hillock_house:
                         case SiteRealizationBuildingType.mead_hall:
                         case SiteRealizationBuildingType.fortress_entrance:
                         case SiteRealizationBuildingType.library:
                         case SiteRealizationBuildingType.tavern:
-                            fakeTile.material = building.material;
-                            Color buildingColor;
-                            ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out color);
-                            if (color != null)
-                                buildingColor = color.value;
-                            else
                             {
-                                Debug.LogError("No valid color for " + building.type);
-                                buildingColor = Color.magenta;
+                                fakeTile.material = building.material;
+                                Color buildingColor;
+                                ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out color);
+                                if (color != null)
+                                    buildingColor = color.value;
+                                else
+                                {
+                                    Debug.LogError("No valid color for " + building.type);
+                                    buildingColor = Color.magenta;
+                                }
+                                min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
+                                max = new Vector3((building.max_x + 1) * GameMap.tileWidth, 2 * GameMap.tileHeight, -(building.max_y + 1) * GameMap.tileWidth);
+                                AddBlock(vert1 + min, vert1 + max, biome, buildingColor);
+                                break;
                             }
-                            min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
-                            max = new Vector3((building.max_x + 1) * GameMap.tileWidth, 2 * GameMap.tileHeight, -(building.max_y + 1) * GameMap.tileWidth);
-                            AddBlock(vert1 + min, vert1 + max, biome, buildingColor);
-                            break;
                         case SiteRealizationBuildingType.courtyard:
                         case SiteRealizationBuildingType.market_square:
                         case SiteRealizationBuildingType.waste:
@@ -354,6 +355,23 @@ public class RegionMaker : MonoBehaviour
                             max = new Vector3((building.max_x + 1) * GameMap.tileWidth, 1 * GameMap.tileHeight / 6.0f, -(mid_y + 2) * GameMap.tileWidth);
                             AddBlock(vert1 + min, vert1 + max, biome, Color.black);
                             break;
+                        case SiteRealizationBuildingType.great_tower:
+                            {
+                                fakeTile.material = building.material;
+                                Color buildingColor;
+                                ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out color);
+                                if (color != null)
+                                    buildingColor = color.value;
+                                else
+                                {
+                                    Debug.LogError("No valid color for " + building.type);
+                                    buildingColor = Color.magenta;
+                                }
+                                min = new Vector3((building.min_x + 5) * GameMap.tileWidth, 0, -(building.min_y + 5) * GameMap.tileWidth);
+                                max = new Vector3((building.max_x - 4) * GameMap.tileWidth, 15 * GameMap.tileHeight, -(building.max_y - 4) * GameMap.tileWidth);
+                                AddCylinder(vert1 + min, vert1 + max, biome, buildingColor);
+                                break;
+                            }
                         default:
                             min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
                             max = new Vector3((building.max_x + 1) * GameMap.tileWidth, 13 * GameMap.tileHeight / 6.0f, -(building.max_y + 1) * GameMap.tileWidth);
@@ -1052,6 +1070,73 @@ public class RegionMaker : MonoBehaviour
         AddVerticalQuad(new Vector3(max.x, max.y, min.z), new Vector3(max.x, min.y, max.z), biome, color, vertices, colors, uvCoords, uvCoords2, triangles);
         AddVerticalQuad(new Vector3(max.x, max.y, max.z), new Vector3(min.x, min.y, max.z), biome, color, vertices, colors, uvCoords, uvCoords2, triangles);
         AddVerticalQuad(new Vector3(min.x, max.y, max.z), new Vector3(min.x, min.y, min.z), biome, color, vertices, colors, uvCoords, uvCoords2, triangles);
+    }
+
+    private void AddCylinder(Vector3 min, Vector3 max, Vector2 biome, Color color)
+    {
+        int index = vertices.Count;
+
+        float dia = ((max.x - min.x) + (max.y - min.y)) / 2;
+
+        Vector2 offset = new Vector2(0.206931f, 0.5f) * dia;
+
+        Vector3 centerTop = (max + new Vector3(min.x, max.y, min.z)) / 2;
+        Vector3 centerBottom = new Vector3(centerTop.x, min.y, centerTop.z);
+
+        vertices.Add(new Vector3(centerTop.x - offset.x, centerTop.y, centerTop.z + offset.y));
+        vertices.Add(new Vector3(centerTop.x + offset.x, centerTop.y, centerTop.z + offset.y));
+        vertices.Add(new Vector3(centerTop.x + offset.y, centerTop.y, centerTop.z + offset.x));
+        vertices.Add(new Vector3(centerTop.x + offset.y, centerTop.y, centerTop.z - offset.x));
+        vertices.Add(new Vector3(centerTop.x + offset.x, centerTop.y, centerTop.z - offset.y));
+        vertices.Add(new Vector3(centerTop.x - offset.x, centerTop.y, centerTop.z - offset.y));
+        vertices.Add(new Vector3(centerTop.x - offset.y, centerTop.y, centerTop.z - offset.x));
+        vertices.Add(new Vector3(centerTop.x - offset.y, centerTop.y, centerTop.z + offset.x));
+
+        for (int i = 0; i < 8; i++)
+        {
+            colors.Add(color);
+            uvCoords2.Add(biome);
+            uvCoords.Add(new Vector2(vertices[index + i].x, vertices[index + i].z));
+        }
+
+        for (int i = 0; i < 6; i++)
+        {
+            triangles.Add(index + 0);
+            triangles.Add(index + i + 1);
+            triangles.Add(index + i + 2);
+        }
+
+        int newIndex = vertices.Count;
+
+        for(int i = 0; i < 8; i++)
+        {
+            vertices.Add(vertices[index + i]);
+            vertices.Add(new Vector3(vertices[index + i].x, min.y, vertices[index + i].z));
+            colors.Add(color);
+            uvCoords2.Add(biome);
+            uvCoords.Add(new Vector2(vertices[index + i].x, vertices[index + i].z));
+            colors.Add(color);
+            uvCoords2.Add(biome);
+            uvCoords.Add(new Vector2(vertices[index + i].x, vertices[index + i].z));
+        }
+
+        for (int i = 0; i < 14; i+=2)
+        {
+            triangles.Add(newIndex + i);
+            triangles.Add(newIndex + i + 1);
+            triangles.Add(newIndex + i + 2);
+
+            triangles.Add(newIndex + i + 1);
+            triangles.Add(newIndex + i + 3);
+            triangles.Add(newIndex + i + 2);
+        }
+        triangles.Add(newIndex + 14);
+        triangles.Add(newIndex + 14 + 1);
+        triangles.Add(newIndex + 0);
+
+        triangles.Add(newIndex + 14 + 1);
+        triangles.Add(newIndex + 1);
+        triangles.Add(newIndex + 0);
     }
 
     private void AddFlatTile(Vector3 vert1, Vector2 biome, float north, float east, float south, float west, int waterLevel, Color terrainColor)

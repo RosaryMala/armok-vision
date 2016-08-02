@@ -1,4 +1,6 @@
-﻿Shader "Noise-Simplex" {
+﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+
+Shader "Noise-Simplex" {
 Properties {
 	_Freq ("Frequency", Float) = 1
 	_Speed ("Speed", Float) = 1
@@ -31,7 +33,7 @@ SubShader {
 
 			o.pos =	mul(UNITY_MATRIX_MVP, objPos);
 			
-			o.srcPos = mul(_Object2World, objPos).xyz;
+			o.srcPos = mul(unity_ObjectToWorld, objPos).xyz;
 			o.srcPos *= _Freq;
 			o.srcPos.y += _Time.y * _Speed;
 			

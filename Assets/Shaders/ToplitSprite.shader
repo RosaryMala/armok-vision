@@ -1,4 +1,6 @@
-﻿Shader "Custom/ToplitSprite" {
+﻿// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
+
+Shader "Custom/ToplitSprite" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
@@ -30,7 +32,7 @@
 		fixed4 _Color;
 
 		void vert(inout appdata_full v) {
-			v.normal = mul(_World2Object, float4(0,1,0, 0));
+			v.normal = mul(unity_WorldToObject, float4(0,1,0, 0));
 		}
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
