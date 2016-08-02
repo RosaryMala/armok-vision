@@ -1,4 +1,6 @@
-﻿Shader "Custom/SnowShader" {
+﻿// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
+
+Shader "Custom/SnowShader" {
     Properties{
         _MainTex("Base (RGB)", 2D) = "white" {}
     _Bump("Bump", 2D) = "bump" {}
@@ -31,7 +33,7 @@
     void vert(inout appdata_full v) {
         //Convert the normal to world coortinates
         float3 snormal = normalize(_SnowDirection.xyz);
-        float3 sn = mul((float3x3)_World2Object, snormal).xyz;
+        float3 sn = mul((float3x3)unity_WorldToObject, snormal).xyz;
 
         if (dot(v.normal, sn) >= lerp(1,-1, (_Snow * 2) / 3))
         {
