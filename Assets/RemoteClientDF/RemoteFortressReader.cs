@@ -1536,6 +1536,82 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"SiteRealizationBuildingWall")]
+  public partial class SiteRealizationBuildingWall : global::ProtoBuf.IExtensible
+  {
+    public SiteRealizationBuildingWall() {}
+    
+    private int _start_x = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"start_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int start_x
+    {
+      get { return _start_x; }
+      set { _start_x = value; }
+    }
+    private int _start_y = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"start_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int start_y
+    {
+      get { return _start_y; }
+      set { _start_y = value; }
+    }
+    private int _start_z = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"start_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int start_z
+    {
+      get { return _start_z; }
+      set { _start_z = value; }
+    }
+    private int _end_x = default(int);
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"end_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int end_x
+    {
+      get { return _end_x; }
+      set { _end_x = value; }
+    }
+    private int _end_y = default(int);
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"end_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int end_y
+    {
+      get { return _end_y; }
+      set { _end_y = value; }
+    }
+    private int _end_z = default(int);
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"end_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int end_z
+    {
+      get { return _end_z; }
+      set { _end_z = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"SiteRealizationBuildingTower")]
+  public partial class SiteRealizationBuildingTower : global::ProtoBuf.IExtensible
+  {
+    public SiteRealizationBuildingTower() {}
+    
+    private int _roof_z = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"roof_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int roof_z
+    {
+      get { return _roof_z; }
+      set { _roof_z = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"SiteRealizationBuilding")]
   public partial class SiteRealizationBuilding : global::ProtoBuf.IExtensible
   {
@@ -1596,6 +1672,22 @@ namespace RemoteFortressReader
     {
       get { return _material; }
       set { _material = value; }
+    }
+    private RemoteFortressReader.SiteRealizationBuildingWall _wall_info = null;
+    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"wall_info", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.SiteRealizationBuildingWall wall_info
+    {
+      get { return _wall_info; }
+      set { _wall_info = value; }
+    }
+    private RemoteFortressReader.SiteRealizationBuildingTower _tower_info = null;
+    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"tower_info", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.SiteRealizationBuildingTower tower_info
+    {
+      get { return _tower_info; }
+      set { _tower_info = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
