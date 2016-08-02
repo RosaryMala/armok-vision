@@ -1536,6 +1536,72 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"SiteRealizationBuilding")]
+  public partial class SiteRealizationBuilding : global::ProtoBuf.IExtensible
+  {
+    public SiteRealizationBuilding() {}
+    
+    private int _id = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int id
+    {
+      get { return _id; }
+      set { _id = value; }
+    }
+    private RemoteFortressReader.SiteRealizationBuildingType _type = RemoteFortressReader.SiteRealizationBuildingType.cottage_plot;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.SiteRealizationBuildingType.cottage_plot)]
+    public RemoteFortressReader.SiteRealizationBuildingType type
+    {
+      get { return _type; }
+      set { _type = value; }
+    }
+    private int _min_x = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"min_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int min_x
+    {
+      get { return _min_x; }
+      set { _min_x = value; }
+    }
+    private int _min_y = default(int);
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"min_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int min_y
+    {
+      get { return _min_y; }
+      set { _min_y = value; }
+    }
+    private int _max_x = default(int);
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"max_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int max_x
+    {
+      get { return _max_x; }
+      set { _max_x = value; }
+    }
+    private int _max_y = default(int);
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"max_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int max_y
+    {
+      get { return _max_y; }
+      set { _max_y = value; }
+    }
+    private RemoteFortressReader.MatPair _material = null;
+    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"material", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.MatPair material
+    {
+      get { return _material; }
+      set { _material = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"RegionTile")]
   public partial class RegionTile : global::ProtoBuf.IExtensible
   {
@@ -1642,6 +1708,13 @@ namespace RemoteFortressReader
     public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> plant_materials
     {
       get { return _plant_materials; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.SiteRealizationBuilding> _buildings = new global::System.Collections.Generic.List<RemoteFortressReader.SiteRealizationBuilding>();
+    [global::ProtoBuf.ProtoMember(14, Name=@"buildings", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.SiteRealizationBuilding> buildings
+    {
+      get { return _buildings; }
     }
   
     private global::ProtoBuf.IExtension extensionObject;
@@ -3033,6 +3106,80 @@ namespace RemoteFortressReader
             
       [global::ProtoBuf.ProtoEnum(Name=@"F0G_THICK", Value=3)]
       F0G_THICK = 3
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"SiteRealizationBuildingType")]
+    public enum SiteRealizationBuildingType
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"cottage_plot", Value=0)]
+      cottage_plot = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"castle_wall", Value=1)]
+      castle_wall = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"castle_tower", Value=2)]
+      castle_tower = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"castle_courtyard", Value=3)]
+      castle_courtyard = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"house", Value=4)]
+      house = 4,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"temple", Value=5)]
+      temple = 5,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"tomb", Value=6)]
+      tomb = 6,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"shop_house", Value=7)]
+      shop_house = 7,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"warehouse", Value=8)]
+      warehouse = 8,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"market_square", Value=9)]
+      market_square = 9,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"pasture", Value=10)]
+      pasture = 10,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"waste", Value=11)]
+      waste = 11,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"courtyard", Value=12)]
+      courtyard = 12,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"well", Value=13)]
+      well = 13,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"vault", Value=14)]
+      vault = 14,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"great_tower", Value=15)]
+      great_tower = 15,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"trenches", Value=16)]
+      trenches = 16,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"tree_house", Value=17)]
+      tree_house = 17,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"hillock_house", Value=18)]
+      hillock_house = 18,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"mead_hall", Value=19)]
+      mead_hall = 19,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"fortress_entrance", Value=20)]
+      fortress_entrance = 20,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"library", Value=21)]
+      library = 21,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"tavern", Value=22)]
+      tavern = 22
     }
   
     [global::ProtoBuf.ProtoContract(Name=@"PatternType")]
