@@ -79,15 +79,6 @@ abstract class BlockMesher {
         recycledBlocks = new Stack<MapDataStore>();
         resultQueue = new Queue<Result>();
 
-        // Load meshes
-        ContentLoader.Instance = new ContentLoader();
-        System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
-        watch.Start();
-        ContentLoader.Instance.ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt");
-        ContentLoader.Instance.FinalizeTextureAtlases();
-        watch.Stop();
-        Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
-
         // Load materials
         materials = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
         foreach (RemoteFortressReader.MaterialDefinition material in DFConnection.Instance.NetMaterialList.material_list)

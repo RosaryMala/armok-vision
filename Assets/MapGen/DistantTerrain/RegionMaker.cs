@@ -24,6 +24,7 @@ public class RegionMaker : MonoBehaviour
         public RiverTile rivers;
         public MatPairStruct surfaceMaterial;
         public List<MatPairStruct> plantMaterials;
+        public List<SiteRealizationBuilding> buildings;
 
         public RegionTile(WorldMap remoteMap, int index)
         {
@@ -63,6 +64,7 @@ public class RegionMaker : MonoBehaviour
             {
                 plantMaterials.Add(item);
             }
+            buildings = tile.buildings;
         }
     }
     public float scale;
@@ -123,7 +125,7 @@ public class RegionMaker : MonoBehaviour
         transform.localScale = new Vector3(scale, scale, scale);
     }
 
-    public void CopyFromRemote(RemoteFortressReader.RegionMap remoteMap, WorldMap mainMap)
+    public void CopyFromRemote(RegionMap remoteMap, WorldMap mainMap)
     {
         if (remoteMap == null)
         {
@@ -282,13 +284,83 @@ public class RegionMaker : MonoBehaviour
                     plantColor /= tile.plantMaterials.Count;
 
 
-                terrainColor = Color.Lerp(terrainColor, plantColor, plantBlend);
+                Color blendedColor = Color.Lerp(terrainColor, plantColor, plantBlend);
 
                 if (riverSides == 0)
-                    AddFlatTile(vert1, biome, north * GameMap.tileHeight, east * GameMap.tileHeight, south * GameMap.tileHeight, west * GameMap.tileHeight, tile.water_elevation, terrainColor);
+                    AddFlatTile(vert1, biome, north * GameMap.tileHeight, east * GameMap.tileHeight, south * GameMap.tileHeight, west * GameMap.tileHeight, tile.water_elevation, blendedColor);
                 else
                 {
-                    AddRiverTile(riverSides, tile.rivers, vert1, biome, north * GameMap.tileHeight, east * GameMap.tileHeight, south * GameMap.tileHeight, west * GameMap.tileHeight, terrainColor);
+                    AddRiverTile(riverSides, tile.rivers, vert1, biome, north * GameMap.tileHeight, east * GameMap.tileHeight, south * GameMap.tileHeight, west * GameMap.tileHeight, blendedColor);
+                }
+
+                foreach (SiteRealizationBuilding building in tile.buildings)
+                {
+
+                    Vector3 min, max;
+
+                    switch (building.type)
+                    {
+                        case SiteRealizationBuildingType.cottage_plot:
+                        case SiteRealizationBuildingType.castle_wall:
+                        case SiteRealizationBuildingType.castle_tower:
+                        case SiteRealizationBuildingType.castle_courtyard:
+                        case SiteRealizationBuildingType.house:
+                        case SiteRealizationBuildingType.temple:
+                        case SiteRealizationBuildingType.tomb:
+                        case SiteRealizationBuildingType.shop_house:
+                        case SiteRealizationBuildingType.warehouse:
+                        case SiteRealizationBuildingType.well:
+                        case SiteRealizationBuildingType.vault:
+                        case SiteRealizationBuildingType.great_tower:
+                        case SiteRealizationBuildingType.tree_house:
+                        case SiteRealizationBuildingType.hillock_house:
+                        case SiteRealizationBuildingType.mead_hall:
+                        case SiteRealizationBuildingType.fortress_entrance:
+                        case SiteRealizationBuildingType.library:
+                        case SiteRealizationBuildingType.tavern:
+                            fakeTile.material = building.material;
+                            Color buildingColor;
+                            ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out color);
+                            if (color != null)
+                                buildingColor = color.value;
+                            else
+                            {
+                                Debug.LogError("No valid color for " + building.type);
+                                buildingColor = Color.magenta;
+                            }
+                            min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
+                            max = new Vector3((building.max_x + 1) * GameMap.tileWidth, 2 * GameMap.tileHeight, -(building.max_y + 1) * GameMap.tileWidth);
+                            AddBlock(vert1 + min, vert1 + max, biome, buildingColor);
+                            break;
+                        case SiteRealizationBuildingType.courtyard:
+                        case SiteRealizationBuildingType.market_square:
+                        case SiteRealizationBuildingType.waste:
+                            min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
+                            max = new Vector3((building.max_x + 1) * GameMap.tileWidth, 1 * GameMap.tileHeight / 6.0f, -(building.max_y + 1) * GameMap.tileWidth);
+                            AddBlock(vert1 + min, vert1 + max, biome, terrainColor);
+                            break;
+                        case SiteRealizationBuildingType.pasture:
+                            min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
+                            max = new Vector3((building.max_x + 1) * GameMap.tileWidth, 1 * GameMap.tileHeight / 6.0f, -(building.max_y + 1) * GameMap.tileWidth);
+                            AddBlock(vert1 + min, vert1 + max, biome, plantColor);
+                            break;
+                        case SiteRealizationBuildingType.trenches:
+                            int mid_x = (building.min_x + building.max_x) / 2;
+                            int mid_y = (building.min_y + building.max_y) / 2;
+                            min = new Vector3((mid_x - 1) * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
+                            max = new Vector3((mid_x + 2) * GameMap.tileWidth, 1 * GameMap.tileHeight / 6.0f, -(building.max_y + 1) * GameMap.tileWidth);
+                            AddBlock(vert1 + min, vert1 + max, biome, Color.black);
+                            min = new Vector3(building.min_x * GameMap.tileWidth, 0, -(mid_y - 1) * GameMap.tileWidth);
+                            max = new Vector3((building.max_x + 1) * GameMap.tileWidth, 1 * GameMap.tileHeight / 6.0f, -(mid_y + 2) * GameMap.tileWidth);
+                            AddBlock(vert1 + min, vert1 + max, biome, Color.black);
+                            break;
+                        default:
+                            min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
+                            max = new Vector3((building.max_x + 1) * GameMap.tileWidth, 13 * GameMap.tileHeight / 6.0f, -(building.max_y + 1) * GameMap.tileWidth);
+                            AddBlock(vert1 + min, vert1 + max, biome, Color.magenta);
+                            break;
+                    }
+
                 }
 
                 if (vertices.Count >= (65535 - 20))
@@ -970,6 +1042,16 @@ public class RegionMaker : MonoBehaviour
                 );
         }
 
+    }
+
+    private void AddBlock(Vector3 min, Vector3 max, Vector2 biome, Color color)
+    {
+        AddHorizontalQuad(new Vector3(min.x, max.y, min.z), max, biome, color, vertices, colors, uvCoords, uvCoords2, triangles);
+
+        AddVerticalQuad(new Vector3(min.x, max.y, min.z), new Vector3(max.x, min.y, min.z), biome, color, vertices, colors, uvCoords, uvCoords2, triangles);
+        AddVerticalQuad(new Vector3(max.x, max.y, min.z), new Vector3(max.x, min.y, max.z), biome, color, vertices, colors, uvCoords, uvCoords2, triangles);
+        AddVerticalQuad(new Vector3(max.x, max.y, max.z), new Vector3(min.x, min.y, max.z), biome, color, vertices, colors, uvCoords, uvCoords2, triangles);
+        AddVerticalQuad(new Vector3(min.x, max.y, max.z), new Vector3(min.x, min.y, min.z), biome, color, vertices, colors, uvCoords, uvCoords2, triangles);
     }
 
     private void AddFlatTile(Vector3 vert1, Vector2 biome, float north, float east, float south, float west, int waterLevel, Color terrainColor)
