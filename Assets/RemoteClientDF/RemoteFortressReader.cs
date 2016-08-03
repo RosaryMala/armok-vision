@@ -1607,6 +1607,81 @@ namespace RemoteFortressReader
       get { return _roof_z; }
       set { _roof_z = value; }
     }
+    private bool _round = default(bool);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"round", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool round
+    {
+      get { return _round; }
+      set { _round = value; }
+    }
+    private bool _goblin = default(bool);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"goblin", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool goblin
+    {
+      get { return _goblin; }
+      set { _goblin = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"TrenchSpoke")]
+  public partial class TrenchSpoke : global::ProtoBuf.IExtensible
+  {
+    public TrenchSpoke() {}
+    
+    private int _mound_start = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"mound_start", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int mound_start
+    {
+      get { return _mound_start; }
+      set { _mound_start = value; }
+    }
+    private int _trench_start = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"trench_start", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int trench_start
+    {
+      get { return _trench_start; }
+      set { _trench_start = value; }
+    }
+    private int _trench_end = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"trench_end", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int trench_end
+    {
+      get { return _trench_end; }
+      set { _trench_end = value; }
+    }
+    private int _mound_end = default(int);
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"mound_end", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int mound_end
+    {
+      get { return _mound_end; }
+      set { _mound_end = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"SiteRealizationBuildingTrenches")]
+  public partial class SiteRealizationBuildingTrenches : global::ProtoBuf.IExtensible
+  {
+    public SiteRealizationBuildingTrenches() {}
+    
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.TrenchSpoke> _spokes = new global::System.Collections.Generic.List<RemoteFortressReader.TrenchSpoke>();
+    [global::ProtoBuf.ProtoMember(1, Name=@"spokes", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.TrenchSpoke> spokes
+    {
+      get { return _spokes; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -1688,6 +1763,14 @@ namespace RemoteFortressReader
     {
       get { return _tower_info; }
       set { _tower_info = value; }
+    }
+    private RemoteFortressReader.SiteRealizationBuildingTrenches _trench_info = null;
+    [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name=@"trench_info", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.SiteRealizationBuildingTrenches trench_info
+    {
+      get { return _trench_info; }
+      set { _trench_info = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
