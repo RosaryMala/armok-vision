@@ -302,7 +302,6 @@ public class RegionMaker : MonoBehaviour
                     {
                         case SiteRealizationBuildingType.cottage_plot:
                         case SiteRealizationBuildingType.castle_wall:
-                        case SiteRealizationBuildingType.castle_tower:
                         case SiteRealizationBuildingType.castle_courtyard:
                         case SiteRealizationBuildingType.house:
                         case SiteRealizationBuildingType.temple:
@@ -370,6 +369,39 @@ public class RegionMaker : MonoBehaviour
                                 min = new Vector3((building.min_x + 5) * GameMap.tileWidth, 0, -(building.min_y + 5) * GameMap.tileWidth);
                                 max = new Vector3((building.max_x - 4) * GameMap.tileWidth, 15 * GameMap.tileHeight, -(building.max_y - 4) * GameMap.tileWidth);
                                 AddCylinder(vert1 + min, vert1 + max, biome, buildingColor);
+                                break;
+                            }
+                        case SiteRealizationBuildingType.castle_tower:
+                            {
+                                fakeTile.material = building.material;
+                                Color buildingColor;
+                                ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out color);
+                                if (color != null)
+                                    buildingColor = color.value;
+                                else
+                                {
+                                    buildingColor = Color.magenta;
+                                }
+                                int top = 2;
+                                if(building.tower_info != null)
+                                {
+                                    if (building.tower_info.goblin)
+                                    {
+                                        top = 11;
+                                        buildingColor = terrainColor;
+                                    }
+                                    else
+                                    {
+                                        top = building.tower_info.roof_z;
+                                        top -= tile.elevation;
+                                    }
+                                }
+                                min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
+                                max = new Vector3((building.max_x + 1) * GameMap.tileWidth, top * GameMap.tileHeight, -(building.max_y + 1) * GameMap.tileWidth);
+                                if(building.tower_info != null && building.tower_info.round)
+                                    AddCylinder(vert1 + min, vert1 + max, biome, buildingColor);
+                                else
+                                    AddBlock(vert1 + min, vert1 + max, biome, buildingColor);
                                 break;
                             }
                         default:
