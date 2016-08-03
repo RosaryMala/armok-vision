@@ -301,8 +301,6 @@ public class RegionMaker : MonoBehaviour
                     switch (building.type)
                     {
                         case SiteRealizationBuildingType.cottage_plot:
-                        case SiteRealizationBuildingType.castle_wall:
-                        case SiteRealizationBuildingType.castle_tower:
                         case SiteRealizationBuildingType.castle_courtyard:
                         case SiteRealizationBuildingType.house:
                         case SiteRealizationBuildingType.temple:
@@ -336,25 +334,31 @@ public class RegionMaker : MonoBehaviour
                         case SiteRealizationBuildingType.courtyard:
                         case SiteRealizationBuildingType.market_square:
                         case SiteRealizationBuildingType.waste:
-                            min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
-                            max = new Vector3((building.max_x + 1) * GameMap.tileWidth, 1 * GameMap.tileHeight / 6.0f, -(building.max_y + 1) * GameMap.tileWidth);
-                            AddBlock(vert1 + min, vert1 + max, biome, terrainColor);
-                            break;
+                            {
+                                min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
+                                max = new Vector3((building.max_x + 1) * GameMap.tileWidth, 1 * GameMap.tileHeight / 6.0f, -(building.max_y + 1) * GameMap.tileWidth);
+                                AddBlock(vert1 + min, vert1 + max, biome, terrainColor);
+                                break;
+                            }
                         case SiteRealizationBuildingType.pasture:
-                            min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
-                            max = new Vector3((building.max_x + 1) * GameMap.tileWidth, 1 * GameMap.tileHeight / 6.0f, -(building.max_y + 1) * GameMap.tileWidth);
-                            AddBlock(vert1 + min, vert1 + max, biome, plantColor);
-                            break;
+                            {
+                                min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
+                                max = new Vector3((building.max_x + 1) * GameMap.tileWidth, 1 * GameMap.tileHeight / 6.0f, -(building.max_y + 1) * GameMap.tileWidth);
+                                AddBlock(vert1 + min, vert1 + max, biome, plantColor);
+                                break;
+                            }
                         case SiteRealizationBuildingType.trenches:
-                            int mid_x = (building.min_x + building.max_x) / 2;
-                            int mid_y = (building.min_y + building.max_y) / 2;
-                            min = new Vector3((mid_x - 1) * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
-                            max = new Vector3((mid_x + 2) * GameMap.tileWidth, 1 * GameMap.tileHeight / 6.0f, -(building.max_y + 1) * GameMap.tileWidth);
-                            AddBlock(vert1 + min, vert1 + max, biome, Color.black);
-                            min = new Vector3(building.min_x * GameMap.tileWidth, 0, -(mid_y - 1) * GameMap.tileWidth);
-                            max = new Vector3((building.max_x + 1) * GameMap.tileWidth, 1 * GameMap.tileHeight / 6.0f, -(mid_y + 2) * GameMap.tileWidth);
-                            AddBlock(vert1 + min, vert1 + max, biome, Color.black);
-                            break;
+                            {
+                                int mid_x = (building.min_x + building.max_x) / 2;
+                                int mid_y = (building.min_y + building.max_y) / 2;
+                                min = new Vector3((mid_x - 1) * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
+                                max = new Vector3((mid_x + 2) * GameMap.tileWidth, 1 * GameMap.tileHeight / 6.0f, -(building.max_y + 1) * GameMap.tileWidth);
+                                AddBlock(vert1 + min, vert1 + max, biome, Color.black);
+                                min = new Vector3(building.min_x * GameMap.tileWidth, 0, -(mid_y - 1) * GameMap.tileWidth);
+                                max = new Vector3((building.max_x + 1) * GameMap.tileWidth, 1 * GameMap.tileHeight / 6.0f, -(mid_y + 2) * GameMap.tileWidth);
+                                AddBlock(vert1 + min, vert1 + max, biome, Color.black);
+                                break;
+                            }
                         case SiteRealizationBuildingType.great_tower:
                             {
                                 fakeTile.material = building.material;
@@ -372,11 +376,60 @@ public class RegionMaker : MonoBehaviour
                                 AddCylinder(vert1 + min, vert1 + max, biome, buildingColor);
                                 break;
                             }
+                        case SiteRealizationBuildingType.castle_wall:
+                            {
+                                fakeTile.material = building.material;
+                                Color buildingColor;
+                                ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out color);
+                                if (color != null)
+                                    buildingColor = color.value;
+                                else
+                                {
+                                    buildingColor = Color.magenta;
+                                }
+                                if (building.wall_info != null)
+                                {
+                                    min = new Vector3(building.wall_info.start_x * GameMap.tileWidth, (building.wall_info.start_z - tile.elevation) * GameMap.tileHeight, -building.wall_info.start_y * GameMap.tileWidth);
+                                    max = new Vector3(building.wall_info.end_x * GameMap.tileWidth, 0, -building.wall_info.end_y * GameMap.tileWidth);
+                                    AddWall(vert1 + min, vert1 + max, 4 * GameMap.tileWidth, biome, buildingColor);
+                                }
+                                else
+                                {
+                                    min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
+                                    max = new Vector3((building.max_x + 1) * GameMap.tileWidth, 2 * GameMap.tileHeight, -(building.max_y + 1) * GameMap.tileWidth);
+                                    AddBlock(vert1 + min, vert1 + max, biome, Color.black);
+                                }
+                                break;
+                            }
+                        case SiteRealizationBuildingType.castle_tower:
+                            {
+                                fakeTile.material = building.material;
+                                Color buildingColor;
+                                ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out color);
+                                if (color != null)
+                                    buildingColor = color.value;
+                                else
+                                {
+                                    Debug.LogError("No valid color for " + building.type);
+                                    buildingColor = Color.magenta;
+                                }
+                                int roof = 2;
+                                if (building.tower_info != null)
+                                {
+                                    roof = building.tower_info.roof_z - tile.elevation;
+                                }
+                                min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
+                                max = new Vector3((building.max_x + 1) * GameMap.tileWidth, roof * GameMap.tileHeight, -(building.max_y + 1) * GameMap.tileWidth);
+                                AddBlock(vert1 + min, vert1 + max, biome, buildingColor);
+                                break;
+                            }
                         default:
-                            min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
-                            max = new Vector3((building.max_x + 1) * GameMap.tileWidth, 13 * GameMap.tileHeight / 6.0f, -(building.max_y + 1) * GameMap.tileWidth);
-                            AddBlock(vert1 + min, vert1 + max, biome, Color.magenta);
-                            break;
+                            {
+                                min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
+                                max = new Vector3((building.max_x + 1) * GameMap.tileWidth, 13 * GameMap.tileHeight / 6.0f, -(building.max_y + 1) * GameMap.tileWidth);
+                                AddBlock(vert1 + min, vert1 + max, biome, Color.magenta);
+                                break;
+                            }
                     }
 
                 }
@@ -1060,6 +1113,25 @@ public class RegionMaker : MonoBehaviour
                 );
         }
 
+    }
+
+    private void AddWall(Vector3 start, Vector3 end, float width, Vector2 biome, Color color)
+    {
+        Vector3 front = new Vector3(end.x - start.x, 0, end.z - start.z).normalized * width / 2;
+        Vector3 left = new Vector3(-front.z, 0, front.x);
+        Vector3 down = new Vector3(0, end.y - start.y, 0);
+
+        Vector3 v1 = new Vector3(start.x, start.y, start.z) + left - front;
+        Vector3 v4 = new Vector3(start.x, start.y, start.z) - left - front;
+        Vector3 v2 = new Vector3(end.x, start.y, end.z) + left + front;
+        Vector3 v3 = new Vector3(end.x, start.y, end.z) - left + front;
+
+        AddQuad(v1, v2, v3, v4, biome, color, vertices, colors, uvCoords, uvCoords2, triangles);
+
+        AddVerticalQuad(v1, v2 + down, biome, color, vertices, colors, uvCoords, uvCoords2, triangles);
+        AddVerticalQuad(v2, v3 + down, biome, color, vertices, colors, uvCoords, uvCoords2, triangles);
+        AddVerticalQuad(v3, v4 + down, biome, color, vertices, colors, uvCoords, uvCoords2, triangles);
+        AddVerticalQuad(v4, v1 + down, biome, color, vertices, colors, uvCoords, uvCoords2, triangles);
     }
 
     private void AddBlock(Vector3 min, Vector3 max, Vector2 biome, Color color)
