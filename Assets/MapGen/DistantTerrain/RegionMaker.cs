@@ -3,7 +3,6 @@ using RemoteFortressReader;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityExtension;
-using System;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
@@ -25,6 +24,8 @@ public class RegionMaker : MonoBehaviour
         public MatPairStruct surfaceMaterial;
         public List<MatPairStruct> plantMaterials;
         public List<SiteRealizationBuilding> buildings;
+        public List<MatPairStruct> stoneMaterials;
+        public List<MatPairStruct> treeMaterials;
 
         public RegionTile(WorldMap remoteMap, int index)
         {
@@ -65,6 +66,16 @@ public class RegionMaker : MonoBehaviour
                 plantMaterials.Add(item);
             }
             buildings = tile.buildings;
+            stoneMaterials = new List<MatPairStruct>();
+            foreach (var item in tile.stone_materials)
+            {
+                stoneMaterials.Add(item);
+            }
+            treeMaterials = new List<MatPairStruct>();
+            foreach (var item in tile.tree_materials)
+            {
+                treeMaterials.Add(item);
+            }
         }
     }
     public float scale;
@@ -192,7 +203,7 @@ public class RegionMaker : MonoBehaviour
     List<Vector2> waterUvs = new List<Vector2>();
     List<int> waterTris = new List<int>();
 
-    [Flags]
+    [System.Flags]
     enum Sides
     {
         None = 0,
@@ -266,16 +277,17 @@ public class RegionMaker : MonoBehaviour
 
                 fakeTile.material = tile.surfaceMaterial;
 
-                ColorContent color;
-                ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out color);
+                ColorContent colorDef;
+                ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef);
 
-                Color terrainColor = color.value;
+                Color terrainColor = colorDef.value;
                 Color plantColor = Color.black;
+                Color stoneColor = Color.grey;
                 foreach (var item in tile.plantMaterials)
                 {
                     fakeTile.material = item;
-                    ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out color);
-                    plantColor += color.value;
+                    ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef);
+                    plantColor += colorDef.value;
                 }
                 float plantBlend = tile.vegetation / 100.0f;
                 if (tile.plantMaterials.Count == 0)
@@ -283,6 +295,12 @@ public class RegionMaker : MonoBehaviour
                 else
                     plantColor /= tile.plantMaterials.Count;
 
+                if (tile.stoneMaterials.Count > 0)
+                {
+                    fakeTile.material = tile.stoneMaterials[0];
+                    ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef);
+                    stoneColor = colorDef.value;
+                }
 
                 Color blendedColor = Color.Lerp(terrainColor, plantColor, plantBlend);
 
@@ -318,9 +336,9 @@ public class RegionMaker : MonoBehaviour
                             {
                                 fakeTile.material = building.material;
                                 Color buildingColor;
-                                ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out color);
-                                if (color != null)
-                                    buildingColor = color.value;
+                                ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef);
+                                if (colorDef != null)
+                                    buildingColor = colorDef.value;
                                 else
                                 {
                                     Debug.LogError("No valid color for " + building.type);
@@ -363,9 +381,9 @@ public class RegionMaker : MonoBehaviour
                             {
                                 fakeTile.material = building.material;
                                 Color buildingColor;
-                                ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out color);
-                                if (color != null)
-                                    buildingColor = color.value;
+                                ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef);
+                                if (colorDef != null)
+                                    buildingColor = colorDef.value;
                                 else
                                 {
                                     Debug.LogError("No valid color for " + building.type);
@@ -380,12 +398,17 @@ public class RegionMaker : MonoBehaviour
                             {
                                 fakeTile.material = building.material;
                                 Color buildingColor;
-                                ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out color);
-                                if (color != null)
-                                    buildingColor = color.value;
+                                Color roofColor;
+                                ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef);
+                                if (colorDef != null)
+                                {
+                                    buildingColor = colorDef.value;
+                                    roofColor = colorDef.value;
+                                }
                                 else
                                 {
-                                    buildingColor = Color.magenta;
+                                    buildingColor = stoneColor;
+                                    roofColor = terrainColor;
                                 }
                                 int top = 2;
                                 if(building.tower_info != null)
@@ -393,7 +416,6 @@ public class RegionMaker : MonoBehaviour
                                     if (building.tower_info.goblin)
                                     {
                                         top = 11;
-                                        buildingColor = terrainColor;
                                     }
                                     else
                                     {
@@ -404,26 +426,26 @@ public class RegionMaker : MonoBehaviour
                                 min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
                                 max = new Vector3((building.max_x + 1) * GameMap.tileWidth, top * GameMap.tileHeight, -(building.max_y + 1) * GameMap.tileWidth);
                                 if(building.tower_info != null && building.tower_info.round)
-                                    AddCylinder(vert1 + min, vert1 + max, biome, buildingColor);
+                                    AddCylinder(vert1 + min, vert1 + max, biome, buildingColor, roofColor);
                                 else
-                                    AddBlock(vert1 + min, vert1 + max, biome, buildingColor);
+                                    AddBlock(vert1 + min, vert1 + max, biome, buildingColor, roofColor);
                                 break;
                             }
                         case SiteRealizationBuildingType.castle_wall:
                             {
                                 fakeTile.material = building.material;
                                 Color buildingColor;
-                                ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out color);
-                                if (color != null)
-                                    buildingColor = color.value;
+                                ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef);
+                                if (colorDef != null)
+                                    buildingColor = colorDef.value;
                                 else
                                 {
                                     buildingColor = Color.magenta;
                                 }
                                 if (building.wall_info != null)
                                 {
-                                    min = new Vector3(building.wall_info.start_x * GameMap.tileWidth, (building.wall_info.start_z - tile.elevation) * GameMap.tileHeight, -building.wall_info.start_y * GameMap.tileWidth);
-                                    max = new Vector3(building.wall_info.end_x * GameMap.tileWidth, 0, -building.wall_info.end_y * GameMap.tileWidth);
+                                    min = new Vector3((building.wall_info.start_x + 1) * GameMap.tileWidth, (building.wall_info.start_z - tile.elevation) * GameMap.tileHeight, -(building.wall_info.start_y + 1) * GameMap.tileWidth);
+                                    max = new Vector3((building.wall_info.end_x + 1) * GameMap.tileWidth, 0, -(building.wall_info.end_y + 1) * GameMap.tileWidth);
                                     AddWall(vert1 + min, vert1 + max, 4 * GameMap.tileWidth, biome, buildingColor);
                                 }
                                 else
@@ -443,6 +465,41 @@ public class RegionMaker : MonoBehaviour
                     }
                     }
 
+                }
+
+                if(tile.buildings.Count == 0 && tile.treeMaterials.Count > 0)
+                {
+                    float treeRadius = 4.5f * GameMap.tileWidth;
+                    var treeCoords = UniformPoissonDiskSampler.SampleRectangle(new Vector2(vert1.x + treeRadius, vert1.z - 48 * GameMap.tileWidth + treeRadius), new Vector2(vert1.x + 48 * GameMap.tileWidth - treeRadius, vert1.z - treeRadius), (Mathf.Lerp(48.0f, 8.0f, Mathf.Pow(tile.vegetation / 100.0f, 0.5f))) * GameMap.tileWidth);
+
+                    foreach (var coord in treeCoords)
+                    {
+                        var tree = tile.treeMaterials[Random.Range(0, tile.treeMaterials.Count - 1)];
+                        int plantIndex = tree.mat_index;
+                        if (tree.mat_type != 419
+                            || DFConnection.Instance.NetPlantRawList == null
+                            || DFConnection.Instance.NetPlantRawList.plant_raws.Count <= plantIndex)
+                            continue;
+
+                        foreach (var growth in DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths)
+                        {
+                            int currentTicks = TimeHolder.DisplayedTime.CurrentYearTicks;
+                            if ((growth.timing_start != -1 && growth.timing_start > currentTicks) || (growth.timing_end != -1 && growth.timing_end < currentTicks))
+                                continue;
+                            tree = growth.mat;
+                            break;
+                        }
+                        Color treeColor = Color.green;
+
+                        fakeTile.material = tree;
+                        if (ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
+                            treeColor = colorDef.value;
+
+                        if (tree.mat_type == 419) // bare tree
+                            AddTree(new Vector3(coord.x, tile.elevation * GameMap.tileHeight, coord.y), GameMap.tileWidth / 2, Random.Range(7.0f, 9.0f) * GameMap.tileHeight, treeColor, biome, Random.Range(0.0f, 360.0f));
+                        else
+                            AddTree(new Vector3(coord.x, tile.elevation * GameMap.tileHeight, coord.y), treeRadius, Random.Range(7.0f, 9.0f) * GameMap.tileHeight, treeColor, biome, Random.Range(0.0f, 360.0f));
+                    }
                 }
 
                 if (vertices.Count >= (65535 - 20))
@@ -1145,9 +1202,12 @@ public class RegionMaker : MonoBehaviour
         AddVerticalQuad(v4, v1 + down, biome, color, vertices, colors, uvCoords, uvCoords2, triangles);
     }
 
-    private void AddBlock(Vector3 min, Vector3 max, Vector2 biome, Color color)
+    private void AddBlock(Vector3 min, Vector3 max, Vector2 biome, Color color, Color? roofColor = null)
     {
-        AddHorizontalQuad(new Vector3(min.x, max.y, min.z), max, biome, color, vertices, colors, uvCoords, uvCoords2, triangles);
+        if (roofColor == null)
+            AddHorizontalQuad(new Vector3(min.x, max.y, min.z), max, biome, color, vertices, colors, uvCoords, uvCoords2, triangles);
+        else
+            AddHorizontalQuad(new Vector3(min.x, max.y, min.z), max, biome, roofColor.Value, vertices, colors, uvCoords, uvCoords2, triangles);
 
         AddVerticalQuad(new Vector3(min.x, max.y, min.z), new Vector3(max.x, min.y, min.z), biome, color, vertices, colors, uvCoords, uvCoords2, triangles);
         AddVerticalQuad(new Vector3(max.x, max.y, min.z), new Vector3(max.x, min.y, max.z), biome, color, vertices, colors, uvCoords, uvCoords2, triangles);
@@ -1155,9 +1215,13 @@ public class RegionMaker : MonoBehaviour
         AddVerticalQuad(new Vector3(min.x, max.y, max.z), new Vector3(min.x, min.y, min.z), biome, color, vertices, colors, uvCoords, uvCoords2, triangles);
     }
 
-    private void AddCylinder(Vector3 min, Vector3 max, Vector2 biome, Color color)
+    private void AddCylinder(Vector3 min, Vector3 max, Vector2 biome, Color color, Color? roofColor = null)
     {
         int index = vertices.Count;
+
+        Color roof = color;
+        if (roofColor != null)
+            roof = roofColor.Value;
 
         float dia = ((max.x - min.x) + (max.y - min.y)) / 2;
 
@@ -1177,7 +1241,7 @@ public class RegionMaker : MonoBehaviour
 
         for (int i = 0; i < 8; i++)
         {
-            colors.Add(color);
+            colors.Add(roof);
             uvCoords2.Add(biome);
             uvCoords.Add(new Vector2(vertices[index + i].x, vertices[index + i].z));
         }
@@ -1220,6 +1284,43 @@ public class RegionMaker : MonoBehaviour
         triangles.Add(newIndex + 14 + 1);
         triangles.Add(newIndex + 1);
         triangles.Add(newIndex + 0);
+    }
+
+    private void AddTree(Vector3 root, float radius, float height, Color color, Vector2 biome, float rotation = 0)
+    {
+        int index = vertices.Count;
+        vertices.Add(new Vector3(root.x, root.y + height, root.z));
+        colors.Add(color);
+        uvCoords2.Add(biome);
+        uvCoords.Add(new Vector2(vertices[index].x, vertices[index].z));
+        Vector2 spoke = new Vector2(radius, 0);
+        spoke = spoke.Rotate(rotation);
+        index = vertices.Count;
+        for (int i = 0; i < 12; i += 2)
+        {
+            spoke = spoke.Rotate(360.0f / 6);
+            vertices.Add(new Vector3(root.x + spoke.x, root.y + height - (0.577f * radius), root.z + spoke.y));
+            vertices.Add(new Vector3(root.x + spoke.x, root.y , root.z + spoke.y));
+
+            colors.Add(color);
+            colors.Add(color);
+            uvCoords2.Add(biome);
+            uvCoords2.Add(biome);
+            uvCoords.Add(new Vector2(vertices[index + i].x, vertices[index + i].z));
+            uvCoords.Add(new Vector2(vertices[index + i + 1].x, vertices[index + i + 1].z));
+
+            triangles.Add(index - 1);
+            triangles.Add(index + (i + 2) % 12);
+            triangles.Add(index + i);
+
+            triangles.Add(index + (i + 0) % 12);
+            triangles.Add(index + (i + 3) % 12);
+            triangles.Add(index + (i + 1) % 12);
+
+            triangles.Add(index + (i + 0) % 12);
+            triangles.Add(index + (i + 2) % 12);
+            triangles.Add(index + (i + 3) % 12);
+        }
     }
 
     private void AddFlatTile(Vector3 vert1, Vector2 biome, float north, float east, float south, float west, int waterLevel, Color terrainColor)

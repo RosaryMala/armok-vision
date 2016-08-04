@@ -1892,6 +1892,20 @@ namespace RemoteFortressReader
       get { return _buildings; }
     }
   
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _stone_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
+    [global::ProtoBuf.ProtoMember(15, Name=@"stone_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> stone_materials
+    {
+      get { return _stone_materials; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _tree_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
+    [global::ProtoBuf.ProtoMember(16, Name=@"tree_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> tree_materials
+    {
+      get { return _tree_materials; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

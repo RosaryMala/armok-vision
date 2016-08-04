@@ -8,6 +8,7 @@
         _Metallic("Metallic", Range(0,1)) = 0.0
         _SeaLevel("Sea Level (Unscaled)", Float) = 100
         _Scale("Terrain Scale", Float) = 1.0
+		_GraySample("Gray Sample", 2D) = "gray" {}
     }
         SubShader
         {
@@ -43,7 +44,8 @@
 
             sampler2D _MainTex;
             sampler2D _ElevationGradient;
-            sampler2D _BiomeMap;
+			sampler2D _BiomeMap;
+			sampler2D _GraySample;
 
             struct Input
             {
@@ -62,11 +64,13 @@
             {
                 half correctedElevation = ((IN.worldPos.y / _Scale) - _SeaLevel) / 3;
                 // Albedo comes from a texture tinted by color
+				fixed4 gray = tex2D(_GraySample, float2(0.5,0.5));
+				fixed3 terrainColor = gray.rgb < 0.5 ? (2.0 * gray.rgb * IN.color.rgb) : (1.0 - 2.0 * (1.0 - gray.rgb) * (1.0 - IN.color.rgb));
                 fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
                 fixed4 g = tex2D(_ElevationGradient, ((((IN.worldPos / _Scale) - _SeaLevel) / 3) + 100) / 280);
                 fixed4 b = tex2D(_BiomeMap, IN.uv2_BiomeMap);
-                //o.Albedo = lerp(b.rgb, g.rgb, g.a);
-				o.Albedo = IN.color;
+                fixed3 falseColor = lerp(b.rgb, g.rgb, g.a);
+				o.Albedo = lerp(falseColor, terrainColor, IN.color.a);
                 // Metallic and smoothness come from slider variables
                 o.Metallic = _Metallic;
                 o.Smoothness = _Glossiness;
