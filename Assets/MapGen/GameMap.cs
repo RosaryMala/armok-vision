@@ -304,6 +304,21 @@ public class GameMap : MonoBehaviour
             {
                 SaveMeshes();
             }
+            // take screenshot on up->down transition of F9 key
+            if (Input.GetButtonDown("TakeScreenshot"))
+            {
+                string screenshotFilename;
+                do
+                {
+                    screenshotCount++;
+                    screenshotFilename = "screenshot" + screenshotCount + ".png";
+
+                } while (File.Exists(screenshotFilename));
+                if (Input.GetButton("Mod"))
+                    Application.CaptureScreenshot(screenshotFilename, 4);
+                else
+                    Application.CaptureScreenshot(screenshotFilename);
+            }
         }
 
         ShowCursorInfo();
@@ -1190,6 +1205,7 @@ public class GameMap : MonoBehaviour
 
     UnitList lastUnitList = null;
     UnitList unitList = null;
+    private int screenshotCount;
 
     void UpdateCreatures()
     {
