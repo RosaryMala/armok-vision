@@ -14,7 +14,8 @@ Shader "Hidden/FisheyeShader" {
 	};
 	
 	sampler2D _MainTex;
-	
+	half4 _MainTex_ST;
+
 	float2 intensity;
 	
 	v2f vert( appdata_img v ) 
@@ -34,7 +35,7 @@ Shader "Hidden/FisheyeShader" {
 		realCoordOffs.x = (1-coords.y * coords.y) * intensity.y * (coords.x); 
 		realCoordOffs.y = (1-coords.x * coords.x) * intensity.x * (coords.y);
 		
-		half4 color = tex2D (_MainTex, i.uv - realCoordOffs);	 
+		half4 color = tex2D (_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv - realCoordOffs, _MainTex_ST));
 		
 		return color;
 	}

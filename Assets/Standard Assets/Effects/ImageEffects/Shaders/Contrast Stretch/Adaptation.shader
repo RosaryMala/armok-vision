@@ -21,11 +21,13 @@ CGPROGRAM
 uniform sampler2D _MainTex; // currently adapted to
 uniform sampler2D _CurTex; // new value to adapt to
 uniform float4 _AdaptParams; // x=adaptLerp, y=limitMinimum, z=limitMaximum
+half4 _MainTex_ST;
+half4 _CurTex_ST;
 
 float4 frag (v2f_img i) : SV_Target  {
 	// value is: max, min
-	float2 valAdapted = tex2D(_MainTex, i.uv).xy;
-	float2 valCur = tex2D(_CurTex, i.uv).xy;
+	float2 valAdapted = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv, _MainTex_ST)).xy;
+	float2 valCur = tex2D(_CurTex, UnityStereoScreenSpaceUVAdjust(i.uv, _MainTex_ST)).xy;
 	
 	// Calculate new adapted values: interpolate
 	// from valAdapted to valCur by script-supplied amount.

@@ -25,7 +25,8 @@ Shader "Hidden/MultipassHollywoodFlares" {
 	half2 _Threshhold;
 	
 	half4 _MainTex_TexelSize;
-	
+	half4 _MainTex_ST;
+
 	sampler2D _MainTex;
 	sampler2D _NonBlurredTex;
 		
@@ -40,26 +41,26 @@ Shader "Hidden/MultipassHollywoodFlares" {
 		v2f_opts o;
 		o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
 		half b = stretchWidth;		
-		o.uv[0] = v.texcoord.xy;
-		o.uv[1] = v.texcoord.xy + b * 2.0 * offsets.xy;
-		o.uv[2] = v.texcoord.xy - b * 2.0 * offsets.xy;
-		o.uv[3] = v.texcoord.xy + b * 4.0 * offsets.xy;
-		o.uv[4] = v.texcoord.xy - b * 4.0 * offsets.xy;
-		o.uv[5] = v.texcoord.xy + b * 6.0 * offsets.xy;
-		o.uv[6] = v.texcoord.xy - b * 6.0 * offsets.xy;
+		o.uv[0] = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy, _MainTex_ST);
+		o.uv[1] = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy + b * 2.0 * offsets.xy, _MainTex_ST);
+		o.uv[2] = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy - b * 2.0 * offsets.xy, _MainTex_ST);
+		o.uv[3] = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy + b * 4.0 * offsets.xy, _MainTex_ST);
+		o.uv[4] = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy - b * 4.0 * offsets.xy, _MainTex_ST);
+		o.uv[5] = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy + b * 6.0 * offsets.xy, _MainTex_ST);
+		o.uv[6] = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy - b * 6.0 * offsets.xy, _MainTex_ST);
 		return o;
 	}
 	
 	v2f_opts vertVerticalCoords (appdata_img v) {
 		v2f_opts o;
 		o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
-		o.uv[0] = v.texcoord.xy;
-		o.uv[1] = v.texcoord.xy + 0.5 * _MainTex_TexelSize.xy * half2(0,1);
-		o.uv[2] = v.texcoord.xy - 0.5 * _MainTex_TexelSize.xy * half2(0,1);
-		o.uv[3] = v.texcoord.xy + 1.5 * _MainTex_TexelSize.xy * half2(0,1);
-		o.uv[4] = v.texcoord.xy - 1.5 * _MainTex_TexelSize.xy * half2(0,1);
-		o.uv[5] = v.texcoord.xy + 2.5 * _MainTex_TexelSize.xy * half2(0,1);
-		o.uv[6] = v.texcoord.xy - 2.5 * _MainTex_TexelSize.xy * half2(0,1);
+		o.uv[0] = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy, _MainTex_ST);
+		o.uv[1] = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy + 0.5 * _MainTex_TexelSize.xy * half2(0,1), _MainTex_ST);
+		o.uv[2] = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy - 0.5 * _MainTex_TexelSize.xy * half2(0,1), _MainTex_ST);
+		o.uv[3] = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy + 1.5 * _MainTex_TexelSize.xy * half2(0,1), _MainTex_ST);
+		o.uv[4] = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy - 1.5 * _MainTex_TexelSize.xy * half2(0,1), _MainTex_ST);
+		o.uv[5] = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy + 2.5 * _MainTex_TexelSize.xy * half2(0,1), _MainTex_ST);
+		o.uv[6] = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy - 2.5 * _MainTex_TexelSize.xy * half2(0,1), _MainTex_ST);
 		return o;
 	}	
 		
