@@ -3,7 +3,10 @@ using UnityEngine;
 
 namespace UnityStandardAssets.ImageEffects
 {
-    [ExecuteInEditMode]
+#if UNITY_5_4_OR_NEWER
+	[ImageEffectAllowedInSceneView]
+#endif
+	[ExecuteInEditMode]
     [RequireComponent(typeof (Camera))]
     [AddComponentMenu("Image Effects/Color Adjustments/Tonemapping")]
     public class Tonemapping : PostEffectsBase

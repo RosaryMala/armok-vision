@@ -21,6 +21,7 @@ Shader "Hidden/Tonemapper" {
 	float4 _HdrParams;
 	float2 intensity;
 	float4 _MainTex_TexelSize;
+	half4 _MainTex_ST;
 	float _AdaptionSpeed;
 	float _ExposureAdjustment;
 	float _RangeScale;
@@ -39,10 +40,10 @@ Shader "Hidden/Tonemapper" {
  
 		float fLogLumSum = 0.0f;
  
-		fLogLumSum += log( max( EPSILON, Luminance(tex2D(_MainTex, i.uv + _MainTex_TexelSize.xy * float2(-1,-1)).rgb)));		
-		fLogLumSum += log( max( EPSILON, Luminance(tex2D(_MainTex, i.uv + _MainTex_TexelSize.xy * float2(1,1)).rgb)));		
-		fLogLumSum += log( max( EPSILON, Luminance(tex2D(_MainTex, i.uv + _MainTex_TexelSize.xy * float2(-1,1)).rgb)));		
-		fLogLumSum += log( max( EPSILON, Luminance(tex2D(_MainTex, i.uv + _MainTex_TexelSize.xy * float2(1,-1)).rgb)));		
+		fLogLumSum += log( max( EPSILON, Luminance(tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv + _MainTex_TexelSize.xy * float2(-1,-1), _MainTex_ST)).rgb)));
+		fLogLumSum += log( max( EPSILON, Luminance(tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv + _MainTex_TexelSize.xy * float2( 1, 1), _MainTex_ST)).rgb)));
+		fLogLumSum += log( max( EPSILON, Luminance(tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv + _MainTex_TexelSize.xy * float2(-1, 1), _MainTex_ST)).rgb)));
+		fLogLumSum += log( max( EPSILON, Luminance(tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv + _MainTex_TexelSize.xy * float2( 1,-1), _MainTex_ST)).rgb)));
 
 		float avg = fLogLumSum / 4.0;
 		return float4(avg, avg, avg, avg);
@@ -52,10 +53,10 @@ Shader "Hidden/Tonemapper" {
 	{
 		float2 lum = float2(0.0f, 0.0f);
 		
-		lum += tex2D(_MainTex, i.uv  + _MainTex_TexelSize.xy * float2(-1,-1)).xy;	
-		lum += tex2D(_MainTex, i.uv  + _MainTex_TexelSize.xy * float2(1,1)).xy;	
-		lum += tex2D(_MainTex, i.uv + _MainTex_TexelSize.xy * float2(1,-1)).xy;	
-		lum += tex2D(_MainTex, i.uv  + _MainTex_TexelSize.xy * float2(-1,1)).xy;	
+		lum += tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv  + _MainTex_TexelSize.xy * float2(-1,-1), _MainTex_ST)).xy;
+		lum += tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv  + _MainTex_TexelSize.xy * float2(1,1), _MainTex_ST)).xy;
+		lum += tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv + _MainTex_TexelSize.xy * float2(1,-1), _MainTex_ST)).xy;
+		lum += tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv  + _MainTex_TexelSize.xy * float2(-1,1), _MainTex_ST)).xy;
 
 		lum = exp(lum / 4.0f);
 		
@@ -122,7 +123,7 @@ Shader "Hidden/Tonemapper" {
 	float4 fragAdaptive(v2f i) : SV_Target 
 	{
 		float avgLum = tex2D(_SmallTex, i.uv).x;
-		float4 color = tex2D (_MainTex, i.uv);
+		float4 color = tex2D (_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv, _MainTex_ST));
 		
 		float cieLum = max(0.000001, Luminance(color.rgb)); //ToCIE(color.rgb);
 		
@@ -141,7 +142,7 @@ Shader "Hidden/Tonemapper" {
 	float4 fragAdaptiveAutoWhite(v2f i) : SV_Target 
 	{			
 		float2 avgLum = tex2D(_SmallTex, i.uv).xy;
-		float4 color = tex2D(_MainTex, i.uv);
+		float4 color = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv, _MainTex_ST));
 		
 		float cieLum = max(0.000001, Luminance(color.rgb)); //ToCIE(color.rgb);
 		
@@ -159,7 +160,7 @@ Shader "Hidden/Tonemapper" {
 	
 	float4 fragCurve(v2f i) : SV_Target 
 	{
-		float4 color = tex2D(_MainTex, i.uv);
+		float4 color = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv, _MainTex_ST));
 		float3 cie = ToCIE(color.rgb);
 		
 		// Remap to new lum range
@@ -180,7 +181,7 @@ Shader "Hidden/Tonemapper" {
 		const float F = 0.30;
 		const float W = 11.2;
 
-		float3 texColor = tex2D(_MainTex, i.uv).rgb;
+		float3 texColor = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv, _MainTex_ST)).rgb;
 		texColor *= _ExposureAdjustment;
 
 		float ExposureBias = 2.0;
@@ -199,7 +200,7 @@ Shader "Hidden/Tonemapper" {
 	// we are doing it on luminance here (better color preservation, but some other problems like very fast saturation)
 	float4 fragSimpleReinhard(v2f i) : SV_Target
 	{
-		float4 texColor = tex2D(_MainTex, i.uv);
+		float4 texColor = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv, _MainTex_ST));
 		float lum = Luminance(texColor.rgb); 
 		float lumTm = lum * _ExposureAdjustment;
 		float scale = lumTm / (1+lumTm);  
@@ -208,7 +209,7 @@ Shader "Hidden/Tonemapper" {
 	
 	float4 fragOptimizedHejiDawson(v2f i) : SV_Target 
 	{
-		float4 texColor = tex2D(_MainTex, i.uv );
+		float4 texColor = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv, _MainTex_ST));
 		texColor *= _ExposureAdjustment;
 		float4 X = max(float4(0.0,0.0,0.0,0.0), texColor-0.004);
 		float4 retColor = (X*(6.2*X+.5))/(X*(6.2*X+1.7)+0.06);
@@ -217,16 +218,16 @@ Shader "Hidden/Tonemapper" {
 
 	float4 fragPhotographic(v2f i) : SV_Target
 	{
-		float4 texColor = tex2D(_MainTex, i.uv);
+		float4 texColor = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv, _MainTex_ST));
 		return 1-exp2(-_ExposureAdjustment * texColor);
 	}
 	
 	float4 fragDownsample(v2f i) : SV_Target
 	{
-		float4 tapA = tex2D(_MainTex, i.uv + _MainTex_TexelSize * 0.5);
-		float4 tapB = tex2D(_MainTex, i.uv - _MainTex_TexelSize * 0.5);
-		float4 tapC = tex2D(_MainTex, i.uv + _MainTex_TexelSize * float2(0.5,-0.5));
-		float4 tapD = tex2D(_MainTex, i.uv - _MainTex_TexelSize * float2(0.5,-0.5));
+		float4 tapA = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv + _MainTex_TexelSize * 0.5, _MainTex_ST));
+		float4 tapB = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv - _MainTex_TexelSize * 0.5, _MainTex_ST));
+		float4 tapC = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv + _MainTex_TexelSize * float2(0.5,-0.5), _MainTex_ST));
+		float4 tapD = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv - _MainTex_TexelSize * float2(0.5,-0.5), _MainTex_ST));
 		
 		float4 average = (tapA+tapB+tapC+tapD)/4;
 		average.y = max(max(tapA.y,tapB.y), max(tapC.y,tapD.y));

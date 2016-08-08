@@ -34,6 +34,11 @@ Shader "Hidden/SunShaftsComposite" {
 	uniform half4 _BlurRadius4;
 	uniform half4 _SunPosition;
 	uniform half4 _MainTex_TexelSize;	
+	half4 _MainTex_ST;
+	half4 _ColorBuffer_ST;
+	half4 _Skybox_ST;
+	half4 _CameraDepthTexture_ST;
+
 
 	#define SAMPLES_FLOAT 6.0f
 	#define SAMPLES_INT 6
@@ -53,22 +58,22 @@ Shader "Hidden/SunShaftsComposite" {
 	}
 		
 	half4 fragScreen(v2f i) : SV_Target { 
-		half4 colorA = tex2D (_MainTex, i.uv.xy);
+		half4 colorA = tex2D (_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv.xy, _MainTex_ST));
 		#if UNITY_UV_STARTS_AT_TOP
-		half4 colorB = tex2D (_ColorBuffer, i.uv1.xy);
+		half4 colorB = tex2D (_ColorBuffer, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _ColorBuffer_ST));
 		#else
-		half4 colorB = tex2D (_ColorBuffer, i.uv.xy);
+		half4 colorB = tex2D (_ColorBuffer, UnityStereoScreenSpaceUVAdjust(i.uv.xy, _ColorBuffer_ST));
 		#endif
 		half4 depthMask = saturate (colorB * _SunColor);	
 		return 1.0f - (1.0f-colorA) * (1.0f-depthMask);	
 	}
 
 	half4 fragAdd(v2f i) : SV_Target { 
-		half4 colorA = tex2D (_MainTex, i.uv.xy);
+		half4 colorA = tex2D (_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv.xy, _MainTex_ST));
 		#if UNITY_UV_STARTS_AT_TOP
-		half4 colorB = tex2D (_ColorBuffer, i.uv1.xy);
+		half4 colorB = tex2D (_ColorBuffer, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _ColorBuffer_ST));
 		#else
-		half4 colorB = tex2D (_ColorBuffer, i.uv.xy);
+		half4 colorB = tex2D (_ColorBuffer, UnityStereoScreenSpaceUVAdjust(i.uv.xy, _ColorBuffer_ST));
 		#endif
 		half4 depthMask = saturate (colorB * _SunColor);	
 		return colorA + depthMask;	
@@ -89,7 +94,7 @@ Shader "Hidden/SunShaftsComposite" {
 		half4 color = half4(0,0,0,0);
 		for(int j = 0; j < SAMPLES_INT; j++)   
 		{	
-			half4 tmpColor = tex2D(_MainTex, i.uv.xy);
+			half4 tmpColor = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv.xy, _MainTex_ST));
 			color += tmpColor;
 			i.uv.xy += i.blurVector; 	
 		}
@@ -102,12 +107,12 @@ Shader "Hidden/SunShaftsComposite" {
 	
 	half4 frag_depth (v2f i) : SV_Target {
 		#if UNITY_UV_STARTS_AT_TOP
-		float depthSample = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv1.xy);
+		float depthSample = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _CameraDepthTexture_ST));
 		#else
-		float depthSample = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv.xy);		
+		float depthSample = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, UnityStereoScreenSpaceUVAdjust(i.uv.xy, _CameraDepthTexture_ST));
 		#endif
 		
-		half4 tex = tex2D (_MainTex, i.uv.xy);
+		half4 tex = tex2D (_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv.xy, _MainTex_ST));
 		
 		depthSample = Linear01Depth (depthSample);
 		 
@@ -130,12 +135,12 @@ Shader "Hidden/SunShaftsComposite" {
 	
 	half4 frag_nodepth (v2f i) : SV_Target {
 		#if UNITY_UV_STARTS_AT_TOP
-		float4 sky = (tex2D (_Skybox, i.uv1.xy));
+		float4 sky = (tex2D (_Skybox, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _Skybox_ST)));
 		#else
-		float4 sky = (tex2D (_Skybox, i.uv.xy));		
+		float4 sky = (tex2D (_Skybox, UnityStereoScreenSpaceUVAdjust(i.uv.xy, _Skybox_ST)));
 		#endif
 		
-		float4 tex = (tex2D (_MainTex, i.uv.xy));
+		float4 tex = (tex2D (_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv.xy, _MainTex_ST)));
 		
 		// consider maximum radius
 		#if UNITY_UV_STARTS_AT_TOP

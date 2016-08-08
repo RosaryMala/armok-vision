@@ -16,9 +16,11 @@ CGPROGRAM
 uniform sampler2D _MainTex;
 uniform sampler2D _RampTex;
 
+half4 _MainTex_ST;
+
 fixed4 frag (v2f_img i) : SV_Target
 {
-	fixed4 orig = tex2D(_MainTex, i.uv);
+	fixed4 orig = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv, _MainTex_ST));
 	
 	fixed rr = tex2D(_RampTex, orig.rr).r;
 	fixed gg = tex2D(_RampTex, orig.gg).g;

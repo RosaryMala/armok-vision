@@ -22,13 +22,15 @@ Shader "Hidden/Blend" {
 	
 	half _Intensity;
 	half4 _ColorBuffer_TexelSize;
+	half4 _ColorBuffer_ST;
 	half4 _MainTex_TexelSize;
-		
+	half4 _MainTex_ST;	
+
 	v2f vert( appdata_img v ) {
 		v2f o;
 		o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
-		o.uv[0] =  v.texcoord.xy;
-		o.uv[1] =  v.texcoord.xy;
+		o.uv[0] = v.texcoord.xy;
+		o.uv[1] = v.texcoord.xy;
 		
 		#if UNITY_UV_STARTS_AT_TOP
 		if (_ColorBuffer_TexelSize.y < 0) 
@@ -42,30 +44,30 @@ Shader "Hidden/Blend" {
 		v2f_mt o;
 		o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
 		o.uv[0] = v.texcoord.xy + _MainTex_TexelSize.xy * 0.5;
-		o.uv[1] = v.texcoord.xy - _MainTex_TexelSize.xy * 0.5;	
-		o.uv[2] = v.texcoord.xy - _MainTex_TexelSize.xy * half2(1,-1) * 0.5;	
-		o.uv[3] = v.texcoord.xy + _MainTex_TexelSize.xy * half2(1,-1) * 0.5;	
+		o.uv[1] = v.texcoord.xy - _MainTex_TexelSize.xy * 0.5;
+		o.uv[2] = v.texcoord.xy - _MainTex_TexelSize.xy * half2(1,-1) * 0.5;
+		o.uv[3] = v.texcoord.xy + _MainTex_TexelSize.xy * half2(1,-1) * 0.5;
 		return o;
 	}
 	
 	half4 fragScreen (v2f i) : SV_Target {
-		half4 toBlend = saturate (tex2D(_MainTex, i.uv[0]) * _Intensity);
-		return 1-(1-toBlend)*(1-tex2D(_ColorBuffer, i.uv[1]));
+		half4 toBlend = saturate (tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv[0], _MainTex_ST)) * _Intensity);
+		return 1-(1-toBlend)*(1-tex2D(_ColorBuffer, UnityStereoScreenSpaceUVAdjust(i.uv[1], _ColorBuffer_ST)));
 	}
 
 	half4 fragAdd (v2f i) : SV_Target {
-		return tex2D(_MainTex, i.uv[0].xy) * _Intensity + tex2D(_ColorBuffer, i.uv[1]);
+		return tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv[0].xy, _MainTex_ST)) * _Intensity + tex2D(_ColorBuffer, UnityStereoScreenSpaceUVAdjust(i.uv[1], _ColorBuffer_ST));
 	}
 
 	half4 fragVignetteBlend (v2f i) : SV_Target {
-		return tex2D(_MainTex, i.uv[0].xy) * tex2D(_ColorBuffer, i.uv[0]);
+		return tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv[0].xy, _MainTex_ST)) * tex2D(_ColorBuffer, UnityStereoScreenSpaceUVAdjust(i.uv[0], _ColorBuffer_ST));
 	}
 	
 	half4 fragMultiTap (v2f_mt i) : SV_Target {
-		half4 outColor = tex2D(_MainTex, i.uv[0].xy);
-		outColor += tex2D(_MainTex, i.uv[1].xy);
-		outColor += tex2D(_MainTex, i.uv[2].xy);
-		outColor += tex2D(_MainTex, i.uv[3].xy);
+		half4 outColor = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv[0].xy, _MainTex_ST));
+		outColor += tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv[1].xy, _MainTex_ST));
+		outColor += tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv[2].xy, _MainTex_ST));
+		outColor += tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv[3].xy, _MainTex_ST));
 		return outColor * 0.25;
 	}
 

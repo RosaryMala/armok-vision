@@ -37,7 +37,12 @@
 	uniform sampler2D _LowRez;
 	uniform float4 _CurveParams;
 	uniform float4 _MainTex_TexelSize;
+	half4 _MainTex_ST;
 	uniform float4 _Offsets;
+
+	half4 _CameraDepthTexture_ST;
+	half4 _LowRez_ST;
+	half4 _FgOverlap_ST;
 
 	v2f vert( appdata_img v ) 
 	{
@@ -75,12 +80,12 @@
 	{
 		v2fBlur o;
 		o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
-		o.uv.xy = v.texcoord.xy;
-		o.uv01 =  v.texcoord.xyxy + _Offsets.xyxy * float4(1,1, -1,-1) * _MainTex_TexelSize.xyxy / 6.0;
-		o.uv23 =  v.texcoord.xyxy + _Offsets.xyxy * float4(2,2, -2,-2) * _MainTex_TexelSize.xyxy / 6.0;
-		o.uv45 =  v.texcoord.xyxy + _Offsets.xyxy * float4(3,3, -3,-3) * _MainTex_TexelSize.xyxy / 6.0;
-		o.uv67 =  v.texcoord.xyxy + _Offsets.xyxy * float4(4,4, -4,-4) * _MainTex_TexelSize.xyxy / 6.0;
-		o.uv89 =  v.texcoord.xyxy + _Offsets.xyxy * float4(5,5, -5,-5) * _MainTex_TexelSize.xyxy / 6.0;
+		o.uv.xy = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy, _MainTex_ST);
+		o.uv01 =  UnityStereoScreenSpaceUVAdjust(v.texcoord.xyxy + _Offsets.xyxy * float4(1,1, -1,-1) * _MainTex_TexelSize.xyxy / 6.0, _MainTex_ST);
+		o.uv23 =  UnityStereoScreenSpaceUVAdjust(v.texcoord.xyxy + _Offsets.xyxy * float4(2,2, -2,-2) * _MainTex_TexelSize.xyxy / 6.0, _MainTex_ST);
+		o.uv45 =  UnityStereoScreenSpaceUVAdjust(v.texcoord.xyxy + _Offsets.xyxy * float4(3,3, -3,-3) * _MainTex_TexelSize.xyxy / 6.0, _MainTex_ST);
+		o.uv67 =  UnityStereoScreenSpaceUVAdjust(v.texcoord.xyxy + _Offsets.xyxy * float4(4,4, -4,-4) * _MainTex_TexelSize.xyxy / 6.0, _MainTex_ST);
+		o.uv89 =  UnityStereoScreenSpaceUVAdjust(v.texcoord.xyxy + _Offsets.xyxy * float4(5,5, -5,-5) * _MainTex_TexelSize.xyxy / 6.0, _MainTex_ST);
 		return o;  
 	}
 
@@ -147,7 +152,7 @@
 
 	float4 fragBlurInsaneMQ (v2f i) : SV_Target 
 	{
-		float4 centerTap = tex2D(_MainTex, i.uv1.xy);
+		float4 centerTap = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _MainTex_ST));
 		float4 sum = centerTap;
 		float4 poissonScale = _MainTex_TexelSize.xyxy * centerTap.a * _Offsets.w;
 
@@ -159,7 +164,7 @@
 		for(int l=0; l < NumDiscSamples; l++)
 		{
 			float2 sampleUV = i.uv1.xy + DiscKernel[l].xy * poissonScale.xy;
-			float4 sample0 = tex2D(_MainTex, sampleUV.xy);
+			float4 sample0 = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(sampleUV.xy, _MainTex_ST));
 
 			if( sample0.a > 0.0 )  
 			{
@@ -177,7 +182,7 @@
 
 	float4 fragBlurInsaneHQ (v2f i) : SV_Target 
 	{
-		float4 centerTap = tex2D(_MainTex, i.uv1.xy);
+		float4 centerTap = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _MainTex_ST));
 		float4 sum = centerTap;
 		float4 poissonScale = _MainTex_TexelSize.xyxy * centerTap.a * _Offsets.w;
 
@@ -190,8 +195,8 @@
 		{
 			float4 sampleUV = i.uv1.xyxy + DiscKernel[l].xyxy * poissonScale.xyxy / float4(1.2,1.2,DiscKernel[l].zz);
 
-			float4 sample0 = tex2D(_MainTex, sampleUV.xy);
-			float4 sample1 = tex2D(_MainTex, sampleUV.zw);	
+			float4 sample0 = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(sampleUV.xy, _MainTex_ST));
+			float4 sample1 = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(sampleUV.zw, _MainTex_ST));
 
 			if( (sample0.a + sample1.a) > 0.0 )  
 			{
@@ -221,8 +226,8 @@
 
 	float4 fragBlurUpsampleCombineHQ (v2f i) : SV_Target 
 	{	
-		float4 bigBlur = tex2D(_LowRez, i.uv1.xy);
-		float4 centerTap = tex2D(_MainTex, i.uv1.xy);
+		float4 bigBlur = tex2D(_LowRez, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _LowRez_ST));
+		float4 centerTap = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _MainTex_ST));
 
 		float4 smallBlur = centerTap;
 		float4 poissonScale = _MainTex_TexelSize.xyxy * centerTap.a * _Offsets.w ;
@@ -234,7 +239,7 @@
 		{
 			float2 sampleUV = i.uv1.xy + DiscKernel[l].xy * poissonScale.xy;
 
-			float4 sample0 = tex2D(_MainTex, sampleUV);	 
+			float4 sample0 = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(sampleUV, _MainTex_ST));
 			float weight0 = BokehWeightDisc(sample0, DiscKernel[l].z, centerTap);
 			smallBlur += sample0 * weight0; sampleCount += weight0;
 		}
@@ -247,8 +252,8 @@
 
 	float4 fragBlurUpsampleCombineMQ (v2f i) : SV_Target 
 	{			
-		float4 bigBlur = tex2D(_LowRez, i.uv1.xy);
-		float4 centerTap = tex2D(_MainTex, i.uv1.xy);
+		float4 bigBlur = tex2D(_LowRez, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _LowRez_ST));
+		float4 centerTap = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _MainTex_ST));
 
 		float4 smallBlur = centerTap;
 		float4 poissonScale = _MainTex_TexelSize.xyxy * centerTap.a * _Offsets.w ;
@@ -260,7 +265,7 @@
 		{
 			float2 sampleUV = i.uv1.xy + SmallDiscKernel[l].xy * poissonScale.xy*1.1;
 
-			float4 sample0 = tex2D(_MainTex, sampleUV);	 
+			float4 sample0 = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(sampleUV, _MainTex_ST));
 			float weight0 = BokehWeightDisc(sample0, length(SmallDiscKernel[l].xy*1.1), centerTap);
 			smallBlur += sample0 * weight0; sampleCount += weight0;
 		}
@@ -274,10 +279,10 @@
 
 	float4 fragBlurUpsampleCheap (v2f i) : SV_Target 
 	{			
-		float4 centerTap = tex2D(_MainTex, i.uv1.xy);
-		float4 bigBlur = tex2D(_LowRez, i.uv1.xy);
+		float4 centerTap = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _MainTex_ST));
+		float4 bigBlur = tex2D(_LowRez, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _LowRez_ST));
 
-		float fgCoc = tex2D(_FgOverlap, i.uv1.xy).a;
+		float fgCoc = tex2D(_FgOverlap, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _FgOverlap_ST)).a;
 		float4 smallBlur = lerp(centerTap, bigBlur, saturate( max(centerTap.a,fgCoc)*8.0 ));
 
 		return float4(smallBlur.rgb, centerTap.a);
@@ -287,7 +292,7 @@
 	{
 		const int TAPS = 12;
 
-		float4 centerTap = tex2D(_MainTex, i.uv1.xy);
+		float4 centerTap = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _MainTex_ST));
 
 		// TODO: important ? breaks when HR blur is being used
 		//centerTap.a = max(centerTap.a, 0.1f);
@@ -302,8 +307,8 @@
 		{
 			float4 sampleUV = i.uv1.xyxy + steps * (float)l;
 			
-			float4 sample0 = tex2D(_MainTex, sampleUV.xy);
-			float4 sample1 = tex2D(_MainTex, sampleUV.zw);
+			float4 sample0 = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(sampleUV.xy, _MainTex_ST));
+			float4 sample1 = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(sampleUV.zw, _MainTex_ST));
 	
 			float2 maxLen01 = float2(sample0.a, sample1.a);
 			float2 r = lenStep.xx * (float)l;
@@ -334,10 +339,10 @@
 	float4 fragBoxDownsample (v2f i) : SV_Target 
 	{		
 		//float4 returnValue = tex2D(_MainTex, i.uv1.xy);			
-		float4 returnValue = tex2D(_MainTex, i.uv1.xy + 0.75*_MainTex_TexelSize.xy);
-		returnValue += tex2D(_MainTex, i.uv1.xy - 0.75*_MainTex_TexelSize.xy);
-		returnValue += tex2D(_MainTex, i.uv1.xy + 0.75*_MainTex_TexelSize.xy * float2(1,-1));
-		returnValue += tex2D(_MainTex, i.uv1.xy - 0.75*_MainTex_TexelSize.xy * float2(1,-1));
+		float4 returnValue = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv1.xy + 0.75*_MainTex_TexelSize.xy, _MainTex_ST));
+		returnValue += tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv1.xy - 0.75*_MainTex_TexelSize.xy, _MainTex_ST));
+		returnValue += tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv1.xy + 0.75*_MainTex_TexelSize.xy * float2(1,-1), _MainTex_ST));
+		returnValue += tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv1.xy - 0.75*_MainTex_TexelSize.xy * float2(1,-1), _MainTex_ST));
 
 		return returnValue/4;
 	}		
@@ -459,12 +464,12 @@
 
 	float4 frag4TapBlurForLRSpawn (v2f i) : SV_Target 
 	{
-		float4 tap  =  tex2D(_MainTex, i.uv.xy);
+		float4 tap  =  tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv.xy, _MainTex_ST));
 		
-		float4 tapA =  tex2D(_MainTex, i.uv.xy + 0.75 * _MainTex_TexelSize.xy); 
-		float4 tapB =  tex2D(_MainTex, i.uv.xy - 0.75 * _MainTex_TexelSize.xy);
-		float4 tapC =  tex2D(_MainTex, i.uv.xy + 0.75 * _MainTex_TexelSize.xy * float2(1,-1));
-		float4 tapD =  tex2D(_MainTex, i.uv.xy - 0.75 * _MainTex_TexelSize.xy * float2(1,-1));
+		float4 tapA =  tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv.xy + 0.75 * _MainTex_TexelSize.xy, _MainTex_ST));
+		float4 tapB =  tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv.xy - 0.75 * _MainTex_TexelSize.xy, _MainTex_ST));
+		float4 tapC =  tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv.xy + 0.75 * _MainTex_TexelSize.xy * float2(1,-1), _MainTex_ST));
+		float4 tapD =  tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv.xy - 0.75 * _MainTex_TexelSize.xy * float2(1,-1), _MainTex_ST));
 		
 		float4 weights = saturate(10.0 * float4(tapA.a, tapB.a, tapC.a, tapD.a));
 		float sumWeights = dot(weights, 1);
@@ -479,8 +484,8 @@
 
 	float4 fragCaptureColorAndSignedCoc (v2f i) : SV_Target 
 	{	
-		float4 color = tex2D (_MainTex, i.uv1.xy);
-		float d = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv1.xy);
+		float4 color = tex2D (_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _MainTex_ST));
+		float d = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _CameraDepthTexture_ST));
 		d = Linear01Depth (d);
 		color.a = _CurveParams.z * abs(d - _CurveParams.w) / (d + 1e-5f); 
 		color.a = clamp( max(0.0, color.a - _CurveParams.y), 0.0, _CurveParams.x) * sign(d - _CurveParams.w);
@@ -491,7 +496,7 @@
 	float4 fragCaptureCoc (v2f i) : SV_Target 
 	{	
 		float4 color = float4(0,0,0,0); //tex2D (_MainTex, i.uv1.xy);
-		float d = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv1.xy);
+		float d = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _CameraDepthTexture_ST));
 		d = Linear01Depth (d);
 		color.a = _CurveParams.z * abs(d - _CurveParams.w) / (d + 1e-5f); 
 		color.a = clamp( max(0.0, color.a - _CurveParams.y), 0.0, _CurveParams.x);
@@ -501,15 +506,15 @@
 
 	float4 AddFgCoc (v2f i) : SV_Target 
 	{	
-		return tex2D (_MainTex, i.uv1.xy);
+		return tex2D (_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _MainTex_ST));
 	} 
 
 	float4 fragMergeCoc (v2f i) : SV_Target 
 	{	
-		float4 color = tex2D (_FgOverlap, i.uv.xy); // this is the foreground overlap value
+		float4 color = tex2D (_FgOverlap, UnityStereoScreenSpaceUVAdjust(i.uv.xy, _FgOverlap_ST)); // this is the foreground overlap value
 		float fgCoc = color.a;
 
-		float d = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv1.xy);
+		float d = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _CameraDepthTexture_ST));
 		d = Linear01Depth (d);
 		color.a = _CurveParams.z * abs(d - _CurveParams.w) / (d + 1e-5f); 
 		color.a = clamp( max(0.0, color.a - _CurveParams.y), 0.0, _CurveParams.x);
@@ -519,8 +524,8 @@
 
 	float4 fragCombineCocWithMaskBlur (v2f i) : SV_Target 
 	{	
-		float bgAndFgCoc = tex2D (_MainTex, i.uv1.xy).a;
-		float fgOverlapCoc = tex2D (_FgOverlap, i.uv1.xy).a;
+		float bgAndFgCoc = tex2D (_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _MainTex_ST)).a;
+		float fgOverlapCoc = tex2D (_FgOverlap, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _FgOverlap_ST)).a;
 
 		return (bgAndFgCoc < 0.01) * saturate(fgOverlapCoc-bgAndFgCoc);
 	} 
@@ -528,7 +533,7 @@
 	float4 fragCaptureForegroundCoc (v2f i) : SV_Target 
 	{	
 		float4 color = float4(0,0,0,0); //tex2D (_MainTex, i.uv1.xy);
-		float d = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv1.xy);
+		float d = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _CameraDepthTexture_ST));
 		d = Linear01Depth (d);
 		color.a = _CurveParams.z * (_CurveParams.w-d) / (d + 1e-5f);
 		color.a = clamp(max(0.0, color.a - _CurveParams.y), 0.0, _CurveParams.x);
@@ -539,7 +544,7 @@
 	float4 fragCaptureForegroundCocMask (v2f i) : SV_Target 
 	{	
 		float4 color = float4(0,0,0,0);
-		float d = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv1.xy);
+		float d = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _CameraDepthTexture_ST));
 		d = Linear01Depth (d);
 		color.a = _CurveParams.z * (_CurveParams.w-d) / (d + 1e-5f);
 		color.a = clamp(max(0.0, color.a - _CurveParams.y), 0.0, _CurveParams.x);
@@ -549,13 +554,13 @@
 	
 	float4 fragBlendInHighRez (v2f i) : SV_Target 
 	{
-		float4 tapHighRez =  tex2D(_MainTex, i.uv.xy);
+		float4 tapHighRez =  tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv.xy, _MainTex_ST));
 		return float4(tapHighRez.rgb, 1.0-saturate(tapHighRez.a*5.0));
 	}
 	
 	float4 fragBlendInLowRezParts (v2f i) : SV_Target 
 	{
-		float4 from = tex2D(_MainTex, i.uv1.xy);
+		float4 from = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _MainTex_ST));
 		from.a = saturate(from.a * _Offsets.w) / (_CurveParams.x + 1e-5f);
 		float square = from.a * from.a;
 		from.a = square * square * _CurveParams.x;
@@ -570,7 +575,7 @@
 	
 	float4 fragAlphaMask(v2f i) : SV_Target 
 	{
-		float4 c = tex2D(_MainTex, i.uv1.xy);
+		float4 c = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _MainTex_ST));
 		c.a = saturate(c.a*100.0);
 		return c;
 	}	

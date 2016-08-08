@@ -42,7 +42,12 @@
 	half _ForegroundBlurExtrude;
 	uniform half3 _Threshhold;	
 	uniform float4 _MainTex_TexelSize;
+	half4 _MainTex_ST;
 	uniform float2 _InvRenderTargetSize;
+	half4 _CameraDepthTexture_ST;
+	half4 _TapLowBackground_ST;
+	half4 _TapLowForeground_ST;
+	half4 _TapMedium_ST;
 	
 	v2f vert( appdata_img v ) {
 		v2f o;
@@ -54,7 +59,7 @@
 	v2fRadius vertWithRadius( appdata_img v ) {
 		v2fRadius o;
 		o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
-		o.uv.xy = v.texcoord.xy;
+		o.uv.xy = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy, _MainTex_ST);
 
 		const half2 blurOffsets[4] = {
 			half2(-0.5, +1.5),
@@ -63,15 +68,15 @@
 			half2(-1.5, -0.5)
 		}; 	
 				
-		o.uv1[0].xy = v.texcoord.xy + 5.0 * _MainTex_TexelSize.xy * blurOffsets[0];
-		o.uv1[1].xy = v.texcoord.xy + 5.0 * _MainTex_TexelSize.xy * blurOffsets[1];
-		o.uv1[2].xy = v.texcoord.xy + 5.0 * _MainTex_TexelSize.xy * blurOffsets[2];
-		o.uv1[3].xy = v.texcoord.xy + 5.0 * _MainTex_TexelSize.xy * blurOffsets[3];
+		o.uv1[0].xy = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy + 5.0 * _MainTex_TexelSize.xy * blurOffsets[0], _MainTex_ST);
+		o.uv1[1].xy = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy + 5.0 * _MainTex_TexelSize.xy * blurOffsets[1], _MainTex_ST);
+		o.uv1[2].xy = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy + 5.0 * _MainTex_TexelSize.xy * blurOffsets[2], _MainTex_ST);
+		o.uv1[3].xy = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy + 5.0 * _MainTex_TexelSize.xy * blurOffsets[3], _MainTex_ST);
 		
-		o.uv1[0].zw = v.texcoord.xy + 3.0 * _MainTex_TexelSize.xy * blurOffsets[0];
-		o.uv1[1].zw = v.texcoord.xy + 3.0 * _MainTex_TexelSize.xy * blurOffsets[1];
-		o.uv1[2].zw = v.texcoord.xy + 3.0 * _MainTex_TexelSize.xy * blurOffsets[2];
-		o.uv1[3].zw = v.texcoord.xy + 3.0 * _MainTex_TexelSize.xy * blurOffsets[3];
+		o.uv1[0].zw = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy + 3.0 * _MainTex_TexelSize.xy * blurOffsets[0], _MainTex_ST);
+		o.uv1[1].zw = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy + 3.0 * _MainTex_TexelSize.xy * blurOffsets[1], _MainTex_ST);
+		o.uv1[2].zw = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy + 3.0 * _MainTex_TexelSize.xy * blurOffsets[2], _MainTex_ST);
+		o.uv1[3].zw = UnityStereoScreenSpaceUVAdjust(v.texcoord.xy + 3.0 * _MainTex_TexelSize.xy * blurOffsets[3], _MainTex_ST);
 		
 		return o;
 	} 
@@ -134,12 +139,12 @@
   		rowOfs[2] = half2(0.0, _InvRenderTargetSize.y) * 2.0;  
   		rowOfs[3] = half2(0.0, _InvRenderTargetSize.y) * 3.0; 
   		
-  		half4 color = tex2D(_MainTex, i.uv0.xy); 	
+  		half4 color = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv0.xy, _MainTex_ST));
 			
-		half4 sampleA = tex2D(_MainTex, i.uv[0].xy + rowOfs[0]);  
-		half4 sampleB = tex2D(_MainTex, i.uv[1].xy + rowOfs[0]);  
-		half4 sampleC = tex2D(_MainTex, i.uv[0].xy + rowOfs[2]);  
-		half4 sampleD = tex2D(_MainTex, i.uv[1].xy + rowOfs[2]);  
+		half4 sampleA = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv[0].xy + rowOfs[0], _MainTex_ST));
+		half4 sampleB = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv[1].xy + rowOfs[0], _MainTex_ST));
+		half4 sampleC = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv[0].xy + rowOfs[2], _MainTex_ST));
+		half4 sampleD = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv[1].xy + rowOfs[2], _MainTex_ST));
 		
 		color += sampleA + sampleB + sampleC + sampleD;
 		color *= 0.2;
@@ -155,42 +160,42 @@
 	}
 	
 	half4 fragDofApplyBg (v2fDofApply i) : SV_Target {		
-		half4 tapHigh = tex2D (_MainTex, i.uv.xy);
+		half4 tapHigh = tex2D (_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv.xy, _MainTex_ST));
 		
 		#if UNITY_UV_STARTS_AT_TOP
 		if (_MainTex_TexelSize.y < 0)
 			i.uv.xy = i.uv.xy * half2(1,-1)+half2(0,1);
 		#endif
 		
-		half4 tapLow = tex2D (_TapLowBackground, i.uv.xy); // already mixed with medium blur
+		half4 tapLow = tex2D (_TapLowBackground, UnityStereoScreenSpaceUVAdjust(i.uv.xy, _TapLowBackground_ST)); // already mixed with medium blur
 		tapHigh = lerp (tapHigh, tapLow, tapHigh.a);
 		return tapHigh; 
 	}	
 	
 	half4 fragDofApplyBgDebug (v2fDofApply i) : SV_Target {		
-		half4 tapHigh = tex2D (_MainTex, i.uv.xy); 	
+		half4 tapHigh = tex2D (_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv.xy, _MainTex_ST));
 		
-		half4 tapLow = tex2D (_TapLowBackground, i.uv.xy);
+		half4 tapLow = tex2D (_TapLowBackground, UnityStereoScreenSpaceUVAdjust(i.uv.xy, _TapLowBackground_ST));
 		
-		half4 tapMedium = tex2D (_TapMedium, i.uv.xy);
+		half4 tapMedium = tex2D (_TapMedium, UnityStereoScreenSpaceUVAdjust(i.uv.xy, _TapMedium_ST));
 		tapMedium.rgb = (tapMedium.rgb + half3 (1, 1, 0)) * 0.5;	
 		tapLow.rgb = (tapLow.rgb + half3 (0, 1, 0)) * 0.5;
 		
 		tapLow = lerp (tapMedium, tapLow, saturate (tapLow.a * tapLow.a));		
-		tapLow = tapLow * 0.5 + tex2D (_TapLowBackground, i.uv.xy) * 0.5;
+		tapLow = tapLow * 0.5 + tex2D (_TapLowBackground, UnityStereoScreenSpaceUVAdjust(i.uv.xy, _TapLowBackground_ST)) * 0.5;
 
 		return lerp (tapHigh, tapLow, tapHigh.a);
 	}		
 	
 	half4 fragDofApplyFg (v2fDofApply i) : SV_Target {
-		half4 fgBlur = tex2D(_TapLowForeground, i.uv.xy);	
+		half4 fgBlur = tex2D(_TapLowForeground, UnityStereoScreenSpaceUVAdjust(i.uv.xy, _TapLowForeground_ST));
 		
 		#if UNITY_UV_STARTS_AT_TOP
 		if (_MainTex_TexelSize.y < 0)
 			i.uv.xy = i.uv.xy * half2(1,-1)+half2(0,1);
 		#endif
 				
-		half4 fgColor = tex2D(_MainTex,i.uv.xy);
+		half4 fgColor = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv.xy, _MainTex_ST));
 				
 		//fgBlur.a = saturate(fgBlur.a*_ForegroundBlurWeight+saturate(fgColor.a-fgBlur.a));
 		//fgBlur.a = max (fgColor.a, (2.0 * fgBlur.a - fgColor.a)) * _ForegroundBlurExtrude;
@@ -200,9 +205,9 @@
 	}	
 	
 	half4 fragDofApplyFgDebug (v2fDofApply i) : SV_Target {
-		half4 fgBlur = tex2D(_TapLowForeground, i.uv.xy);		
+		half4 fgBlur = tex2D(_TapLowForeground, UnityStereoScreenSpaceUVAdjust(i.uv.xy, _TapLowForeground_ST));
 					
-		half4 fgColor = tex2D(_MainTex,i.uv.xy);
+		half4 fgColor = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv.xy, _MainTex_ST));
 		
 		fgBlur.a = max(fgColor.a, fgBlur.a * _ForegroundBlurExtrude); //max (fgColor.a, (2.0*fgBlur.a-fgColor.a)) * _ForegroundBlurExtrude;
 		
@@ -217,7 +222,7 @@
 		
 	half4 fragCocBg (v2f i) : SV_Target {
 		
-		float d = SAMPLE_DEPTH_TEXTURE (_CameraDepthTexture, i.uv1.xy);
+		float d = SAMPLE_DEPTH_TEXTURE (_CameraDepthTexture, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _MainTex_ST));
 		d = Linear01Depth (d);
 		half coc = 0.0; 
 		
@@ -231,7 +236,7 @@
 	} 
 	
 	half4 fragCocFg (v2f i) : SV_Target {		
-		half4 color = tex2D (_MainTex, i.uv1.xy);
+		half4 color = tex2D (_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _MainTex_ST));
 		color.a = 0.0;
 
 		#if UNITY_UV_STARTS_AT_TOP
@@ -239,7 +244,7 @@
 			i.uv1.xy = i.uv1.xy * half2(1,-1)+half2(0,1);
 		#endif
 
-		float d = SAMPLE_DEPTH_TEXTURE (_CameraDepthTexture, i.uv1.xy);
+		float d = SAMPLE_DEPTH_TEXTURE (_CameraDepthTexture, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _MainTex_ST));
 		d = Linear01Depth (d);	
 		
 		half focalDistance01 = (_CurveParams.w - _CurveParams.z);	
@@ -260,12 +265,12 @@
 	// used for simple one one blend
 	
 	half4 fragAddBokeh (v2f i) : SV_Target {	
-		half4 from = tex2D( _MainTex, i.uv1.xy );
+		half4 from = tex2D( _MainTex, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _MainTex_ST) );
 		return from;
 	}
 	
 	half4 fragAddFgBokeh (v2f i) : SV_Target {		
-		half4 from = tex2D( _MainTex, i.uv1.xy );
+		half4 from = tex2D( _MainTex, UnityStereoScreenSpaceUVAdjust(i.uv1.xy, _MainTex_ST) );
 		return from; 
 	}
 		
@@ -328,7 +333,6 @@ Subshader {
       CGPROGRAM
       #pragma vertex vertDofApply
       #pragma fragment fragDofApplyBg
-      
       ENDCG
   	}
 
@@ -341,7 +345,6 @@ Subshader {
       CGPROGRAM
       #pragma vertex vertDofApply
       #pragma fragment fragDofApplyFgDebug
-
       ENDCG
   	}
 
@@ -354,7 +357,6 @@ Subshader {
       CGPROGRAM
       #pragma vertex vertDofApply
       #pragma fragment fragDofApplyBgDebug
-
       ENDCG
   	}
   	
@@ -369,7 +371,6 @@ Subshader {
       CGPROGRAM
       #pragma vertex vert
       #pragma fragment fragCocBg
-
       ENDCG
   	}  
   	 	
@@ -385,7 +386,6 @@ Subshader {
       CGPROGRAM
       #pragma vertex vertDofApply
       #pragma fragment fragDofApplyFg
-      
       ENDCG
   	}  	
 
@@ -398,7 +398,6 @@ Subshader {
       CGPROGRAM
       #pragma vertex vert
       #pragma fragment fragCocFg
-
       ENDCG
   	} 
 
@@ -410,7 +409,6 @@ Subshader {
       CGPROGRAM
       #pragma vertex vertDownsampleWithCocConserve
       #pragma fragment fragDownsampleWithCocConserve
-
       ENDCG
   	} 
 
@@ -424,7 +422,6 @@ Subshader {
       CGPROGRAM
       #pragma vertex vert
       #pragma fragment fragMask
-
       ENDCG
   	} 
 
@@ -438,7 +435,6 @@ Subshader {
       CGPROGRAM
       #pragma vertex vert
       #pragma fragment fragAddBokeh
-
       ENDCG
   	} 
   	
@@ -452,7 +448,6 @@ Subshader {
       CGPROGRAM
       #pragma vertex vertWithRadius
       #pragma fragment fragExtractAndAddToBokeh
-
       ENDCG
   	} 
   	
@@ -464,7 +459,6 @@ Subshader {
       CGPROGRAM
       #pragma vertex vertWithRadius
       #pragma fragment fragDarkenForBokeh
-
       ENDCG
   	}   	
   	
@@ -476,7 +470,6 @@ Subshader {
       CGPROGRAM
       #pragma vertex vertWithRadius
       #pragma fragment fragExtractAndAddToBokeh
-
       ENDCG
   	}   	
   }
