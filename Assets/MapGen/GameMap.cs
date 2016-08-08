@@ -307,17 +307,36 @@ public class GameMap : MonoBehaviour
             // take screenshot on up->down transition of F9 key
             if (Input.GetButtonDown("TakeScreenshot"))
             {
+                string path = Application.dataPath;
+                if (Application.platform == RuntimePlatform.OSXPlayer)
+                {
+                    path += "/../../";
+                }
+                else if (Application.platform == RuntimePlatform.WindowsPlayer
+                    || Application.platform == RuntimePlatform.LinuxPlayer)
+                {
+                    path += "/../";
+                }
+
                 string screenshotFilename;
                 do
                 {
                     screenshotCount++;
-                    screenshotFilename = "screenshot" + screenshotCount + ".png";
+                    screenshotFilename = path + "screenshot" + screenshotCount + ".png";
 
                 } while (File.Exists(screenshotFilename));
+
                 if (Input.GetButton("Mod"))
-                    Application.CaptureScreenshot(screenshotFilename, 4);
+                    Application.CaptureScreenshot(screenshotFilename, 8);
                 else
                     Application.CaptureScreenshot(screenshotFilename);
+            }
+            if(Input.GetButtonDown("Refresh"))
+            {
+                for (int x = 0; x < blockDirtyBits.GetLength(0); x++)
+                    for (int y = 0; y < blockDirtyBits.GetLength(0); y++)
+                        for (int z = 0; z < blockDirtyBits.GetLength(0); z++)
+                            SetDirtyBlock(x, y, z);
             }
         }
 
@@ -640,6 +659,7 @@ public class GameMap : MonoBehaviour
         foreach (var material in block.materials)
         {
             if (material.mat_type != 419
+                    || material.mat_index < 0
                     || DFConnection.Instance.NetPlantRawList.plant_raws.Count <= material.mat_index
                     || DFConnection.Instance.NetPlantRawList.plant_raws[material.mat_index].growths.Count == 0)
                 continue;
