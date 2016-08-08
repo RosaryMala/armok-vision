@@ -116,6 +116,21 @@
         </subObject>
     </buildingMesh>
     <buildingMesh file="NONE">
+        <buildingType token="Workshop_Carpenters"/>
+        <subObject file="WorkshopCarpenters.obj"
+                   pattern="WorkshopCarpenters_P.png"
+                   specular="WorkshopCarpenters_M.png"
+                   normal="Flat_N.png"
+                   occlusion="WorkshopCarpenters_O.png"
+                   alpha="Opaque_A.png"
+                   metallic="WorkshopCarpenters_M.png"
+                   illumination="black.png">
+            <buildingPosition x="1"
+                              y="1"/>
+        </subObject>
+    </buildingMesh>
+
+    <buildingMesh file="NONE">
         <buildingType token="Workshop_Farmers"/>
         <subObject file="WorkshopFarmersSpindle.obj"
                    normal="Flat_N.png"
