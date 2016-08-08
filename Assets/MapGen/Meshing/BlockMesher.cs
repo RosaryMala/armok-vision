@@ -387,7 +387,7 @@ abstract class BlockMesher {
                 buffer.uv3Transform = meshContent.SpecialTexture.UVTransform;
             else
                 buffer.uv3Transform = ContentLoader.Instance.DefaultSpecialTexTransform;
-            buffer.hiddenFaces = CalculateHiddenFaces(tile);
+            buffer.hiddenFaces = CalculateHiddenFaces(tile, meshContent.Rotation);
             return;
         }
         switch (layer)
@@ -580,24 +580,30 @@ abstract class BlockMesher {
         buffer.uv1Transform = matTexTransform;
         buffer.uv2Transform = shapeTextTransform;
         buffer.uv3Transform = specialTexTransform;
-        buffer.hiddenFaces = CalculateHiddenFaces(tile);
+        buffer.hiddenFaces = CalculateHiddenFaces(tile, meshContent.Rotation);
     }
 
-    private MeshCombineUtility.HiddenFaces CalculateHiddenFaces(MapDataStore.Tile tile)
+    private MeshCombineUtility.HiddenFaces CalculateHiddenFaces(MapDataStore.Tile tile, RotationType rotation)
     {
         MeshCombineUtility.HiddenFaces hiddenFaces = MeshCombineUtility.HiddenFaces.None;
-        if (tile.North != null && (tile.North.isWall || tile.North.Hidden))
-            hiddenFaces |= MeshCombineUtility.HiddenFaces.North;
-        if (tile.South != null && (tile.South.isWall || tile.South.Hidden))
-            hiddenFaces |= MeshCombineUtility.HiddenFaces.South;
-        if (tile.East != null && (tile.East.isWall || tile.East.Hidden))
-            hiddenFaces |= MeshCombineUtility.HiddenFaces.East;
-        if (tile.West != null && (tile.West.isWall || tile.West.Hidden))
-            hiddenFaces |= MeshCombineUtility.HiddenFaces.West;
-        if (tile.Up != null && (tile.Up.isSolidBase || tile.Up.Hidden))
-            hiddenFaces |= MeshCombineUtility.HiddenFaces.Up;
-        if (tile.Down != null && (tile.Down.isWall || tile.Down.Hidden))
-            hiddenFaces |= MeshCombineUtility.HiddenFaces.Down;
+        if (rotation == RotationType.None)
+        {
+            if (tile.North != null && (tile.North.isWall || tile.North.Hidden))
+                hiddenFaces |= MeshCombineUtility.HiddenFaces.North;
+            if (tile.South != null && (tile.South.isWall || tile.South.Hidden))
+                hiddenFaces |= MeshCombineUtility.HiddenFaces.South;
+            if (tile.East != null && (tile.East.isWall || tile.East.Hidden))
+                hiddenFaces |= MeshCombineUtility.HiddenFaces.East;
+            if (tile.West != null && (tile.West.isWall || tile.West.Hidden))
+                hiddenFaces |= MeshCombineUtility.HiddenFaces.West;
+        }
+        if (rotation != RotationType.TreeRound && rotation != RotationType.TreeRoundTall)//these two rotations don't give a flat rotation.
+        {
+            if (tile.Up != null && (tile.Up.isSolidBase || tile.Up.Hidden))
+                hiddenFaces |= MeshCombineUtility.HiddenFaces.Up;
+            if (tile.Down != null && (tile.Down.isWall || tile.Down.Hidden))
+                hiddenFaces |= MeshCombineUtility.HiddenFaces.Down;
+        }
         return hiddenFaces;
     }
 }

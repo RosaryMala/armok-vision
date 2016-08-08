@@ -86,6 +86,15 @@ public class MeshContent : IContent
     public SpecialMapContent SpecialTexture { get { return _specialTexture; } }
 
     RotationType rotationType = RotationType.None;
+
+    public RotationType Rotation
+    {
+        get
+        {
+            return rotationType;
+        }
+    }
+
     public Quaternion GetRotation(MapDataStore.Tile tile)
     {
         switch (rotationType)
