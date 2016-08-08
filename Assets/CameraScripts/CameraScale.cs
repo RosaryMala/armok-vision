@@ -8,6 +8,7 @@ public class CameraScale : MonoBehaviour
     public float zoomLevel = 2.0f;
     public float zoomSpeed = 0.1f;
     public float firstPersonThreshold = 1.0f;
+    public float maxZoom = 3.5f;
 
     GameMap gameMap;
     public Transform viewCamera;
@@ -28,6 +29,8 @@ public class CameraScale : MonoBehaviour
         if (Input.GetAxis("Mouse ScrollWheel") != 0)
         {
             zoomLevel -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
+            if (zoomLevel > maxZoom)
+                zoomLevel = maxZoom;
             if (zoomLevel <= firstPersonThreshold)
             {
                 zoomLevel = firstPersonThreshold;

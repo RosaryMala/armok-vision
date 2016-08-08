@@ -1400,37 +1400,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settings:
-    basicSettings:
-      reflectionMultiplier: 1
-      maxDistance: 100
-      fadeDistance: 100
-      screenEdgeFading: 0.03
-      enableHDR: 1
-      additiveReflection: 0
     reflectionSettings:
-      maxSteps: 128
-      rayStepSize: 3
+      blendType: 0
+      reflectionQuality: 0
+      maxDistance: 100
+      iterationCount: 256
+      stepSize: 3
       widthModifier: 0.5
-      smoothFallbackThreshold: 0.2
-      smoothFallbackDistance: 0.05
-      fresnelFade: 0.2
-      fresnelFadePower: 2
-      distanceBlur: 1
-    advancedSettings:
-      temporalFilterStrength: 0.7
-      useTemporalConfidence: 1
-      traceBehindObjects: 1
-      highQualitySharpReflections: 1
-      traceEverywhere: 1
-      treatBackfaceHitAsMiss: 0
-      allowBackwardsRays: 0
-      improveCorners: 1
-      resolution: 1
-      bilateralUpsample: 1
-      reduceBanding: 1
-      highlightSuppression: 0
-    debugSettings:
-      debugMode: 0
+      reflectionBlur: 1
+      reflectBackfaces: 1
+    intensitySettings:
+      reflectionMultiplier: 1
+      fadeDistance: 100
+      fresnelFade: 1
+      fresnelFadePower: 1
+    screenEdgeMask:
+      intensity: 0.03
   m_Shader: {fileID: 4800000, guid: 7e2fcc83af19e744787647ec0ac5d42c, type: 3}
 --- !u!1 &1201785582
 GameObject:
@@ -1617,7 +1602,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   zoomLevel: 2
   zoomSpeed: 0.5
-  firstPersonThreshold: -1
+  firstPersonThreshold: 0
+  maxZoom: 3.5
   viewCamera: {fileID: 654332373}
 --- !u!4 &1404020253
 Transform:
@@ -1695,15 +1681,15 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.1
-  far clip plane: 1000
+  near clip plane: 0.5
+  far clip plane: 10000
   field of view: 70
   orthographic: 0
   orthographic size: 100
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294966527
+    m_Bits: 4294966783
   m_RenderingPath: 3
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1990,7 +1976,6 @@ GameObject:
   - 114: {fileID: 1688073737}
   - 114: {fileID: 1688073736}
   - 114: {fileID: 1688073735}
-  - 114: {fileID: 1688073734}
   - 114: {fileID: 1688073731}
   m_Layer: 0
   m_Name: Far Terrain Camera
@@ -1998,7 +1983,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1688073731
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2035,7 +2020,7 @@ Camera:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 3328
-  m_RenderingPath: -1
+  m_RenderingPath: 3
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
@@ -2057,31 +2042,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 654332373}
   m_RootOrder: 1
---- !u!114 &1688073734
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1688073730}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e50e925fb93c78246bf995d9dc3a2330, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 3
-  adaptiveTextureSize: 256
-  remapCurve:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  exposureAdjustment: 1.5
-  middleGrey: 0.2
-  white: 2
-  adaptionSpeed: 1.5
-  tonemapper: {fileID: 4800000, guid: 003377fc2620a44939dadde6fe3f8190, type: 3}
-  validRenderTextureFormat: 1
 --- !u!114 &1688073735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2130,37 +2090,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settings:
-    basicSettings:
-      reflectionMultiplier: 1
-      maxDistance: 1000
-      fadeDistance: 100
-      screenEdgeFading: 0.03
-      enableHDR: 1
-      additiveReflection: 0
     reflectionSettings:
-      maxSteps: 128
-      rayStepSize: 4
+      blendType: 0
+      reflectionQuality: 0
+      maxDistance: 100
+      iterationCount: 256
+      stepSize: 3
       widthModifier: 0.5
-      smoothFallbackThreshold: 0.2
-      smoothFallbackDistance: 0.05
-      fresnelFade: 0.2
-      fresnelFadePower: 2
-      distanceBlur: 1
-    advancedSettings:
-      temporalFilterStrength: 0.7
-      useTemporalConfidence: 1
-      traceBehindObjects: 1
-      highQualitySharpReflections: 1
-      traceEverywhere: 1
-      treatBackfaceHitAsMiss: 0
-      allowBackwardsRays: 0
-      improveCorners: 1
-      resolution: 1
-      bilateralUpsample: 1
-      reduceBanding: 1
-      highlightSuppression: 0
-    debugSettings:
-      debugMode: 0
+      reflectionBlur: 1
+      reflectBackfaces: 1
+    intensitySettings:
+      reflectionMultiplier: 1
+      fadeDistance: 100
+      fresnelFade: 1
+      fresnelFadePower: 1
+    screenEdgeMask:
+      intensity: 0.03
   m_Shader: {fileID: 4800000, guid: 7e2fcc83af19e744787647ec0ac5d42c, type: 3}
 --- !u!1 &1696498549
 GameObject:
