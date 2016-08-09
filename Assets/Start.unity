@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 692705303}
-  m_IndirectSpecularColor: {r: 0.20770165, g: 0.28957182, b: 0.40892342, a: 1}
+  m_IndirectSpecularColor: {r: 0.58691657, g: 0.7870393, b: 1.0747223, a: 1}
 --- !u!157 &4
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -1271,6 +1271,7 @@ GameObject:
   - 124: {fileID: 1169102440}
   - 81: {fileID: 1169102439}
   - 114: {fileID: 1169102442}
+  - 114: {fileID: 1169102443}
   - 114: {fileID: 1169102438}
   - 114: {fileID: 1169102437}
   - 114: {fileID: 1169102436}
@@ -1417,6 +1418,28 @@ MonoBehaviour:
     screenEdgeMask:
       intensity: 0.03
   m_Shader: {fileID: 4800000, guid: 7e2fcc83af19e744787647ec0ac5d42c, type: 3}
+--- !u!114 &1169102443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1169102434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e89654dcf6db746d2a57aeaaa14f5e83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settings:
+    intensity: 1
+    radius: 6
+    sampleCount: 2
+    sampleCountValue: 24
+    downsampling: 0
+    ambientOnly: 0
+    occlusionSource: 1
+    debug: 0
+  _aoShader: {fileID: 4800000, guid: 65e203e5acda447acbf9dc1ef78c4a39, type: 3}
+  _quadMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1201785582
 GameObject:
   m_ObjectHideFlags: 0
