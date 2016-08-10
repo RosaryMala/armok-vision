@@ -304,7 +304,7 @@ public class AtlasCreator
                     }
                     _atlas.texture.SetPixels(fillcolors);
                 }
-                _atlas.texture.filterMode = FilterMode.Bilinear;
+                _atlas.texture.filterMode = FilterMode.Point;
                 _atlas.root = new AtlasNode();
                 _atlas.root.rc = new Rect(0, 0, GameSettings.Instance.rendering.textureAtlasSize, GameSettings.Instance.rendering.textureAtlasSize);
             }

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 public class TextureStorage
 {
-    List<Texture2D> textureList;
+    List<Texture2D> textureList = new List<Texture2D>();
 
     AtlasCreator.Atlas atlas;
 
-    Dictionary<int, string> texIndexToName;
+    Dictionary<int, string> texIndexToName = new Dictionary<int, string>();
 
     Dictionary<string, int> nameToAtlasIndex;
 
@@ -28,17 +28,34 @@ public class TextureStorage
 
     public int AddTexture(Texture2D tex)
     {
-        if (textureList == null)
-            textureList = new List<Texture2D>();
-        if (texIndexToName == null)
-            texIndexToName = new Dictionary<int, string>();
         textureList.Add(tex);
         texIndexToName[textureList.Count - 1] = tex.name;
         return textureList.Count - 1;
     }
 
+    static int CompareBySize(Texture2D b, Texture2D a)
+    {
+        if(a == null)
+        {
+            if (b == null)
+                return 0;
+            else
+                return -1;
+        }
+        else
+        {
+            if (b == null)
+                return 1;
+            else
+            {
+                return (a.width * a.height).CompareTo(b.width * b.height);
+            }
+        }
+    }
+
     public void BuildAtlas(string name, TextureFormat format = TextureFormat.RGBA32, Color defaultColor = default(Color), bool linear = false)
     {
+        textureList.Sort(CompareBySize);
         AtlasCreator.Atlas[] atlasList = AtlasCreator.CreateAtlas(name, textureList.ToArray(), null, format, defaultColor, linear);
         if((atlasList.Length > 1) || (GameSettings.Instance.rendering.debugTextureAtlas))
         {
