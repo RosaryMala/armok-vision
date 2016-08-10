@@ -120,14 +120,14 @@
         <subObject file="Support.obj">
             <buildingPosition x="0"
                               y="0"/>
-            <buildingPosition x="5"
+            <buildingPosition x="4"
                               y="0"/>
             <buildingPosition x="0"
-                              y="5"/>
-            <buildingPosition x="5"
-                              y="5"/>
-            <buildingPosition x="3"
-                              y="3"/>
+                              y="4"/>
+            <buildingPosition x="4"
+                              y="4"/>
+            <buildingPosition x="2"
+                              y="2"/>
         </subObject>
     </buildingMesh>
     <buildingMesh file="NONE">
