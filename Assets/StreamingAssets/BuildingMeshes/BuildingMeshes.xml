@@ -115,6 +115,21 @@
                               y="0"/>
         </subObject>
     </buildingMesh>
+    <buildingMesh file="Bridge.obj">
+        <buildingType token="TradeDepot"/>
+        <subObject file="Support.obj">
+            <buildingPosition x="0"
+                              y="0"/>
+            <buildingPosition x="5"
+                              y="0"/>
+            <buildingPosition x="0"
+                              y="5"/>
+            <buildingPosition x="5"
+                              y="5"/>
+            <buildingPosition x="3"
+                              y="3"/>
+        </subObject>
+    </buildingMesh>
     <buildingMesh file="NONE">
         <buildingType token="Workshop_Carpenters"/>
         <subObject file="WorkshopCarpenters.obj"
