@@ -6,7 +6,7 @@ using DFHack;
 public class MapSelection : MonoBehaviour
 {
     GameMap gameMap;
-    public GameObject cameraOrigin;
+    public CameraMovement cameraOrigin;
     public bool debugMode = false;
 
     public Vector3 dfCoord = new Vector3();
@@ -75,7 +75,9 @@ public class MapSelection : MonoBehaviour
 
             Vector3 current = new Vector3(mouseWorldPosition.x, 0f, mouseWorldPosition.z);
             Vector3 previous = new Vector3(mouseWorldPositionPrevious.x, 0f, mouseWorldPositionPrevious.z);
-
+            Vector3 amount = previous - current;
+            if (amount.sqrMagnitude > 0.001f)
+                cameraOrigin.following = false;
             cameraOrigin.transform.Translate(previous - current, Space.World);
             gameMap.UpdateCenter(cameraOrigin.transform.position);
 
