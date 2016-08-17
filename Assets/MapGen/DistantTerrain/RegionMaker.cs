@@ -1228,7 +1228,6 @@ public class RegionMaker : MonoBehaviour
         Vector2 offset = new Vector2(0.206931f, 0.5f) * dia;
 
         Vector3 centerTop = (max + new Vector3(min.x, max.y, min.z)) / 2;
-        Vector3 centerBottom = new Vector3(centerTop.x, min.y, centerTop.z);
 
         vertices.Add(new Vector3(centerTop.x - offset.x, centerTop.y, centerTop.z + offset.y));
         vertices.Add(new Vector3(centerTop.x + offset.x, centerTop.y, centerTop.z + offset.y));

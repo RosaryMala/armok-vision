@@ -114,7 +114,8 @@ public class MapDataStore {
 
     public MapDataStore(BlockCoord block) : this(block.ToDFCoord(), BLOCK_SIZE){}
 
-    public void CopySliceTo(DFCoord newSliceOrigin, DFCoord newSliceSize, MapDataStore target) {
+    public bool CopySliceTo(DFCoord newSliceOrigin, DFCoord newSliceSize, MapDataStore target) {
+        bool success = false;
         if (newSliceSize != target.SliceSize) {
             throw new UnityException("Mismatched slice sizes");
         }
@@ -135,9 +136,11 @@ public class MapDataStore {
                     if (this[x,y,z].shape == TiletypeShape.RAMP)
                         this[x, y, z].CalculateRampType();
                     target[x, y, z] = this[x,y,z];
+                    success = true;
                 }
             }
         }
+        return success;
     }
 
     public void CopySliceTo(BlockCoord block, MapDataStore target) {
@@ -398,10 +401,10 @@ public class MapDataStore {
     }
 
     public void Reset() {
-        for (int x = 0; x < SliceSize.x; x++) {
-            for (int y = 0; y < SliceSize.y; y++) {
-                for (int z = 0; z < SliceSize.z; z++) {
-                    this[x,y,z] = null;
+        for (int x = 0; x < _tiles.GetLength(0); x++) {
+            for (int y = 0; y < _tiles.GetLength(1); y++) {
+                for (int z = 0; z < _tiles.GetLength(2); z++) {
+                    _tiles[x,y,z] = null;
                 }
             }
         }

@@ -98,6 +98,7 @@ public class GameMap : MonoBehaviour
     Mesh[,,,] liquidBlocks; // Water & magma. Extra dimension is a liquid type.
     // Dirty flags for those meshes
     bool[,,] blockDirtyBits;
+    bool[,,] blockContentBits;
     UpdateSchedule[,,] blockUpdateSchedules;
     bool[,,] liquidBlockDirtyBits;
     // Lights from magma.
@@ -334,10 +335,7 @@ public class GameMap : MonoBehaviour
             }
             if(Input.GetButtonDown("Refresh"))
             {
-                for (int x = 0; x < blockDirtyBits.GetLength(0); x++)
-                    for (int y = 0; y < blockDirtyBits.GetLength(0); y++)
-                        for (int z = 0; z < blockDirtyBits.GetLength(0); z++)
-                            SetDirtyBlock(x, y, z);
+                Refresh();
             }
             if(Input.GetButtonDown("Cancel"))
             {
@@ -354,6 +352,17 @@ public class GameMap : MonoBehaviour
 
         DrawBlocks();
 
+    }
+
+    public void Refresh()
+    {
+        for (int x = 0; x < blockDirtyBits.GetLength(0); x++)
+            for (int y = 0; y < blockDirtyBits.GetLength(1); y++)
+                for (int z = 0; z < blockDirtyBits.GetLength(2); z++)
+                {
+                    blockDirtyBits[x, y, z] = blockContentBits[x, y, z];
+                    liquidBlockDirtyBits[x, y, z] = blockContentBits[x, y, z];
+                }
     }
 
     public Mesh testMesh;
@@ -617,9 +626,13 @@ public class GameMap : MonoBehaviour
             {
                 addSeasonalUpdates(block, block.map_x, block.map_y, block.map_z);
                 SetDirtyBlock(block.map_x, block.map_y, block.map_z);
+                SetBlockContent(block.map_x, block.map_y, block.map_z);
             }
             if (setLiquids)
+            {
                 SetDirtyLiquidBlock(block.map_x, block.map_y, block.map_z);
+                SetBlockContent(block.map_x, block.map_y, block.map_z);
+            }
         }
         loadWatch.Stop();
         genWatch.Reset();
@@ -648,6 +661,7 @@ public class GameMap : MonoBehaviour
         topTransparentBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         liquidBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ, 2];
         blockDirtyBits = new bool[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
+        blockContentBits = new bool[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         blockUpdateSchedules = new UpdateSchedule[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         liquidBlockDirtyBits = new bool[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         magmaGlow = new Light[blockSizeX * 16, blockSizeY * 16, blockSizeZ];
@@ -690,6 +704,12 @@ public class GameMap : MonoBehaviour
         mapBlockX /= blockSize;
         mapBlockY /= blockSize;
         blockDirtyBits[mapBlockX, mapBlockY, mapBlockZ] = true;
+    }
+    void SetBlockContent(int mapBlockX, int mapBlockY, int mapBlockZ)
+    {
+        mapBlockX /= blockSize;
+        mapBlockY /= blockSize;
+        blockContentBits[mapBlockX, mapBlockY, mapBlockZ] = true;
     }
     void SetDirtyLiquidBlock(int mapBlockX, int mapBlockY, int mapBlockZ)
     {
