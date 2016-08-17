@@ -16,12 +16,14 @@ namespace UserSettings
                 return (int)slider.value;
             }
         }
+        protected GameMap gameMap;
 
         // Awake is called when the script instance is being loaded
         public void Awake()
         {
             slider = GetComponent<Slider>();
             valueLabel = transform.FindChild("Value").GetComponent<Text>();
+            gameMap = FindObjectOfType<GameMap>();
         }
 
         // Start is called just before any of the Update methods is called the first time

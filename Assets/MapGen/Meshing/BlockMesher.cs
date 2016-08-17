@@ -108,7 +108,8 @@ abstract class BlockMesher {
         MapDataStore targetDataStore = AllocateBlockStore();
 
         // Copy data
-        MapDataStore.Main.CopySliceTo(targetLocation, MapDataStore.BLOCK_SIZE, targetDataStore);
+        if (!MapDataStore.Main.CopySliceTo(targetLocation, MapDataStore.BLOCK_SIZE, targetDataStore))
+            return true; //it's empty, but it isn't a failure condition.
 
         // In case we displace another block update
         Request redundant;

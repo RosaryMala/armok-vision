@@ -19,7 +19,7 @@ public class GameSettings : MonoBehaviour
         public int drawRangeSide = 4;
         public int drawRangeUp = 1;
         public int drawRangeDown = 5;
-        public int maxBlocksToDraw = int.MaxValue;
+        public int maxBlocksToDraw = 460800;
         public int maxTextureSize = 512;
         public int textureAtlasSize = 2048;
         public bool debugTextureAtlas = false;
