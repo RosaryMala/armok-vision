@@ -40,6 +40,7 @@ public class GameMap : MonoBehaviour
 
     public WorldMapMaker worldMap;
 
+    public RectTransform optionsPanel;
 
     // Parameters managing the currently visible area of the map.
     // Tracking:
@@ -337,6 +338,10 @@ public class GameMap : MonoBehaviour
                     for (int y = 0; y < blockDirtyBits.GetLength(0); y++)
                         for (int z = 0; z < blockDirtyBits.GetLength(0); z++)
                             SetDirtyBlock(x, y, z);
+            }
+            if(Input.GetButtonDown("Cancel"))
+            {
+                optionsPanel.gameObject.SetActive(!optionsPanel.gameObject.activeSelf);
             }
         }
 
