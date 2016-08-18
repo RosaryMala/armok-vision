@@ -6,6 +6,12 @@ using UnityEngine;
 
 public class GameSettings : MonoBehaviour
 {
+    public enum LandscapeDetail
+    {
+        Off,
+        Low,
+        High
+    }
     [Serializable]
     public class Meshing
     {
@@ -24,7 +30,7 @@ public class GameSettings : MonoBehaviour
         public int textureAtlasSize = 2048;
         public bool debugTextureAtlas = false;
         public bool drawClouds = true;
-        public bool drawDistantTerrain = true;
+        public LandscapeDetail distantTerrainDetail = LandscapeDetail.High;
         public bool drawShadows = true;
         public int vSyncCount = 0;
         public int targetFrameRate = 60;

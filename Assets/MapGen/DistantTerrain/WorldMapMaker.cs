@@ -62,7 +62,7 @@ public class WorldMapMaker : MonoBehaviour
             Debug.Log("Didn't get world map!");
             return;
         }
-        if (!GameSettings.Instance.rendering.drawDistantTerrain)
+        if (GameSettings.Instance.rendering.distantTerrainDetail == GameSettings.LandscapeDetail.Off)
             return;
         width = remoteMap.world_width;
         height = remoteMap.world_height;
@@ -219,7 +219,7 @@ public class WorldMapMaker : MonoBehaviour
 
     void UpdateRegionPositions(WorldMap map)
     {
-        if (!GameSettings.Instance.rendering.drawDistantTerrain)
+        if (GameSettings.Instance.rendering.distantTerrainDetail == GameSettings.LandscapeDetail.Off)
             return;
 
         foreach (var item in DetailRegions)
@@ -231,7 +231,7 @@ public class WorldMapMaker : MonoBehaviour
 
     void GenerateRegionMeshes()
     {
-        if (!GameSettings.Instance.rendering.drawDistantTerrain)
+        if (GameSettings.Instance.rendering.distantTerrainDetail == GameSettings.LandscapeDetail.Off)
             return;
 
         foreach (RegionMap map in regionMaps.region_maps)
