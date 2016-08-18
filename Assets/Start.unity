@@ -2131,7 +2131,7 @@ Prefab:
     - target: {fileID: 114000011593732324, guid: f80361a40d9d2ae44ac46b581f971be5,
         type: 2}
       propertyPath: m_Text
-      value: Draw Distant Terrain
+      value: Max Texture Size
       objectReference: {fileID: 0}
     - target: {fileID: 114000013737065396, guid: f80361a40d9d2ae44ac46b581f971be5,
         type: 2}
@@ -2141,17 +2141,17 @@ Prefab:
     - target: {fileID: 224000010261470308, guid: f80361a40d9d2ae44ac46b581f971be5,
         type: 2}
       propertyPath: m_AnchorMax.x
-      value: 0.083333336
+      value: 0.11111111
       objectReference: {fileID: 0}
     - target: {fileID: 224000013456284164, guid: f80361a40d9d2ae44ac46b581f971be5,
         type: 2}
       propertyPath: m_AnchorMin.x
-      value: 0.083333336
+      value: 0.11111111
       objectReference: {fileID: 0}
     - target: {fileID: 224000013456284164, guid: f80361a40d9d2ae44ac46b581f971be5,
         type: 2}
       propertyPath: m_AnchorMax.x
-      value: 0.083333336
+      value: 0.11111111
       objectReference: {fileID: 0}
     - target: {fileID: 114000013737065396, guid: f80361a40d9d2ae44ac46b581f971be5,
         type: 2}
@@ -2292,12 +2292,12 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1000012621621584, guid: f80361a40d9d2ae44ac46b581f971be5, type: 2}
       propertyPath: m_Name
-      value: MaxTextureSizeSlider (1)
+      value: TextureAtlasSizeSlider
       objectReference: {fileID: 0}
     - target: {fileID: 114000011593732324, guid: f80361a40d9d2ae44ac46b581f971be5,
         type: 2}
       propertyPath: m_Text
-      value: Draw Distant Terrain
+      value: Texture Atlas Size
       objectReference: {fileID: 0}
     - target: {fileID: 114000013737065396, guid: f80361a40d9d2ae44ac46b581f971be5,
         type: 2}
@@ -2741,6 +2741,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 1340737509}
   - 114: {fileID: 1340737510}
+  - 114: {fileID: 1340737511}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -2775,7 +2776,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 300}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1340737510
 MonoBehaviour:
@@ -2797,6 +2798,19 @@ MonoBehaviour:
   m_Spacing: 15
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
+--- !u!114 &1340737511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1340737508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1741964061, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 2
 --- !u!1 &1383803862
 GameObject:
   m_ObjectHideFlags: 0
@@ -4246,8 +4260,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 291021896}
   m_HandleRect: {fileID: 291021895}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.75
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4565,7 +4579,7 @@ Prefab:
     - target: {fileID: 114000011593732324, guid: f80361a40d9d2ae44ac46b581f971be5,
         type: 2}
       propertyPath: m_Text
-      value: Draw Distant Terrain
+      value: Distant Terrain Detail
       objectReference: {fileID: 0}
     - target: {fileID: 114000013737065396, guid: f80361a40d9d2ae44ac46b581f971be5,
         type: 2}
@@ -4590,7 +4604,12 @@ Prefab:
     - target: {fileID: 114000013737065396, guid: f80361a40d9d2ae44ac46b581f971be5,
         type: 2}
       propertyPath: m_MaxValue
-      value: 1
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000013737065396, guid: f80361a40d9d2ae44ac46b581f971be5,
+        type: 2}
+      propertyPath: m_Value
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114000012431711026, guid: f80361a40d9d2ae44ac46b581f971be5, type: 2}

@@ -6,14 +6,14 @@ namespace UserSettings
     {
         protected override void InitValue()
         {
-            slider.value = Convert.ToInt32(GameSettings.Instance.rendering.drawDistantTerrain);
-            valueLabel.text = GameSettings.Instance.rendering.drawDistantTerrain.ToString();
+            slider.value = (int)GameSettings.Instance.rendering.distantTerrainDetail;
+            valueLabel.text = GameSettings.Instance.rendering.distantTerrainDetail.ToString();
         }
 
         protected override void OnValueChanged(float value)
         {
-            GameSettings.Instance.rendering.drawDistantTerrain = Convert.ToBoolean(value);
-            valueLabel.text = GameSettings.Instance.rendering.drawDistantTerrain.ToString();
+            GameSettings.Instance.rendering.distantTerrainDetail = (GameSettings.LandscapeDetail)value;
+            valueLabel.text = GameSettings.Instance.rendering.distantTerrainDetail.ToString();
         }
     }
 }
