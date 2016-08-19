@@ -1,0 +1,88 @@
+v 0.10.1
+ * Fixed compatibility with new DFHack plugin.
+
+v 0.10.0
+ * Zooming in and out changes the world size in VR now.
+ * Made hidden areas black
+ * Overhauled the outside world, giving much nicer looking maps
+ * Added rivers to the world map
+ * Added lakes to the world map
+ * Changed some internals relating to tile mesh generation
+ * Made mesh generation always include surrounding tile data
+ * Changed how reflections work.
+ * Show designations
+
+v 0.9.1
+ * Fixed tree foliage textures.
+ * Fixed keyboard not responding on startup.
+ * Made all debug stuff off by default. You can turn it on in the config json file.
+
+v0.9.0
+ * Added a toggle to follow the DF screen. Press F to activate.
+ * You can now press ` to bring in the screen from Dwarf Fortress. Currently rather buggy.
+ * Hidden map tiles are now invisible in Armok Vision. TODO: Make them black.
+ * Models can now have metallic and self illumination maps. Beds temporarily have both.
+ 
+
+v0.8.0
+ * Fixed units showing up when they're caged or off the map
+ * Added creature names above sprites
+ * Added option to export the generated map to collada file, using Ctrl+M. Quite crashy.
+ * Made clouds and distant terrain optional
+ * Trees now show leaves, flowers, and fruits, in their proper times and colors.
+ * Backend stuff related to creatures. Not usable yet.
+ * Performance improvements by Kazimuth
+ * Save various settings to a JSON file that is created on first run.
+ * Remodel tree branches
+ * Added palm leaves to trees that can use them.
+ * Made the sun angle change according to season.
+
+v0.7.2
+ * Fixed time-of-day changing that 0.7.1 broke.
+ * Fixed caged and gone creatures showing up where they're not supposed to.
+
+v0.7.1
+ * Fixed a bug that caused the landscape to not render whenever you moved as an adventurer.
+ * Various performance improvements.
+
+v0.7
+ * Allowed loading up a DF world without a fort loaded, like on the embark screen.
+ * Added support for adventure mode entering and leaving fast travel.
+ * Changed how textures are loded. Alpha maps now go into texture shape, and specular smoothness maps go into the material texture.
+ * Added building support.
+ * Added basic meshes for many, but not all, buildings.
+ * Added support for semitransparent meshes, like glass.
+ * Added a day/night system. Time can be paused by pressing P, and can be moved forward and back with [ and ].
+ * Added optional scaling of unit sprites. Can be toggled with L.
+ * Added ability to toggle shadows from overhead hidden geometry by pressing O.
+ 
+v0.6a
+ * Graceful handling of out-dated Remotefortressreader DFhack plugin.
+ * Optimized filesize
+
+v0.6
+ * improved ramp joining at block borders. Still not fully working.
+ * Added distant terrain and clouds
+ * Fixes for normal map loading
+ * Show basic units, only ascii for now.
+
+v0.5
+ * Added support for loading user-textures
+ * Added many new landscape textures
+ * Added screen-space reflections
+
+v0.4
+ * Added multi-threading for geometry generation and map reading
+ * Fully movable camera
+ * Click the map for debug info
+
+v0.3
+ * Upgrade to unity 5
+ * Added a bunch of pretty effects.
+ * Added a movable camera. Use right click to rotate, and wheel to zoom.
+
+v0.2
+ * Added systems in place for setting tiles according to any combination of material, tiletype, ramp direction, or random variation.
+ * Added some amount of content that uses this.
+ * Added water
+ * Added lava
