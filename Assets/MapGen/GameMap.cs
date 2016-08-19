@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using UnitFlags;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 // The class responsible for talking to DF and meshing the data it gets.
@@ -23,8 +24,6 @@ public class GameMap : MonoBehaviour
     public Material transparentTerrainMaterial; // Anything with partial transparency.
     public Material waterMaterial;
     public Material magmaMaterial;
-    public Material invisibleMaterial;
-    public Material invisibleStencilMaterial;
 
     public Light magmaGlowPrefab;
     public Text genStatus;
@@ -1365,33 +1364,33 @@ public class GameMap : MonoBehaviour
         }
     }
 
-    private bool DrawSingleBlock(int xx, int yy, int zz, bool phantom, Vector3 pos)
+    private bool DrawSingleBlock(int xx, int yy, int zz, bool phantom, Vector3 pos, bool top)
     {
-        return DrawSingleBlock(xx, yy, zz, phantom, Matrix4x4.TRS(pos, Quaternion.identity, Vector3.one));
+        return DrawSingleBlock(xx, yy, zz, phantom, Matrix4x4.TRS(pos, Quaternion.identity, Vector3.one), top);
     }
 
-    private bool DrawSingleBlock(int xx, int yy, int zz, bool phantom, Matrix4x4 LocalTransform)
+    private bool DrawSingleBlock(int xx, int yy, int zz, bool phantom, Matrix4x4 LocalTransform, bool top)
     {
         bool drewBlock = false;
         if (blocks[xx, yy, zz] != null && blocks[xx, yy, zz].vertexCount > 0)
         {
-            Graphics.DrawMesh(blocks[xx, yy, zz], LocalTransform, phantom ? invisibleMaterial : basicTerrainMaterial, 0);
+            Graphics.DrawMesh(blocks[xx, yy, zz], LocalTransform, basicTerrainMaterial, 0, null, 0, null, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
             drewBlock = true;
         }
-        if (topBlocks[xx, yy, zz] != null && topBlocks[xx, yy, zz].vertexCount > 0 && zz == posZ - 1)
+        if (topBlocks[xx, yy, zz] != null && topBlocks[xx, yy, zz].vertexCount > 0 && top)
         {
-            Graphics.DrawMesh(topBlocks[xx, yy, zz], LocalTransform, phantom ? invisibleMaterial : basicTerrainMaterial, 0);
+            Graphics.DrawMesh(topBlocks[xx, yy, zz], LocalTransform, basicTerrainMaterial, 0, null, 0, null, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
             drewBlock = true;
         }
 
         if (stencilBlocks[xx, yy, zz] != null && stencilBlocks[xx, yy, zz].vertexCount > 0)
         {
-            Graphics.DrawMesh(stencilBlocks[xx, yy, zz], LocalTransform, phantom ? invisibleStencilMaterial : stencilTerrainMaterial, 0);
+            Graphics.DrawMesh(stencilBlocks[xx, yy, zz], LocalTransform, stencilTerrainMaterial, 0, null, 0, null, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
             drewBlock = true;
         }
-        if (topStencilBlocks[xx, yy, zz] != null && topStencilBlocks[xx, yy, zz].vertexCount > 0 && zz == posZ - 1)
+        if (topStencilBlocks[xx, yy, zz] != null && topStencilBlocks[xx, yy, zz].vertexCount > 0 && top)
         {
-            Graphics.DrawMesh(topStencilBlocks[xx, yy, zz], LocalTransform, phantom ? invisibleStencilMaterial : stencilTerrainMaterial, 0);
+            Graphics.DrawMesh(topStencilBlocks[xx, yy, zz], LocalTransform, stencilTerrainMaterial, 0, null, 0, null, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
             drewBlock = true;
         }
 
@@ -1400,7 +1399,7 @@ public class GameMap : MonoBehaviour
             Graphics.DrawMesh(transparentBlocks[xx, yy, zz], LocalTransform, transparentTerrainMaterial, 0);
             drewBlock = true;
         }
-        if (topTransparentBlocks[xx, yy, zz] != null && topTransparentBlocks[xx, yy, zz].vertexCount > 0 && !phantom && zz == posZ - 1)
+        if (topTransparentBlocks[xx, yy, zz] != null && topTransparentBlocks[xx, yy, zz].vertexCount > 0 && !phantom && top)
         {
             Graphics.DrawMesh(topTransparentBlocks[xx, yy, zz], LocalTransform, transparentTerrainMaterial, 0);
             drewBlock = true;
@@ -1447,7 +1446,7 @@ public class GameMap : MonoBehaviour
                     Vector3 pos = DFtoUnityCoord(xx * blockSize, yy * blockSize, zz);
                     if (drawnBlocks >= GameSettings.Instance.rendering.maxBlocksToDraw)
                         break;
-                    if (DrawSingleBlock(xx, yy, zz, false, pos))
+                    if (DrawSingleBlock(xx, yy, zz, false, pos, zz == posZ - 1))
                         drawnBlocks++;
                 }
             }
@@ -1468,7 +1467,7 @@ public class GameMap : MonoBehaviour
                             break;
                         Vector3 pos = DFtoUnityCoord(xx * blockSize, yy * blockSize, zz);
 
-                        if (DrawSingleBlock(xx, yy, zz, (!firstPerson), pos))
+                        if (DrawSingleBlock(xx, yy, zz, (!firstPerson), pos, zz == posZ || zz == zmax-1))
                             drawnBlocks++;
                     }
                 }

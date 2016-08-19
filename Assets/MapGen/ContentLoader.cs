@@ -289,7 +289,6 @@ public class ContentLoader
         gameMap.transparentTerrainMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
         gameMap.transparentTerrainMaterial.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
         gameMap.transparentTerrainMaterial.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
-        gameMap.invisibleStencilMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
 
 
         //get rid of any un-used textures left over.
