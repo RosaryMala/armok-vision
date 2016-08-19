@@ -289,7 +289,7 @@ public class RegionMaker : MonoBehaviour
                     ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef);
                     plantColor += colorDef.value;
                 }
-                float plantBlend = tile.vegetation / 100.0f;
+                float plantBlend = Mathf.Pow(tile.vegetation / 100.0f, 0.25f);
                 if (tile.plantMaterials.Count == 0)
                     plantBlend = 0;
                 else
@@ -324,7 +324,6 @@ public class RegionMaker : MonoBehaviour
                             case SiteRealizationBuildingType.castle_courtyard:
                             case SiteRealizationBuildingType.house:
                             case SiteRealizationBuildingType.temple:
-                            case SiteRealizationBuildingType.tomb:
                             case SiteRealizationBuildingType.shop_house:
                             case SiteRealizationBuildingType.warehouse:
                             case SiteRealizationBuildingType.well:
@@ -458,6 +457,24 @@ public class RegionMaker : MonoBehaviour
                                     }
                                     break;
                                 }
+                            case SiteRealizationBuildingType.tomb:
+                                {
+                                    fakeTile.material = building.material;
+                                    if (fakeTile.material.mat_type < 0)
+                                        fakeTile.material = new MatPairStruct(0, fakeTile.material.mat_index);
+                                    Color buildingColor;
+                                    ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef);
+                                    if (colorDef != null)
+                                        buildingColor = colorDef.value;
+                                    else
+                                        buildingColor = Color.grey;
+                                    min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
+                                    int height = (building.max_x - building.min_x + building.max_y - building.min_y) / 8;
+                                    max = new Vector3((building.max_x + 1) * GameMap.tileWidth, height * GameMap.tileHeight, -(building.max_y + 1) * GameMap.tileWidth);
+                                    AddPyramid(vert1 + min, vert1 + max, biome, buildingColor);
+                                    break;
+                                }
+
                             default:
                                 {
                                     min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
@@ -1285,6 +1302,40 @@ public class RegionMaker : MonoBehaviour
         triangles.Add(newIndex + 14 + 1);
         triangles.Add(newIndex + 1);
         triangles.Add(newIndex + 0);
+    }
+
+    private void AddPyramid(Vector3 min, Vector3 max, Vector2 biome, Color color)
+    {
+        int index = vertices.Count;
+
+        vertices.Add(new Vector3((min.x + max.x) / 2, max.y, (min.z + max.z) / 2));
+        vertices.Add(new Vector3(min.x, min.y, min.z));
+        vertices.Add(new Vector3(max.x, min.y, min.z));
+        vertices.Add(new Vector3(max.x, min.y, max.z));
+        vertices.Add(new Vector3(min.x, min.y, max.z));
+
+        for (int i = 0; i < 5; i++)
+        {
+            colors.Add(color);
+            uvCoords2.Add(biome);
+            uvCoords.Add(new Vector2(vertices[index + i].x, vertices[index + i].z));
+        }
+
+        triangles.Add(index + 0);
+        triangles.Add(index + 1);
+        triangles.Add(index + 2);
+
+        triangles.Add(index + 0);
+        triangles.Add(index + 2);
+        triangles.Add(index + 3);
+
+        triangles.Add(index + 0);
+        triangles.Add(index + 3);
+        triangles.Add(index + 4);
+
+        triangles.Add(index + 0);
+        triangles.Add(index + 4);
+        triangles.Add(index + 1);
     }
 
     private void AddTree(Vector3 root, float radius, float height, Color color, Vector2 biome, float rotation = 0)
