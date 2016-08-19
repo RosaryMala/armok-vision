@@ -328,7 +328,6 @@ public class RegionMaker : MonoBehaviour
                             case SiteRealizationBuildingType.warehouse:
                             case SiteRealizationBuildingType.well:
                             case SiteRealizationBuildingType.vault:
-                            case SiteRealizationBuildingType.tree_house:
                             case SiteRealizationBuildingType.hillock_house:
                             case SiteRealizationBuildingType.mead_hall:
                             case SiteRealizationBuildingType.fortress_entrance:
@@ -472,6 +471,42 @@ public class RegionMaker : MonoBehaviour
                                     int tombHeight = (building.max_x - building.min_x + building.max_y - building.min_y) / 8;
                                     max = new Vector3((building.max_x + 1) * GameMap.tileWidth, tombHeight * GameMap.tileHeight, -(building.max_y + 1) * GameMap.tileWidth);
                                     AddPyramid(vert1 + min, vert1 + max, biome, buildingColor);
+                                    break;
+                                }
+                            case SiteRealizationBuildingType.tree_house:
+                                {
+                                    var tree = building.material;
+                                    int plantIndex = tree.mat_index;
+                                    if (tree.mat_type >= 419 && tree.mat_type < 619
+                                        && DFConnection.Instance.NetPlantRawList != null
+                                        && DFConnection.Instance.NetPlantRawList.plant_raws.Count > plantIndex)
+                                        foreach (var growth in DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths)
+                                        {
+                                            int currentTicks = TimeHolder.DisplayedTime.CurrentYearTicks;
+                                            if ((growth.timing_start != -1 && growth.timing_start > currentTicks) || (growth.timing_end != -1 && growth.timing_end < currentTicks))
+                                                continue;
+                                            tree = growth.mat;
+                                            break;
+                                        }
+
+                                    fakeTile.material = tree;
+                                    Color buildingColor;
+                                    ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef);
+                                    if (colorDef != null)
+                                        buildingColor = colorDef.value;
+                                    else
+                                    {
+                                        Debug.LogError("No valid color for " + building.type);
+                                        buildingColor = Color.magenta;
+                                    }
+                                    Vector3 pos = new Vector3((building.min_x + building.max_x + 1) / 2.0f, 0, -(building.min_y + building.max_y + 1) / 2.0f) * GameMap.tileWidth;
+
+                                    float treeRadius = (building.max_x - building.min_x + building.max_y - building.min_y) / 4.0f * GameMap.tileWidth * 1.28676f;
+
+                                    if (tree.mat_type == 419) // bare tree
+                                        AddTree(vert1+pos, GameMap.tileWidth / 2, Random.Range(9.0f, 11.0f) * GameMap.tileHeight, buildingColor, biome, Random.Range(0.0f, 360.0f));
+                                    else
+                                        AddTree(vert1 + pos, treeRadius, Random.Range(9.0f, 11.0f) * GameMap.tileHeight, buildingColor, biome, Random.Range(0.0f, 360.0f));
                                     break;
                                 }
 
@@ -1311,10 +1346,21 @@ public class RegionMaker : MonoBehaviour
         vertices.Add(new Vector3((min.x + max.x) / 2, max.y, (min.z + max.z) / 2));
         vertices.Add(new Vector3(min.x, min.y, min.z));
         vertices.Add(new Vector3(max.x, min.y, min.z));
+
+        vertices.Add(new Vector3((min.x + max.x) / 2, max.y, (min.z + max.z) / 2));
+        vertices.Add(new Vector3(max.x, min.y, min.z));
+        vertices.Add(new Vector3(max.x, min.y, max.z));
+
+        vertices.Add(new Vector3((min.x + max.x) / 2, max.y, (min.z + max.z) / 2));
         vertices.Add(new Vector3(max.x, min.y, max.z));
         vertices.Add(new Vector3(min.x, min.y, max.z));
 
-        for (int i = 0; i < 5; i++)
+        vertices.Add(new Vector3((min.x + max.x) / 2, max.y, (min.z + max.z) / 2));
+        vertices.Add(new Vector3(min.x, min.y, max.z));
+        vertices.Add(new Vector3(min.x, min.y, min.z));
+
+
+        for (int i = 0; i < 12; i++)
         {
             colors.Add(color);
             uvCoords2.Add(biome);
@@ -1325,17 +1371,17 @@ public class RegionMaker : MonoBehaviour
         triangles.Add(index + 1);
         triangles.Add(index + 2);
 
-        triangles.Add(index + 0);
-        triangles.Add(index + 2);
-        triangles.Add(index + 3);
-
-        triangles.Add(index + 0);
         triangles.Add(index + 3);
         triangles.Add(index + 4);
+        triangles.Add(index + 5);
 
-        triangles.Add(index + 0);
-        triangles.Add(index + 4);
-        triangles.Add(index + 1);
+        triangles.Add(index + 6);
+        triangles.Add(index + 7);
+        triangles.Add(index + 8);
+
+        triangles.Add(index + 9);
+        triangles.Add(index + 10);
+        triangles.Add(index + 11);
     }
 
     private void AddTree(Vector3 root, float radius, float height, Color color, Vector2 biome, float rotation = 0)
