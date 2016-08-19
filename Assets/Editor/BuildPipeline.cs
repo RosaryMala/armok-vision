@@ -36,7 +36,7 @@ public class BuildFactory
                 targetString = "Win";
                 break;
             case BuildTarget.StandaloneWindows64:
-                targetString = "Win.x64";
+                targetString = "Win x64";
                 break;
             default:
                 break;
@@ -55,7 +55,7 @@ public class BuildFactory
         using (ZipFile zip = new ZipFile())
         {
             zip.AddDirectory(path);
-            zip.Save("Build/" + releaseName + "." + targetString + ".zip");
+            zip.Save("Build/" + releaseName + " " + version + " " + targetString + ".zip");
         }
     }
 
