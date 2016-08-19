@@ -237,10 +237,7 @@ public class WorldMapMaker : MonoBehaviour
         foreach (RegionMap map in regionMaps.region_maps)
         {
             DFCoord2d pos = new DFCoord2d(map.map_x, map.map_y);
-            if (DetailRegions.ContainsKey(pos))
-            {
-                continue;
-            }
+
             RegionMaker region = Instantiate(regionPrefab);
             region.CopyFromRemote(map, worldMap);
             region.name = region.worldNameEnglish;

@@ -22,3 +22,6 @@
 /Config.json
 /Map.dae
 /Map.fbx
+
+#Built releases.
+Build/
