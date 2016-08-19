@@ -469,8 +469,8 @@ public class RegionMaker : MonoBehaviour
                                     else
                                         buildingColor = Color.grey;
                                     min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
-                                    int height = (building.max_x - building.min_x + building.max_y - building.min_y) / 8;
-                                    max = new Vector3((building.max_x + 1) * GameMap.tileWidth, height * GameMap.tileHeight, -(building.max_y + 1) * GameMap.tileWidth);
+                                    int tombHeight = (building.max_x - building.min_x + building.max_y - building.min_y) / 8;
+                                    max = new Vector3((building.max_x + 1) * GameMap.tileWidth, tombHeight * GameMap.tileHeight, -(building.max_y + 1) * GameMap.tileWidth);
                                     AddPyramid(vert1 + min, vert1 + max, biome, buildingColor);
                                     break;
                                 }
