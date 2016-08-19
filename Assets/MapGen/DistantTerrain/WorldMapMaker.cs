@@ -361,7 +361,7 @@ public class WorldMapMaker : MonoBehaviour
                 Color terrainColor = colorContent.value;
 
                 Color plantColor = Color.black;
-                float vegitation = regionTiles[x, y].vegetation / 100.0f;
+                float vegitation = Mathf.Pow(regionTiles[x, y].vegetation / 100.0f, 0.25F);
 
                 foreach (var item in regionTiles[x, y].plant_materials)
                 {
