@@ -6,7 +6,7 @@ public class BuildFactory
 {
     const string releaseName = "Armok Vision";
 
-    const string version = "0.11.0";
+    const string version = "0.11.1";
 
     [MenuItem("Mytools/Build Release")]
     public static void BuildAll()
@@ -64,5 +64,6 @@ public class BuildFactory
         FileUtil.ReplaceFile("Assets/ReleaseFiles/Changelog.txt", path + "Changelog.txt");
         FileUtil.ReplaceFile("Assets/ReleaseFiles/Credits.txt", path + "Credits.txt");
         FileUtil.ReplaceFile("Assets/ReleaseFiles/Readme.txt", path + "Readme.txt");
+        FileUtil.ReplaceDirectory("Assets/ReleaseFiles/Plugins/", path + "Plugins");
     }
 }
