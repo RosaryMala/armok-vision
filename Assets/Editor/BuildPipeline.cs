@@ -61,9 +61,9 @@ public class BuildFactory
 
     static void CopyExtras(string path)
     {
-        FileUtil.ReplaceFile("Assets/ReleaseFiles/Changelog.txt", path + "Changelog.txt");
-        FileUtil.ReplaceFile("Assets/ReleaseFiles/Credits.txt", path + "Credits.txt");
-        FileUtil.ReplaceFile("Assets/ReleaseFiles/Readme.txt", path + "Readme.txt");
-        FileUtil.ReplaceDirectory("Assets/ReleaseFiles/Plugins/", path + "Plugins");
+        FileUtil.ReplaceFile("ReleaseFiles/Changelog.txt", path + "Changelog.txt");
+        FileUtil.ReplaceFile("ReleaseFiles/Credits.txt", path + "Credits.txt");
+        FileUtil.ReplaceFile("ReleaseFiles/Readme.txt", path + "Readme.txt");
+        FileUtil.ReplaceDirectory("ReleaseFiles/Plugins/", path + "Plugins");
     }
 }
