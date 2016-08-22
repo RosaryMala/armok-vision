@@ -95,6 +95,8 @@ public class GameMap : MonoBehaviour
     Mesh[,,] topStencilBlocks;  // Foliage &ct.
     Mesh[,,] topTransparentBlocks;  // Glass &ct.
     Mesh[,,,] liquidBlocks; // Water & magma. Extra dimension is a liquid type.
+    MeshCollider[,,] collisionBlocks;
+    public MeshCollider collisionTemplate;
     // Dirty flags for those meshes
     bool[,,] blockDirtyBits;
     bool[,,] blockContentBits;
@@ -664,6 +666,8 @@ public class GameMap : MonoBehaviour
         blockUpdateSchedules = new UpdateSchedule[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         liquidBlockDirtyBits = new bool[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         magmaGlow = new Light[blockSizeX * 16, blockSizeY * 16, blockSizeZ];
+        collisionBlocks = new MeshCollider[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
+
     }
 
     void addSeasonalUpdates(RemoteFortressReader.MapBlock block, int mapBlockX, int mapBlockY, int mapBlockZ)
@@ -716,6 +720,7 @@ public class GameMap : MonoBehaviour
         mapBlockY /= blockSize;
         liquidBlockDirtyBits[mapBlockX, mapBlockY, mapBlockZ] = true;
     }
+    #region Debug Data Saving
 
     void PrintFullMaterialList()
     {
@@ -859,6 +864,7 @@ public class GameMap : MonoBehaviour
             }
         }
     }
+    #endregion
 
     void DirtySeasonalBlocks()
     {
@@ -1024,6 +1030,20 @@ public class GameMap : MonoBehaviour
                 Mesh magmaMesh = liquidBlocks[block_x, block_y, block_z, MapDataStore.MAGMA_INDEX];
                 magmaMesh.Clear();
                 newMeshes.magma.CopyToMesh(magmaMesh);
+            }
+            if(newMeshes.collisionMesh != null)
+            {
+                if (collisionBlocks[block_x, block_y, block_z] == null)
+                {
+                    collisionBlocks[block_x, block_y, block_z] = Instantiate(collisionTemplate);
+                    collisionBlocks[block_x, block_y, block_z].name = string.Format("collisionBlock_{0}_{1}_{2}", block_x, block_y, block_z);
+                    collisionBlocks[block_x, block_y, block_z].transform.position = DFtoUnityCoord(block_x * blockSize, block_y * blockSize, block_z);
+                    collisionBlocks[block_x, block_y, block_z].transform.parent = this.transform;
+                }
+                Mesh collisionMesh = new Mesh();
+                collisionMesh.name = string.Format("block_collision_{0}_{1}_{2}", block_x, block_y, block_z);
+                newMeshes.collisionMesh.CopyToMesh(collisionMesh);
+                collisionBlocks[block_x, block_y, block_z].sharedMesh = collisionMesh;
             }
         }
     }

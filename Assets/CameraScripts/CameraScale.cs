@@ -12,15 +12,26 @@ public class CameraScale : MonoBehaviour
 
     GameMap gameMap;
     public Transform viewCamera;
+    Rigidbody rigidBody;
+    CapsuleCollider capsule;
 
     void Awake()
     {
         gameMap = FindObjectOfType<GameMap>();
+        rigidBody = GetComponent<Rigidbody>();
+        capsule = GetComponent<CapsuleCollider>();
     }
 
     void Update()
     {
         HandleMouseRotation();
+    }
+
+    public void Start()
+    {
+        capsule.enabled = false;
+        rigidBody.isKinematic = true;
+        rigidBody.detectCollisions = false;
     }
 
     private void HandleMouseRotation()
@@ -37,7 +48,10 @@ public class CameraScale : MonoBehaviour
                 if (gameMap != null)
                     gameMap.firstPerson = true;
                 viewCamera.transform.localPosition = Vector3.zero;
-                transform.localScale = Vector3.one * Mathf.Pow(10, zoomLevel);
+                transform.localScale = Vector3.one;
+                capsule.enabled = true;
+                rigidBody.isKinematic = false;
+                rigidBody.detectCollisions = true;
             }
             else
             {
@@ -45,6 +59,9 @@ public class CameraScale : MonoBehaviour
                 transform.localScale = Vector3.one * Mathf.Pow(10, zoomLevel);
                 if (gameMap != null)
                     gameMap.firstPerson = false;
+                capsule.enabled = false;
+                rigidBody.isKinematic = true;
+                rigidBody.detectCollisions = false;
             }
         }
 
