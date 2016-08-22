@@ -434,6 +434,103 @@ public class MapDataStore {
         return x * SliceSize.y * SliceSize.z + y * SliceSize.z + z;
     }
 
+    public enum CollisionState
+    {
+        None,
+        Stairs,
+        Water,
+        Solid
+    }
+
+    public CollisionState CheckCollision(Vector3 pos)
+    {
+        var dfPos = GameMap.UnityToDFCoord(pos);
+        var localPos = pos - GameMap.DFtoUnityCoord(dfPos);
+        var tile = this[dfPos];
+        if (tile == null)
+            return CollisionState.None;
+        var shape = tile.shape;
+
+        var state = CollisionState.None;
+
+        switch (shape)
+        {
+            case TiletypeShape.NO_SHAPE:
+            case TiletypeShape.EMPTY:
+            case TiletypeShape.ENDLESS_PIT:
+            case TiletypeShape.TWIG:
+                state = CollisionState.None;
+                break;
+            case TiletypeShape.FLOOR:
+            case TiletypeShape.BOULDER:
+            case TiletypeShape.PEBBLES:
+            case TiletypeShape.BROOK_TOP:
+            case TiletypeShape.SAPLING:
+            case TiletypeShape.SHRUB:
+            case TiletypeShape.BRANCH:
+            case TiletypeShape.TRUNK_BRANCH:
+                if (localPos.y < 0.5f)
+                    state = CollisionState.Solid;
+                else
+                    state = CollisionState.None;
+                break;
+            case TiletypeShape.WALL:
+            case TiletypeShape.FORTIFICATION:
+            case TiletypeShape.BROOK_BED:
+            case TiletypeShape.TREE_SHAPE:
+                state = CollisionState.Solid;
+                break;
+            case TiletypeShape.STAIR_UP:
+                if (localPos.y < 0.5f)
+                    state = CollisionState.Solid;
+                else
+                    state = CollisionState.Stairs;
+                break;
+            case TiletypeShape.STAIR_DOWN:
+                if (localPos.y < 0.5f)
+                    state = CollisionState.Stairs;
+                else
+                    state = CollisionState.None;
+                break;
+            case TiletypeShape.STAIR_UPDOWN:
+                state = CollisionState.Stairs;
+                break;
+            case TiletypeShape.RAMP:
+                DFCoord2d dir = SnapDirection(localPos);
+
+                break;
+            case TiletypeShape.RAMP_TOP:
+                break;
+            default:
+                break;
+        }
+
+        Debug.Log(localPos + ", " + shape + ", " + state);
+
+        return state;
+    }
+
+    DFCoord2d SnapDirection(Vector2 dir)
+    {
+        DFCoord2d outDir = new DFCoord2d(0, 0);
+        if(Mathf.Abs(dir.x) > Math.Abs(dir.y))
+        {
+            //x is the dominant direction
+            if (dir.x > 0)
+                return new DFCoord2d(1, 0);
+            else
+                return new DFCoord2d(-1, 0);
+        }
+        else
+        {
+            //y is the dominant dir.
+            if (dir.y <= 0)
+                return new DFCoord2d(0, 1);
+            else
+                return new DFCoord2d(0, -1);
+        }
+    }
+
     // The data for a single tile of the map.
     // Nested struct because it depends heavily on its container.
     public class Tile
