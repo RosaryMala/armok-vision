@@ -237,8 +237,14 @@ public class WorldMapMaker : MonoBehaviour
         foreach (RegionMap map in regionMaps.region_maps)
         {
             DFCoord2d pos = new DFCoord2d(map.map_x, map.map_y);
-
-            RegionMaker region = Instantiate(regionPrefab);
+            RegionMaker region;
+            if (!DetailRegions.ContainsKey(pos))
+            {
+                region = Instantiate(regionPrefab);
+                DetailRegions[pos] = region;
+            }
+            else
+                region = DetailRegions[pos];
             region.CopyFromRemote(map, worldMap);
             region.name = region.worldNameEnglish;
             region.transform.parent = transform;
@@ -358,7 +364,8 @@ public class WorldMapMaker : MonoBehaviour
                 Color terrainColor = colorContent.value;
 
                 Color plantColor = Color.black;
-                float vegitation = Mathf.Pow(regionTiles[x, y].vegetation / 100.0f, 0.25F);
+                float grassPercent = Mathf.Pow(regionTiles[x, y].vegetation / 100.0f, 0.25F);
+                float treePercent = Mathf.Pow(regionTiles[x, y].vegetation / 100.0f, 0.5F);
 
                 foreach (var item in regionTiles[x, y].plant_materials)
                 {
@@ -367,13 +374,44 @@ public class WorldMapMaker : MonoBehaviour
                     plantColor += colorContent.value;
                 }
                 if (regionTiles[x, y].plant_materials.Count == 0)
-                    vegitation = 0;
+                    grassPercent = 0;
                 else
                     plantColor /= regionTiles[x, y].plant_materials.Count;
 
+                Color treeColor = Color.black;
+                int treeCount = 0;
+                foreach (var tree in regionTiles[x,y].tree_materials)
+                {
+                    int plantIndex = tree.mat_index;
+                    if (tree.mat_type != 419
+                        || DFConnection.Instance.NetPlantRawList == null
+                        || DFConnection.Instance.NetPlantRawList.plant_raws.Count <= plantIndex)
+                        continue;
+                    var treeMat = tree;
+                    foreach (var growth in DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths)
+                    {
+                        int currentTicks = TimeHolder.DisplayedTime.CurrentYearTicks;
+                        if ((growth.timing_start != -1 && growth.timing_start > currentTicks) || (growth.timing_end != -1 && growth.timing_end < currentTicks))
+                            continue;
+                        treeMat = growth.mat;
+                        break;
+                    }
+                    fakeTile.material = treeMat;
+                    if (ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorContent))
+                    {
+                        treeColor += colorContent.value;
+                        treeCount++;
+                    }
+                }
+                if (treeCount == 0)
+                    treePercent = 0;
+                else
+                    treeColor /= treeCount;
 
 
-                    terrainColor = Color.Lerp(terrainColor, plantColor, vegitation);
+
+                terrainColor = Color.Lerp(terrainColor, plantColor, grassPercent);
+                terrainColor = Color.Lerp(terrainColor, treeColor, treePercent);
 
                 Vector2 biome = new Vector2(regionTiles[x, y].rainfall, 100 - regionTiles[x, y].drainage) / 100;
 

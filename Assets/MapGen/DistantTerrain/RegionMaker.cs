@@ -521,9 +521,11 @@ public class RegionMaker : MonoBehaviour
 
                     }
 
+                    Random.InitState(new DFCoord2d(x+regionOrigin.x, y+regionOrigin.y).GetHashCode());
+
                     if (tile.buildings.Count == 0 && tile.treeMaterials.Count > 0)
                     {
-                        float treeRadius = 4.5f * GameMap.tileWidth;
+                        float treeRadius = 4f * GameMap.tileWidth;
                         var treeCoords = UniformPoissonDiskSampler.SampleRectangle(new Vector2(vert1.x + treeRadius, vert1.z - 48 * GameMap.tileWidth + treeRadius), new Vector2(vert1.x + 48 * GameMap.tileWidth - treeRadius, vert1.z - treeRadius), (Mathf.Lerp(48.0f, 8.0f, Mathf.Pow(tile.vegetation / 100.0f, 0.5f))) * GameMap.tileWidth);
 
                         foreach (var coord in treeCoords)

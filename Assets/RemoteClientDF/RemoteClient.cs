@@ -159,7 +159,7 @@ namespace DFHack
         }
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return (((x * 499) + y) * 613) + z;
         }
         public override bool Equals(object obj)
         {
@@ -226,6 +226,11 @@ namespace DFHack
         public override string ToString()
         {
             return string.Format("DFCoord({0},{1})", x, y);
+        }
+
+        public override int GetHashCode()
+        {
+            return (x * 499) + y;
         }
 
     }
