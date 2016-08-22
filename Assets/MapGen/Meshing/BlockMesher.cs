@@ -3,7 +3,6 @@ using RemoteFortressReader;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
-using System;
 
 // Two implementations: single and multithreaded.
 // All of the actual meshing code is exactly the same;
@@ -31,6 +30,7 @@ abstract class BlockMesher {
         public CPUMesh topTransparentTiles;
         public CPUMesh water;
         public CPUMesh magma;
+        public CPUMesh collisionMesh;
     }
 
     protected struct Request {
@@ -50,13 +50,16 @@ abstract class BlockMesher {
             stencilMeshBuffer =
                 new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize * ((int)MeshLayer.StaticTransparent - (int)MeshLayer.StaticCutout)];
             transparentMeshBuffer =
-                new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize * ((int)MeshLayer.Count - (int)MeshLayer.StaticTransparent)];
+                new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize * ((int)MeshLayer.Collision - (int)MeshLayer.StaticTransparent)];
+            collisionMeshBuffer =
+                new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize];
             heights = new float[2, 2];
         }
 
         public MeshCombineUtility.MeshInstance[] meshBuffer { get; private set; }
         public MeshCombineUtility.MeshInstance[] stencilMeshBuffer { get; private set; }
         public MeshCombineUtility.MeshInstance[] transparentMeshBuffer { get; private set; }
+        public MeshCombineUtility.MeshInstance[] collisionMeshBuffer { get; private set; }
         public float[,] heights { get; private set; }
     }
 
@@ -187,7 +190,7 @@ abstract class BlockMesher {
         }
         if (request.tiles)
         {
-            GenerateTiles(request.data, out result.tiles, out result.stencilTiles, out result.transparentTiles, out result.topTiles, out result.topStencilTiles, out result.topTransparentTiles, temp);
+            GenerateTiles(request.data, out result.tiles, out result.stencilTiles, out result.transparentTiles, out result.topTiles, out result.topStencilTiles, out result.topTransparentTiles, out result.collisionMesh, temp);
         }
         return result;
     }
@@ -313,7 +316,7 @@ abstract class BlockMesher {
         }
     }
 
-    bool GenerateTiles(MapDataStore data, out CPUMesh tiles, out CPUMesh stencilTiles, out CPUMesh transparentTiles, out CPUMesh topTiles, out CPUMesh topStencilTiles, out CPUMesh topTransparentTiles, TempBuffers temp)
+    bool GenerateTiles(MapDataStore data, out CPUMesh tiles, out CPUMesh stencilTiles, out CPUMesh transparentTiles, out CPUMesh topTiles, out CPUMesh topStencilTiles, out CPUMesh topTransparentTiles, out CPUMesh collisionTiles, TempBuffers temp)
     {
         int block_x = data.SliceOrigin.x / GameMap.blockSize;
         int block_y = data.SliceOrigin.y / GameMap.blockSize;
@@ -321,6 +324,7 @@ abstract class BlockMesher {
         int bufferIndex = 0;
         int stencilBufferIndex = 0;
         int transparentBufferIndex = 0;
+        int collisionIndex = 0;
         for (int xx = (block_x * GameMap.blockSize); xx < (block_x + 1) * GameMap.blockSize; xx++)
             for (int yy = (block_y * GameMap.blockSize); yy < (block_y + 1) * GameMap.blockSize; yy++)
             {
@@ -339,10 +343,15 @@ abstract class BlockMesher {
                         FillMeshBuffer(out temp.stencilMeshBuffer[stencilBufferIndex], (MeshLayer)i, data[xx, yy, block_z], GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize), yy - (block_y * GameMap.blockSize), -GameMap.MapZOffset));
                         stencilBufferIndex++;
                     }
-                    else
+                    else if (i < (int)MeshLayer.Collision)
                     {
                         FillMeshBuffer(out temp.transparentMeshBuffer[transparentBufferIndex], (MeshLayer)i, data[xx, yy, block_z], GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize), yy - (block_y * GameMap.blockSize), -GameMap.MapZOffset));
                         transparentBufferIndex++;
+                    }
+                    else
+                    {
+                        FillMeshBuffer(out temp.collisionMeshBuffer[collisionIndex], (MeshLayer)i, data[xx, yy, block_z], GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize), yy - (block_y * GameMap.blockSize), -GameMap.MapZOffset));
+                        collisionIndex++;
                     }
                 }
             }
@@ -353,6 +362,7 @@ abstract class BlockMesher {
         topTransparentTiles = MeshCombineUtility.ColorCombine(temp.transparentMeshBuffer, out dontCare, true);
         topTiles = MeshCombineUtility.ColorCombine(temp.meshBuffer, out dontCare, true);
         tiles = MeshCombineUtility.ColorCombine(temp.meshBuffer, out success, false);
+        collisionTiles = MeshCombineUtility.ColorCombine(temp.collisionMeshBuffer, out dontCare, false);
 
         return success;
     }
@@ -367,7 +377,27 @@ abstract class BlockMesher {
     {
         buffer = new MeshCombineUtility.MeshInstance();
         MeshContent meshContent = null;
-        if(ContentLoader.Instance.DesignationMeshConfiguration.GetValue(tile, layer, out meshContent))
+        if(layer == MeshLayer.Collision)
+        {
+            if (!ContentLoader.Instance.CollisionMeshConfiguration.GetValue(tile, layer, out meshContent))
+            {
+                buffer.meshData = null;
+                return;
+            }
+            if (meshContent.MeshData.ContainsKey(MeshLayer.Collision))
+                buffer.meshData = meshContent.MeshData[MeshLayer.Collision];
+            else if (meshContent.MeshData.ContainsKey(MeshLayer.StaticMaterial))
+                buffer.meshData = meshContent.MeshData[MeshLayer.StaticMaterial];
+            else
+            {
+                buffer.meshData = null;
+                return;
+            }
+            buffer.transform = Matrix4x4.TRS(pos, meshContent.GetRotation(tile), Vector3.one);
+            buffer.hiddenFaces = CalculateHiddenFaces(tile, meshContent.Rotation);
+            return;
+        }
+        if (ContentLoader.Instance.DesignationMeshConfiguration.GetValue(tile, layer, out meshContent))
         {
             if(!meshContent.MeshData.ContainsKey(layer))
             {

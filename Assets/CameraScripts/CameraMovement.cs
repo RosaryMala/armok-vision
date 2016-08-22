@@ -67,5 +67,7 @@ public class CameraMovement : MonoBehaviour
             if (gameMap != null)
                 gameMap.UpdateCenter(transform.position);
         }
+        if(gameMap!= null && gameMap.firstPerson)
+            gameMap.UpdateCenter(transform.position);
     }
 }
