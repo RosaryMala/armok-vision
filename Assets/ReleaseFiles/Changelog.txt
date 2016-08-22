@@ -1,3 +1,8 @@
+v 0.11.1
+ * Fixed a bug where the outside landscape trees would be different every time.
+ * Added tree color to the very very far terrain.
+ * Fixed scene reflections not respecting time of day.
+
 v 0.11.0
  * Added new mason's workshop model
  * Added many temporary workshop models made fron chunky voxels.
