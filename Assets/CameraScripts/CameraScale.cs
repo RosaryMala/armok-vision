@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System;
 using UnityEngine.VR;
+using UnityStandardAssets.Characters.FirstPerson;
 
 public class CameraScale : MonoBehaviour
 {
@@ -12,26 +11,52 @@ public class CameraScale : MonoBehaviour
 
     GameMap gameMap;
     public Transform viewCamera;
-    Rigidbody rigidBody;
-    CapsuleCollider capsule;
+    new Camera camera;
+    CharacterController charController;
+    FirstPersonController fpsController;
+    CameraRotate cameraRotate;
+    CameraMovement cameraMovement;
+    CameraRotateVertical cameraRotateVertical;
+
+    void SetFirstPerson(bool value)
+    {
+        charController.enabled = value;
+        fpsController.enabled = value;
+        cameraRotate.enabled = !value;
+        cameraMovement.enabled = !value;
+        cameraRotateVertical.enabled = !value;
+        if (value)
+            cameraRotateVertical.transform.localRotation = Quaternion.identity;
+        else
+        {
+            camera.transform.localRotation = Quaternion.identity;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+    }
 
     void Awake()
     {
         gameMap = FindObjectOfType<GameMap>();
-        rigidBody = GetComponent<Rigidbody>();
-        capsule = GetComponent<CapsuleCollider>();
+        charController = GetComponent<CharacterController>();
+        fpsController = GetComponent<FirstPersonController>();
+        cameraRotate = GetComponent<CameraRotate>();
+        cameraMovement = GetComponent<CameraMovement>();
+        cameraRotateVertical = GetComponentInChildren<CameraRotateVertical>();
+        camera = Camera.main;
     }
 
     void Update()
     {
         HandleMouseRotation();
+        if (gameMap != null && gameMap.firstPerson)
+            gameMap.UpdateCenter(transform.position);
+
     }
 
     public void Start()
     {
-        capsule.enabled = false;
-        rigidBody.isKinematic = true;
-        rigidBody.detectCollisions = false;
+        SetFirstPerson(false);
     }
 
     private void HandleMouseRotation()
@@ -49,9 +74,7 @@ public class CameraScale : MonoBehaviour
                     gameMap.firstPerson = true;
                 viewCamera.transform.localPosition = Vector3.zero;
                 transform.localScale = Vector3.one;
-                capsule.enabled = true;
-                rigidBody.isKinematic = false;
-                rigidBody.detectCollisions = true;
+                SetFirstPerson(true);
             }
             else
             {
@@ -59,9 +82,7 @@ public class CameraScale : MonoBehaviour
                 transform.localScale = Vector3.one * Mathf.Pow(10, zoomLevel);
                 if (gameMap != null)
                     gameMap.firstPerson = false;
-                capsule.enabled = false;
-                rigidBody.isKinematic = true;
-                rigidBody.detectCollisions = false;
+                SetFirstPerson(false);
             }
         }
 

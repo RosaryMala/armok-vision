@@ -9,6 +9,7 @@
         <tiletype token="SHRUB:*:*:*:*" />
         <tiletype token="BROOK_BED:*:*:*:*" />
         <tiletype token="TRUNK_BRANCH:*:*:*:*" />
+        <tiletype token="STAIR_UP:*:*:*:*" />
     </collisionMesh>
     <collisionMesh file = "WALL.obj">
         <tiletype token="WALL:*:*:*:*" />
@@ -26,10 +27,6 @@
         <tiletype token="STAIR_UPDOWN:*:*:*:*" />
     </collisionMesh>
 -->
-    <!--<collisionMesh file = "Grass Big.obj">
-        <tiletype token="FLOOR:*:GRASS_LIGHT:*:*" />
-        <tiletype token="FLOOR:*:GRASS_DARK:*:*" />
-    </collisionMesh>-->
     <collisionMesh file = "Ramps/RAMP_1.obj">
         <tiletype token="RAMP:*:*:*:*" />
         <subObject file ="Ramps/RAMP_1.obj">
