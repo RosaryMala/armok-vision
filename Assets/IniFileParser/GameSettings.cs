@@ -15,8 +15,8 @@ public class GameSettings : MonoBehaviour
     [Serializable]
     public class Meshing
     {
-        public int meshingThreads = 2;
-        public int queueLimit = 4;
+        public int meshingThreads = 4;
+        public int queueLimit = 8;
     }
 
     [Serializable]

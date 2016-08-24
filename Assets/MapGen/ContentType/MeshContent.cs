@@ -41,6 +41,7 @@ public enum MeshLayer
     NoMaterialTransparent,
     NoMaterialBuildingTransparent,
     Collision,
+    BuildingCollision,
     Count
 }
 

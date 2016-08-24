@@ -6,7 +6,7 @@ public class BuildFactory
 {
     const string releaseName = "Armok Vision";
 
-    const string version = "0.11.1";
+    const string version = "0.11.2";
 
     [MenuItem("Mytools/Build Release")]
     public static void BuildAll()
