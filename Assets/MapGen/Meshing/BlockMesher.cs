@@ -52,7 +52,7 @@ abstract class BlockMesher {
             transparentMeshBuffer =
                 new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize * ((int)MeshLayer.Collision - (int)MeshLayer.StaticTransparent)];
             collisionMeshBuffer =
-                new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize];
+                new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize * ((int)MeshLayer.Count - (int)MeshLayer.Collision)];
             heights = new float[2, 2];
         }
 
@@ -377,7 +377,7 @@ abstract class BlockMesher {
     {
         buffer = new MeshCombineUtility.MeshInstance();
         MeshContent meshContent = null;
-        if(layer == MeshLayer.Collision)
+        if (layer == MeshLayer.Collision)
         {
             if (!ContentLoader.Instance.CollisionMeshConfiguration.GetValue(tile, layer, out meshContent))
             {
@@ -388,6 +388,30 @@ abstract class BlockMesher {
                 buffer.meshData = meshContent.MeshData[MeshLayer.Collision];
             else if (meshContent.MeshData.ContainsKey(MeshLayer.StaticMaterial))
                 buffer.meshData = meshContent.MeshData[MeshLayer.StaticMaterial];
+            else
+            {
+                buffer.meshData = null;
+                return;
+            }
+            buffer.transform = Matrix4x4.TRS(pos, meshContent.GetRotation(tile), Vector3.one);
+            buffer.hiddenFaces = CalculateHiddenFaces(tile, meshContent.Rotation);
+            return;
+        }
+        if (layer == MeshLayer.BuildingCollision)
+        {
+            if (tile.buildingType == default(BuildingStruct) || !ContentLoader.Instance.BuildingCollisionMeshConfiguration.GetValue(tile, layer, out meshContent))
+            {
+                buffer.meshData = null;
+                return;
+            }
+            if (meshContent.MeshData.ContainsKey(MeshLayer.Collision))
+                buffer.meshData = meshContent.MeshData[MeshLayer.Collision];
+            else if (meshContent.MeshData.ContainsKey(MeshLayer.BuildingMaterial))
+                buffer.meshData = meshContent.MeshData[MeshLayer.BuildingMaterial];
+            else if (meshContent.MeshData.ContainsKey(MeshLayer.BuildingMaterialCutout))
+                buffer.meshData = meshContent.MeshData[MeshLayer.BuildingMaterialCutout];
+            else if (meshContent.MeshData.ContainsKey(MeshLayer.BuildingMaterialTransparent))
+                buffer.meshData = meshContent.MeshData[MeshLayer.BuildingMaterialTransparent];
             else
             {
                 buffer.meshData = null;

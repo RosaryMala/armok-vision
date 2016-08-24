@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<buildingCollisionMeshes>
+    <buildingCollisionMesh file="Statue.obj">
+        <buildingType token="Statue"/>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="Window.obj">
+        <buildingType token="WindowGlass"/>
+        <buildingType token="WindowGem"/>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="Bridge.obj">
+        <buildingType token="Bridge"/>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="Support.obj">
+        <buildingType token="Support"/>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="ScrewPump"/>
+        <subObject file="WorkshopCounter.obj"
+                   rotation="BuildingDirection">
+            <buildingPosition x="0"
+                              y="1"/>
+        </subObject>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="Workshop_MetalsmithsForge"/>
+        <subObject file="WorkshopCounter.obj">
+            <buildingPosition x="1"
+                              y="0"/>
+            <buildingPosition x="1"
+                              y="2"/>
+        </subObject>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="Furnace"/>
+        <subObject file="WorkshopCounter.obj">
+            <buildingPosition x="1"
+                              y="0"/>
+        </subObject>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="Workshop_Carpenters"/>
+        <subObject file="WorkshopCounter.obj">
+            <buildingPosition x="0"
+                              y="1"/>
+            <buildingPosition x="0"
+                              y="2"/>
+            <buildingPosition x="2"
+                              y="2"/>
+        </subObject>
+    </buildingCollisionMesh>
+
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="Workshop_Farmers"/>
+        <subObject file="WorkshopCounter.obj">
+            <buildingPosition x="0"
+                              y="2"/>
+            <buildingPosition x="1"
+                              y="0"/>
+        </subObject>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="Workshop_Masons"/>
+        <subObject file="WorkshopCounter.obj">
+            <buildingPosition x="2"
+                              y="0"/>
+            <buildingPosition x="0"
+                              y="1"/>
+            <buildingPosition x="2"
+                              y="1"/>
+        </subObject>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="Workshop_Craftsdwarfs"/>
+        <subObject file="WorkshopCounter.obj">
+            <buildingPosition x="2"
+                              y="0"/>
+            <buildingPosition x="0"
+                              y="1"/>
+            <buildingPosition x="0"
+                              y="2"/>
+            <buildingPosition x="1"
+                              y="2"/>
+        </subObject>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="Workshop_Jewelers"/>
+        <subObject file="WorkshopCounter.obj">
+            <buildingPosition x="2"
+                              y="0"/>
+            <buildingPosition x="2"
+                              y="1"/>
+            <buildingPosition x="2"
+                              y="2"/>
+        </subObject>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="Workshop_MetalsmithsForge"/>
+        <subObject file="WorkshopCounter.obj">
+            <buildingPosition x="1"
+                              y="0"/>
+            <buildingPosition x="1"
+                              y="2"/>
+        </subObject>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="Workshop_MagmaForge"/>
+        <subObject file="WorkshopCounter.obj">
+            <buildingPosition x="1"
+                              y="0"/>
+            <buildingPosition x="1"
+                              y="2"/>
+        </subObject>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="Workshop_Bowyers"/>
+        <subObject file="WorkshopCounter.obj">
+            <buildingPosition x="0"
+                              y="0"/>
+            <buildingPosition x="0"
+                              y="1"/>
+            <buildingPosition x="0"
+                              y="2"/>
+        </subObject>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="Workshop_Mechanics"/>
+        <subObject file="WorkshopCounter.obj">
+            <buildingPosition x="2"
+                              y="1"/>
+        </subObject>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="Workshop_Siege"/>
+        <subObject file="WorkshopCounter.obj">
+            <buildingPosition x="1"
+                              y="1"/>
+            <buildingPosition x="2"
+                              y="1"/>
+            <buildingPosition x="3"
+                              y="1"/>
+            <buildingPosition x="1"
+                              y="3"/>
+            <buildingPosition x="2"
+                              y="3"/>
+            <buildingPosition x="3"
+                              y="3"/>
+        </subObject>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="Workshop_Butchers"/>
+        <subObject file="WorkshopCounter.obj">
+            <buildingPosition x="2"
+                              y="0"/>
+            <buildingPosition x="2"
+                              y="1"/>
+            <buildingPosition x="2"
+                              y="2"/>
+        </subObject>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="Workshop_Leatherworks"/>
+        <subObject file="WorkshopCounter.obj">
+            <buildingPosition x="0"
+                              y="1"/>
+            <buildingPosition x="2"
+                              y="1"/>
+            <buildingPosition x="3"
+                              y="0"/>
+        </subObject>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="Workshop_Tanners"/>
+        <subObject file="WorkshopCounter.obj">
+            <buildingPosition x="0"
+                              y="0"/>
+            <buildingPosition x="0"
+                              y="2"/>
+            <buildingPosition x="2"
+                              y="1"/>
+        </subObject>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="Workshop_Clothiers"/>
+        <subObject file="WorkshopCounter.obj">
+            <buildingPosition x="0"
+                              y="0"/>
+            <buildingPosition x="1"
+                              y="2"/>
+        </subObject>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="Workshop_Fishery"/>
+        <subObject file="WorkshopCounter.obj">
+            <buildingPosition x="0"
+                              y="0"/>
+            <buildingPosition x="1"
+                              y="0"/>
+            <buildingPosition x="1"
+                              y="2"/>
+        </subObject>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="Workshop_Still"/>
+        <subObject file="WorkshopCounter.obj">
+            <buildingPosition x="0"
+                              y="0"/>
+        </subObject>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="Workshop_Loom"/>
+        <subObject file="WorkshopCounter.obj">
+            <buildingPosition x="0"
+                              y="0"/>
+            <buildingPosition x="2"
+                              y="0"/>
+        </subObject>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="Workshop_Kitchen"/>
+        <subObject file="WorkshopCounter.obj">
+            <buildingPosition x="1"
+                              y="0"/>
+            <buildingPosition x="2"
+                              y="0"/>
+            <buildingPosition x="2"
+                              y="1"/>
+        </subObject>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="Workshop_Ashery"/>
+        <subObject file="WorkshopCounter.obj">
+            <buildingPosition x="1"
+                              y="0"/>
+            <buildingPosition x="0"
+                              y="2"/>
+        </subObject>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="Workshop_Dyers"/>
+        <subObject file="WorkshopCounter.obj">
+            <buildingPosition x="1"
+                              y="0"/>
+            <buildingPosition x="0"
+                              y="2"/>
+            <buildingPosition x="2"
+                              y="2"/>
+        </subObject>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="Workshop_Millstone"/>
+    </buildingCollisionMesh>
+    <buildingCollisionMesh file="NONE">
+        <buildingType token="SOAP_MAKER"/>
+        <subObject file="WorkshopCounter.obj">
+            <buildingPosition x="2"
+                              y="0"/>
+            <buildingPosition x="2"
+                              y="1"/>
+        </subObject>
+    </buildingCollisionMesh>
+</buildingCollisionMeshes>

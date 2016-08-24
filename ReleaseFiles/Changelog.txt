@@ -1,3 +1,6 @@
+v 0.11.2
+ * Made first person mode follow physics rules, turning the user into a visitor of the fortress.
+
 v 0.11.1
  * Fixed a bug where the outside landscape trees would be different every time.
  * Added tree color to the very very far terrain.

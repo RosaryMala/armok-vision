@@ -133,6 +133,7 @@ public class ContentLoader
     public CreatureConfiguration<MeshContent> CreatureMeshConfiguration { get; private set; }
     public TileConfiguration<MeshContent> DesignationMeshConfiguration { get; private set; }
     public TileConfiguration<MeshContent> CollisionMeshConfiguration { get; private set; }
+    public TileConfiguration<MeshContent> BuildingCollisionMeshConfiguration { get; private set; }
 
     public ContentLoader()
     {
@@ -270,7 +271,11 @@ public class ContentLoader
                         CollisionMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "collisionMesh");
                     CollisionMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage, specialTextureStorage));
                     break;
-
+                case "buildingCollisionMeshes":
+                    if (BuildingCollisionMeshConfiguration == null)
+                        BuildingCollisionMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "buildingCollisionMesh");
+                    BuildingCollisionMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage, specialTextureStorage));
+                    break;
                 default:
                     break;
             }
