@@ -6,7 +6,7 @@ public class BuildFactory
 {
     const string releaseName = "Armok Vision";
 
-    const string version = "0.11.2";
+    const string version = "0.11.3";
 
     [MenuItem("Mytools/Build Release")]
     public static void BuildAll()
@@ -42,13 +42,13 @@ public class BuildFactory
                 break;
         }
 
-        string path = "Build/" + targetString + "/";
+        string path = "Build/" + version + "/" + targetString + "/";
 
         if (target == BuildTarget.StandaloneWindows || target == BuildTarget.StandaloneWindows64)
             ext = ".exe";
 
         string[] levels = new string[] { "Assets/Start.unity" };
-
+        EditorUserBuildSettings.SetPlatformSettings("Standalone", "CopyPDBFiles", "false");
         Debug.Log(BuildPipeline.BuildPlayer(levels, path + releaseName + ext, target, BuildOptions.None));
         CopyExtras(path);
 

@@ -35,6 +35,7 @@ public class GameSettings : MonoBehaviour
         public int vSyncCount = 0;
         public int targetFrameRate = 60;
         public bool showHiddenTiles = false;
+        public bool fog = true;
     }
     [Serializable]
     public class CameraSettings

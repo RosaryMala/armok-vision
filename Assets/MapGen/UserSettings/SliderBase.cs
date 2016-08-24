@@ -9,6 +9,7 @@ namespace UserSettings
     {
         protected Slider slider;
         protected Text valueLabel;
+        protected Camera cam;
         public int Value
         {
             get
@@ -24,6 +25,7 @@ namespace UserSettings
             slider = GetComponent<Slider>();
             valueLabel = transform.FindChild("Value").GetComponent<Text>();
             gameMap = FindObjectOfType<GameMap>();
+            cam = Camera.main;
         }
 
         // Start is called just before any of the Update methods is called the first time
