@@ -14,6 +14,11 @@ namespace UserSettings
         {
             GameSettings.Instance.rendering.drawClouds = Convert.ToBoolean(value);
             valueLabel.text = GameSettings.Instance.rendering.drawClouds.ToString();
+            var clouds = FindObjectsOfType<CloudMaker>();
+            foreach (var cloud in clouds)
+            {
+                cloud.gameObject.SetActive(GameSettings.Instance.rendering.drawClouds);
+            }
         }
     }
 }
