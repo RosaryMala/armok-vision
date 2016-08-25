@@ -1,3 +1,8 @@
+v 0.11.3
+ * More improvements to the automated build process.
+ * Allow the user to instantly turn off distant terrain and clouds, but enabling them stil requires a restart.
+ * Include a manifest.json for pylnp.
+
 v 0.11.2
  * Made first person mode follow physics rules, turning the user into a visitor of the fortress.
 
