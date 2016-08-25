@@ -1,13 +1,11 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using Ionic.Zip;
+using Newtonsoft.Json;
+using System.IO;
 
 public class BuildFactory
 {
-    const string releaseName = "Armok Vision";
-
-    const string version = "0.11.3";
-
     [MenuItem("Mytools/Build Release")]
     public static void BuildAll()
     {
@@ -19,43 +17,51 @@ public class BuildFactory
 
     static void BuildRelease(BuildTarget target)
     {
+        BuildSettings buildSettings = Resources.Load("Build Settings", typeof(BuildSettings)) as BuildSettings;
 
-        string ext = "";
+        if(buildSettings == null)
+        {
+            Debug.LogError("Can't find build settings");
+            return;
+        }
 
         string targetString = "";
+        string releaseName = "";
 
         switch (target)
         {
             case BuildTarget.StandaloneOSXUniversal:
+                releaseName = buildSettings.osx_exe;
                 targetString = "Mac";
                 break;
             case BuildTarget.StandaloneLinuxUniversal:
+                releaseName = buildSettings.linux_exe;
                 targetString = "Linux";
                 break;
             case BuildTarget.StandaloneWindows:
+                releaseName = buildSettings.win_exe;
                 targetString = "Win";
                 break;
             case BuildTarget.StandaloneWindows64:
+                releaseName = buildSettings.win_exe;
                 targetString = "Win x64";
                 break;
             default:
                 break;
         }
 
-        string path = "Build/" + version + "/" + targetString + "/";
-
-        if (target == BuildTarget.StandaloneWindows || target == BuildTarget.StandaloneWindows64)
-            ext = ".exe";
+        string path = "Build/" + buildSettings.content_version + "/" + targetString + "/";
 
         string[] levels = new string[] { "Assets/Start.unity" };
         EditorUserBuildSettings.SetPlatformSettings("Standalone", "CopyPDBFiles", "false");
-        Debug.Log(BuildPipeline.BuildPlayer(levels, path + releaseName + ext, target, BuildOptions.None));
+        Debug.Log(BuildPipeline.BuildPlayer(levels, path + releaseName, target, BuildOptions.None));
         CopyExtras(path);
+        File.WriteAllText(path + "manifest.json", JsonConvert.SerializeObject(buildSettings, Formatting.Indented));
 
         using (ZipFile zip = new ZipFile())
         {
             zip.AddDirectory(path);
-            zip.Save("Build/" + releaseName + " " + version + " " + targetString + ".zip");
+            zip.Save("Build/" + releaseName + " " + buildSettings.content_version + " " + targetString + ".zip");
         }
     }
 
