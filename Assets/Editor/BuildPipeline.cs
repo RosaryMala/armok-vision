@@ -9,10 +9,10 @@ public class BuildFactory
     [MenuItem("Mytools/Build Release")]
     public static void BuildAll()
     {
-        BuildRelease(BuildTarget.StandaloneWindows);
-        BuildRelease(BuildTarget.StandaloneWindows64);
         BuildRelease(BuildTarget.StandaloneOSXUniversal);
         BuildRelease(BuildTarget.StandaloneLinuxUniversal);
+        BuildRelease(BuildTarget.StandaloneWindows);
+        BuildRelease(BuildTarget.StandaloneWindows64);
     }
 
     static void BuildRelease(BuildTarget target)
@@ -61,7 +61,7 @@ public class BuildFactory
         using (ZipFile zip = new ZipFile())
         {
             zip.AddDirectory(path);
-            zip.Save("Build/" + releaseName + " " + buildSettings.content_version + " " + targetString + ".zip");
+            zip.Save("Build/" + buildSettings.title + " " + buildSettings.content_version + " " + targetString + ".zip");
         }
     }
 
