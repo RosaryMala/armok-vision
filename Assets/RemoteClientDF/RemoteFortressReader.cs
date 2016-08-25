@@ -342,6 +342,65 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Splatter")]
+  public partial class Splatter : global::ProtoBuf.IExtensible
+  {
+    public Splatter() {}
+    
+    private RemoteFortressReader.MatPair _material = null;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"material", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.MatPair material
+    {
+      get { return _material; }
+      set { _material = value; }
+    }
+    private int _amount = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"amount", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int amount
+    {
+      get { return _amount; }
+      set { _amount = value; }
+    }
+    private RemoteFortressReader.MatterState _state = RemoteFortressReader.MatterState.Solid;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"state", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.MatterState.Solid)]
+    public RemoteFortressReader.MatterState state
+    {
+      get { return _state; }
+      set { _state = value; }
+    }
+    private RemoteFortressReader.MatPair _item = null;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"item", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.MatPair item
+    {
+      get { return _item; }
+      set { _item = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"SplatterPile")]
+  public partial class SplatterPile : global::ProtoBuf.IExtensible
+  {
+    public SplatterPile() {}
+    
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.Splatter> _splatters = new global::System.Collections.Generic.List<RemoteFortressReader.Splatter>();
+    [global::ProtoBuf.ProtoMember(1, Name=@"splatters", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.Splatter> splatters
+    {
+      get { return _splatters; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MapBlock")]
   public partial class MapBlock : global::ProtoBuf.IExtensible
   {
@@ -513,6 +572,13 @@ namespace RemoteFortressReader
     public global::System.Collections.Generic.List<RemoteFortressReader.TileDigDesignation> tile_dig_designation
     {
       get { return _tile_dig_designation; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.SplatterPile> _splatterPile = new global::System.Collections.Generic.List<RemoteFortressReader.SplatterPile>();
+    [global::ProtoBuf.ProtoMember(25, Name=@"splatterPile", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.SplatterPile> splatterPile
+    {
+      get { return _splatterPile; }
     }
   
     private global::ProtoBuf.IExtension extensionObject;
@@ -3227,6 +3293,29 @@ namespace RemoteFortressReader
             
       [global::ProtoBuf.ProtoEnum(Name=@"UP_STAIR_DIG", Value=6)]
       UP_STAIR_DIG = 6
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"MatterState")]
+    public enum MatterState
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Solid", Value=0)]
+      Solid = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Liquid", Value=1)]
+      Liquid = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Gas", Value=2)]
+      Gas = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Powder", Value=3)]
+      Powder = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Paste", Value=4)]
+      Paste = 4,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Pressed", Value=5)]
+      Pressed = 5
     }
   
     [global::ProtoBuf.ProtoContract(Name=@"FrontType")]
