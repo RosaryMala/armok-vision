@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 360b72fbe862f91408822cf3621947d0, type: 3}
+  m_Name: Build Settings
+  m_EditorClassIdentifier: 
+  author: Japa, Justin Partain, Kazimuth, Lethosor
+  content_version: v0.11.3
+  df_min_version: 0.34.11
+  df_max_version: 
+  title: Armok Vision
+  tooltip: A full 3D visualiser - shows off Dwarf Fortress with unprecedented detail
+    and beauty.
+  win_exe: Armok Vision.exe
+  osx_exe: Armok Vision.app
+  linux_exe: Armok Vision.x86_64
+  launch_with_terminal: 0
+  readme: Readme.txt
+  needs_dfhack: 1
