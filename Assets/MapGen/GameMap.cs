@@ -102,6 +102,7 @@ public class GameMap : MonoBehaviour
     bool[,,] blockContentBits;
     UpdateSchedule[,,] blockUpdateSchedules;
     bool[,,] liquidBlockDirtyBits;
+    bool[] spatterBlockDirtyBits;
     // Lights from magma.
     Light[,,] magmaGlow;
 
@@ -363,6 +364,7 @@ public class GameMap : MonoBehaviour
                 {
                     blockDirtyBits[x, y, z] = blockContentBits[x, y, z];
                     liquidBlockDirtyBits[x, y, z] = blockContentBits[x, y, z];
+                    spatterBlockDirtyBits[z] |= blockContentBits[x, y, z];
                 }
     }
 
@@ -622,7 +624,8 @@ public class GameMap : MonoBehaviour
             if (block == null) break;
             bool setTiles;
             bool setLiquids;
-            MapDataStore.Main.StoreTiles(block, out setTiles, out setLiquids);
+            bool setSpatters;
+            MapDataStore.Main.StoreTiles(block, out setTiles, out setLiquids, out setSpatters);
             if (setTiles)
             {
                 addSeasonalUpdates(block, block.map_x, block.map_y, block.map_z);
@@ -633,6 +636,10 @@ public class GameMap : MonoBehaviour
             {
                 SetDirtyLiquidBlock(block.map_x, block.map_y, block.map_z);
                 SetBlockContent(block.map_x, block.map_y, block.map_z);
+            }
+            if(setSpatters)
+            {
+                SetDirtySpatterBlock(block.map_x, block.map_y, block.map_z);
             }
         }
         loadWatch.Stop();
@@ -667,7 +674,7 @@ public class GameMap : MonoBehaviour
         liquidBlockDirtyBits = new bool[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         magmaGlow = new Light[blockSizeX * 16, blockSizeY * 16, blockSizeZ];
         collisionBlocks = new MeshCollider[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
-
+        spatterBlockDirtyBits = new bool[blockSizeZ];
     }
 
     void addSeasonalUpdates(RemoteFortressReader.MapBlock block, int mapBlockX, int mapBlockY, int mapBlockZ)
@@ -720,6 +727,12 @@ public class GameMap : MonoBehaviour
         mapBlockY /= blockSize;
         liquidBlockDirtyBits[mapBlockX, mapBlockY, mapBlockZ] = true;
     }
+    private void SetDirtySpatterBlock(int map_x, int map_y, int map_z)
+    {
+        spatterBlockDirtyBits[map_z] = true;
+    }
+
+
     #region Debug Data Saving
 
     void PrintFullMaterialList()
@@ -1220,6 +1233,25 @@ public class GameMap : MonoBehaviour
                     statusText.Append(tile.buildingLocalPos).AppendLine();
                     statusText.Append("Building Direction: ").Append(tile.buildingDirection).AppendLine();
 
+                }
+
+                foreach (var spatter in tile.spatters)
+                {
+                    if (spatter.item != null)
+                    {
+                        string item = ((MatPairStruct)spatter.item).ToString();
+                        if(spatter.item.mat_type == 55)//Plant Growth
+                        {
+                            item = DFConnection.Instance.NetPlantRawList.plant_raws[spatter.material.mat_index].growths[spatter.item.mat_index].id;
+                        }
+                        else if (items.ContainsKey(spatter.item))
+                            item = items[spatter.item].id;
+                        else if (items.ContainsKey(new MatPairStruct(spatter.item.mat_type, -1)))
+                            item = items[new MatPairStruct(spatter.item.mat_type, -1)].id;
+                        statusText.AppendFormat("{0} {1}: {2}", materials[spatter.material].id, item, spatter.amount).AppendLine();
+                    }
+                    else
+                        statusText.AppendFormat("{0} {1}: {2}", materials[spatter.material].id, spatter.state, spatter.amount).AppendLine();
                 }
             }
 

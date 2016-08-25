@@ -342,10 +342,10 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Splatter")]
-  public partial class Splatter : global::ProtoBuf.IExtensible
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Spatter")]
+  public partial class Spatter : global::ProtoBuf.IExtensible
   {
-    public Splatter() {}
+    public Spatter() {}
     
     private RemoteFortressReader.MatPair _material = null;
     [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"material", DataFormat = global::ProtoBuf.DataFormat.Default)]
@@ -384,16 +384,16 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"SplatterPile")]
-  public partial class SplatterPile : global::ProtoBuf.IExtensible
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"SpatterPile")]
+  public partial class SpatterPile : global::ProtoBuf.IExtensible
   {
-    public SplatterPile() {}
+    public SpatterPile() {}
     
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.Splatter> _splatters = new global::System.Collections.Generic.List<RemoteFortressReader.Splatter>();
-    [global::ProtoBuf.ProtoMember(1, Name=@"splatters", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.Splatter> splatters
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.Spatter> _spatters = new global::System.Collections.Generic.List<RemoteFortressReader.Spatter>();
+    [global::ProtoBuf.ProtoMember(1, Name=@"spatters", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.Spatter> spatters
     {
-      get { return _splatters; }
+      get { return _spatters; }
     }
   
     private global::ProtoBuf.IExtension extensionObject;
@@ -574,11 +574,11 @@ namespace RemoteFortressReader
       get { return _tile_dig_designation; }
     }
   
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.SplatterPile> _splatterPile = new global::System.Collections.Generic.List<RemoteFortressReader.SplatterPile>();
-    [global::ProtoBuf.ProtoMember(25, Name=@"splatterPile", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.SplatterPile> splatterPile
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.SpatterPile> _spatterPile = new global::System.Collections.Generic.List<RemoteFortressReader.SpatterPile>();
+    [global::ProtoBuf.ProtoMember(25, Name=@"spatterPile", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.SpatterPile> spatterPile
     {
-      get { return _splatterPile; }
+      get { return _spatterPile; }
     }
   
     private global::ProtoBuf.IExtension extensionObject;
