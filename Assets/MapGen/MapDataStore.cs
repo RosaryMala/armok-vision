@@ -157,9 +157,10 @@ public class MapDataStore {
         return CopySlice(block.ToDFCoord(), BLOCK_SIZE);
     }
 
-    public void StoreTiles(RemoteFortressReader.MapBlock block, out bool setTiles, out bool setLiquids) {
+    public void StoreTiles(RemoteFortressReader.MapBlock block, out bool setTiles, out bool setLiquids, out bool setSpatters) {
         setTiles = block.tiles.Count > 0;
         setLiquids = block.water.Count > 0 || block.magma.Count > 0;
+        setSpatters = block.spatterPile.Count > 0;
         if (!setTiles && !setLiquids) return;
 
         for (int xx = 0; xx < 16; xx++)
@@ -213,7 +214,10 @@ public class MapDataStore {
                             setTiles = true;
                         }
                     }
-
+                }
+                if(setSpatters)
+                {
+                    this[worldCoord].spatters = block.spatterPile[netIndex].spatters;
                 }
             }
         foreach (var building in block.buildings)
@@ -372,7 +376,8 @@ public class MapDataStore {
                            bool? hidden = null,
                            byte? trunkPercent = null,
                            DFCoord? positionOnTree = null,
-                           TileDigDesignation? digDesignation = null)
+                           TileDigDesignation? digDesignation = null,
+                           List<Spatter> spatters = null)
     {
         if (!InSliceBounds(coord)) {
             throw new UnityException("Can't modify tile outside of slice");
@@ -396,7 +401,8 @@ public class MapDataStore {
             hidden,
             trunkPercent,
             positionOnTree,
-            digDesignation
+            digDesignation,
+            spatters
             );
     }
 
@@ -555,6 +561,7 @@ public class MapDataStore {
             trunkPercent = 0;
             positionOnTree = default(DFCoord);
             digDesignation = TileDigDesignation.NO_DIG;
+            spatters = null;
         }
 
         public Tile(Tile orig)
@@ -583,6 +590,7 @@ public class MapDataStore {
             trunkPercent = orig.trunkPercent;
             positionOnTree = orig.positionOnTree;
             digDesignation = orig.digDesignation;
+            spatters = orig.spatters;
         }
 
         public MapDataStore container;
@@ -618,6 +626,7 @@ public class MapDataStore {
         public byte trunkPercent;
         public DFCoord positionOnTree;
         public TileDigDesignation digDesignation;
+        public List<Spatter> spatters;
 
         public TiletypeShape shape { get { return tiletypeTokenList [tileType].shape; } }
         public TiletypeMaterial tiletypeMaterial { get { return tiletypeTokenList [tileType].material; } }
@@ -657,7 +666,8 @@ public class MapDataStore {
                            bool? hidden = null,
                            byte? trunkPercent = null,
                            DFCoord? positionOnTree = null,
-                           TileDigDesignation? digDesignation = null)
+                           TileDigDesignation? digDesignation = null,
+                           List<Spatter> spatters = null)
         {
             if (tileType != null) {
                 this.tileType = tileType.Value;
@@ -701,13 +711,15 @@ public class MapDataStore {
             if (buildingDirection != null)
                 this.buildingDirection = buildingDirection.Value;
             if (hidden != null)
-                this.Hidden = hidden.Value;
+                Hidden = hidden.Value;
             if (trunkPercent != null)
                 this.trunkPercent = trunkPercent.Value;
             if (positionOnTree != null)
                 this.positionOnTree = positionOnTree.Value;
             if (digDesignation != null)
                 this.digDesignation = digDesignation.Value;
+            if (spatters != null)
+                this.spatters = spatters;
         }
         public bool isWall {
             get {
