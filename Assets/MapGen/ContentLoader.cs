@@ -150,7 +150,7 @@ public class ContentLoader
         defaultSpecialTexIndex = specialTextureStorage.AddTexture(Texture2D.blackTexture);
     }
 
-    Texture2D CreateFlatTexture(Color color)
+    public static Texture2D CreateFlatTexture(Color color)
     {
         Texture2D tex = new Texture2D(4, 4);
         var pix = tex.GetPixels();

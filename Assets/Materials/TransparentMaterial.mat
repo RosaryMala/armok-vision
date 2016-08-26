@@ -70,6 +70,18 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
+        name: _SpatterNoise
+      second:
+        m_Texture: {fileID: 2800000, guid: e80c3c84ea861404d8a427db8b7abf04, type: 3}
+        m_Scale: {x: 0.5, y: 0.5}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _SpatterTex
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
         name: _SpecialTex
       second:
         m_Texture: {fileID: 0}
@@ -104,6 +116,9 @@ Material:
         name: _Parallax
       second: 0.02
     - first:
+        name: _SpatterSmoothness
+      second: 0.5
+    - first:
         name: _SrcBlend
       second: 1
     - first:
@@ -119,3 +134,9 @@ Material:
     - first:
         name: _EmissionColor
       second: {r: 0, g: 0, b: 0, a: 1}
+    - first:
+        name: _SpatterDirection
+      second: {r: 0, g: 1, b: 0, a: 1}
+    - first:
+        name: _WorldBounds
+      second: {r: -1, g: 1, b: 383, a: -383}
