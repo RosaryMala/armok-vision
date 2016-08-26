@@ -510,9 +510,6 @@ public class MapDataStore {
             default:
                 break;
         }
-
-        Debug.Log(localPos + ", " + shape + ", " + state);
-
         return state;
     }
 

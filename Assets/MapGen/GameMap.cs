@@ -103,6 +103,7 @@ public class GameMap : MonoBehaviour
     UpdateSchedule[,,] blockUpdateSchedules;
     bool[,,] liquidBlockDirtyBits;
     bool[] spatterBlockDirtyBits;
+    Texture2D[] spatterLayers;
     // Lights from magma.
     Light[,,] magmaGlow;
 
@@ -190,6 +191,14 @@ public class GameMap : MonoBehaviour
 
         dfScreen.SetActive(GameSettings.Instance.game.showDFScreen);
 
+        Texture2D clear = ContentLoader.CreateFlatTexture(Color.clear);
+
+
+        spatterID = Shader.PropertyToID("_SpatterTex");
+        basicTerrainMaterial.SetTexture(spatterID, clear);
+        stencilTerrainMaterial.SetTexture(spatterID, clear);
+        transparentTerrainMaterial.SetTexture(spatterID, clear);
+        sharedMatBlock = new MaterialPropertyBlock();
     }
 
     void OnConnectToDF()
@@ -654,6 +663,13 @@ public class GameMap : MonoBehaviour
         FetchNewMeshes();
     }
 
+    void SetMaterialBounds(Vector4 bounds)
+    {
+        basicTerrainMaterial.SetVector("_WorldBounds", bounds);
+        stencilTerrainMaterial.SetVector("_WorldBounds", bounds);
+        transparentTerrainMaterial.SetVector("_WorldBounds", bounds);
+    }
+
     void InitializeBlocks()
     {
         int blockSizeX = DFConnection.Instance.EmbarkMapSize.x;
@@ -675,6 +691,12 @@ public class GameMap : MonoBehaviour
         magmaGlow = new Light[blockSizeX * 16, blockSizeY * 16, blockSizeZ];
         collisionBlocks = new MeshCollider[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         spatterBlockDirtyBits = new bool[blockSizeZ];
+        spatterLayers = new Texture2D[blockSizeZ];
+
+        Vector3 min = DFtoUnityCoord(0, 0, 0) - new Vector3(tileWidth / 2, 0, -tileWidth / 2);
+        Vector3 max = DFtoUnityCoord((blockSizeX * 16) - 1, (blockSizeY * 16) - 1, 0) + new Vector3(tileWidth / 2, 0, -tileWidth / 2);
+
+        SetMaterialBounds(new Vector4(min.x, min.z, max.x, max.z));
     }
 
     void addSeasonalUpdates(RemoteFortressReader.MapBlock block, int mapBlockX, int mapBlockY, int mapBlockZ)
@@ -925,6 +947,11 @@ public class GameMap : MonoBehaviour
                     blockDirtyBits[xx, yy, zz] = false;
                     liquidBlockDirtyBits[xx, yy, zz] = false;
                 }
+            if (spatterBlockDirtyBits[zz])
+            {
+                GenerateSpatterTexture(zz);
+                spatterBlockDirtyBits[zz] = false;
+            }
         }
         for (int zz = posZ; zz < zmax; zz++)
         {
@@ -1059,6 +1086,78 @@ public class GameMap : MonoBehaviour
                 collisionBlocks[block_x, block_y, block_z].sharedMesh = collisionMesh;
             }
         }
+    }
+
+    void GenerateSpatterTexture(int z)
+    {
+        Color[] textureColors = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
+
+        for (int x = 0; x < MapDataStore.MapSize.x; x++)
+            for (int y = 0; y < MapDataStore.MapSize.y; y++)
+            {
+                var tile = MapDataStore.Main[x, y, z];
+                if (tile == null)
+                    continue;
+                if (tile.spatters == null || tile.spatters.Count == 0)
+                    continue;
+
+                Color totalColor = new Color(0, 0, 0, 0);
+
+                float totalAmount = 0;
+
+                int index = x + (y * MapDataStore.MapSize.x);
+
+                foreach (var spatter in tile.spatters)
+                {
+                    if (spatter.amount == 0)
+                        continue;
+
+                    MapDataStore.Tile fakeTile = new MapDataStore.Tile(null, new DFCoord(0, 0, 0));
+
+                    fakeTile.material = spatter.material;
+
+                    Color color = Color.white;
+
+                    ColorContent cont;
+
+                    if (ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out cont))
+                    {
+                        color = cont.value;
+                    }
+                    else if (materials.ContainsKey(spatter.material))
+                    {
+                        var colorDef = materials[spatter.material].state_color;
+                        color = new Color32((byte)colorDef.red, (byte)colorDef.green, (byte)colorDef.blue, 255);
+                    }
+                    float amount = spatter.amount;
+                    if (spatter.item != null)
+                        amount /= 3000;
+                    else
+                        amount /= 100;
+                    //amount = Mathf.Clamp01(amount);
+
+                    color *= amount;
+
+                    color.a = amount;
+
+                    totalColor += color;
+                    totalAmount += amount;
+                }
+                if (totalAmount > 1)
+                {
+                    totalColor /= totalAmount;
+                }
+                textureColors[index] = totalColor;
+            }
+
+        if (spatterLayers[z] == null)
+            spatterLayers[z] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
+        if (spatterLayers[z].width != MapDataStore.MapSize.x || spatterLayers[z].height != MapDataStore.MapSize.y)
+            spatterLayers[z].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
+
+        spatterLayers[z].SetPixels(textureColors);
+        spatterLayers[z].Apply();
+
     }
 
 
@@ -1235,24 +1334,28 @@ public class GameMap : MonoBehaviour
 
                 }
 
-                foreach (var spatter in tile.spatters)
-                {
-                    if (spatter.item != null)
+                if (tile.spatters != null)
+                    foreach (var spatter in tile.spatters)
                     {
-                        string item = ((MatPairStruct)spatter.item).ToString();
-                        if(spatter.item.mat_type == 55)//Plant Growth
+                        string matString = ((MatPairStruct)spatter.material).ToString();
+                        if (materials.ContainsKey(spatter.material))
+                            matString = materials[spatter.material].id;
+                        if (spatter.item != null)
                         {
-                            item = DFConnection.Instance.NetPlantRawList.plant_raws[spatter.material.mat_index].growths[spatter.item.mat_index].id;
+                            string item = ((MatPairStruct)spatter.item).ToString();
+                            if (spatter.item.mat_type == 55)//Plant Growth
+                            {
+                                item = DFConnection.Instance.NetPlantRawList.plant_raws[spatter.material.mat_index].growths[spatter.item.mat_index].id;
+                            }
+                            else if (items.ContainsKey(spatter.item))
+                                item = items[spatter.item].id;
+                            else if (items.ContainsKey(new MatPairStruct(spatter.item.mat_type, -1)))
+                                item = items[new MatPairStruct(spatter.item.mat_type, -1)].id;
+                            statusText.AppendFormat("{0} {1}: {2}", matString, item, spatter.amount).AppendLine();
                         }
-                        else if (items.ContainsKey(spatter.item))
-                            item = items[spatter.item].id;
-                        else if (items.ContainsKey(new MatPairStruct(spatter.item.mat_type, -1)))
-                            item = items[new MatPairStruct(spatter.item.mat_type, -1)].id;
-                        statusText.AppendFormat("{0} {1}: {2}", materials[spatter.material].id, item, spatter.amount).AppendLine();
+                        else
+                            statusText.AppendFormat("{0} {1}: {2}", matString, spatter.state, spatter.amount).AppendLine();
                     }
-                    else
-                        statusText.AppendFormat("{0} {1}: {2}", materials[spatter.material].id, spatter.state, spatter.amount).AppendLine();
-                }
             }
 
             if (unitList != null)
@@ -1421,39 +1524,49 @@ public class GameMap : MonoBehaviour
         return DrawSingleBlock(xx, yy, zz, phantom, Matrix4x4.TRS(pos, Quaternion.identity, Vector3.one), top);
     }
 
+    MaterialPropertyBlock sharedMatBlock;
+    int spatterID;
+
     private bool DrawSingleBlock(int xx, int yy, int zz, bool phantom, Matrix4x4 LocalTransform, bool top)
     {
+        MaterialPropertyBlock matBlock = null;
+        if (spatterLayers[zz] != null)
+        {
+            matBlock = sharedMatBlock;
+            matBlock.SetTexture(spatterID, spatterLayers[zz]);
+        }
+
         bool drewBlock = false;
         if (blocks[xx, yy, zz] != null && blocks[xx, yy, zz].vertexCount > 0)
         {
-            Graphics.DrawMesh(blocks[xx, yy, zz], LocalTransform, basicTerrainMaterial, 0, null, 0, null, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
+            Graphics.DrawMesh(blocks[xx, yy, zz], LocalTransform, basicTerrainMaterial, 0, null, 0, matBlock, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
             drewBlock = true;
         }
         if (topBlocks[xx, yy, zz] != null && topBlocks[xx, yy, zz].vertexCount > 0 && top)
         {
-            Graphics.DrawMesh(topBlocks[xx, yy, zz], LocalTransform, basicTerrainMaterial, 0, null, 0, null, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
+            Graphics.DrawMesh(topBlocks[xx, yy, zz], LocalTransform, basicTerrainMaterial, 0, null, 0, matBlock, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
             drewBlock = true;
         }
 
         if (stencilBlocks[xx, yy, zz] != null && stencilBlocks[xx, yy, zz].vertexCount > 0)
         {
-            Graphics.DrawMesh(stencilBlocks[xx, yy, zz], LocalTransform, stencilTerrainMaterial, 0, null, 0, null, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
+            Graphics.DrawMesh(stencilBlocks[xx, yy, zz], LocalTransform, stencilTerrainMaterial, 0, null, 0, matBlock, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
             drewBlock = true;
         }
         if (topStencilBlocks[xx, yy, zz] != null && topStencilBlocks[xx, yy, zz].vertexCount > 0 && top)
         {
-            Graphics.DrawMesh(topStencilBlocks[xx, yy, zz], LocalTransform, stencilTerrainMaterial, 0, null, 0, null, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
+            Graphics.DrawMesh(topStencilBlocks[xx, yy, zz], LocalTransform, stencilTerrainMaterial, 0, null, 0, matBlock, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
             drewBlock = true;
         }
 
         if (transparentBlocks[xx, yy, zz] != null && transparentBlocks[xx, yy, zz].vertexCount > 0 && !phantom)
         {
-            Graphics.DrawMesh(transparentBlocks[xx, yy, zz], LocalTransform, transparentTerrainMaterial, 0);
+            Graphics.DrawMesh(transparentBlocks[xx, yy, zz], LocalTransform, transparentTerrainMaterial, 0, null, 0, matBlock);
             drewBlock = true;
         }
         if (topTransparentBlocks[xx, yy, zz] != null && topTransparentBlocks[xx, yy, zz].vertexCount > 0 && !phantom && top)
         {
-            Graphics.DrawMesh(topTransparentBlocks[xx, yy, zz], LocalTransform, transparentTerrainMaterial, 0);
+            Graphics.DrawMesh(topTransparentBlocks[xx, yy, zz], LocalTransform, transparentTerrainMaterial, 0, null, 0, matBlock);
             drewBlock = true;
         }
 
