@@ -106,13 +106,16 @@ abstract class BlockMesher {
         if (!tiles && !liquids) {
             throw new UnityException("Why mesh something without tiles or liquids?");
         }
-
+        Profiler.BeginSample("BlockMesher.Enqueue");
         // Using our object pool
         MapDataStore targetDataStore = AllocateBlockStore();
 
         // Copy data
         if (!MapDataStore.Main.CopySliceTo(targetLocation, MapDataStore.BLOCK_SIZE, targetDataStore))
+        {
+            Profiler.EndSample();
             return true; //it's empty, but it isn't a failure condition.
+        }
 
         // In case we displace another block update
         Request redundant;
@@ -125,7 +128,10 @@ abstract class BlockMesher {
             if (redundant.data == null)
             {
                 if (requestQueue.Count >= GameSettings.Instance.meshing.queueLimit)
+                {
+                    Profiler.EndSample();
                     return false;
+                }
             }
 
             Request meshRequest = new Request();
@@ -142,6 +148,7 @@ abstract class BlockMesher {
                 recycledBlocks.Push(redundant.data);
             }
         }
+        Profiler.EndSample();
         return true;
     }
 

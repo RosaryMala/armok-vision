@@ -57,7 +57,9 @@ public class CPUMesh
         this.name = name;
     }
 
-    public void CopyToMesh(Mesh target) {
+    public void CopyToMesh(Mesh target)
+    {
+        Profiler.BeginSample("CopyToMesh", target);
         target.vertices = vertices;
         target.normals = normals;
         target.tangents = tangents;
@@ -67,8 +69,8 @@ public class CPUMesh
         target.colors = colors;
         target.triangles = triangles;
         target.RecalculateBounds();
-        target.RecalculateTangents();
-        if(target.name == "")
+        if (target.name == "")
             target.name = name;
+        Profiler.EndSample();
     }
 }
