@@ -177,11 +177,6 @@ public class GameMap : MonoBehaviour
                input.y % blockSize == 0;
     }
 
-    // Used for random diagnostics
-    System.Diagnostics.Stopwatch blockListTimer = new System.Diagnostics.Stopwatch();
-    System.Diagnostics.Stopwatch cullTimer = new System.Diagnostics.Stopwatch();
-    System.Diagnostics.Stopwatch lazyLoadTimer = new System.Diagnostics.Stopwatch();
-
     // Does about what you'd think it does.
     void Start()
     {
@@ -273,10 +268,6 @@ public class GameMap : MonoBehaviour
 
         UpdateView();
 
-        blockListTimer.Start();
-        cullTimer.Start();
-        lazyLoadTimer.Start();
-
         InitializeBlocks();
     }
 
@@ -356,24 +347,22 @@ public class GameMap : MonoBehaviour
 
         ShowCursorInfo();
         UpdateRequestRegion();
-        blockListTimer.Reset();
-        blockListTimer.Start();
         UpdateCreatures();
         UpdateBlocks();
-
+        UpdateSpatters();
         DrawBlocks();
 
     }
 
     public void Refresh()
     {
-        for (int x = 0; x < blockDirtyBits.GetLength(0); x++)
-            for (int y = 0; y < blockDirtyBits.GetLength(1); y++)
-                for (int z = 0; z < blockDirtyBits.GetLength(2); z++)
+        for (int z = 0; z < blockDirtyBits.GetLength(2); z++)
+            for (int x = 0; x < blockDirtyBits.GetLength(0); x++)
+                for (int y = 0; y < blockDirtyBits.GetLength(1); y++)
                 {
                     blockDirtyBits[x, y, z] = blockContentBits[x, y, z];
                     liquidBlockDirtyBits[x, y, z] = blockContentBits[x, y, z];
-                    spatterBlockDirtyBits[z] |= blockContentBits[x, y, z];
+                    spatterBlockDirtyBits[z] = blockContentBits[x, y, z] || spatterBlockDirtyBits[z];
                 }
     }
 
@@ -570,6 +559,8 @@ public class GameMap : MonoBehaviour
     {
         RemoteFortressReader.ViewInfo newView = DFConnection.Instance.PopViewInfoUpdate();
         if (newView == null) return;
+
+        Profiler.BeginSample("UpdateView", this);
         //Debug.Log("Got view");
         view = newView;
 
@@ -590,11 +581,13 @@ public class GameMap : MonoBehaviour
         posXTile = (view.view_pos_x + (view.view_size_x / 2));
         posYTile = (view.view_pos_y + (view.view_size_y / 2));
         posZ = view.view_pos_z + 1;
+        Profiler.EndSample();
     }
 
     // Update the region we're requesting
     void UpdateRequestRegion()
     {
+        Profiler.BeginSample("UpdateRequestRegion", this);
         DFConnection.Instance.SetRequestRegion(
             new BlockCoord(
                 PosXBlock - GameSettings.Instance.rendering.drawRangeSide,
@@ -606,6 +599,7 @@ public class GameMap : MonoBehaviour
                 PosYBlock + GameSettings.Instance.rendering.drawRangeSide,
                 posZ + GameSettings.Instance.rendering.drawRangeUp
             ));
+        Profiler.EndSample();
     }
     void UpdateBlocks()
     {
@@ -625,16 +619,19 @@ public class GameMap : MonoBehaviour
         }
         if (MapDataStore.MapSize.x < 48)
             return;
-        loadWatch.Reset();
-        loadWatch.Start();
+        Profiler.BeginSample("UpdateBlocks", this);
         while (true)
         {
+            Profiler.BeginSample("PopMapBlockUpdate", this);
             RemoteFortressReader.MapBlock block = DFConnection.Instance.PopMapBlockUpdate();
+            Profiler.EndSample();
             if (block == null) break;
             bool setTiles;
             bool setLiquids;
             bool setSpatters;
+            Profiler.BeginSample("StoreTiles", this);
             MapDataStore.Main.StoreTiles(block, out setTiles, out setLiquids, out setSpatters);
+            Profiler.EndSample();
             if (setTiles)
             {
                 addSeasonalUpdates(block, block.map_x, block.map_y, block.map_z);
@@ -651,16 +648,15 @@ public class GameMap : MonoBehaviour
                 SetDirtySpatterBlock(block.map_x, block.map_y, block.map_z);
             }
         }
-        loadWatch.Stop();
-        genWatch.Reset();
-        genWatch.Start();
         DirtySeasonalBlocks();
+        Profiler.BeginSample("EnqueueMeshUpdates", this);
         EnqueueMeshUpdates();
-        genWatch.Stop();
+        Profiler.EndSample();
 
         mesher.Poll();
 
         FetchNewMeshes();
+        Profiler.EndSample();
     }
 
     void SetMaterialBounds(Vector4 bounds)
@@ -919,6 +915,20 @@ public class GameMap : MonoBehaviour
 
     }
 
+    void UpdateSpatters()
+    {
+        Profiler.BeginSample("UpdateSpatters", this);
+        for (int z = spatterBlockDirtyBits.Length - 1; z >= 0; z--)
+        {
+            if (spatterBlockDirtyBits[z])
+            {
+                GenerateSpatterTexture(z);
+                spatterBlockDirtyBits[z] = false;
+            }
+        }
+        Profiler.EndSample();
+    }
+
     // Have the mesher mesh all dirty tiles in the region
     void EnqueueMeshUpdates()
     {
@@ -946,12 +956,8 @@ public class GameMap : MonoBehaviour
                         return;
                     blockDirtyBits[xx, yy, zz] = false;
                     liquidBlockDirtyBits[xx, yy, zz] = false;
+                    return;
                 }
-            if (spatterBlockDirtyBits[zz])
-            {
-                GenerateSpatterTexture(zz);
-                spatterBlockDirtyBits[zz] = false;
-            }
         }
         for (int zz = posZ; zz < zmax; zz++)
         {
@@ -970,6 +976,7 @@ public class GameMap : MonoBehaviour
                         return;
                     blockDirtyBits[xx, yy, zz] = false;
                     liquidBlockDirtyBits[xx, yy, zz] = false;
+                    return;
                 }
         }
     }
@@ -977,7 +984,8 @@ public class GameMap : MonoBehaviour
     // Get new meshes from the mesher
     void FetchNewMeshes()
     {
-        while (mesher.HasNewMeshes)
+        Profiler.BeginSample("FetchNewMeshes", this);
+        if (mesher.HasNewMeshes)
         {
             var newMeshes = mesher.Dequeue().Value;
             int block_x = newMeshes.location.x / blockSize;
@@ -1086,10 +1094,12 @@ public class GameMap : MonoBehaviour
                 collisionBlocks[block_x, block_y, block_z].sharedMesh = collisionMesh;
             }
         }
+        Profiler.EndSample();
     }
 
     void GenerateSpatterTexture(int z)
     {
+        Profiler.BeginSample("GenerateSpatterTexture", this);
         Color[] textureColors = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
 
         for (int x = 0; x < MapDataStore.MapSize.x; x++)
@@ -1157,14 +1167,8 @@ public class GameMap : MonoBehaviour
 
         spatterLayers[z].SetPixels(textureColors);
         spatterLayers[z].Apply();
-
+        Profiler.EndSample();
     }
-
-
-    System.Diagnostics.Stopwatch loadWatch = new System.Diagnostics.Stopwatch();
-    System.Diagnostics.Stopwatch genWatch = new System.Diagnostics.Stopwatch();
-
-
 
     void ClearMap()
     {
@@ -1208,7 +1212,7 @@ public class GameMap : MonoBehaviour
     {
         if (MapDataStore.Main == null)
             return; //No 
-
+        Profiler.BeginSample("ShowCursorInfo", this);
 
         StringBuilder statusText = new StringBuilder();
 
@@ -1397,6 +1401,7 @@ public class GameMap : MonoBehaviour
                 }
         }
         cursorProperties.text = statusText.ToString();
+        Profiler.EndSample();
     }
 
     Dictionary<int, Transform> creatureList;
@@ -1414,6 +1419,7 @@ public class GameMap : MonoBehaviour
         TextInfo textInfo = cultureInfo.TextInfo;
         unitList = DFConnection.Instance.PopUnitListUpdate();
         if (unitList == null) return;
+        Profiler.BeginSample("UpdateCreatures", this);
         lastUnitList = unitList;
         foreach (var unit in unitList.creature_list)
         {
@@ -1495,17 +1501,21 @@ public class GameMap : MonoBehaviour
                         else
                             creatureList[unit.id].GetComponentInChildren<AtlasSprite>().SetTile(0, creatureRaw.creature_tile);
                         Text unitText = creatureList[unit.id].GetComponentInChildren<Text>();
-                        if (unit.name == "")
-                            unitText.text = textInfo.ToTitleCase(creatureRaw.caste[unit.race.mat_index].caste_name[0]);
-                        else
+                        if (unitText != null)
                         {
-                            unitText.text = unit.name;
+                            if (unit.name == "")
+                                unitText.text = textInfo.ToTitleCase(creatureRaw.caste[unit.race.mat_index].caste_name[0]);
+                            else
+                            {
+                                unitText.text = unit.name;
+                            }
                         }
                     }
                 }
 
             }
         }
+        Profiler.EndSample();
     }
 
     public void UpdateCenter(Vector3 pos)
@@ -1588,6 +1598,7 @@ public class GameMap : MonoBehaviour
     {
         if (blocks == null)
             return;
+        Profiler.BeginSample("DrawBlocks", this);
         int xmin = Mathf.Clamp(PosXBlock - GameSettings.Instance.rendering.drawRangeSide, 0, blocks.GetLength(0));
         int xmax = Mathf.Clamp(PosXBlock + GameSettings.Instance.rendering.drawRangeSide, 0, blocks.GetLength(0));
         int ymin = Mathf.Clamp(PosYBlock - GameSettings.Instance.rendering.drawRangeSide, 0, blocks.GetLength(1));
@@ -1638,6 +1649,7 @@ public class GameMap : MonoBehaviour
                 }
             }
         StatsReadout.BlocksDrawn = drawnBlocks;
+        Profiler.EndSample();
     }
 
 }
