@@ -542,6 +542,7 @@ PlayerSettings:
   PSP2::VR::enabledDevices: []
   SamsungTV::VR::enabledDevices: []
   Standalone::VR::enabledDevices:
+  - None
   - OpenVR
   Tizen::VR::enabledDevices: []
   WebGL::VR::enabledDevices: []
