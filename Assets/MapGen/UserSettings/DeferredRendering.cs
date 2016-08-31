@@ -6,28 +6,22 @@ namespace UserSettings
     {
         protected override void InitValue()
         {
-            slider.value = GameSettings.Instance.rendering.deferredRendering;
+            slider.value = Convert.ToInt32(GameSettings.Instance.camera.deferredRendering);
             OnValueChanged(slider.value);
         }
 
         protected override void OnValueChanged(float value)
         {
-            GameSettings.Instance.rendering.deferredRendering = (int)value;
-            switch (GameSettings.Instance.rendering.deferredRendering)
+            GameSettings.Instance.camera.deferredRendering = Convert.ToBoolean(value);
+            switch (GameSettings.Instance.camera.deferredRendering)
             {
-                case 2:
+                case true:
                     cam.renderingPath = UnityEngine.RenderingPath.DeferredShading;
                     valueLabel.text = "Deferred";
                     break;
-                case 1:
+                case false:
                     cam.renderingPath = UnityEngine.RenderingPath.Forward;
                     valueLabel.text = "Forward";
-                    break;
-                case 0:
-                    cam.renderingPath = UnityEngine.RenderingPath.VertexLit;
-                    valueLabel.text = "Vertex Lit";
-                    break;
-                default:
                     break;
             }
         }
