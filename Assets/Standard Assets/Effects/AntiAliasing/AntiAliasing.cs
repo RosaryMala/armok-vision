@@ -4,7 +4,7 @@ namespace UnityStandardAssets.CinematicEffects
 {
     [ExecuteInEditMode]
     [RequireComponent(typeof(Camera))]
-    [AddComponentMenu("Image Effects/Anti-aliasing")]
+    [AddComponentMenu("Image Effects/Cinematic/Anti-aliasing")]
 #if UNITY_5_4_OR_NEWER
     [ImageEffectAllowedInSceneView]
 #endif

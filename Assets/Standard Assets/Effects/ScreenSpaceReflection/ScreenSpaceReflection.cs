@@ -10,7 +10,7 @@ namespace UnityStandardAssets.CinematicEffects
     [ImageEffectAllowedInSceneView]
 #endif
     [RequireComponent(typeof(Camera))]
-    [AddComponentMenu("Cinematic Image Effects/Screen Space Reflections")]
+    [AddComponentMenu("Image Effects/Cinematic/Screen Space Reflections")]
     public class ScreenSpaceReflection : MonoBehaviour
     {
         public enum SSRResolution

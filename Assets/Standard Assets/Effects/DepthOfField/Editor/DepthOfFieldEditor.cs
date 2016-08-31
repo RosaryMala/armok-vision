@@ -15,8 +15,6 @@ namespace UnityStandardAssets.CinematicEffects
         private SerializedProperty m_Transform;
         private SerializedProperty m_FocusPlane;
         private SerializedProperty m_Range;
-        private SerializedProperty m_HFDist;
-        private SerializedProperty m_MinDist;
         private SerializedProperty m_NearPlane;
         private SerializedProperty m_NearFalloff;
         private SerializedProperty m_FarPlane;
@@ -43,8 +41,6 @@ namespace UnityStandardAssets.CinematicEffects
             m_Transform = o.FindProperty("focus.transform");
             m_FocusPlane = o.FindProperty("focus.focusPlane");
             m_Range = o.FindProperty("focus.range");
-            m_HFDist = o.FindProperty("focus.hyperFocalDistance");
-            m_MinDist = o.FindProperty("focus.minimumFocalDistance");
             m_NearPlane = o.FindProperty("focus.nearPlane");
             m_NearFalloff = o.FindProperty("focus.nearFalloff");
             m_FarPlane = o.FindProperty("focus.farPlane");
@@ -91,7 +87,6 @@ namespace UnityStandardAssets.CinematicEffects
                 {
                     EditorGUILayout.PropertyField(m_FocusPlane);
                 }
-                EditorGUILayout.PropertyField(m_MinDist);
 
                 EditorGUILayout.PropertyField(m_Range);
 
@@ -104,36 +99,6 @@ namespace UnityStandardAssets.CinematicEffects
                 EditorGUILayout.LabelField(m_FarPlane.displayName);
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(m_FarFalloff, falloff);
-                EditorGUILayout.PropertyField(m_FarBlurRadius, blurRadius);
-                EditorGUI.indentLevel--;
-            }
-            else if (m_TweakMode.intValue == (int)DepthOfField.TweakMode.Advanced)
-            {
-                EditorGUILayout.PropertyField(m_Transform);
-
-                using (new EditorGUI.DisabledGroupScope(m_Transform.objectReferenceValue != null))
-                {
-                    EditorGUILayout.PropertyField(m_FocusPlane);
-                }
-                EditorGUILayout.PropertyField(m_MinDist);
-
-                EditorGUILayout.PropertyField(m_HFDist);
-
-                EditorGUILayout.LabelField(m_NearPlane.displayName);
-                EditorGUI.indentLevel++;
-                using (new EditorGUI.DisabledGroupScope(true))
-                {
-                    EditorGUILayout.PropertyField(m_NearFalloff, falloff);
-                }
-                EditorGUILayout.PropertyField(m_NearBlurRadius, blurRadius);
-                EditorGUI.indentLevel--;
-
-                EditorGUILayout.LabelField(m_FarPlane.displayName);
-                EditorGUI.indentLevel++;
-                using (new EditorGUI.DisabledGroupScope(true))
-                {
-                    EditorGUILayout.PropertyField(m_FarFalloff, falloff);
-                }
                 EditorGUILayout.PropertyField(m_FarBlurRadius, blurRadius);
                 EditorGUI.indentLevel--;
             }

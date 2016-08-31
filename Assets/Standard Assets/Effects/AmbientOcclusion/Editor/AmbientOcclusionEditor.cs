@@ -23,12 +23,17 @@ namespace UnityStandardAssets.CinematicEffects
             "Change Renderring Path in camera settings to Deferred.";
 
         static string _textNoAmbientOnly =
-            "The ambient-only mode is currently disabled; " +
+            "Ambient-only mode is currently disabled; " +
             "it requires G-buffer source and HDR rendering.";
 
         static string _textGBufferNote =
             "Forward opaque objects don't go in the G-buffer. " +
             "This may lead to artifacts.";
+
+        #if UNITY_5_4_OR_NEWER
+        static string _textSinglePassStereo =
+            "Ambient-only mode isn't supported in single-pass stereo rendering.";
+        #endif
 
         void OnEnable()
         {
@@ -80,6 +85,11 @@ namespace UnityStandardAssets.CinematicEffects
             {
                 EditorGUILayout.HelpBox(_textNoAmbientOnly, MessageType.Warning);
             }
+
+            #if UNITY_5_4_OR_NEWER
+            if (_ambientOnly.boolValue && PlayerSettings.singlePassStereoRendering)
+                EditorGUILayout.HelpBox(_textSinglePassStereo, MessageType.Warning);
+            #endif
 
             EditorGUILayout.PropertyField(_debug);
 
