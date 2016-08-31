@@ -36,12 +36,13 @@ public class GameSettings : MonoBehaviour
         public int targetFrameRate = 60;
         public bool showHiddenTiles = false;
         public bool fog = true;
-        public int deferredRendering = 2;
     }
     [Serializable]
     public class CameraSettings
     {
         public float fieldOfView = 70;
+        public bool deferredRendering = true;
+        public bool SSAO = true;
     }
 
     [Serializable]
