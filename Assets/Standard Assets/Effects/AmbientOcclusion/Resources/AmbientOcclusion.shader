@@ -14,7 +14,7 @@ Shader "Hidden/Image Effects/Cinematic/AmbientOcclusion"
             CGPROGRAM
             #define SOURCE_DEPTH 1
             #include "AmbientOcclusion.cginc"
-            #pragma vertex vert_img
+            #pragma vertex vert
             #pragma fragment frag_ao
             #pragma target 3.0
             ENDCG
@@ -26,7 +26,7 @@ Shader "Hidden/Image Effects/Cinematic/AmbientOcclusion"
             CGPROGRAM
             #define SOURCE_DEPTHNORMALS 1
             #include "AmbientOcclusion.cginc"
-            #pragma vertex vert_img
+            #pragma vertex vert
             #pragma fragment frag_ao
             #pragma target 3.0
             ENDCG
@@ -38,7 +38,7 @@ Shader "Hidden/Image Effects/Cinematic/AmbientOcclusion"
             CGPROGRAM
             #define SOURCE_GBUFFER 1
             #include "AmbientOcclusion.cginc"
-            #pragma vertex vert_img
+            #pragma vertex vert
             #pragma fragment frag_ao
             #pragma target 3.0
             ENDCG
@@ -50,7 +50,7 @@ Shader "Hidden/Image Effects/Cinematic/AmbientOcclusion"
             CGPROGRAM
             #define SOURCE_DEPTHNORMALS 1
             #include "AmbientOcclusion.cginc"
-            #pragma vertex vert_img
+            #pragma vertex vert
             #pragma fragment frag_blur1
             #pragma target 3.0
             ENDCG
@@ -62,7 +62,7 @@ Shader "Hidden/Image Effects/Cinematic/AmbientOcclusion"
             CGPROGRAM
             #define SOURCE_GBUFFER 1
             #include "AmbientOcclusion.cginc"
-            #pragma vertex vert_img
+            #pragma vertex vert
             #pragma fragment frag_blur1
             #pragma target 3.0
             ENDCG
@@ -74,7 +74,7 @@ Shader "Hidden/Image Effects/Cinematic/AmbientOcclusion"
             CGPROGRAM
             #define SOURCE_DEPTHNORMALS 1
             #include "AmbientOcclusion.cginc"
-            #pragma vertex vert_img
+            #pragma vertex vert
             #pragma fragment frag_blur2
             #pragma target 3.0
             ENDCG
@@ -86,7 +86,7 @@ Shader "Hidden/Image Effects/Cinematic/AmbientOcclusion"
             CGPROGRAM
             #define SOURCE_GBUFFER 1
             #include "AmbientOcclusion.cginc"
-            #pragma vertex vert_img
+            #pragma vertex vert
             #pragma fragment frag_blur2
             #pragma target 3.0
             ENDCG
@@ -97,7 +97,7 @@ Shader "Hidden/Image Effects/Cinematic/AmbientOcclusion"
             ZTest Always Cull Off ZWrite Off
             CGPROGRAM
             #include "AmbientOcclusion.cginc"
-            #pragma vertex vert_multitex
+            #pragma vertex vert
             #pragma fragment frag_combine
             #pragma target 3.0
             ENDCG
@@ -120,7 +120,7 @@ Shader "Hidden/Image Effects/Cinematic/AmbientOcclusion"
             ZTest Always Cull Off ZWrite Off
             CGPROGRAM
             #include "AmbientOcclusion.cginc"
-            #pragma vertex vert_multitex
+            #pragma vertex vert
             #pragma fragment frag_blit_ao
             #pragma target 3.0
             ENDCG

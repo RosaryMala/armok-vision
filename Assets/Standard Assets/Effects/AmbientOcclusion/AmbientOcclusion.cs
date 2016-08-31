@@ -235,7 +235,7 @@ namespace UnityStandardAssets.CinematicEffects
             var rtMask = RenderTexture.GetTemporary(tw / ts, th / ts, 0, format, rwMode);
 
             // AO estimation
-            Graphics.Blit((Texture)null, rtMask, m, (int)occlusionSource);
+            Graphics.Blit(source, rtMask, m, (int)occlusionSource);
 
             // Primary blur filter (large kernel)
             var rtBlur = RenderTexture.GetTemporary(tw, th, 0, format, rwMode);

@@ -72,8 +72,7 @@ namespace UnityStandardAssets.CinematicEffects
         public enum TweakMode
         {
             Range,
-            Explicit,
-            Advanced
+            Explicit
         }
 
         public enum ApertureShape
@@ -181,12 +180,6 @@ namespace UnityStandardAssets.CinematicEffects
             [Min(0f), Tooltip("Focus distance (in world units).")]
             public float focusPlane;
 
-            [Min(0f), Tooltip("Hyperfocal distance (in world units).")]
-            public float hyperFocalDistance;
-
-            [Min(0f), Tooltip("The focus plane will never come closer than this.")]
-            public float minimumFocalDistance;
-
             [Min(0.1f), Tooltip("Focus range (in world units). The focus plane is located in the center of the range.")]
             public float range;
 
@@ -222,9 +215,7 @@ namespace UnityStandardAssets.CinematicEffects
                         farPlane = 37.5f,
                         farFalloff = 50f,
                         nearBlurRadius = 15f,
-                        farBlurRadius = 20f,
-                        hyperFocalDistance = 10f,
-                        minimumFocalDistance = 1f
+                        farBlurRadius = 20f
                     };
                 }
             }
@@ -703,29 +694,9 @@ namespace UnityStandardAssets.CinematicEffects
                 else
                     focusDistance = focus.focusPlane;
 
-                focusDistance = Mathf.Max(focusDistance, focus.minimumFocalDistance);
-
                 float s = focus.range * 0.5f;
                 nearPlane = focusDistance - s;
                 farPlane = focusDistance + s;
-            }
-            else if(settings.tweakMode == TweakMode.Advanced)
-            {
-                if (focus.transform != null)
-                    focusDistance = sceneCamera.WorldToViewportPoint(focus.transform.position).z;
-                else
-                    focusDistance = focus.focusPlane;
-
-                focusDistance = Mathf.Max(focusDistance, focus.minimumFocalDistance);
-
-                nearPlane = (focus.hyperFocalDistance * focusDistance) / (focus.hyperFocalDistance + focusDistance);
-                if (focusDistance < focus.hyperFocalDistance)
-                    farPlane = (focus.hyperFocalDistance * focusDistance) / (focus.hyperFocalDistance - focusDistance);
-                else
-                    farPlane = sceneCamera.farClipPlane;
-
-                nearFalloff = (focusDistance - nearPlane) * focus.nearBlurRadius * 2f;
-                farFalloff = (farPlane - focusDistance) * focus.farBlurRadius * 2f;
             }
 
             nearPlane -= (nearFalloff * 0.5f);
@@ -767,8 +738,6 @@ namespace UnityStandardAssets.CinematicEffects
             focus.farPlane = farPlane - (farFalloff * 0.5f);
             focus.focusPlane = (focus.nearPlane + focus.farPlane) * 0.5f;
             focus.range = focus.farPlane - focus.nearPlane;
-            focus.nearFalloff = nearFalloff * 0.5f;
-            focus.farFalloff = farFalloff * 0.5f;
         }
 
         private void ReleaseComputeResources()

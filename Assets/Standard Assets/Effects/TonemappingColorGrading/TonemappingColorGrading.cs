@@ -43,7 +43,7 @@ namespace UnityStandardAssets.CinematicEffects
         }
 
         [SerializeField]
-        public bool histogramRefreshOnPlay = true;
+        public bool histogramRefreshOnPlay = false;
 #endif
 
         #region Attributes
@@ -830,6 +830,8 @@ namespace UnityStandardAssets.CinematicEffects
             }
         }
 
+        private RenderTexture[] m_AdaptRts = null;
+
         [ImageEffectTransformsToLDR]
         private void OnRenderImage(RenderTexture source, RenderTexture destination)
         {
@@ -843,7 +845,6 @@ namespace UnityStandardAssets.CinematicEffects
             material.shaderKeywords = null;
 
             RenderTexture rtSquared = null;
-            RenderTexture[] rts = null;
 
             if (eyeAdaptation.enabled)
             {
@@ -865,20 +866,23 @@ namespace UnityStandardAssets.CinematicEffects
                 int downsample = (int)Mathf.Log(rtSquared.width, 2f);
 
                 int div = 2;
-                rts = new RenderTexture[downsample];
+
+                if (m_AdaptRts == null || m_AdaptRts.Length != downsample)
+                    m_AdaptRts = new RenderTexture[downsample];
+
                 for (int i = 0; i < downsample; i++)
                 {
-                    rts[i] = RenderTexture.GetTemporary(rtSquared.width / div, rtSquared.width / div, 0, m_AdaptiveRtFormat);
+                    m_AdaptRts[i] = RenderTexture.GetTemporary(rtSquared.width / div, rtSquared.width / div, 0, m_AdaptiveRtFormat);
                     div <<= 1;
                 }
 
                 // Downsample pyramid
-                var lumRt = rts[downsample - 1];
-                Graphics.Blit(rtSquared, rts[0], material, (int)Pass.AdaptationLog);
+                var lumRt = m_AdaptRts[downsample - 1];
+                Graphics.Blit(rtSquared, m_AdaptRts[0], material, (int)Pass.AdaptationLog);
                 for (int i = 0; i < downsample - 1; i++)
                 {
-                    Graphics.Blit(rts[i], rts[i + 1]);
-                    lumRt = rts[i + 1];
+                    Graphics.Blit(m_AdaptRts[i], m_AdaptRts[i + 1]);
+                    lumRt = m_AdaptRts[i + 1];
                 }
 
                 // Keeping luminance values between frames, RT restore expected
@@ -982,12 +986,12 @@ namespace UnityStandardAssets.CinematicEffects
                     Graphics.Blit(identityLut, internalLutRt, material, (int)Pass.LutGen);
                     m_Dirty = false;
                 }
-                
+
                 material.EnableKeyword("ENABLE_COLOR_GRADING");
 
                 if (colorGrading.useDithering)
                     material.EnableKeyword("ENABLE_DITHERING");
-                
+
                 material.SetTexture("_InternalLutTex", internalLutRt);
                 material.SetVector("_InternalLutParams", new Vector3(1f / internalLutRt.width, 1f / internalLutRt.height, internalLutRt.height - 1f));
             }
@@ -1004,8 +1008,8 @@ namespace UnityStandardAssets.CinematicEffects
             // Cleanup for eye adaptation
             if (eyeAdaptation.enabled)
             {
-                for (int i = 0; i < rts.Length; i++)
-                    RenderTexture.ReleaseTemporary(rts[i]);
+                for (int i = 0; i < m_AdaptRts.Length; i++)
+                    RenderTexture.ReleaseTemporary(m_AdaptRts[i]);
 
                 RenderTexture.ReleaseTemporary(rtSquared);
             }

@@ -12,6 +12,11 @@
 // the fixed one.
 #define FIXED_SAMPLING_PATTERN 1
 
+// The SampleNormal function normalizes samples from G-buffer because
+// they're possibly unnormalized. We can eliminate this if it can be said
+// that there is no bad shader that outputs unnormalized normals.
+#define VALIDATE_NORMALS 1
+
 // The constant below determines the contrast of occlusion. Altough this
 // allows intentional over/under occlusion, currently is not exposed to the
 // editor, because it’s thought to be rarely useful.
@@ -48,6 +53,7 @@ int _SampleCount;
 
 sampler2D _MainTex;
 float4 _MainTex_TexelSize;
+half4 _MainTex_ST;
 sampler2D _OcclusionTexture;
 
 // Material shader properties
@@ -102,17 +108,31 @@ float CheckBounds(float2 uv, float d)
     return ob * 1e8;
 }
 
+// Check if the camera is perspective; returns 1.0 when orthographic.
+float CheckPerspective(float x)
+{
+    return lerp(x, 1, unity_OrthoParams.w);
+}
+
+// Z buffer depth to linear 0-1 depth
+float LinearizeDepth(float z)
+{
+    float isOrtho = unity_OrthoParams.w;
+    float isPers = 1 - unity_OrthoParams.w;
+    z *= _ZBufferParams.x;
+    return (1 - isOrtho * z) / (isPers * z + _ZBufferParams.y);
+}
+
 // Depth/normal sampling functions
 float SampleDepth(float2 uv)
 {
 #if SOURCE_GBUFFER || SOURCE_DEPTH
-    float d = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, uv);
-    return LinearEyeDepth(d) + CheckBounds(uv, d);
+    float d = LinearizeDepth(SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, uv));
 #else
     float4 cdn = tex2D(_CameraDepthNormalsTexture, uv);
     float d = DecodeFloatRG(cdn.zw);
-    return d * _ProjectionParams.z + CheckBounds(uv, d);
 #endif
+    return d * _ProjectionParams.z + CheckBounds(uv, d);
 }
 
 float3 SampleNormal(float2 uv)
@@ -120,7 +140,11 @@ float3 SampleNormal(float2 uv)
 #if SOURCE_GBUFFER
     float3 norm = tex2D(_CameraGBufferTexture2, uv).xyz;
     norm = norm * 2 - any(norm); // gets (0,0,0) when norm == 0
-    return mul((float3x3)unity_WorldToCamera, norm);
+    norm = mul((float3x3)unity_WorldToCamera, norm);
+#if VALIDATE_NORMALS
+    norm = normalize(norm);
+#endif
+    return norm;
 #else
     float4 cdn = tex2D(_CameraDepthNormalsTexture, uv);
     return DecodeViewNormalStereo(cdn) * float3(1, 1, -1);
@@ -145,7 +169,7 @@ float SampleDepthNormal(float2 uv, out float3 normal)
 // p13_31 = (unity_CameraProjection._13, unity_CameraProjection._23)
 float3 ReconstructViewPos(float2 uv, float depth, float2 p11_22, float2 p13_31)
 {
-    return float3((uv * 2 - 1 - p13_31) / p11_22, 1) * depth;
+    return float3((uv * 2 - 1 - p13_31) / p11_22 * CheckPerspective(depth), depth);
 }
 
 // Normal vector comparer (for geometry-aware weighting)
@@ -179,7 +203,7 @@ float3 PickSamplePoint(float2 uv, float index)
 }
 
 // Occlusion estimator function
-float EstimateOcclusion(float2 uv)
+float EstimateOcclusion(float2 uv, float2 uv01)
 {
     // Parameters used in coordinate conversion
     float3x3 proj = (float3x3)unity_CameraProjection;
@@ -197,7 +221,7 @@ float EstimateOcclusion(float2 uv)
 #endif
 
     // Reconstruct the view-space position.
-    float3 vpos_o = ReconstructViewPos(uv, depth_o, p11_22, p13_31);
+    float3 vpos_o = ReconstructViewPos(uv01, depth_o, p11_22, p13_31);
 
     // Distance-based AO estimator based on Morgan 2011 http://goo.gl/2iz3P
     float ao = 0.0;
@@ -217,13 +241,18 @@ float EstimateOcclusion(float2 uv)
 
         // Reproject the sample point
         float3 spos_s1 = mul(proj, vpos_s1);
-        float2 uv_s1 = (spos_s1.xy / vpos_s1.z + 1) * 0.5;
+        float2 uv_s1_01 = (spos_s1.xy / CheckPerspective(vpos_s1.z) + 1) * 0.5;
+#ifdef UNITY_SINGLE_PASS_STEREO
+        float2 uv_s1 = UnityStereoScreenSpaceUVAdjust(uv_s1_01, _MainTex_ST);
+#else
+        float2 uv_s1 = uv_s1_01;
+#endif
 
         // Depth at the sample point
         float depth_s1 = SampleDepth(uv_s1);
 
         // Relative position of the sample point
-        float3 vpos_s2 = ReconstructViewPos(uv_s1, depth_s1, p11_22, p13_31);
+        float3 vpos_s2 = ReconstructViewPos(uv_s1_01, depth_s1, p11_22, p13_31);
         float3 v_s2 = vpos_s2 - vpos_o;
 
         // Estimate the obscurance value
@@ -314,50 +343,62 @@ half SeparableBlurSmall(sampler2D tex, float2 uv, float2 delta)
     return s / (w0 + w1 + w2);
 }
 
-// Occlusion estimation pass
-half4 frag_ao(v2f_img i) : SV_Target
+// Common vertex shader
+struct v2f
 {
-    return EstimateOcclusion(i.uv);
+    float4 pos : SV_POSITION;
+    half2 uv : TEXCOORD0;    // Screen space UV (supports stereo rendering)
+    half2 uv01 : TEXCOORD1;  // Original UV (from 0 to 1)
+    half2 uvAlt : TEXCOORD2; // Alternative UV (supports v-flip case)
+};
+
+v2f vert(appdata_img v)
+{
+    half2 uvAlt = v.texcoord;
+#if UNITY_UV_STARTS_AT_TOP
+    if (_MainTex_TexelSize.y < 0.0) uvAlt.y = 1 - uvAlt.y;
+#endif
+
+    v2f o;
+#ifdef UNITY_SINGLE_PASS_STEREO
+    o.pos = UnityObjectToClipPos(v.vertex);
+    o.uv = UnityStereoScreenSpaceUVAdjust(v.texcoord, _MainTex_ST);
+    o.uvAlt = UnityStereoScreenSpaceUVAdjust(uvAlt, _MainTex_ST);
+#else
+    o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+    o.uv = v.texcoord;
+    o.uvAlt = uvAlt;
+#endif
+    o.uv01 = uvAlt;
+
+    return o;
+}
+
+// Occlusion estimation pass
+half4 frag_ao(v2f i) : SV_Target
+{
+    return EstimateOcclusion(i.uvAlt, i.uv01);
 }
 
 // Noise reduction pass (large kernel)
-half4 frag_blur1(v2f_img i) : SV_Target
+half4 frag_blur1(v2f i) : SV_Target
 {
     float2 delta = _MainTex_TexelSize.xy * _BlurVector;
     return SeparableBlurLarge(_MainTex, i.uv, delta);
 }
 
 // Noise reduction pass (small kernel)
-half4 frag_blur2(v2f_img i) : SV_Target
+half4 frag_blur2(v2f i) : SV_Target
 {
     float2 delta = _MainTex_TexelSize.xy * _BlurVector;
     return SeparableBlurSmall(_MainTex, i.uv, delta);
 }
 
 // Combiner pass for the forward mode
-struct v2f_multitex
+half4 frag_combine(v2f i) : SV_Target
 {
-    float4 pos : SV_POSITION;
-    float2 uv0 : TEXCOORD0;
-    float2 uv1 : TEXCOORD1;
-};
-
-v2f_multitex vert_multitex(appdata_img v)
-{
-    // Handles vertically-flipped case.
-    float vflip = sign(_MainTex_TexelSize.y);
-
-    v2f_multitex o;
-    o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
-    o.uv0 = v.texcoord.xy;
-    o.uv1 = (v.texcoord.xy - 0.5) * float2(1, vflip) + 0.5;
-    return o;
-}
-
-half4 frag_combine(v2f_multitex i) : SV_Target
-{
-    half4 src = tex2D(_MainTex, i.uv0);
-    half ao = tex2D(_OcclusionTexture, i.uv1).r;
+    half4 src = tex2D(_MainTex, i.uv);
+    half ao = tex2D(_OcclusionTexture, i.uvAlt).r;
     return half4(CombineOcclusion(src.rgb, ao), src.a);
 }
 
@@ -401,9 +442,9 @@ fixed4 frag_gbuffer_combine(v2f_img i) : SV_Target0
 #endif
 
 // Debug blit
-half4 frag_blit_ao(v2f_multitex i) : SV_Target
+half4 frag_blit_ao(v2f i) : SV_Target
 {
-    half4 src = tex2D(_MainTex, i.uv0);
-    half ao = tex2D(_OcclusionTexture, i.uv1).r;
+    half4 src = tex2D(_MainTex, i.uv);
+    half ao = tex2D(_OcclusionTexture, i.uvAlt).r;
     return half4(CombineOcclusion(1, ao), src.a);
 }
