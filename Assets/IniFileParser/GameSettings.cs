@@ -41,6 +41,8 @@ public class GameSettings : MonoBehaviour
     public class CameraSettings
     {
         public float fieldOfView = 70;
+        public bool deferredRendering = true;
+        public bool SSAO = true;
     }
 
     [Serializable]

@@ -17,7 +17,6 @@ public class CameraScale : MonoBehaviour
     CameraRotate cameraRotate;
     CameraMovement cameraMovement;
     CameraRotateVertical cameraRotateVertical;
-    public Camera steamVrCamera;
 
     void SetFirstPerson(bool value)
     {
@@ -58,16 +57,6 @@ public class CameraScale : MonoBehaviour
     public void Start()
     {
         SetFirstPerson(false);
-        if (SteamVR.active)
-        {
-            camera.gameObject.SetActive(false);
-            steamVrCamera.gameObject.SetActive(true);
-        }
-        else
-        {
-            camera.gameObject.SetActive(true);
-            steamVrCamera.gameObject.SetActive(false);
-        }
     }
 
     private void HandleMouseRotation()
