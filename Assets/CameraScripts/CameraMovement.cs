@@ -65,4 +65,10 @@ public class CameraMovement : MonoBehaviour
             transform.Translate(movement * Time.deltaTime * speed * cameraDistance, Space.Self);
         }
     }
+
+    public void OnEnable()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
 }

@@ -7,6 +7,16 @@ public class MapPositionUpdater : MonoBehaviour
 
     public Vector3 offset;
 
+    public enum FirstPerson
+    {
+        DontCare,
+        Yes,
+        No
+        
+    }
+
+    public FirstPerson firstPerson;
+
     public void Awake()
     {
         map = FindObjectOfType<GameMap>();
@@ -23,5 +33,11 @@ public class MapPositionUpdater : MonoBehaviour
             map.UpdateCenter(newPos);
             oldPos = newPos;
         }
+    }
+
+    public void OnEnable()
+    {
+        if(firstPerson != FirstPerson.DontCare)
+            map.firstPerson = firstPerson == FirstPerson.Yes;
     }
 }
