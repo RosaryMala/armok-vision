@@ -286,7 +286,7 @@ public class GameMap : MonoBehaviour
 
         var camera = FindObjectOfType<CameraMovement>();
 
-        if (camera.following || GameSettings.Instance.game.showDFScreen)
+        if ((camera != null && camera.following) || GameSettings.Instance.game.showDFScreen)
             UpdateView();
 
 

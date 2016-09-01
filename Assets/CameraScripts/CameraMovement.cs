@@ -63,8 +63,6 @@ public class CameraMovement : MonoBehaviour
                 cameraDistance *= fasterMultiplier;
             Vector3 movement = new Vector3(moveX, moveZ, moveY);
             transform.Translate(movement * Time.deltaTime * speed * cameraDistance, Space.Self);
-            if (gameMap != null)
-                gameMap.UpdateCenter(transform.position);
         }
     }
 }
