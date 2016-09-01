@@ -61,15 +61,15 @@ public class CameraSelector : MonoBehaviour
         if (oldRoot == null || newRoot == null)
             return;
 
-        oldRoot.gameObject.SetActive(false);
-        newRoot.gameObject.SetActive(true);
-
         newRoot.transform.position = oldRoot.transform.position;
 
         ActualCamera.transform.parent = newSibling.parent;
         ActualCamera.transform.localPosition = newSibling.localPosition;
         ActualCamera.transform.localRotation = newSibling.localRotation;
         ActualCamera.transform.localScale = newSibling.localScale;
+
+        oldRoot.gameObject.SetActive(false);
+        newRoot.gameObject.SetActive(true);
     }
 
     public void Update()

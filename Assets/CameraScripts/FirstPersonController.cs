@@ -42,7 +42,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private AudioSource m_AudioSource;
 
         // Use this for initialization
-        private void Start()
+        private void OnEnable()
         {
             m_CharacterController = GetComponent<CharacterController>();
             m_Camera = Camera.main;
