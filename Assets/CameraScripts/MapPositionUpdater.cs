@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using DFHack;
 
 public class MapPositionUpdater : MonoBehaviour
 {
-    GameMap map;
+    GameMap gameMap;
 
     public Vector3 offset;
 
@@ -17,9 +18,11 @@ public class MapPositionUpdater : MonoBehaviour
 
     public FirstPerson firstPerson;
 
+    public bool following ;
+
     public void Awake()
     {
-        map = FindObjectOfType<GameMap>();
+        gameMap = FindObjectOfType<GameMap>();
     }
 
     Vector3 oldPos;
@@ -27,17 +30,23 @@ public class MapPositionUpdater : MonoBehaviour
     public void Update()
     {
         Vector3 newPos = transform.TransformPoint(offset);
-
-        if (map != null && (oldPos - newPos).sqrMagnitude > 0.01)
+        Vector3 scaledOffset = transform.position - newPos;
+        if (following && gameMap != null)
         {
-            map.UpdateCenter(newPos);
+            transform.position = GameMap.DFtoUnityTileCenter(new DFCoord(gameMap.PosXTile, gameMap.PosYTile, gameMap.PosZ - 1)) + scaledOffset;
+        }
+        if (gameMap != null && (oldPos - newPos).sqrMagnitude > 0.01)
+        {
+            following = false;
+            gameMap.UpdateCenter(newPos);
             oldPos = newPos;
         }
+
     }
 
     public void OnEnable()
     {
         if(firstPerson != FirstPerson.DontCare)
-            map.firstPerson = firstPerson == FirstPerson.Yes;
+            gameMap.firstPerson = firstPerson == FirstPerson.Yes;
     }
 }

@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
-
+using UnityEngine.VR;
 public class CameraSelector : MonoBehaviour
 {
 
@@ -15,7 +14,7 @@ public class CameraSelector : MonoBehaviour
     public Camera ActualCamera;
     public Transform GodViewCamera;
     public Transform FirstPersonCamera;
-
+    public Transform GodViewVRCamera;
 
     CameraOption currentCamera = CameraOption.GodView;
     public void ChangeCamera(CameraOption option)
@@ -24,12 +23,24 @@ public class CameraSelector : MonoBehaviour
         switch (option)
         {
             case CameraOption.GodView:
+                if(ActualCamera.GetComponent<SteamVR_Camera>().enabled)
+                {
+                    ActualCamera.GetComponent<SteamVR_Camera>().enabled = false;
+                    ActualCamera.GetComponent<SteamVR_Camera>().Collapse();
+                }
                 ChangeParent(GodViewCamera);
                 break;
             case CameraOption.FirstPerson:
+                if (ActualCamera.GetComponent<SteamVR_Camera>().enabled)
+                {
+                    ActualCamera.GetComponent<SteamVR_Camera>().enabled = false;
+                    ActualCamera.GetComponent<SteamVR_Camera>().Collapse();
+                }
                 ChangeParent(FirstPersonCamera);
                 break;
             case CameraOption.GodViewVR:
+                ChangeParent(GodViewVRCamera);
+                ActualCamera.GetComponent<SteamVR_Camera>().enabled = true;
                 break;
             case CameraOption.FirstPersonVR:
                 break;
@@ -40,6 +51,8 @@ public class CameraSelector : MonoBehaviour
 
     void CycleCamera()
     {
+        if (SteamVR.active)
+            return;
         switch (currentCamera)
         {
             case CameraOption.GodView:
@@ -86,5 +99,16 @@ public class CameraSelector : MonoBehaviour
                 return trans;
         }
         return null;
+    }
+
+    public void Start()
+    {
+        if (VRSettings.loadedDeviceName == "OpenVR")
+        {
+            ChangeCamera(CameraOption.GodViewVR);
+            Debug.Log("Started VR Mode");
+        }
+        else
+            ChangeCamera(CameraOption.GodView);
     }
 }
