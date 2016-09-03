@@ -1411,7 +1411,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offset: {x: 0, y: 1.5, z: 0}
   firstPerson: 1
-  following: 1
+  following: 0
 --- !u!114 &658606371
 MonoBehaviour:
   m_ObjectHideFlags: 0
