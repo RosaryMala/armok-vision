@@ -18,7 +18,8 @@ public class MapPositionUpdater : MonoBehaviour
 
     public FirstPerson firstPerson;
 
-    public bool following ;
+    public bool following;
+    public bool forceFollowing;
 
     public void Awake()
     {
@@ -35,7 +36,7 @@ public class MapPositionUpdater : MonoBehaviour
         {
             transform.position = GameMap.DFtoUnityTileCenter(new DFCoord(gameMap.PosXTile, gameMap.PosYTile, gameMap.PosZ - 1)) + scaledOffset;
         }
-        if (gameMap != null && (oldPos - newPos).sqrMagnitude > 0.01)
+        if (gameMap != null && (oldPos - newPos).sqrMagnitude > 0.01 && !(forceFollowing && following))
         {
             following = false;
             gameMap.UpdateCenter(newPos);
