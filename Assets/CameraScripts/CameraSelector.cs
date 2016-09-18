@@ -7,8 +7,7 @@ public class CameraSelector : MonoBehaviour
     {
         GodView,
         FirstPerson,
-        GodViewVR,
-        FirstPersonVR
+        VR,
     }
 
     public Camera ActualCamera;
@@ -19,6 +18,7 @@ public class CameraSelector : MonoBehaviour
     CameraOption currentCamera = CameraOption.GodView;
     public void ChangeCamera(CameraOption option)
     {
+        Debug.Log("Changing to " + option);
         currentCamera = option;
         switch (option)
         {
@@ -38,11 +38,9 @@ public class CameraSelector : MonoBehaviour
                 }
                 ChangeParent(FirstPersonCamera);
                 break;
-            case CameraOption.GodViewVR:
+            case CameraOption.VR:
                 ChangeParent(GodViewVRCamera);
                 ActualCamera.GetComponent<SteamVR_Camera>().enabled = true;
-                break;
-            case CameraOption.FirstPersonVR:
                 break;
             default:
                 break;
@@ -71,8 +69,16 @@ public class CameraSelector : MonoBehaviour
     {
         Transform oldRoot = FindParentWithTag(ActualCamera.transform, "CameraRig");
         Transform newRoot = FindParentWithTag(newSibling.transform, "CameraRig");
-        if (oldRoot == null || newRoot == null)
+        if (oldRoot == null)
+        {
+            Debug.Log("Cannot find source CameraRig! Exiting.");
             return;
+        }
+        if (newRoot == null)
+        {
+            Debug.Log("Cannot find destination CameraRig! Exiting.");
+            return;
+        }
 
         newRoot.transform.position = oldRoot.transform.position;
 
@@ -105,10 +111,13 @@ public class CameraSelector : MonoBehaviour
     {
         if (VRSettings.loadedDeviceName == "OpenVR")
         {
-            ChangeCamera(CameraOption.GodViewVR);
+            ChangeCamera(CameraOption.VR);
             Debug.Log("Started VR Mode");
         }
         else
+        {
             ChangeCamera(CameraOption.GodView);
+            Debug.Log("Started Monitor Mode");
+        }
     }
 }

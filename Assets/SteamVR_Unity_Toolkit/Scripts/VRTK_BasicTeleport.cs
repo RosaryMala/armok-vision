@@ -37,6 +37,7 @@ namespace VRTK
         private float maxBlinkTransitionSpeed = 1.5f;
         private float maxBlinkDistance = 33f;
         private SteamVR_ControllerManager controllerManager;
+        MapPositionUpdater mapPosition;
 
         public void InitDestinationSetListener(GameObject markerMaker, bool register)
         {
@@ -64,6 +65,7 @@ namespace VRTK
             Utilities.SetPlayerObject(gameObject, VRTK_PlayerObject.ObjectTypes.CameraRig);
             eyeCamera = Utilities.AddCameraFade();
             controllerManager = FindObjectOfType<SteamVR_ControllerManager>();
+            mapPosition = GetComponent<MapPositionUpdater>();
         }
 
         protected virtual void OnEnable()
@@ -129,6 +131,7 @@ namespace VRTK
         {
             if (enableTeleport && ValidLocation(e.target, e.destinationPosition) && e.enableTeleport)
             {
+                mapPosition.following = false;
                 OnTeleporting(sender, e);
                 Vector3 newPosition = GetNewPosition(e.destinationPosition, e.target);
                 CalculateBlinkDelay(blinkTransitionSpeed, newPosition);
