@@ -1415,6 +1415,8 @@ public class GameMap : MonoBehaviour
     {
         if (!GameSettings.Instance.units.drawUnits)
             return;
+        if (creatureTemplate == null)
+            return;
         CultureInfo cultureInfo = Thread.CurrentThread.CurrentCulture;
         TextInfo textInfo = cultureInfo.TextInfo;
         unitList = DFConnection.Instance.PopUnitListUpdate();
@@ -1539,6 +1541,18 @@ public class GameMap : MonoBehaviour
 
     private bool DrawSingleBlock(int xx, int yy, int zz, bool phantom, Matrix4x4 LocalTransform, bool top)
     {
+        if (blocks[xx, yy, zz] == null
+            && topBlocks[xx, yy, zz] == null
+            && stencilBlocks[xx, yy, zz] == null
+            && topStencilBlocks[xx, yy, zz] == null
+            && transparentBlocks[xx, yy, zz] == null
+            && topTransparentBlocks[xx, yy, zz] == null
+            && liquidBlocks[xx, yy, zz, MapDataStore.WATER_INDEX] == null
+            && liquidBlocks[xx, yy, zz, MapDataStore.MAGMA_INDEX] == null)
+            return false;
+
+        Profiler.BeginSample("DrawSingleBlock", this);
+
         MaterialPropertyBlock matBlock = null;
         if (spatterLayers[zz] != null)
         {
@@ -1591,6 +1605,7 @@ public class GameMap : MonoBehaviour
             Graphics.DrawMesh(liquidBlocks[xx, yy, zz, MapDataStore.MAGMA_INDEX], LocalTransform, magmaMaterial, 4);
             drewBlock = true;
         }
+        Profiler.EndSample();
         return drewBlock;
     }
 
