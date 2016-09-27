@@ -22,5 +22,5 @@
 
 		ENDCG
 	} 
-	FallBack "Diffuse"
+	FallBack "Custom/ArmokStandardPBRNoSpatter"
 }

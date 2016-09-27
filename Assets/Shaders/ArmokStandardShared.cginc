@@ -3,6 +3,7 @@
 
 // Use shader model 3.0 target, to get nicer looking lighting
 #pragma target 3.0
+#pragma exclude_renderers d3d11_9x
 
 sampler2D _MainTex;
 sampler2D _Shapetex;
