@@ -10,7 +10,7 @@ Material:
   m_Shader: {fileID: 4800000, guid: e207164973c16f349bf7a7aedad7e2fa, type: 3}
   m_ShaderKeywords: DIFFCUBE_ON LUX_AO_OFF SPECCUBE_ON _ALPHATEST_ON _NORMALMAP
   m_LightmapFlags: 5
-  m_CustomRenderQueue: 2450
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   m_SavedProperties:
     serializedVersion: 2
