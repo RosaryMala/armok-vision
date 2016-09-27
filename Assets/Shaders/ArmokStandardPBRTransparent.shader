@@ -28,5 +28,5 @@
 
 		ENDCG
 	} 
-	FallBack "Transparent/Diffuse"
+	FallBack "Custom/ArmokStandardPBRTransparentNoSpatter"
 }

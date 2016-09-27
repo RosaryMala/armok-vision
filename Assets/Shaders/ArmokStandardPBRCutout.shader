@@ -24,5 +24,5 @@
 
 		ENDCG
 	} 
-	FallBack "Diffuse"
+	FallBack "Custom/ArmokStandardPBRCutoutNoSpatter"
 }
