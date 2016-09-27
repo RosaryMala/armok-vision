@@ -69,7 +69,7 @@ MonoBehaviour:
   rumbleOnTouch: {x: 0, y: 0}
   allowedTouchControllers: 0
   hideControllerOnTouch: 0
-  isGrabbable: 0
+  isGrabbable: 1
   isDroppable: 1
   isSwappable: 1
   holdButtonToGrab: 1
