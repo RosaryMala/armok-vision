@@ -276,18 +276,18 @@ public class RegionMaker : MonoBehaviour
                 MapDataStore.Tile fakeTile = new MapDataStore.Tile(null, new DFCoord(0, 0, 0));
 
                 fakeTile.material = tile.surfaceMaterial;
-
+                Color terrainColor = Color.green;
                 ColorContent colorDef;
-                ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef);
+                if (ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
+                    terrainColor = colorDef.value;
 
-                Color terrainColor = colorDef.value;
                 Color plantColor = Color.black;
                 Color stoneColor = Color.grey;
                 foreach (var item in tile.plantMaterials)
                 {
                     fakeTile.material = item;
-                    ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef);
-                    plantColor += colorDef.value;
+                    if (ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
+                        plantColor += colorDef.value;
                 }
                 float plantBlend = Mathf.Pow(tile.vegetation / 100.0f, 0.25f);
                 if (tile.plantMaterials.Count == 0)
@@ -298,8 +298,8 @@ public class RegionMaker : MonoBehaviour
                 if (tile.stoneMaterials.Count > 0)
                 {
                     fakeTile.material = tile.stoneMaterials[0];
-                    ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef);
-                    stoneColor = colorDef.value;
+                    if (ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
+                        stoneColor = colorDef.value;
                 }
 
                 Color blendedColor = Color.Lerp(terrainColor, plantColor, plantBlend);
@@ -381,8 +381,7 @@ public class RegionMaker : MonoBehaviour
                                 {
                                     fakeTile.material = building.material;
                                     Color buildingColor;
-                                    ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef);
-                                    if (colorDef != null)
+                                    if(ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
                                         buildingColor = colorDef.value;
                                     else
                                     {
@@ -399,8 +398,7 @@ public class RegionMaker : MonoBehaviour
                                     fakeTile.material = building.material;
                                     Color buildingColor;
                                     Color roofColor;
-                                    ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef);
-                                    if (colorDef != null)
+                                    if(ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
                                     {
                                         buildingColor = colorDef.value;
                                         roofColor = colorDef.value;
@@ -435,8 +433,7 @@ public class RegionMaker : MonoBehaviour
                                 {
                                     fakeTile.material = building.material;
                                     Color buildingColor;
-                                    ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef);
-                                    if (colorDef != null)
+                                    if(ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
                                         buildingColor = colorDef.value;
                                     else
                                     {
@@ -462,8 +459,7 @@ public class RegionMaker : MonoBehaviour
                                     if (fakeTile.material.mat_type < 0)
                                         fakeTile.material = new MatPairStruct(0, fakeTile.material.mat_index);
                                     Color buildingColor;
-                                    ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef);
-                                    if (colorDef != null)
+                                    if(ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
                                         buildingColor = colorDef.value;
                                     else
                                         buildingColor = Color.grey;
@@ -491,8 +487,7 @@ public class RegionMaker : MonoBehaviour
 
                                     fakeTile.material = tree;
                                     Color buildingColor;
-                                    ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef);
-                                    if (colorDef != null)
+                                    if(ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
                                         buildingColor = colorDef.value;
                                     else
                                     {
@@ -608,6 +603,8 @@ public class RegionMaker : MonoBehaviour
         }
 
     }
+    
+    #region MeshGenHelpers
 
     private void AddRiverTile(Sides riverSides, RiverTile riverTile, Vector3 vert1, Vector2 biome, float north, float east, float south, float west, Color terrainColor)
     {
@@ -1537,4 +1534,6 @@ public class RegionMaker : MonoBehaviour
         triangles.Add(index + 2);
         triangles.Add(index + 3);
     }
+
+    #endregion
 }
