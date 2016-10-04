@@ -3253,7 +3253,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BlocksToFetch: 10
-  RunOnAlternateThread: 1
+  RunOnAlternateThread: 0
 --- !u!4 &1201785584
 Transform:
   m_ObjectHideFlags: 0
