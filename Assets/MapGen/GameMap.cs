@@ -1130,7 +1130,11 @@ public class GameMap : MonoBehaviour
 
                     ColorContent cont;
 
-                    if (ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out cont))
+                    if (spatter.material.mat_type == (int)MatBasic.ICE && spatter.state == MatterState.Powder)
+                    {
+                        color = Color.white;
+                    }
+                    else if (ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out cont))
                     {
                         color = cont.value;
                     }
