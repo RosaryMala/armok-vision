@@ -1111,6 +1111,9 @@ public class GameMap : MonoBehaviour
                 if (tile.spatters == null || tile.spatters.Count == 0)
                     continue;
 
+                if (tile.Hidden)
+                    continue;
+
                 Color totalColor = new Color(0, 0, 0, 0);
 
                 float totalAmount = 0;
