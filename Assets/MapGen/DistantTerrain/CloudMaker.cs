@@ -11,7 +11,6 @@ public class CloudMaker : MonoBehaviour
     {
         return x + y * width;
     }
-    public Vector3 offset;
     public float scale;
     MeshFilter meshFilter;
 
@@ -40,10 +39,10 @@ public class CloudMaker : MonoBehaviour
             for (int y = 0; y < height; y++)
             {
                 int index = CoordToIndex(x, y);
-                vertexPositions[index] = (new Vector3(
+                vertexPositions[index] = new Vector3(
                     x * 16 * 48 * GameMap.tileWidth,
                     0,
-                    -y * 16 * 48 * GameMap.tileWidth) + offset) * scale;
+                    -y * 16 * 48 * GameMap.tileWidth) * scale;
                 vertexColors[index] = Color.white;
                 if (cloudArray[x, y])
                     vertexColors[index].a = 1;
