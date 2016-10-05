@@ -1,3 +1,10 @@
+v 0.12.0
+ * Added support for displaying material spatters, including blood, vomit, fallen leaves, mud, snow, etc.
+ * Added a few more options to the esc menu, including camera stuff.
+ * Brought back the old first person camera, and added a key to switch between floating and walking cameras. Default is C.
+ * Fixed a set of bugs that caused the map to not render when playing a heavily modded Dwarf Fortress.
+ * Added basic VR support. Needs heavy testing. To use it, just start Armok Vision with SteamVR running.
+
 v 0.11.3
  * More improvements to the automated build process.
  * Allow the user to instantly turn off distant terrain and clouds, but enabling them stil requires a restart.
