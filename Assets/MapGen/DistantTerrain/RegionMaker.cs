@@ -132,7 +132,7 @@ public class RegionMaker : MonoBehaviour
 
         offset += new Vector3(-0.5f, 0, 0.5f) * GameMap.tileWidth;
 
-        transform.position = offset;
+        transform.localPosition = offset;
         transform.localScale = new Vector3(scale, scale, scale);
     }
 
