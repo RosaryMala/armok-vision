@@ -45,9 +45,14 @@ public enum MatBasic
 
 }
 
-public class ContentLoader
+public class ContentLoader : MonoBehaviour
 {
-    public static ContentLoader Instance { get; set; }
+    public void Start()
+    {
+        DFConnection.RegisterConnectionCallback(Initialize);
+    }
+
+    public static ContentLoader Instance { get; private set; }
 
     public static MatBasic lookupMaterialType(string value)
     {
@@ -135,7 +140,7 @@ public class ContentLoader
     public TileConfiguration<MeshContent> CollisionMeshConfiguration { get; private set; }
     public TileConfiguration<MeshContent> BuildingCollisionMeshConfiguration { get; private set; }
 
-    public ContentLoader()
+    public void Awake()
     {
         materialTextureStorage = new TextureStorage();
         shapeTextureStorage = new TextureStorage();
@@ -154,13 +159,24 @@ public class ContentLoader
     {
         Texture2D tex = new Texture2D(4, 4);
         var pix = tex.GetPixels();
-        for(int i = 0; i < pix.Length; i++)
+        for (int i = 0; i < pix.Length; i++)
         {
             pix[i] = color;
         }
         tex.SetPixels(pix);
         tex.Apply();
         return tex;
+    }
+
+    public void Initialize()
+    {
+        System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+        watch.Start();
+        ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt");
+        FinalizeTextureAtlases();
+        Instance = this;
+        watch.Stop();
+        Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
     }
 
 
@@ -187,7 +203,7 @@ public class ContentLoader
             {
                 filePath = Path.Combine(Path.GetDirectoryName(path), fileArray[i]);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 continue; //Todo: Make an error message here
             }
@@ -227,7 +243,7 @@ public class ContentLoader
                     MaterialTextureConfiguration.AddSingleContentConfig(doc, materialTextureStorage, materialTextures);
                     break;
                 case "shapeTextures":
-                    if(ShapeTextureConfiguration == null)
+                    if (ShapeTextureConfiguration == null)
                         ShapeTextureConfiguration = TileConfiguration<NormalContent>.GetFromRootElement(doc, "shapeTexture");
                     ShapeTextureConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
                     break;
@@ -255,7 +271,7 @@ public class ContentLoader
                     if (CreatureMeshConfiguration == null)
                         CreatureMeshConfiguration = CreatureConfiguration<MeshContent>.GetFromRootElement(doc, "creatureMesh");
                     CreatureMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage, specialTextureStorage));
-                            break;
+                    break;
                 case "growthMeshes":
                     if (GrowthMeshConfiguration == null)
                         GrowthMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "growthMesh");

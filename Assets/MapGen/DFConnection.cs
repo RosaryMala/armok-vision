@@ -306,7 +306,7 @@ public sealed class DFConnection : MonoBehaviour
             mapResetCall.execute();
         InitStatics();
 
-        foreach (System.Action callback in connectionCallbacks)
+        foreach (Action callback in connectionCallbacks)
         {
             callback.Invoke();
         }
@@ -461,14 +461,6 @@ public sealed class DFConnection : MonoBehaviour
             PlantTokenList.PlantRawList = netPlantRawList.plant_raws;
             Debug.Log("Plant Raws fetched: " + netPlantRawList.plant_raws.Count);
         }
-
-        ContentLoader.Instance = new ContentLoader();
-        System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
-        watch.Start();
-        ContentLoader.Instance.ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt");
-        ContentLoader.Instance.FinalizeTextureAtlases();
-        watch.Stop();
-        Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
 
         //Debug.Log("Buildingtypes fetched: " + netBuildingList.building_list.Count);
         //Debug.Log("Creature Raws fetched: " + netCreatureRawList.creature_raws.Count);
