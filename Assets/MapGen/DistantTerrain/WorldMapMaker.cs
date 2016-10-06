@@ -195,7 +195,7 @@ public class WorldMapMaker : MonoBehaviour
             return;
         regionMaps = DFConnection.Instance.PopRegionMapUpdate();
         worldMap = DFConnection.Instance.PopWorldMapUpdate();
-        if (regionMaps != null)
+        if (regionMaps != null && worldMap != null)
         {
             GenerateRegionMeshes();
             GenerateMesh();
@@ -205,27 +205,12 @@ public class WorldMapMaker : MonoBehaviour
             if (DFConnection.Instance.HasWorldMapPositionChanged())
             {
                 CopyFromRemote(worldMap);
-                UpdateRegionPositions(worldMap);
             }
             else
             {
                 if(GameSettings.Instance.rendering.drawClouds)
                     CopyClouds(worldMap);
             }
-        }
-        if (Input.GetKeyDown(KeyCode.Equals))
-            UpdateRegionPositions(worldMap);
-    }
-
-    void UpdateRegionPositions(WorldMap map)
-    {
-        if (GameSettings.Instance.rendering.distantTerrainDetail == GameSettings.LandscapeDetail.Off)
-            return;
-
-        foreach (var item in DetailRegions)
-        {
-            RegionMaker region = item.Value;
-            region.SetPosition(map);
         }
     }
 
@@ -242,6 +227,7 @@ public class WorldMapMaker : MonoBehaviour
             {
                 region = Instantiate(regionPrefab);
                 region.transform.parent = transform;
+                region.transform.localPosition = RegionToUnityCoords(map.map_x, map.map_y, 0);
                 DetailRegions[pos] = region;
             }
             else
@@ -255,8 +241,8 @@ public class WorldMapMaker : MonoBehaviour
     {
         return new Vector3(
             x * 48 * 16 * GameMap.tileWidth,
-            y * GameMap.tileHeight,
-            -z * 48 * 16 * GameMap.tileWidth
+            z * GameMap.tileHeight,
+            -y * 48 * 16 * GameMap.tileWidth
             );
     }
 
@@ -423,16 +409,16 @@ public class WorldMapMaker : MonoBehaviour
 
                 Vector2 biome = new Vector2(regionTiles[x, y].rainfall, 100 - regionTiles[x, y].drainage) / 100;
 
-                Vector3 vert1 = RegionToUnityCoords(x, regionTiles[x, y].elevation, y);
-                Vector3 vert2 = RegionToUnityCoords(x + 1, regionTiles[x, y].elevation, y + 1);
+                Vector3 vert1 = RegionToUnityCoords(x, y, regionTiles[x, y].elevation);
+                Vector3 vert2 = RegionToUnityCoords(x + 1, y + 1, regionTiles[x, y].elevation);
 
 
                 RegionMaker.AddHorizontalQuad(vert1, vert2, biome, terrainColor, vertices, colors, uvs, uv2s, triangles);
 
                 if (regionTiles[x, y].elevation < regionTiles[x, y].water_elevation)
                 {
-                    vert1 = RegionToUnityCoords(x, regionTiles[x, y].water_elevation, y);
-                    vert2 = RegionToUnityCoords(x + 1, regionTiles[x, y].water_elevation, y + 1);
+                    vert1 = RegionToUnityCoords(x, y, regionTiles[x, y].water_elevation);
+                    vert2 = RegionToUnityCoords(x + 1, y+1, regionTiles[x, y].water_elevation);
 
                     RegionMaker.AddHorizontalQuad(vert1, vert2, biome, terrainColor, waterVerts, null, waterUvs, null, waterTris);
                 }
@@ -559,11 +545,11 @@ public class WorldMapMaker : MonoBehaviour
         if (original == null)
         {
             original = Instantiate(cloudPrafab);
-            original.transform.localPosition = new Vector3(0, height * GameMap.tileHeight * scale);
             original.scale = scale;
             original.GenerateMesh(cloudMap);
             original.name = name;
             original.transform.parent = transform;
+            original.transform.localPosition = new Vector3(0, height * GameMap.tileHeight * scale);
         }
         else
             original.UpdateClouds(cloudMap);

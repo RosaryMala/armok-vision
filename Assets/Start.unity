@@ -911,7 +911,6 @@ MonoBehaviour:
   height: 0
   worldName: 
   worldNameEnglish: 
-  offset: {x: 0, y: 0, z: 0}
   cloudPrafab: {fileID: 11429096, guid: 81483fb545a1d2c42ab4bcdf87c47fab, type: 2}
   regionPrefab: {fileID: 11445684, guid: 90bab0905d33d714694a6059b62f28d2, type: 2}
   terrainPrefab: {fileID: 3345160, guid: ca070c912bf1ee84e96d71de7b55d40d, type: 2}
@@ -2057,6 +2056,7 @@ GameObject:
   - 114: {fileID: 861361731}
   - 114: {fileID: 861361732}
   - 114: {fileID: 861361730}
+  - 114: {fileID: 861361733}
   m_Layer: 0
   m_Name: GameMapObject
   m_TagString: Untagged
@@ -2167,6 +2167,17 @@ MonoBehaviour:
   LightList:
   - {fileID: 895398303}
   - {fileID: 692705303}
+--- !u!114 &861361733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 861361727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03ebb23c98a48ec4ea9d9803606b334a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &874450143
 GameObject:
   m_ObjectHideFlags: 0

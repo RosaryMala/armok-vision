@@ -119,23 +119,6 @@ public class RegionMaker : MonoBehaviour
         }
     }
 
-    public void SetPosition(WorldMap mainMap)
-    {
-        if (mainMap != null)
-        {
-            offset = (new Vector3(-mainMap.center_x, 0, mainMap.center_y) + embarkTileOffset) * 48 * GameMap.tileWidth;
-        }
-        else
-        {
-            offset = embarkTileOffset * 48 * GameMap.tileWidth;
-        }
-
-        offset += new Vector3(-0.5f, 0, 0.5f) * GameMap.tileWidth;
-
-        transform.localPosition = offset;
-        transform.localScale = new Vector3(scale, scale, scale);
-    }
-
     public void CopyFromRemote(RegionMap remoteMap, WorldMap mainMap)
     {
         if (remoteMap == null)
@@ -148,7 +131,6 @@ public class RegionMaker : MonoBehaviour
         worldNameEnglish = remoteMap.name_english;
         embarkTileOffset = new Vector3((remoteMap.map_x * 16), 0, -(remoteMap.map_y * 16));
         regionOrigin = new DFCoord(remoteMap.map_x * 16, remoteMap.map_y * 16, 0);
-        SetPosition(mainMap);
         InitArrays();
         for (int x = 0; x < width; x++)
             for (int y = 0; y < height; y++)
