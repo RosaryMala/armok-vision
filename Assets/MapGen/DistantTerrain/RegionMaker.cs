@@ -26,6 +26,7 @@ public class RegionMaker : MonoBehaviour
         public List<SiteRealizationBuilding> buildings;
         public List<MatPairStruct> stoneMaterials;
         public List<MatPairStruct> treeMaterials;
+        public int snow;
 
         public RegionTile(WorldMap remoteMap, int index)
         {
@@ -76,6 +77,7 @@ public class RegionMaker : MonoBehaviour
             {
                 treeMaterials.Add(item);
             }
+            snow = tile.snow;
         }
     }
     public float scale;
@@ -285,6 +287,9 @@ public class RegionMaker : MonoBehaviour
                 }
 
                 Color blendedColor = Color.Lerp(terrainColor, plantColor, plantBlend);
+
+                if (tile.snow > 0)
+                    blendedColor = Color.white;
 
                 if (riverSides == 0)
                     AddFlatTile(vert1, biome, north * GameMap.tileHeight, east * GameMap.tileHeight, south * GameMap.tileHeight, west * GameMap.tileHeight, tile.water_elevation, blendedColor);

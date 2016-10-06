@@ -281,6 +281,8 @@ public class WorldMapMaker : MonoBehaviour
                 if (DetailRegions.ContainsKey(new DFCoord2d(x, y)))
                     continue;
 
+                #region Mesh Finalize
+
                 //If the vertex lists are already full, make a chunk with what we have, and keep going
                 if (vertices.Count >= (65535 - 20))
                 {
@@ -349,6 +351,8 @@ public class WorldMapMaker : MonoBehaviour
                     waterChunkIndex++;
                 }
 
+                #endregion
+
                 MapDataStore.Tile fakeTile = new MapDataStore.Tile(null, new DFCoord(0, 0, 0));
 
                 fakeTile.material = regionTiles[x, y].surface_material;
@@ -413,7 +417,10 @@ public class WorldMapMaker : MonoBehaviour
                 Vector3 vert2 = RegionToUnityCoords(x + 1, y + 1, regionTiles[x, y].elevation);
 
 
-                RegionMaker.AddHorizontalQuad(vert1, vert2, biome, terrainColor, vertices, colors, uvs, uv2s, triangles);
+                if(regionTiles[x,y].snow > 0)
+                    RegionMaker.AddHorizontalQuad(vert1, vert2, biome, Color.white, vertices, colors, uvs, uv2s, triangles);
+                else
+                    RegionMaker.AddHorizontalQuad(vert1, vert2, biome, terrainColor, vertices, colors, uvs, uv2s, triangles);
 
                 if (regionTiles[x, y].elevation < regionTiles[x, y].water_elevation)
                 {
