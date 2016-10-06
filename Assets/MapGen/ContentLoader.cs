@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
@@ -170,18 +171,25 @@ public class ContentLoader : MonoBehaviour
 
     public void Initialize()
     {
+        StartCoroutine(LoadAssets());
+    }
+
+    IEnumerator LoadAssets()
+    {
         System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         watch.Start();
-        ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt");
+        yield return StartCoroutine(ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt"));
         FinalizeTextureAtlases();
         Instance = this;
         watch.Stop();
         Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
+        yield return null;
     }
 
 
-    public bool ParseContentIndexFile(string path)
+    IEnumerator ParseContentIndexFile(string path)
     {
+        Debug.Log("Loading Index File: " + path);
         string line;
         List<string> fileArray = new List<string>(); //This allows us to parse the file in reverse.
         StreamReader file = new StreamReader(path);
@@ -210,23 +218,21 @@ public class ContentLoader : MonoBehaviour
             switch (Path.GetExtension(filePath))
             {
                 case ".txt":
-                    if (!ParseContentIndexFile(filePath))
-                        break; //Todo: replace with an error message
+                    yield return StartCoroutine(ParseContentIndexFile(filePath));
                     break;
                 case ".xml":
-                    if (!ParseContentXMLFile(filePath))
-                        break; //Todo: replace with an error message
+                    yield return StartCoroutine(ParseContentXMLFile(filePath));
                     break;
                 default:
                     break;
             }
         }
-        return true;
+        yield return null;
     }
 
-    bool ParseContentXMLFile(string path)
+    IEnumerator ParseContentXMLFile(string path)
     {
-        bool runningResult = true;
+        Debug.Log("Loading XML File: " + path);
         XElement doc = XElement.Load(path, LoadOptions.SetBaseUri | LoadOptions.SetLineInfo);
         while (doc != null)
         {
@@ -297,7 +303,7 @@ public class ContentLoader : MonoBehaviour
             }
             doc = doc.NextNode as XElement;
         }
-        return runningResult;
+        yield return null;
     }
 
     public void FinalizeTextureAtlases()
