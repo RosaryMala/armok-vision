@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum MatBasic
 {
@@ -52,6 +53,8 @@ public class ContentLoader : MonoBehaviour
     {
         DFConnection.RegisterConnectionCallback(Initialize);
     }
+
+    public Text statusText;
 
     public static ContentLoader Instance { get; private set; }
 
@@ -179,17 +182,20 @@ public class ContentLoader : MonoBehaviour
         System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         watch.Start();
         yield return StartCoroutine(ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt"));
-        FinalizeTextureAtlases();
+        yield return StartCoroutine(FinalizeTextureAtlases());
         Instance = this;
         watch.Stop();
         Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
+        statusText.gameObject.SetActive(false);
         yield return null;
     }
 
 
     IEnumerator ParseContentIndexFile(string path)
     {
-        Debug.Log("Loading Index File: " + path);
+        if (statusText != null)
+            statusText.text = "Loading Index File: " + path;
+
         string line;
         List<string> fileArray = new List<string>(); //This allows us to parse the file in reverse.
         StreamReader file = new StreamReader(path);
@@ -232,7 +238,8 @@ public class ContentLoader : MonoBehaviour
 
     IEnumerator ParseContentXMLFile(string path)
     {
-        Debug.Log("Loading XML File: " + path);
+        if(statusText != null)
+            statusText.text = "Loading XML File: " + path;
         XElement doc = XElement.Load(path, LoadOptions.SetBaseUri | LoadOptions.SetLineInfo);
         while (doc != null)
         {
@@ -306,10 +313,19 @@ public class ContentLoader : MonoBehaviour
         yield return null;
     }
 
-    public void FinalizeTextureAtlases()
+    IEnumerator FinalizeTextureAtlases()
     {
+        if (statusText != null)
+            statusText.text = "Building material textures...";
+        yield return null;
         materialTextureStorage.BuildAtlas("MaterialTexture");
+        if (statusText != null)
+            statusText.text = "Building shape textures...";
+        yield return null;
         shapeTextureStorage.BuildAtlas("ShapeTexture", TextureFormat.RGBA32, new Color(1.0f, 0.5f, 0.0f, 0.5f), true);
+        if (statusText != null)
+            statusText.text = "Building special textures...";
+        yield return null;
         specialTextureStorage.BuildAtlas("SpecialTexture");
 
         GameMap gameMap = GameObject.FindObjectOfType<GameMap>();
@@ -327,6 +343,7 @@ public class ContentLoader : MonoBehaviour
         //get rid of any un-used textures left over.
         Resources.UnloadUnusedAssets();
         GC.Collect();
+        yield return null;
     }
 
 }

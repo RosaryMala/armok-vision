@@ -2097,7 +2097,6 @@ MonoBehaviour:
   waterMaterial: {fileID: 2100000, guid: 653692fae3c0d494fa3483ac3f95927f, type: 2}
   magmaMaterial: {fileID: 2100000, guid: 0234441288425134d810e44bf8760514, type: 2}
   magmaGlowPrefab: {fileID: 10814916, guid: 1404eb50c31e0534896ff4e91f3785e5, type: 2}
-  genStatus: {fileID: 1986774941}
   cursorProperties: {fileID: 793246035}
   overheadShadows: 1
   firstPerson: 0
@@ -2178,6 +2177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03ebb23c98a48ec4ea9d9803606b334a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statusText: {fileID: 1986774941}
 --- !u!1 &874450143
 GameObject:
   m_ObjectHideFlags: 0
@@ -6052,11 +6052,11 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
-    m_Alignment: 0
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 1
-    m_VerticalOverflow: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
 --- !u!222 &1986774942
@@ -6078,18 +6078,18 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1503824699}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 32, y: -32}
-  m_SizeDelta: {x: 160, y: 30}
-  m_Pivot: {x: 0, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1986774945
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1986774940}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1d6ad41feeed74f458eef2424b3c2955, type: 3}
   m_Name: 
