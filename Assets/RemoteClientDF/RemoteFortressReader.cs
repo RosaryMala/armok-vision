@@ -1972,6 +1972,14 @@ namespace RemoteFortressReader
       get { return _tree_materials; }
     }
   
+    private int _snow = default(int);
+    [global::ProtoBuf.ProtoMember(17, IsRequired = false, Name=@"snow", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int snow
+    {
+      get { return _snow; }
+      set { _snow = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
