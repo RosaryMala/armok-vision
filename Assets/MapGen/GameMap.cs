@@ -26,7 +26,6 @@ public class GameMap : MonoBehaviour
     public Material magmaMaterial;
 
     public Light magmaGlowPrefab;
-    public Text genStatus;
     public Text cursorProperties;
 
     public bool overheadShadows = true;

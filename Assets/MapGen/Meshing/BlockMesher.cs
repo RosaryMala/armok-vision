@@ -680,6 +680,8 @@ sealed class SingleThreadedMesher : BlockMesher {
     }
 
     public override void Poll() {
+        if (ContentLoader.Instance == null)
+            return;
         StatsReadout.QueueLength = requestQueue.Count;
         if (requestQueue.Count == 0) return;
         Request req = requestQueue.Dequeue();
@@ -727,6 +729,12 @@ sealed class MultiThreadedMesher : BlockMesher {
         System.Diagnostics.Stopwatch watch;
         // Loop forever
         while (!finished) {
+            if(ContentLoader.Instance == null)
+            {
+                //If there's nothing loaded yet, don't do anything.
+                Thread.Sleep(SLEEP_TIME);
+                continue;
+            }
             Request? maybeWorkItem;
             // Check for an item
             lock (requestQueue)
