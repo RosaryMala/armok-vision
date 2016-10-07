@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityExtension;
 using DFHack;
+using System;
 
 public class WorldMapMaker : MonoBehaviour
 {
@@ -104,6 +105,8 @@ public class WorldMapMaker : MonoBehaviour
     }
 
     DFTime lastUpdateTime;
+    private int chunkIndex;
+    private int waterChunkIndex;
 
     void CopyClouds(WorldMap remoteMap)
     {
@@ -255,6 +258,7 @@ public class WorldMapMaker : MonoBehaviour
         List<Color> colors = new List<Color>(length);
         List<Vector2> uvs = new List<Vector2>(length);
         List<Vector2> uv2s = new List<Vector2>(length);
+        List<Vector2> uv3s = new List<Vector2>(length);
         List<int> triangles = new List<int>(length);
 
         List<Vector3> waterVerts = new List<Vector3>();
@@ -272,8 +276,8 @@ public class WorldMapMaker : MonoBehaviour
                 mf.mesh.Clear();
         }
 
-        int chunkIndex = 0;
-        int waterChunkIndex = 0;
+        chunkIndex = 0;
+        waterChunkIndex = 0;
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
@@ -281,77 +285,19 @@ public class WorldMapMaker : MonoBehaviour
                 if (DetailRegions.ContainsKey(new DFCoord2d(x, y)))
                     continue;
 
-                #region Mesh Finalize
 
                 //If the vertex lists are already full, make a chunk with what we have, and keep going
                 if (vertices.Count >= (65535 - 20))
                 {
-                    if(terrainChunks.Count <= chunkIndex)
-                    {
-                        terrainChunks.Add(Instantiate(terrainPrefab));
-                        terrainChunks[chunkIndex].transform.parent = transform;
-                        terrainChunks[chunkIndex].gameObject.name = "TerrainChunk" + chunkIndex;
-                        terrainChunks[chunkIndex].transform.localPosition = Vector3.zero;
-                    }
-                    MeshFilter mf = terrainChunks[chunkIndex];
-
-                    if (mf.mesh == null)
-                        mf.mesh = new Mesh();
-
-                    Mesh terrainMesh = mf.mesh;
-
-                    terrainMesh.vertices = vertices.ToArray();
-                    terrainMesh.colors = colors.ToArray();
-                    terrainMesh.uv = uvs.ToArray();
-                    terrainMesh.uv2 = uv2s.ToArray();
-                    terrainMesh.triangles = triangles.ToArray();
-
-                    terrainMesh.RecalculateNormals();
-                    terrainMesh.RecalculateTangents();
-
-                    mf.mesh = terrainMesh;
-
-                    vertices.Clear();
-                    colors.Clear();
-                    uvs.Clear();
-                    uv2s.Clear();
-                    triangles.Clear();
-                    chunkIndex++;
+                    FinalizeGeometryChunk(vertices, colors, uvs, uv2s, uv3s, triangles);
                 }
 
                 //If the vertex lists are already full, make a chunk with what we have, and keep going
                 if (waterVerts.Count >= (65535 - 20))
                 {
-                    if (waterChunks.Count <= waterChunkIndex)
-                    {
-                        waterChunks.Add(Instantiate(waterPrefab));
-                        waterChunks[waterChunkIndex].transform.parent = transform;
-                        waterChunks[waterChunkIndex].gameObject.name = "WaterChunk" + waterChunkIndex;
-                        waterChunks[waterChunkIndex].transform.localPosition = Vector3.zero;
-                    }
-                    MeshFilter mf = waterChunks[waterChunkIndex];
-
-                    if (mf.mesh == null)
-                        mf.mesh = new Mesh();
-
-                    Mesh waterMesh = mf.mesh;
-
-                    waterMesh.vertices = waterVerts.ToArray();
-                    waterMesh.uv = waterUvs.ToArray();
-                    waterMesh.triangles = waterTris.ToArray();
-
-                    waterMesh.RecalculateNormals();
-                    waterMesh.RecalculateTangents();
-
-                    mf.mesh = waterMesh;
-
-                    waterVerts.Clear();
-                    waterUvs.Clear();
-                    waterTris.Clear();
-                    waterChunkIndex++;
+                    FinalizeWaterGeometryChunk(waterVerts, waterUvs, waterTris);
                 }
 
-                #endregion
 
                 MapDataStore.Tile fakeTile = new MapDataStore.Tile(null, new DFCoord(0, 0, 0));
 
@@ -416,18 +362,16 @@ public class WorldMapMaker : MonoBehaviour
                 Vector3 vert1 = RegionToUnityCoords(x, y, regionTiles[x, y].elevation);
                 Vector3 vert2 = RegionToUnityCoords(x + 1, y + 1, regionTiles[x, y].elevation);
 
+                bool snow = regionTiles[x, y].snow > 0;
 
-                if(regionTiles[x,y].snow > 0)
-                    RegionMaker.AddHorizontalQuad(vert1, vert2, biome, Color.white, vertices, colors, uvs, uv2s, triangles);
-                else
-                    RegionMaker.AddHorizontalQuad(vert1, vert2, biome, terrainColor, vertices, colors, uvs, uv2s, triangles);
+                RegionMaker.AddHorizontalQuad(vert1, vert2, biome, terrainColor, vertices, colors, uvs, uv2s, uv3s, triangles, snow);
 
                 if (regionTiles[x, y].elevation < regionTiles[x, y].water_elevation)
                 {
                     vert1 = RegionToUnityCoords(x, y, regionTiles[x, y].water_elevation);
-                    vert2 = RegionToUnityCoords(x + 1, y+1, regionTiles[x, y].water_elevation);
+                    vert2 = RegionToUnityCoords(x + 1, y + 1, regionTiles[x, y].water_elevation);
 
-                    RegionMaker.AddHorizontalQuad(vert1, vert2, biome, terrainColor, waterVerts, null, waterUvs, null, waterTris);
+                    RegionMaker.AddHorizontalQuad(vert1, vert2, biome, terrainColor, waterVerts, null, waterUvs, null, null, waterTris, false);
                 }
 
                 int north = 0;
@@ -438,7 +382,7 @@ public class WorldMapMaker : MonoBehaviour
                     vert1 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, regionTiles[x, y].elevation * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth)) * scale;
                     vert2 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, north * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth)) * scale;
 
-                    RegionMaker.AddVerticalQuad(vert1, vert2, biome, terrainColor, vertices, colors, uvs, uv2s, triangles);
+                    RegionMaker.AddVerticalQuad(vert1, vert2, biome, terrainColor, vertices, colors, uvs, uv2s, uv3s, triangles, snow);
                 }
 
                 int south = 0;
@@ -449,7 +393,7 @@ public class WorldMapMaker : MonoBehaviour
                     vert1 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, regionTiles[x, y].elevation * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth)) * scale;
                     vert2 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, south * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth)) * scale;
 
-                    RegionMaker.AddVerticalQuad(vert1, vert2, biome, terrainColor, vertices, colors, uvs, uv2s, triangles);
+                    RegionMaker.AddVerticalQuad(vert1, vert2, biome, terrainColor, vertices, colors, uvs, uv2s, uv3s, triangles, snow);
                 }
 
                 int east = 0;
@@ -460,7 +404,7 @@ public class WorldMapMaker : MonoBehaviour
                     vert1 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, regionTiles[x, y].elevation * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth)) * scale;
                     vert2 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, east * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth)) * scale;
 
-                    RegionMaker.AddVerticalQuad(vert1, vert2, biome, terrainColor, vertices, colors, uvs, uv2s, triangles);
+                    RegionMaker.AddVerticalQuad(vert1, vert2, biome, terrainColor, vertices, colors, uvs, uv2s, uv3s, triangles, snow);
                 }
                 int west = 0;
                 if (x > 0 && !DetailRegions.ContainsKey(new DFCoord2d(x - 1, y)))
@@ -470,66 +414,82 @@ public class WorldMapMaker : MonoBehaviour
                     vert1 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, regionTiles[x, y].elevation * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth)) * scale;
                     vert2 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, west * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth)) * scale;
 
-                    RegionMaker.AddVerticalQuad(vert1, vert2, biome, terrainColor, vertices, colors, uvs, uv2s, triangles);
+                    RegionMaker.AddVerticalQuad(vert1, vert2, biome, terrainColor, vertices, colors, uvs, uv2s, uv3s, triangles, snow);
                 }
             }
         }
+
+        FinalizeGeometryChunk(vertices, colors, uvs, uv2s, uv3s, triangles);
+
+        FinalizeWaterGeometryChunk(waterVerts, waterUvs, waterTris);
+    }
+
+    private void FinalizeWaterGeometryChunk(List<Vector3> waterVerts, List<Vector2> waterUvs, List<int> waterTris)
+    {
+        if (waterChunks.Count <= waterChunkIndex)
         {
-            if (terrainChunks.Count <= chunkIndex)
-            {
-                terrainChunks.Add(Instantiate(terrainPrefab));
-                terrainChunks[chunkIndex].transform.parent = transform;
-                terrainChunks[chunkIndex].gameObject.name = "TerrainChunk" + chunkIndex;
-                terrainChunks[chunkIndex].transform.localPosition = Vector3.zero;
-            }
-            MeshFilter mf = terrainChunks[chunkIndex];
-
-            if (mf.mesh == null)
-                mf.mesh = new Mesh();
-
-            Mesh terrainMesh = mf.mesh;
-
-            terrainMesh.vertices = vertices.ToArray();
-            terrainMesh.colors = colors.ToArray();
-            terrainMesh.uv = uvs.ToArray();
-            terrainMesh.uv2 = uv2s.ToArray();
-            terrainMesh.triangles = triangles.ToArray();
-
-            terrainMesh.RecalculateNormals();
-            terrainMesh.RecalculateTangents();
-
-            mf.mesh = terrainMesh;
+            waterChunks.Add(Instantiate(waterPrefab));
+            waterChunks[waterChunkIndex].transform.parent = transform;
+            waterChunks[waterChunkIndex].gameObject.name = "WaterChunk" + waterChunkIndex;
+            waterChunks[waterChunkIndex].transform.localPosition = Vector3.zero;
         }
+        MeshFilter mf = waterChunks[waterChunkIndex];
 
+        if (mf.mesh == null)
+            mf.mesh = new Mesh();
+
+        Mesh waterMesh = mf.mesh;
+
+        waterMesh.vertices = waterVerts.ToArray();
+        waterMesh.uv = waterUvs.ToArray();
+        waterMesh.triangles = waterTris.ToArray();
+
+        waterMesh.RecalculateNormals();
+        waterMesh.RecalculateTangents();
+
+        mf.mesh = waterMesh;
+
+        waterVerts.Clear();
+        waterUvs.Clear();
+        waterTris.Clear();
+        waterChunkIndex++;
+    }
+
+    private void FinalizeGeometryChunk(List<Vector3> vertices, List<Color> colors, List<Vector2> uvs, List<Vector2> uv2s, List<Vector2> uv3s, List<int> triangles)
+    {
+        if (terrainChunks.Count <= chunkIndex)
         {
-            if (waterChunks.Count <= waterChunkIndex)
-            {
-                waterChunks.Add(Instantiate(waterPrefab));
-                waterChunks[waterChunkIndex].transform.parent = transform;
-                waterChunks[waterChunkIndex].gameObject.name = "WaterChunk" + waterChunkIndex;
-                waterChunks[waterChunkIndex].transform.localPosition = Vector3.zero;
-            }
-            MeshFilter mf = waterChunks[waterChunkIndex];
-
-            if (mf.mesh == null)
-                mf.mesh = new Mesh();
-
-            Mesh waterMesh = mf.mesh;
-
-            waterMesh.vertices = waterVerts.ToArray();
-            waterMesh.uv = waterUvs.ToArray();
-            waterMesh.triangles = waterTris.ToArray();
-
-            waterMesh.RecalculateNormals();
-            waterMesh.RecalculateTangents();
-
-            mf.mesh = waterMesh;
-
-            waterVerts.Clear();
-            waterUvs.Clear();
-            waterTris.Clear();
-            waterChunkIndex++;
+            terrainChunks.Add(Instantiate(terrainPrefab));
+            terrainChunks[chunkIndex].transform.parent = transform;
+            terrainChunks[chunkIndex].gameObject.name = "TerrainChunk" + chunkIndex;
+            terrainChunks[chunkIndex].transform.localPosition = Vector3.zero;
         }
+        MeshFilter mf = terrainChunks[chunkIndex];
+
+        if (mf.mesh == null)
+            mf.mesh = new Mesh();
+
+        Mesh terrainMesh = mf.mesh;
+
+        terrainMesh.vertices = vertices.ToArray();
+        terrainMesh.colors = colors.ToArray();
+        terrainMesh.uv = uvs.ToArray();
+        terrainMesh.uv2 = uv2s.ToArray();
+        terrainMesh.uv3 = uv3s.ToArray();
+        terrainMesh.triangles = triangles.ToArray();
+
+        terrainMesh.RecalculateNormals();
+        terrainMesh.RecalculateTangents();
+
+        mf.mesh = terrainMesh;
+
+        vertices.Clear();
+        colors.Clear();
+        uvs.Clear();
+        uv2s.Clear();
+        uv3s.Clear();
+        triangles.Clear();
+        chunkIndex++;
     }
 
     void GenerateClouds()
