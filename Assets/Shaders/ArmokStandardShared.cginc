@@ -1,9 +1,7 @@
 #ifndef ARMOK_STANDARD_SHARED
 #define ARMOK_STANDARD_SHARED
 
-// Use shader model 3.0 target, to get nicer looking lighting
-#pragma target 3.0
-#pragma exclude_renderers d3d11_9x
+#pragma target 4.0
 
 sampler2D _MainTex;
 sampler2D _Shapetex;
