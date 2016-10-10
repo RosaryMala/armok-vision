@@ -2,6 +2,7 @@ v 0.13.0
  * Added a loading screen
  * Removed the mesh generation timer that never worked well.
  * Show snowfall on the world map.
+ * Added a simple hardware survey.
 
 v 0.12.0
  * Added support for displaying material spatters, including blood, vomit, fallen leaves, mud, snow, etc.

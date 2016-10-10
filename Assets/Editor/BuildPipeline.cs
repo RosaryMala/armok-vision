@@ -51,7 +51,8 @@ public class BuildFactory
 
         string path = "Build/" + buildSettings.content_version + "/" + targetString + "/";
 
-        Directory.Delete(path, true);
+        if (Directory.Exists(path))
+            Directory.Delete(path, true);
 
         string[] levels = new string[] { "Assets/Start.unity" };
         EditorUserBuildSettings.SetPlatformSettings("Standalone", "CopyPDBFiles", "false");
