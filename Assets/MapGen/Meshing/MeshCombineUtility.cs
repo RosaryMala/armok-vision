@@ -28,6 +28,8 @@ public class MeshCombineUtility
         public Matrix4x4 uv1Transform;
         public Matrix4x4 uv2Transform;
         public Matrix4x4 uv3Transform;
+        public Vector2? uv2Force;
+        public Vector2? uv3Force;
         public HiddenFaces hiddenFaces;
     }
 
@@ -124,9 +126,9 @@ public class MeshCombineUtility
                         && (inputVertices[vert2].x < -sideThreshold))
                         continue;
 
-                    int newVert0 = getIndex(indexTranslation, combines[combIndex], vert0, vertices, normals, tangents, uvs, uv2s, uv3s, colors, inputVertices, inputNormals, inputTangents, inputUVs, inputColors);
-                    int newVert1 = getIndex(indexTranslation, combines[combIndex], vert1, vertices, normals, tangents, uvs, uv2s, uv3s, colors, inputVertices, inputNormals, inputTangents, inputUVs, inputColors);
-                    int newVert2 = getIndex(indexTranslation, combines[combIndex], vert2, vertices, normals, tangents, uvs, uv2s, uv3s, colors, inputVertices, inputNormals, inputTangents, inputUVs, inputColors);
+                    int newVert0 = getIndex(indexTranslation, combines[combIndex], vert0, vertices, normals, tangents, uvs, uv2s, uv3s, colors, inputVertices, inputNormals, inputTangents, inputUVs, inputColors, combines[combIndex].uv2Force, combines[combIndex].uv3Force);
+                    int newVert1 = getIndex(indexTranslation, combines[combIndex], vert1, vertices, normals, tangents, uvs, uv2s, uv3s, colors, inputVertices, inputNormals, inputTangents, inputUVs, inputColors, combines[combIndex].uv2Force, combines[combIndex].uv3Force);
+                    int newVert2 = getIndex(indexTranslation, combines[combIndex], vert2, vertices, normals, tangents, uvs, uv2s, uv3s, colors, inputVertices, inputNormals, inputTangents, inputUVs, inputColors, combines[combIndex].uv2Force, combines[combIndex].uv3Force);
 
                     if (newVert0 > 65531 || newVert1 > 65531 || newVert2 > 65531)
                         goto failure;
@@ -163,7 +165,7 @@ public class MeshCombineUtility
             );
     }
 
-    private static int getIndex(Dictionary<int, int> indexTranslation, MeshInstance meshInstance, int inputVert, List<Vector3> vertices, List<Vector3> normals, List<Vector4> tangents, List<Vector2> uvs, List<Vector2> uv2s, List<Vector2> uv3s, List<Color> colors, Vector3[] inputVertices, Vector3[] inputNormals, Vector4[] inputTangents, Vector2[] inputUVs, Color[] inputColors)
+    private static int getIndex(Dictionary<int, int> indexTranslation, MeshInstance meshInstance, int inputVert, List<Vector3> vertices, List<Vector3> normals, List<Vector4> tangents, List<Vector2> uvs, List<Vector2> uv2s, List<Vector2> uv3s, List<Color> colors, Vector3[] inputVertices, Vector3[] inputNormals, Vector4[] inputTangents, Vector2[] inputUVs, Color[] inputColors, Vector2? uv2Force, Vector2? uv3Force)
     {
         int newVert;
         if (indexTranslation.ContainsKey(inputVert))
@@ -184,8 +186,15 @@ public class MeshCombineUtility
             p = invTranspose.MultiplyVector(p).normalized;
             tangents.Add(invTranspose.MultiplyVector(new Vector4(p.x, p.y, p.z, p4.w)));
             uvs.Add(meshInstance.uv1Transform.MultiplyPoint(inputUVs[inputVert]));
-            uv2s.Add(meshInstance.uv2Transform.MultiplyPoint(inputUVs[inputVert]));
-            uv3s.Add(meshInstance.uv3Transform.MultiplyPoint(inputUVs[inputVert]));
+            if (!uv2Force.HasValue)
+                uv2s.Add(meshInstance.uv2Transform.MultiplyPoint(inputUVs[inputVert]));
+            else
+                uv2s.Add(uv2Force.Value);
+
+            if (!uv3Force.HasValue)
+                uv3s.Add(meshInstance.uv3Transform.MultiplyPoint(inputUVs[inputVert]));
+            else
+                uv3s.Add(uv3Force.Value);
             if (inputColors.Length > 0)
                 colors.Add(meshInstance.color * inputColors[inputVert]);
             else

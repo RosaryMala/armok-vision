@@ -1,15 +1,16 @@
-﻿Shader "Custom/ArmokStandardPBRTransparent" {
+﻿Shader "Custom/ArmokStandardPBRTransparent_Array" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
-		_MainTex ("Albedo (RGB)", 2D) = "grey" {}
-		_BumpMap ("Normalmap (RGB) Occlusion (A)", 2D) = "bump" {}
-        _SpecialTex("Metallic (R)", 2D) = "black" {}
+		_MainTex ("Albedo (RGB)", 2DArray) = "grey" {}
+		_BumpMap ("Normalmap (RGB) Occlusion (A)", 2DArray) = "bump" {}
+        _SpecialTex("Metallic (R)", 2DArray) = "black" {}
 		[PerRendererData]_SpatterTex("Spatter", 2D) = "" {}
 		_SpatterDirection("Spatter Direction", Vector) = (0,1,0)
 		_SpatterSmoothness("Spatter Smoothness", Range(0,1)) = 0
 		_WorldBounds("World Bounds", Vector) = (0,0,1,1)
 		_SpatterNoise("Spatter Noise", 2D) = "white" {}
-	}
+        _TexArrayCount("Texture array count", Vector) = (0,0,0,0)
+    }
 	SubShader {
 		Tags {"Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent"}
 		LOD 200	
@@ -26,7 +27,7 @@
         #pragma target 3.5
         #define TRANS
 
-		#include "ArmokStandardShared.cginc"
+		#include "ArmokStandardShared_Array.cginc"
 
 		ENDCG
 	} 

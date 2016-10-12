@@ -18,10 +18,46 @@ using UnityEngine.UI;
 
 public class GameMap : MonoBehaviour
 {
-    // Things to be set from the Unity Editor.
+    //Atlas materials
     public Material basicTerrainMaterial;   // Can be any terrain you want.
     public Material stencilTerrainMaterial; // Foliage & other stenciled materials.
     public Material transparentTerrainMaterial; // Anything with partial transparency.
+
+    //Texture array materials
+    public Material basicTerrainArrayMaterial;   // Can be any terrain you want.
+    public Material stencilTerrainArrayMaterial; // Foliage & other stenciled materials.
+    public Material transparentTerrainArrayMaterial; // Anything with partial transparency.
+
+    bool arrayTextures = false;
+
+    // Things to be set from the Unity Editor.
+    public Material BasicTerrainMaterial
+    {
+        get
+        {
+            if (arrayTextures)
+                return basicTerrainArrayMaterial;
+            return basicTerrainMaterial;
+        }
+    }
+    public Material StencilTerrainMaterial
+    {
+        get
+        {
+            if (arrayTextures)
+                return stencilTerrainArrayMaterial;
+            return stencilTerrainMaterial;
+        }
+    }
+    public Material TransparentTerrainMaterial
+    {
+        get
+        {
+            if (arrayTextures)
+                return transparentTerrainArrayMaterial;
+            return transparentTerrainMaterial;
+        }
+    }
     public Material waterMaterial;
     public Material magmaMaterial;
 
@@ -189,10 +225,16 @@ public class GameMap : MonoBehaviour
 
 
         spatterID = Shader.PropertyToID("_SpatterTex");
-        basicTerrainMaterial.SetTexture(spatterID, clear);
-        stencilTerrainMaterial.SetTexture(spatterID, clear);
-        transparentTerrainMaterial.SetTexture(spatterID, clear);
+        BasicTerrainMaterial.SetTexture(spatterID, clear);
+        StencilTerrainMaterial.SetTexture(spatterID, clear);
+        TransparentTerrainMaterial.SetTexture(spatterID, clear);
         sharedMatBlock = new MaterialPropertyBlock();
+    }
+
+    // Awake is called when the script instance is being loaded
+    public void Awake()
+    {
+        arrayTextures = SystemInfo.supports2DArrayTextures;
     }
 
     void OnConnectToDF()
@@ -334,11 +376,11 @@ public class GameMap : MonoBehaviour
                 else
                     Application.CaptureScreenshot(screenshotFilename);
             }
-            if(Input.GetButtonDown("Refresh"))
+            if (Input.GetButtonDown("Refresh"))
             {
                 Refresh();
             }
-            if(Input.GetButtonDown("Cancel"))
+            if (Input.GetButtonDown("Cancel"))
             {
                 optionsPanel.gameObject.SetActive(!optionsPanel.gameObject.activeSelf);
             }
@@ -479,7 +521,7 @@ public class GameMap : MonoBehaviour
         exportScene.Save("Map.dae");
         Debug.Log("Saved Scene");
 
-        Texture2D mainTex = (Texture2D)basicTerrainMaterial.GetTexture("_MainTex");
+        Texture2D mainTex = (Texture2D)BasicTerrainMaterial.GetTexture("_MainTex");
 
         Color[] mainTexPixels = mainTex.GetPixels();
         Color[] diffusePixels = new Color[mainTexPixels.Length];
@@ -507,7 +549,7 @@ public class GameMap : MonoBehaviour
         File.WriteAllBytes("specular.png", roughnessBytes);
         Debug.Log("Saved Maintex");
 
-        Texture2D bumpMap = (Texture2D)basicTerrainMaterial.GetTexture("_BumpMap");
+        Texture2D bumpMap = (Texture2D)BasicTerrainMaterial.GetTexture("_BumpMap");
 
         Color[] bumpMapPixels = bumpMap.GetPixels();
         Color[] normalMapPixels = new Color[bumpMapPixels.Length];
@@ -642,7 +684,7 @@ public class GameMap : MonoBehaviour
                 SetDirtyLiquidBlock(block.map_x, block.map_y, block.map_z);
                 SetBlockContent(block.map_x, block.map_y, block.map_z);
             }
-            if(setSpatters)
+            if (setSpatters)
             {
                 SetDirtySpatterBlock(block.map_x, block.map_y, block.map_z);
             }
@@ -660,9 +702,9 @@ public class GameMap : MonoBehaviour
 
     void SetMaterialBounds(Vector4 bounds)
     {
-        basicTerrainMaterial.SetVector("_WorldBounds", bounds);
-        stencilTerrainMaterial.SetVector("_WorldBounds", bounds);
-        transparentTerrainMaterial.SetVector("_WorldBounds", bounds);
+        BasicTerrainMaterial.SetVector("_WorldBounds", bounds);
+        StencilTerrainMaterial.SetVector("_WorldBounds", bounds);
+        TransparentTerrainMaterial.SetVector("_WorldBounds", bounds);
     }
 
     void InitializeBlocks()
@@ -916,6 +958,8 @@ public class GameMap : MonoBehaviour
 
     void UpdateSpatters()
     {
+        if (ContentLoader.Instance == null)
+            return;
         Profiler.BeginSample("UpdateSpatters", this);
         for (int z = spatterBlockDirtyBits.Length - 1; z >= 0; z--)
         {
@@ -1078,7 +1122,7 @@ public class GameMap : MonoBehaviour
                 magmaMesh.Clear();
                 newMeshes.magma.CopyToMesh(magmaMesh);
             }
-            if(newMeshes.collisionMesh != null)
+            if (newMeshes.collisionMesh != null)
             {
                 if (collisionBlocks[block_x, block_y, block_z] == null)
                 {
@@ -1249,7 +1293,7 @@ public class GameMap : MonoBehaviour
 
                 statusText.Append("Desingation: ").Append(tile.digDesignation).AppendLine();
 
-                if(tile.Hidden)
+                if (tile.Hidden)
                     statusText.Append("Hidden").AppendLine();
 
                 statusText.Append(tile.WallBuildingSides).AppendLine();
@@ -1569,34 +1613,34 @@ public class GameMap : MonoBehaviour
         bool drewBlock = false;
         if (blocks[xx, yy, zz] != null && blocks[xx, yy, zz].vertexCount > 0)
         {
-            Graphics.DrawMesh(blocks[xx, yy, zz], LocalTransform, basicTerrainMaterial, 0, null, 0, matBlock, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
+            Graphics.DrawMesh(blocks[xx, yy, zz], LocalTransform, BasicTerrainMaterial, 0, null, 0, matBlock, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
             drewBlock = true;
         }
         if (topBlocks[xx, yy, zz] != null && topBlocks[xx, yy, zz].vertexCount > 0 && top)
         {
-            Graphics.DrawMesh(topBlocks[xx, yy, zz], LocalTransform, basicTerrainMaterial, 0, null, 0, matBlock, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
+            Graphics.DrawMesh(topBlocks[xx, yy, zz], LocalTransform, BasicTerrainMaterial, 0, null, 0, matBlock, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
             drewBlock = true;
         }
 
         if (stencilBlocks[xx, yy, zz] != null && stencilBlocks[xx, yy, zz].vertexCount > 0)
         {
-            Graphics.DrawMesh(stencilBlocks[xx, yy, zz], LocalTransform, stencilTerrainMaterial, 0, null, 0, matBlock, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
+            Graphics.DrawMesh(stencilBlocks[xx, yy, zz], LocalTransform, StencilTerrainMaterial, 0, null, 0, matBlock, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
             drewBlock = true;
         }
         if (topStencilBlocks[xx, yy, zz] != null && topStencilBlocks[xx, yy, zz].vertexCount > 0 && top)
         {
-            Graphics.DrawMesh(topStencilBlocks[xx, yy, zz], LocalTransform, stencilTerrainMaterial, 0, null, 0, matBlock, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
+            Graphics.DrawMesh(topStencilBlocks[xx, yy, zz], LocalTransform, StencilTerrainMaterial, 0, null, 0, matBlock, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
             drewBlock = true;
         }
 
         if (transparentBlocks[xx, yy, zz] != null && transparentBlocks[xx, yy, zz].vertexCount > 0 && !phantom)
         {
-            Graphics.DrawMesh(transparentBlocks[xx, yy, zz], LocalTransform, transparentTerrainMaterial, 0, null, 0, matBlock);
+            Graphics.DrawMesh(transparentBlocks[xx, yy, zz], LocalTransform, TransparentTerrainMaterial, 0, null, 0, matBlock);
             drewBlock = true;
         }
         if (topTransparentBlocks[xx, yy, zz] != null && topTransparentBlocks[xx, yy, zz].vertexCount > 0 && !phantom && top)
         {
-            Graphics.DrawMesh(topTransparentBlocks[xx, yy, zz], LocalTransform, transparentTerrainMaterial, 0, null, 0, matBlock);
+            Graphics.DrawMesh(topTransparentBlocks[xx, yy, zz], LocalTransform, TransparentTerrainMaterial, 0, null, 0, matBlock);
             drewBlock = true;
         }
 
@@ -1664,7 +1708,7 @@ public class GameMap : MonoBehaviour
                             break;
                         Vector3 pos = DFtoUnityCoord(xx * blockSize, yy * blockSize, zz);
 
-                        if (DrawSingleBlock(xx, yy, zz, (!firstPerson), pos, zz == posZ || zz == zmax-1))
+                        if (DrawSingleBlock(xx, yy, zz, (!firstPerson), pos, zz == posZ || zz == zmax - 1))
                             drawnBlocks++;
                     }
                 }
