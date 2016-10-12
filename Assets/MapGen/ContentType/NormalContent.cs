@@ -17,6 +17,15 @@ public class NormalContent : IContent
         }
     }
 
+    public float ArrayIndex
+    {
+        get
+        {
+            return (float)storageIndex / store.Count;
+        }
+    }
+
+
     public bool AddTypeElement(System.Xml.Linq.XElement elemtype)
     {
         if (store == null) //nowhere to put the image.

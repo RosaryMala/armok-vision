@@ -18,7 +18,15 @@ public class TextureContent : IContent
         }
     }
 
-    public bool AddTypeElement(System.Xml.Linq.XElement elemtype)
+    public float ArrayIndex
+    {
+        get
+        {
+            return (float)storageIndex / store.Count;
+        }
+    }
+
+    public bool AddTypeElement(XElement elemtype)
     {
         if (store == null) //nowhere to put the image.
         {

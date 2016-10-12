@@ -112,6 +112,14 @@ public class ContentLoader : MonoBehaviour
             return materialTextureStorage.getUVTransform(defaultMatTexIndex);
         }
     }
+    public float DefaultMatTexArrayIndex
+    {
+        get
+        {
+            return (float)defaultMatTexIndex / materialTextureStorage.Count;
+        }
+    }
+
     int defaultShapeTexIndex;
 
     public Matrix4x4 DefaultShapeTexTransform
@@ -121,6 +129,14 @@ public class ContentLoader : MonoBehaviour
             return shapeTextureStorage.getUVTransform(defaultShapeTexIndex);
         }
     }
+    public float DefaultShapeTexArrayIndex
+    {
+        get
+        {
+            return (float)defaultShapeTexIndex / shapeTextureStorage.Count;
+        }
+    }
+
     int defaultSpecialTexIndex;
 
     public Matrix4x4 DefaultSpecialTexTransform
@@ -128,6 +144,13 @@ public class ContentLoader : MonoBehaviour
         get
         {
             return specialTextureStorage.getUVTransform(defaultSpecialTexIndex);
+        }
+    }
+    public float DefaultSpecialTexArrayIndex
+    {
+        get
+        {
+            return (float)defaultSpecialTexIndex / specialTextureStorage.Count;
         }
     }
 
@@ -318,26 +341,31 @@ public class ContentLoader : MonoBehaviour
         if (statusText != null)
             statusText.text = "Building material textures...";
         yield return null;
-        materialTextureStorage.BuildAtlas("MaterialTexture");
+        materialTextureStorage.CompileTextures("MaterialTexture");
         if (statusText != null)
             statusText.text = "Building shape textures...";
         yield return null;
-        shapeTextureStorage.BuildAtlas("ShapeTexture", TextureFormat.RGBA32, new Color(1.0f, 0.5f, 0.0f, 0.5f), true);
+        shapeTextureStorage.CompileTextures("ShapeTexture", TextureFormat.RGBA32, new Color(1.0f, 0.5f, 0.0f, 0.5f), true);
         if (statusText != null)
             statusText.text = "Building special textures...";
         yield return null;
-        specialTextureStorage.BuildAtlas("SpecialTexture");
+        specialTextureStorage.CompileTextures("SpecialTexture");
 
-        GameMap gameMap = GameObject.FindObjectOfType<GameMap>();
-        gameMap.basicTerrainMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
-        gameMap.basicTerrainMaterial.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
-        gameMap.basicTerrainMaterial.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
-        gameMap.stencilTerrainMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
-        gameMap.stencilTerrainMaterial.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
-        gameMap.stencilTerrainMaterial.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
-        gameMap.transparentTerrainMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
-        gameMap.transparentTerrainMaterial.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
-        gameMap.transparentTerrainMaterial.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
+        Vector4 arrayCount = new Vector4(materialTextureStorage.Count, shapeTextureStorage.Count, specialTextureStorage.Count);
+
+        GameMap gameMap = FindObjectOfType<GameMap>();
+        gameMap.BasicTerrainMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
+        gameMap.BasicTerrainMaterial.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
+        gameMap.BasicTerrainMaterial.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
+        gameMap.BasicTerrainMaterial.SetVector("_TexArrayCount", arrayCount);
+        gameMap.StencilTerrainMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
+        gameMap.StencilTerrainMaterial.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
+        gameMap.StencilTerrainMaterial.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
+        gameMap.StencilTerrainMaterial.SetVector("_TexArrayCount", arrayCount);
+        gameMap.TransparentTerrainMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
+        gameMap.TransparentTerrainMaterial.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
+        gameMap.TransparentTerrainMaterial.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
+        gameMap.TransparentTerrainMaterial.SetVector("_TexArrayCount", arrayCount);
 
 
         //get rid of any un-used textures left over.

@@ -16,6 +16,14 @@ public class SpecialMapContent : IContent
         }
     }
 
+    public float ArrayIndex
+    {
+        get
+        {
+            return (float)storageIndex / store.Count;
+        }
+    }
+
     public object ExternalStorage
     {
         set

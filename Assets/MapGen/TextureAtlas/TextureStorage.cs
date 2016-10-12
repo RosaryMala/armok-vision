@@ -5,7 +5,11 @@ public class TextureStorage
 {
     List<Texture2D> textureList = new List<Texture2D>();
 
+    public static bool UsingArray { get; private set; }
+
     AtlasCreator.Atlas atlas;
+
+    Texture2DArray textureArray;
 
     Dictionary<int, string> texIndexToName = new Dictionary<int, string>();
 
@@ -13,15 +17,21 @@ public class TextureStorage
 
     Dictionary<int, int> texIndexToAtlasIndex;
 
+    public int Count { get { return textureList.Count; } }
+
     public Matrix4x4 getUVTransform(int index)
     {
+        if (UsingArray)
+            return Matrix4x4.identity;
         return atlas.uvRects[texIndexToAtlasIndex[index]].UVTransform;
     }
 
-    public Texture2D AtlasTexture
+    public Texture AtlasTexture
     {
         get
         {
+            if (UsingArray)
+                return textureArray;
             return atlas.texture;
         }
     }
@@ -53,7 +63,21 @@ public class TextureStorage
         }
     }
 
-    public void BuildAtlas(string name, TextureFormat format = TextureFormat.RGBA32, Color defaultColor = default(Color), bool linear = false)
+    public void CompileTextures(string name, TextureFormat format = TextureFormat.RGBA32, Color defaultColor = default(Color), bool linear = false)
+    {
+        if(SystemInfo.supports2DArrayTextures)
+        {
+            UsingArray = true;
+            BuildTextureArray(format, defaultColor, linear);
+        }
+        else
+        {
+            UsingArray = false;
+            BuildAtlas(name, format, defaultColor, linear);
+        }
+    }
+
+    void BuildAtlas(string name, TextureFormat format = TextureFormat.RGBA32, Color defaultColor = default(Color), bool linear = false)
     {
         textureList.Sort(CompareBySize);
         AtlasCreator.Atlas[] atlasList = AtlasCreator.CreateAtlas(name, textureList.ToArray(), null, format, defaultColor, linear);
@@ -85,5 +109,27 @@ public class TextureStorage
         }
 
         //AtlasCreator.SaveAtlas(atlas, name);
+    }
+
+    void BuildTextureArray(TextureFormat format = TextureFormat.RGBA32, Color defaultColor = default(Color), bool linear = false)
+    {
+        int maxWidth = 0;
+        int maxHeight = 0;
+        foreach (var texture in textureList)
+        {
+            maxWidth = Mathf.Max(maxWidth, texture.width);
+            maxHeight = Mathf.Max(maxHeight, texture.height);
+        }
+
+        textureArray = new Texture2DArray(maxWidth, maxHeight, textureList.Count, format, true, linear);
+
+        for (int i = 0; i < textureList.Count; i++)
+        {
+            if (textureList[i].width < maxWidth || textureList[i].height < maxHeight)
+                TextureScale.Bilinear(textureList[i], maxWidth, maxHeight);
+
+            textureArray.SetPixels(textureList[i].GetPixels(), i);
+        }
+        textureArray.Apply();
     }
 }
