@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.PostProcessing;
+using UnityEngine.UI;
 
 public class GameSettings : MonoBehaviour
 {
@@ -118,6 +120,8 @@ public class GameSettings : MonoBehaviour
         SetShadows(Instance.rendering.drawShadows);
         Application.targetFrameRate = Instance.rendering.targetFrameRate;
         QualitySettings.vSyncCount = Instance.rendering.vSyncCount;
+
+        UpdatePostProcessing();
     }
 
     void SetShadows(bool input)
@@ -135,4 +139,80 @@ public class GameSettings : MonoBehaviour
             }
         }
     }
+
+    void SetSlider(GameObject go, float value)
+    {
+        Slider slider = go.GetComponent<Slider>();
+        if (slider == null) return;
+        slider.value = value;
+    }
+    void SetSlider(Slider slider, float value)
+    {
+        if (slider == null) return;
+        slider.value = value;
+    }
+
+    #region Variable change events
+
+    #region Deferred
+    Slider deferredSlider;
+    public void InitDeferredRendering(GameObject go)
+    {
+        UnityEngine.Debug.Log("Invoked from " + go);
+        deferredSlider = go.GetComponent<Slider>();
+        SetSlider(deferredSlider, Convert.ToInt32(Instance.camera.deferredRendering));
+    }
+    public void SetDeferredRendering(float value)
+    {
+        Instance.camera.deferredRendering = Convert.ToBoolean(value);
+        UpdateDeferredRendering();
+        UpdatePostProcessing();
+        SetSlider(deferredSlider, Convert.ToInt32(Instance.camera.deferredRendering));
+    }
+    public void UpdateDeferredRendering()
+    {
+        foreach (Camera camera in mainCameras)
+        {
+                if (Instance.camera.deferredRendering)
+                    camera.renderingPath = RenderingPath.DeferredShading;
+                else
+                    camera.renderingPath = RenderingPath.Forward;
+        }
+        if (postprocessSlider != null)
+            postprocessSlider.gameObject.SetActive(Instance.camera.deferredRendering);
+    }
+    #endregion
+
+    #region PostProcessing
+    Slider postprocessSlider;
+    public void InitPostProcessing(GameObject go)
+    {
+        UnityEngine.Debug.Log("Invoked from " + go);
+        postprocessSlider = go.GetComponent<Slider>();
+        SetSlider(postprocessSlider, Convert.ToInt32(Instance.camera.postProcessing));
+    }
+    public void SetPostProcessing(float value)
+    {
+        Instance.camera.postProcessing = Convert.ToBoolean(value);
+        UpdatePostProcessing();
+        SetSlider(postprocessSlider, Convert.ToInt32(Instance.camera.postProcessing));
+    }
+    public void UpdatePostProcessing()
+    {
+        foreach (Camera camera in mainCameras)
+        {
+            PostProcessingBehaviour ppb = camera.GetComponent<PostProcessingBehaviour>();
+            if (ppb != null)
+            {
+                if (Instance.camera.deferredRendering)
+                    ppb.enabled = Instance.camera.postProcessing;
+                else
+                    ppb.enabled = false;
+            }
+        }
+    }
+    #endregion
+
+    #endregion
+
 }

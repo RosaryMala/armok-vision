@@ -26,5 +26,11 @@ namespace UserSettings
                     break;
             }
         }
+
+        void Update()
+        {
+            if(!GameSettings.Instance.camera.deferredRendering)
+                GameSettings.Instance.camera.postProcessing = false;
+        }
     }
 }
