@@ -22,6 +22,7 @@ namespace UserSettings
                 case false:
                     cam.renderingPath = UnityEngine.RenderingPath.Forward;
                     valueLabel.text = "Forward";
+                    GameSettings.Instance.camera.postProcessing = false;
                     break;
             }
         }

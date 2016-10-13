@@ -43,6 +43,7 @@ public class GameSettings : MonoBehaviour
         public float fieldOfView = 70;
         public bool deferredRendering = true;
         public bool SSAO = true;
+        public bool postProcessing = true;
     }
 
     [Serializable]
