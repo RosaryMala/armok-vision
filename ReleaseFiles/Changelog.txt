@@ -1,3 +1,8 @@
+v 0.13.1
+ * Use texture arrays instead of texture atlases when available.
+ * Use a single postprocess stack instead of multiple separate effects.
+ * Lighten hidden tiles.
+
 v 0.13.0
  * Added a loading screen
  * Removed the mesh generation timer that never worked well.
