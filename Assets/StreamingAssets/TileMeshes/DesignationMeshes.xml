@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <designationMeshes>
     <designationMesh file="WALL.obj"
-                pattern="black.png"
+                pattern="slate.png"
                 specular="black.png"
                 metallic="black.png"
                 illumination="Flat_O.png">

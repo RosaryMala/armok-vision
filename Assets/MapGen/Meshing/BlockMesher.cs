@@ -386,6 +386,7 @@ abstract class BlockMesher {
         Vector2 index1 = Vector2.zero;
         Vector2 index2 = Vector2.zero;
         MeshContent meshContent = null;
+        buffer.color = Color.grey;
         if (layer == MeshLayer.Collision)
         {
             if (!ContentLoader.Instance.CollisionMeshConfiguration.GetValue(tile, layer, out meshContent))
@@ -406,6 +407,7 @@ abstract class BlockMesher {
             buffer.hiddenFaces = CalculateHiddenFaces(tile, meshContent.Rotation);
             return;
         }
+
         if (layer == MeshLayer.BuildingCollision)
         {
             if (tile.buildingType == default(BuildingStruct) || !ContentLoader.Instance.BuildingCollisionMeshConfiguration.GetValue(tile, layer, out meshContent))
