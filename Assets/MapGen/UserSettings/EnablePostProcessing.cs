@@ -13,7 +13,7 @@ namespace UserSettings
 
         protected override void InitValue()
         {
-            skyCam = GameObject.Find("Sky Camera").GetComponent<Camera>();
+            skyCam = GameObject.FindGameObjectWithTag("SkyCam").GetComponent<Camera>();
             slider.value = Convert.ToInt32(GameSettings.Instance.camera.postProcessing);
             valueLabel.text = GameSettings.Instance.camera.postProcessing.ToString();
             post = cam.GetComponent<PostProcessingBehaviour>();
@@ -32,7 +32,7 @@ namespace UserSettings
             skyCam.hdr = GameSettings.Instance.camera.postProcessing; ;
         }
 
-        bool oldValue = false;
+        bool oldValue = true;
 
         void Update()
         {

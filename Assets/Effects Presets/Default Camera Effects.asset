@@ -79,7 +79,7 @@ MonoBehaviour:
     m_Settings:
       lowPercent: 65
       highPercent: 95
-      minLuminance: 0.03
+      minLuminance: 0.2
       maxLuminance: 2
       exposureCompensation: 0.5
       adaptationType: 0

@@ -9,6 +9,12 @@ public class TurnOffBelowHorizon : MonoBehaviour {
     float originalIntensity;
     Light lightComponent;
 
+    public bool setFog = false;
+
+    public Color dayFog;
+
+    public Color nightFog;
+
     void Awake()
     {
         lightComponent = GetComponent<Light>();
@@ -19,7 +25,9 @@ public class TurnOffBelowHorizon : MonoBehaviour {
     {
         originalIntensity = lightComponent.intensity;
     }
-    
+
+    float prevIntensity = float.NaN;
+
     // Update is called once per frame
     void Update () {
         
@@ -31,7 +39,16 @@ public class TurnOffBelowHorizon : MonoBehaviour {
         x += (angleRange / 2);
         x /= angleRange;
         x = Mathf.Clamp(x, 0, 1);
-        //Debug.Log(this.name + " light=" + x + ", xrot=" + transform.rotation.eulerAngles.x);
-        lightComponent.intensity = x * originalIntensity;
+
+        if (x != prevIntensity)
+        {
+            //Debug.Log(this.name + " light=" + x + ", xrot=" + transform.rotation.eulerAngles.x);
+            lightComponent.intensity = x * originalIntensity;
+            if(setFog)
+            {
+                RenderSettings.fogColor = Color.Lerp(nightFog, dayFog, x);
+            }
+            prevIntensity = x;
+        }
     }
 }
