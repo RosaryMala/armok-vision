@@ -230,8 +230,6 @@ public class GameMap : MonoBehaviour
         TransparentTerrainMaterial.SetTexture(spatterID, clear);
         sharedMatBlock = new MaterialPropertyBlock();
 
-        optionsPanel.gameObject.SetActive(true);
-        optionsPanel.gameObject.SetActive(false);
 
     }
 
