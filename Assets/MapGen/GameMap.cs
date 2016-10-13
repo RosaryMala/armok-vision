@@ -229,6 +229,10 @@ public class GameMap : MonoBehaviour
         StencilTerrainMaterial.SetTexture(spatterID, clear);
         TransparentTerrainMaterial.SetTexture(spatterID, clear);
         sharedMatBlock = new MaterialPropertyBlock();
+
+        optionsPanel.gameObject.SetActive(true);
+        optionsPanel.gameObject.SetActive(false);
+
     }
 
     // Awake is called when the script instance is being loaded

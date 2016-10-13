@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 using UnityEngine.PostProcessing;
 using UnityStandardAssets.CinematicEffects;
 
@@ -8,12 +9,17 @@ namespace UserSettings
     {
         PostProcessingBehaviour post;
 
+        Camera skyCam;
+
         protected override void InitValue()
         {
+            skyCam = GameObject.Find("Sky Camera").GetComponent<Camera>();
             slider.value = Convert.ToInt32(GameSettings.Instance.camera.postProcessing);
             valueLabel.text = GameSettings.Instance.camera.postProcessing.ToString();
             post = cam.GetComponent<PostProcessingBehaviour>();
             post.enabled = GameSettings.Instance.camera.postProcessing;
+            cam.hdr = GameSettings.Instance.camera.postProcessing;
+            skyCam.hdr = GameSettings.Instance.camera.postProcessing; ;
         }
 
         protected override void OnValueChanged(float value)
@@ -23,6 +29,7 @@ namespace UserSettings
             valueLabel.text = GameSettings.Instance.camera.postProcessing.ToString();
             post.enabled = GameSettings.Instance.camera.postProcessing;
             cam.hdr = GameSettings.Instance.camera.postProcessing;
+            skyCam.hdr = GameSettings.Instance.camera.postProcessing; ;
         }
 
         bool oldValue = false;
