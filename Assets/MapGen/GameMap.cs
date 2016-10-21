@@ -233,10 +233,13 @@ public class GameMap : MonoBehaviour
 
     }
 
+    public static GameMap Instance { get; private set; }
+
     // Awake is called when the script instance is being loaded
     public void Awake()
     {
         arrayTextures = SystemInfo.supports2DArrayTextures;
+        Instance = this;
     }
 
     void OnConnectToDF()

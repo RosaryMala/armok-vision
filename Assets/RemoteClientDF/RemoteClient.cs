@@ -165,6 +165,18 @@ namespace DFHack
         {
             return this == (DFCoord)obj;
         }
+        public static implicit operator RemoteFortressReader.Coord(DFCoord a)
+        {
+            RemoteFortressReader.Coord b = new RemoteFortressReader.Coord();
+            b.x = a.x;
+            b.y = a.y;
+            b.z = a.z;
+            return b;
+        }
+        public static implicit operator DFCoord(RemoteFortressReader.Coord a)
+        {
+            return new DFCoord(a.x, a.y, a.z);
+        }
     }
     public struct DFCoord2d
     {
