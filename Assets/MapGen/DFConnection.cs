@@ -172,7 +172,10 @@ public sealed class DFConnection : MonoBehaviour
     /// <param name="command"></param>
     public void EnqueueDigCommand(RemoteFortressReader.DigCommand command)
     {
-        netDigCommands.Enqueue(command);
+        if (digCommandCall == null)
+            return; //don't bother.
+        if(netDigCommands.Count < netDigCommands.Capacity)
+            netDigCommands.Enqueue(command);
     }
 
     #endregion
@@ -615,10 +618,9 @@ public sealed class DFConnection : MonoBehaviour
 
         if (digCommandCall != null)
         {
-            RemoteFortressReader.DigCommand command;
-            while (netDigCommands.TryDequeue(out command))
+            while (netDigCommands.Count > 0)
             {
-                digCommandCall.execute(command);
+                digCommandCall.execute(netDigCommands.Dequeue());
             }
         }
 

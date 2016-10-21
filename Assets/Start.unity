@@ -2161,7 +2161,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -32, y: -32}
-  m_SizeDelta: {x: 512, y: 512}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: 1}
 --- !u!1 &806509832 stripped
 GameObject:
@@ -2358,6 +2358,8 @@ GameObject:
   - 114: {fileID: 861361732}
   - 114: {fileID: 861361730}
   - 114: {fileID: 861361733}
+  - 114: {fileID: 861361735}
+  - 114: {fileID: 861361734}
   m_Layer: 0
   m_Name: '[GameMapObject]'
   m_TagString: Untagged
@@ -2485,6 +2487,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   statusText: {fileID: 1986774941}
+--- !u!114 &861361734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 861361727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98dee60b296da9248a5073025e3361ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCam: {fileID: 0}
+--- !u!114 &861361735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 861361727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10e38d62d238e445a9a8002799fa9d78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BlocksToFetch: 10
+  RunOnAlternateThread: 0
 --- !u!1 &874450143
 GameObject:
   m_ObjectHideFlags: 0
@@ -3543,7 +3570,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraOrigin: {fileID: 1383803864}
-  debugMode: 0
+  debugMode: 1
   dfCoord: {x: 0, y: 0, z: 0}
   unityCoord: {x: 0, y: 0, z: 0}
   highlightLineMaterial: {fileID: 2100000, guid: 1c9356298dc65654d87468f4b00d9831,
@@ -3623,7 +3650,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1201785584}
-  - 114: {fileID: 1201785583}
   m_Layer: 0
   m_Name: DFConnectionObject
   m_TagString: Untagged
@@ -3631,19 +3657,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1201785583
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1201785582}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10e38d62d238e445a9a8002799fa9d78, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  BlocksToFetch: 10
-  RunOnAlternateThread: 1
 --- !u!4 &1201785584
 Transform:
   m_ObjectHideFlags: 0
