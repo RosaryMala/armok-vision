@@ -10,6 +10,40 @@
 // Generated from: RemoteFortressReader.proto
 namespace RemoteFortressReader
 {
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Coord")]
+  public partial class Coord : global::ProtoBuf.IExtensible
+  {
+    public Coord() {}
+    
+    private int _x = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int x
+    {
+      get { return _x; }
+      set { _x = value; }
+    }
+    private int _y = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int y
+    {
+      get { return _y; }
+      set { _y = value; }
+    }
+    private int _z = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int z
+    {
+      get { return _z; }
+      set { _z = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Tiletype")]
   public partial class Tiletype : global::ProtoBuf.IExtensible
   {
@@ -3020,6 +3054,31 @@ namespace RemoteFortressReader
       get { return _unicode; }
       set { _unicode = value; }
     }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"DigCommand")]
+  public partial class DigCommand : global::ProtoBuf.IExtensible
+  {
+    public DigCommand() {}
+    
+    private RemoteFortressReader.TileDigDesignation _designation = RemoteFortressReader.TileDigDesignation.NO_DIG;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"designation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.TileDigDesignation.NO_DIG)]
+    public RemoteFortressReader.TileDigDesignation designation
+    {
+      get { return _designation; }
+      set { _designation = value; }
+    }
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.Coord> _locations = new global::System.Collections.Generic.List<RemoteFortressReader.Coord>();
+    [global::ProtoBuf.ProtoMember(2, Name=@"locations", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.Coord> locations
+    {
+      get { return _locations; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

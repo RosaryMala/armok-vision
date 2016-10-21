@@ -18,7 +18,7 @@ public sealed class DFConnection : MonoBehaviour
     // Singleton stuff
 
     private static DFConnection instance = null;
-    private static List<System.Action> connectionCallbacks = new List<System.Action>();
+    private static List<Action> connectionCallbacks = new List<Action>();
     public static DFConnection Instance
     {
         get
@@ -37,7 +37,7 @@ public sealed class DFConnection : MonoBehaviour
     }
 
     // Can be called before instance is initialized.
-    public static void RegisterConnectionCallback(System.Action callback)
+    public static void RegisterConnectionCallback(Action callback)
     {
         connectionCallbacks.Add(callback);
     }
@@ -50,6 +50,8 @@ public sealed class DFConnection : MonoBehaviour
 
     // Thread management
     private ConnectionManager connectionManager;
+
+    #region RPC Bindings
 
     // Remote bindings
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MaterialList> materialListCall;
@@ -68,8 +70,72 @@ public sealed class DFConnection : MonoBehaviour
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.PlantRawList> plantRawListCall;
     private RemoteFunction<RemoteFortressReader.KeyboardEvent> keyboardEventCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.ScreenCapture> copyScreenCall;
+    private RemoteFunction<RemoteFortressReader.DigCommand> digCommandCall;
     private color_ostream dfNetworkOut = new color_ostream();
     private RemoteClient networkClient;
+
+    /// <summary>
+    /// Tries to bind an RPC function, leaving returning null if it fails.
+    /// </summary>
+    /// <typeparam name="Input">Protobuf class used as an input</typeparam>
+    /// <param name="client">Connection to Dwarf Fortress</param>
+    /// <param name="name">Name of the RPC function to bind to</param>
+    /// <param name="proto">Name of the protobuf file to use</param>
+    /// <returns>Bound remote function on success, otherwise null.</returns>
+    RemoteFunction<Input> CreateAndBind<Input>(RemoteClient client, string name, string proto = "") where Input : class, ProtoBuf.IExtensible, new()
+    {
+        RemoteFunction<Input> output = new RemoteFunction<Input>();
+        if (output.bind(client, name, proto))
+            return output;
+        else
+            return null;
+    }
+
+    /// <summary>
+    /// Tries to bind an RPC function, returning null if it fails.
+    /// </summary>
+    /// <typeparam name="Input">Protobuf class used as an input</typeparam>
+    /// <typeparam name="Output">Protobuf class to use as an output</typeparam>
+    /// <param name="client">Connection to Dwarf Fortress</param>
+    /// <param name="name">Name of the RPC function to bind to</param>
+    /// <param name="proto">Name of the protobuf file to use</param>
+    /// <returns>Bound remote function on success, otherwise null.</returns>
+    RemoteFunction<Input, Output> CreateAndBind<Input, Output>(RemoteClient client, string name, string proto = "")
+        where Input : class, ProtoBuf.IExtensible, new()
+        where Output : class, ProtoBuf.IExtensible, new()
+    {
+        RemoteFunction<Input, Output> output = new RemoteFunction<Input, Output>();
+        if (output.bind(client, name, proto))
+            return output;
+        else
+            return null;
+    }
+
+    /// <summary>
+    /// Bind the RPC functions we'll be calling
+    /// </summary>
+    void BindMethods()
+    {
+        materialListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.MaterialList>(networkClient, "GetMaterialList", "RemoteFortressReader");
+        itemListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.MaterialList>(networkClient, "GetItemList", "RemoteFortressReader");
+        tiletypeListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.TiletypeList>(networkClient, "GetTiletypeList", "RemoteFortressReader");
+        blockListCall = CreateAndBind<RemoteFortressReader.BlockRequest, RemoteFortressReader.BlockList>(networkClient, "GetBlockList", "RemoteFortressReader");
+        unitListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.UnitList>(networkClient, "GetUnitList", "RemoteFortressReader");
+        viewInfoCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.ViewInfo>(networkClient, "GetViewInfo", "RemoteFortressReader");
+        mapInfoCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.MapInfo>(networkClient, "GetMapInfo", "RemoteFortressReader");
+        mapResetCall = CreateAndBind<dfproto.EmptyMessage>(networkClient, "ResetMapHashes", "RemoteFortressReader");
+        buildingListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.BuildingList>(networkClient, "GetBuildingDefList", "RemoteFortressReader");
+        worldMapCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.WorldMap>(networkClient, "GetWorldMapNew", "RemoteFortressReader");
+        worldMapCenterCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.WorldMap>(networkClient, "GetWorldMapCenter", "RemoteFortressReader");
+        regionMapCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.RegionMaps>(networkClient, "GetRegionMapsNew", "RemoteFortressReader");
+        creatureRawListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.CreatureRawList>(networkClient, "GetCreatureRaws", "RemoteFortressReader");
+        plantRawListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.PlantRawList>(networkClient, "GetPlantRaws", "RemoteFortressReader");
+        keyboardEventCall = CreateAndBind<RemoteFortressReader.KeyboardEvent>(networkClient, "PassKeyboardEvent", "RemoteFortressReader");
+        copyScreenCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.ScreenCapture>(networkClient, "CopyScreen", "RemoteFortressReader");
+        digCommandCall = CreateAndBind<RemoteFortressReader.DigCommand>(networkClient, "SendDigCommand", "RemoteFortressReader");
+    }
+
+    #endregion
 
     // Things we read from DF
 
@@ -94,6 +160,22 @@ public sealed class DFConnection : MonoBehaviour
     // Input queues
     private RingBuffer<RemoteFortressReader.KeyboardEvent> keyPresses
         = new RingBuffer<RemoteFortressReader.KeyboardEvent>(128);
+
+    #region Command DF
+
+    private RingBuffer<RemoteFortressReader.DigCommand> netDigCommands 
+        = new RingBuffer<RemoteFortressReader.DigCommand>(8);
+
+    /// <summary>
+    /// Enqueue's a digging designation command to send to DF
+    /// </summary>
+    /// <param name="command"></param>
+    public void EnqueueDigCommand(RemoteFortressReader.DigCommand command)
+    {
+        netDigCommands.Enqueue(command);
+    }
+
+    #endregion
 
     /// <summary>
     /// Queue to set the area we want to get updates for.
@@ -333,66 +415,6 @@ public sealed class DFConnection : MonoBehaviour
     }
 
     /// <summary>
-    /// Tries to bind an RPC function, leaving returning null if it fails.
-    /// </summary>
-    /// <typeparam name="Input">Protobuf class used as an input</typeparam>
-    /// <param name="client">Connection to Dwarf Fortress</param>
-    /// <param name="name">Name of the RPC function to bind to</param>
-    /// <param name="proto">Name of the protobuf file to use</param>
-    /// <returns>Bound remote function on success, otherwise null.</returns>
-    RemoteFunction<Input> CreateAndBind<Input>(RemoteClient client, string name, string proto = "") where Input : class, ProtoBuf.IExtensible, new()
-    {
-        RemoteFunction<Input> output = new RemoteFunction<Input>();
-        if (output.bind(client, name, proto))
-            return output;
-        else
-            return null;
-    }
-
-    /// <summary>
-    /// Tries to bind an RPC function, returning null if it fails.
-    /// </summary>
-    /// <typeparam name="Input">Protobuf class used as an input</typeparam>
-    /// <typeparam name="Output">Protobuf class to use as an output</typeparam>
-    /// <param name="client">Connection to Dwarf Fortress</param>
-    /// <param name="name">Name of the RPC function to bind to</param>
-    /// <param name="proto">Name of the protobuf file to use</param>
-    /// <returns>Bound remote function on success, otherwise null.</returns>
-    RemoteFunction<Input, Output> CreateAndBind<Input, Output>(RemoteClient client, string name, string proto = "")
-        where Input : class, ProtoBuf.IExtensible, new()
-        where Output : class, ProtoBuf.IExtensible, new()
-    {
-        RemoteFunction<Input, Output> output = new RemoteFunction<Input, Output>();
-        if (output.bind(client, name, proto))
-            return output;
-        else
-            return null;
-    }
-
-    /// <summary>
-    /// Bind the RPC functions we'll be calling
-    /// </summary>
-    void BindMethods()
-    {
-        materialListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.MaterialList>(networkClient, "GetMaterialList", "RemoteFortressReader");
-        itemListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.MaterialList>(networkClient, "GetItemList", "RemoteFortressReader");
-        tiletypeListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.TiletypeList>(networkClient, "GetTiletypeList", "RemoteFortressReader");
-        blockListCall = CreateAndBind<RemoteFortressReader.BlockRequest, RemoteFortressReader.BlockList>(networkClient, "GetBlockList", "RemoteFortressReader");
-        unitListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.UnitList>(networkClient, "GetUnitList", "RemoteFortressReader");
-        viewInfoCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.ViewInfo>(networkClient, "GetViewInfo", "RemoteFortressReader");
-        mapInfoCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.MapInfo>(networkClient, "GetMapInfo", "RemoteFortressReader");
-        mapResetCall = CreateAndBind<dfproto.EmptyMessage>(networkClient, "ResetMapHashes", "RemoteFortressReader");
-        buildingListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.BuildingList>(networkClient, "GetBuildingDefList", "RemoteFortressReader");
-        worldMapCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.WorldMap>(networkClient, "GetWorldMapNew", "RemoteFortressReader");
-        worldMapCenterCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.WorldMap>(networkClient, "GetWorldMapCenter", "RemoteFortressReader");
-        regionMapCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.RegionMaps>(networkClient, "GetRegionMapsNew", "RemoteFortressReader");
-        creatureRawListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.CreatureRawList>(networkClient, "GetCreatureRaws", "RemoteFortressReader");
-        plantRawListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.PlantRawList>(networkClient, "GetPlantRaws", "RemoteFortressReader");
-        keyboardEventCall = CreateAndBind<RemoteFortressReader.KeyboardEvent>(networkClient, "PassKeyboardEvent", "RemoteFortressReader");
-        copyScreenCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.ScreenCapture>(networkClient, "CopyScreen", "RemoteFortressReader");
-    }
-
-    /// <summary>
     /// Get information that only needs to be read once.
     /// </summary>
     void FetchUnchangingInfo()
@@ -580,12 +602,29 @@ public sealed class DFConnection : MonoBehaviour
     /// <exception cref="System.Exception"></exception>
     void PerformSingleUpdate()
     {
+        //pause df here, so it doesn't try to resume while we're working.
         networkClient.suspend_game();
+
+        //everything that controls DF.
+        #region DF Control
 
         if (mapResetRequested.Pop())
         {
             mapResetCall.execute();
         }
+
+        if (digCommandCall != null)
+        {
+            RemoteFortressReader.DigCommand command;
+            while (netDigCommands.TryDequeue(out command))
+            {
+                digCommandCall.execute(command);
+            }
+        }
+
+        #endregion
+
+        #region DF Read
 
         if (mapInfoCall != null)
         {
@@ -696,6 +735,8 @@ public sealed class DFConnection : MonoBehaviour
             }
         }
 
+        #endregion
+
         // since enqueueing results can block, we do it after we've unsuspended df
         RemoteFortressReader.BlockList resultList = null;
 
@@ -721,6 +762,8 @@ public sealed class DFConnection : MonoBehaviour
                 blockListCall.execute(blockRequest, out resultList);
             }
         }
+
+        //All communication with DF should be before this.
         networkClient.resume_game();
 
         if (resultList != null)
