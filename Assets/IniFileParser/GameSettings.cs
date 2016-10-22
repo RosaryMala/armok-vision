@@ -158,7 +158,6 @@ public class GameSettings : MonoBehaviour
     Slider deferredSlider;
     public void InitDeferredRendering(GameObject go)
     {
-        UnityEngine.Debug.Log("Invoked from " + go);
         deferredSlider = go.GetComponent<Slider>();
         SetSlider(deferredSlider, Convert.ToInt32(Instance.camera.deferredRendering));
     }

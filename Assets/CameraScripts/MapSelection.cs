@@ -9,7 +9,6 @@ public class MapSelection : MonoBehaviour
     public bool debugMode = false;
 
     public Vector3 dfCoord = new Vector3();
-    public Vector3 unityCoord = new Vector3();
 
     //private Vector3 mouseWorldPosition = Vector3.zero;
     private Vector3 mouseWorldPositionPrevious = Vector3.zero;
@@ -136,8 +135,9 @@ public class MapSelection : MonoBehaviour
         Vector3 currentTargetCoords;
         if (MapDataStore.FindCurrentTarget(mouseRay, out currentTarget, out currentTargetCoords))
         {
-            DebugHighlightTile(currentTarget, Color.white);
-            unityCoord = currentTargetCoords;
+            var testCoords = GameMap.UnityToFloatingDFCoord(currentTargetCoords);
+            DFCoord testDF = new DFCoord(Mathf.FloorToInt(testCoords.x), Mathf.FloorToInt(testCoords.y), Mathf.FloorToInt(testCoords.z));
+            DebugHighlightTile(testDF, Color.white);
             dfCoord = new Vector3(currentTarget.x, currentTarget.y, currentTarget.z);
         }
     }
