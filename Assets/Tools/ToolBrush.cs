@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ToolBrush : MonoBehaviour {
+public class ToolBrush : MonoBehaviour
+{
 
     public Material cursorMaterial;
     public Material activeCursorMaterial;
@@ -22,43 +23,47 @@ public class ToolBrush : MonoBehaviour {
     public DiggingTool diggingTool;
 
     // Update is called once per frame
-    void Update () {
-        if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
+    void Update()
+    {
+        if (diggingTool.digMode != DiggingTool.DigMode.None)
         {
-            Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
-            DFCoord mapTargetPos;
-            Vector3 unityTargetPos;
-
-            if (MapDataStore.FindCurrentTarget(ray, out mapTargetPos, out unityTargetPos))
+            if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
             {
-                unityTargetPos += (ray.direction * 0.001f);
-                Vector3 mapFloatTargetPos = GameMap.UnityToFloatingDFCoord(unityTargetPos);
-                if (dragging)
+                Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
+                DFCoord mapTargetPos;
+                Vector3 unityTargetPos;
+
+                if (MapDataStore.FindCurrentTarget(ray, out mapTargetPos, out unityTargetPos))
                 {
-                    var coordList = raytrace(lastTargetPos, mapFloatTargetPos);
-                    foreach (var item in coordList)
+                    unityTargetPos += (ray.direction * 0.001f);
+                    Vector3 mapFloatTargetPos = GameMap.UnityToFloatingDFCoord(unityTargetPos);
+                    if (dragging)
                     {
-                        DrawCursor(item, true);
+                        var coordList = raytrace(lastTargetPos, mapFloatTargetPos);
+                        foreach (var item in coordList)
+                        {
+                            DrawCursor(item, true);
+                        }
+                        diggingTool.Apply(coordList);
                     }
-                    diggingTool.Apply(coordList);
+                    lastTargetPos = mapFloatTargetPos;
+                    dragging = true;
                 }
-                lastTargetPos = mapFloatTargetPos;
-                dragging = true;
+                else
+                    dragging = false;
             }
             else
-                dragging = false;
-        }
-        else
-        {
-            Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
-            DFCoord mapTargetPos;
-            Vector3 unityTargetPos;
-            if (MapDataStore.FindCurrentTarget(ray, out mapTargetPos, out unityTargetPos))
             {
-                unityTargetPos += ray.direction * 0.001f;
-                Vector3 pos = GameMap.UnityToFloatingDFCoord(unityTargetPos);
-                mapTargetPos = new DFCoord(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
-                DrawCursor(mapTargetPos, false);
+                Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
+                DFCoord mapTargetPos;
+                Vector3 unityTargetPos;
+                if (MapDataStore.FindCurrentTarget(ray, out mapTargetPos, out unityTargetPos))
+                {
+                    unityTargetPos += ray.direction * 0.001f;
+                    Vector3 pos = GameMap.UnityToFloatingDFCoord(unityTargetPos);
+                    mapTargetPos = new DFCoord(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
+                    DrawCursor(mapTargetPos, false);
+                }
             }
         }
         if (Input.GetMouseButtonUp(0) || EventSystem.current.IsPointerOverGameObject())
