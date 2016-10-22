@@ -252,48 +252,72 @@ public class MapDataStore {
                     // Yes.
                     switch (currentTile.shape)
                     {
-                        case RemoteFortressReader.TiletypeShape.EMPTY:
-                        case RemoteFortressReader.TiletypeShape.NO_SHAPE:
+                        case TiletypeShape.EMPTY:
+                        case TiletypeShape.NO_SHAPE:
                             // We're not hitting anything, though.
                             break;
                         //case RemoteFortressReader.TiletypeShape.SHRUB:
                         //case RemoteFortressReader.TiletypeShape.SAPLING:
-                        case RemoteFortressReader.TiletypeShape.WALL:
-                        case RemoteFortressReader.TiletypeShape.FORTIFICATION:
+                        case TiletypeShape.WALL:
+                        case TiletypeShape.FORTIFICATION:
                         //case RemoteFortressReader.TiletypeShape.TRUNK_BRANCH:
-                        case RemoteFortressReader.TiletypeShape.TWIG:
+                        case TiletypeShape.TWIG:
                             // We must be hitting things.
                             // (maybe adjust shrub, saplings out of this group?)
                             tileCoord = currentCoord;
                             unityCoord = lastHit;
                             return true;
-                        case RemoteFortressReader.TiletypeShape.RAMP:
-                        case RemoteFortressReader.TiletypeShape.FLOOR:
-                        case RemoteFortressReader.TiletypeShape.BOULDER:
-                        case RemoteFortressReader.TiletypeShape.PEBBLES:
-                        case RemoteFortressReader.TiletypeShape.BROOK_TOP:
-                        case RemoteFortressReader.TiletypeShape.SAPLING:
-                        case RemoteFortressReader.TiletypeShape.SHRUB:
-                        case RemoteFortressReader.TiletypeShape.BRANCH:
-                        case RemoteFortressReader.TiletypeShape.TRUNK_BRANCH:
-                            // Check if we're in the floor.
-                            // (that we're in the tile is implied.)
-                            if (Between(cornerCoord.y, lastHit.y, cornerCoord.y + GameMap.floorHeight))
+                        case TiletypeShape.RAMP:
                             {
-                                tileCoord = currentCoord;
-                                unityCoord = lastHit;
-                                return true;
+                                // Check if we're in the ramp.
+                                // (that we're in the tile is implied.)
+                                if (Between(cornerCoord.y, lastHit.y, cornerCoord.y + GameMap.floorHeight + (GameMap.tileHeight / 2)))
+                                {
+                                    tileCoord = currentCoord;
+                                    unityCoord = lastHit;
+                                    return true;
+                                }
+                                // Check if we enter the ramp; same way we check wall intersections.
+                                float floorY = cornerCoord.y + GameMap.floorHeight + (GameMap.tileHeight / 2);
+                                float toFloorMult = (floorY - ray.origin.y) / ray.direction.y;
+                                Vector3 floorIntercept = ray.origin + ray.direction * toFloorMult;
+                                if (Between(cornerCoord.x, floorIntercept.x, cornerCoord.x + GameMap.tileWidth) &&
+                                    Between(cornerCoord.z, floorIntercept.z, cornerCoord.z + GameMap.tileWidth))
+                                {
+                                    tileCoord = currentCoord;
+                                    unityCoord = lastHit;
+                                    return true;
+                                }
                             }
-                            // Check if we enter the floor; same way we check wall intersections.
-                            float floorY = cornerCoord.y + GameMap.floorHeight;
-                            float toFloorMult = (floorY - ray.origin.y) / ray.direction.y;
-                            Vector3 floorIntercept = ray.origin + ray.direction * toFloorMult;
-                            if (Between(cornerCoord.x, floorIntercept.x, cornerCoord.x + GameMap.tileWidth) &&
-                                Between(cornerCoord.z, floorIntercept.z, cornerCoord.z + GameMap.tileWidth))
+                            break;
+                        case TiletypeShape.FLOOR:
+                        case TiletypeShape.BOULDER:
+                        case TiletypeShape.PEBBLES:
+                        case TiletypeShape.BROOK_TOP:
+                        case TiletypeShape.SAPLING:
+                        case TiletypeShape.SHRUB:
+                        case TiletypeShape.BRANCH:
+                        case TiletypeShape.TRUNK_BRANCH:
                             {
-                                tileCoord = currentCoord;
-                                unityCoord = lastHit;
-                                return true;
+                                // Check if we're in the floor.
+                                // (that we're in the tile is implied.)
+                                if (Between(cornerCoord.y, lastHit.y, cornerCoord.y + GameMap.floorHeight))
+                                {
+                                    tileCoord = currentCoord;
+                                    unityCoord = lastHit;
+                                    return true;
+                                }
+                                // Check if we enter the floor; same way we check wall intersections.
+                                float floorY = cornerCoord.y + GameMap.floorHeight;
+                                float toFloorMult = (floorY - ray.origin.y) / ray.direction.y;
+                                Vector3 floorIntercept = ray.origin + ray.direction * toFloorMult;
+                                if (Between(cornerCoord.x, floorIntercept.x, cornerCoord.x + GameMap.tileWidth) &&
+                                    Between(cornerCoord.z, floorIntercept.z, cornerCoord.z + GameMap.tileWidth))
+                                {
+                                    tileCoord = currentCoord;
+                                    unityCoord = lastHit;
+                                    return true;
+                                }
                             }
                             break;
                     }

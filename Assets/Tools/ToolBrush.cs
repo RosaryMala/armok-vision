@@ -1,18 +1,79 @@
 ﻿using DFHack;
+using RemoteFortressReader;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class ToolBrush : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    public Material cursorMaterial;
+    public Material activeCursorMaterial;
+
+    public Mesh cursorMesh;
+    private Camera mainCam;
+    private bool dragging;
+    private Vector3 lastTargetPos = Vector3.zero;
+
+    void Awake()
+    {
+        mainCam = Camera.main;
+    }
+
+    public DiggingTool diggingTool;
+
+    // Update is called once per frame
+    void Update () {
+        if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
+        {
+            Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
+            DFCoord mapTargetPos;
+            Vector3 unityTargetPos;
+
+            if (MapDataStore.FindCurrentTarget(ray, out mapTargetPos, out unityTargetPos))
+            {
+                unityTargetPos += (ray.direction * 0.001f);
+                Vector3 mapFloatTargetPos = GameMap.UnityToFloatingDFCoord(unityTargetPos);
+                if (dragging)
+                {
+                    var coordList = raytrace(lastTargetPos, mapFloatTargetPos);
+                    foreach (var item in coordList)
+                    {
+                        DrawCursor(item, true);
+                    }
+                    diggingTool.Apply(coordList);
+                }
+                lastTargetPos = mapFloatTargetPos;
+                dragging = true;
+            }
+            else
+                dragging = false;
+        }
+        else
+        {
+            Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
+            DFCoord mapTargetPos;
+            Vector3 unityTargetPos;
+            if (MapDataStore.FindCurrentTarget(ray, out mapTargetPos, out unityTargetPos))
+            {
+                unityTargetPos += ray.direction * 0.001f;
+                Vector3 pos = GameMap.UnityToFloatingDFCoord(unityTargetPos);
+                mapTargetPos = new DFCoord(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
+                DrawCursor(mapTargetPos, false);
+            }
+        }
+        if (Input.GetMouseButtonUp(0) || EventSystem.current.IsPointerOverGameObject())
+        {
+            //dragging has stopped.
+            dragging = false;
+        }
+
+    }
+
+    void DrawCursor(DFCoord pos, bool active)
+    {
+        Matrix4x4 matrix = Matrix4x4.TRS(GameMap.DFtoUnityCoord(pos), Quaternion.identity, Vector3.one);
+        Graphics.DrawMesh(cursorMesh, matrix, active ? activeCursorMaterial : cursorMaterial, 5);
+    }
 
     public static List<DFCoord> raytrace(Vector3 start, Vector3 end)
     {

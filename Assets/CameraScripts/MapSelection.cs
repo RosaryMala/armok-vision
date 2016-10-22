@@ -36,27 +36,12 @@ public class MapSelection : MonoBehaviour
                 GameMap.Instance.cursX = currentTarget.x;
                 GameMap.Instance.cursY = currentTarget.y;
                 GameMap.Instance.cursZ = currentTarget.z;
-                if (debugMode)
-                    DebugHighlightTile(currentTarget, Color.red);
             }
             else
             {
                 GameMap.Instance.cursX = -30000;
                 GameMap.Instance.cursY = -30000;
                 GameMap.Instance.cursZ = -30000;
-            }
-        }
-        else
-        {
-            if (debugMode)
-            {
-                Ray mouseRay = GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
-                DFCoord currentTarget;
-                Vector3 currentTargetCoords;
-                if (DFConnection.Connected && GameMap.Instance.enabled && MapDataStore.FindCurrentTarget(mouseRay, out currentTarget, out currentTargetCoords))
-                {
-                    DebugHighlightTile(currentTarget, Color.blue);
-                }
             }
         }
     }
@@ -124,23 +109,24 @@ public class MapSelection : MonoBehaviour
         return WorldPos;
     }
 
-    // If we're attached to a camera, highlight the cube we're pointing at
-    // (For now)
-    void OnPostRender()
-    {
-        if (!DFConnection.Connected || GameMap.Instance == null || !GameMap.Instance.enabled) return;
-        Ray mouseRay = GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+    //// If we're attached to a camera, highlight the cube we're pointing at
+    //// (For now)
+    //void OnPostRender()
+    //{
+    //    if (!DFConnection.Connected || GameMap.Instance == null || !GameMap.Instance.enabled) return;
+    //    Ray mouseRay = GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
 
-        DFCoord currentTarget;
-        Vector3 currentTargetCoords;
-        if (MapDataStore.FindCurrentTarget(mouseRay, out currentTarget, out currentTargetCoords))
-        {
-            var testCoords = GameMap.UnityToFloatingDFCoord(currentTargetCoords);
-            DFCoord testDF = new DFCoord(Mathf.FloorToInt(testCoords.x), Mathf.FloorToInt(testCoords.y), Mathf.FloorToInt(testCoords.z));
-            DebugHighlightTile(testDF, Color.white);
-            dfCoord = new Vector3(currentTarget.x, currentTarget.y, currentTarget.z);
-        }
-    }
+    //    DFCoord currentTarget;
+    //    Vector3 currentTargetCoords;
+    //    if (MapDataStore.FindCurrentTarget(mouseRay, out currentTarget, out currentTargetCoords))
+    //    {
+    //        var testCoords = GameMap.UnityToFloatingDFCoord(currentTargetCoords);
+    //        testCoords += mouseRay.direction * 0.0001f;
+    //        DFCoord testDF = new DFCoord(Mathf.FloorToInt(testCoords.x), Mathf.FloorToInt(testCoords.y), Mathf.FloorToInt(testCoords.z));
+    //        DebugHighlightTile(testDF, Color.white);
+    //        dfCoord = new Vector3(currentTarget.x, currentTarget.y, currentTarget.z);
+    //    }
+    //}
 
     void DebugHighlightTile(DFCoord tile, Color color)
     {
