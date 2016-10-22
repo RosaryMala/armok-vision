@@ -4,6 +4,7 @@ using RemoteFortressReader;
 using DFHack;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using System;
 
 public class DiggingTool : MonoBehaviour
 {
@@ -27,6 +28,19 @@ public class DiggingTool : MonoBehaviour
     }
 
     public DigMode digMode;
+
+    public void SetDigMode(string mode)
+    {
+        try
+        {
+            digMode = (DigMode)Enum.Parse(typeof(DigMode), mode, true);
+        }
+        catch (Exception)
+        {
+
+        }
+
+    }
 
     public void Apply(List<DFCoord> coordList)
     {
