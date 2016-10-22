@@ -206,6 +206,13 @@ public class GameMap : MonoBehaviour
         int z = Mathf.FloorToInt(input.y / tileHeight);
         return new DFCoord(x, y, z - MapZOffset);
     }
+    public static Vector3 UnityToFloatingDFCoord(Vector3 input)
+    {
+        float x = input.x / tileWidth;
+        float y = input.z / -tileWidth;
+        float z = input.y / tileHeight;
+        return new Vector3(x + 0.5f, y + 0.499f, z - MapZOffset - 0.001f);
+    }
     public static bool IsBlockCorner(DFCoord input)
     {
         return input.x % blockSize == 0 &&

@@ -352,6 +352,8 @@ public class MapDataStore {
     // Check if a ray could possibly hit the game map at all
     static bool HitsMapCube(Ray ray)
     {
+        if (Main == null)
+            return false; //there's no cube to hit.
         Vector3 lowerLimits = GameMap.DFtoUnityBottomCorner(new DFCoord(0, 0, 0));
         Vector3 upperLimits = GameMap.DFtoUnityBottomCorner(new DFCoord(
             MapSize.x - 1,
