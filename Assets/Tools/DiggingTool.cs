@@ -3,67 +3,137 @@ using System.Collections;
 using RemoteFortressReader;
 using DFHack;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public class DiggingTool : MonoBehaviour
 {
-
-    public Camera mainCam;
-
-    void Awake()
+    public enum DigMode
     {
-        mainCam = Camera.main;
+        None,
+        Dig,
+        Channel,
+        UpStair,
+        DownStair,
+        UpDownStair,
+        UpRamp,
+        RemoveUpStairRamp,
+        ChopTrees,
+        GatherPlants,
+        SmoothStone,
+        EngraveStone,
+        CarveFortifications,
+        RemoveConstruction,
+        RemoveDesignation
     }
 
-    // Use this for initialization
-    void Start()
+    public DigMode digMode;
+
+    public void Apply(List<DFCoord> coordList)
     {
+        DigCommand command = new DigCommand();
+        TileDigDesignation designation;
+        if (!GetDesignation(out designation))
+            return;
+        command.designation = designation;
+        foreach (var item in coordList)
+        {
+            MapDataStore.Tile tile = MapDataStore.Main[item];
+            if (tile == null)
+                continue;
+            if (DesignationApplies(tile))
+                command.locations.Add(item);
+        }
+        if (command.locations.Count > 0)
+            DFConnection.Instance.EnqueueDigCommand(command);
 
     }
 
-    Vector3 lastTargetPos = Vector3.zero;
-    bool dragging = false;
-
-    // Update is called once per frame
-    void Update()
+    bool GetDesignation(out TileDigDesignation designation)
     {
-        if(Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
+        switch (digMode)
         {
-            Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
-
-            DFCoord mapTargetPos;
-            Vector3 unityTargetPos;
-
-            if (MapDataStore.FindCurrentTarget(ray, out mapTargetPos, out unityTargetPos))
-            {
-                Vector3 mapFloatTargetPos = GameMap.UnityToFloatingDFCoord(unityTargetPos);
-
-                if(dragging)
-                {
-                    var coordList = ToolBrush.raytrace(lastTargetPos, mapFloatTargetPos);
-                    DigCommand command = new DigCommand();
-
-                    command.designation = TileDigDesignation.DEFAULT_DIG;
-                    foreach (var item in coordList)
-                    {
-                        MapDataStore.Tile tile = MapDataStore.Main[item];
-                        if (tile == null)
-                            continue;
-                        if (tile.Hidden || (tile.isWall && tile.tiletypeMaterial != TiletypeMaterial.TREE_MATERIAL))
-                            command.locations.Add(item);
-                    }
-                    if(command.locations.Count > 0)
-                        DFConnection.Instance.EnqueueDigCommand(command);
-                }
-                lastTargetPos = mapFloatTargetPos;
-                dragging = true;
-            }
-            else
-                dragging = false;  
+            case DigMode.Dig:
+                designation = TileDigDesignation.DEFAULT_DIG;
+                break;
+            case DigMode.Channel:
+                designation = TileDigDesignation.CHANNEL_DIG;
+                break;
+            case DigMode.UpStair:
+                designation = TileDigDesignation.UP_STAIR_DIG;
+                break;
+            case DigMode.DownStair:
+                designation = TileDigDesignation.DOWN_STAIR_DIG;
+                break;
+            case DigMode.UpDownStair:
+                designation = TileDigDesignation.UP_DOWN_STAIR_DIG;
+                break;
+            case DigMode.UpRamp:
+                designation = TileDigDesignation.RAMP_DIG;
+                break;
+            case DigMode.RemoveUpStairRamp:
+                designation = TileDigDesignation.DEFAULT_DIG;
+                break;
+            case DigMode.ChopTrees:
+                designation = TileDigDesignation.DEFAULT_DIG;
+                break;
+            case DigMode.GatherPlants:
+                designation = TileDigDesignation.DEFAULT_DIG;
+                break;
+            //case DigMode.SmoothStone:
+            //    command.designation = TileDigDesignation.DEFAULT_DIG;
+            //    break;
+            //case DigMode.EngraveStone:
+            //    command.designation = TileDigDesignation.DEFAULT_DIG;
+            //    break;
+            //case DigMode.CarveFortifications:
+            //    command.designation = TileDigDesignation.DEFAULT_DIG;
+            //    break;
+            //case DigMode.RemoveConstruction:
+            //    command.designation = TileDigDesignation.DEFAULT_DIG;
+            //    break;
+            //case DigMode.RemoveDesignation:
+            //    command.designation = TileDigDesignation.NO_DIG;
+            //    break;
+            default:
+                designation = TileDigDesignation.NO_DIG;
+                return false;
         }
-        if(Input.GetMouseButtonUp(0) || EventSystem.current.IsPointerOverGameObject())
+        return true;
+    }
+
+    bool DesignationApplies(MapDataStore.Tile tile)
+    {
+        switch (digMode)
         {
-            //dragging has stopped.
-            dragging = false;
+            case DigMode.None:
+                break;
+            case DigMode.Dig:
+            case DigMode.UpStair:
+            case DigMode.UpDownStair:
+            case DigMode.UpRamp:
+                return tile.Hidden || (tile.isWall && tile.tiletypeMaterial != TiletypeMaterial.TREE_MATERIAL);
+            case DigMode.Channel:
+            case DigMode.DownStair:
+                return tile.Hidden || (tile.tiletypeMaterial != TiletypeMaterial.TREE_MATERIAL);
+            case DigMode.RemoveUpStairRamp:
+                return tile.shape == TiletypeShape.RAMP || tile.shape == TiletypeShape.STAIR_UP || tile.shape == TiletypeShape.STAIR_UPDOWN;
+            case DigMode.ChopTrees:
+                return tile.tiletypeMaterial == TiletypeMaterial.TREE_MATERIAL;
+            case DigMode.GatherPlants:
+                return tile.tiletypeMaterial == TiletypeMaterial.PLANT;
+            case DigMode.SmoothStone:
+                break;
+            case DigMode.EngraveStone:
+                break;
+            case DigMode.CarveFortifications:
+                break;
+            case DigMode.RemoveConstruction:
+                break;
+            case DigMode.RemoveDesignation:
+                break;
+            default:
+                break;
         }
+        return false;
     }
 }

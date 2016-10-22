@@ -211,7 +211,7 @@ public class GameMap : MonoBehaviour
         float x = input.x / tileWidth;
         float y = input.z / -tileWidth;
         float z = input.y / tileHeight;
-        return new Vector3(x + 0.5f, y + 0.499f, z - MapZOffset - 0.001f);
+        return new Vector3(x + 0.5f, y + 0.5f, z - MapZOffset);
     }
     public static bool IsBlockCorner(DFCoord input)
     {

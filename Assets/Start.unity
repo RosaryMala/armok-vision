@@ -2360,6 +2360,7 @@ GameObject:
   - 114: {fileID: 861361733}
   - 114: {fileID: 861361735}
   - 114: {fileID: 861361734}
+  - 114: {fileID: 861361736}
   m_Layer: 0
   m_Name: '[GameMapObject]'
   m_TagString: Untagged
@@ -2498,7 +2499,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98dee60b296da9248a5073025e3361ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCam: {fileID: 0}
+  digMode: 1
 --- !u!114 &861361735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2512,6 +2513,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BlocksToFetch: 10
   RunOnAlternateThread: 1
+--- !u!114 &861361736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 861361727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0a94a8e59cd2944281d4e702fd26f95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cursorMaterial: {fileID: 2100000, guid: f33f3e4ce95d3af4ba4c970ad50eece6, type: 2}
+  activeCursorMaterial: {fileID: 2100000, guid: 8c2685326aa5b864396b996028b5fe87,
+    type: 2}
+  cursorMesh: {fileID: 4300000, guid: 4bd277bd94c5c0f4c93e139ab2b6ae76, type: 3}
+  diggingTool: {fileID: 861361734}
 --- !u!1 &874450143
 GameObject:
   m_ObjectHideFlags: 0
@@ -3570,7 +3587,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraOrigin: {fileID: 1383803864}
-  debugMode: 1
+  debugMode: 0
   dfCoord: {x: 0, y: 0, z: 0}
   highlightLineMaterial: {fileID: 2100000, guid: 1c9356298dc65654d87468f4b00d9831,
     type: 2}
