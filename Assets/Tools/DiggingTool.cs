@@ -105,9 +105,9 @@ public class DiggingTool : MonoBehaviour
             //case DigMode.RemoveConstruction:
             //    command.designation = TileDigDesignation.DEFAULT_DIG;
             //    break;
-            //case DigMode.RemoveDesignation:
-            //    command.designation = TileDigDesignation.NO_DIG;
-            //    break;
+            case DigMode.RemoveDesignation:
+                designation = TileDigDesignation.NO_DIG;
+                break;
             default:
                 designation = TileDigDesignation.NO_DIG;
                 return false;
@@ -144,7 +144,7 @@ public class DiggingTool : MonoBehaviour
             case DigMode.RemoveConstruction:
                 break;
             case DigMode.RemoveDesignation:
-                break;
+                return true;
             default:
                 break;
         }
