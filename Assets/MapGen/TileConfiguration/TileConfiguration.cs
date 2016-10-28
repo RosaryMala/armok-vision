@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using TokenLists;
@@ -129,5 +130,10 @@ abstract public class TileConfiguration<T> where T : IContent, new()
     }
 
     abstract public object SecondaryDictionary { set; }
+
+    internal void GetValue(MapDataStore.Tile tempTile, MeshLayer staticMaterial, out object colorContent)
+    {
+        throw new NotImplementedException();
+    }
 }
 
