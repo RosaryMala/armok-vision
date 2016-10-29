@@ -59,7 +59,7 @@
         <material token="INORGANIC:*" />
     </materialTexture>
     <materialTexture pattern="Wood.png" specular="Matte_S.png">
-        <material token="*:*:WOOD" />
+        <material token="PLANT:*:WOOD" />
     </materialTexture>
     <materialTexture pattern="Grey.png" specular="Mirror_S.png">
         <material token="*:IRON" />

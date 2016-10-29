@@ -270,6 +270,8 @@ public class MeshContent : IContent
             filePath = Path.GetFullPath(filePath);
 
             //	Load the OBJ in
+            if (!File.Exists(filePath))
+                return false;
             var lStream = new FileStream(filePath, FileMode.Open);
             var lOBJData = OBJLoader.LoadOBJ(lStream);
             lStream.Close();

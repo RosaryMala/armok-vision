@@ -1761,10 +1761,10 @@ public class GameMap : MonoBehaviour
 
     public ParticleSystem itemParticleSystem;
     ParticleSystem.Particle[] itemParticles;
-    Dictionary<int, ParticleSystem> customItemParticleSystems;
-    Dictionary<int, ParticleSystem.Particle[]> customItemParticles;
-    Dictionary<int, int> customItemParticleCount;
-
+    Dictionary<int, ParticleSystem> customItemParticleSystems = new Dictionary<int, ParticleSystem>();
+    Dictionary<int, ParticleSystem.Particle[]> customItemParticles = new Dictionary<int, ParticleSystem.Particle[]>();
+    Dictionary<int, int> customItemParticleCount = new Dictionary<int, int>();
+    OpenSimplexNoise noise = new OpenSimplexNoise();
     void DrawItems()
     {
         if (ContentLoader.Instance == null)
@@ -1798,7 +1798,7 @@ public class GameMap : MonoBehaviour
             else
                 part.startColor = Color.gray;
 
-            if (ContentLoader.Instance.ItemMeshConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out meshContent))
+            if (ContentLoader.Instance.ItemMeshConfiguration != null && ContentLoader.Instance.ItemMeshConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out meshContent))
             {
                 ParticleSystem partSys;
                 if (!customItemParticleSystems.ContainsKey(meshContent.UniqueIndex))
@@ -1811,20 +1811,35 @@ public class GameMap : MonoBehaviour
                     renderer.mesh = mesh;
                     if (meshContent.MaterialTexture != null)
                         renderer.material.SetTexture("_MainTex", meshContent.MaterialTexture.Texture);
+                    else
+                    {
+                        TextureContent texCon;
+                        if(ContentLoader.Instance.MaterialTextureConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out texCon))
+                            renderer.material.SetTexture("_MainTex", texCon.Texture);
+                    }
                     if (meshContent.ShapeTexture != null)
                         renderer.material.SetTexture("_BumpMap", meshContent.ShapeTexture.Texture);
+                    else
+                    {
+                        NormalContent normalCon;
+                        if(ContentLoader.Instance.ShapeTextureConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out normalCon))
+                            renderer.material.SetTexture("_BumpMap", normalCon.Texture);
+                    }
                     if (meshContent.SpecialTexture != null)
-                        renderer.material.SetTexture("_MainTex", meshContent.SpecialTexture.Texture);
+                        renderer.material.SetTexture("_SpecialTex", meshContent.SpecialTexture.Texture);
                     customItemParticleSystems[meshContent.UniqueIndex] = partSys;
                     customItemParticles[meshContent.UniqueIndex] = new ParticleSystem.Particle[partSys.maxParticles];
                     customItemParticleCount[meshContent.UniqueIndex] = 0;
                 }
-
+                if (meshContent.Rotation == RotationType.Random)
+                    part.rotation = (float)noise.eval(pos.x, pos.y, pos.z) * 360;
+                part.position = DFtoUnityCoord(item.Value.pos) + new Vector3(0, floorHeight, 0);
                 customItemParticles[meshContent.UniqueIndex][customItemParticleCount[meshContent.UniqueIndex]] = part;
                 customItemParticleCount[meshContent.UniqueIndex]++;
             }
             else
             {
+                part.position = DFtoUnityCoord(item.Value.pos) + new Vector3(0, floorHeight + 0.5f, 0);
                 itemParticles[i] = part;
                 i++;
             }

@@ -111,15 +111,8 @@ public class TextureContent : IContent
 
 
         if (store != null)
-        {
             storageIndex = store.AddTexture(combinedMap);
-            Texture = null;
-        }
-        else
-        {
-            storageIndex = -1;
-            Texture = combinedMap;
-        }
+        Texture = combinedMap;
         return true;
     }
 
