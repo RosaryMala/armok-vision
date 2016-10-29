@@ -10,6 +10,8 @@ public class TextureContent : IContent
     TextureStorage store;
     int storageIndex;
 
+    public Texture2D Texture { get; private set; }
+
     public Matrix4x4 UVTransform
     {
         get
@@ -28,12 +30,6 @@ public class TextureContent : IContent
 
     public bool AddTypeElement(XElement elemtype)
     {
-        if (store == null) //nowhere to put the image.
-        {
-            Debug.LogError("Texture Storage is Null: " + elemtype);
-            return false;
-        }
-
         XAttribute patternAtt = elemtype.Attribute("pattern");
         if (patternAtt == null)
         {
@@ -114,7 +110,16 @@ public class TextureContent : IContent
         combinedMap.Apply();
 
 
-        storageIndex = store.AddTexture(combinedMap);
+        if (store != null)
+        {
+            storageIndex = store.AddTexture(combinedMap);
+            Texture = null;
+        }
+        else
+        {
+            storageIndex = -1;
+            Texture = combinedMap;
+        }
         return true;
     }
 

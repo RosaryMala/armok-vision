@@ -8,6 +8,8 @@ public class NormalContent : IContent
 
     TextureStorage store;
     int storageIndex;
+    
+    public Texture2D Texture { get; private set; }
 
     public Matrix4x4 UVTransform
     {
@@ -28,12 +30,6 @@ public class NormalContent : IContent
 
     public bool AddTypeElement(System.Xml.Linq.XElement elemtype)
     {
-        if (store == null) //nowhere to put the image.
-        {
-            Debug.LogError("Texture Storage is Null: " + elemtype);
-            return false;
-        } 
-
         XAttribute normalAtt = elemtype.Attribute("normal");
         if (normalAtt == null)
         {
@@ -142,7 +138,16 @@ public class NormalContent : IContent
         combinedMap.SetPixels(normalColors);
         combinedMap.Apply();
 
-        storageIndex = store.AddTexture(combinedMap);
+        if (store != null)
+        {
+            storageIndex = store.AddTexture(combinedMap);
+            Texture = null;
+        }
+        else
+        {
+            storageIndex = -1;
+            Texture = combinedMap;
+        }
         return true;
     }
 

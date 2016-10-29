@@ -60,6 +60,8 @@ public enum RotationType
 
 public class MeshContent : IContent
 {
+    static int num_created = 0;
+    public int UniqueIndex { get; private set; }
     public struct TextureStorageContainer
     {
         public readonly TextureStorage materialStore;
@@ -224,8 +226,7 @@ public class MeshContent : IContent
         }
 
 
-        if (storeContainer.shapeStore != null
-            && (elemtype.Attribute("normal") != null
+        if ((elemtype.Attribute("normal") != null
             || elemtype.Attribute("occlusion") != null
             || elemtype.Attribute("alpha") != null
             ))
@@ -236,8 +237,7 @@ public class MeshContent : IContent
                 _normalTexture = null;
         }
 
-        if (storeContainer.specialStore != null
-            && (elemtype.Attribute("metallic") != null
+        if ((elemtype.Attribute("metallic") != null
             || elemtype.Attribute("illumination") != null
             ))
         {
@@ -247,8 +247,7 @@ public class MeshContent : IContent
                 _specialTexture = null;
         }
 
-        if (storeContainer.materialStore != null
-            && (elemtype.Attribute("pattern") != null
+        if ((elemtype.Attribute("pattern") != null
             || elemtype.Attribute("specular") != null
             ))
         {
@@ -329,6 +328,8 @@ public class MeshContent : IContent
                 Debug.Log("Unknown rotation value: " + rotAtt.Value);
             }
         }
+        UniqueIndex = num_created;
+        num_created++;
         return true;
     }
 
