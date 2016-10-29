@@ -2,7 +2,6 @@
 #define ARMOK_STANDARD_SHARED
 
 sampler2D _MainTex;
-sampler2D _Shapetex;
 sampler2D _BumpMap;
 sampler2D _SpecialTex;
 sampler2D _SpatterTex;

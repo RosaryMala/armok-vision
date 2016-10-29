@@ -3,3 +3,4 @@ MaterialTextures/index.txt
 TileTextures/index.txt
 TileMeshes/index.txt
 BuildingMeshes/index.txt
+ItemMeshes/index.txt

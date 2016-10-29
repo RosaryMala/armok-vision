@@ -15,7 +15,6 @@ struct Input {
 	float2 uv2_BumpMap;
 	float2 uv3_SpecialTex;
 	float4 color: Color; // Vertex color
-	INTERNAL_DATA
 };
 
 half _Glossiness;
