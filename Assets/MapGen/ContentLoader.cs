@@ -166,6 +166,7 @@ public class ContentLoader : MonoBehaviour
     public TileConfiguration<MeshContent> DesignationMeshConfiguration { get; private set; }
     public TileConfiguration<MeshContent> CollisionMeshConfiguration { get; private set; }
     public TileConfiguration<MeshContent> BuildingCollisionMeshConfiguration { get; private set; }
+    public TileConfiguration<MeshContent> ItemMeshConfiguration { get; private set; }
 
     public void Awake()
     {
@@ -327,6 +328,11 @@ public class ContentLoader : MonoBehaviour
                     if (BuildingCollisionMeshConfiguration == null)
                         BuildingCollisionMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "buildingCollisionMesh");
                     BuildingCollisionMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage, specialTextureStorage));
+                    break;
+                case "itemMeshes":
+                    if (ItemMeshConfiguration == null)
+                        ItemMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "itemMesh");
+                    ItemMeshConfiguration.AddSingleContentConfig(doc, null);
                     break;
                 default:
                     break;

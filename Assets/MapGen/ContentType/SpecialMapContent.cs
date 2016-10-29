@@ -8,6 +8,8 @@ public class SpecialMapContent : IContent
     TextureStorage store;
     int storageIndex;
 
+    public Texture2D Texture { get; private set; }
+
     public Matrix4x4 UVTransform
     {
         get
@@ -36,12 +38,6 @@ public class SpecialMapContent : IContent
 
     public bool AddTypeElement(XElement elemtype)
     {
-        if (store == null) //nowhere to put the image.
-        {
-            Debug.LogError("Texture Storage is Null: " + elemtype);
-            return false;
-        }
-
         XAttribute metalAtt = elemtype.Attribute("metallic");
         if(metalAtt == null)
         {
@@ -126,7 +122,16 @@ public class SpecialMapContent : IContent
         combinedMap.SetPixels(metalColors);
         combinedMap.Apply();
 
-        storageIndex = store.AddTexture(combinedMap);
+        if (store != null)
+        {
+            storageIndex = store.AddTexture(combinedMap);
+            Texture = null;
+        }
+        else
+        {
+            storageIndex = -1;
+            Texture = combinedMap;
+        }
 
         return true;
     }

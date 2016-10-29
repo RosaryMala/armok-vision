@@ -1482,10 +1482,11 @@ public class GameMap : MonoBehaviour
                 if (materials.ContainsKey(item.material))
                     statusText.Append(materials[item.material].id);
                 else
-                    statusText.Append("Unknown");
+                    statusText.Append(((MatPairStruct)item.material).ToString());
                 statusText.Append(" ");
                 if (items.ContainsKey(item.type))
                     statusText.Append(items[item.type].id);
+                statusText.Append("(").Append(((MatPairStruct)item.type)).Append(")");
                 statusText.AppendLine();
 
                 statusText.Append(itemInstances.Count).Append(" items total.");
@@ -1760,6 +1761,9 @@ public class GameMap : MonoBehaviour
 
     public ParticleSystem itemParticleSystem;
     ParticleSystem.Particle[] itemParticles;
+    Dictionary<int, ParticleSystem> customItemParticleSystems;
+    Dictionary<int, ParticleSystem.Particle[]> customItemParticles;
+    Dictionary<int, int> customItemParticleCount;
 
     void DrawItems()
     {
@@ -1771,24 +1775,65 @@ public class GameMap : MonoBehaviour
         }
         MapDataStore.Tile tempTile = new MapDataStore.Tile(null, new DFCoord(0, 0, 0));
         int i = 0;
+        foreach (var count in customItemParticleSystems)
+        {
+            customItemParticleCount[count.Key] = 0;
+        }
         foreach (var item in itemPositions)
         {
             var pos = item.Key;
             if (!(pos.z < PosZ && pos.z >= (PosZ - GameSettings.Instance.rendering.drawRangeDown)))
                 continue;
-            itemParticles[i] = new ParticleSystem.Particle();
-            itemParticles[i].startSize = 1;
-            itemParticles[i].position = DFtoUnityCoord(item.Value.pos) + new Vector3(0, floorHeight + 0.5f, 0);
 
             tempTile.material = item.Value.material;
+            tempTile.construction_item = item.Value.type;
             ColorContent colorContent;
+            MeshContent meshContent;
+
+            var part = new ParticleSystem.Particle();
+            part.startSize = 1;
+            part.position = DFtoUnityCoord(item.Value.pos) + new Vector3(0, floorHeight + 0.5f, 0);
             if (ContentLoader.Instance.ColorConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out colorContent))
-                itemParticles[i].startColor = colorContent.value;
+                part.startColor = colorContent.value;
             else
-                itemParticles[i].startColor = Color.gray;
-            i++;
+                part.startColor = Color.gray;
+
+            if (ContentLoader.Instance.ItemMeshConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out meshContent))
+            {
+                ParticleSystem partSys;
+                if (!customItemParticleSystems.ContainsKey(meshContent.UniqueIndex))
+                {
+                    partSys = Instantiate(itemParticleSystem);
+                    partSys.transform.parent = transform;
+                    var renderer = partSys.GetComponent<ParticleSystemRenderer>();
+                    Mesh mesh = new Mesh();
+                    meshContent.MeshData[MeshLayer.StaticMaterial].CopyToMesh(mesh);
+                    renderer.mesh = mesh;
+                    if (meshContent.MaterialTexture != null)
+                        renderer.material.SetTexture("_MainTex", meshContent.MaterialTexture.Texture);
+                    if (meshContent.ShapeTexture != null)
+                        renderer.material.SetTexture("_BumpMap", meshContent.ShapeTexture.Texture);
+                    if (meshContent.SpecialTexture != null)
+                        renderer.material.SetTexture("_MainTex", meshContent.SpecialTexture.Texture);
+                    customItemParticleSystems[meshContent.UniqueIndex] = partSys;
+                    customItemParticles[meshContent.UniqueIndex] = new ParticleSystem.Particle[partSys.maxParticles];
+                    customItemParticleCount[meshContent.UniqueIndex] = 0;
+                }
+
+                customItemParticles[meshContent.UniqueIndex][customItemParticleCount[meshContent.UniqueIndex]] = part;
+                customItemParticleCount[meshContent.UniqueIndex]++;
+            }
+            else
+            {
+                itemParticles[i] = part;
+                i++;
+            }
         }
         itemParticleSystem.SetParticles(itemParticles, i);
+        foreach (var sys in customItemParticleSystems)
+        {
+            sys.Value.SetParticles(customItemParticles[sys.Key], customItemParticleCount[sys.Key]);
+        }
     }
 
 }
