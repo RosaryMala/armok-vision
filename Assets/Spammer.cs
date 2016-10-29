@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Spammer : MonoBehaviour {
+public class Spammer : MonoBehaviour
+{
     public Transform source;
 
     public int numX = 1;
@@ -10,11 +11,11 @@ public class Spammer : MonoBehaviour {
 
     public float spacing = 1;
 
-
-	// Use this for initialization
-	void Start () {
+    IEnumerator Spam()
+    {
         for (int x = 0; x < numX; x++)
             for (int y = 0; y < numY; y++)
+            {
                 for (int z = 0; z < numZ; z++)
                 {
                     Transform instance = Instantiate(source);
@@ -22,6 +23,16 @@ public class Spammer : MonoBehaviour {
                     instance.position = new Vector3(x, y, z) * spacing;
                     instance.name = x + ", " + y + ", " + z;
                 }
+                yield return null;
+            }
         Debug.Log("Spammed " + numX * numY * numZ + "Instances");
+        yield return null;
+    }
+
+
+    // Use this for initialization
+    void Start()
+    {
+        StartCoroutine(Spam());
     }
 }
