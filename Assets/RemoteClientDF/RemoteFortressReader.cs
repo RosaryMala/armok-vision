@@ -435,6 +435,64 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Item")]
+  public partial class Item : global::ProtoBuf.IExtensible
+  {
+    public Item() {}
+    
+    private int _id = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int id
+    {
+      get { return _id; }
+      set { _id = value; }
+    }
+    private RemoteFortressReader.Coord _pos = null;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"pos", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Coord pos
+    {
+      get { return _pos; }
+      set { _pos = value; }
+    }
+    private uint _flags1 = default(uint);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"flags1", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(uint))]
+    public uint flags1
+    {
+      get { return _flags1; }
+      set { _flags1 = value; }
+    }
+    private uint _flags2 = default(uint);
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"flags2", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(uint))]
+    public uint flags2
+    {
+      get { return _flags2; }
+      set { _flags2 = value; }
+    }
+    private RemoteFortressReader.MatPair _type = null;
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"type", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.MatPair type
+    {
+      get { return _type; }
+      set { _type = value; }
+    }
+    private RemoteFortressReader.MatPair _material = null;
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"material", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.MatPair material
+    {
+      get { return _material; }
+      set { _material = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MapBlock")]
   public partial class MapBlock : global::ProtoBuf.IExtensible
   {
@@ -613,6 +671,13 @@ namespace RemoteFortressReader
     public global::System.Collections.Generic.List<RemoteFortressReader.SpatterPile> spatterPile
     {
       get { return _spatterPile; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.Item> _items = new global::System.Collections.Generic.List<RemoteFortressReader.Item>();
+    [global::ProtoBuf.ProtoMember(26, Name=@"items", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.Item> items
+    {
+      get { return _items; }
     }
   
     private global::ProtoBuf.IExtension extensionObject;

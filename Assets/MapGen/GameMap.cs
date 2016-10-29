@@ -118,7 +118,7 @@ public class GameMap : MonoBehaviour
     }
 
     // Stored view information
-    RemoteFortressReader.ViewInfo view;
+    ViewInfo view;
 
     BlockMesher mesher;
 
@@ -146,10 +146,14 @@ public class GameMap : MonoBehaviour
     DFCoord mapPosition;
 
     // Stuff to let the material list & various meshes & whatnot be loaded from xml specs at runtime.
-    Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> materials;
-    Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> items;
-    Dictionary<BuildingStruct, RemoteFortressReader.BuildingDefinition> buildings;
-    Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> creatures;
+    Dictionary<MatPairStruct, MaterialDefinition> materials;
+    Dictionary<MatPairStruct, MaterialDefinition> items;
+    Dictionary<BuildingStruct, BuildingDefinition> buildings;
+    Dictionary<MatPairStruct, MaterialDefinition> creatures;
+
+    //Items list. Pretty simple right now.
+    Dictionary<int, Item> itemInstances = new Dictionary<int, Item>();
+    Dictionary<DFCoord, Item> itemPositions = new Dictionary<DFCoord, Item>();
 
     // Coordinate system stuff.
     public const float tileHeight = 3.0f;
@@ -404,7 +408,7 @@ public class GameMap : MonoBehaviour
         UpdateBlocks();
         UpdateSpatters();
         DrawBlocks();
-
+        DrawItems();
     }
 
     public void Refresh()
@@ -700,6 +704,15 @@ public class GameMap : MonoBehaviour
             {
                 SetDirtySpatterBlock(block.map_x, block.map_y, block.map_z);
             }
+            foreach (var item in block.items)
+            {
+                itemInstances[item.id] = item;
+            }
+        }
+        itemPositions.Clear();
+        foreach (var item in itemInstances)
+        {
+            itemPositions[item.Value.pos] = item.Value;
         }
         DirtySeasonalBlocks();
         Profiler.BeginSample("EnqueueMeshUpdates", this);
@@ -1461,6 +1474,22 @@ public class GameMap : MonoBehaviour
                     }
                     break;
                 }
+
+            if(itemPositions.ContainsKey(new DFCoord(cursX, cursY, cursZ)))
+            {
+                Item item = itemPositions[new DFCoord(cursX, cursY, cursZ)];
+                statusText.Append("Item ").Append(item.id).Append(": ");
+                if (materials.ContainsKey(item.material))
+                    statusText.Append(materials[item.material].id);
+                else
+                    statusText.Append("Unknown");
+                statusText.Append(" ");
+                if (items.ContainsKey(item.type))
+                    statusText.Append(items[item.type].id);
+                statusText.AppendLine();
+
+                statusText.Append(itemInstances.Count).Append(" items total.");
+            }
         }
         cursorProperties.text = statusText.ToString();
         Profiler.EndSample();
@@ -1727,6 +1756,39 @@ public class GameMap : MonoBehaviour
             }
         StatsReadout.BlocksDrawn = drawnBlocks;
         Profiler.EndSample();
+    }
+
+    public ParticleSystem itemParticleSystem;
+    ParticleSystem.Particle[] itemParticles;
+
+    void DrawItems()
+    {
+        if (ContentLoader.Instance == null)
+            return;
+        if (itemParticles == null)
+        {
+            itemParticles = new ParticleSystem.Particle[itemParticleSystem.maxParticles];
+        }
+        MapDataStore.Tile tempTile = new MapDataStore.Tile(null, new DFCoord(0, 0, 0));
+        int i = 0;
+        foreach (var item in itemPositions)
+        {
+            var pos = item.Key;
+            if (!(pos.z < PosZ && pos.z >= (PosZ - GameSettings.Instance.rendering.drawRangeDown)))
+                continue;
+            itemParticles[i] = new ParticleSystem.Particle();
+            itemParticles[i].startSize = 1;
+            itemParticles[i].position = DFtoUnityCoord(item.Value.pos) + new Vector3(0, floorHeight + 0.5f, 0);
+
+            tempTile.material = item.Value.material;
+            ColorContent colorContent;
+            if (ContentLoader.Instance.ColorConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out colorContent))
+                itemParticles[i].startColor = colorContent.value;
+            else
+                itemParticles[i].startColor = Color.gray;
+            i++;
+        }
+        itemParticleSystem.SetParticles(itemParticles, i);
     }
 
 }
