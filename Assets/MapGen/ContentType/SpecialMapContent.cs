@@ -31,8 +31,6 @@ public class SpecialMapContent : IContent
         set
         {
             store = value as TextureStorage;
-            if (store == null)
-                Debug.LogError(value + " is null, for some reason");
         }
     }
 
@@ -104,8 +102,8 @@ public class SpecialMapContent : IContent
         }
 
 
-        Texture2D combinedMap = new Texture2D(metalMap.width, metalMap.height, TextureFormat.ARGB32, false, true);
-
+        Texture2D combinedMap = new Texture2D(metalMap.width, metalMap.height, TextureFormat.ARGB32, true, true);
+        combinedMap.filterMode = FilterMode.Trilinear;
         combinedMap.name = metalPath + illuminationAtt.Value;
 
         Color[] metalColors = metalMap.GetPixels();

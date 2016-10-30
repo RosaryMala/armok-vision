@@ -95,7 +95,8 @@ public class TextureContent : IContent
             TextureScale.Bilinear(specularTex, patternTex.width, patternTex.height);
         }
 
-        Texture2D combinedMap = new Texture2D(patternTex.width, patternTex.height, TextureFormat.ARGB32, false, false);
+        Texture2D combinedMap = new Texture2D(patternTex.width, patternTex.height, TextureFormat.ARGB32, true, false);
+        combinedMap.filterMode = FilterMode.Trilinear;
         combinedMap.name = patternPath + specularAtt.Value;
 
         Color[] patternColors = patternTex.GetPixels();
@@ -112,6 +113,8 @@ public class TextureContent : IContent
 
         if (store != null)
             storageIndex = store.AddTexture(combinedMap);
+        else
+            storageIndex = -1;
         Texture = combinedMap;
         return true;
     }
@@ -121,8 +124,6 @@ public class TextureContent : IContent
         set
         {
             store = value as TextureStorage;
-            if (store == null)
-                Debug.LogError(value + "Is null, for some reason");
         }
     }
 }
