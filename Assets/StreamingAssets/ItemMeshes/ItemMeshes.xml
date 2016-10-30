@@ -23,6 +23,12 @@
         <item token="DOOR"/>
         <item token="FLOODGATE"/>
     </itemMesh>
+    <itemMesh file = "BIN.obj"
+                    normal="BIN.png"
+                    occlusion="BIN.png"
+                    alpha="Opaque_A.png">
+        <item token="BIN"/>
+    </itemMesh>
     <itemMesh file = "BED.obj" rotation="Random">
         <item token="BED"/>
     </itemMesh>
