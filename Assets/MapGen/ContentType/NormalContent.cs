@@ -119,8 +119,8 @@ public class NormalContent : IContent
             TextureScale.Bilinear(occlusionMap, normalMap.width, normalMap.height);
         }
 
-        Texture2D combinedMap = new Texture2D(normalMap.width, normalMap.height, TextureFormat.ARGB32, false, true);
-
+        Texture2D combinedMap = new Texture2D(normalMap.width, normalMap.height, TextureFormat.ARGB32, true, true);
+        combinedMap.filterMode = FilterMode.Trilinear;
         combinedMap.name = normalPath + occlusionAtt.Value + alphaAtt.Value;
 
         Color[] normalColors = normalMap.GetPixels();
@@ -139,15 +139,10 @@ public class NormalContent : IContent
         combinedMap.Apply();
 
         if (store != null)
-        {
             storageIndex = store.AddTexture(combinedMap);
-            Texture = null;
-        }
         else
-        {
             storageIndex = -1;
-            Texture = combinedMap;
-        }
+        Texture = combinedMap;
         return true;
     }
 
@@ -156,8 +151,6 @@ public class NormalContent : IContent
         set
         {
             store = value as TextureStorage;
-            if (store == null)
-                Debug.LogError(value + " is null, for some reason");
         }
     }
 }

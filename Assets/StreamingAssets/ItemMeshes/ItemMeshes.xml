@@ -24,10 +24,16 @@
         <item token="FLOODGATE"/>
     </itemMesh>
     <itemMesh file = "BIN.obj"
-                    normal="BIN.png"
-                    occlusion="BIN.png"
+                    normal="BIN_N.png"
+                    occlusion="BIN_O.png"
                     alpha="Opaque_A.png">
         <item token="BIN"/>
+    </itemMesh>
+    <itemMesh file = "BARREL.obj"
+                    normal="BARREL_N.png"
+                    occlusion="BARREL_O.png"
+                    alpha="Opaque_A.png">
+        <item token="BARREL"/>
     </itemMesh>
     <itemMesh file = "BED.obj" rotation="Random">
         <item token="BED"/>
