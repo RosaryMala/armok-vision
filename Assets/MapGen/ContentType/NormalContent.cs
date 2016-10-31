@@ -28,107 +28,38 @@ public class NormalContent : IContent
     }
 
 
-    public bool AddTypeElement(System.Xml.Linq.XElement elemtype)
+    public bool AddTypeElement(XElement elemtype)
     {
         XAttribute normalAtt = elemtype.Attribute("normal");
-        if (normalAtt == null)
-        {
-            Debug.LogError("No normal map in " + elemtype);
-            return false;
-        }
-        string normalPath = Path.Combine(Path.GetDirectoryName(new Uri(elemtype.BaseUri).LocalPath), normalAtt.Value);
-        normalPath = Path.GetFullPath(normalPath);
-
-        if (!File.Exists(normalPath))
-        {
-            Debug.LogError("File not found: " + normalPath);
-            return false;
-        }
-
-        byte[] normalData = File.ReadAllBytes(normalPath);
-        Texture2D normalMap = new Texture2D(2, 2, TextureFormat.ARGB32, false, true);
-        normalMap.LoadImage(normalData);
-
-        if (normalMap.width > GameSettings.Instance.rendering.maxTextureSize || normalMap.height > GameSettings.Instance.rendering.maxTextureSize)
-        {
-            if (normalMap.width > normalMap.height)
-            {
-                TextureScale.Bilinear(
-                    normalMap,
-                    GameSettings.Instance.rendering.maxTextureSize,
-                    GameSettings.Instance.rendering.maxTextureSize * normalMap.height / normalMap.width);
-            }
-            else
-            {
-                TextureScale.Bilinear(
-                    normalMap,
-                    GameSettings.Instance.rendering.maxTextureSize * normalMap.width / normalMap.height,
-                    GameSettings.Instance.rendering.maxTextureSize);
-            }
-        }
-
+        Texture2D normalMap = ContentLoader.LoadTexture(normalAtt, elemtype, new Color(0.5f, 0.5f, 1f), true);
 
         XAttribute alphaAtt = elemtype.Attribute("alpha");
-        if (alphaAtt == null)
-        {
-            Debug.LogError("No alpha map in " + elemtype);
-            //Add error message here
-            return false;
-        }
-        string alphaPath = Path.Combine(Path.GetDirectoryName(new Uri(elemtype.BaseUri).LocalPath), alphaAtt.Value);
-        alphaPath = Path.GetFullPath(alphaPath);
-
-        if (!File.Exists(alphaPath))
-        {
-            Debug.LogError("File not found: " + alphaPath);
-            return false;
-        }
-
-        byte[] alphaData = File.ReadAllBytes(alphaPath);
-        Texture2D alphaMap = new Texture2D(2, 2, TextureFormat.ARGB32, false, false);
-        alphaMap.LoadImage(alphaData);
-
-        if ((alphaMap.width != normalMap.width) || (alphaMap.height != normalMap.height))
-        {
-            TextureScale.Bilinear(alphaMap, normalMap.width, normalMap.height);
-        }
+        Texture2D alphaMap = ContentLoader.LoadTexture(alphaAtt, elemtype, Color.white, true);
 
         XAttribute occlusionAtt = elemtype.Attribute("occlusion");
-        if (occlusionAtt == null)
-        {
-            Debug.LogError("No occlusion map in " + elemtype);
-            //Add error message here
-            return false;
-        }
-        string occlusionPath = Path.Combine(Path.GetDirectoryName(new Uri(elemtype.BaseUri).LocalPath), occlusionAtt.Value);
-        occlusionPath = Path.GetFullPath(occlusionPath);
+        Texture2D occlusionMap = ContentLoader.LoadTexture(occlusionAtt, elemtype, Color.white, true);
 
-        if (!File.Exists(occlusionPath))
-        {
-            Debug.LogError("File not found: " + occlusionPath);
-            return false;
-        }
-
-        byte[] occlusionData = File.ReadAllBytes(occlusionPath);
-
-        Texture2D occlusionMap = new Texture2D(2, 2, TextureFormat.ARGB32, false, true);
-        occlusionMap.LoadImage(occlusionData);
-
-        if (occlusionMap.width != normalMap.width || occlusionMap.height != normalMap.height)
-        {
-            TextureScale.Bilinear(occlusionMap, normalMap.width, normalMap.height);
-        }
+        GameSettings.MatchSizes(new Texture2D[] { normalMap, alphaMap, occlusionMap });
 
         Texture2D combinedMap = new Texture2D(normalMap.width, normalMap.height, TextureFormat.ARGB32, true, true);
         combinedMap.filterMode = FilterMode.Trilinear;
-        combinedMap.name = normalPath + occlusionAtt.Value + alphaAtt.Value;
+
+        if(!string.IsNullOrEmpty(normalMap.name))
+        {
+            combinedMap.name = normalMap.name + occlusionAtt.Value + alphaAtt.Value;
+        }
+        else if(!string.IsNullOrEmpty(occlusionMap.name))
+        {
+            combinedMap.name = occlusionMap.name + alphaAtt.Value;
+        }
+        else
+        {
+            combinedMap.name = alphaMap.name;
+        }
 
         Color[] normalColors = normalMap.GetPixels();
         Color[] occlusionColors = occlusionMap.GetPixels();
         Color[] alphaColors = alphaMap.GetPixels();
-
-        if (normalColors.Length != alphaColors.Length)
-            Debug.LogError("Maps aren't same size!");
 
         for (int i = 0; i < normalColors.Length; i++)
         {

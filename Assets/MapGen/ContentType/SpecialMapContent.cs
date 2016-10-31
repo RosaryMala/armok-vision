@@ -37,80 +37,22 @@ public class SpecialMapContent : IContent
     public bool AddTypeElement(XElement elemtype)
     {
         XAttribute metalAtt = elemtype.Attribute("metallic");
-        if(metalAtt == null)
-        {
-            Debug.LogError("No metallic map in " + elemtype);
-            return false;
-        }
-        string metalPath = Path.Combine(Path.GetDirectoryName(new Uri(elemtype.BaseUri).LocalPath), metalAtt.Value);
-        metalPath = Path.GetFullPath(metalPath);
-
-        if(!File.Exists(metalPath))
-        {
-            Debug.LogError("File not found: " + metalPath);
-            return false;
-        }
-
-        byte[] metalData = File.ReadAllBytes(metalPath);
-        Texture2D metalMap = new Texture2D(2, 2, TextureFormat.ARGB32, false, true);
-        metalMap.LoadImage(metalData);
-
-        metalMap.name = metalPath;
-
-        if (metalMap.width > GameSettings.Instance.rendering.maxTextureSize || metalMap.height > GameSettings.Instance.rendering.maxTextureSize)
-        {
-            if (metalMap.width > metalMap.height)
-            {
-                TextureScale.Bilinear(
-                    metalMap,
-                    GameSettings.Instance.rendering.maxTextureSize,
-                    GameSettings.Instance.rendering.maxTextureSize * metalMap.height / metalMap.width);
-            }
-            else
-            {
-                TextureScale.Bilinear(
-                    metalMap,
-                    GameSettings.Instance.rendering.maxTextureSize * metalMap.width / metalMap.height,
-                    GameSettings.Instance.rendering.maxTextureSize);
-            }
-        }
+        Texture2D metalMap = ContentLoader.LoadTexture(metalAtt, elemtype, Color.black, false);
 
         XAttribute illuminationAtt = elemtype.Attribute("illumination");
-        if (illuminationAtt == null)
-        {
-            Debug.LogError("No illumination map in " + elemtype);
-            //Add error message here
-            return false;
-        }
-        string illuminationPath = Path.Combine(Path.GetDirectoryName(new Uri(elemtype.BaseUri).LocalPath), illuminationAtt.Value);
-        illuminationPath = Path.GetFullPath(illuminationPath);
+        Texture2D illuminationMap = ContentLoader.LoadTexture(illuminationAtt, elemtype, Color.black, false);
 
-        if (!File.Exists(illuminationPath))
-        {
-            Debug.LogError("File not found: " + illuminationPath);
-            return false;
-        }
-
-        byte[] illuminationData = File.ReadAllBytes(illuminationPath);
-
-        Texture2D illuminationMap = new Texture2D(2, 2, TextureFormat.ARGB32, false, true);
-        illuminationMap.LoadImage(illuminationData);
-
-        if (illuminationMap.width != metalMap.width || illuminationMap.height != metalMap.height)
-        {
-            TextureScale.Bilinear(illuminationMap, metalMap.width, metalMap.height);
-        }
-
+        GameSettings.MatchSizes(metalMap, illuminationMap);
 
         Texture2D combinedMap = new Texture2D(metalMap.width, metalMap.height, TextureFormat.ARGB32, true, true);
         combinedMap.filterMode = FilterMode.Trilinear;
-        combinedMap.name = metalPath + illuminationAtt.Value;
+        if (string.IsNullOrEmpty(metalMap.name))
+            combinedMap.name = illuminationMap.name;
+        else
+            combinedMap.name = metalMap.name + illuminationAtt.Value;
 
         Color[] metalColors = metalMap.GetPixels();
         Color[] illuminationColors = illuminationMap.GetPixels();
-
-        if (metalColors.Length != illuminationColors.Length)
-            Debug.LogError("Maps aren't same size!");
 
         for (int i = 0; i < metalColors.Length; i++)
         {
@@ -121,15 +63,10 @@ public class SpecialMapContent : IContent
         combinedMap.Apply();
 
         if (store != null)
-        {
             storageIndex = store.AddTexture(combinedMap);
-            Texture = null;
-        }
         else
-        {
             storageIndex = -1;
-            Texture = combinedMap;
-        }
+        Texture = combinedMap;
 
         return true;
     }

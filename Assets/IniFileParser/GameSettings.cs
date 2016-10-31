@@ -39,6 +39,56 @@ public class GameSettings : MonoBehaviour
         public bool showHiddenTiles = false;
         public bool fog = true;
     }
+
+    public static void ClampToMaxSize(Texture2D texture)
+    {
+        if (texture.width > Instance.rendering.maxTextureSize || texture.height > Instance.rendering.maxTextureSize)
+        {
+            if (texture.width > texture.height)
+            {
+                TextureScale.Bilinear(
+                    texture,
+                    Instance.rendering.maxTextureSize,
+                    Instance.rendering.maxTextureSize * texture.height / texture.width);
+            }
+            else
+            {
+                TextureScale.Bilinear(
+                    texture,
+                    Instance.rendering.maxTextureSize * texture.width / texture.height,
+                    Instance.rendering.maxTextureSize);
+            }
+        }
+    }
+
+    public static void MatchSizes(Texture2D a, Texture2D b)
+    {
+        if (a.width != b.width || a.height != b.height)
+        {
+            TextureScale.Bilinear(a, Mathf.Max(a.width, b.width), Mathf.Max(a.height, b.width));
+            TextureScale.Bilinear(b, Mathf.Max(a.width, b.width), Mathf.Max(a.height, b.width));
+        }
+
+    }
+
+    public static void MatchSizes(Texture2D[] textures)
+    {
+        int maxWidth = int.MinValue;
+        int maxHeight = int.MinValue;
+        foreach (var item in textures)
+        {
+            maxWidth = Mathf.Max(item.width, maxWidth);
+            maxHeight = Mathf.Max(item.height, maxHeight);
+        }
+        foreach (var item in textures)
+        {
+            if (item.width != maxWidth || item.height != maxHeight)
+            {
+                TextureScale.Bilinear(item, maxWidth, maxHeight);
+            }
+        }
+    }
+
     [Serializable]
     public class CameraSettings
     {
