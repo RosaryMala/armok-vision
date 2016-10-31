@@ -39,31 +39,39 @@ public class NormalContent : IContent
         XAttribute occlusionAtt = elemtype.Attribute("occlusion");
         Texture2D occlusionMap = ContentLoader.LoadTexture(occlusionAtt, elemtype, Color.white, true);
 
-        GameSettings.MatchSizes(new Texture2D[] { normalMap, alphaMap, occlusionMap });
+        XAttribute patternAtt = elemtype.Attribute("pattern");
+        Texture2D patternTex = ContentLoader.LoadTexture(patternAtt, elemtype, Color.gray);
+
+        GameSettings.MatchSizes(new Texture2D[] { normalMap, alphaMap, occlusionMap, patternTex });
 
         Texture2D combinedMap = new Texture2D(normalMap.width, normalMap.height, TextureFormat.ARGB32, true, true);
         combinedMap.filterMode = FilterMode.Trilinear;
 
         if(!string.IsNullOrEmpty(normalMap.name))
         {
-            combinedMap.name = normalMap.name + occlusionAtt.Value + alphaAtt.Value;
+            combinedMap.name = normalMap.name + occlusionAtt.Value + alphaAtt.Value + patternAtt.Value;
         }
         else if(!string.IsNullOrEmpty(occlusionMap.name))
         {
-            combinedMap.name = occlusionMap.name + alphaAtt.Value;
+            combinedMap.name = occlusionMap.name + alphaAtt.Value + patternAtt.Value;
+        }
+        else if (!string.IsNullOrEmpty(alphaMap.name))
+        {
+            combinedMap.name = alphaMap.name + patternAtt.Value;
         }
         else
         {
-            combinedMap.name = alphaMap.name;
+            combinedMap.name = patternTex.name;
         }
 
         Color[] normalColors = normalMap.GetPixels();
         Color[] occlusionColors = occlusionMap.GetPixels();
         Color[] alphaColors = alphaMap.GetPixels();
+        Color[] patternColors = patternTex.GetPixels();
 
         for (int i = 0; i < normalColors.Length; i++)
         {
-            normalColors[i] = new Color(occlusionColors[i].r, normalColors[i].g, alphaColors[i].r, normalColors[i].r);
+            normalColors[i] = new Color(occlusionColors[i].r, normalColors[i].g, alphaColors[i].r * patternColors[i].a, normalColors[i].r);
         }
 
         combinedMap.SetPixels(normalColors);
