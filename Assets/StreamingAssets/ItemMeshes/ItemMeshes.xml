@@ -17,8 +17,8 @@
         <item token="WOOD"/>
     </itemMesh>
     <itemMesh file = "DOOR.obj"
-                    normal="Door_N.png"
-                    occlusion="Door_O.png"
+                    normal="../BuildingMeshes/Door_N.png"
+                    occlusion="../BuildingMeshes/Door_O.png"
                     alpha="Opaque_A.png">
         <item token="DOOR"/>
         <item token="FLOODGATE"/>
@@ -29,6 +29,12 @@
                     alpha="Opaque_A.png">
         <item token="BIN"/>
     </itemMesh>
+    <itemMesh file = "CAGE.obj"
+                    normal="CAGE_N.png"
+                    occlusion="CAGE_O.png"
+                    alpha="CAGE_A.png">
+        <item token="CAGE"/>
+    </itemMesh>
     <itemMesh file = "BARREL.obj"
                     normal="BARREL_N.png"
                     occlusion="BARREL_O.png"
@@ -37,6 +43,9 @@
     </itemMesh>
     <itemMesh file = "BED.obj" rotation="Random">
         <item token="BED"/>
+    </itemMesh>
+    <itemMesh file = "STATUE.obj" rotation="Random">
+        <item token="STATUE"/>
     </itemMesh>
     <itemMesh file = "CHAIR.obj" rotation="Random">
         <item token="CHAIR"/>
