@@ -87,6 +87,299 @@
         <item token="WINDOW"/>
     </itemMesh>
     <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_WHIP.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_WHIP"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_AXE_BATTLE.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_AXE_BATTLE"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_HAMMER_WAR.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_HAMMER_WAR"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_SWORD_SHORT.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_SWORD_SHORT"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_SPEAR.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_SPEAR"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_MACE.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_MACE"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_CROSSBOW.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_CROSSBOW"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_PICK.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_PICK"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_BOW.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_BOW"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_BLOWGUN.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_BLOWGUN"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_PIKE.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_PIKE"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_HALBERD.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_HALBERD"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_SWORD_2H.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_SWORD_2H"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_SWORD_LONG.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_SWORD_LONG"/>
+        <item token="WEAPON"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_MAUL.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_MAUL"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_AXE_GREAT.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_AXE_GREAT"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_DAGGER_LARGE.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_DAGGER_LARGE"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_SCOURGE.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_SCOURGE"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_FLAIL.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_FLAIL"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_MORNINGSTAR.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_MORNINGSTAR"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_SCIMITAR.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_SCIMITAR"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_AXE_TRAINING.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_AXE_TRAINING"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_SWORD_SHORT_TRAINING.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_SWORD_SHORT_TRAINING"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_SPEAR_TRAINING.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_SPEAR_TRAINING"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ARMOR.png"
+        rotation="Random">
+        <item token="ARMOR"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_ARMOR_BREASTPLATE.png"
+        rotation="Random">
+        <item token="ITEM_ARMOR_BREASTPLATE"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_ARMOR_MAIL_SHIRT.png"
+        rotation="Random">
+        <item token="ITEM_ARMOR_MAIL_SHIRT"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_ARMOR_LEATHER.png"
+        rotation="Random">
+        <item token="ITEM_ARMOR_LEATHER"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_ARMOR_COAT.png"
+        rotation="Random">
+        <item token="ITEM_ARMOR_COAT"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_ARMOR_SHIRT.png"
+        rotation="Random">
+        <item token="ITEM_ARMOR_SHIRT"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_ARMOR_CLOAK.png"
+        rotation="Random">
+        <item token="ITEM_ARMOR_CLOAK"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_ARMOR_TUNIC.png"
+        rotation="Random">
+        <item token="ITEM_ARMOR_TUNIC"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_ARMOR_TOGA.png"
+        rotation="Random">
+        <item token="ITEM_ARMOR_TOGA"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_ARMOR_CAPE.png"
+        rotation="Random">
+        <item token="ITEM_ARMOR_CAPE"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_ARMOR_VEST.png"
+        rotation="Random">
+        <item token="ITEM_ARMOR_VEST"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_ARMOR_DRESS.png"
+        rotation="Random">
+        <item token="ITEM_ARMOR_DRESS"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "SHOES.png"
+        rotation="Random">
+        <item token="SHOES"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_SHOES_SHOES.png"
+        rotation="Random">
+        <item token="ITEM_SHOES_SHOES"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_SHOES_BOOTS.png"
+        rotation="Random">
+        <item token="ITEM_SHOES_BOOTS"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_SHOES_BOOTS_LOW.png"
+        rotation="Random">
+        <item token="ITEM_SHOES_BOOTS_LOW"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_SHOES_SANDAL.png"
+        rotation="Random">
+        <item token="ITEM_SHOES_SANDAL"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_SHOES_CHAUSSE.png"
+        rotation="Random">
+        <item token="ITEM_SHOES_CHAUSSE"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_SHOES_SOCKS.png"
+        rotation="Random">
+        <item token="ITEM_SHOES_SOCKS"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_SHIELD_SHIELD.png"
+        rotation="Random">
+        <item token="ITEM_SHIELD_SHIELD"/>
+        <item token="SHIELD"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_SHIELD_BUCKLER.png"
+        rotation="Random">
+        <item token="ITEM_SHIELD_BUCKLER"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_HELM_HELM.png"
+        rotation="Random">
+        <item token="ITEM_HELM_HELM"/>
+        <item token="HELM"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_HELM_CAP.png"
+        rotation="Random">
+        <item token="ITEM_HELM_CAP"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_HELM_HOOD.png"
+        rotation="Random">
+        <item token="ITEM_HELM_HOOD"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_HELM_TURBAN.png"
+        rotation="Random">
+        <item token="ITEM_HELM_TURBAN"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_HELM_MASK.png"
+        rotation="Random">
+        <item token="ITEM_HELM_MASK"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_HELM_VEIL_HEAD.png"
+        rotation="Random">
+        <item token="ITEM_HELM_VEIL_HEAD"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_HELM_VEIL_FACE.png"
+        rotation="Random">
+        <item token="ITEM_HELM_VEIL_FACE"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_HELM_SCARF_HEAD.png"
+        rotation="Random">
+        <item token="ITEM_HELM_SCARF_HEAD"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "GLOVES.png"
+        rotation="Random">
+        <item token="GLOVES"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_GLOVES_GAUNTLETS.png"
+        rotation="Random">
+        <item token="ITEM_GLOVES_GAUNTLETS"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_GLOVES_GLOVES.png"
+        rotation="Random">
+        <item token="ITEM_GLOVES_GLOVES"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_GLOVES_MITTENS.png"
+        rotation="Random">
+        <item token="ITEM_GLOVES_MITTENS"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_WEAPON_SPEAR_TRAINING.png"
+        rotation="Random">
+        <item token="ITEM_WEAPON_SPEAR_TRAINING"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
         pattern = "MEAT.png"
         rotation="Random">
         <item token="MEAT"/>
@@ -108,5 +401,51 @@
         pattern = "ITEM_AMMO_BOLTS.png"
         rotation="Random">
         <item token="ITEM_AMMO_BOLTS"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_PANTS_PANTS.png"
+        rotation="Random">
+        <item token="ITEM_PANTS_PANTS"/>
+        <item token="PANTS"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_PANTS_GREAVES.png"
+        rotation="Random">
+        <item token="ITEM_PANTS_GREAVES"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_PANTS_LEGGINGS.png"
+        rotation="Random">
+        <item token="ITEM_PANTS_LEGGINGS"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_PANTS_LOINCLOTH.png"
+        rotation="Random">
+        <item token="ITEM_PANTS_LOINCLOTH"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_PANTS_THONG.png"
+        rotation="Random">
+        <item token="ITEM_PANTS_THONG"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_PANTS_SKIRT.png"
+        rotation="Random">
+        <item token="ITEM_PANTS_SKIRT"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_PANTS_SKIRT_SHORT.png"
+        rotation="Random">
+        <item token="ITEM_PANTS_SKIRT_SHORT"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_PANTS_SKIRT_LONG.png"
+        rotation="Random">
+        <item token="ITEM_PANTS_SKIRT_LONG"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_PANTS_BRAIES.png"
+        rotation="Random">
+        <item token="ITEM_PANTS_BRAIES"/>
     </itemMesh>
 </itemMeshes>
