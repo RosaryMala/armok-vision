@@ -46,10 +46,7 @@ public class SpecialMapContent : IContent
 
         Texture2D combinedMap = new Texture2D(metalMap.width, metalMap.height, TextureFormat.ARGB32, true, true);
         combinedMap.filterMode = FilterMode.Trilinear;
-        if (string.IsNullOrEmpty(metalMap.name))
-            combinedMap.name = illuminationMap.name;
-        else
-            combinedMap.name = metalMap.name + illuminationAtt.Value;
+        combinedMap.name = metalMap.name + illuminationMap.name;
 
         Color[] metalColors = metalMap.GetPixels();
         Color[] illuminationColors = illuminationMap.GetPixels();

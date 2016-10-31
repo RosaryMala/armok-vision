@@ -37,15 +37,9 @@ public class TextureContent : IContent
 
         GameSettings.MatchSizes(patternTex, specularTex);
 
-        string name = "";
-        if (string.IsNullOrEmpty(patternTex.name))
-            name = specularTex.name;
-        else
-            name = patternTex.name + specularAtt.Value;
-
         Texture2D combinedMap = new Texture2D(patternTex.width, patternTex.height, TextureFormat.ARGB32, true, false);
         combinedMap.filterMode = FilterMode.Trilinear;
-        combinedMap.name = name;
+        combinedMap.name = patternTex.name + specularTex.name;
 
         Color[] patternColors = patternTex.GetPixels();
         Color[] specularColors = specularTex.GetPixels();
