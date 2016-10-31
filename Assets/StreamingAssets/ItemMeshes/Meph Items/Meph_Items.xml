@@ -1,8 +1,112 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <itemMeshes>
     <itemMesh file = "../Sprite.obj"
-        pattern = "ARMOR.png"
+        pattern = "BAR.png"
         rotation="Random">
-        <item token="ARMOR"/>
+        <item token="BAR"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "SMALLGEM.png"
+        rotation="Random">
+        <item token="SMALLGEM"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "BLOCKS.png"
+        rotation="Random">
+        <item token="BLOCKS"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ROUGH.png"
+        rotation="Random">
+        <item token="ROUGH"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "BOULDER.png"
+        rotation="Random">
+        <item token="BOULDER"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "WOOD.png"
+        rotation="Random">
+        <item token="WOOD"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "DOOR.png"
+        rotation="Random">
+        <item token="DOOR"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "FLOODGATE.png"
+        rotation="Random">
+        <item token="FLOODGATE"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "FLASK.png"
+        rotation="Random">
+        <item token="FLASK"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "GOBLET.png"
+        rotation="Random">
+        <item token="GOBLET"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "INSTRUMENT.png"
+        rotation="Random">
+        <item token="INSTRUMENT"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_TOY_PUZZLEBOX.png"
+        rotation="Random">
+        <item token="ITEM_TOY_PUZZLEBOX"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_TOY_BOAT.png"
+        rotation="Random">
+        <item token="ITEM_TOY_BOAT"/>
+        <item token="TOY"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_TOY_HAMMER.png"
+        rotation="Random">
+        <item token="ITEM_TOY_HAMMER"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_TOY_AXE.png"
+        rotation="Random">
+        <item token="ITEM_TOY_AXE"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_TOY_MINIFORGE.png"
+        rotation="Random">
+        <item token="ITEM_TOY_MINIFORGE"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "WINDOW.png"
+        rotation="Random">
+        <item token="WINDOW"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "MEAT.png"
+        rotation="Random">
+        <item token="MEAT"/>
+        <item token="CORPSEPIECE"/>
+        <item token="REMAINS"/>
+        <item token="CORPSE"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_AMMO_ARROWS.png"
+        rotation="Random">
+        <item token="ITEM_AMMO_ARROWS"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_AMMO_BLOWDARTS.png"
+        rotation="Random">
+        <item token="ITEM_AMMO_BLOWDARTS"/>
+    </itemMesh>
+    <itemMesh file = "../Sprite.obj"
+        pattern = "ITEM_AMMO_BOLTS.png"
+        rotation="Random">
+        <item token="ITEM_AMMO_BOLTS"/>
     </itemMesh>
 </itemMeshes>
