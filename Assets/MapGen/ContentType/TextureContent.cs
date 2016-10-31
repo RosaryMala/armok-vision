@@ -29,75 +29,19 @@ public class TextureContent : IContent
 
     public bool AddTypeElement(XElement elemtype)
     {
-        Texture2D patternTex = new Texture2D(2, 2);
         XAttribute patternAtt = elemtype.Attribute("pattern");
-        string name = "";
-        if (patternAtt == null)
-        {
-            patternTex = ContentLoader.CreateFlatTexture(Color.grey);
-        }
-        else
-        {
-            string patternPath = Path.Combine(Path.GetDirectoryName(new Uri(elemtype.BaseUri).LocalPath), patternAtt.Value);
-            patternPath = Path.GetFullPath(patternPath);
-            name += patternPath;
-            if (!File.Exists(patternPath))
-            {
-                Debug.LogError("File not found: " + patternPath);
-                return false;
-            }
-
-            byte[] patternData = File.ReadAllBytes(patternPath);
-
-            patternTex.LoadImage(patternData);
-        }
-        if(patternTex.width > GameSettings.Instance.rendering.maxTextureSize || patternTex.height > GameSettings.Instance.rendering.maxTextureSize)
-        {
-            if(patternTex.width > patternTex.height)
-            {
-                TextureScale.Bilinear(
-                    patternTex,
-                    GameSettings.Instance.rendering.maxTextureSize,
-                    GameSettings.Instance.rendering.maxTextureSize * patternTex.height / patternTex.width);
-            }
-            else
-            {
-                TextureScale.Bilinear(
-                    patternTex,
-                    GameSettings.Instance.rendering.maxTextureSize * patternTex.width / patternTex.height,
-                    GameSettings.Instance.rendering.maxTextureSize);
-            }
-        }
+        Texture2D patternTex = ContentLoader.LoadTexture(patternAtt, elemtype, Color.gray);
 
         XAttribute specularAtt = elemtype.Attribute("specular");
-        Texture2D specularTex = new Texture2D(2, 2);
-        if (specularAtt == null)
-        {
-            specularTex = ContentLoader.CreateFlatTexture(Color.black);
-        }
+        Texture2D specularTex = ContentLoader.LoadTexture(specularAtt, elemtype, Color.black);
+
+        GameSettings.MatchSizes(patternTex, specularTex);
+
+        string name = "";
+        if (string.IsNullOrEmpty(patternTex.name))
+            name = specularTex.name;
         else
-        {
-            string specularPath = Path.Combine(Path.GetDirectoryName(new Uri(elemtype.BaseUri).LocalPath), specularAtt.Value);
-            specularPath = Path.GetFullPath(specularPath);
-            if (string.IsNullOrEmpty(name))
-                name = specularPath;
-            else
-                name += specularAtt.Value;
-            if (!File.Exists(specularPath))
-            {
-                Debug.LogError("File not found: " + specularPath);
-                return false;
-            }
-
-            byte[] specularData = File.ReadAllBytes(specularPath);
-
-            specularTex.LoadImage(specularData);
-        }
-
-        if (specularTex.width != patternTex.width || specularTex.height != patternTex.height)
-        {
-            TextureScale.Bilinear(specularTex, patternTex.width, patternTex.height);
-        }
+            name = patternTex.name + specularAtt.Value;
 
         Texture2D combinedMap = new Texture2D(patternTex.width, patternTex.height, TextureFormat.ARGB32, true, false);
         combinedMap.filterMode = FilterMode.Trilinear;

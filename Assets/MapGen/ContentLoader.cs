@@ -195,6 +195,27 @@ public class ContentLoader : MonoBehaviour
         tex.Apply();
         return tex;
     }
+    public static Texture2D LoadTexture(XAttribute textureAtt, XElement elemtype, Color defaultColor, bool linear = false)
+    {
+        if (textureAtt == null)
+            return CreateFlatTexture(defaultColor);
+
+        string texturePath = Path.Combine(Path.GetDirectoryName(new Uri(elemtype.BaseUri).LocalPath), textureAtt.Value);
+        texturePath = Path.GetFullPath(texturePath);
+        if (!File.Exists(texturePath))
+        {
+            Debug.LogError("File not found: " + texturePath);
+            return CreateFlatTexture(defaultColor);
+        }
+
+        byte[] patternData = File.ReadAllBytes(texturePath);
+        Texture2D texture = new Texture2D(2, 2, TextureFormat.ARGB32, false, linear);
+        texture.LoadImage(patternData);
+        GameSettings.ClampToMaxSize(texture);
+        texture.name = texturePath;
+        return texture;
+    }
+
 
     public void Initialize()
     {
