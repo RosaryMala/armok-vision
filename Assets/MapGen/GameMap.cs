@@ -1817,7 +1817,20 @@ public class GameMap : MonoBehaviour
                     partSys.transform.parent = transform;
                     var renderer = partSys.GetComponent<ParticleSystemRenderer>();
                     Mesh mesh = new Mesh();
-                    meshContent.MeshData[MeshLayer.StaticMaterial].CopyToMesh(mesh);
+                    if(meshContent.MeshData.ContainsKey(MeshLayer.StaticMaterial))
+                        meshContent.MeshData[MeshLayer.StaticMaterial].CopyToMesh(mesh);
+                    else
+                    {
+                        bool copied = false;
+                        foreach (var backup in meshContent.MeshData)
+                        {
+                            backup.Value.CopyToMesh(mesh);
+                            copied = true;
+                            break;
+                        }
+                        if (!copied)
+                            continue;
+                    }
                     renderer.mesh = mesh;
                     if (meshContent.MaterialTexture != null)
                         renderer.material.SetTexture("_MainTex", meshContent.MaterialTexture.Texture);
