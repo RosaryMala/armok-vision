@@ -1803,6 +1803,11 @@ public class GameMap : MonoBehaviour
             else
                 part.startColor = Color.gray;
 
+            if(item.Value.dye != null)
+            {
+                part.startColor *= (Color)(new Color32((byte)item.Value.dye.red, (byte)item.Value.dye.green, (byte)item.Value.dye.blue, 255));
+            }
+
             if (ContentLoader.Instance.ItemMeshConfiguration != null && ContentLoader.Instance.ItemMeshConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out meshContent))
             {
                 ParticleSystem partSys;

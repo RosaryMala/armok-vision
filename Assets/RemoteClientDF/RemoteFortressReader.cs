@@ -488,6 +488,14 @@ namespace RemoteFortressReader
       get { return _material; }
       set { _material = value; }
     }
+    private RemoteFortressReader.ColorDefinition _dye = null;
+    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"dye", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.ColorDefinition dye
+    {
+      get { return _dye; }
+      set { _dye = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
