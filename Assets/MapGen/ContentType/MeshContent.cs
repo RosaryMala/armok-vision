@@ -229,6 +229,7 @@ public class MeshContent : IContent
         if ((elemtype.Attribute("normal") != null
             || elemtype.Attribute("occlusion") != null
             || elemtype.Attribute("alpha") != null
+            || elemtype.Attribute("pattern") != null
             ))
         {
             _normalTexture = new NormalContent();

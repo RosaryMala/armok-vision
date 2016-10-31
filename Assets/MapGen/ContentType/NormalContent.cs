@@ -46,23 +46,8 @@ public class NormalContent : IContent
 
         Texture2D combinedMap = new Texture2D(normalMap.width, normalMap.height, TextureFormat.ARGB32, true, true);
         combinedMap.filterMode = FilterMode.Trilinear;
+        combinedMap.name = normalMap.name + occlusionMap.name + alphaMap.name + patternTex.name;
 
-        if(!string.IsNullOrEmpty(normalMap.name))
-        {
-            combinedMap.name = normalMap.name + occlusionAtt.Value + alphaAtt.Value + patternAtt.Value;
-        }
-        else if(!string.IsNullOrEmpty(occlusionMap.name))
-        {
-            combinedMap.name = occlusionMap.name + alphaAtt.Value + patternAtt.Value;
-        }
-        else if (!string.IsNullOrEmpty(alphaMap.name))
-        {
-            combinedMap.name = alphaMap.name + patternAtt.Value;
-        }
-        else
-        {
-            combinedMap.name = patternTex.name;
-        }
 
         Color[] normalColors = normalMap.GetPixels();
         Color[] occlusionColors = occlusionMap.GetPixels();
