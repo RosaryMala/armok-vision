@@ -1795,6 +1795,11 @@ public class GameMap : MonoBehaviour
             part.position = DFtoUnityCoord(item.Value.pos) + new Vector3(0, floorHeight + 0.5f, 0);
             if (ContentLoader.Instance.ColorConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out colorContent))
                 part.startColor = colorContent.value;
+            else if (materials.ContainsKey(item.Value.material) && materials[item.Value.material].state_color != null)
+            {
+                var stateColor = materials[item.Value.material].state_color;
+                part.startColor = new Color32((byte)stateColor.red, (byte)stateColor.green, (byte)stateColor.blue, 255);
+            }
             else
                 part.startColor = Color.gray;
 
