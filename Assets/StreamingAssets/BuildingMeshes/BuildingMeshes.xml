@@ -24,6 +24,16 @@
                   rotation="Door">
         <buildingType token="Door"/>
     </buildingMesh>
+    <buildingMesh file="Hatch.obj"
+                  normal="Hatch_N.png"
+                  occlusion="Hatch_O.png"
+                  alpha="Hatch_A.png"
+                  metallic="Hatch_A.png"
+                  pattern="Hatch_P.png"
+                  specular="Hatch_P.png"
+                  >
+        <buildingType token="Hatch"/>
+    </buildingMesh>
     <buildingMesh file="Box.obj">
         <buildingType token="Box"/>
     </buildingMesh>
