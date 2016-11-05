@@ -83,8 +83,8 @@ abstract class BlockMesher {
         resultQueue = new Queue<Result>();
 
         // Load materials
-        materials = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
-        foreach (RemoteFortressReader.MaterialDefinition material in DFConnection.Instance.NetMaterialList.material_list)
+        materials = new Dictionary<MatPairStruct, MaterialDefinition>();
+        foreach (MaterialDefinition material in DFConnection.Instance.NetMaterialList.material_list)
         {
             materials[material.mat_pair] = material;
         }
