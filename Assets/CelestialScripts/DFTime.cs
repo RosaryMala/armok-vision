@@ -83,6 +83,14 @@ public struct DFTime : IComparable, IFormattable,
         }
     }
 
+    public float YearFraction
+    {
+        get
+        {
+            return (float)(_ticks % TicksPerYear) / TicksPerYear;
+        }
+    }
+
     public int Year
     {
         get { return (int)(_ticks / TicksPerYear); }
@@ -137,11 +145,33 @@ public struct DFTime : IComparable, IFormattable,
         }
     }
 
-    public double DayFraction
+    public float DayFraction
     {
         get
         {
-            return (Ticks % TicksPerDay) / (double)TicksPerDay;
+            return (Ticks % TicksPerDay) / (float)TicksPerDay;
+        }
+    }
+
+    public float MonthFraction
+    {
+        get
+        {
+            return (Ticks % TicksPerMonth) / (float)TicksPerMonth;
+        }
+    }
+    public float HourFraction
+    {
+        get
+        {
+            return (Ticks % TicksPerHour) / (float)TicksPerHour;
+        }
+    }
+    public float MinuteFraction
+    {
+        get
+        {
+            return (Ticks % TicksPerMinute) / (float)TicksPerMinute;
         }
     }
 
