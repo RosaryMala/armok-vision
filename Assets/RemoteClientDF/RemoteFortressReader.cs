@@ -3157,6 +3157,24 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"SingleBool")]
+  public partial class SingleBool : global::ProtoBuf.IExtensible
+  {
+    public SingleBool() {}
+    
+    private bool _Value = default(bool);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"Value", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool Value
+    {
+      get { return _Value; }
+      set { _Value = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
     [global::ProtoBuf.ProtoContract(Name=@"TiletypeShape")]
     public enum TiletypeShape
     {
