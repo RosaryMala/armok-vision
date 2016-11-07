@@ -1764,6 +1764,7 @@ public class GameMap : MonoBehaviour
     Dictionary<int, ParticleSystem> customItemParticleSystems = new Dictionary<int, ParticleSystem>();
     Dictionary<int, ParticleSystem.Particle[]> customItemParticles = new Dictionary<int, ParticleSystem.Particle[]>();
     Dictionary<int, int> customItemParticleCount = new Dictionary<int, int>();
+    Dictionary<int, bool> noCustomParticleColor = new Dictionary<int, bool>();
     OpenSimplexNoise noise = new OpenSimplexNoise();
     void DrawItems()
     {
@@ -1817,14 +1818,23 @@ public class GameMap : MonoBehaviour
                     partSys.transform.parent = transform;
                     var renderer = partSys.GetComponent<ParticleSystemRenderer>();
                     Mesh mesh = new Mesh();
-                    if(meshContent.MeshData.ContainsKey(MeshLayer.StaticMaterial))
-                        meshContent.MeshData[MeshLayer.StaticMaterial].CopyToMesh(mesh);
+                    if (meshContent.MeshData.ContainsKey(MeshLayer.StaticCutout))
+                    {
+                        meshContent.MeshData[MeshLayer.StaticCutout].CopyToMesh(mesh);
+                        noCustomParticleColor[meshContent.UniqueIndex] = false;
+                    }
+                    else if (meshContent.MeshData.ContainsKey(MeshLayer.NoMaterialCutout))
+                    {
+                        meshContent.MeshData[MeshLayer.NoMaterialCutout].CopyToMesh(mesh);
+                        noCustomParticleColor[meshContent.UniqueIndex] = true;
+                    }
                     else
                     {
                         bool copied = false;
                         foreach (var backup in meshContent.MeshData)
                         {
                             backup.Value.CopyToMesh(mesh);
+                            noCustomParticleColor[meshContent.UniqueIndex] = false;
                             copied = true;
                             break;
                         }
@@ -1857,6 +1867,8 @@ public class GameMap : MonoBehaviour
                 if (meshContent.Rotation == RotationType.Random)
                     part.rotation = (float)noise.eval(pos.x, pos.y, pos.z) * 360;
                 part.position = DFtoUnityCoord(item.Value.pos) + new Vector3(0, floorHeight, 0);
+                if (noCustomParticleColor[meshContent.UniqueIndex])
+                    part.startColor = Color.gray;
                 customItemParticles[meshContent.UniqueIndex][customItemParticleCount[meshContent.UniqueIndex]] = part;
                 customItemParticleCount[meshContent.UniqueIndex]++;
             }
