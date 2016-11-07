@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <itemMeshes>
-<itemMesh file="../Sprite.obj"
-          pattern="NONE.png"
-          rotation="Random">
+	<itemMesh file="../Sprite.obj"
+	          pattern="NONE.png"
+	          rotation="Random">
 		<item token="NONE"/>
 	</itemMesh>
 	<itemMesh file="../Sprite.obj"
@@ -594,11 +594,631 @@
 	          pattern="SEEDS.png"
 	          rotation="Random">
 		<item token="SEEDS"/>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/BUSH_QUARRY-SEED.png"
+		           rotation="Random">
+			<material token="PLANT:BUSH_QUARRY:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/LESSER_YAM-SEED.png"
+		           rotation="Random">
+			<material token="PLANT:LESSER_YAM:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/LONG_YAM-SEED.png"
+		           rotation="Random">
+			<material token="PLANT:LONG_YAM:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/PURPLE_YAM-SEED.png"
+		           rotation="Random">
+			<material token="PLANT:PURPLE_YAM:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/WHITE_YAM-SEED.png"
+		           rotation="Random">
+			<material token="PLANT:WHITE_YAM:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/RED_BEAN-SEED.png"
+		           rotation="Random">
+			<material token="PLANT:RED_BEAN:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/POTATO-SEED.png"
+		           rotation="Random">
+			<material token="PLANT:POTATO:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/SWEET_POTATO-SEED.png"
+		           rotation="Random">
+			<material token="PLANT:SWEET_POTATO:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/CHICKPEA-SEED.png"
+		           rotation="Random">
+			<material token="PLANT:CHICKPEA:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/PEANUT-SEED.png"
+		           rotation="Random">
+			<material token="PLANT:PEANUT:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/LENTIL-SEED.png"
+		           rotation="Random">
+			<material token="PLANT:LENTIL:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/SOYBEAN-SEED.png"
+		           rotation="Random">
+			<material token="PLANT:SOYBEAN:*" />
+		</subObject>
 	</itemMesh>
 	<itemMesh file="../Sprite.obj"
 	          pattern="PLANT.png"
 	          rotation="Random">
 		<item token="PLANT"/>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/SINGLE-GRAIN_WHEAT.png"
+		           rotation="Random">
+			<material token="PLANT:SINGLE-GRAIN_WHEAT:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/TWO-GRAIN_WHEAT.png"
+		           rotation="Random">
+			<material token="PLANT:TWO-GRAIN_WHEAT:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/SOFT_WHEAT.png"
+		           rotation="Random">
+			<material token="PLANT:SOFT_WHEAT:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/HARD_WHEAT.png"
+		           rotation="Random">
+			<material token="PLANT:HARD_WHEAT:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/SPELT.png"
+		           rotation="Random">
+			<material token="PLANT:SPELT:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/BARLEY.png"
+		           rotation="Random">
+			<material token="PLANT:BARLEY:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/BUCKWHEAT.png"
+		           rotation="Random">
+			<material token="PLANT:BUCKWHEAT:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/OATS.png"
+		           rotation="Random">
+			<material token="PLANT:OATS:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/ALFALFA.png"
+		           rotation="Random">
+			<material token="PLANT:ALFALFA:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/RYE.png"
+		           rotation="Random">
+			<material token="PLANT:RYE:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/SORGHUM.png"
+		           rotation="Random">
+			<material token="PLANT:SORGHUM:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/RICE.png"
+		           rotation="Random">
+			<material token="PLANT:RICE:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/MAIZE.png"
+		           rotation="Random">
+			<material token="PLANT:MAIZE:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/QUINOA.png"
+		           rotation="Random">
+			<material token="PLANT:QUINOA:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/KANIWA.png"
+		           rotation="Random">
+			<material token="PLANT:KANIWA:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/BITTER_VETCH.png"
+		           rotation="Random">
+			<material token="PLANT:BITTER_VETCH:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/PENDANT_AMARANTH.png"
+		           rotation="Random">
+			<material token="PLANT:PENDANT_AMARANTH:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/BLOOD_AMARANTH.png"
+		           rotation="Random">
+			<material token="PLANT:BLOOD_AMARANTH:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/PURPLE_AMARANTH.png"
+		           rotation="Random">
+			<material token="PLANT:PURPLE_AMARANTH:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/RED_SPINACH.png"
+		           rotation="Random">
+			<material token="PLANT:RED_SPINACH:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/ELEPHANT-HEAD_AMARANTH.png"
+		           rotation="Random">
+			<material token="PLANT:ELEPHANT-HEAD_AMARANTH:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/PEARL_MILLET.png"
+		           rotation="Random">
+			<material token="PLANT:PEARL_MILLET:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/WHITE_MILLET.png"
+		           rotation="Random">
+			<material token="PLANT:WHITE_MILLET:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/FINGER_MILLET.png"
+		           rotation="Random">
+			<material token="PLANT:FINGER_MILLET:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/FOXTAIL_MILLET.png"
+		           rotation="Random">
+			<material token="PLANT:FOXTAIL_MILLET:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/FONIO.png"
+		           rotation="Random">
+			<material token="PLANT:FONIO:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/TEFF.png"
+		           rotation="Random">
+			<material token="PLANT:TEFF:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/FLAX.png"
+		           rotation="Random">
+			<material token="PLANT:FLAX:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/JUTE.png"
+		           rotation="Random">
+			<material token="PLANT:JUTE:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/HEMP.png"
+		           rotation="Random">
+			<material token="PLANT:HEMP:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/COTTON.png"
+		           rotation="Random">
+			<material token="PLANT:COTTON:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/RAMIE.png"
+		           rotation="Random">
+			<material token="PLANT:RAMIE:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/KENAF.png"
+		           rotation="Random">
+			<material token="PLANT:KENAF:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/PAPYRUS_SEDGE.png"
+		           rotation="Random">
+			<material token="PLANT:PAPYRUS_SEDGE:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/ARTICHOKE.png"
+		           rotation="Random">
+			<material token="PLANT:ARTICHOKE:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/ASPARAGUS.png"
+		           rotation="Random">
+			<material token="PLANT:ASPARAGUS:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/BAMBARA_GROUNDNUT.png"
+		           rotation="Random">
+			<material token="PLANT:BAMBARA_GROUNDNUT:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/STRING_BEAN.png"
+		           rotation="Random">
+			<material token="PLANT:STRING_BEAN:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/BROAD_BEAN.png"
+		           rotation="Random">
+			<material token="PLANT:BROAD_BEAN:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/BEET.png"
+		           rotation="Random">
+			<material token="PLANT:BEET:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/BITTER_MELON.png"
+		           rotation="Random">
+			<material token="PLANT:BITTER_MELON:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/CAPER.png"
+		           rotation="Random">
+			<material token="PLANT:CAPER:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/WILD_CARROT.png"
+		           rotation="Random">
+			<material token="PLANT:WILD_CARROT:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/CASSAVA.png"
+		           rotation="Random">
+			<material token="PLANT:CASSAVA:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/CELERY.png"
+		           rotation="Random">
+			<material token="PLANT:CELERY:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/CHICKPEA.png"
+		           rotation="Random">
+			<material token="PLANT:CHICKPEA:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/CHICORY.png"
+		           rotation="Random">
+			<material token="PLANT:CHICORY:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/COWPEA.png"
+		           rotation="Random">
+			<material token="PLANT:COWPEA:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/CUCUMBER.png"
+		           rotation="Random">
+			<material token="PLANT:CUCUMBER:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/EGGPLANT.png"
+		           rotation="Random">
+			<material token="PLANT:EGGPLANT:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/GARDEN_CRESS.png"
+		           rotation="Random">
+			<material token="PLANT:GARDEN_CRESS:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/GARLIC.png"
+		           rotation="Random">
+			<material token="PLANT:GARLIC:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/HORNED_MELON.png"
+		           rotation="Random">
+			<material token="PLANT:HORNED_MELON:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/LEEK.png"
+		           rotation="Random">
+			<material token="PLANT:LEEK:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/LENTIL.png"
+		           rotation="Random">
+			<material token="PLANT:LENTIL:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/MUNG_BEAN.png"
+		           rotation="Random">
+			<material token="PLANT:MUNG_BEAN:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/MUSKMELON.png"
+		           rotation="Random">
+			<material token="PLANT:MUSKMELON:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/ONION.png"
+		           rotation="Random">
+			<material token="PLANT:ONION:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/PARSNIP.png"
+		           rotation="Random">
+			<material token="PLANT:PARSNIP:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/PEA.png"
+		           rotation="Random">
+			<material token="PLANT:PEA:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/PEANUT.png"
+		           rotation="Random">
+			<material token="PLANT:PEANUT:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/PEPPER.png"
+		           rotation="Random">
+			<material token="PLANT:PEPPER:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/POTATO.png"
+		           rotation="Random">
+			<material token="PLANT:POTATO:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/RADISH.png"
+		           rotation="Random">
+			<material token="PLANT:RADISH:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/RED_BEAN.png"
+		           rotation="Random">
+			<material token="PLANT:RED_BEAN:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/RHUBARB.png"
+		           rotation="Random">
+			<material token="PLANT:RHUBARB:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/SOYBEAN.png"
+		           rotation="Random">
+			<material token="PLANT:SOYBEAN:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/SPINACH.png"
+		           rotation="Random">
+			<material token="PLANT:SPINACH:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/SQUASH.png"
+		           rotation="Random">
+			<material token="PLANT:SQUASH:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/SWEET_POTATO.png"
+		           rotation="Random">
+			<material token="PLANT:SWEET_POTATO:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/TARO.png"
+		           rotation="Random">
+			<material token="PLANT:TARO:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/TOMATO.png"
+		           rotation="Random">
+			<material token="PLANT:TOMATO:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/TOMATILLO.png"
+		           rotation="Random">
+			<material token="PLANT:TOMATILLO:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/TURNIP.png"
+		           rotation="Random">
+			<material token="PLANT:TURNIP:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/URAD_BEAN.png"
+		           rotation="Random">
+			<material token="PLANT:URAD_BEAN:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/WATERMELON.png"
+		           rotation="Random">
+			<material token="PLANT:WATERMELON:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/WINTER_MELON.png"
+		           rotation="Random">
+			<material token="PLANT:WINTER_MELON:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/LESSER_YAM.png"
+		           rotation="Random">
+			<material token="PLANT:LESSER_YAM:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/LONG_YAM.png"
+		           rotation="Random">
+			<material token="PLANT:LONG_YAM:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/PURPLE_YAM.png"
+		           rotation="Random">
+			<material token="PLANT:PURPLE_YAM:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/WHITE_YAM.png"
+		           rotation="Random">
+			<material token="PLANT:WHITE_YAM:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/PASSION_FRUIT.png"
+		           rotation="Random">
+			<material token="PLANT:PASSION_FRUIT:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/GRAPE.png"
+		           rotation="Random">
+			<material token="PLANT:GRAPE:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/CRANBERRY.png"
+		           rotation="Random">
+			<material token="PLANT:CRANBERRY:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/BILBERRY.png"
+		           rotation="Random">
+			<material token="PLANT:BILBERRY:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/BLUEBERRY.png"
+		           rotation="Random">
+			<material token="PLANT:BLUEBERRY:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/BLACKBERRY.png"
+		           rotation="Random">
+			<material token="PLANT:BLACKBERRY:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/RASPBERRY.png"
+		           rotation="Random">
+			<material token="PLANT:RASPBERRY:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/PINEAPPLE.png"
+		           rotation="Random">
+			<material token="PLANT:PINEAPPLE:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/MUSHROOM_HELMET_PLUMP.png"
+		           rotation="Random">
+			<material token="PLANT:MUSHROOM_HELMET_PLUMP:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/GRASS_TAIL_PIG.png"
+		           rotation="Random">
+			<material token="PLANT:GRASS_TAIL_PIG:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/GRASS_WHEAT_CAVE.png"
+		           rotation="Random">
+			<material token="PLANT:GRASS_WHEAT_CAVE:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/POD_SWEET.png"
+		           rotation="Random">
+			<material token="PLANT:POD_SWEET:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/BUSH_QUARRY.png"
+		           rotation="Random">
+			<material token="PLANT:BUSH_QUARRY:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/ROOT_MUCK.png"
+		           rotation="Random">
+			<material token="PLANT:ROOT_MUCK:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/TUBER_BLOATED.png"
+		           rotation="Random">
+			<material token="PLANT:TUBER_BLOATED:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/BULB_KOBOLD.png"
+		           rotation="Random">
+			<material token="PLANT:BULB_KOBOLD:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/BERRIES_PRICKLE.png"
+		           rotation="Random">
+			<material token="PLANT:BERRIES_PRICKLE:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/BERRIES_STRAW.png"
+		           rotation="Random">
+			<material token="PLANT:BERRIES_STRAW:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/GRASS_LONGLAND.png"
+		           rotation="Random">
+			<material token="PLANT:GRASS_LONGLAND:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/HERB_VALLEY.png"
+		           rotation="Random">
+			<material token="PLANT:HERB_VALLEY:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/WEED_RAT.png"
+		           rotation="Random">
+			<material token="PLANT:WEED_RAT:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/BERRIES_FISHER.png"
+		           rotation="Random">
+			<material token="PLANT:BERRIES_FISHER:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/REED_ROPE.png"
+		           rotation="Random">
+			<material token="PLANT:REED_ROPE:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/MUSHROOM_CUP_DIMPLE.png"
+		           rotation="Random">
+			<material token="PLANT:MUSHROOM_CUP_DIMPLE:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/WEED_BLADE.png"
+		           rotation="Random">
+			<material token="PLANT:WEED_BLADE:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/ROOT_HIDE.png"
+		           rotation="Random">
+			<material token="PLANT:ROOT_HIDE:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/SLIVER_BARB.png"
+		           rotation="Random">
+			<material token="PLANT:SLIVER_BARB:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/BERRY_SUN.png"
+		           rotation="Random">
+			<material token="PLANT:BERRY_SUN:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/VINE_WHIP.png"
+		           rotation="Random">
+			<material token="PLANT:VINE_WHIP:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/CABBAGE.png"
+		           rotation="Random">
+			<material token="PLANT:CABBAGE:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/LETTUCE.png"
+		           rotation="Random">
+			<material token="PLANT:LETTUCE:*" />
+		</subObject>
 	</itemMesh>
 	<itemMesh file="../Sprite.obj"
 	          pattern="SKIN_TANNED.png"
@@ -609,6 +1229,16 @@
 	          pattern="PLANT_GROWTH.png"
 	          rotation="Random">
 		<item token="PLANT_GROWTH"/>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/CABBAGE.png"
+		           rotation="Random">
+			<material token="PLANT:CABBAGE:*" />
+		</subObject>
+		<subObject file="../Sprite_NoColor.obj"
+		           pattern="Plants/LETTUCE.png"
+		           rotation="Random">
+			<material token="PLANT:LETTUCE:*" />
+		</subObject>
 	</itemMesh>
 	<itemMesh file="../Sprite.obj"
 	          pattern="THREAD.png"
