@@ -94,8 +94,6 @@ public class ToolBrush : MonoBehaviour
         float dt_dy = 1.0f / dy;
         float dt_dz = 1.0f / dz;
 
-        float t = 0;
-
         int n = 1;
         int x_inc, y_inc, z_inc;
         float t_next_x, t_next_y, t_next_z;
@@ -163,19 +161,16 @@ public class ToolBrush : MonoBehaviour
             if ((t_next_z < t_next_y) && (t_next_z < t_next_x))
             {
                 z += z_inc;
-                t = t_next_z;
                 t_next_z += dt_dz;
             }
             else if (t_next_y < t_next_x)
             {
                 y += y_inc;
-                t = t_next_y;
                 t_next_y += dt_dy;
             }
             else
             {
                 x += x_inc;
-                t = t_next_x;
                 t_next_x += dt_dx;
             }
         }
