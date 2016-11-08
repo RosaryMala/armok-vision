@@ -3,6 +3,7 @@ v 0.14.0
  * Added support for items on the floor.
  * Added sprites for all items, and 3D models for several
  * Added a clock and calandar.
+ * Added a button to pause and resume Dwarf Fortress
 
 v 0.13.1
  * Use texture arrays instead of texture atlases when available.
