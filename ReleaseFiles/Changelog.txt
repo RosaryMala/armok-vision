@@ -1,3 +1,9 @@
+v 0.14.0
+ * Added basic designation support. Only freehand at the moment. More brush types will come later.
+ * Added support for items on the floor.
+ * Added sprites for all items, and 3D models for several
+ * Added a clock and calandar.
+
 v 0.13.1
  * Use texture arrays instead of texture atlases when available.
  * Use a single postprocess stack instead of multiple separate effects.
