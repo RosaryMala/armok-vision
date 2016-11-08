@@ -71,6 +71,8 @@ public sealed class DFConnection : MonoBehaviour
     private RemoteFunction<RemoteFortressReader.KeyboardEvent> keyboardEventCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.ScreenCapture> copyScreenCall;
     private RemoteFunction<RemoteFortressReader.DigCommand> digCommandCall;
+    private RemoteFunction<RemoteFortressReader.SingleBool> pauseCommandCall;
+    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.SingleBool> pauseStatusCall;
     private color_ostream dfNetworkOut = new color_ostream();
     private RemoteClient networkClient;
 
@@ -133,6 +135,8 @@ public sealed class DFConnection : MonoBehaviour
         keyboardEventCall = CreateAndBind<RemoteFortressReader.KeyboardEvent>(networkClient, "PassKeyboardEvent", "RemoteFortressReader");
         copyScreenCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.ScreenCapture>(networkClient, "CopyScreen", "RemoteFortressReader");
         digCommandCall = CreateAndBind<RemoteFortressReader.DigCommand>(networkClient, "SendDigCommand", "RemoteFortressReader");
+        pauseCommandCall = CreateAndBind<RemoteFortressReader.SingleBool>(networkClient, "SetPauseState", "RemoteFortressReader");
+        pauseStatusCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.SingleBool>(networkClient, "GetPauseState", "RemoteFortressReader");
     }
 
     #endregion
@@ -178,6 +182,18 @@ public sealed class DFConnection : MonoBehaviour
             netDigCommands.Enqueue(command);
     }
 
+    private RingBuffer<RemoteFortressReader.SingleBool> pauseCommands
+        = new RingBuffer<RemoteFortressReader.SingleBool>(8);
+
+    public void SendPauseCommand(bool state)
+    {
+        RemoteFortressReader.SingleBool command = new RemoteFortressReader.SingleBool();
+
+        command.Value = state;
+        if (pauseCommands.Count < pauseCommands.Capacity)
+            pauseCommands.Enqueue(command);
+    }
+
     #endregion
 
     /// <summary>
@@ -188,6 +204,7 @@ public sealed class DFConnection : MonoBehaviour
     /// Queue to request map resets.
     /// </summary>
     private EventBuffer mapResetRequested;
+
 
     // Used to check whether the map has moved.
     private RemoteFortressReader.MapInfo netMapInfo;
@@ -325,6 +342,15 @@ public sealed class DFConnection : MonoBehaviour
         RemoteFortressReader.MapBlock result;
         pendingBlocks.TryDequeue(out result);
         return result;
+    }
+
+    bool _dfPauseState = false;
+    public bool DfPauseState
+    {
+        get
+        {
+            return _dfPauseState;
+        }
     }
 
     /// <summary>
@@ -624,6 +650,14 @@ public sealed class DFConnection : MonoBehaviour
             }
         }
 
+        if(pauseCommandCall != null)
+        {
+            while(pauseCommands.Count > 0)
+            {
+                pauseCommandCall.execute(pauseCommands.Dequeue());
+            }
+        }
+
         #endregion
 
         #region DF Read
@@ -735,6 +769,14 @@ public sealed class DFConnection : MonoBehaviour
             {
                 keyboardEventCall.execute(dfEvent);
             }
+        }
+
+        if(pauseCommandCall != null)
+        {
+            RemoteFortressReader.SingleBool status;
+            pauseStatusCall.execute(null, out status);
+            if (status != null)
+                _dfPauseState = status.Value;
         }
 
         #endregion
