@@ -5,7 +5,7 @@ public class Survey : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        if (PlayerPrefs.GetInt("Survey", 0) == 1)
+        if (PlayerPrefs.GetInt("Survey2", 0) == 1)
             gameObject.SetActive(false);
 	}
 	
@@ -16,12 +16,12 @@ public class Survey : MonoBehaviour {
 
     public void OpenSurvey()
     {
-        Application.OpenURL("https://goo.gl/forms/FhO5d70qtJjjBBuv2");
+        Application.OpenURL("https://goo.gl/forms/Olo2LONurpjiSLTz2");
     }
 
     public void ClosePanel()
     {
-        PlayerPrefs.SetInt("Survey", 1);
+        PlayerPrefs.SetInt("Survey2", 1);
         gameObject.SetActive(false);
     }
 }
