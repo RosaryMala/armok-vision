@@ -1,0 +1,9 @@
+Authors of the original hqx package:
+
+Maxim Stepin - Creator of hqx filter
+
+Cameron Zemek - Package maintainer. Added 24bit color support.
+
+Authors of hqxSharp:
+
+Tamme Schichler - Project maintainer. Ported hqx to C#. Added 32bit color support. Added customizable thresholds for edge-detection. Added seamless modes for use with tilesets.
