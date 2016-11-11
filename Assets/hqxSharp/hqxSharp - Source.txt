@@ -1,0 +1,1 @@
+﻿To get the source code for hqxSharp, please visit <https://bitbucket.org/Tamschi/hqxsharp>.
