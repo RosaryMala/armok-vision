@@ -1,7 +1,5 @@
 ﻿using System.Xml.Linq;
 using UnityEngine;
-using System.IO;
-using System;
 
 public class TextureContent : IContent
 {
@@ -51,7 +49,6 @@ public class TextureContent : IContent
 
         combinedMap.SetPixels(patternColors);
         combinedMap.Apply();
-
 
         if (store != null)
             storageIndex = store.AddTexture(combinedMap);

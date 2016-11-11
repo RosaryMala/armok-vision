@@ -28,7 +28,7 @@ public class GameSettings : MonoBehaviour
         public int drawRangeUp = 1;
         public int drawRangeDown = 5;
         public int maxBlocksToDraw = 460800;
-        public int maxTextureSize = 512;
+        public int maxTextureSize = 256;
         public int textureAtlasSize = 2048;
         public bool debugTextureAtlas = false;
         public bool drawClouds = true;
