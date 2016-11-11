@@ -1,4 +1,5 @@
-﻿using System;
+﻿using hqx;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -213,6 +214,18 @@ public class ContentLoader : MonoBehaviour
         texture.LoadImage(patternData);
         GameSettings.ClampToMaxSize(texture);
         texture.name = texturePath;
+        if (texture.width * 4 <= GameSettings.Instance.rendering.maxTextureSize && texture.height * 4 <= GameSettings.Instance.rendering.maxTextureSize)
+        {
+            texture = HqxSharp.Scale4(texture);
+        }
+        else if (texture.width * 3 <= GameSettings.Instance.rendering.maxTextureSize && texture.height * 3 <= GameSettings.Instance.rendering.maxTextureSize)
+        {
+            texture = HqxSharp.Scale3(texture);
+        }
+        else if (texture.width * 2 <= GameSettings.Instance.rendering.maxTextureSize && texture.height * 2 <= GameSettings.Instance.rendering.maxTextureSize)
+        {
+            texture = HqxSharp.Scale2(texture);
+        }
         return texture;
     }
 

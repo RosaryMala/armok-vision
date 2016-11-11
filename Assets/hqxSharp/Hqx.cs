@@ -22,11 +22,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
-using System.Drawing.Imaging;
 using UnityEngine;
 
 namespace hqx
@@ -57,13 +52,18 @@ namespace hqx
         /// <returns>Returns true if colors differ more than the thresholds permit, otherwise false.</returns>
         private static bool Diff(Color32 c1, Color32 c2, uint trY, uint trU, uint trV, uint trA)
         {
-            int YUV1 = (int)RgbYuv.GetYuv(c1);
-            int YUV2 = (int)RgbYuv.GetYuv(c2);
+            ColorYUV YUV1 = new ColorYUV(c1);
+            ColorYUV YUV2 = new ColorYUV(c2);
 
-            return ((Math.Abs((YUV1 & Ymask) - (YUV2 & Ymask)) > trY) ||
-            (Math.Abs((YUV1 & Umask) - (YUV2 & Umask)) > trU) ||
-            (Math.Abs((YUV1 & Vmask) - (YUV2 & Vmask)) > trV) ||
-            (Math.Abs(((int)((uint)c1 >> 24) - (int)((uint)c2 >> 24))) > trA));
+            return ((Math.Abs(YUV1.Y - YUV2.Y) > trY) ||
+            (Math.Abs(YUV1.U - YUV2.U) > trU) ||
+            (Math.Abs(YUV1.V - YUV2.V) > trV) ||
+            (Math.Abs(c1.a - c2.a) > trA));
+        }
+
+        static bool IsEqual(Color32 a, Color32 b)
+        {
+            return a.r == b.r && a.g == b.g && a.b == b.b && a.a == b.a;
         }
     }
 }

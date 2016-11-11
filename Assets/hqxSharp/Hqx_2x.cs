@@ -21,10 +21,6 @@
  * along with hqxSharp. If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace hqx
@@ -45,7 +41,6 @@ namespace hqx
         /// <returns>A new Bitmap instance that contains the source imagage scaled to twice its size.</returns>
         public static Texture2D Scale2(Texture2D bitmap, uint trY = 48, uint trU = 7, uint trV = 6, uint trA = 0, bool wrapX = false, bool wrapY = false)
         {
-
             int Xres = bitmap.width;
             int Yres = bitmap.height;
 
@@ -53,9 +48,9 @@ namespace hqx
 
             var bmpData = bitmap.GetPixels32();
             var destData = dest.GetPixels32();
-            {
-                Scale2(bmpData, destData, Xres, Yres, trY, trU, trV, trA, wrapX, wrapY);
-            }
+
+            Scale2(bmpData, destData, Xres, Yres, trY, trU, trV, trA, wrapX, wrapY);
+
             dest.SetPixels32(destData);
             dest.Apply();
 
@@ -66,8 +61,8 @@ namespace hqx
         /// This is the extended C# port of the hq2x algorithm.
         /// <para>The destination image must be exactly twice as large in both dimensions as the source image.</para>
         /// </summary>
-        /// <param name="sp">A pointer to the source image.</param>
-        /// <param name="dp">A pointer to the destination image.</param>
+        /// <param name="source">A pointer to the source image.</param>
+        /// <param name="dest">A pointer to the destination image.</param>
         /// <param name="Xres">The horizontal resolution of the source image.</param>
         /// <param name="Yres">The vertical resolution of the source image.</param>
         /// <param name="trY">The Y (luminance) threshold.</param>
@@ -76,16 +71,13 @@ namespace hqx
         /// <param name="trA">The A (transparency) threshold.</param>
         /// <param name="wrapX">Used for images that can be seamlessly repeated horizontally.</param>
         /// <param name="wrapY">Used for images that can be seamlessly repeated vertically.</param>
-        public static void Scale2(Color32[] sp, Color32[] dp, int Xres, int Yres, uint trY = 48, uint trU = 7, uint trV = 6, uint trA = 0, bool wrapX = false, bool wrapY = false)
+        public static void Scale2(Color32[] source, Color32[] dest, int Xres, int Yres, uint trY = 48, uint trU = 7, uint trV = 6, uint trA = 0, bool wrapX = false, bool wrapY = false)
         {
-            //Don't shift trA, as it uses shift right instead of a mask for comparisons.
-            trY <<= 2 * 8;
-            trU <<= 1 * 8;
             int dpL = Xres * 2;
 
-            int prevline, nextline;
+            int sourceIndex, destIndex, prevline, nextline;
             Color32[] patch = new Color32[9];
-
+            sourceIndex = destIndex = 0;
             for (int yy = 0; yy < Yres; yy++)
             {
                 if (yy > 0)
@@ -121,23 +113,23 @@ namespace hqx
 
                 for (int xx = 0; xx < Xres; xx++)
                 {
-                    patch[1] = *(sp + prevline);
-                    patch[4] = *sp;
-                    patch[7] = *(sp + nextline);
+                    patch[1] = source[sourceIndex + prevline];
+                    patch[4] = source[sourceIndex];
+                    patch[7] = source[sourceIndex + nextline];
 
                     if (xx > 0)
                     {
-                        patch[0] = *(sp + prevline - 1);
-                        patch[3] = *(sp - 1);
-                        patch[6] = *(sp + nextline - 1);
+                        patch[0] = source[sourceIndex + prevline - 1];
+                        patch[3] = source[sourceIndex - 1];
+                        patch[6] = source[sourceIndex + nextline - 1];
                     }
                     else
                     {
                         if (wrapX)
                         {
-                            patch[0] = *(sp + prevline + Xres - 1);
-                            patch[3] = *(sp + Xres - 1);
-                            patch[6] = *(sp + nextline + Xres - 1);
+                            patch[0] = source[sourceIndex + prevline + Xres - 1];
+                            patch[3] = source[sourceIndex + Xres - 1];
+                            patch[6] = source[sourceIndex + nextline + Xres - 1];
                         }
                         else
                         {
@@ -149,17 +141,17 @@ namespace hqx
 
                     if (xx < Xres - 1)
                     {
-                        patch[2] = *(sp + prevline + 1);
-                        patch[5] = *(sp + 1);
-                        patch[8] = *(sp + nextline + 1);
+                        patch[2] = source[sourceIndex + prevline + 1];
+                        patch[5] = source[sourceIndex + 1];
+                        patch[8] = source[sourceIndex + nextline + 1];
                     }
                     else
                     {
                         if (wrapX)
                         {
-                            patch[2] = *(sp + prevline - Xres + 1);
-                            patch[5] = *(sp - Xres + 1);
-                            patch[8] = *(sp + nextline - Xres + 1);
+                            patch[2] = source[sourceIndex + prevline - Xres + 1];
+                            patch[5] = source[sourceIndex - Xres + 1];
+                            patch[8] = source[sourceIndex + nextline - Xres + 1];
                         }
                         else
                         {
@@ -176,7 +168,7 @@ namespace hqx
                     {
                         if (k == 4) continue;
 
-                        if (patch[k] != patch[4])
+                        if (!IsEqual(patch[k], patch[4]))
                         {
                             if (Diff(patch[4], patch[k], trY, trU, trV, trA))
                                 pattern |= flag;
@@ -203,10 +195,10 @@ namespace hqx
                         case 37:
                         case 165:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 break;
                             }
                         case 2:
@@ -214,10 +206,10 @@ namespace hqx
                         case 130:
                         case 162:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 break;
                             }
                         case 16:
@@ -225,10 +217,10 @@ namespace hqx
                         case 48:
                         case 49:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
                                 break;
                             }
                         case 64:
@@ -236,10 +228,10 @@ namespace hqx
                         case 68:
                         case 69:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
                                 break;
                             }
                         case 8:
@@ -247,10 +239,10 @@ namespace hqx
                         case 136:
                         case 140:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 break;
                             }
                         case 3:
@@ -258,10 +250,10 @@ namespace hqx
                         case 131:
                         case 163:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 break;
                             }
                         case 6:
@@ -269,10 +261,10 @@ namespace hqx
                         case 134:
                         case 166:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 break;
                             }
                         case 20:
@@ -280,10 +272,10 @@ namespace hqx
                         case 52:
                         case 53:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
                                 break;
                             }
                         case 144:
@@ -291,10 +283,10 @@ namespace hqx
                         case 176:
                         case 177:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 break;
                             }
                         case 192:
@@ -302,10 +294,10 @@ namespace hqx
                         case 196:
                         case 197:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 break;
                             }
                         case 96:
@@ -313,10 +305,10 @@ namespace hqx
                         case 100:
                         case 101:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
                                 break;
                             }
                         case 40:
@@ -324,10 +316,10 @@ namespace hqx
                         case 168:
                         case 172:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 break;
                             }
                         case 9:
@@ -335,58 +327,58 @@ namespace hqx
                         case 137:
                         case 141:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 break;
                             }
                         case 18:
                         case 50:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
+                                    dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
                                 break;
                             }
                         case 80:
                         case 81:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
                         case 72:
                         case 76:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
+                                    dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
                                 }
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
                                 break;
                             }
                         case 10:
@@ -394,119 +386,119 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = Interpolation.Mix3To1(patch[4], patch[0]);
+                                    dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
                                 }
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 break;
                             }
                         case 66:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
                                 break;
                             }
                         case 24:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
                                 break;
                             }
                         case 7:
                         case 39:
                         case 135:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 break;
                             }
                         case 148:
                         case 149:
                         case 180:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 break;
                             }
                         case 224:
                         case 228:
                         case 225:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 break;
                             }
                         case 41:
                         case 169:
                         case 45:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 break;
                             }
                         case 22:
                         case 54:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
                                 break;
                             }
                         case 208:
                         case 209:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
                         case 104:
                         case 108:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
                                 }
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
                                 break;
                             }
                         case 11:
@@ -514,15 +506,15 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
                                 }
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 break;
                             }
                         case 19:
@@ -530,83 +522,83 @@ namespace hqx
                             {
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *dp = Interpolation.Mix3To1(patch[4], patch[3]);
-                                    *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
+                                    dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                    dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix5To2To1(patch[4], patch[1], patch[3]);
-                                    *(dp + 1) = Interpolation.Mix2To3To3(patch[4], patch[1], patch[5]);
+                                    dest[destIndex] = Interpolation.Mix5To2To1(patch[4], patch[1], patch[3]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To3To3(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
                                 break;
                             }
                         case 146:
                         case 178:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
-                                    *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                    dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix2To3To3(patch[4], patch[1], patch[5]);
-                                    *(dp + dpL + 1) = Interpolation.Mix5To2To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To3To3(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix5To2To1(patch[4], patch[5], patch[7]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
                                 break;
                             }
                         case 84:
                         case 85:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[1]);
-                                    *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                    dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix5To2To1(patch[4], patch[5], patch[1]);
-                                    *(dp + dpL + 1) = Interpolation.Mix2To3To3(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + 1] = Interpolation.Mix5To2To1(patch[4], patch[5], patch[1]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To3To3(patch[4], patch[5], patch[7]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
                                 break;
                             }
                         case 112:
                         case 113:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[3]);
-                                    *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                    dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix5To2To1(patch[4], patch[7], patch[3]);
-                                    *(dp + dpL + 1) = Interpolation.Mix2To3To3(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL] = Interpolation.Mix5To2To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To3To3(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
                         case 200:
                         case 204:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
-                                    *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                    dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix2To3To3(patch[4], patch[7], patch[3]);
-                                    *(dp + dpL + 1) = Interpolation.Mix5To2To1(patch[4], patch[7], patch[5]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To3To3(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix5To2To1(patch[4], patch[7], patch[5]);
                                 }
                                 break;
                             }
@@ -615,16 +607,16 @@ namespace hqx
                             {
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *dp = Interpolation.Mix3To1(patch[4], patch[1]);
-                                    *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
+                                    dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                    dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix5To2To1(patch[4], patch[3], patch[1]);
-                                    *(dp + dpL) = Interpolation.Mix2To3To3(patch[4], patch[7], patch[3]);
+                                    dest[destIndex] = Interpolation.Mix5To2To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To3To3(patch[4], patch[7], patch[3]);
                                 }
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
                                 break;
                             }
                         case 42:
@@ -632,16 +624,16 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = Interpolation.Mix3To1(patch[4], patch[0]);
-                                    *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                    dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
+                                    dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To3To3(patch[4], patch[3], patch[1]);
-                                    *(dp + dpL) = Interpolation.Mix5To2To1(patch[4], patch[3], patch[7]);
+                                    dest[destIndex] = Interpolation.Mix2To3To3(patch[4], patch[3], patch[1]);
+                                    dest[destIndex + dpL] = Interpolation.Mix5To2To1(patch[4], patch[3], patch[7]);
                                 }
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 break;
                             }
                         case 14:
@@ -649,80 +641,80 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = Interpolation.Mix3To1(patch[4], patch[0]);
-                                    *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                    dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
+                                    dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To3To3(patch[4], patch[3], patch[1]);
-                                    *(dp + 1) = Interpolation.Mix5To2To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex] = Interpolation.Mix2To3To3(patch[4], patch[3], patch[1]);
+                                    dest[destIndex + 1] = Interpolation.Mix5To2To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 break;
                             }
                         case 67:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
                                 break;
                             }
                         case 70:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
                                 break;
                             }
                         case 28:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
                                 break;
                             }
                         case 152:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 break;
                             }
                         case 194:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 break;
                             }
                         case 98:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
                                 break;
                             }
                         case 56:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
                                 break;
                             }
                         case 25:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
                                 break;
                             }
                         case 26:
@@ -730,67 +722,67 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
                                 }
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
                                 break;
                             }
                         case 82:
                         case 214:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
                         case 88:
                         case 248:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
                                 }
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
@@ -799,303 +791,303 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
                                 }
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
                                 }
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
                                 break;
                             }
                         case 27:
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
                                 }
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
                                 break;
                             }
                         case 86:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 break;
                             }
                         case 216:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
                         case 106:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[0]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
                                 }
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
                                 break;
                             }
                         case 30:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[0]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
                                 break;
                             }
                         case 210:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
                         case 120:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
                                 }
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 break;
                             }
                         case 75:
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
                                 }
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
                                 break;
                             }
                         case 29:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
                                 break;
                             }
                         case 198:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 break;
                             }
                         case 184:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 break;
                             }
                         case 99:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
                                 break;
                             }
                         case 57:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
                                 break;
                             }
                         case 71:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
                                 break;
                             }
                         case 156:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 break;
                             }
                         case 226:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 break;
                             }
                         case 60:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
                                 break;
                             }
                         case 195:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 break;
                             }
                         case 102:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
                                 break;
                             }
                         case 153:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 break;
                             }
                         case 58:
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = Interpolation.Mix3To1(patch[4], patch[0]);
+                                    dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
                                 }
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
+                                    dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
                                 break;
                             }
                         case 83:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[3]);
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
+                                    dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
                         case 92:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[1]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
+                                    dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
                                 }
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
@@ -1103,109 +1095,109 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = Interpolation.Mix3To1(patch[4], patch[0]);
+                                    dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
                                 }
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
+                                    dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
                                 }
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 break;
                             }
                         case 78:
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = Interpolation.Mix3To1(patch[4], patch[0]);
+                                    dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
                                 }
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
+                                    dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
                                 }
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
                                 break;
                             }
                         case 154:
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = Interpolation.Mix3To1(patch[4], patch[0]);
+                                    dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
                                 }
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
+                                    dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 break;
                             }
                         case 114:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
+                                    dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[3]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
                         case 89:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
+                                    dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
                                 }
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
@@ -1213,35 +1205,35 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = Interpolation.Mix3To1(patch[4], patch[0]);
+                                    dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
                                 }
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
+                                    dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
                                 }
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
+                                    dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
                                 }
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
@@ -1250,83 +1242,83 @@ namespace hqx
                             {
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *dp = Interpolation.Mix3To1(patch[4], patch[3]);
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix5To2To1(patch[4], patch[1], patch[3]);
-                                    *(dp + 1) = Interpolation.Mix2To3To3(patch[4], patch[1], patch[5]);
+                                    dest[destIndex] = Interpolation.Mix5To2To1(patch[4], patch[1], patch[3]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To3To3(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
                                 break;
                             }
                         case 182:
                         case 150:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
-                                    *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                    dest[destIndex + 1] = patch[4];
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix2To3To3(patch[4], patch[1], patch[5]);
-                                    *(dp + dpL + 1) = Interpolation.Mix5To2To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To3To3(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix5To2To1(patch[4], patch[5], patch[7]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
                                 break;
                             }
                         case 213:
                         case 212:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[1]);
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix5To2To1(patch[4], patch[5], patch[1]);
-                                    *(dp + dpL + 1) = Interpolation.Mix2To3To3(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + 1] = Interpolation.Mix5To2To1(patch[4], patch[5], patch[1]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To3To3(patch[4], patch[5], patch[7]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
                                 break;
                             }
                         case 241:
                         case 240:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[3]);
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix5To2To1(patch[4], patch[7], patch[3]);
-                                    *(dp + dpL + 1) = Interpolation.Mix2To3To3(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL] = Interpolation.Mix5To2To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To3To3(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
                         case 236:
                         case 232:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
-                                    *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                    dest[destIndex + dpL] = patch[4];
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix2To3To3(patch[4], patch[7], patch[3]);
-                                    *(dp + dpL + 1) = Interpolation.Mix5To2To1(patch[4], patch[7], patch[5]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To3To3(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix5To2To1(patch[4], patch[7], patch[5]);
                                 }
                                 break;
                             }
@@ -1335,16 +1327,16 @@ namespace hqx
                             {
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *dp = Interpolation.Mix3To1(patch[4], patch[1]);
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix5To2To1(patch[4], patch[3], patch[1]);
-                                    *(dp + dpL) = Interpolation.Mix2To3To3(patch[4], patch[7], patch[3]);
+                                    dest[destIndex] = Interpolation.Mix5To2To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To3To3(patch[4], patch[7], patch[3]);
                                 }
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
                                 break;
                             }
                         case 171:
@@ -1352,16 +1344,16 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
-                                    *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                    dest[destIndex] = patch[4];
+                                    dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To3To3(patch[4], patch[3], patch[1]);
-                                    *(dp + dpL) = Interpolation.Mix5To2To1(patch[4], patch[3], patch[7]);
+                                    dest[destIndex] = Interpolation.Mix2To3To3(patch[4], patch[3], patch[1]);
+                                    dest[destIndex + dpL] = Interpolation.Mix5To2To1(patch[4], patch[3], patch[7]);
                                 }
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 break;
                             }
                         case 143:
@@ -1369,221 +1361,221 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
-                                    *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                    dest[destIndex] = patch[4];
+                                    dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To3To3(patch[4], patch[3], patch[1]);
-                                    *(dp + 1) = Interpolation.Mix5To2To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex] = Interpolation.Mix2To3To3(patch[4], patch[3], patch[1]);
+                                    dest[destIndex + 1] = Interpolation.Mix5To2To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 break;
                             }
                         case 124:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[1]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
                                 }
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 break;
                             }
                         case 203:
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
                                 }
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 break;
                             }
                         case 62:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[0]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
                                 break;
                             }
                         case 211:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
                         case 118:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 break;
                             }
                         case 217:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
                         case 110:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[0]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
                                 }
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
                                 break;
                             }
                         case 155:
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
                                 }
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 break;
                             }
                         case 188:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 break;
                             }
                         case 185:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 break;
                             }
                         case 61:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
                                 break;
                             }
                         case 157:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 break;
                             }
                         case 103:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
                                 break;
                             }
                         case 227:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 break;
                             }
                         case 230:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 break;
                             }
                         case 199:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 break;
                             }
                         case 220:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[1]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
+                                    dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
                                 }
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
@@ -1591,65 +1583,65 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = Interpolation.Mix3To1(patch[4], patch[0]);
+                                    dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
                                 }
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 break;
                             }
                         case 234:
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = Interpolation.Mix3To1(patch[4], patch[0]);
+                                    dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
                                 }
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
                                 }
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 break;
                             }
                         case 242:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
+                                    dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[3]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
@@ -1657,65 +1649,65 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
                                 }
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
+                                    dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
                                 break;
                             }
                         case 121:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
                                 }
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
                         case 87:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[3]);
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
@@ -1723,57 +1715,57 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
                                 }
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
+                                    dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
                                 }
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
                                 break;
                             }
                         case 122:
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = Interpolation.Mix3To1(patch[4], patch[0]);
+                                    dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
                                 }
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
+                                    dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
                                 }
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
                                 }
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
@@ -1781,35 +1773,35 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = Interpolation.Mix3To1(patch[4], patch[0]);
+                                    dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
                                 }
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 }
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
+                                    dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
                                 }
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
@@ -1817,35 +1809,35 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = Interpolation.Mix3To1(patch[4], patch[0]);
+                                    dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
                                 }
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
+                                    dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
                                 }
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
+                                    dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
                                 }
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
@@ -1853,133 +1845,133 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
                                 }
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
+                                    dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
                                 }
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
+                                    dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
                                 }
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
                         case 229:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 break;
                             }
                         case 167:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 break;
                             }
                         case 173:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 break;
                             }
                         case 181:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 break;
                             }
                         case 186:
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = Interpolation.Mix3To1(patch[4], patch[0]);
+                                    dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
                                 }
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
+                                    dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 break;
                             }
                         case 115:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[3]);
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
+                                    dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[3]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
                         case 93:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[1]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
+                                    dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
                                 }
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
@@ -1987,38 +1979,38 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = Interpolation.Mix3To1(patch[4], patch[0]);
+                                    dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
                                 }
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
+                                    dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
                                 }
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 break;
                             }
                         case 205:
                         case 201:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
+                                    dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix6To1To1(patch[4], patch[7], patch[3]);
                                 }
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 break;
                             }
                         case 174:
@@ -2026,106 +2018,106 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = Interpolation.Mix3To1(patch[4], patch[0]);
+                                    dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix6To1To1(patch[4], patch[3], patch[1]);
                                 }
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 break;
                             }
                         case 179:
                         case 147:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[3]);
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
+                                    dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix6To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 break;
                             }
                         case 117:
                         case 116:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[3]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix6To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
                         case 189:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 break;
                             }
                         case 231:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 break;
                             }
                         case 126:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[0]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 }
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
                                 }
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 break;
                             }
                         case 219:
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
                                 }
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
@@ -2133,111 +2125,111 @@ namespace hqx
                             {
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *dp = Interpolation.Mix3To1(patch[4], patch[1]);
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix5To2To1(patch[4], patch[3], patch[1]);
-                                    *(dp + dpL) = Interpolation.Mix2To3To3(patch[4], patch[7], patch[3]);
+                                    dest[destIndex] = Interpolation.Mix5To2To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To3To3(patch[4], patch[7], patch[3]);
                                 }
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 break;
                             }
                         case 221:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[1]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[1]);
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix5To2To1(patch[4], patch[5], patch[1]);
-                                    *(dp + dpL + 1) = Interpolation.Mix2To3To3(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + 1] = Interpolation.Mix5To2To1(patch[4], patch[5], patch[1]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To3To3(patch[4], patch[5], patch[7]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
                                 break;
                             }
                         case 207:
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
-                                    *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                    dest[destIndex] = patch[4];
+                                    dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To3To3(patch[4], patch[3], patch[1]);
-                                    *(dp + 1) = Interpolation.Mix5To2To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex] = Interpolation.Mix2To3To3(patch[4], patch[3], patch[1]);
+                                    dest[destIndex + 1] = Interpolation.Mix5To2To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 break;
                             }
                         case 238:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[0]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
-                                    *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                    dest[destIndex + dpL] = patch[4];
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix2To3To3(patch[4], patch[7], patch[3]);
-                                    *(dp + dpL + 1) = Interpolation.Mix5To2To1(patch[4], patch[7], patch[5]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To3To3(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix5To2To1(patch[4], patch[7], patch[5]);
                                 }
                                 break;
                             }
                         case 190:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[0]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
-                                    *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                    dest[destIndex + 1] = patch[4];
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix2To3To3(patch[4], patch[1], patch[5]);
-                                    *(dp + dpL + 1) = Interpolation.Mix5To2To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To3To3(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix5To2To1(patch[4], patch[5], patch[7]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 break;
                             }
                         case 187:
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
-                                    *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                    dest[destIndex] = patch[4];
+                                    dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To3To3(patch[4], patch[3], patch[1]);
-                                    *(dp + dpL) = Interpolation.Mix5To2To1(patch[4], patch[3], patch[7]);
+                                    dest[destIndex] = Interpolation.Mix2To3To3(patch[4], patch[3], patch[1]);
+                                    dest[destIndex + dpL] = Interpolation.Mix5To2To1(patch[4], patch[3], patch[7]);
                                 }
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 break;
                             }
                         case 243:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[3]);
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix5To2To1(patch[4], patch[7], patch[3]);
-                                    *(dp + dpL + 1) = Interpolation.Mix2To3To3(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL] = Interpolation.Mix5To2To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To3To3(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
@@ -2245,32 +2237,32 @@ namespace hqx
                             {
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *dp = Interpolation.Mix3To1(patch[4], patch[3]);
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix5To2To1(patch[4], patch[1], patch[3]);
-                                    *(dp + 1) = Interpolation.Mix2To3To3(patch[4], patch[1], patch[5]);
+                                    dest[destIndex] = Interpolation.Mix5To2To1(patch[4], patch[1], patch[3]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To3To3(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 break;
                             }
                         case 237:
                         case 233:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix14To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix14To1To1(patch[4], patch[7], patch[3]);
                                 }
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 break;
                             }
                         case 175:
@@ -2278,68 +2270,68 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix14To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix14To1To1(patch[4], patch[3], patch[1]);
                                 }
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 break;
                             }
                         case 183:
                         case 151:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[3]);
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix14To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix14To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 break;
                             }
                         case 245:
                         case 244:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[3]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix14To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix14To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
                         case 250:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[0]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
                                 }
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
@@ -2347,109 +2339,109 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
                                 }
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
                                 }
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 break;
                             }
                         case 95:
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
                                 }
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 break;
                             }
                         case 222:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[0]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
                         case 252:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[1]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
                                 }
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix14To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix14To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
                         case 249:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[1]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix14To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix14To1To1(patch[4], patch[7], patch[3]);
                                 }
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
@@ -2457,182 +2449,182 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
                                 }
-                                *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
+                                dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[2], patch[5]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix14To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix14To1To1(patch[4], patch[7], patch[3]);
                                 }
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 break;
                             }
                         case 111:
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix14To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix14To1To1(patch[4], patch[3], patch[1]);
                                 }
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
                                 }
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[5]);
                                 break;
                             }
                         case 63:
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix14To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix14To1To1(patch[4], patch[3], patch[1]);
                                 }
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[8], patch[7]);
                                 break;
                             }
                         case 159:
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
                                 }
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix14To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix14To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 break;
                             }
                         case 215:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[3]);
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix14To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix14To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
+                                dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[6], patch[3]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
                         case 246:
                             {
-                                *dp = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
+                                dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[0], patch[3]);
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[3]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix14To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix14To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
                         case 254:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[0]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[0]);
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 }
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
                                 }
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix14To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix14To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
                         case 253:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[1]);
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[1]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[1]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix14To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix14To1To1(patch[4], patch[7], patch[3]);
                                 }
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix14To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix14To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
@@ -2640,28 +2632,28 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
                                 }
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[2]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[2]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix14To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix14To1To1(patch[4], patch[7], patch[3]);
                                 }
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
@@ -2669,123 +2661,123 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix14To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix14To1To1(patch[4], patch[3], patch[1]);
                                 }
-                                *(dp + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix14To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix14To1To1(patch[4], patch[7], patch[3]);
                                 }
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[5]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[5]);
                                 break;
                             }
                         case 127:
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix14To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix14To1To1(patch[4], patch[3], patch[1]);
                                 }
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix2To1To1(patch[4], patch[1], patch[5]);
                                 }
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix2To1To1(patch[4], patch[7], patch[3]);
                                 }
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[8]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[8]);
                                 break;
                             }
                         case 191:
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix14To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix14To1To1(patch[4], patch[3], patch[1]);
                                 }
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix14To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix14To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[7]);
-                                *(dp + dpL + 1) = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[7]);
+                                dest[destIndex + dpL + 1] = Interpolation.Mix3To1(patch[4], patch[7]);
                                 break;
                             }
                         case 223:
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix2To1To1(patch[4], patch[3], patch[1]);
                                 }
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix14To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix14To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[6]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[6]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix2To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
                         case 247:
                             {
-                                *dp = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex] = Interpolation.Mix3To1(patch[4], patch[3]);
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix14To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix14To1To1(patch[4], patch[1], patch[5]);
                                 }
-                                *(dp + dpL) = Interpolation.Mix3To1(patch[4], patch[3]);
+                                dest[destIndex + dpL] = Interpolation.Mix3To1(patch[4], patch[3]);
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix14To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix14To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
@@ -2793,43 +2785,43 @@ namespace hqx
                             {
                                 if (Diff(patch[3], patch[1], trY, trU, trV, trA))
                                 {
-                                    *dp = patch[4];
+                                    dest[destIndex] = patch[4];
                                 }
                                 else
                                 {
-                                    *dp = Interpolation.Mix14To1To1(patch[4], patch[3], patch[1]);
+                                    dest[destIndex] = Interpolation.Mix14To1To1(patch[4], patch[3], patch[1]);
                                 }
                                 if (Diff(patch[1], patch[5], trY, trU, trV, trA))
                                 {
-                                    *(dp + 1) = patch[4];
+                                    dest[destIndex + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + 1) = Interpolation.Mix14To1To1(patch[4], patch[1], patch[5]);
+                                    dest[destIndex + 1] = Interpolation.Mix14To1To1(patch[4], patch[1], patch[5]);
                                 }
                                 if (Diff(patch[7], patch[3], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL) = patch[4];
+                                    dest[destIndex + dpL] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL) = Interpolation.Mix14To1To1(patch[4], patch[7], patch[3]);
+                                    dest[destIndex + dpL] = Interpolation.Mix14To1To1(patch[4], patch[7], patch[3]);
                                 }
                                 if (Diff(patch[5], patch[7], trY, trU, trV, trA))
                                 {
-                                    *(dp + dpL + 1) = patch[4];
+                                    dest[destIndex + dpL + 1] = patch[4];
                                 }
                                 else
                                 {
-                                    *(dp + dpL + 1) = Interpolation.Mix14To1To1(patch[4], patch[5], patch[7]);
+                                    dest[destIndex + dpL + 1] = Interpolation.Mix14To1To1(patch[4], patch[5], patch[7]);
                                 }
                                 break;
                             }
                     }
-                    sp++;
-                    dp += 2;
+                    sourceIndex++;
+                    destIndex += 2;
                 }
-                dp += dpL;
+                destIndex += dpL;
             }
         }
 
