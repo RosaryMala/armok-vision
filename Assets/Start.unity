@@ -4330,7 +4330,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: -1
   modelOverride: 
-  shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 3}
   verbose: 0
   createComponents: 1
   updateDynamically: 1
@@ -4774,7 +4774,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: -1
   modelOverride: 
-  shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 3}
   verbose: 0
   createComponents: 1
   updateDynamically: 1
@@ -5783,6 +5783,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0a94a8e59cd2944281d4e702fd26f95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  brushShape: 1
   cursorMaterial: {fileID: 2100000, guid: f33f3e4ce95d3af4ba4c970ad50eece6, type: 2}
   activeCursorMaterial: {fileID: 2100000, guid: 8c2685326aa5b864396b996028b5fe87,
     type: 2}
