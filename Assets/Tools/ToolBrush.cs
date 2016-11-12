@@ -6,14 +6,20 @@ using UnityEngine.EventSystems;
 
 public class ToolBrush : MonoBehaviour
 {
+    public enum BrushShape
+    {
+        Freehand,
+        Box
+    }
+    public BrushShape brushShape;
 
     public Material cursorMaterial;
     public Material activeCursorMaterial;
 
     public Mesh cursorMesh;
     private Camera mainCam;
-    private bool dragging;
-    private Vector3 lastTargetPos = Vector3.zero;
+    private Vector3 lastTargetPosF = Vector3.zero;
+    private DFCoord lastTargetPos;
 
     void Awake()
     {
@@ -21,13 +27,39 @@ public class ToolBrush : MonoBehaviour
     }
 
     public DiggingTool diggingTool;
+    private bool drawing = false;
+
+
+    List<DFCoord> coordList = new List<DFCoord>();
 
     // Update is called once per frame
     void Update()
     {
         if (diggingTool.digMode != DiggingTool.DigMode.None)
         {
-            if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
+            //start the drag. This is the same for all shapes.
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (EventSystem.current.IsPointerOverGameObject()) //we just clicked on 
+                {
+                    coordList.Clear(); //flush out any list we currently have, so the rest doesn't get confused.
+                    drawing = false;
+                }
+                else
+                {
+                    Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
+                    DFCoord mapTargetPos;
+                    Vector3 unityTargetPos;
+                    if (MapDataStore.FindCurrentTarget(ray, out mapTargetPos, out unityTargetPos))
+                    {
+                        lastTargetPos = mapTargetPos;
+                        unityTargetPos += (ray.direction * 0.001f);
+                        lastTargetPosF = GameMap.UnityToFloatingDFCoord(unityTargetPos);
+                        drawing = true;
+                    }
+                }
+            }
+            else if (Input.GetMouseButton(0) && drawing) //still dragging
             {
                 Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
                 DFCoord mapTargetPos;
@@ -37,22 +69,39 @@ public class ToolBrush : MonoBehaviour
                 {
                     unityTargetPos += (ray.direction * 0.001f);
                     Vector3 mapFloatTargetPos = GameMap.UnityToFloatingDFCoord(unityTargetPos);
-                    if (dragging)
+                    switch (brushShape)
                     {
-                        var coordList = raytrace(lastTargetPos, mapFloatTargetPos);
-                        foreach (var item in coordList)
-                        {
-                            DrawCursor(item, true);
-                        }
-                        diggingTool.Apply(coordList);
+                        case BrushShape.Freehand:
+                        //if (dragging)
+                        //{
+                        //    diggingTool.Apply(coordList);
+                        //    coordList.Clear();
+                        //    RayTrace(coordList, lastTargetPosF, mapFloatTargetPos);
+                        //}
+                        //lastTargetPosF = mapFloatTargetPos;
+                        //dragging = true;
+                        //break;
+                        case BrushShape.Box:
+                            coordList.Clear();
+                            Box(coordList, lastTargetPosF, mapFloatTargetPos);
+                            break;
+                        default:
+                            break;
                     }
-                    lastTargetPos = mapFloatTargetPos;
-                    dragging = true;
                 }
-                else
-                    dragging = false;
+
+                foreach (var item in coordList)
+                {
+                    DrawCursor(item, true);
+                }
             }
-            else
+            else if(Input.GetMouseButtonUp(0) && drawing) //released the mouse
+            {
+                diggingTool.Apply(coordList);
+                coordList.Clear();
+                drawing = false;
+            }
+            else if(!EventSystem.current.IsPointerOverGameObject()) // Just hovering over the map.
             {
                 Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
                 DFCoord mapTargetPos;
@@ -66,12 +115,6 @@ public class ToolBrush : MonoBehaviour
                 }
             }
         }
-        if (Input.GetMouseButtonUp(0) || EventSystem.current.IsPointerOverGameObject())
-        {
-            //dragging has stopped.
-            dragging = false;
-        }
-
     }
 
     void DrawCursor(DFCoord pos, bool active)
@@ -80,7 +123,20 @@ public class ToolBrush : MonoBehaviour
         Graphics.DrawMesh(cursorMesh, matrix, active ? activeCursorMaterial : cursorMaterial, 5);
     }
 
-    public static List<DFCoord> raytrace(Vector3 start, Vector3 end)
+    static void Box(List<DFCoord> coordList, Vector3 start, Vector3 end)
+    {
+        DFCoord dfStart = new DFCoord(Mathf.FloorToInt(start.x), Mathf.FloorToInt(start.y), Mathf.FloorToInt(start.z));
+        DFCoord dfEnd = new DFCoord(Mathf.FloorToInt(end.x), Mathf.FloorToInt(end.y), Mathf.FloorToInt(end.z));
+
+        for (int x = Mathf.Min(dfStart.x, dfEnd.x); x <= Mathf.Max(dfStart.x, dfEnd.x); x++)
+            for (int y = Mathf.Min(dfStart.y, dfEnd.y); y <= Mathf.Max(dfStart.y, dfEnd.y); y++)
+                for (int z = Mathf.Min(dfStart.z, dfEnd.z); z <= Mathf.Max(dfStart.z, dfEnd.z); z++)
+                {
+                    coordList.Add(new DFCoord(x, y, z));
+                }
+    }
+
+    public static void RayTrace(List<DFCoord> coordList, Vector3 start, Vector3 end)
     {
         float dx = Mathf.Abs(start.x - end.x);
         float dy = Mathf.Abs(start.y - end.y);
@@ -152,8 +208,6 @@ public class ToolBrush : MonoBehaviour
             t_next_z = (start.z - Mathf.Floor(start.z)) * dt_dz;
         }
 
-        List<DFCoord> coordList = new List<DFCoord>();
-
         for (; n > 0; --n)
         {
             coordList.Add(new DFCoord(x, y, z));
@@ -174,7 +228,5 @@ public class ToolBrush : MonoBehaviour
                 t_next_x += dt_dx;
             }
         }
-
-        return coordList;
     }
 }
