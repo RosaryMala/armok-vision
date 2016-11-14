@@ -268,7 +268,7 @@ public class RegionMaker : MonoBehaviour
                 Color terrainColor = Color.green;
                 ColorContent colorDef;
                 if (ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
-                    terrainColor = colorDef.value;
+                    terrainColor = colorDef.color;
 
                 Color plantColor = Color.black;
                 Color stoneColor = Color.grey;
@@ -276,7 +276,7 @@ public class RegionMaker : MonoBehaviour
                 {
                     fakeTile.material = item;
                     if (ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
-                        plantColor += colorDef.value;
+                        plantColor += colorDef.color;
                 }
                 float plantBlend = Mathf.Pow(tile.vegetation / 100.0f, 0.25f);
                 if (tile.plantMaterials.Count == 0)
@@ -288,7 +288,7 @@ public class RegionMaker : MonoBehaviour
                 {
                     fakeTile.material = tile.stoneMaterials[0];
                     if (ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
-                        stoneColor = colorDef.value;
+                        stoneColor = colorDef.color;
                 }
 
                 Color blendedColor = Color.Lerp(terrainColor, plantColor, plantBlend);
@@ -327,7 +327,7 @@ public class RegionMaker : MonoBehaviour
                                     Color buildingColor;
                                     ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef);
                                     if (colorDef != null)
-                                        buildingColor = colorDef.value;
+                                        buildingColor = colorDef.color;
                                     else
                                     {
                                         Debug.LogError("No valid color for " + building.type);
@@ -371,7 +371,7 @@ public class RegionMaker : MonoBehaviour
                                     fakeTile.material = building.material;
                                     Color buildingColor;
                                     if(ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
-                                        buildingColor = colorDef.value;
+                                        buildingColor = colorDef.color;
                                     else
                                     {
                                         Debug.LogError("No valid color for " + building.type);
@@ -389,8 +389,8 @@ public class RegionMaker : MonoBehaviour
                                     Color roofColor;
                                     if(ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
                                     {
-                                        buildingColor = colorDef.value;
-                                        roofColor = colorDef.value;
+                                        buildingColor = colorDef.color;
+                                        roofColor = colorDef.color;
                                     }
                                     else
                                     {
@@ -423,7 +423,7 @@ public class RegionMaker : MonoBehaviour
                                     fakeTile.material = building.material;
                                     Color buildingColor;
                                     if(ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
-                                        buildingColor = colorDef.value;
+                                        buildingColor = colorDef.color;
                                     else
                                     {
                                         buildingColor = Color.magenta;
@@ -449,7 +449,7 @@ public class RegionMaker : MonoBehaviour
                                         fakeTile.material = new MatPairStruct(0, fakeTile.material.mat_index);
                                     Color buildingColor;
                                     if(ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
-                                        buildingColor = colorDef.value;
+                                        buildingColor = colorDef.color;
                                     else
                                         buildingColor = Color.grey;
                                     min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
@@ -477,7 +477,7 @@ public class RegionMaker : MonoBehaviour
                                     fakeTile.material = tree;
                                     Color buildingColor;
                                     if(ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
-                                        buildingColor = colorDef.value;
+                                        buildingColor = colorDef.color;
                                     else
                                     {
                                         Debug.LogError("No valid color for " + building.type);
@@ -533,7 +533,7 @@ public class RegionMaker : MonoBehaviour
 
                             fakeTile.material = tree;
                             if (ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
-                                treeColor = colorDef.value;
+                                treeColor = colorDef.color;
 
                             if (tree.mat_type == 419) // bare tree
                                 AddTree(new Vector3(coord.x, tile.elevation * GameMap.tileHeight, coord.y), GameMap.tileWidth / 2, Random.Range(7.0f, 9.0f) * GameMap.tileHeight, treeColor, biome, snow, Random.Range(0.0f, 360.0f));

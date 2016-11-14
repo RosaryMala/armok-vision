@@ -623,7 +623,7 @@ abstract class BlockMesher {
         Color newColor;
         if (ContentLoader.Instance.ColorConfiguration.GetValue(tile, layer, out newColorContent))
         {
-            newColor = newColorContent.value;
+            newColor = newColorContent.color;
         }
         else
         {
