@@ -305,7 +305,7 @@ public class WorldMapMaker : MonoBehaviour
 
                 ColorContent colorContent;
                 ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorContent);
-                Color terrainColor = colorContent.value;
+                Color terrainColor = colorContent.color;
 
                 Color plantColor = Color.black;
                 float grassPercent = Mathf.Pow(regionTiles[x, y].vegetation / 100.0f, 0.25F);
@@ -315,7 +315,7 @@ public class WorldMapMaker : MonoBehaviour
                 {
                     fakeTile.material = item;
                     ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorContent);
-                    plantColor += colorContent.value;
+                    plantColor += colorContent.color;
                 }
                 if (regionTiles[x, y].plant_materials.Count == 0)
                     grassPercent = 0;
@@ -343,7 +343,7 @@ public class WorldMapMaker : MonoBehaviour
                     fakeTile.material = treeMat;
                     if (ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorContent))
                     {
-                        treeColor += colorContent.value;
+                        treeColor += colorContent.color;
                         treeCount++;
                     }
                 }

@@ -61,6 +61,7 @@ public enum RotationType
 public class MeshContent : IContent
 {
     static int num_created = 0;
+    public static int NumCreated { get { return num_created; } }
     public int UniqueIndex { get; private set; }
     public struct TextureStorageContainer
     {

@@ -3,29 +3,32 @@ using System.Xml.Linq;
 
 public class ColorContent : IContent
 {
+    static int num_created = 0;
+    public static int NumCreated { get { return num_created; } }
+    public int UniqueIndex { get; private set; }
 
-    public Color value;
+    public Color color;
     public bool AddTypeElement(System.Xml.Linq.XElement elemtype)
     {
         XAttribute colorRedAtt = elemtype.Attribute("red");
         if (colorRedAtt == null)
         {
             //Add error message here
-            value = default(Color);
+            color = default(Color);
             return false;
         }
         XAttribute colorGreenAtt = elemtype.Attribute("green");
         if (colorGreenAtt == null)
         {
             //Add error message here
-            value = default(Color);
+            color = default(Color);
             return false;
         }
         XAttribute colorBlueAtt = elemtype.Attribute("blue");
         if (colorBlueAtt == null)
         {
             //Add error message here
-            value = default(Color);
+            color = default(Color);
             return false;
         }
         int alpha = 255;
@@ -50,12 +53,14 @@ public class ColorContent : IContent
         int.TryParse(colorRedAtt.Value, out red);
         int.TryParse(colorGreenAtt.Value, out green);
         int.TryParse(colorBlueAtt.Value, out blue);
-        value = new Color(red / 255.0f, green / 255.0f, blue / 255.0f, alpha / 255.0f);
+        color = new Color(red / 255.0f, green / 255.0f, blue / 255.0f, alpha / 255.0f);
         // LINEAR
         //if (PlayerSettings.colorSpace == ColorSpace.Linear)
         {
-            value = value.linear;
+            color = color.linear;
         }
+        UniqueIndex = num_created;
+        num_created++;
         return true;
 
     }

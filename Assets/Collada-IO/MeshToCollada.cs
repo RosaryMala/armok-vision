@@ -6,14 +6,22 @@ namespace Collada141
 {
     public partial class COLLADA
     {
-        public static geometry MeshToGeometry(Mesh inputMesh)
+        public static geometry MeshToGeometry(Mesh inputMesh, string id = null)
         {
-            string meshName = "Mesh-" + inputMesh.GetInstanceID();
+            string name;
+            if (string.IsNullOrEmpty(id))
+                name = "Mesh-" + inputMesh.GetInstanceID();
+            else
+                name = id;
+            return MeshToGeometry(new CPUMesh(inputMesh), name);
+        }
+        public static geometry MeshToGeometry(CPUMesh inputMesh, string id)
+        {
 
             geometry outputGeometry = new geometry();
             mesh outputMesh = new mesh();
 
-            outputGeometry.id = meshName + "-lib";
+            outputGeometry.id = id + "-lib";
             outputGeometry.name = inputMesh.name + "-mesh";
             outputGeometry.Item = outputMesh;
 
@@ -23,10 +31,10 @@ namespace Collada141
             var inputVertices = inputMesh.vertices;
             if (inputVertices.Length == 0)
                 return null;
-            sourceList.Add(ArrayToSource(inputMesh.vertices, meshName + "-POSITION"));
+            sourceList.Add(ArrayToSource(inputMesh.vertices, id + "-POSITION"));
 
             vertices vertexList = new vertices();
-            vertexList.id = meshName + "-VERTEX";
+            vertexList.id = id + "-VERTEX";
             vertexList.input = new InputLocal[1];
             vertexList.input[0] = new InputLocal();
             vertexList.input[0].semantic = "POSITION";
@@ -46,7 +54,7 @@ namespace Collada141
             var inputNormals = inputMesh.normals;
             if(inputNormals.Length > 0)
             {
-                var array = ArrayToSource(inputNormals, meshName + "-Normal0");
+                var array = ArrayToSource(inputNormals, id + "-Normal0");
                 InputLocalOffset offset = new InputLocalOffset();
                 offset.semantic = "NORMAL";
                 offset.offset = (ulong)sourceList.Count;
@@ -57,7 +65,7 @@ namespace Collada141
             var inputUV1s = inputMesh.uv;
             if (inputUV1s.Length > 0)
             {
-                var array = ArrayToSource(inputUV1s, meshName + "-UV0");
+                var array = ArrayToSource(inputUV1s, id + "-UV0");
                 InputLocalOffset offset = new InputLocalOffset();
                 offset.semantic = "TEXCOORD";
                 offset.offset = (ulong)sourceList.Count;
@@ -70,7 +78,7 @@ namespace Collada141
             var inputUV2s = inputMesh.uv2;
             if (inputUV2s.Length > 0)
             {
-                var array = ArrayToSource(inputUV2s, meshName + "-UV1");
+                var array = ArrayToSource(inputUV2s, id + "-UV1");
                 InputLocalOffset offset = new InputLocalOffset();
                 offset.semantic = "TEXCOORD";
                 offset.offset = (ulong)sourceList.Count;
@@ -83,7 +91,7 @@ namespace Collada141
             var inputColors = inputMesh.colors;
             if (inputColors.Length > 0)
             {
-                var array = ArrayToSource(inputColors, meshName + "-VERTEX_COLOR0");
+                var array = ArrayToSource(inputColors, id + "-VERTEX_COLOR0");
                 InputLocalOffset offset = new InputLocalOffset();
                 offset.semantic = "COLOR";
                 offset.offset = (ulong)sourceList.Count;
@@ -255,12 +263,35 @@ namespace Collada141
             matrix output = new matrix();
 
             output.Values = new double[16];
-            for(int i = 0; i < 16; i++)
-            {
-                output.Values[i] = input[i];
-            }
+            int i = 0;
+            for (int x = 0; x < 4; x++)
+                for (int y = 0; y < 4; y++)
+                {
+                    output.Values[i] = input[x,y];
+                    i++;
+                }
             output.sid = "matrix";
 
+            return output;
+        }
+
+        public static rotate ConvertRotation(Quaternion input)
+        {
+            rotate output = new rotate();
+
+            Vector3 axis;
+            float angle;
+            input.ToAngleAxis(out angle, out axis);
+
+            output.Values = new double[] { axis.x, axis.y, axis.z, angle };
+            output.sid = "rotate";
+            return output;
+        }
+        
+        public static TargetableFloat3 ConvertVector(Vector3 input, string sid)
+        {
+            TargetableFloat3 output = new TargetableFloat3();
+            output.Values = new double[] { input.x, input.y, input.z };
             return output;
         }
     }

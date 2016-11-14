@@ -361,10 +361,7 @@ public class GameMap : MonoBehaviour
             {
                 camera.following = true;
             }
-            if (Input.GetButtonDown("SaveMeshes") && Input.GetButton("Mod"))
-            {
-                SaveMeshes();
-            }
+
             // take screenshot on up->down transition of F9 key
             if (Input.GetButtonDown("TakeScreenshot"))
             {
@@ -504,12 +501,12 @@ public class GameMap : MonoBehaviour
 
             thisNode.Items = new object[1];
             thisNode.Items[0] = COLLADA.ConvertMatrix(Matrix4x4.identity);
+            thisNode.ItemsElementName = new ItemsChoiceType2[1];
+            thisNode.ItemsElementName[0] = ItemsChoiceType2.matrix;
 
             thisNode.instance_geometry = new instance_geometry[1];
             thisNode.instance_geometry[0] = new instance_geometry();
             thisNode.instance_geometry[0].url = "#" + thisGeometry.id;
-            thisNode.ItemsElementName = new ItemsChoiceType2[1];
-            thisNode.ItemsElementName[0] = ItemsChoiceType2.matrix;
         }
         Debug.Log("Added geometry to scene");
 
@@ -1207,7 +1204,7 @@ public class GameMap : MonoBehaviour
                     }
                     else if (ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out cont))
                     {
-                        color = cont.value;
+                        color = cont.color;
                     }
                     else if (materials.ContainsKey(spatter.material))
                     {
@@ -1792,7 +1789,7 @@ public class GameMap : MonoBehaviour
             part.startSize = 1;
             part.position = DFtoUnityCoord(item.Value.pos) + new Vector3(0, floorHeight + 0.5f, 0);
             if (ContentLoader.Instance.ColorConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out colorContent))
-                part.startColor = colorContent.value;
+                part.startColor = colorContent.color;
             else if (materials.ContainsKey(item.Value.material) && materials[item.Value.material].state_color != null)
             {
                 var stateColor = materials[item.Value.material].state_color;

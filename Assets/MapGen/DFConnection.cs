@@ -920,7 +920,7 @@ public sealed class DFConnection : MonoBehaviour
             public override void Terminate()
             {
                 finished = true;
-                connectionThread.Join();
+                connectionThread.Join(100);
             }
 
             private void RunForever()
