@@ -262,11 +262,11 @@
             <tiletype token="*:*:GRASS_DEAD:*:*"/>
         </subObject>
     </color>
-    <color red="128" green="101" blue="116">
+    <color red="128" green="128" blue="128">
         <material value="Plant">
             <subtype value="EYEBALL"/>
         </material>
-        <subObject red="77" green="55" blue="65">
+        <subObject red="16" green="16" blue="16">
             <tiletype token="*:*:GRASS_DEAD:*:*"/>
         </subObject>
     </color>

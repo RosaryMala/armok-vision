@@ -50,6 +50,11 @@
         <subObject pattern="Grass.png" specular="Grass_S.png">
             <tiletype token="*:*:GRASS_LIGHT:*:*" />
             <tiletype token="*:*:GRASS_DARK:*:*" />
+            <tiletype token="*:*:GRASS_DEAD:*:*" />
+            <tiletype token="*:*:GRASS_DRY:*:*" />
+            <subObject pattern="Eyes.png" specular="Mirror_S.png">
+                <material token="PLANT:EYEBALL:*" />
+            </subObject>
         </subObject>
     </materialTexture>
     <materialTexture pattern="Marble.png" specular="Medium_S.png">

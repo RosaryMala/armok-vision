@@ -23,8 +23,13 @@
         <subObject normal="Rough_N.png" occlusion="Rough_O.png" alpha="Opaque_A.png">
             <material token="*:*:*" />
             <subObject normal="Grass_N.png" occlusion="Grass_O.png" alpha="Opaque_A.png">
-                <tiletype token="*:*:GRASS_LIGHT:*:*" />
-                <tiletype token="*:*:GRASS_DARK:*:*" />
+            <tiletype token="*:*:GRASS_LIGHT:*:*" />
+            <tiletype token="*:*:GRASS_DARK:*:*" />
+            <tiletype token="*:*:GRASS_DEAD:*:*" />
+            <tiletype token="*:*:GRASS_DRY:*:*" />
+                <subObject normal="Eyes_N.png" occlusion="Eyes_O.png">
+                    <material token="PLANT:EYEBALL:*" />
+                </subObject>
             </subObject>
             <subObject normal="Flat_N.png" occlusion="Flat_O.png" alpha="Opaque_A.png">
                 <tiletype token="*:SMOOTH:*:*:*" />
