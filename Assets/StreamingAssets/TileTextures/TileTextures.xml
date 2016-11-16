@@ -30,6 +30,9 @@
                 <subObject normal="Eyes_N.png" occlusion="Eyes_O.png">
                     <material token="PLANT:EYEBALL:*" />
                 </subObject>
+                <subObject normal="Worms_N.png" occlusion="Worms_O.png">
+                    <material token="PLANT:WORMY TENDRILS:*" />
+                </subObject>
             </subObject>
             <subObject normal="Flat_N.png" occlusion="Flat_O.png" alpha="Opaque_A.png">
                 <tiletype token="*:SMOOTH:*:*:*" />
