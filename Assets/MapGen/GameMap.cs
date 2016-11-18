@@ -146,10 +146,10 @@ public class GameMap : MonoBehaviour
     DFCoord mapPosition;
 
     // Stuff to let the material list & various meshes & whatnot be loaded from xml specs at runtime.
-    Dictionary<MatPairStruct, MaterialDefinition> materials;
-    Dictionary<MatPairStruct, MaterialDefinition> items;
-    Dictionary<BuildingStruct, BuildingDefinition> buildings;
-    Dictionary<MatPairStruct, MaterialDefinition> creatures;
+    public static Dictionary<MatPairStruct, MaterialDefinition> materials;
+    public static Dictionary<MatPairStruct, MaterialDefinition> items;
+    public static Dictionary<BuildingStruct, BuildingDefinition> buildings;
+    public static Dictionary<MatPairStruct, MaterialDefinition> creatures;
 
     //Items list. Pretty simple right now.
     Dictionary<int, Item> itemInstances = new Dictionary<int, Item>();

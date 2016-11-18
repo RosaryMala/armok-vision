@@ -7,6 +7,7 @@ using System.IO;
 using RemoteFortressReader;
 using Collada141;
 using DFHack;
+using System.Text;
 
 public class MapExport : MonoBehaviour
 {
@@ -21,30 +22,121 @@ public class MapExport : MonoBehaviour
         }
     }
 
+    void Count(Dictionary<MatPairStruct, int> dict, MatPairStruct value)
+    {
+        if (!dict.ContainsKey(value))
+            dict[value] = 1;
+        else
+            dict[value] = dict[value] + 1;
+    }
+
     private IEnumerator ExportMap(string v)
     {
         if (ContentLoader.Instance == null)
             yield return null;
         statusText.gameObject.SetActive(true);
         int tileCount = 0;
+        StringBuilder output = new StringBuilder();
         for (int z = 0; z < MapDataStore.MapSize.z; z++)
         {
             statusText.text = string.Format("Collecting meshes from Z-level {0}/{1}", z, MapDataStore.MapSize.z);
             if (tileCount > 0)
                 yield return null;
             tileCount = 0;
+            Dictionary<MatPairStruct, int> materials = new Dictionary<MatPairStruct, int>();
+            Dictionary<MatPairStruct, int> layerMaterials = new Dictionary<MatPairStruct, int>();
+            Dictionary<MatPairStruct, int> baseMaterials = new Dictionary<MatPairStruct, int>();
+            Dictionary<MatPairStruct, int> veinMaterials = new Dictionary<MatPairStruct, int>();
+            Dictionary<MatPairStruct, int> grassMaterials = new Dictionary<MatPairStruct, int>();
             for (int y = 0; y < MapDataStore.MapSize.y; y++)
                 for (int x = 0; x < MapDataStore.MapSize.x; x++)
                 {
                     var tile = MapDataStore.Main[x, y, z];
                     if (tile == null) continue;
-                    for (int i = 0; i < (int)MeshLayer.Count; i++)
+                    if (tile.shape == TiletypeShape.FLOOR)
                     {
-                        CollectModel(tile, (MeshLayer)i, new DFCoord(x,y,z));
+                        Count(materials, tile.material);
+                        Count(veinMaterials, tile.vein_material);
+                        Count(layerMaterials, tile.layer_material);
+                        Count(baseMaterials, tile.base_material);
                     }
+                    if (
+                        tile.tiletypeMaterial == TiletypeMaterial.GRASS_DARK ||
+                        tile.tiletypeMaterial == TiletypeMaterial.GRASS_LIGHT ||
+                        tile.tiletypeMaterial == TiletypeMaterial.GRASS_DEAD ||
+                        tile.tiletypeMaterial == TiletypeMaterial.GRASS_DRY
+                        )
+                    {
+                        Count(grassMaterials, tile.material);
+                    }
+                    //for (int i = 0; i < (int)MeshLayer.Count; i++)
+                    //{
+                    //    CollectModel(tile, (MeshLayer)i, new DFCoord(x,y,z));
+                    //}
                     tileCount++;
                 }
+            if (materials.Count + layerMaterials.Count + baseMaterials.Count + veinMaterials.Count + grassMaterials.Count == 0)
+                continue;
+            output.AppendFormat("Layer \t{0}:\t", z);
+            output.AppendLine().Append("Materials -\t");
+            output.Append(materials.Count).Append(":\t");
+            foreach (var item in materials)
+            {
+                if (GameMap.materials.ContainsKey(item.Key))
+                    output.Append(GameMap.materials[item.Key].id);
+                else output.Append(item.Key);
+
+                output.Append(":\t").Append(item.Value).Append(",\t");
+            }
+            output.AppendLine().Append("Vein Materials:\t");
+            output.Append(veinMaterials.Count).Append(":\t");
+            foreach (var item in veinMaterials)
+            {
+                if (GameMap.materials.ContainsKey(item.Key))
+                    output.Append(GameMap.materials[item.Key].id);
+                else output.Append(item.Key);
+
+                output.Append(":\t").Append(item.Value).Append(",\t");
+            }
+            output.AppendLine().Append("Layer Materials:\t");
+            output.Append(layerMaterials.Count).Append(":\t");
+            foreach (var item in layerMaterials)
+            {
+                if (GameMap.materials.ContainsKey(item.Key))
+                    output.Append(GameMap.materials[item.Key].id);
+                else output.Append(item.Key);
+
+                output.Append(":\t").Append(item.Value).Append(",\t");
+            }
+            output.AppendLine().Append("Base Materials:\t");
+            output.Append(baseMaterials.Count).Append(":\t");
+            foreach (var item in baseMaterials)
+            {
+                if (GameMap.materials.ContainsKey(item.Key))
+                    output.Append(GameMap.materials[item.Key].id);
+                else output.Append(item.Key);
+
+                output.Append(":\t").Append(item.Value).Append(",\t");
+            }
+            output.AppendLine().Append("Grass Materials:\t");
+            output.Append(grassMaterials.Count).Append(":\t");
+            foreach (var item in grassMaterials)
+            {
+                if (GameMap.materials.ContainsKey(item.Key))
+                    output.Append(GameMap.materials[item.Key].id);
+                else output.Append(item.Key);
+
+                output.Append(":\t").Append(item.Value).Append(",\t");
+            }
+            output.AppendLine();
         }
+        if (File.Exists("Matcount.txt"))
+            File.Delete("Matcount.txt");
+
+        File.WriteAllText("Matcount.txt", output.ToString());
+
+        statusText.gameObject.SetActive(false);
+        yield break;
         statusText.text = string.Format("Saving {0} textures to disk.", diffuseTextures.Count);
         yield return null;
         foreach (var item in diffuseTextures)
