@@ -6,9 +6,9 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Debug
-  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: _EMISSION _NORMALMAP _SUNDISK_HIGH_QUALITY
+  m_Name: Grass Splat
+  m_Shader: {fileID: 4800000, guid: a83b41fd507506b4993e1989fc9c2805, type: 3}
+  m_ShaderKeywords: _EMISSION
   m_LightmapFlags: 1
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -16,16 +16,40 @@ Material:
     serializedVersion: 2
     m_TexEnvs:
     - first:
+        name: _Alpha
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _BaseControl
+      second:
+        m_Texture: {fileID: 2800000, guid: 6ea428435b5333746853111ec4621425, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
         name: _BumpMap
       second:
-        m_Texture: {fileID: 2800000, guid: 85eec403a7d64264c918be9ff0f02487, type: 3}
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _Control
+      second:
+        m_Texture: {fileID: 2800000, guid: 7d872706f59b0b748ad9fa43d1369d6a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _Depth
+      second:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
         name: _DetailAlbedoMap
       second:
         m_Texture: {fileID: 0}
-        m_Scale: {x: 0, y: 1}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
         name: _DetailMask
@@ -40,16 +64,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
-        name: _DiffCubeIBL
-      second:
-        m_Texture: {fileID: 8900000, guid: 4579ea1a287d4465587006d5739747fb, type: 2}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
         name: _EmissionMap
       second:
         m_Texture: {fileID: 0}
-        m_Scale: {x: 10, y: 10}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
         name: _MainTex
@@ -64,9 +82,39 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
+        name: _Normal0
+      second:
+        m_Texture: {fileID: 2800000, guid: 40701a5ed27460946a99dc0bb1bc022f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _Normal1
+      second:
+        m_Texture: {fileID: 2800000, guid: 6728b20761eb5294da3ad766793830bd, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _Normal2
+      second:
+        m_Texture: {fileID: 2800000, guid: a3e689f7465a1214cb988344a5af57d5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _Normal3
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _Normal4
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
         name: _OcclusionMap
       second:
-        m_Texture: {fileID: 2800000, guid: 1b24f5cd7e349114a9cc43b064e0ae7d, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
@@ -76,27 +124,36 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
-        name: _Shapetex
+        name: _Splat0
+      second:
+        m_Texture: {fileID: 2800000, guid: c87b6b2dbe33f7b4bb6c13522b7969b6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _Splat1
+      second:
+        m_Texture: {fileID: 2800000, guid: 49affc320a8b6c040b0839c27a4f1a1d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _Splat2
+      second:
+        m_Texture: {fileID: 2800000, guid: 3b30235b49ec91144a54fab351d2e4d6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _Splat3
       second:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
-        name: _SpecCubeIBL
-      second:
-        m_Texture: {fileID: 8900000, guid: 1b2b3cd737a4d4d51aef34132186b19b, type: 2}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
-        name: _Tex
+        name: _Splat4
       second:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - first:
-        name: _AtmosphereThickness
-      second: 1
     - first:
         name: _BumpScale
       second: 1
@@ -104,20 +161,20 @@ Material:
         name: _Cutoff
       second: 0.5
     - first:
+        name: _Depth
+      second: 0.02
+    - first:
         name: _DetailNormalMapScale
       second: 1
     - first:
         name: _DstBlend
       second: 0
     - first:
-        name: _Exposure
-      second: 1.3
-    - first:
         name: _GlossMapScale
       second: 1
     - first:
         name: _Glossiness
-      second: 0.116
+      second: 0.5
     - first:
         name: _GlossyReflections
       second: 1
@@ -134,12 +191,6 @@ Material:
         name: _Parallax
       second: 0.02
     - first:
-        name: _Rotation
-      second: 0
-    - first:
-        name: _Shininess
-      second: 0.5
-    - first:
         name: _SmoothnessTextureChannel
       second: 0
     - first:
@@ -149,12 +200,6 @@ Material:
         name: _SrcBlend
       second: 1
     - first:
-        name: _SunDisk
-      second: 2
-    - first:
-        name: _SunSize
-      second: 0.04
-    - first:
         name: _UVSec
       second: 0
     - first:
@@ -163,19 +208,10 @@ Material:
     m_Colors:
     - first:
         name: _Color
-      second: {r: 1, g: 0.81920415, b: 0.7205882, a: 1}
+      second: {r: 1, g: 1, b: 1, a: 1}
     - first:
         name: _EmissionColor
       second: {r: 0, g: 0, b: 0, a: 1}
     - first:
-        name: _GroundColor
-      second: {r: 0.36899996, g: 0.34899998, b: 0.34099993, a: 1}
-    - first:
-        name: _ShapeAdj
-      second: {r: 1, g: 1, b: 1, a: 1}
-    - first:
-        name: _SkyTint
-      second: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    - first:
-        name: _Tint
-      second: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
+        name: _WorldBounds
+      second: {r: -5, g: -5, b: 5, a: 5}
