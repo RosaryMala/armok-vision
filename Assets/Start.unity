@@ -5771,7 +5771,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10e38d62d238e445a9a8002799fa9d78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BlocksToFetch: 10
+  BlocksToFetch: 80
   RunOnAlternateThread: 1
 --- !u!114 &861361736
 MonoBehaviour:
