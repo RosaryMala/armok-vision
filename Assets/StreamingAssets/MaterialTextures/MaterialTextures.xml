@@ -55,6 +55,9 @@
             <subObject pattern="Eyes.png" specular="Mirror_S.png">
                 <material token="PLANT:EYEBALL:*" />
             </subObject>
+            <subObject pattern="Worms.png" specular="Mirror_S.png">
+                <material token="PLANT:WORMY TENDRILS:*" />
+            </subObject>
         </subObject>
     </materialTexture>
     <materialTexture pattern="Marble.png" specular="Medium_S.png">
