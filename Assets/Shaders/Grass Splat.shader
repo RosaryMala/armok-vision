@@ -75,6 +75,7 @@
             //o.Smoothness = _Glossiness;
             o.Alpha = c.a > 0 ? 1 : 0;
             o.Normal = UnpackNormal(n);
+            o.Occlusion = n.r;
         }
         ENDCG
     }
