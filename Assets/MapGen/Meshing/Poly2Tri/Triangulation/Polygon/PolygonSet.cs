@@ -55,6 +55,11 @@ namespace Poly2Tri
             _polygons.Add(p);
         }
 
+        public void Remove(Polygon p)
+        {
+            _polygons.Remove(p);
+        }
+
         public IEnumerable<Polygon> Polygons { get { return _polygons; } }
     }
 }
