@@ -217,6 +217,11 @@ namespace Poly2Tri
         public static bool operator >(Point2D lhs, Point2D rhs) { return (lhs.CompareTo(rhs) == 1) ? true : false; }
         public static bool operator <=(Point2D lhs, Point2D rhs) { return (lhs.CompareTo(rhs) <= 0) ? true : false; }
         public static bool operator >=(Point2D lhs, Point2D rhs) { return (lhs.CompareTo(rhs) >= 0) ? true : false; }
+
+        //Conversion Operators
+        //This are very specific to Armok Vision, really.
+        public static implicit operator Point2D(UnityEngine.Vector3 p) { return new Point2D(p.x, p.z); }
+        public static implicit operator UnityEngine.Vector3(Point2D p) { return new UnityEngine.Vector3(p.Xf, 0, p.Yf); }
     }
 
 

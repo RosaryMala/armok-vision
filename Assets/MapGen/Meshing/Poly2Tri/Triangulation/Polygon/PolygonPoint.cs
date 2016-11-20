@@ -29,11 +29,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
+using UnityEngine;
 /// Changes from the Java version
 ///   Replaced get/set Next/Previous with attributes
 /// Future possibilities
 ///   Documentation!
-
 namespace Poly2Tri
 {
     public class PolygonPoint : TriangulationPoint
@@ -51,6 +52,11 @@ namespace Poly2Tri
         public static TriangulationPoint ToTriangulationPoint(PolygonPoint p)
         {
             return (TriangulationPoint)p;
+        }
+
+        public static implicit operator PolygonPoint(Vector3 p)
+        {
+            return new PolygonPoint(p.x, p.z);
         }
     }
 }

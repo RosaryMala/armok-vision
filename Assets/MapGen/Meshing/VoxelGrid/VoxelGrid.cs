@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Poly2Tri;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,6 +22,13 @@ public class VoxelGrid : MonoBehaviour
     private Material[] voxelMaterials;
 
     public VoxelGrid xNeighbor, yNeighbor, xyNeighbor;
+
+    public enum CornerType
+    {
+        Diamond,
+        Square,
+        Rounded
+    }
 
     public void Initialize(int resolution, float size)
     {
@@ -98,6 +106,10 @@ public class VoxelGrid : MonoBehaviour
         vertices.Clear();
         triangles.Clear();
         mesh.Clear();
+
+        PolygonSegmentsByEnd.Clear();
+        PolygonSegmentsByStart.Clear();
+        CompletedPolygons = new PolygonSet();
 
         if (xNeighbor != null)
         {
@@ -188,27 +200,35 @@ public class VoxelGrid : MonoBehaviour
                 return;
             case 1:
                 AddTriangle(a.position, a.yEdgePosition, a.xEdgePosition);
+                AddSet1(a.yEdgePosition, a.xEdgePosition);
                 break;
             case 2:
                 AddTriangle(b.position, a.xEdgePosition, b.yEdgePosition);
+                AddSet1(a.xEdgePosition, b.yEdgePosition);
                 break;
             case 4:
                 AddTriangle(c.position, c.xEdgePosition, a.yEdgePosition);
+                AddSet1(c.xEdgePosition, a.yEdgePosition);
                 break;
             case 8:
                 AddTriangle(d.position, b.yEdgePosition, c.xEdgePosition);
+                AddSet1(b.yEdgePosition, c.xEdgePosition);
                 break;
             case 3:
                 AddQuad(a.position, a.yEdgePosition, b.yEdgePosition, b.position);
+                AddSet3(a.yEdgePosition, b.yEdgePosition);
                 break;
             case 5:
                 AddQuad(a.position, c.position, c.xEdgePosition, a.xEdgePosition);
+                AddSet3(c.xEdgePosition, a.xEdgePosition);
                 break;
             case 10:
                 AddQuad(a.xEdgePosition, c.xEdgePosition, d.position, b.position);
+                AddSet3(a.xEdgePosition, c.xEdgePosition);
                 break;
             case 12:
                 AddQuad(a.yEdgePosition, c.position, d.position, b.yEdgePosition);
+                AddSet3(b.yEdgePosition, a.yEdgePosition);
                 break;
             case 15:
                 AddQuad(a.position, c.position, d.position, b.position);
@@ -247,6 +267,17 @@ public class VoxelGrid : MonoBehaviour
                 break;
         }
     }
+
+    private void AddSet1(PolygonPoint a, PolygonPoint b, CornerType type = CornerType.Diamond)
+    {
+        AddLineSegment(a, b);
+    }
+
+    private void AddSet3(PolygonPoint a, PolygonPoint b, CornerType type = CornerType.Diamond)
+    {
+        AddLineSegment(a, b);
+    }
+
 
     private void AddTriangle(Vector3 a, Vector3 b, Vector3 c)
     {
@@ -315,4 +346,186 @@ public class VoxelGrid : MonoBehaviour
         triangles.Add(vertexIndex + 5);
         triangles.Add(vertexIndex + 4);
     }
+
+    #region Polygon Stuff
+    Dictionary<Point2D, List<PolygonPoint>> PolygonSegmentsByEnd = new Dictionary<Point2D, List<PolygonPoint>>();
+    Dictionary<Point2D, List<PolygonPoint>> PolygonSegmentsByStart = new Dictionary<Point2D, List<PolygonPoint>>();
+    PolygonSet CompletedPolygons = new PolygonSet();
+
+    void AddLineSegment(params PolygonPoint[] values)
+    {
+        AddLineSegment(new List<PolygonPoint>(values));
+    }
+
+    void AddLineSegment(List<PolygonPoint> segment)
+    {
+        if (segment.Count < 2)
+            return; //can't add a single point.
+
+        //if both the start and end match, then we're bridging two together.
+        if (PolygonSegmentsByEnd.ContainsKey(segment[0]) && PolygonSegmentsByStart.ContainsKey(segment[segment.Count - 1]))
+        {
+            //get the segment that this one completes.
+            var startSegment = PolygonSegmentsByEnd[segment[0]];
+            var endSegment = PolygonSegmentsByStart[segment[segment.Count - 1]];
+            //remove both from both collections.
+            PolygonSegmentsByEnd.Remove(segment[0]);
+            PolygonSegmentsByStart.Remove(segment[segment.Count - 1]);
+
+            if (startSegment == endSegment) // We're completing a closed polygon.
+            {
+                //remove the shared point between both
+                startSegment.RemoveAt(startSegment.Count - 1);
+                //join them together
+                startSegment.AddRange(segment);
+                //remove one of the now same two points that are at either ends.
+                startSegment.RemoveAt(startSegment.Count - 1);
+                Polygon newPoly = new Polygon(startSegment);
+                Polygon potentialHole = null;
+                foreach (var item in CompletedPolygons.Polygons)
+                {
+                    if (TryInsertHole(item, newPoly))
+                        return;
+                    else if (newPoly.IsPointInside(item[0]))
+                    {
+                        potentialHole = item;
+                    }
+                }
+                if (potentialHole != null)
+                {
+                    CompletedPolygons.Remove(potentialHole);
+                    newPoly.AddHole(potentialHole);
+                }
+                CompletedPolygons.Add(newPoly);
+            }
+            else
+            {
+                //remove the shared point between both
+                startSegment.RemoveAt(startSegment.Count - 1);
+                //join them together
+                startSegment.AddRange(segment);
+                //remove one of the now same two points that are at either ends.
+                startSegment.RemoveAt(startSegment.Count - 1);
+                //join them together
+                startSegment.AddRange(endSegment);
+
+                PolygonSegmentsByEnd[startSegment[startSegment.Count - 1]] = startSegment;
+                PolygonSegmentsByStart[startSegment[0]] = startSegment;
+            }
+        }
+        //If we have a segment who's end matches our beginning, we join them.
+        else if(PolygonSegmentsByEnd.ContainsKey(segment[0]))
+        {
+            //get the segment we need to join to
+            var oldSegment = PolygonSegmentsByEnd[segment[0]];
+
+            //Remove the old segment from that list.
+            //It will need a new address.
+            PolygonSegmentsByEnd.Remove(segment[0]);
+
+            //remove the last point from the old segment,
+            //because it's the same as the first point from the new one.
+            oldSegment.RemoveAt(oldSegment.Count - 1);
+
+            //now join them together.
+            oldSegment.AddRange(segment);
+
+            //finally add the newly joined segment to the list of ends.
+            PolygonSegmentsByEnd[oldSegment[oldSegment.Count - 1]] = oldSegment;
+
+            //The other list doesn't need changeing because we keep the start point.
+        }
+        //likewise, if we have a segment who's beginning matches our end.
+        else if(PolygonSegmentsByStart.ContainsKey(segment[segment.Count - 1]))
+        {
+            var oldSegment = PolygonSegmentsByStart[segment[segment.Count - 1]];
+            PolygonSegmentsByStart.Remove(segment[segment.Count - 1]);
+            segment.RemoveAt(segment.Count - 1);
+            oldSegment.InsertRange(0, segment);
+            PolygonSegmentsByStart[oldSegment[0]] = oldSegment;
+        }
+        //finally, if there's no existing connection, just add it to both lists.
+        else
+        {
+            PolygonSegmentsByStart[segment[0]] = segment;
+            PolygonSegmentsByEnd[segment[segment.Count - 1]] = segment;
+        }
+    }
+
+    bool TryInsertHole(Polygon parent, Polygon hole)
+    {
+        //Can't go in.
+        if (!parent.IsPointInside(hole[0]))
+            return false;
+
+        if(parent.Holes != null)
+            foreach (var item in parent.Holes)
+            {
+                if(TryInsertHole(item, hole))
+                    return true;
+            }
+        //it doesn't fit into any of the daughter holes.
+        parent.AddHole(hole);
+        return true;
+    }
+
+    private void OnDrawGizmos()
+    {
+        foreach (var item in PolygonSegmentsByEnd)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(item.Key), 0.3f);
+            Gizmos.color = Color.green;
+            DrawPolygonSegment(item.Value);
+        }
+        foreach (var item in PolygonSegmentsByStart)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(item.Key), 0.3f);
+        }
+        Gizmos.color = Color.blue;
+        foreach (var item in CompletedPolygons.Polygons)
+        {
+            DrawPolygon(item);
+        }
+    }
+
+    private void DrawPolygon(Polygon poly)
+    {
+        DrawPolygonSegment(poly.Points, true);
+        if(poly.Holes != null)
+        {
+            foreach (var item in poly.Holes)
+            {
+                DrawPolygon(item);
+            }
+        }
+    }
+
+    private void DrawPolygonSegment(IList<TriangulationPoint> segment, bool closed = false)
+    {
+        for (int i = 0; i < segment.Count - 1; i++)
+        {
+            if (i > 0)
+                Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(segment[i]), 0.2f);
+            Gizmos.DrawLine(transform.localToWorldMatrix.MultiplyPoint(segment[i]), transform.localToWorldMatrix.MultiplyPoint(segment[i + 1]));
+        }
+        if(closed)
+            Gizmos.DrawLine(transform.localToWorldMatrix.MultiplyPoint(segment[segment.Count-1]), transform.localToWorldMatrix.MultiplyPoint(segment[0]));
+    }
+
+
+    private void DrawPolygonSegment(IList<PolygonPoint> segment, bool closed = false)
+    {
+        for (int i = 0; i < segment.Count - 1; i++)
+        {
+            if (i > 0)
+                Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(segment[i]), 0.2f);
+            Gizmos.DrawLine(transform.localToWorldMatrix.MultiplyPoint(segment[i]), transform.localToWorldMatrix.MultiplyPoint(segment[i + 1]));
+        }
+        if (closed)
+            Gizmos.DrawLine(transform.localToWorldMatrix.MultiplyPoint(segment[segment.Count - 1]), transform.localToWorldMatrix.MultiplyPoint(segment[0]));
+    }
+
+    #endregion
 }
