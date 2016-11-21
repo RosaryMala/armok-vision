@@ -176,8 +176,8 @@ public class VoxelGrid : MonoBehaviour
 
     private void TriangulateCell(Voxel a, Voxel b, Voxel c, Voxel d)
     {
-        CornerType cornerType = CornerType.Square;
-        bool saddleCrossing = true;
+        CornerType cornerType = CornerType.Rounded;
+        bool saddleCrossing = false;
         int cellType = 0;
         if (a.state)
         {
@@ -253,6 +253,7 @@ public class VoxelGrid : MonoBehaviour
                 break;
 
             case 6:
+                AddSaddle(a.xEdgePosition, b.yEdgePosition, c.xEdgePosition, a.yEdgePosition, saddleCrossing);
                 if (saddleCrossing)
                 {
                     AddHexagon(b.position, a.xEdgePosition, a.yEdgePosition, c.position, c.xEdgePosition, b.yEdgePosition);
@@ -265,6 +266,7 @@ public class VoxelGrid : MonoBehaviour
 
                 break;
             case 9:
+                AddSaddle(a.yEdgePosition, a.xEdgePosition, b.yEdgePosition, c.xEdgePosition, saddleCrossing);
                 if (saddleCrossing)
                 {
                     AddHexagon(a.position, a.yEdgePosition, c.xEdgePosition, d.position, b.yEdgePosition, a.xEdgePosition);
@@ -288,7 +290,12 @@ public class VoxelGrid : MonoBehaviour
                 AddLineSegment(start, center, end);
                 return;
             case CornerType.Rounded:
-                break;
+                AddLineSegment(
+                    start,
+                    new PolygonPoint((start.X + center.X) / 2, (start.Y + center.Y) / 2),
+                    new PolygonPoint((end.X + center.X) / 2, (end.Y + center.Y) / 2),
+                    end);
+                return;
             default:
                 break;
         }
@@ -298,6 +305,21 @@ public class VoxelGrid : MonoBehaviour
     private void AddStraight(PolygonPoint a, PolygonPoint b, CornerType type = CornerType.Diamond)
     {
         AddLineSegment(a, b);
+    }
+
+
+    private void AddSaddle(PolygonPoint a, PolygonPoint b, PolygonPoint c, PolygonPoint d, bool crossing = true, CornerType type = CornerType.Diamond)
+    {
+        if(crossing)
+        {
+            AddLineSegment(a, d);
+            AddLineSegment(c, b);
+        }
+        else
+        {
+            AddLineSegment(a, b);
+            AddLineSegment(c, d);
+        }
     }
 
 
