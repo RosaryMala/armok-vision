@@ -6,13 +6,13 @@ public class VoxelStencilCircle : VoxelStencil
 
     private int sqrRadius;
 
-    public override void Initialize(bool fillType, int radius)
+    public override void Initialize(Voxel.State fillType, int radius)
     {
         base.Initialize(fillType, radius);
         sqrRadius = radius * radius;
     }
 
-    public override bool Apply(int x, int y, bool voxel)
+    public override Voxel.State Apply(int x, int y, Voxel.State voxel)
     {
         x -= centerX;
         y -= centerY;

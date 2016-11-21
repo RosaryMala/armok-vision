@@ -4,8 +4,14 @@ using System;
 [Serializable]
 public class Voxel
 {
+    public enum State
+    {
+        Empty,
+        Filled,
+        Intruded
+    }
 
-    public bool state;
+    public State state;
 
     public Vector3 position, xEdgePosition, yEdgePosition, cornerPosition;
 
