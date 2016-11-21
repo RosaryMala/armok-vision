@@ -95,7 +95,7 @@ public class VoxelMap : MonoBehaviour
         }
 
         VoxelStencil activeStencil = stencils[stencilIndex];
-        activeStencil.Initialize(fillTypeIndex == 0, radiusIndex);
+        activeStencil.Initialize((Voxel.State)fillTypeIndex, radiusIndex);
 
         int voxelYOffset = yEnd * voxelResolution;
         for (int y = yEnd; y >= yStart; y--)
@@ -112,7 +112,7 @@ public class VoxelMap : MonoBehaviour
         }
     }
 
-    private static string[] fillTypeNames = { "Filled", "Empty" };
+    private static string[] fillTypeNames = { "Empty", "Filled", "Intruded" };
 
     private static string[] radiusNames = { "0", "1", "2", "3", "4", "5" };
 
@@ -134,6 +134,13 @@ public class VoxelMap : MonoBehaviour
         radiusIndex = GUILayout.SelectionGrid(radiusIndex, radiusNames, 6);
         GUILayout.Label("Stencil");
         stencilIndex = GUILayout.SelectionGrid(stencilIndex, stencilNames, 2);
+        if(GUILayout.Button("Invert"))
+        {
+            foreach (var item in chunks)
+            {
+                item.Invert();
+            }
+        }
         GUILayout.EndArea();
     }
 }

@@ -91,7 +91,21 @@ public class VoxelGrid : MonoBehaviour
     {
         for (int i = 0; i < voxels.Length; i++)
         {
-            voxelMaterials[i].color = voxels[i].state ? Color.black : Color.white;
+            switch (voxels[i].state)
+            {
+                case Voxel.State.Empty:
+                    voxelMaterials[i].color = Color.white;
+                    break;
+                case Voxel.State.Filled:
+                    voxelMaterials[i].color = Color.black;
+                    break;
+                case Voxel.State.Intruded:
+                    voxelMaterials[i].color = Color.red;
+                    break;
+                default:
+                    voxelMaterials[i].color = Color.white;
+                    break;
+            }
         }
     }
 
@@ -153,6 +167,27 @@ public class VoxelGrid : MonoBehaviour
         TriangulateCell(voxels[i], dummyT, voxels[i + resolution], dummyX);
     }
 
+    internal void Invert()
+    {
+        for (int i = 0; i < voxels.Length; i++)
+        {
+            switch (voxels[i].state)
+            {
+                case Voxel.State.Empty:
+                    voxels[i].state = Voxel.State.Filled;
+                    break;
+                case Voxel.State.Filled:
+                    voxels[i].state = Voxel.State.Empty;
+                    break;
+                case Voxel.State.Intruded:
+                    break;
+                default:
+                    break;
+            }
+        }
+        Refresh();
+    }
+
     private void TriangulateGapRow()
     {
         dummyY.BecomeYDummyOf(yNeighbor.voxels[0], gridSize);
@@ -174,24 +209,34 @@ public class VoxelGrid : MonoBehaviour
         }
     }
 
-    private void TriangulateCell(Voxel a, Voxel b, Voxel c, Voxel d)
+    private void TriangulateCell(Voxel a, Voxel b, Voxel c, Voxel d, bool forceSquare = false)
     {
         CornerType cornerType = CornerType.Rounded;
         bool saddleCrossing = false;
+        if (a.state == Voxel.State.Intruded
+            || b.state == Voxel.State.Intruded
+            || c.state == Voxel.State.Intruded
+            || d.state == Voxel.State.Intruded
+            )
+            forceSquare = true;
+        if (forceSquare)
+            cornerType = CornerType.Square;
+
+
         int cellType = 0;
-        if (a.state)
+        if (a.state == Voxel.State.Filled)
         {
             cellType |= 1;
         }
-        if (b.state)
+        if (b.state == Voxel.State.Filled)
         {
             cellType |= 2;
         }
-        if (c.state)
+        if (c.state == Voxel.State.Filled)
         {
             cellType |= 4;
         }
-        if (d.state)
+        if (d.state == Voxel.State.Filled)
         {
             cellType |= 8;
         }
@@ -201,83 +246,71 @@ public class VoxelGrid : MonoBehaviour
             case 0:
                 return;
             case 1:
-                AddTriangle(a.position, a.yEdgePosition, a.xEdgePosition);
                 AddCorner(a.yEdgePosition, a.xEdgePosition, a.cornerPosition, cornerType);
                 break;
             case 2:
-                AddTriangle(b.position, a.xEdgePosition, b.yEdgePosition);
                 AddCorner(a.xEdgePosition, b.yEdgePosition, a.cornerPosition, cornerType);
                 break;
             case 4:
-                AddTriangle(c.position, c.xEdgePosition, a.yEdgePosition);
                 AddCorner(c.xEdgePosition, a.yEdgePosition, a.cornerPosition, cornerType);
                 break;
             case 8:
-                AddTriangle(d.position, b.yEdgePosition, c.xEdgePosition);
                 AddCorner(b.yEdgePosition, c.xEdgePosition, a.cornerPosition, cornerType);
                 break;
             case 3:
-                AddQuad(a.position, a.yEdgePosition, b.yEdgePosition, b.position);
                 AddStraight(a.yEdgePosition, b.yEdgePosition);
                 break;
             case 5:
-                AddQuad(a.position, c.position, c.xEdgePosition, a.xEdgePosition);
                 AddStraight(c.xEdgePosition, a.xEdgePosition);
                 break;
             case 10:
-                AddQuad(a.xEdgePosition, c.xEdgePosition, d.position, b.position);
                 AddStraight(a.xEdgePosition, c.xEdgePosition);
                 break;
             case 12:
-                AddQuad(a.yEdgePosition, c.position, d.position, b.yEdgePosition);
                 AddStraight(b.yEdgePosition, a.yEdgePosition);
                 break;
             case 15:
-                AddQuad(a.position, c.position, d.position, b.position);
                 break;
             case 7:
-                AddPentagon(a.position, c.position, c.xEdgePosition, b.yEdgePosition, b.position);
                 AddCorner(c.xEdgePosition, b.yEdgePosition, a.cornerPosition, cornerType);
                 break;
             case 11:
-                AddPentagon(b.position, a.position, a.yEdgePosition, c.xEdgePosition, d.position);
                 AddCorner(a.yEdgePosition, c.xEdgePosition, a.cornerPosition, cornerType);
                 break;
             case 13:
-                AddPentagon(c.position, d.position, b.yEdgePosition, a.xEdgePosition, a.position);
                 AddCorner(b.yEdgePosition, a.xEdgePosition, a.cornerPosition, cornerType);
                 break;
             case 14:
-                AddPentagon(d.position, b.position, a.xEdgePosition, a.yEdgePosition, c.position);
                 AddCorner(a.xEdgePosition, a.yEdgePosition, a.cornerPosition, cornerType);
                 break;
 
             case 6:
-                AddSaddle(a.xEdgePosition, b.yEdgePosition, c.xEdgePosition, a.yEdgePosition, saddleCrossing);
-                if (saddleCrossing)
+                if(forceSquare)
                 {
-                    AddHexagon(b.position, a.xEdgePosition, a.yEdgePosition, c.position, c.xEdgePosition, b.yEdgePosition);
+                    AddCorner(a.xEdgePosition, b.yEdgePosition, nudge(a.xEdgePosition, b.yEdgePosition, a.cornerPosition), cornerType);
+                    AddCorner(c.xEdgePosition, a.yEdgePosition, nudge(c.xEdgePosition, a.yEdgePosition, a.cornerPosition), cornerType);
                 }
                 else
-                {
-                    AddTriangle(b.position, a.xEdgePosition, b.yEdgePosition);
-                    AddTriangle(c.position, c.xEdgePosition, a.yEdgePosition);
-                }
-
+                    AddSaddle(a.xEdgePosition, b.yEdgePosition, c.xEdgePosition, a.yEdgePosition, saddleCrossing);
                 break;
             case 9:
-                AddSaddle(a.yEdgePosition, a.xEdgePosition, b.yEdgePosition, c.xEdgePosition, saddleCrossing);
-                if (saddleCrossing)
+                if (forceSquare)
                 {
-                    AddHexagon(a.position, a.yEdgePosition, c.xEdgePosition, d.position, b.yEdgePosition, a.xEdgePosition);
+                    AddCorner(a.yEdgePosition, a.xEdgePosition, nudge(a.yEdgePosition, a.xEdgePosition, a.cornerPosition), cornerType);
+                    AddCorner(b.yEdgePosition, c.xEdgePosition, nudge(b.yEdgePosition, c.xEdgePosition, a.cornerPosition), cornerType);
                 }
                 else
-                {
-                    AddTriangle(a.position, a.yEdgePosition, a.xEdgePosition);
-                    AddTriangle(d.position, b.yEdgePosition, c.xEdgePosition);
-                }
+                    AddSaddle(a.yEdgePosition, a.xEdgePosition, b.yEdgePosition, c.xEdgePosition, saddleCrossing);
                 break;
         }
+    }
+
+    //The triangulator doesn't like points in the same place. This makes things just far enough apart that they work.
+    Vector3 nudge(Vector3 a, Vector3 b, Vector3 center)
+    {
+        Vector3 average = (a + b) / 2;
+        Vector3 direction = center - average;
+        return center - (direction * 0.001f);
     }
 
     private void AddCorner(PolygonPoint start, PolygonPoint end, PolygonPoint center, CornerType type = CornerType.Diamond)
@@ -320,75 +353,6 @@ public class VoxelGrid : MonoBehaviour
             AddLineSegment(a, b);
             AddLineSegment(c, d);
         }
-    }
-
-
-    private void AddTriangle(Vector3 a, Vector3 b, Vector3 c)
-    {
-        int vertexIndex = vertices.Count;
-        vertices.Add(a);
-        vertices.Add(b);
-        vertices.Add(c);
-        triangles.Add(vertexIndex);
-        triangles.Add(vertexIndex + 2);
-        triangles.Add(vertexIndex + 1);
-    }
-
-    private void AddQuad(Vector3 a, Vector3 b, Vector3 c, Vector3 d)
-    {
-        int vertexIndex = vertices.Count;
-        vertices.Add(a);
-        vertices.Add(b);
-        vertices.Add(c);
-        vertices.Add(d);
-        triangles.Add(vertexIndex);
-        triangles.Add(vertexIndex + 2);
-        triangles.Add(vertexIndex + 1);
-        triangles.Add(vertexIndex);
-        triangles.Add(vertexIndex + 3);
-        triangles.Add(vertexIndex + 2);
-    }
-
-    private void AddPentagon(Vector3 a, Vector3 b, Vector3 c, Vector3 d, Vector3 e)
-    {
-        int vertexIndex = vertices.Count;
-        vertices.Add(a);
-        vertices.Add(b);
-        vertices.Add(c);
-        vertices.Add(d);
-        vertices.Add(e);
-        triangles.Add(vertexIndex);
-        triangles.Add(vertexIndex + 2);
-        triangles.Add(vertexIndex + 1);
-        triangles.Add(vertexIndex);
-        triangles.Add(vertexIndex + 3);
-        triangles.Add(vertexIndex + 2);
-        triangles.Add(vertexIndex);
-        triangles.Add(vertexIndex + 4);
-        triangles.Add(vertexIndex + 3);
-    }
-
-    private void AddHexagon(Vector3 a, Vector3 b, Vector3 c, Vector3 d, Vector3 e, Vector3 f)
-    {
-        int vertexIndex = vertices.Count;
-        vertices.Add(a);
-        vertices.Add(b);
-        vertices.Add(c);
-        vertices.Add(d);
-        vertices.Add(e);
-        vertices.Add(f);
-        triangles.Add(vertexIndex);
-        triangles.Add(vertexIndex + 2);
-        triangles.Add(vertexIndex + 1);
-        triangles.Add(vertexIndex);
-        triangles.Add(vertexIndex + 3);
-        triangles.Add(vertexIndex + 2);
-        triangles.Add(vertexIndex);
-        triangles.Add(vertexIndex + 4);
-        triangles.Add(vertexIndex + 3);
-        triangles.Add(vertexIndex);
-        triangles.Add(vertexIndex + 5);
-        triangles.Add(vertexIndex + 4);
     }
 
     #region Polygon Stuff
