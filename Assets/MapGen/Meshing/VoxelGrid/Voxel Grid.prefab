@@ -48,7 +48,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000014249397954}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_MotionVectors: 1
@@ -92,3 +92,6 @@ MonoBehaviour:
   voxelPrefab: {fileID: 1000013829919128, guid: 3109f88211f1ee246a0fa74378552054,
     type: 2}
   resolution: 17
+  xNeighbor: {fileID: 0}
+  yNeighbor: {fileID: 0}
+  xyNeighbor: {fileID: 0}
