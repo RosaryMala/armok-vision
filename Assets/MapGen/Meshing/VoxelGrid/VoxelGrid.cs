@@ -176,6 +176,8 @@ public class VoxelGrid : MonoBehaviour
 
     private void TriangulateCell(Voxel a, Voxel b, Voxel c, Voxel d)
     {
+        CornerType cornerType = CornerType.Square;
+        bool saddleCrossing = true;
         int cellType = 0;
         if (a.state)
         {
@@ -200,55 +202,61 @@ public class VoxelGrid : MonoBehaviour
                 return;
             case 1:
                 AddTriangle(a.position, a.yEdgePosition, a.xEdgePosition);
-                AddSet1(a.yEdgePosition, a.xEdgePosition);
+                AddCorner(a.yEdgePosition, a.xEdgePosition, a.cornerPosition, cornerType);
                 break;
             case 2:
                 AddTriangle(b.position, a.xEdgePosition, b.yEdgePosition);
-                AddSet1(a.xEdgePosition, b.yEdgePosition);
+                AddCorner(a.xEdgePosition, b.yEdgePosition, a.cornerPosition, cornerType);
                 break;
             case 4:
                 AddTriangle(c.position, c.xEdgePosition, a.yEdgePosition);
-                AddSet1(c.xEdgePosition, a.yEdgePosition);
+                AddCorner(c.xEdgePosition, a.yEdgePosition, a.cornerPosition, cornerType);
                 break;
             case 8:
                 AddTriangle(d.position, b.yEdgePosition, c.xEdgePosition);
-                AddSet1(b.yEdgePosition, c.xEdgePosition);
+                AddCorner(b.yEdgePosition, c.xEdgePosition, a.cornerPosition, cornerType);
                 break;
             case 3:
                 AddQuad(a.position, a.yEdgePosition, b.yEdgePosition, b.position);
-                AddSet3(a.yEdgePosition, b.yEdgePosition);
+                AddStraight(a.yEdgePosition, b.yEdgePosition);
                 break;
             case 5:
                 AddQuad(a.position, c.position, c.xEdgePosition, a.xEdgePosition);
-                AddSet3(c.xEdgePosition, a.xEdgePosition);
+                AddStraight(c.xEdgePosition, a.xEdgePosition);
                 break;
             case 10:
                 AddQuad(a.xEdgePosition, c.xEdgePosition, d.position, b.position);
-                AddSet3(a.xEdgePosition, c.xEdgePosition);
+                AddStraight(a.xEdgePosition, c.xEdgePosition);
                 break;
             case 12:
                 AddQuad(a.yEdgePosition, c.position, d.position, b.yEdgePosition);
-                AddSet3(b.yEdgePosition, a.yEdgePosition);
+                AddStraight(b.yEdgePosition, a.yEdgePosition);
                 break;
             case 15:
                 AddQuad(a.position, c.position, d.position, b.position);
                 break;
             case 7:
                 AddPentagon(a.position, c.position, c.xEdgePosition, b.yEdgePosition, b.position);
+                AddCorner(c.xEdgePosition, b.yEdgePosition, a.cornerPosition, cornerType);
                 break;
             case 11:
                 AddPentagon(b.position, a.position, a.yEdgePosition, c.xEdgePosition, d.position);
+                AddCorner(a.yEdgePosition, c.xEdgePosition, a.cornerPosition, cornerType);
                 break;
             case 13:
                 AddPentagon(c.position, d.position, b.yEdgePosition, a.xEdgePosition, a.position);
+                AddCorner(b.yEdgePosition, a.xEdgePosition, a.cornerPosition, cornerType);
                 break;
             case 14:
                 AddPentagon(d.position, b.position, a.xEdgePosition, a.yEdgePosition, c.position);
+                AddCorner(a.xEdgePosition, a.yEdgePosition, a.cornerPosition, cornerType);
                 break;
 
             case 6:
-                if (true)
+                if (saddleCrossing)
+                {
                     AddHexagon(b.position, a.xEdgePosition, a.yEdgePosition, c.position, c.xEdgePosition, b.yEdgePosition);
+                }
                 else
                 {
                     AddTriangle(b.position, a.xEdgePosition, b.yEdgePosition);
@@ -257,8 +265,10 @@ public class VoxelGrid : MonoBehaviour
 
                 break;
             case 9:
-                if (true)
+                if (saddleCrossing)
+                {
                     AddHexagon(a.position, a.yEdgePosition, c.xEdgePosition, d.position, b.yEdgePosition, a.xEdgePosition);
+                }
                 else
                 {
                     AddTriangle(a.position, a.yEdgePosition, a.xEdgePosition);
@@ -268,12 +278,24 @@ public class VoxelGrid : MonoBehaviour
         }
     }
 
-    private void AddSet1(PolygonPoint a, PolygonPoint b, CornerType type = CornerType.Diamond)
+    private void AddCorner(PolygonPoint start, PolygonPoint end, PolygonPoint center, CornerType type = CornerType.Diamond)
     {
-        AddLineSegment(a, b);
+        switch (type)
+        {
+            case CornerType.Diamond:
+                break;
+            case CornerType.Square:
+                AddLineSegment(start, center, end);
+                return;
+            case CornerType.Rounded:
+                break;
+            default:
+                break;
+        }
+        AddLineSegment(start, end);
     }
 
-    private void AddSet3(PolygonPoint a, PolygonPoint b, CornerType type = CornerType.Diamond)
+    private void AddStraight(PolygonPoint a, PolygonPoint b, CornerType type = CornerType.Diamond)
     {
         AddLineSegment(a, b);
     }
@@ -381,6 +403,7 @@ public class VoxelGrid : MonoBehaviour
                 //remove one of the now same two points that are at either ends.
                 startSegment.RemoveAt(startSegment.Count - 1);
                 Polygon newPoly = new Polygon(startSegment);
+                newPoly.Simplify();
                 Polygon potentialHole = null;
                 foreach (var item in CompletedPolygons.Polygons)
                 {
@@ -506,12 +529,15 @@ public class VoxelGrid : MonoBehaviour
     {
         for (int i = 0; i < segment.Count - 1; i++)
         {
-            if (i > 0)
+            if (i > 0 || closed)
                 Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(segment[i]), 0.2f);
             Gizmos.DrawLine(transform.localToWorldMatrix.MultiplyPoint(segment[i]), transform.localToWorldMatrix.MultiplyPoint(segment[i + 1]));
         }
-        if(closed)
-            Gizmos.DrawLine(transform.localToWorldMatrix.MultiplyPoint(segment[segment.Count-1]), transform.localToWorldMatrix.MultiplyPoint(segment[0]));
+        if (closed)
+        {
+            Gizmos.DrawLine(transform.localToWorldMatrix.MultiplyPoint(segment[segment.Count - 1]), transform.localToWorldMatrix.MultiplyPoint(segment[0]));
+            Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(segment[segment.Count - 1]), 0.2f);
+        }
     }
 
 
@@ -519,12 +545,15 @@ public class VoxelGrid : MonoBehaviour
     {
         for (int i = 0; i < segment.Count - 1; i++)
         {
-            if (i > 0)
+            if (i > 0 || closed)
                 Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(segment[i]), 0.2f);
             Gizmos.DrawLine(transform.localToWorldMatrix.MultiplyPoint(segment[i]), transform.localToWorldMatrix.MultiplyPoint(segment[i + 1]));
         }
         if (closed)
+        {
             Gizmos.DrawLine(transform.localToWorldMatrix.MultiplyPoint(segment[segment.Count - 1]), transform.localToWorldMatrix.MultiplyPoint(segment[0]));
+            Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(segment[segment.Count - 1]), 0.2f);
+        }
     }
 
     #endregion
