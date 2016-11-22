@@ -30,6 +30,36 @@ public class VoxelGrid : MonoBehaviour
         Rounded
     }
 
+    CornerType _cornerType = CornerType.Diamond;
+
+    public CornerType cornerType
+    {
+        get
+        {
+            return _cornerType;
+        }
+        set
+        {
+            _cornerType = value;
+            Refresh();
+        }
+    }
+
+    bool _filledGaps = false;
+
+    public bool filledGaps
+    {
+        get
+        {
+            return _filledGaps;
+        }
+        set
+        {
+            _filledGaps = value;
+            Refresh();
+        }
+    }
+
     public void Initialize(int resolution, float size)
     {
         this.resolution = resolution;
@@ -130,10 +160,6 @@ public class VoxelGrid : MonoBehaviour
             dummyX.BecomeXDummyOf(xNeighbor.voxels[0], gridSize);
         }
         TriangulateCellRows();
-        if (yNeighbor != null)
-        {
-            TriangulateGapRow();
-        }
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
     }
@@ -145,26 +171,22 @@ public class VoxelGrid : MonoBehaviour
         {
             for (int x = 0; x < cells; x++, i++)
             {
+                if (x == 0)
+                    TriangulateLeftEdge(voxels[i], voxels[i + resolution]);
+                if (x == cells - 1)
+                    TriangulateRightEdge(voxels[i + 1], voxels[i + resolution + 1]);
+                if (y == 0)
+                    TriangulateTopEdge(voxels[i], voxels[i + 1]);
+                if (y == cells - 1)
+                    TriangulateBottomEdge(voxels[i + resolution], voxels[i + resolution + 1]);
+
                 TriangulateCell(
                     voxels[i],
                     voxels[i + 1],
                     voxels[i + resolution],
                     voxels[i + resolution + 1]);
             }
-            if (xNeighbor != null)
-            {
-                TriangulateGapCell(i);
-            }
         }
-    }
-
-    private void TriangulateGapCell(int i)
-    {
-        Voxel dummySwap = dummyT;
-        dummySwap.BecomeXDummyOf(xNeighbor.voxels[i + 1], gridSize);
-        dummyT = dummyX;
-        dummyX = dummySwap;
-        TriangulateCell(voxels[i], dummyT, voxels[i + resolution], dummyX);
     }
 
     internal void Invert()
@@ -188,30 +210,85 @@ public class VoxelGrid : MonoBehaviour
         Refresh();
     }
 
-    private void TriangulateGapRow()
+    private void TriangulateLeftEdge(Voxel a, Voxel b)
     {
-        dummyY.BecomeYDummyOf(yNeighbor.voxels[0], gridSize);
-        int cells = resolution - 1;
-        int offset = cells * resolution;
-
-        for (int x = 0; x < cells; x++)
+        if(a.state == Voxel.State.Filled)
         {
-            Voxel dummySwap = dummyT;
-            dummySwap.BecomeYDummyOf(yNeighbor.voxels[x + 1], gridSize);
-            dummyT = dummyY;
-            dummyY = dummySwap;
-            TriangulateCell(voxels[x + offset], voxels[x + offset + 1], dummyT, dummyY);
+            if (b.state == Voxel.State.Filled)
+            {
+                AddLineSegment(a.position, b.position);
+            }
+            else
+            {
+                AddLineSegment(a.position, a.yEdgePosition);
+            }
         }
-        if (xNeighbor != null)
+        else if(b.state == Voxel.State.Filled)
         {
-            dummyT.BecomeXYDummyOf(xyNeighbor.voxels[0], gridSize);
-            TriangulateCell(voxels[voxels.Length - 1], dummyX, dummyY, dummyT);
+            AddLineSegment(a.yEdgePosition, b.position);
         }
     }
 
+    private void TriangulateRightEdge(Voxel a, Voxel b)
+    {
+        if (a.state == Voxel.State.Filled)
+        {
+            if (b.state == Voxel.State.Filled)
+            {
+                AddLineSegment(b.position, a.position);
+            }
+            else
+            {
+                AddLineSegment(a.yEdgePosition, a.position);
+            }
+        }
+        else if (b.state == Voxel.State.Filled)
+        {
+            AddLineSegment(b.position, a.yEdgePosition);
+        }
+    }
+
+    private void TriangulateTopEdge(Voxel a, Voxel b)
+    {
+        if (a.state == Voxel.State.Filled)
+        {
+            if (b.state == Voxel.State.Filled)
+            {
+                AddLineSegment(b.position, a.position);
+            }
+            else
+            {
+                AddLineSegment(a.xEdgePosition, a.position);
+            }
+        }
+        else if (b.state == Voxel.State.Filled)
+        {
+            AddLineSegment(b.position, a.xEdgePosition);
+        }
+    }
+
+    private void TriangulateBottomEdge(Voxel a, Voxel b)
+    {
+        if (a.state == Voxel.State.Filled)
+        {
+            if (b.state == Voxel.State.Filled)
+            {
+                AddLineSegment(a.position, b.position);
+            }
+            else
+            {
+                AddLineSegment(a.position, a.xEdgePosition);
+            }
+        }
+        else if (b.state == Voxel.State.Filled)
+        {
+            AddLineSegment(a.xEdgePosition, b.position);
+        }
+    }
+
+
     private void TriangulateCell(Voxel a, Voxel b, Voxel c, Voxel d, bool forceSquare = false)
     {
-        CornerType cornerType = CornerType.Rounded;
         bool saddleCrossing = false;
         if (a.state == Voxel.State.Intruded
             || b.state == Voxel.State.Intruded
@@ -220,7 +297,7 @@ public class VoxelGrid : MonoBehaviour
             )
             forceSquare = true;
         if (forceSquare)
-            cornerType = CornerType.Square;
+            _cornerType = CornerType.Square;
 
 
         int cellType = 0;
@@ -246,16 +323,16 @@ public class VoxelGrid : MonoBehaviour
             case 0:
                 return;
             case 1:
-                AddCorner(a.yEdgePosition, a.xEdgePosition, a.cornerPosition, cornerType);
+                AddCorner(a.yEdgePosition, a.xEdgePosition, a.cornerPosition, _cornerType);
                 break;
             case 2:
-                AddCorner(a.xEdgePosition, b.yEdgePosition, a.cornerPosition, cornerType);
+                AddCorner(a.xEdgePosition, b.yEdgePosition, a.cornerPosition, _cornerType);
                 break;
             case 4:
-                AddCorner(c.xEdgePosition, a.yEdgePosition, a.cornerPosition, cornerType);
+                AddCorner(c.xEdgePosition, a.yEdgePosition, a.cornerPosition, _cornerType);
                 break;
             case 8:
-                AddCorner(b.yEdgePosition, c.xEdgePosition, a.cornerPosition, cornerType);
+                AddCorner(b.yEdgePosition, c.xEdgePosition, a.cornerPosition, _cornerType);
                 break;
             case 3:
                 AddStraight(a.yEdgePosition, b.yEdgePosition);
@@ -272,32 +349,32 @@ public class VoxelGrid : MonoBehaviour
             case 15:
                 break;
             case 7:
-                AddCorner(c.xEdgePosition, b.yEdgePosition, a.cornerPosition, cornerType);
+                AddCorner(c.xEdgePosition, b.yEdgePosition, a.cornerPosition, _cornerType);
                 break;
             case 11:
-                AddCorner(a.yEdgePosition, c.xEdgePosition, a.cornerPosition, cornerType);
+                AddCorner(a.yEdgePosition, c.xEdgePosition, a.cornerPosition, _cornerType);
                 break;
             case 13:
-                AddCorner(b.yEdgePosition, a.xEdgePosition, a.cornerPosition, cornerType);
+                AddCorner(b.yEdgePosition, a.xEdgePosition, a.cornerPosition, _cornerType);
                 break;
             case 14:
-                AddCorner(a.xEdgePosition, a.yEdgePosition, a.cornerPosition, cornerType);
+                AddCorner(a.xEdgePosition, a.yEdgePosition, a.cornerPosition, _cornerType);
                 break;
 
             case 6:
-                if(forceSquare)
+                if(forceSquare || _filledGaps)
                 {
-                    AddCorner(a.xEdgePosition, b.yEdgePosition, nudge(a.xEdgePosition, b.yEdgePosition, a.cornerPosition), cornerType);
-                    AddCorner(c.xEdgePosition, a.yEdgePosition, nudge(c.xEdgePosition, a.yEdgePosition, a.cornerPosition), cornerType);
+                    AddCorner(a.xEdgePosition, b.yEdgePosition, nudge(a.xEdgePosition, b.yEdgePosition, a.cornerPosition), _cornerType);
+                    AddCorner(c.xEdgePosition, a.yEdgePosition, nudge(c.xEdgePosition, a.yEdgePosition, a.cornerPosition), _cornerType);
                 }
                 else
                     AddSaddle(a.xEdgePosition, b.yEdgePosition, c.xEdgePosition, a.yEdgePosition, saddleCrossing);
                 break;
             case 9:
-                if (forceSquare)
+                if (forceSquare || _filledGaps)
                 {
-                    AddCorner(a.yEdgePosition, a.xEdgePosition, nudge(a.yEdgePosition, a.xEdgePosition, a.cornerPosition), cornerType);
-                    AddCorner(b.yEdgePosition, c.xEdgePosition, nudge(b.yEdgePosition, c.xEdgePosition, a.cornerPosition), cornerType);
+                    AddCorner(a.yEdgePosition, a.xEdgePosition, nudge(a.yEdgePosition, a.xEdgePosition, a.cornerPosition), _cornerType);
+                    AddCorner(b.yEdgePosition, c.xEdgePosition, nudge(b.yEdgePosition, c.xEdgePosition, a.cornerPosition), _cornerType);
                 }
                 else
                     AddSaddle(a.yEdgePosition, a.xEdgePosition, b.yEdgePosition, c.xEdgePosition, saddleCrossing);
