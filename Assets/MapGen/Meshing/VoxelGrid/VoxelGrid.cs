@@ -289,6 +289,7 @@ public class VoxelGrid : MonoBehaviour
 
     private void TriangulateCell(Voxel a, Voxel b, Voxel c, Voxel d, bool forceSquare = false)
     {
+        var corner = _cornerType;
         bool saddleCrossing = false;
         if (a.state == Voxel.State.Intruded
             || b.state == Voxel.State.Intruded
@@ -297,7 +298,7 @@ public class VoxelGrid : MonoBehaviour
             )
             forceSquare = true;
         if (forceSquare)
-            _cornerType = CornerType.Square;
+            corner = CornerType.Square;
 
 
         int cellType = 0;
@@ -323,16 +324,16 @@ public class VoxelGrid : MonoBehaviour
             case 0:
                 return;
             case 1:
-                AddCorner(a.yEdgePosition, a.xEdgePosition, a.cornerPosition, _cornerType);
+                AddCorner(a.yEdgePosition, a.xEdgePosition, a.cornerPosition, corner);
                 break;
             case 2:
-                AddCorner(a.xEdgePosition, b.yEdgePosition, a.cornerPosition, _cornerType);
+                AddCorner(a.xEdgePosition, b.yEdgePosition, a.cornerPosition, corner);
                 break;
             case 4:
-                AddCorner(c.xEdgePosition, a.yEdgePosition, a.cornerPosition, _cornerType);
+                AddCorner(c.xEdgePosition, a.yEdgePosition, a.cornerPosition, corner);
                 break;
             case 8:
-                AddCorner(b.yEdgePosition, c.xEdgePosition, a.cornerPosition, _cornerType);
+                AddCorner(b.yEdgePosition, c.xEdgePosition, a.cornerPosition, corner);
                 break;
             case 3:
                 AddStraight(a.yEdgePosition, b.yEdgePosition);
@@ -349,23 +350,23 @@ public class VoxelGrid : MonoBehaviour
             case 15:
                 break;
             case 7:
-                AddCorner(c.xEdgePosition, b.yEdgePosition, a.cornerPosition, _cornerType);
+                AddCorner(c.xEdgePosition, b.yEdgePosition, a.cornerPosition, corner);
                 break;
             case 11:
-                AddCorner(a.yEdgePosition, c.xEdgePosition, a.cornerPosition, _cornerType);
+                AddCorner(a.yEdgePosition, c.xEdgePosition, a.cornerPosition, corner);
                 break;
             case 13:
-                AddCorner(b.yEdgePosition, a.xEdgePosition, a.cornerPosition, _cornerType);
+                AddCorner(b.yEdgePosition, a.xEdgePosition, a.cornerPosition, corner);
                 break;
             case 14:
-                AddCorner(a.xEdgePosition, a.yEdgePosition, a.cornerPosition, _cornerType);
+                AddCorner(a.xEdgePosition, a.yEdgePosition, a.cornerPosition, corner);
                 break;
 
             case 6:
                 if(forceSquare || _filledGaps)
                 {
-                    AddCorner(a.xEdgePosition, b.yEdgePosition, nudge(a.xEdgePosition, b.yEdgePosition, a.cornerPosition), _cornerType);
-                    AddCorner(c.xEdgePosition, a.yEdgePosition, nudge(c.xEdgePosition, a.yEdgePosition, a.cornerPosition), _cornerType);
+                    AddCorner(a.xEdgePosition, b.yEdgePosition, nudge(a.xEdgePosition, b.yEdgePosition, a.cornerPosition), corner);
+                    AddCorner(c.xEdgePosition, a.yEdgePosition, nudge(c.xEdgePosition, a.yEdgePosition, a.cornerPosition), corner);
                 }
                 else
                     AddSaddle(a.xEdgePosition, b.yEdgePosition, c.xEdgePosition, a.yEdgePosition, saddleCrossing);
@@ -373,8 +374,8 @@ public class VoxelGrid : MonoBehaviour
             case 9:
                 if (forceSquare || _filledGaps)
                 {
-                    AddCorner(a.yEdgePosition, a.xEdgePosition, nudge(a.yEdgePosition, a.xEdgePosition, a.cornerPosition), _cornerType);
-                    AddCorner(b.yEdgePosition, c.xEdgePosition, nudge(b.yEdgePosition, c.xEdgePosition, a.cornerPosition), _cornerType);
+                    AddCorner(a.yEdgePosition, a.xEdgePosition, nudge(a.yEdgePosition, a.xEdgePosition, a.cornerPosition), corner);
+                    AddCorner(b.yEdgePosition, c.xEdgePosition, nudge(b.yEdgePosition, c.xEdgePosition, a.cornerPosition), corner);
                 }
                 else
                     AddSaddle(a.yEdgePosition, a.xEdgePosition, b.yEdgePosition, c.xEdgePosition, saddleCrossing);
