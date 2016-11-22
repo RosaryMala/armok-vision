@@ -38,6 +38,7 @@ public class VoxelMap : MonoBehaviour
         chunk.Initialize(voxelResolution, chunkSize);
         chunk.transform.parent = transform;
         chunk.transform.localPosition = new Vector3(x * chunkSize - halfSize, 0, -y * chunkSize + halfSize);
+        chunk.cornerType = (VoxelGrid.CornerType)cornerTypeIndex;
         chunks[i] = chunk;
         if (x > 0)
         {
@@ -118,7 +119,14 @@ public class VoxelMap : MonoBehaviour
 
     private static string[] stencilNames = { "Square", "Circle" };
 
-    private int fillTypeIndex, radiusIndex, stencilIndex;
+    private static string[] cornerType = { "Diamond", "Square", "Rounded" };
+
+    private static string[] gapType = { "Opened", "Normal" };
+
+    private int fillTypeIndex = 1;
+    private int radiusIndex, stencilIndex;
+    private int cornerTypeIndex;
+    private int gapTypeIndex;
 
     private VoxelStencil[] stencils = {
         new VoxelStencil(),
@@ -129,12 +137,33 @@ public class VoxelMap : MonoBehaviour
     {
         GUILayout.BeginArea(new Rect(4f, 4f, 150f, 500f));
         GUILayout.Label("Fill Type");
-        fillTypeIndex = GUILayout.SelectionGrid(fillTypeIndex, fillTypeNames, 2);
+        fillTypeIndex = GUILayout.SelectionGrid(fillTypeIndex, fillTypeNames, 3);
         GUILayout.Label("Radius");
         radiusIndex = GUILayout.SelectionGrid(radiusIndex, radiusNames, 6);
         GUILayout.Label("Stencil");
         stencilIndex = GUILayout.SelectionGrid(stencilIndex, stencilNames, 2);
-        if(GUILayout.Button("Invert"))
+        GUILayout.Label("Corner Type");
+        int corner = GUILayout.SelectionGrid(cornerTypeIndex, cornerType, 3);
+        if(cornerTypeIndex != corner)
+        {
+            cornerTypeIndex = corner;
+            foreach (var item in chunks)
+            {
+                item.cornerType = (VoxelGrid.CornerType)cornerTypeIndex;
+            }
+        }
+        GUILayout.Label("Diagonal Gaps");
+        int gap = GUILayout.SelectionGrid(gapTypeIndex, gapType, 2);
+        if(gapTypeIndex != gap)
+        {
+            gapTypeIndex = gap;
+            foreach (var item in chunks)
+            {
+                item.filledGaps = gapTypeIndex == 1;
+            }
+
+        }
+        if (GUILayout.Button("Invert"))
         {
             foreach (var item in chunks)
             {
