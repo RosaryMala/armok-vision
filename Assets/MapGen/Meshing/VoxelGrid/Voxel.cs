@@ -12,6 +12,7 @@ public class Voxel
     }
 
     public State state;
+    public bool edge;
 
     public Vector3 position, xEdgePosition, yEdgePosition, cornerPosition;
 
