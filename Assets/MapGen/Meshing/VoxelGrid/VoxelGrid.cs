@@ -49,13 +49,22 @@ public class VoxelGrid : MonoBehaviour
 
     public bool filledGaps
     {
-        get
-        {
-            return _filledGaps;
-        }
+        get { return _filledGaps; }
         set
         {
             _filledGaps = value;
+            Refresh();
+        }
+    }
+
+    bool _saddleCrossing = false;
+
+    public bool saddleCrossing
+    {
+        get { return _saddleCrossing; }
+        set
+        {
+            _saddleCrossing = value;
             Refresh();
         }
     }
@@ -304,11 +313,34 @@ public class VoxelGrid : MonoBehaviour
         All = NorthWest | NorthEast | SouthWest | SouthEast
     }
 
+    Directions RotateCW(Directions dir)
+    {
+        Directions output = Directions.None;
+        if ((dir & Directions.NorthWest) == Directions.NorthWest)
+            output |= Directions.NorthEast;
+        if ((dir & Directions.NorthEast) == Directions.NorthEast)
+            output |= Directions.SouthEast;
+        if ((dir & Directions.SouthEast) == Directions.SouthEast)
+            output |= Directions.SouthWest;
+        if ((dir & Directions.SouthWest) == Directions.SouthWest)
+            output |= Directions.NorthWest;
+        return output;
+    }
+
+    Directions Rotate180(Directions dir)
+    {
+        return RotateCW(RotateCW(dir));
+    }
+
+    Directions RotateCCW(Directions dir)
+    {
+        return RotateCW(RotateCW(RotateCW(dir)));
+    }
+
 
     private void TriangulateCell(Voxel northWest, Voxel northEast, Voxel southWest, Voxel southEast)
     {
         var corner = _cornerType;
-        bool saddleCrossing = false;
         bool intruded = false;
         if (northWest.state == Voxel.State.Intruded
             || northEast.state == Voxel.State.Intruded
@@ -362,20 +394,75 @@ public class VoxelGrid : MonoBehaviour
             case 0:
                 return;
             case Directions.NorthWest:
-                if ((cellType &  edges) != cellType)
-                    AddCorner(northWest.southEdge, northWest.eastEdge, northWest.cornerPosition, corner);
+            case Directions.North:
+            case Directions.North | Directions.SouthWest:
+            case Directions.NorthWest | Directions.SouthEast:
+            case Directions.All:
+                AddRotatedCell(
+                    northWest.position, northWest.eastEdge,
+                    northEast.position, northEast.southEdge,
+                    southEast.position, southWest.eastEdge,
+                    southWest.position, northWest.southEdge,
+                    northWest.cornerPosition,
+                    cellType, edges, corner, intruded, _saddleCrossing);
                 break;
             case Directions.NorthEast:
-                if ((cellType & edges) != cellType)
-                    AddCorner(northWest.eastEdge, northEast.southEdge, northWest.cornerPosition, corner);
-                break;
-            case Directions.SouthWest:
-                if ((cellType & edges) != cellType)
-                    AddCorner(southWest.eastEdge, northWest.southEdge, northWest.cornerPosition, corner);
+            case Directions.East:
+            case Directions.North | Directions.SouthEast:
+            case Directions.NorthEast | Directions.SouthWest:
+                AddRotatedCell(
+                    northEast.position, northEast.southEdge,
+                    southEast.position, southWest.eastEdge,
+                    southWest.position, northWest.southEdge,
+                    northWest.position, northWest.eastEdge,
+                    northWest.cornerPosition,
+                    RotateCCW(cellType), RotateCCW(edges), corner, intruded, _saddleCrossing);
                 break;
             case Directions.SouthEast:
-                if ((cellType & edges) != cellType)
-                    AddCorner(northEast.southEdge, southWest.eastEdge, northWest.cornerPosition, corner);
+            case Directions.South:
+            case Directions.NorthEast | Directions.South:
+                AddRotatedCell(
+                    southEast.position, southWest.eastEdge,
+                    southWest.position, northWest.southEdge,
+                    northWest.position, northWest.eastEdge,
+                    northEast.position, northEast.southEdge,
+                    northWest.cornerPosition,
+                    Rotate180(cellType), Rotate180(edges), corner, intruded, _saddleCrossing);
+                break;
+            case Directions.SouthWest:
+            case Directions.West:
+            case Directions.West | Directions.SouthEast:
+                AddRotatedCell(
+                    southWest.position, northWest.southEdge,
+                    northWest.position, northWest.eastEdge,
+                    northEast.position, northEast.southEdge,
+                    southEast.position, southWest.eastEdge,
+                    northWest.cornerPosition,
+                    RotateCW(cellType), RotateCW(edges), corner, intruded, _saddleCrossing);
+                break;
+        }
+    }
+
+    private void AddRotatedCell(
+        Vector3 northWest,
+        Vector3 north,
+        Vector3 northEast,
+        Vector3 east,
+        Vector3 southEast,
+        Vector3 south,
+        Vector3 southWest,
+        Vector3 west,
+        Vector3 center,
+        Directions neighbors,
+        Directions edges,
+        CornerType corner,
+        bool intruded, bool saddleCrossing)
+    {
+        switch (neighbors)
+        {
+            case Directions.NorthWest:
+                if ((neighbors & edges) != neighbors)
+                    AddCorner(west, north, center, corner);
                 break;
             case Directions.North:
                 switch (edges)
@@ -386,105 +473,14 @@ public class VoxelGrid : MonoBehaviour
                         break;
                     case Directions.East:
                     case Directions.NorthEast | Directions.South:
-                        AddCorner(northWest.southEdge, northWest.eastEdge, northWest.cornerPosition, CornerType.Square);
+                        AddCorner(west, north, center, CornerType.Square);
                         break;
                     case Directions.West:
                     case Directions.West | Directions.SouthEast:
-                        AddCorner(northWest.eastEdge, northEast.southEdge, northWest.cornerPosition, CornerType.Square);
+                        AddCorner(north, east, center, CornerType.Square);
                         break;
                     default:
-                        AddStraight(northWest.southEdge, northEast.southEdge);
-                        break;
-                }
-                break;
-            case Directions.West:
-                switch (edges)
-                {
-                    case Directions.West:
-                    case Directions.North | Directions.SouthWest:
-                    case Directions.West | Directions.SouthEast:
-                        break;
-                    case Directions.South:
-                    case Directions.NorthEast | Directions.South:
-                        AddCorner(northWest.southEdge, northWest.eastEdge, northWest.cornerPosition, CornerType.Square);
-                        break;
-                    case Directions.North:
-                    case Directions.North | Directions.SouthEast:
-                        AddCorner(southWest.eastEdge, northWest.southEdge, northWest.cornerPosition, CornerType.Square);
-                        break;
-                    default:
-                        AddStraight(southWest.eastEdge, northWest.eastEdge);
-                        break;
-                }
-                break;
-            case Directions.East:
-                switch (edges)
-                {
-                    case Directions.East:
-                    case Directions.North | Directions.SouthEast:
-                    case Directions.NorthEast | Directions.South:
-                        break;
-                    case Directions.North:
-                    case Directions.North | Directions.SouthWest:
-                        AddCorner(northEast.southEdge, southWest.eastEdge, northWest.cornerPosition, CornerType.Square);
-                        break;
-                    case Directions.South:
-                    case Directions.West | Directions.SouthEast:
-                        AddCorner(northWest.eastEdge, northEast.southEdge, northWest.cornerPosition, CornerType.Square);
-                        break;
-                    default:
-                        AddStraight(northWest.eastEdge, southWest.eastEdge);
-                        break;
-                }
-                break;
-            case Directions.South:
-                switch (edges)
-                {
-                    case Directions.South:
-                    case Directions.West | Directions.SouthEast:
-                    case Directions.NorthEast | Directions.South:
-                        break;
-                    case Directions.East:
-                    case Directions.North | Directions.SouthEast:
-                        AddCorner(southWest.eastEdge, northWest.southEdge, northWest.cornerPosition, CornerType.Square);
-                        break;
-                    case Directions.West:
-                    case Directions.North | Directions.SouthWest:
-                        AddCorner(northEast.southEdge, southWest.eastEdge, northWest.cornerPosition, CornerType.Square);
-                        break;
-                    default:
-                        AddStraight(northEast.southEdge, northWest.southEdge);
-                        break;
-                }
-                break;
-            case Directions.All:
-                switch (edges)
-                {
-                    case Directions.North | Directions.SouthWest:
-                        AddCorner(northEast.southEdge, southWest.eastEdge, northWest.cornerPosition, CornerType.Square);
-                        break;
-                    case Directions.North | Directions.SouthEast:
-                        AddCorner(southWest.eastEdge, northWest.southEdge, northWest.cornerPosition, CornerType.Square);
-                        break;
-                    case Directions.West | Directions.SouthEast:
-                        AddCorner(northWest.eastEdge, northEast.southEdge, northWest.cornerPosition, CornerType.Square);
-                        break;
-                    case Directions.NorthEast | Directions.South:
-                        AddCorner(northWest.southEdge, northWest.eastEdge, northWest.cornerPosition, CornerType.Square);
-                        break;
-                    case Directions.North:
-                        AddStraight(northEast.southEdge, northWest.southEdge);
-                        break;
-                    case Directions.West:
-                        AddStraight(northWest.eastEdge, southWest.eastEdge);
-                        break;
-                    case Directions.East:
-                        AddStraight(southWest.eastEdge, northWest.eastEdge);
-                        break;
-                    case Directions.South:
-                        AddStraight(northWest.southEdge, northEast.southEdge);
-                        break;
-                    default:
+                        AddStraight(west, east);
                         break;
                 }
                 break;
@@ -492,172 +488,120 @@ public class VoxelGrid : MonoBehaviour
                 switch (edges)
                 {
                     case Directions.East:
-                        AddStraight(southWest.eastEdge, northWest.eastEdge);
+                        AddStraight(south, north);
                         break;
                     case Directions.South:
-                        AddStraight(northWest.southEdge, northEast.southEdge);
+                        AddStraight(west, east);
                         break;
                     case Directions.North:
-                        AddStraight(northEast.southEdge, northWest.southEdge);
-                        AddCorner(southWest.eastEdge, northEast.southEdge, northWest.cornerPosition, corner);
+                        AddStraight(east, west);
+                        AddCorner(south, east, center, corner);
                         break;
                     case Directions.West:
-                        AddStraight(northWest.eastEdge, southWest.eastEdge);
-                        AddCorner(southWest.eastEdge, northEast.southEdge, northWest.cornerPosition, corner);
+                        AddStraight(north, south);
+                        AddCorner(south, east, center, corner);
                         break;
                     case Directions.North | Directions.SouthWest:
                         if (corner != CornerType.Square)
                         {
-                            AddCorner(southWest.eastEdge, northEast.southEdge, northWest.cornerPosition, corner);
-                            AddCorner(northEast.southEdge, southWest.eastEdge, northWest.cornerPosition, CornerType.Square);
+                            AddCorner(south, east, center, corner);
+                            AddCorner(east, south, center, CornerType.Square);
                         }
                         break;
                     case Directions.North | Directions.SouthEast:
-                        AddCorner(southWest.eastEdge, northWest.southEdge, northWest.cornerPosition, CornerType.Square);
+                        AddCorner(south, west, center, CornerType.Square);
                         break;
                     case Directions.NorthEast | Directions.South:
-                        AddCorner(northWest.southEdge, northWest.eastEdge, northWest.cornerPosition, CornerType.Square);
+                        AddCorner(west, north, center, CornerType.Square);
                         break;
                     case Directions.NorthWest | Directions.South:
-                        AddCorner(northWest.eastEdge, northEast.southEdge, northWest.cornerPosition, CornerType.Square);
+                        AddCorner(north, east, center, CornerType.Square);
                         break;
                     default:
-                        AddCorner(southWest.eastEdge, northEast.southEdge, northWest.cornerPosition, corner);
+                        AddCorner(south, east, center, corner);
                         break;
                 }
-                break;
-            case Directions.North | Directions.SouthEast:
-                switch (edges)
-                {
-                    case Directions.West:
-                        AddStraight(northWest.eastEdge, southWest.eastEdge);
-                        break;
-                    case Directions.South:
-                        AddStraight(northWest.southEdge, northEast.southEdge);
-                        break;
-                    case Directions.North:
-                        AddStraight(northEast.southEdge, northWest.southEdge);
-                        AddCorner(northWest.southEdge, southWest.eastEdge, northWest.cornerPosition, corner);
-                        break;
-                    case Directions.East:
-                        AddStraight(southWest.eastEdge, northWest.eastEdge);
-                        AddCorner(northWest.southEdge, southWest.eastEdge, northWest.cornerPosition, corner);
-                        break;
-                    case Directions.North | Directions.SouthWest:
-                        AddCorner(northEast.southEdge, southWest.eastEdge, northWest.cornerPosition, CornerType.Square);
-                        break;
-                    case Directions.North | Directions.SouthEast:
-                        if (corner != CornerType.Square)
-                        {
-                            AddCorner(northWest.southEdge, southWest.eastEdge, northWest.cornerPosition, corner);
-                            AddCorner(southWest.eastEdge, northWest.southEdge, northWest.cornerPosition, CornerType.Square);
-                        }
-                        break;
-                    case Directions.West | Directions.SouthEast:
-                        AddCorner(northWest.eastEdge, northEast.southEdge, northWest.cornerPosition, CornerType.Square);
-                        break;
-                    case Directions.NorthEast | Directions.South:
-                        AddCorner(northWest.southEdge, northWest.eastEdge, northWest.cornerPosition, CornerType.Square);
-                        break;
-                    default:
-                        AddCorner(northWest.southEdge, southWest.eastEdge, northWest.cornerPosition, corner);
-                        break;
-                }
-                break;
-            case Directions.West | Directions.SouthEast:
-                switch (edges)
-                {
-                    case Directions.North:
-                        AddStraight(northEast.southEdge, northWest.southEdge);
-                        break;
-                    case Directions.South:
-                        AddCorner(northEast.southEdge, northWest.eastEdge, northWest.cornerPosition, corner);
-                        AddStraight(northWest.southEdge, northEast.southEdge);
-                        break;
-                    case Directions.East:
-                        AddStraight(southWest.eastEdge, northWest.eastEdge);
-                        break;
-                    case Directions.West:
-                        AddStraight(northWest.eastEdge, southWest.eastEdge);
-                        AddCorner(northEast.southEdge, northWest.eastEdge, northWest.cornerPosition, corner);
-                        break;
-                    case Directions.North | Directions.SouthWest:
-                        AddCorner(northEast.southEdge, southWest.eastEdge, northWest.cornerPosition, CornerType.Square);
-                        break;
-                    case Directions.North | Directions.SouthEast:
-                        AddCorner(southWest.eastEdge, northWest.southEdge, northWest.cornerPosition, CornerType.Square);
-                        break;
-                    case Directions.NorthWest | Directions.South:
-                        if(corner != CornerType.Square)
-                        {
-                            AddCorner(northEast.southEdge, northWest.eastEdge, northWest.cornerPosition, corner);
-                            AddCorner(northWest.eastEdge, northEast.southEdge, northWest.cornerPosition, CornerType.Square);
-                        }
-                        break;
-                    case Directions.NorthEast | Directions.South:
-                        AddCorner(northWest.southEdge, northWest.eastEdge, northWest.cornerPosition, CornerType.Square);
-                        break;
-                    default:
-                        AddCorner(northEast.southEdge, northWest.eastEdge, northWest.cornerPosition, corner);
-                        break;
-                }
-                break;
-            case Directions.NorthEast | Directions.South:
-                switch (edges)
-                {
-                    case Directions.North:
-                        AddStraight(northEast.southEdge, northWest.southEdge);
-                        break;
-                    case Directions.South:
-                        AddCorner(northWest.eastEdge, northWest.southEdge, northWest.cornerPosition, corner);
-                        AddStraight(northWest.southEdge, northEast.southEdge);
-                        break;
-                    case Directions.East:
-                        AddCorner(northWest.eastEdge, northWest.southEdge, northWest.cornerPosition, corner);
-                        AddStraight(southWest.eastEdge, northWest.eastEdge);
-                        break;
-                    case Directions.West:
-                        AddStraight(northWest.eastEdge, southWest.eastEdge);
-                        break;
-                    case Directions.North | Directions.SouthWest:
-                        AddCorner(northEast.southEdge, southWest.eastEdge, northWest.cornerPosition, CornerType.Square);
-                        break;
-                    case Directions.North | Directions.SouthEast:
-                        AddCorner(southWest.eastEdge, northWest.southEdge, northWest.cornerPosition, CornerType.Square);
-                        break;
-                    case Directions.NorthWest | Directions.South:
-                        AddCorner(northWest.eastEdge, northEast.southEdge, northWest.cornerPosition, CornerType.Square);
-                        break;
-                    case Directions.NorthEast | Directions.South:
-                        if (corner != CornerType.Square)
-                        {
-                            AddCorner(northWest.eastEdge, northWest.southEdge, northWest.cornerPosition, corner);
-                            AddCorner(northWest.southEdge, northWest.eastEdge, northWest.cornerPosition, CornerType.Square);
-                        }
-                        break;
-                    default:
-                        AddCorner(northWest.eastEdge, northWest.southEdge, northWest.cornerPosition, corner);
-                        break;
-                }
-                break;
-
-            case Directions.NorthEast | Directions.SouthWest:
-                if(intruded || _filledGaps)
-                {
-                    AddCorner(northWest.eastEdge, northEast.southEdge, nudge(northWest.eastEdge, northEast.southEdge, northWest.cornerPosition), corner);
-                    AddCorner(southWest.eastEdge, northWest.southEdge, nudge(southWest.eastEdge, northWest.southEdge, northWest.cornerPosition), corner);
-                }
-                else
-                    AddSaddle(northWest.eastEdge, northEast.southEdge, southWest.eastEdge, northWest.southEdge, saddleCrossing);
                 break;
             case Directions.NorthWest | Directions.SouthEast:
-                if (intruded || _filledGaps)
+                switch (edges)
                 {
-                    AddCorner(northWest.southEdge, northWest.eastEdge, nudge(northWest.southEdge, northWest.eastEdge, northWest.cornerPosition), corner);
-                    AddCorner(northEast.southEdge, southWest.eastEdge, nudge(northEast.southEdge, southWest.eastEdge, northWest.cornerPosition), corner);
+                    case Directions.North:
+                        if (intruded || filledGaps)
+                        {
+                            AddCorner(east, south, corner == CornerType.Square ? nudge(north, east, center) : center, corner);
+                        }
+                        else
+                            AddLineSegment(east, south);
+                        break;
+                    case Directions.South:
+                        if (intruded || filledGaps)
+                        {
+                            AddCorner(west, north, corner == CornerType.Square ? nudge(north, east, center) : center, corner);
+                        }
+                        else
+                            AddLineSegment(west, north);
+                        break;
+                    case Directions.East:
+                        if (intruded || filledGaps)
+                        {
+                            AddCorner(west, north, corner == CornerType.Square ? nudge(north, east, center) : center, corner);
+                        }
+                        else
+                            AddLineSegment(west, north);
+                        break;
+                    case Directions.West:
+                        if (intruded || filledGaps)
+                        {
+                            AddCorner(east, south, corner == CornerType.Square ? nudge(north, east, center) : center, corner);
+                        }
+                        else
+                            AddLineSegment(east, south);
+                        break;
+                    case Directions.All:
+                        break;
+                    default:
+                        if (intruded || _filledGaps)
+                        {
+                            AddCorner(west, north, corner == CornerType.Square ? nudge(north, east, center) : center, corner);
+                            AddCorner(east, south, corner == CornerType.Square ? nudge(south, west, center) : center, corner);
+                        }
+                        else
+                            AddSaddle(east, south, west, north, saddleCrossing);
+                        break;
                 }
-                else
-                    AddSaddle(northWest.southEdge, northWest.eastEdge, northEast.southEdge, southWest.eastEdge, saddleCrossing);
+                break;
+            case Directions.All:
+                switch (edges)
+                {
+                    case Directions.North | Directions.SouthWest:
+                        AddCorner(east, south, center, CornerType.Square);
+                        break;
+                    case Directions.North | Directions.SouthEast:
+                        AddCorner(south, west, center, CornerType.Square);
+                        break;
+                    case Directions.West | Directions.SouthEast:
+                        AddCorner(north, east, center, CornerType.Square);
+                        break;
+                    case Directions.NorthEast | Directions.South:
+                        AddCorner(west, north, center, CornerType.Square);
+                        break;
+                    case Directions.North:
+                        AddStraight(east, west);
+                        break;
+                    case Directions.West:
+                        AddStraight(north, south);
+                        break;
+                    case Directions.East:
+                        AddStraight(south, north);
+                        break;
+                    case Directions.South:
+                        AddStraight(west, east);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
                 break;
         }
     }
