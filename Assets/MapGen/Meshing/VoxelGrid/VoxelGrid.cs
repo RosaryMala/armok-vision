@@ -526,47 +526,129 @@ public class VoxelGrid : MonoBehaviour
                 switch (edges)
                 {
                     case Directions.North:
-                        if (intruded || filledGaps)
                         {
-                            AddCorner(east, south, corner == CornerType.Square ? nudge(north, east, center) : center, corner);
+                            var type = corner;
+                            if (!_filledGaps)
+                                type = CornerType.Diamond;
+                            if (saddleCrossing)
+                            {
+                                Vector3 point = type == CornerType.Diamond ? nudge(east, south, west) : west;
+                                AddStraight(east, point);
+                                AddCorner(point, south, center, type);
+                            }
+                            else
+                            {
+                                AddCorner(east, south, center, type);
+                            }
                         }
-                        else
-                            AddLineSegment(east, south);
-                        break;
-                    case Directions.South:
-                        if (intruded || filledGaps)
-                        {
-                            AddCorner(west, north, corner == CornerType.Square ? nudge(north, east, center) : center, corner);
-                        }
-                        else
-                            AddLineSegment(west, north);
                         break;
                     case Directions.East:
-                        if (intruded || filledGaps)
                         {
-                            AddCorner(west, north, corner == CornerType.Square ? nudge(north, east, center) : center, corner);
+                            var type = corner;
+                            if (!_filledGaps)
+                                type = CornerType.Diamond;
+                            if (saddleCrossing)
+                            {
+                                Vector3 point = type == CornerType.Diamond ? nudge(west, north, south) : south;
+                                AddCorner(west, point, center, type);
+                                AddStraight(point, north);
+                            }
+                            else
+                            {
+                                AddCorner(west, north, center, type);
+                            }
                         }
-                        else
-                            AddLineSegment(west, north);
+                        break;
+                    case Directions.South:
+                        {
+                            var type = corner;
+                            if (!_filledGaps)
+                                type = CornerType.Diamond;
+                            if (saddleCrossing)
+                            {
+                                Vector3 point = type == CornerType.Diamond ? nudge(west, north, east) : east;
+                                AddStraight(west, point);
+                                AddCorner(point, north, center, type);
+                            }
+                            else
+                            {
+                                AddCorner(west, north, center, type);
+                            }
+                        }
                         break;
                     case Directions.West:
-                        if (intruded || filledGaps)
                         {
-                            AddCorner(east, south, corner == CornerType.Square ? nudge(north, east, center) : center, corner);
+                            var type = corner;
+                            if (!_filledGaps)
+                                type = CornerType.Diamond;
+                            if (saddleCrossing)
+                            {
+                                Vector3 point = type == CornerType.Diamond ? nudge(east, south, north) : north;
+                                AddCorner(east, point, center, type);
+                                AddStraight(point, south);
+                            }
+                            else
+                            {
+                                AddCorner(east, south, center, type);
+                            }
                         }
-                        else
-                            AddLineSegment(east, south);
                         break;
-                    case Directions.All:
+                    case Directions.North | Directions.SouthWest:
+                        {
+                            var type = corner;
+                            if (!_filledGaps)
+                                type = CornerType.Diamond;
+                            if (saddleCrossing)
+                            {
+                                AddCorner(east, south, center, CornerType.Square);
+                            }
+                            else
+                            {
+                                AddCorner(east, south, center, type);
+                            }
+                        }
+                        break;
+                    case Directions.NorthEast | Directions.South:
+                        {
+                            var type = corner;
+                            if (!_filledGaps)
+                                type = CornerType.Diamond;
+                            if (saddleCrossing)
+                            {
+                                AddCorner(west, north, center, CornerType.Square);
+                            }
+                            else
+                            {
+                                AddCorner(west, north, center, type);
+                            }
+                        }
+                        break;
+                    case Directions.North | Directions.SouthEast:
+                        {
+                            var type = corner;
+                            if (!_filledGaps)
+                                type = CornerType.Diamond;
+                            if (saddleCrossing && type != CornerType.Square)
+                            {
+                                AddCorner(west, south, center, type);
+                                AddCorner(south, west, center, CornerType.Square);
+                            }
+                        }
+                        break;
+                    case Directions.NorthWest | Directions.South:
+                        {
+                            var type = corner;
+                            if (!_filledGaps)
+                                type = CornerType.Diamond;
+                            if (saddleCrossing && type != CornerType.Square)
+                            {
+                                AddCorner(east, north, center, type);
+                                AddCorner(north, east, center, CornerType.Square);
+                            }
+                        }
                         break;
                     default:
-                        if (intruded || _filledGaps)
-                        {
-                            AddCorner(west, north, corner == CornerType.Square ? nudge(north, east, center) : center, corner);
-                            AddCorner(east, south, corner == CornerType.Square ? nudge(south, west, center) : center, corner);
-                        }
-                        else
-                            AddSaddle(east, south, west, north, saddleCrossing);
+                        AddSaddle(north, east, south, west, center, saddleCrossing, corner);
                         break;
                 }
                 break;
@@ -642,17 +724,19 @@ public class VoxelGrid : MonoBehaviour
     }
 
 
-    private void AddSaddle(PolygonPoint a, PolygonPoint b, PolygonPoint c, PolygonPoint d, bool crossing = true, CornerType type = CornerType.Diamond)
+    private void AddSaddle(PolygonPoint north, PolygonPoint east, PolygonPoint south, PolygonPoint west, Vector3 center, bool saddleCrossing = true, CornerType type = CornerType.Diamond)
     {
-        if(crossing)
+        if (!_filledGaps)
+            type = CornerType.Diamond;
+        if(saddleCrossing)
         {
-            AddLineSegment(a, d);
-            AddLineSegment(c, b);
+            AddCorner(east, north, type == CornerType.Square ? nudge(east, north, center) : center, type);
+            AddCorner(west, south, type == CornerType.Square ? nudge(west, south, center) : center, type);
         }
         else
         {
-            AddLineSegment(a, b);
-            AddLineSegment(c, d);
+            AddCorner(east, south, type == CornerType.Square ? nudge(east, south, center) : center, type);
+            AddCorner(west, north, type == CornerType.Square ? nudge(west, north, center) : center, type);
         }
     }
 
