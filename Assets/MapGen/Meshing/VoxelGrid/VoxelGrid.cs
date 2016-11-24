@@ -9,6 +9,7 @@ public class VoxelGrid : MonoBehaviour
     private Mesh mesh;
 
     private List<Vector3> vertices;
+    private List<Vector2> uvs;
     private List<int> triangles;
 
     public GameObject voxelPrefab;
@@ -94,6 +95,7 @@ public class VoxelGrid : MonoBehaviour
         mesh.name = "VoxelGrid Mesh";
         vertices = new List<Vector3>();
         triangles = new List<int>();
+        uvs = new List<Vector2>();
         Refresh();
     }
 
@@ -160,6 +162,7 @@ public class VoxelGrid : MonoBehaviour
         vertices.Clear();
         triangles.Clear();
         mesh.Clear();
+        uvs.Clear();
 
         PolygonSegmentsByEnd.Clear();
         PolygonSegmentsByStart.Clear();
@@ -170,8 +173,12 @@ public class VoxelGrid : MonoBehaviour
             dummyX.BecomeXDummyOf(xNeighbor.voxels[0], gridSize);
         }
         TriangulateCellRows();
+        CompletedPolygons = DeNestHoles(CompletedPolygons);
+        ConvertToMesh(CompletedPolygons);
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
+        mesh.uv = uvs.ToArray();
+        mesh.RecalculateNormals();
     }
 
     private void TriangulateCellRows()
@@ -219,6 +226,8 @@ public class VoxelGrid : MonoBehaviour
         }
         Refresh();
     }
+
+    #region Triangulation Functions
 
     private void TriangulateLeftEdge(Voxel a, Voxel b)
     {
@@ -295,6 +304,8 @@ public class VoxelGrid : MonoBehaviour
             AddLineSegment(a.eastEdge, b.position);
         }
     }
+
+    #endregion
 
     [Flags]
     enum Directions
@@ -775,22 +786,7 @@ public class VoxelGrid : MonoBehaviour
                 startSegment.RemoveAt(startSegment.Count - 1);
                 Polygon newPoly = new Polygon(startSegment);
                 newPoly.Simplify();
-                Polygon potentialHole = null;
-                foreach (var item in CompletedPolygons.Polygons)
-                {
-                    if (TryInsertHole(item, newPoly))
-                        return;
-                    else if (newPoly.IsPointInside(item[0]))
-                    {
-                        potentialHole = item;
-                    }
-                }
-                if (potentialHole != null)
-                {
-                    CompletedPolygons.Remove(potentialHole);
-                    newPoly.AddHole(potentialHole);
-                }
-                CompletedPolygons.Add(newPoly);
+                InsertIntoSet(CompletedPolygons, newPoly);
             }
             else
             {
@@ -846,7 +842,25 @@ public class VoxelGrid : MonoBehaviour
         }
     }
 
-    bool TryInsertHole(Polygon parent, Polygon hole)
+    static void InsertIntoSet(PolygonSet set, Polygon poly)
+    {
+        //first test to see if any of the existing polygons are inside our input.
+        for (int i = set.Polygons.Count - 1; i >= 0; i--)
+        {
+            if (TryInsertHole(poly, set.Polygons[i]))
+                set.Polygons.RemoveAt(i); //we go from the end, so the indices remain valid.
+        }
+        foreach (var item in set.Polygons)
+        {
+            if (TryInsertHole(item, poly))
+            {
+                return; //nothing more to do.
+            }
+        }
+        set.Add(poly);
+    }
+
+    static bool TryInsertHole(Polygon parent, Polygon hole)
     {
         //Can't go in.
         if (!parent.IsPointInside(hole[0]))
@@ -862,6 +876,37 @@ public class VoxelGrid : MonoBehaviour
         parent.AddHole(hole);
         return true;
     }
+
+    static PolygonSet DeNestHoles(PolygonSet set)
+    {
+        PolygonSet output = new PolygonSet();
+        foreach (var polygon in set.Polygons)
+        {
+            output.Polygons.AddRange(DeNestHoles(polygon));
+        }
+        return output;
+    }
+
+    static List<Polygon> DeNestHoles(Polygon poly)
+    {
+        List<Polygon> output = new List<Polygon>();
+        output.Add(poly);
+        if (poly.Holes != null)
+            foreach (var hole in poly.Holes)
+            {
+                if(hole.Holes != null)
+                {
+                    for (int i = hole.Holes.Count - 1; i >= 0; i--)
+                    {
+                        output.AddRange(DeNestHoles(hole.Holes[i]));
+                        hole.Holes.RemoveAt(i);
+                    }
+                }
+            }
+        return output;
+    }
+
+    #region Debug GUI
 
     private void OnDrawGizmos()
     {
@@ -928,4 +973,35 @@ public class VoxelGrid : MonoBehaviour
     }
 
     #endregion
+
+    #endregion
+
+    Dictionary<TriangulationPoint, int> pointIndices = new Dictionary<TriangulationPoint, int>();
+
+    void ConvertToMesh(PolygonSet polySet)
+    {
+        pointIndices.Clear();
+        P2T.Triangulate(polySet);
+        foreach (var polygon in polySet.Polygons)
+        {
+            foreach (var triangle in polygon.Triangles)
+            {
+                for(int i = 2; i >= 0; i--)
+                {
+                    var point = triangle.Points[i];
+                    int index;
+                    if (!pointIndices.ContainsKey(point))
+                    {
+                        index = vertices.Count;
+                        pointIndices[point] = index;
+                        vertices.Add(point);
+                        uvs.Add(new Vector2(point.Xf / GameMap.tileWidth, -point.Yf / GameMap.tileWidth));
+                    }
+                    else
+                        index = pointIndices[point];
+                    triangles.Add(index);
+                }
+            }
+        }
+    }
 }

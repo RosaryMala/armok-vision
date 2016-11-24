@@ -60,6 +60,6 @@ namespace Poly2Tri
             _polygons.Remove(p);
         }
 
-        public IEnumerable<Polygon> Polygons { get { return _polygons; } }
+        public List<Polygon> Polygons { get { return _polygons; } }
     }
 }
