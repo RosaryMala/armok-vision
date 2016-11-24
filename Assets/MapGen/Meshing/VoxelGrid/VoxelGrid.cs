@@ -103,7 +103,7 @@ public class VoxelGrid : MonoBehaviour
     {
         GameObject o = Instantiate(voxelPrefab) as GameObject;
         o.transform.parent = transform;
-        o.transform.localPosition = new Vector3((x + 0.5f) * voxelSize, 0.01f, (y + 0.5f) * -voxelSize);
+        o.transform.localPosition = new Vector3((x + 0.5f) * voxelSize, GameMap.tileHeight + 0.01f, (y + 0.5f) * -voxelSize);
         o.transform.localScale = Vector3.one * voxelSize * 0.1f;
         voxelMaterials[i] = o.GetComponent<MeshRenderer>().material;
         voxels[i] = new Voxel(x, y, voxelSize);
@@ -168,6 +168,7 @@ public class VoxelGrid : MonoBehaviour
         uvs.Clear();
 
         wallPolygons.Clear();
+        floorPolygons.Clear();
 
         if (xNeighbor != null)
         {
@@ -175,7 +176,8 @@ public class VoxelGrid : MonoBehaviour
         }
         TriangulateCellRows();
 
-        ConvertToMesh(wallPolygons.Polygons);
+        ConvertToMesh(wallPolygons.Polygons, GameMap.tileHeight);
+        ConvertToMesh(floorPolygons.Polygons, GameMap.floorHeight);
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
         mesh.uv = uvs.ToArray();
@@ -416,7 +418,13 @@ public class VoxelGrid : MonoBehaviour
         {
             case Directions.NorthWest:
                 if ((neighbors & edges) != neighbors)
-                    AddCorner(wallPolygons, west, north, center, corner);
+                {
+                    if(neighbors == walls)
+                        AddCorner(wallPolygons, west, north, center, corner);
+                    else
+                        AddCorner(floorPolygons, west, north, center, corner);
+
+                }
                 break;
             case Directions.North:
                 switch (edges)
@@ -427,14 +435,38 @@ public class VoxelGrid : MonoBehaviour
                         break;
                     case Directions.East:
                     case Directions.NorthEast | Directions.South:
-                        AddCorner(wallPolygons, west, north, center, CornerType.Square);
+                        if((walls & Directions.NorthWest) == Directions.NorthWest)
+                            AddCorner(wallPolygons, west, north, center, CornerType.Square);
+                        else
+                            AddCorner(floorPolygons, west, north, center, CornerType.Square);
                         break;
                     case Directions.West:
                     case Directions.West | Directions.SouthEast:
-                        AddCorner(wallPolygons, north, east, center, CornerType.Square);
+                        if((walls & Directions.NorthEast) == Directions.NorthEast)
+                            AddCorner(wallPolygons, north, east, center, CornerType.Square);
+                        else
+                            AddCorner(floorPolygons, north, east, center, CornerType.Square);
                         break;
                     default:
-                        AddStraight(wallPolygons, west, east);
+                        switch (walls)
+                        {
+                            case Directions.North:
+                                AddStraight(wallPolygons, west, east);
+                                break;
+                            case Directions.NorthWest:
+                                AddStraight(floorPolygons, west, east);
+                                AddCorner(floorPolygons, north, west, center, corner);
+                                AddCorner(wallPolygons, west, north, center, corner);
+                                break;
+                            case Directions.NorthEast:
+                                AddStraight(floorPolygons, west, east);
+                                AddCorner(floorPolygons, east, north, center, corner);
+                                AddCorner(wallPolygons, north, east, center, corner);
+                                break;
+                            default:
+                                AddStraight(floorPolygons, west, east);
+                                break;
+                        }
                         break;
                 }
                 break;
@@ -695,14 +727,16 @@ public class VoxelGrid : MonoBehaviour
     }
 
     ComplexPoly wallPolygons = new ComplexPoly();
+    ComplexPoly floorPolygons = new ComplexPoly();
 
     private void OnDrawGizmos()
     {
         wallPolygons.DrawGizmos(transform, Color.green, Color.blue);
+        floorPolygons.DrawGizmos(transform, Color.magenta, Color.yellow);
     }
 
 
-    void ConvertToMesh(PolygonSet polySet)
+    void ConvertToMesh(PolygonSet polySet, float height)
     {
         Dictionary<TriangulationPoint, int> pointIndices = new Dictionary<TriangulationPoint, int>();
         P2T.Triangulate(polySet);
@@ -718,7 +752,7 @@ public class VoxelGrid : MonoBehaviour
                     {
                         index = vertices.Count;
                         pointIndices[point] = index;
-                        vertices.Add(point);
+                        vertices.Add(new Vector3(point.Xf, height, point.Yf));
                         uvs.Add(new Vector2(point.Xf / GameMap.tileWidth, -point.Yf / GameMap.tileWidth));
                     }
                     else
