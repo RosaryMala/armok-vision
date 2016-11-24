@@ -113,7 +113,7 @@ public class VoxelMap : MonoBehaviour
         }
     }
 
-    private static string[] fillTypeNames = { "Empty", "Filled", "Intruded" };
+    private static string[] fillTypeNames = { "Empty", "Floor", "Wall", "Intruded" };
 
     private static string[] radiusNames = { "0", "1", "2", "3", "4", "5" };
 
@@ -125,7 +125,7 @@ public class VoxelMap : MonoBehaviour
 
     private static string[] crossingType = { "Open ", "Closed" };
 
-    private int fillTypeIndex = 1;
+    private int fillTypeIndex = 2;
     private int radiusIndex, stencilIndex;
     private int cornerTypeIndex;
     private int gapTypeIndex;
@@ -140,7 +140,7 @@ public class VoxelMap : MonoBehaviour
     {
         GUILayout.BeginArea(new Rect(4f, 4f, 150f, 500f));
         GUILayout.Label("Fill Type");
-        fillTypeIndex = GUILayout.SelectionGrid(fillTypeIndex, fillTypeNames, 3);
+        fillTypeIndex = GUILayout.SelectionGrid(fillTypeIndex, fillTypeNames, 4);
         GUILayout.Label("Radius");
         radiusIndex = GUILayout.SelectionGrid(radiusIndex, radiusNames, 6);
         GUILayout.Label("Stencil");
