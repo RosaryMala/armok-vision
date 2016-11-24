@@ -391,7 +391,7 @@ public class VoxelGrid : MonoBehaviour
 
         switch (cellType)
         {
-            case 0:
+            case Directions.None:
                 return;
             case Directions.NorthWest:
             case Directions.North:
