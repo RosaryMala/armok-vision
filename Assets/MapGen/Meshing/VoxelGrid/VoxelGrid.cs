@@ -138,8 +138,11 @@ public class VoxelGrid : MonoBehaviour
                 case Voxel.State.Empty:
                     voxelMaterials[i].color = Color.white;
                     break;
-                case Voxel.State.Filled:
-                    voxelMaterials[i].color = Color.black;
+                case Voxel.State.Wall:
+                    voxelMaterials[i].color = Color.blue;
+                    break;
+                case Voxel.State.Floor:
+                    voxelMaterials[i].color = Color.yellow;
                     break;
                 case Voxel.State.Intruded:
                     voxelMaterials[i].color = Color.red;
@@ -164,17 +167,15 @@ public class VoxelGrid : MonoBehaviour
         mesh.Clear();
         uvs.Clear();
 
-        PolygonSegmentsByEnd.Clear();
-        PolygonSegmentsByStart.Clear();
-        CompletedPolygons = new PolygonSet();
+        wallPolygons.Clear();
 
         if (xNeighbor != null)
         {
             dummyX.BecomeXDummyOf(xNeighbor.voxels[0], gridSize);
         }
         TriangulateCellRows();
-        CompletedPolygons = DeNestHoles(CompletedPolygons);
-        ConvertToMesh(CompletedPolygons);
+
+        ConvertToMesh(wallPolygons.Polygons);
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
         mesh.uv = uvs.ToArray();
@@ -213,9 +214,9 @@ public class VoxelGrid : MonoBehaviour
             switch (voxels[i].state)
             {
                 case Voxel.State.Empty:
-                    voxels[i].state = Voxel.State.Filled;
+                    voxels[i].state = Voxel.State.Wall;
                     break;
-                case Voxel.State.Filled:
+                case Voxel.State.Wall:
                     voxels[i].state = Voxel.State.Empty;
                     break;
                 case Voxel.State.Intruded:
@@ -226,86 +227,6 @@ public class VoxelGrid : MonoBehaviour
         }
         Refresh();
     }
-
-    #region Triangulation Functions
-
-    private void TriangulateLeftEdge(Voxel a, Voxel b)
-    {
-        if(a.state == Voxel.State.Filled)
-        {
-            if (b.state == Voxel.State.Filled)
-            {
-                AddLineSegment(a.position, b.position);
-            }
-            else
-            {
-                AddLineSegment(a.position, a.southEdge);
-            }
-        }
-        else if(b.state == Voxel.State.Filled)
-        {
-            AddLineSegment(a.southEdge, b.position);
-        }
-    }
-
-    private void TriangulateRightEdge(Voxel a, Voxel b)
-    {
-        if (a.state == Voxel.State.Filled)
-        {
-            if (b.state == Voxel.State.Filled)
-            {
-                AddLineSegment(b.position, a.position);
-            }
-            else
-            {
-                AddLineSegment(a.southEdge, a.position);
-            }
-        }
-        else if (b.state == Voxel.State.Filled)
-        {
-            AddLineSegment(b.position, a.southEdge);
-        }
-    }
-
-    private void TriangulateTopEdge(Voxel a, Voxel b)
-    {
-        if (a.state == Voxel.State.Filled)
-        {
-            if (b.state == Voxel.State.Filled)
-            {
-                AddLineSegment(b.position, a.position);
-            }
-            else
-            {
-                AddLineSegment(a.eastEdge, a.position);
-            }
-        }
-        else if (b.state == Voxel.State.Filled)
-        {
-            AddLineSegment(b.position, a.eastEdge);
-        }
-    }
-
-    private void TriangulateBottomEdge(Voxel a, Voxel b)
-    {
-        if (a.state == Voxel.State.Filled)
-        {
-            if (b.state == Voxel.State.Filled)
-            {
-                AddLineSegment(a.position, b.position);
-            }
-            else
-            {
-                AddLineSegment(a.position, a.eastEdge);
-            }
-        }
-        else if (b.state == Voxel.State.Filled)
-        {
-            AddLineSegment(a.eastEdge, b.position);
-        }
-    }
-
-    #endregion
 
     [Flags]
     enum Directions
@@ -349,7 +270,7 @@ public class VoxelGrid : MonoBehaviour
     }
 
 
-    private void TriangulateCell(Voxel northWest, Voxel northEast, Voxel southWest, Voxel southEast)
+    private void TriangulateCell(Voxel northWest, Voxel northEast, Voxel southWest, Voxel southEast, Voxel.State state = Voxel.State.Wall)
     {
         var corner = _cornerType;
         bool intruded = false;
@@ -363,23 +284,44 @@ public class VoxelGrid : MonoBehaviour
             corner = CornerType.Square;
 
 
-        Directions cellType = Directions.None;
-        if (northWest.state == Voxel.State.Filled)
+
+        Directions walls = Directions.None;
+        if (northWest.state == Voxel.State.Wall)
         {
-            cellType |= Directions.NorthWest;
+            walls |= Directions.NorthWest;
         }
-        if (northEast.state == Voxel.State.Filled)
+        if (northEast.state == Voxel.State.Wall)
         {
-            cellType |= Directions.NorthEast;
+            walls |= Directions.NorthEast;
         }
-        if (southWest.state == Voxel.State.Filled)
+        if (southWest.state == Voxel.State.Wall)
         {
-            cellType |= Directions.SouthWest;
+            walls |= Directions.SouthWest;
         }
-        if (southEast.state == Voxel.State.Filled)
+        if (southEast.state == Voxel.State.Wall)
         {
-            cellType |= Directions.SouthEast;
+            walls |= Directions.SouthEast;
         }
+
+        Directions wallFloors = walls;
+        if (northWest.state == Voxel.State.Floor)
+        {
+            wallFloors |= Directions.NorthWest;
+        }
+        if (northEast.state == Voxel.State.Floor)
+        {
+            wallFloors |= Directions.NorthEast;
+        }
+        if (southWest.state == Voxel.State.Floor)
+        {
+            wallFloors |= Directions.SouthWest;
+        }
+        if (southEast.state == Voxel.State.Floor)
+        {
+            wallFloors |= Directions.SouthEast;
+        }
+
+
 
         Directions edges = Directions.None;
         if (northWest.edge)
@@ -400,7 +342,7 @@ public class VoxelGrid : MonoBehaviour
         }
 
 
-        switch (cellType)
+        switch (wallFloors)
         {
             case Directions.None:
                 return;
@@ -410,62 +352,63 @@ public class VoxelGrid : MonoBehaviour
             case Directions.NorthWest | Directions.SouthEast:
             case Directions.All:
                 AddRotatedCell(
-                    northWest.position, northWest.eastEdge,
-                    northEast.position, northEast.southEdge,
-                    southEast.position, southWest.eastEdge,
-                    southWest.position, northWest.southEdge,
+                    northWest, northWest.eastEdge,
+                    northEast, northEast.southEdge,
+                    southEast, southWest.eastEdge,
+                    southWest, northWest.southEdge,
                     northWest.cornerPosition,
-                    cellType, edges, corner, intruded, _saddleCrossing);
+                    wallFloors, edges, walls, corner, intruded, _saddleCrossing);
                 break;
             case Directions.NorthEast:
             case Directions.East:
             case Directions.North | Directions.SouthEast:
             case Directions.NorthEast | Directions.SouthWest:
                 AddRotatedCell(
-                    northEast.position, northEast.southEdge,
-                    southEast.position, southWest.eastEdge,
-                    southWest.position, northWest.southEdge,
-                    northWest.position, northWest.eastEdge,
+                    northEast, northEast.southEdge,
+                    southEast, southWest.eastEdge,
+                    southWest, northWest.southEdge,
+                    northWest, northWest.eastEdge,
                     northWest.cornerPosition,
-                    RotateCCW(cellType), RotateCCW(edges), corner, intruded, _saddleCrossing);
+                    RotateCCW(wallFloors), RotateCCW(edges), RotateCCW(walls), corner, intruded, _saddleCrossing);
                 break;
             case Directions.SouthEast:
             case Directions.South:
             case Directions.NorthEast | Directions.South:
                 AddRotatedCell(
-                    southEast.position, southWest.eastEdge,
-                    southWest.position, northWest.southEdge,
-                    northWest.position, northWest.eastEdge,
-                    northEast.position, northEast.southEdge,
+                    southEast, southWest.eastEdge,
+                    southWest, northWest.southEdge,
+                    northWest, northWest.eastEdge,
+                    northEast, northEast.southEdge,
                     northWest.cornerPosition,
-                    Rotate180(cellType), Rotate180(edges), corner, intruded, _saddleCrossing);
+                    Rotate180(wallFloors), Rotate180(edges), Rotate180(walls), corner, intruded, _saddleCrossing);
                 break;
             case Directions.SouthWest:
             case Directions.West:
             case Directions.West | Directions.SouthEast:
                 AddRotatedCell(
-                    southWest.position, northWest.southEdge,
-                    northWest.position, northWest.eastEdge,
-                    northEast.position, northEast.southEdge,
-                    southEast.position, southWest.eastEdge,
+                    southWest, northWest.southEdge,
+                    northWest, northWest.eastEdge,
+                    northEast, northEast.southEdge,
+                    southEast, southWest.eastEdge,
                     northWest.cornerPosition,
-                    RotateCW(cellType), RotateCW(edges), corner, intruded, _saddleCrossing);
+                    RotateCW(wallFloors), RotateCW(edges), RotateCW(walls), corner, intruded, _saddleCrossing);
                 break;
         }
     }
 
     private void AddRotatedCell(
-        Vector3 northWest,
+        Voxel northWest,
         Vector3 north,
-        Vector3 northEast,
+        Voxel northEast,
         Vector3 east,
-        Vector3 southEast,
+        Voxel southEast,
         Vector3 south,
-        Vector3 southWest,
+        Voxel southWest,
         Vector3 west,
         Vector3 center,
         Directions neighbors,
         Directions edges,
+        Directions walls,
         CornerType corner,
         bool intruded, bool saddleCrossing)
     {
@@ -473,7 +416,7 @@ public class VoxelGrid : MonoBehaviour
         {
             case Directions.NorthWest:
                 if ((neighbors & edges) != neighbors)
-                    AddCorner(west, north, center, corner);
+                    AddCorner(wallPolygons, west, north, center, corner);
                 break;
             case Directions.North:
                 switch (edges)
@@ -484,14 +427,14 @@ public class VoxelGrid : MonoBehaviour
                         break;
                     case Directions.East:
                     case Directions.NorthEast | Directions.South:
-                        AddCorner(west, north, center, CornerType.Square);
+                        AddCorner(wallPolygons, west, north, center, CornerType.Square);
                         break;
                     case Directions.West:
                     case Directions.West | Directions.SouthEast:
-                        AddCorner(north, east, center, CornerType.Square);
+                        AddCorner(wallPolygons, north, east, center, CornerType.Square);
                         break;
                     default:
-                        AddStraight(west, east);
+                        AddStraight(wallPolygons, west, east);
                         break;
                 }
                 break;
@@ -499,37 +442,37 @@ public class VoxelGrid : MonoBehaviour
                 switch (edges)
                 {
                     case Directions.East:
-                        AddStraight(south, north);
+                        AddStraight(wallPolygons, south, north);
                         break;
                     case Directions.South:
-                        AddStraight(west, east);
+                        AddStraight(wallPolygons, west, east);
                         break;
                     case Directions.North:
-                        AddStraight(east, west);
-                        AddCorner(south, east, center, corner);
+                        AddStraight(wallPolygons, east, west);
+                        AddCorner(wallPolygons, south, east, center, corner);
                         break;
                     case Directions.West:
-                        AddStraight(north, south);
-                        AddCorner(south, east, center, corner);
+                        AddStraight(wallPolygons, north, south);
+                        AddCorner(wallPolygons, south, east, center, corner);
                         break;
                     case Directions.North | Directions.SouthWest:
                         if (corner != CornerType.Square)
                         {
-                            AddCorner(south, east, center, corner);
-                            AddCorner(east, south, center, CornerType.Square);
+                            AddCorner(wallPolygons, south, east, center, corner);
+                            AddCorner(wallPolygons, east, south, center, CornerType.Square);
                         }
                         break;
                     case Directions.North | Directions.SouthEast:
-                        AddCorner(south, west, center, CornerType.Square);
+                        AddCorner(wallPolygons, south, west, center, CornerType.Square);
                         break;
                     case Directions.NorthEast | Directions.South:
-                        AddCorner(west, north, center, CornerType.Square);
+                        AddCorner(wallPolygons, west, north, center, CornerType.Square);
                         break;
                     case Directions.NorthWest | Directions.South:
-                        AddCorner(north, east, center, CornerType.Square);
+                        AddCorner(wallPolygons, north, east, center, CornerType.Square);
                         break;
                     default:
-                        AddCorner(south, east, center, corner);
+                        AddCorner(wallPolygons, south, east, center, corner);
                         break;
                 }
                 break;
@@ -544,12 +487,12 @@ public class VoxelGrid : MonoBehaviour
                             if (saddleCrossing)
                             {
                                 Vector3 point = type == CornerType.Diamond ? nudge(east, south, west) : west;
-                                AddStraight(east, point);
-                                AddCorner(point, south, center, type);
+                                AddStraight(wallPolygons, east, point);
+                                AddCorner(wallPolygons, point, south, center, type);
                             }
                             else
                             {
-                                AddCorner(east, south, center, type);
+                                AddCorner(wallPolygons, east, south, center, type);
                             }
                         }
                         break;
@@ -561,12 +504,12 @@ public class VoxelGrid : MonoBehaviour
                             if (saddleCrossing)
                             {
                                 Vector3 point = type == CornerType.Diamond ? nudge(west, north, south) : south;
-                                AddCorner(west, point, center, type);
-                                AddStraight(point, north);
+                                AddCorner(wallPolygons, west, point, center, type);
+                                AddStraight(wallPolygons, point, north);
                             }
                             else
                             {
-                                AddCorner(west, north, center, type);
+                                AddCorner(wallPolygons, west, north, center, type);
                             }
                         }
                         break;
@@ -578,12 +521,12 @@ public class VoxelGrid : MonoBehaviour
                             if (saddleCrossing)
                             {
                                 Vector3 point = type == CornerType.Diamond ? nudge(west, north, east) : east;
-                                AddStraight(west, point);
-                                AddCorner(point, north, center, type);
+                                AddStraight(wallPolygons, west, point);
+                                AddCorner(wallPolygons, point, north, center, type);
                             }
                             else
                             {
-                                AddCorner(west, north, center, type);
+                                AddCorner(wallPolygons, west, north, center, type);
                             }
                         }
                         break;
@@ -595,12 +538,12 @@ public class VoxelGrid : MonoBehaviour
                             if (saddleCrossing)
                             {
                                 Vector3 point = type == CornerType.Diamond ? nudge(east, south, north) : north;
-                                AddCorner(east, point, center, type);
-                                AddStraight(point, south);
+                                AddCorner(wallPolygons, east, point, center, type);
+                                AddStraight(wallPolygons, point, south);
                             }
                             else
                             {
-                                AddCorner(east, south, center, type);
+                                AddCorner(wallPolygons, east, south, center, type);
                             }
                         }
                         break;
@@ -611,11 +554,11 @@ public class VoxelGrid : MonoBehaviour
                                 type = CornerType.Diamond;
                             if (saddleCrossing)
                             {
-                                AddCorner(east, south, center, CornerType.Square);
+                                AddCorner(wallPolygons, east, south, center, CornerType.Square);
                             }
                             else
                             {
-                                AddCorner(east, south, center, type);
+                                AddCorner(wallPolygons, east, south, center, type);
                             }
                         }
                         break;
@@ -626,11 +569,11 @@ public class VoxelGrid : MonoBehaviour
                                 type = CornerType.Diamond;
                             if (saddleCrossing)
                             {
-                                AddCorner(west, north, center, CornerType.Square);
+                                AddCorner(wallPolygons, west, north, center, CornerType.Square);
                             }
                             else
                             {
-                                AddCorner(west, north, center, type);
+                                AddCorner(wallPolygons, west, north, center, type);
                             }
                         }
                         break;
@@ -641,8 +584,8 @@ public class VoxelGrid : MonoBehaviour
                                 type = CornerType.Diamond;
                             if (saddleCrossing && type != CornerType.Square)
                             {
-                                AddCorner(west, south, center, type);
-                                AddCorner(south, west, center, CornerType.Square);
+                                AddCorner(wallPolygons, west, south, center, type);
+                                AddCorner(wallPolygons, south, west, center, CornerType.Square);
                             }
                         }
                         break;
@@ -653,13 +596,13 @@ public class VoxelGrid : MonoBehaviour
                                 type = CornerType.Diamond;
                             if (saddleCrossing && type != CornerType.Square)
                             {
-                                AddCorner(east, north, center, type);
-                                AddCorner(north, east, center, CornerType.Square);
+                                AddCorner(wallPolygons, east, north, center, type);
+                                AddCorner(wallPolygons, north, east, center, CornerType.Square);
                             }
                         }
                         break;
                     default:
-                        AddSaddle(north, east, south, west, center, saddleCrossing, corner);
+                        AddSaddle(wallPolygons, north, east, south, west, center, saddleCrossing, corner);
                         break;
                 }
                 break;
@@ -667,28 +610,28 @@ public class VoxelGrid : MonoBehaviour
                 switch (edges)
                 {
                     case Directions.North | Directions.SouthWest:
-                        AddCorner(east, south, center, CornerType.Square);
+                        AddCorner(wallPolygons, east, south, center, CornerType.Square);
                         break;
                     case Directions.North | Directions.SouthEast:
-                        AddCorner(south, west, center, CornerType.Square);
+                        AddCorner(wallPolygons, south, west, center, CornerType.Square);
                         break;
                     case Directions.West | Directions.SouthEast:
-                        AddCorner(north, east, center, CornerType.Square);
+                        AddCorner(wallPolygons, north, east, center, CornerType.Square);
                         break;
                     case Directions.NorthEast | Directions.South:
-                        AddCorner(west, north, center, CornerType.Square);
+                        AddCorner(wallPolygons, west, north, center, CornerType.Square);
                         break;
                     case Directions.North:
-                        AddStraight(east, west);
+                        AddStraight(wallPolygons, east, west);
                         break;
                     case Directions.West:
-                        AddStraight(north, south);
+                        AddStraight(wallPolygons, north, south);
                         break;
                     case Directions.East:
-                        AddStraight(south, north);
+                        AddStraight(wallPolygons, south, north);
                         break;
                     case Directions.South:
-                        AddStraight(west, east);
+                        AddStraight(wallPolygons, west, east);
                         break;
                     default:
                         break;
@@ -707,17 +650,17 @@ public class VoxelGrid : MonoBehaviour
         return center - (direction * 0.001f);
     }
 
-    private void AddCorner(PolygonPoint start, PolygonPoint end, PolygonPoint center, CornerType type = CornerType.Diamond)
+    private void AddCorner(ComplexPoly poly, PolygonPoint start, PolygonPoint end, PolygonPoint center, CornerType type = CornerType.Diamond)
     {
         switch (type)
         {
             case CornerType.Diamond:
                 break;
             case CornerType.Square:
-                AddLineSegment(start, center, end);
+                poly.AddLineSegment(start, center, end);
                 return;
             case CornerType.Rounded:
-                AddLineSegment(
+                poly.AddLineSegment(
                     start,
                     new PolygonPoint((start.X + center.X) / 2, (start.Y + center.Y) / 2),
                     new PolygonPoint((end.X + center.X) / 2, (end.Y + center.Y) / 2),
@@ -726,261 +669,42 @@ public class VoxelGrid : MonoBehaviour
             default:
                 break;
         }
-        AddLineSegment(start, end);
+        poly.AddLineSegment(start, end);
     }
 
-    private void AddStraight(PolygonPoint a, PolygonPoint b)
+    private void AddStraight(ComplexPoly poly, PolygonPoint a, PolygonPoint b)
     {
-        AddLineSegment(a, b);
+        poly.AddLineSegment(a, b);
     }
 
 
-    private void AddSaddle(PolygonPoint north, PolygonPoint east, PolygonPoint south, PolygonPoint west, Vector3 center, bool saddleCrossing = true, CornerType type = CornerType.Diamond)
+    private void AddSaddle(ComplexPoly poly, PolygonPoint north, PolygonPoint east, PolygonPoint south, PolygonPoint west, Vector3 center, bool saddleCrossing = true, CornerType type = CornerType.Diamond)
     {
         if (!_filledGaps)
             type = CornerType.Diamond;
         if(saddleCrossing)
         {
-            AddCorner(east, north, type == CornerType.Square ? nudge(east, north, center) : center, type);
-            AddCorner(west, south, type == CornerType.Square ? nudge(west, south, center) : center, type);
+            AddCorner(poly, east, north, type == CornerType.Square ? nudge(east, north, center) : center, type);
+            AddCorner(poly, west, south, type == CornerType.Square ? nudge(west, south, center) : center, type);
         }
         else
         {
-            AddCorner(east, south, type == CornerType.Square ? nudge(east, south, center) : center, type);
-            AddCorner(west, north, type == CornerType.Square ? nudge(west, north, center) : center, type);
+            AddCorner(poly, east, south, type == CornerType.Square ? nudge(east, south, center) : center, type);
+            AddCorner(poly, west, north, type == CornerType.Square ? nudge(west, north, center) : center, type);
         }
     }
 
-    #region Polygon Stuff
-    Dictionary<Point2D, List<PolygonPoint>> PolygonSegmentsByEnd = new Dictionary<Point2D, List<PolygonPoint>>();
-    Dictionary<Point2D, List<PolygonPoint>> PolygonSegmentsByStart = new Dictionary<Point2D, List<PolygonPoint>>();
-    PolygonSet CompletedPolygons = new PolygonSet();
-
-    void AddLineSegment(params PolygonPoint[] values)
-    {
-        AddLineSegment(new List<PolygonPoint>(values));
-    }
-
-    void AddLineSegment(List<PolygonPoint> segment)
-    {
-        if (segment.Count < 2)
-            return; //can't add a single point.
-
-        //if both the start and end match, then we're bridging two together.
-        if (PolygonSegmentsByEnd.ContainsKey(segment[0]) && PolygonSegmentsByStart.ContainsKey(segment[segment.Count - 1]))
-        {
-            //get the segment that this one completes.
-            var startSegment = PolygonSegmentsByEnd[segment[0]];
-            var endSegment = PolygonSegmentsByStart[segment[segment.Count - 1]];
-            //remove both from both collections.
-            PolygonSegmentsByEnd.Remove(segment[0]);
-            PolygonSegmentsByStart.Remove(segment[segment.Count - 1]);
-
-            if (startSegment == endSegment) // We're completing a closed polygon.
-            {
-                //remove the shared point between both
-                startSegment.RemoveAt(startSegment.Count - 1);
-                //join them together
-                startSegment.AddRange(segment);
-                //remove one of the now same two points that are at either ends.
-                startSegment.RemoveAt(startSegment.Count - 1);
-                Polygon newPoly = new Polygon(startSegment);
-                newPoly.Simplify();
-                InsertIntoSet(CompletedPolygons, newPoly);
-            }
-            else
-            {
-                //remove the shared point between both
-                startSegment.RemoveAt(startSegment.Count - 1);
-                //join them together
-                startSegment.AddRange(segment);
-                //remove one of the now same two points that are at either ends.
-                startSegment.RemoveAt(startSegment.Count - 1);
-                //join them together
-                startSegment.AddRange(endSegment);
-
-                PolygonSegmentsByEnd[startSegment[startSegment.Count - 1]] = startSegment;
-                PolygonSegmentsByStart[startSegment[0]] = startSegment;
-            }
-        }
-        //If we have a segment who's end matches our beginning, we join them.
-        else if(PolygonSegmentsByEnd.ContainsKey(segment[0]))
-        {
-            //get the segment we need to join to
-            var oldSegment = PolygonSegmentsByEnd[segment[0]];
-
-            //Remove the old segment from that list.
-            //It will need a new address.
-            PolygonSegmentsByEnd.Remove(segment[0]);
-
-            //remove the last point from the old segment,
-            //because it's the same as the first point from the new one.
-            oldSegment.RemoveAt(oldSegment.Count - 1);
-
-            //now join them together.
-            oldSegment.AddRange(segment);
-
-            //finally add the newly joined segment to the list of ends.
-            PolygonSegmentsByEnd[oldSegment[oldSegment.Count - 1]] = oldSegment;
-
-            //The other list doesn't need changeing because we keep the start point.
-        }
-        //likewise, if we have a segment who's beginning matches our end.
-        else if(PolygonSegmentsByStart.ContainsKey(segment[segment.Count - 1]))
-        {
-            var oldSegment = PolygonSegmentsByStart[segment[segment.Count - 1]];
-            PolygonSegmentsByStart.Remove(segment[segment.Count - 1]);
-            segment.RemoveAt(segment.Count - 1);
-            oldSegment.InsertRange(0, segment);
-            PolygonSegmentsByStart[oldSegment[0]] = oldSegment;
-        }
-        //finally, if there's no existing connection, just add it to both lists.
-        else
-        {
-            PolygonSegmentsByStart[segment[0]] = segment;
-            PolygonSegmentsByEnd[segment[segment.Count - 1]] = segment;
-        }
-    }
-
-    static void InsertIntoSet(PolygonSet set, Polygon poly)
-    {
-        //first test to see if any of the existing polygons are inside our input.
-        for (int i = set.Polygons.Count - 1; i >= 0; i--)
-        {
-            if (TryInsertHole(poly, set.Polygons[i]))
-                set.Polygons.RemoveAt(i); //we go from the end, so the indices remain valid.
-        }
-        foreach (var item in set.Polygons)
-        {
-            if (TryInsertHole(item, poly))
-            {
-                return; //nothing more to do.
-            }
-        }
-        set.Add(poly);
-    }
-
-    static bool TryInsertHole(Polygon parent, Polygon hole)
-    {
-        //Can't go in.
-        if (!parent.IsPointInside(hole[0]))
-            return false;
-
-        if(parent.Holes != null)
-            foreach (var item in parent.Holes)
-            {
-                if(TryInsertHole(item, hole))
-                    return true;
-            }
-        //it doesn't fit into any of the daughter holes.
-        parent.AddHole(hole);
-        return true;
-    }
-
-    static PolygonSet DeNestHoles(PolygonSet set)
-    {
-        PolygonSet output = new PolygonSet();
-        foreach (var polygon in set.Polygons)
-        {
-            output.Polygons.AddRange(DeNestHoles(polygon));
-        }
-        return output;
-    }
-
-    static List<Polygon> DeNestHoles(Polygon poly)
-    {
-        List<Polygon> output = new List<Polygon>();
-        output.Add(poly);
-        if (poly.Holes != null)
-            foreach (var hole in poly.Holes)
-            {
-                if(hole.Holes != null)
-                {
-                    for (int i = hole.Holes.Count - 1; i >= 0; i--)
-                    {
-                        output.AddRange(DeNestHoles(hole.Holes[i]));
-                        hole.Holes.RemoveAt(i);
-                    }
-                }
-            }
-        return output;
-    }
-
-    #region Debug GUI
+    ComplexPoly wallPolygons = new ComplexPoly();
 
     private void OnDrawGizmos()
     {
-        foreach (var item in PolygonSegmentsByEnd)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(item.Key), 0.3f);
-            Gizmos.color = Color.green;
-            DrawPolygonSegment(item.Value);
-        }
-        foreach (var item in PolygonSegmentsByStart)
-        {
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(item.Key), 0.3f);
-        }
-        Gizmos.color = Color.blue;
-        foreach (var item in CompletedPolygons.Polygons)
-        {
-            DrawPolygon(item);
-        }
+        wallPolygons.DrawGizmos(transform, Color.green, Color.blue);
     }
 
-    private void DrawPolygon(Polygon poly)
-    {
-        DrawPolygonSegment(poly.Points, true);
-        if(poly.Holes != null)
-        {
-            foreach (var item in poly.Holes)
-            {
-                DrawPolygon(item);
-            }
-        }
-    }
-
-    private void DrawPolygonSegment(IList<TriangulationPoint> segment, bool closed = false)
-    {
-        for (int i = 0; i < segment.Count - 1; i++)
-        {
-            if (i > 0 || closed)
-                Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(segment[i]), 0.2f);
-            Gizmos.DrawLine(transform.localToWorldMatrix.MultiplyPoint(segment[i]), transform.localToWorldMatrix.MultiplyPoint(segment[i + 1]));
-        }
-        if (closed)
-        {
-            Gizmos.DrawLine(transform.localToWorldMatrix.MultiplyPoint(segment[segment.Count - 1]), transform.localToWorldMatrix.MultiplyPoint(segment[0]));
-            Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(segment[segment.Count - 1]), 0.2f);
-        }
-    }
-
-
-    private void DrawPolygonSegment(IList<PolygonPoint> segment, bool closed = false)
-    {
-        for (int i = 0; i < segment.Count - 1; i++)
-        {
-            if (i > 0 || closed)
-                Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(segment[i]), 0.2f);
-            Gizmos.DrawLine(transform.localToWorldMatrix.MultiplyPoint(segment[i]), transform.localToWorldMatrix.MultiplyPoint(segment[i + 1]));
-        }
-        if (closed)
-        {
-            Gizmos.DrawLine(transform.localToWorldMatrix.MultiplyPoint(segment[segment.Count - 1]), transform.localToWorldMatrix.MultiplyPoint(segment[0]));
-            Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(segment[segment.Count - 1]), 0.2f);
-        }
-    }
-
-    #endregion
-
-    #endregion
-
-    Dictionary<TriangulationPoint, int> pointIndices = new Dictionary<TriangulationPoint, int>();
 
     void ConvertToMesh(PolygonSet polySet)
     {
-        pointIndices.Clear();
+        Dictionary<TriangulationPoint, int> pointIndices = new Dictionary<TriangulationPoint, int>();
         P2T.Triangulate(polySet);
         foreach (var polygon in polySet.Polygons)
         {

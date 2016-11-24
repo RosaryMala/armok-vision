@@ -7,7 +7,8 @@ public class Voxel
     public enum State
     {
         Empty,
-        Filled,
+        Floor,
+        Wall,
         Intruded
     }
 
