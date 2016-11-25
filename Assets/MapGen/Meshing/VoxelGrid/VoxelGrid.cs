@@ -470,11 +470,23 @@ public class VoxelGrid : MonoBehaviour
                         break;
                 }
                 break;
-            case Directions.North | Directions.SouthWest:
+            case Directions.North | Directions.West:
                 switch (edges)
                 {
                     case Directions.East:
-                        AddStraight(wallPolygons, south, north);
+                        switch (walls)
+                        {
+                            case Directions.NorthWest:
+                                AddCorner(wallPolygons, west, north, center, corner);
+                                break;
+                            case Directions.North | Directions.West:
+                                AddStraight(wallPolygons, south, north);
+                                break;
+
+                            default:
+                                AddStraight(floorPolygons, south, north);
+                                break;
+                        }
                         break;
                     case Directions.South:
                         AddStraight(wallPolygons, west, east);
@@ -504,7 +516,44 @@ public class VoxelGrid : MonoBehaviour
                         AddCorner(wallPolygons, north, east, center, CornerType.Square);
                         break;
                     default:
-                        AddCorner(wallPolygons, south, east, center, corner);
+                        {
+                            Vector3 eastPoint = corner == CornerType.Diamond ? nudge(west, west, east) : east;
+                            Vector3 southPoint = corner == CornerType.Diamond ? nudge(north, north, south) : south;
+                            switch (walls)
+                            {
+                                case Directions.NorthWest:
+                                    AddCorner(wallPolygons, west, north, center, corner);
+                                    AddCorner(floorPolygons, north, west, center, corner);
+                                    AddCorner(floorPolygons, south, east, center, corner);
+                                    break;
+                                case Directions.NorthEast:
+                                    AddCorner(wallPolygons, north, east, center, corner);
+                                    AddCorner(floorPolygons, south, eastPoint, center, corner);
+                                    AddCorner(floorPolygons, eastPoint, north, center, corner);
+                                    break;
+                                case Directions.SouthWest:
+                                    AddCorner(wallPolygons, south, west, center, corner);
+                                    AddCorner(floorPolygons, west, southPoint, center, corner);
+                                    AddCorner(floorPolygons, southPoint, east, center, corner);
+                                    break;
+                                case Directions.North:
+                                    AddStraight(wallPolygons, west, east);
+                                    AddStraight(floorPolygons, eastPoint, west);
+                                    AddCorner(floorPolygons, south, eastPoint, center, corner);
+                                    break;
+                                case Directions.West:
+                                    AddStraight(wallPolygons, south, north);
+                                    AddStraight(floorPolygons, north, southPoint);
+                                    AddCorner(floorPolygons, southPoint, east, center, corner);
+                                    break;
+                                case Directions.North | Directions.West:
+                                    AddCorner(wallPolygons, south, east, center, corner);
+                                    break;
+                                default:
+                                    AddCorner(floorPolygons, south, east, center, corner);
+                                    break;
+                            }
+                        }
                         break;
                 }
                 break;
