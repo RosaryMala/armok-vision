@@ -58,18 +58,6 @@ public class VoxelGrid : MonoBehaviour
         }
     }
 
-    bool _saddleCrossing = false;
-
-    public bool saddleCrossing
-    {
-        get { return _saddleCrossing; }
-        set
-        {
-            _saddleCrossing = value;
-            Refresh();
-        }
-    }
-
     public void Initialize(int resolution, float size)
     {
         this.resolution = resolution;
@@ -359,7 +347,7 @@ public class VoxelGrid : MonoBehaviour
                     southEast, southWest.eastEdge,
                     southWest, northWest.southEdge,
                     northWest.cornerPosition,
-                    wallFloors, edges, walls, corner, intruded, _saddleCrossing);
+                    wallFloors, edges, walls, corner, intruded);
                 break;
             case Directions.NorthEast:
             case Directions.East:
@@ -371,7 +359,7 @@ public class VoxelGrid : MonoBehaviour
                     southWest, northWest.southEdge,
                     northWest, northWest.eastEdge,
                     northWest.cornerPosition,
-                    RotateCCW(wallFloors), RotateCCW(edges), RotateCCW(walls), corner, intruded, _saddleCrossing);
+                    RotateCCW(wallFloors), RotateCCW(edges), RotateCCW(walls), corner, intruded);
                 break;
             case Directions.SouthEast:
             case Directions.South:
@@ -382,7 +370,7 @@ public class VoxelGrid : MonoBehaviour
                     northWest, northWest.eastEdge,
                     northEast, northEast.southEdge,
                     northWest.cornerPosition,
-                    Rotate180(wallFloors), Rotate180(edges), Rotate180(walls), corner, intruded, _saddleCrossing);
+                    Rotate180(wallFloors), Rotate180(edges), Rotate180(walls), corner, intruded);
                 break;
             case Directions.SouthWest:
             case Directions.West:
@@ -393,7 +381,7 @@ public class VoxelGrid : MonoBehaviour
                     northEast, northEast.southEdge,
                     southEast, southWest.eastEdge,
                     northWest.cornerPosition,
-                    RotateCW(wallFloors), RotateCW(edges), RotateCW(walls), corner, intruded, _saddleCrossing);
+                    RotateCW(wallFloors), RotateCW(edges), RotateCW(walls), corner, intruded);
                 break;
         }
     }
@@ -412,7 +400,7 @@ public class VoxelGrid : MonoBehaviour
         Directions edges,
         Directions walls,
         CornerType corner,
-        bool intruded, bool saddleCrossing)
+        bool intruded)
     {
         switch (neighbors)
         {
@@ -584,135 +572,64 @@ public class VoxelGrid : MonoBehaviour
                 break;
             #endregion
             case Directions.NorthWest | Directions.SouthEast:
-                switch (edges)
                 {
-                    case Directions.North:
-                        {
-                            var type = corner;
-                            if (!_filledGaps)
-                                type = CornerType.Diamond;
-                            if (saddleCrossing)
+                    var type = corner;
+                    if (!_filledGaps)
+                        type = CornerType.Diamond;
+                    switch (edges)
+                    {
+                        case Directions.North:
+                        case Directions.West:
+                        case Directions.North | Directions.West:
+                            switch (walls)
                             {
-                                Vector3 point = type == CornerType.Diamond ? nudge(east, south, west) : west;
-                                AddStraight(wallPolygons, east, point);
-                                AddCorner(wallPolygons, point, south, center, type);
+                                case Directions.NorthWest | Directions.SouthEast:
+                                case Directions.SouthEast:
+                                    AddCorner(wallPolygons, east, south, type == CornerType.Square ? nudge(east, south, center) : center, type);
+                                    break;
+                                default:
+                                    AddCorner(floorPolygons, east, south, type == CornerType.Square ? nudge(east, south, center) : center, type);
+                                    break;
                             }
-                            else
+                            break;
+                        case Directions.East:
+                        case Directions.South:
+                        case Directions.NorthEast | Directions.South:
+                            switch (walls)
                             {
-                                AddCorner(wallPolygons, east, south, center, type);
+                                case Directions.NorthWest | Directions.SouthEast:
+                                case Directions.NorthWest:
+                                    AddCorner(wallPolygons, west, north, type == CornerType.Square ? nudge(west, north, center) : center, type);
+                                    break;
+                                default:
+                                    AddCorner(floorPolygons, west, north, type == CornerType.Square ? nudge(west, north, center) : center, type);
+                                    break;
                             }
-                        }
-                        break;
-                    case Directions.East:
-                        {
-                            var type = corner;
-                            if (!_filledGaps)
-                                type = CornerType.Diamond;
-                            if (saddleCrossing)
-                            {
-                                Vector3 point = type == CornerType.Diamond ? nudge(west, north, south) : south;
-                                AddCorner(wallPolygons, west, point, center, type);
-                                AddStraight(wallPolygons, point, north);
-                            }
-                            else
-                            {
-                                AddCorner(wallPolygons, west, north, center, type);
-                            }
-                        }
-                        break;
-                    case Directions.South:
-                        {
-                            var type = corner;
-                            if (!_filledGaps)
-                                type = CornerType.Diamond;
-                            if (saddleCrossing)
-                            {
-                                Vector3 point = type == CornerType.Diamond ? nudge(west, north, east) : east;
-                                AddStraight(wallPolygons, west, point);
-                                AddCorner(wallPolygons, point, north, center, type);
-                            }
-                            else
-                            {
-                                AddCorner(wallPolygons, west, north, center, type);
-                            }
-                        }
-                        break;
-                    case Directions.West:
-                        {
-                            var type = corner;
-                            if (!_filledGaps)
-                                type = CornerType.Diamond;
-                            if (saddleCrossing)
-                            {
-                                Vector3 point = type == CornerType.Diamond ? nudge(east, south, north) : north;
-                                AddCorner(wallPolygons, east, point, center, type);
-                                AddStraight(wallPolygons, point, south);
-                            }
-                            else
-                            {
-                                AddCorner(wallPolygons, east, south, center, type);
-                            }
-                        }
-                        break;
-                    case Directions.North | Directions.SouthWest:
-                        {
-                            var type = corner;
-                            if (!_filledGaps)
-                                type = CornerType.Diamond;
-                            if (saddleCrossing)
-                            {
-                                AddCorner(wallPolygons, east, south, center, CornerType.Square);
-                            }
-                            else
-                            {
-                                AddCorner(wallPolygons, east, south, center, type);
-                            }
-                        }
-                        break;
-                    case Directions.NorthEast | Directions.South:
-                        {
-                            var type = corner;
-                            if (!_filledGaps)
-                                type = CornerType.Diamond;
-                            if (saddleCrossing)
-                            {
-                                AddCorner(wallPolygons, west, north, center, CornerType.Square);
-                            }
-                            else
-                            {
-                                AddCorner(wallPolygons, west, north, center, type);
-                            }
-                        }
-                        break;
-                    case Directions.North | Directions.SouthEast:
-                        {
-                            var type = corner;
-                            if (!_filledGaps)
-                                type = CornerType.Diamond;
-                            if (saddleCrossing && type != CornerType.Square)
-                            {
-                                AddCorner(wallPolygons, west, south, center, type);
-                                AddCorner(wallPolygons, south, west, center, CornerType.Square);
-                            }
-                        }
-                        break;
-                    case Directions.NorthWest | Directions.South:
-                        {
-                            var type = corner;
-                            if (!_filledGaps)
-                                type = CornerType.Diamond;
-                            if (saddleCrossing && type != CornerType.Square)
-                            {
-                                AddCorner(wallPolygons, east, north, center, type);
-                                AddCorner(wallPolygons, north, east, center, CornerType.Square);
-                            }
-                        }
-                        break;
-                    default:
-                        AddSaddle(wallPolygons, north, east, south, west, center, saddleCrossing, corner);
-                        break;
+                            break;
+                        default:
+                                switch (walls)
+                                {
+                                    case Directions.NorthWest | Directions.SouthEast:
+                                        AddCorner(wallPolygons, east, south, type == CornerType.Square ? nudge(east, south, center) : center, type);
+                                        AddCorner(wallPolygons, west, north, type == CornerType.Square ? nudge(west, north, center) : center, type);
+                                        break;
+                                    case Directions.NorthWest:
+                                        AddCorner(floorPolygons, east, south, type == CornerType.Square ? nudge(east, south, center) : center, type);
+                                        AddCorner(wallPolygons, west, north, type == CornerType.Square ? nudge(west, north, center) : center, type);
+                                        break;
+                                    case Directions.SouthEast:
+                                        AddCorner(wallPolygons, east, south, type == CornerType.Square ? nudge(east, south, center) : center, type);
+                                        AddCorner(floorPolygons, west, north, type == CornerType.Square ? nudge(west, north, center) : center, type);
+                                        break;
+                                    default:
+                                        AddCorner(floorPolygons, east, south, type == CornerType.Square ? nudge(east, south, center) : center, type);
+                                        AddCorner(floorPolygons, west, north, type == CornerType.Square ? nudge(west, north, center) : center, type);
+                                        break;
+                                }
+                            break;
+                    }
+                    break;
                 }
-                break;
             case Directions.All:
                 switch (edges)
                 {
@@ -803,23 +720,6 @@ public class VoxelGrid : MonoBehaviour
     private void AddStraight(ComplexPoly poly, PolygonPoint a, PolygonPoint b)
     {
         poly.AddLineSegment(a, b);
-    }
-
-
-    private void AddSaddle(ComplexPoly poly, PolygonPoint north, PolygonPoint east, PolygonPoint south, PolygonPoint west, Vector3 center, bool saddleCrossing = true, CornerType type = CornerType.Diamond)
-    {
-        if (!_filledGaps)
-            type = CornerType.Diamond;
-        if(saddleCrossing)
-        {
-            AddCorner(poly, east, north, type == CornerType.Square ? nudge(east, north, center) : center, type);
-            AddCorner(poly, west, south, type == CornerType.Square ? nudge(west, south, center) : center, type);
-        }
-        else
-        {
-            AddCorner(poly, east, south, type == CornerType.Square ? nudge(east, south, center) : center, type);
-            AddCorner(poly, west, north, type == CornerType.Square ? nudge(west, north, center) : center, type);
-        }
     }
 
     ComplexPoly wallPolygons = new ComplexPoly();
