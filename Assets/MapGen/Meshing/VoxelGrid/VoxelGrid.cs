@@ -800,8 +800,8 @@ public class VoxelGrid : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        wallPolygons.DrawGizmos(transform, Color.green, Color.blue);
-        floorPolygons.DrawGizmos(transform, Color.magenta, Color.yellow);
+        wallPolygons.DrawGizmos(transform, Color.green, Color.blue, GameMap.tileHeight);
+        floorPolygons.DrawGizmos(transform, Color.magenta, Color.yellow, GameMap.floorHeight);
     }
 
 
