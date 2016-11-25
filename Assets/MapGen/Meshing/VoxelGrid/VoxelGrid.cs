@@ -716,16 +716,16 @@ public class VoxelGrid : MonoBehaviour
             case Directions.All:
                 switch (edges)
                 {
-                    case Directions.North | Directions.SouthWest:
+                    case Directions.North | Directions.West:
                         AddCorner(wallPolygons, east, south, center, CornerType.Square);
                         break;
-                    case Directions.North | Directions.SouthEast:
+                    case Directions.North | Directions.East:
                         AddCorner(wallPolygons, south, west, center, CornerType.Square);
                         break;
-                    case Directions.West | Directions.SouthEast:
+                    case Directions.West | Directions.South:
                         AddCorner(wallPolygons, north, east, center, CornerType.Square);
                         break;
-                    case Directions.NorthEast | Directions.South:
+                    case Directions.East | Directions.South:
                         AddCorner(wallPolygons, west, north, center, CornerType.Square);
                         break;
                     case Directions.North:
@@ -741,6 +741,27 @@ public class VoxelGrid : MonoBehaviour
                         AddStraight(wallPolygons, west, east);
                         break;
                     default:
+                        switch (walls)
+                        {
+                            case Directions.NorthWest:
+                                AddCorner(wallPolygons, west, north, center, corner);
+                                AddCorner(floorPolygons, north, west, center, corner);
+                                break;
+                            case Directions.NorthEast:
+                                AddCorner(wallPolygons, north, east, center, corner);
+                                AddCorner(floorPolygons, east, north, center, corner);
+                                break;
+                            case Directions.SouthEast:
+                                AddCorner(wallPolygons, east, south, center, corner);
+                                AddCorner(floorPolygons, south, east, center, corner);
+                                break;
+                            case Directions.SouthWest:
+                                AddCorner(wallPolygons, south, west, center, corner);
+                                AddCorner(floorPolygons, west, south, center, corner);
+                                break;
+                            default:
+                                break;
+                        }
                         break;
                 }
                 break;
