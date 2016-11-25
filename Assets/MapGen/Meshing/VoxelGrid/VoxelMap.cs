@@ -124,8 +124,6 @@ public class VoxelMap : MonoBehaviour
 
     private static string[] gapType = { "Opened", "Normal" };
 
-    private static string[] crossingType = { "Open ", "Closed" };
-
     private int fillTypeIndex = 2;
     private int radiusIndex, stencilIndex;
     private int cornerTypeIndex;
@@ -166,16 +164,6 @@ public class VoxelMap : MonoBehaviour
                 item.filledGaps = gapTypeIndex == 1;
             }
 
-        }
-        GUILayout.Label("Diagonal Type");
-        int crossing = GUILayout.SelectionGrid(crossingTypeIndex, crossingType, 2);
-        if(crossingTypeIndex != crossing)
-        {
-            crossingTypeIndex = crossing;
-            foreach (var item in chunks)
-            {
-                item.saddleCrossing = crossingTypeIndex == 1;
-            }
         }
         if (GUILayout.Button("Invert"))
         {
