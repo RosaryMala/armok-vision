@@ -474,18 +474,31 @@ public class VoxelGrid : MonoBehaviour
                 switch (edges)
                 {
                     case Directions.East:
-                        switch (walls)
                         {
-                            case Directions.NorthWest:
-                                AddCorner(wallPolygons, west, north, center, corner);
-                                break;
-                            case Directions.North | Directions.West:
-                                AddStraight(wallPolygons, south, north);
-                                break;
+                            Vector3 eastPoint = corner == CornerType.Diamond ? nudge(west, west, east) : east;
+                            Vector3 southPoint = corner == CornerType.Diamond ? nudge(north, north, south) : south;
+                            Vector3 northPoint = corner == CornerType.Diamond ? nudge(west, south, north) : north;
+                            switch (walls)
+                            {
+                                case Directions.NorthWest:
+                                    AddCorner(wallPolygons, west, north, center, corner);
+                                    AddCorner(floorPolygons, northPoint, west, center, corner);
+                                    AddStraight(floorPolygons, south, northPoint);
+                                    break;
+                                case Directions.SouthWest:
+                                    AddCorner(wallPolygons, south, west, center, corner);
+                                    AddCorner(floorPolygons, west, southPoint, center, corner);
+                                    AddStraight(floorPolygons, southPoint, north);
+                                    break;
+                                case Directions.West:
+                                case Directions.North | Directions.West:
+                                    AddStraight(wallPolygons, south, north);
+                                    break;
 
-                            default:
-                                AddStraight(floorPolygons, south, north);
-                                break;
+                                default:
+                                    AddStraight(floorPolygons, south, north);
+                                    break;
+                            }
                         }
                         break;
                     case Directions.South:
@@ -545,6 +558,13 @@ public class VoxelGrid : MonoBehaviour
                                     AddStraight(wallPolygons, south, north);
                                     AddStraight(floorPolygons, north, southPoint);
                                     AddCorner(floorPolygons, southPoint, east, center, corner);
+                                    break;
+                                case Directions.NorthEast | Directions.SouthWest:
+                                    AddCorner(wallPolygons, north, east, center, corner);
+                                    AddCorner(floorPolygons, south, eastPoint, center, corner);
+                                    AddCorner(wallPolygons, south, west, center, corner);
+                                    AddCorner(floorPolygons, west, southPoint, center, corner);
+                                    AddCorner(floorPolygons, southPoint, eastPoint, center, corner);
                                     break;
                                 case Directions.North | Directions.West:
                                     AddCorner(wallPolygons, south, east, center, corner);
