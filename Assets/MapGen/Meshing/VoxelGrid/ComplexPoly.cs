@@ -175,68 +175,76 @@ public class ComplexPoly
         return output;
     }
 
-    public void DrawGizmos(Transform transform, Color partialColor, Color completeColor)
+    public void DrawGizmos(Transform transform, Color partialColor, Color completeColor, float height)
     {
         foreach (var item in PolygonSegmentsByEnd)
         {
             Gizmos.color = Color.yellow;
-            Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(item.Key), 0.3f);
+            Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(new Vector3(item.Key.Xf, height, item.Key.Yf)), 0.3f);
             Gizmos.color = partialColor;
-            DrawPolygonSegment(transform, item.Value);
+            DrawPolygonSegment(transform, item.Value, height);
         }
         foreach (var item in PolygonSegmentsByStart)
         {
             Gizmos.color = Color.cyan;
-            Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(item.Key), 0.3f);
+            Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(new Vector3(item.Key.Xf, height, item.Key.Yf)), 0.3f);
         }
         Gizmos.color = completeColor;
         foreach (var item in CompletedPolygons.Polygons)
         {
-            DrawPolygon(transform, item);
+            DrawPolygon(transform, item, height);
         }
     }
 
 
-    private void DrawPolygon(Transform transform, Polygon poly)
+    private void DrawPolygon(Transform transform, Polygon poly, float height)
     {
-        DrawPolygonSegment(transform, poly.Points, true);
+        DrawPolygonSegment(transform, poly.Points, height, true);
         if (poly.Holes != null)
         {
             foreach (var item in poly.Holes)
             {
-                DrawPolygon(transform, item);
+                DrawPolygon(transform, item, height);
             }
         }
     }
 
-    private void DrawPolygonSegment(Transform transform, IList<TriangulationPoint> segment, bool closed = false)
+    private void DrawPolygonSegment(Transform transform, IList<TriangulationPoint> segment, float height, bool closed = false)
     {
         for (int i = 0; i < segment.Count - 1; i++)
         {
             if (i > 0 || closed)
-                Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(segment[i]), 0.2f);
-            Gizmos.DrawLine(transform.localToWorldMatrix.MultiplyPoint(segment[i]), transform.localToWorldMatrix.MultiplyPoint(segment[i + 1]));
+                Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[i].Xf, height, segment[i].Yf)), 0.2f);
+            Gizmos.DrawLine(
+                transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[i].Xf, height, segment[i].Yf)),
+                transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[i + 1].Xf, height, segment[i + 1].Yf)));
         }
         if (closed)
         {
-            Gizmos.DrawLine(transform.localToWorldMatrix.MultiplyPoint(segment[segment.Count - 1]), transform.localToWorldMatrix.MultiplyPoint(segment[0]));
-            Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(segment[segment.Count - 1]), 0.2f);
+            Gizmos.DrawLine(
+                transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[segment.Count - 1].Xf, height, segment[segment.Count - 1].Yf)), 
+                transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[0].Xf, height, segment[0].Yf)));
+            Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[segment.Count - 1].Xf, height, segment[segment.Count - 1].Yf)), 0.2f);
         }
     }
 
 
-    private void DrawPolygonSegment(Transform transform, IList<PolygonPoint> segment, bool closed = false)
+    private void DrawPolygonSegment(Transform transform, IList<PolygonPoint> segment, float height, bool closed = false)
     {
         for (int i = 0; i < segment.Count - 1; i++)
         {
             if (i > 0 || closed)
-                Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(segment[i]), 0.2f);
-            Gizmos.DrawLine(transform.localToWorldMatrix.MultiplyPoint(segment[i]), transform.localToWorldMatrix.MultiplyPoint(segment[i + 1]));
+                Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[i].Xf, height, segment[i].Yf)), 0.2f);
+            Gizmos.DrawLine(
+                transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[i].Xf, height, segment[i].Yf)),
+                transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[i + 1].Xf, height, segment[i + 1].Yf)));
         }
         if (closed)
         {
-            Gizmos.DrawLine(transform.localToWorldMatrix.MultiplyPoint(segment[segment.Count - 1]), transform.localToWorldMatrix.MultiplyPoint(segment[0]));
-            Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(segment[segment.Count - 1]), 0.2f);
+            Gizmos.DrawLine(
+                transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[segment.Count - 1].Xf, height, segment[segment.Count - 1].Yf)), 
+                transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[0].Xf, height, segment[0].Yf)));
+            Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[segment.Count - 1].Xf, height, segment[segment.Count - 1].Yf)), 0.2f);
         }
     }
 }
