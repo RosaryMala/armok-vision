@@ -344,10 +344,10 @@ public class VoxelGrid : MonoBehaviour
             case Directions.NorthWest | Directions.SouthEast:
             case Directions.All:
                 AddRotatedCell(
-                    northWest, northWest.eastEdge,
-                    northEast, northEast.southEdge,
-                    southEast, southWest.eastEdge,
-                    southWest, northWest.southEdge,
+                    northWest.eastEdge,
+                    northEast.southEdge,
+                    southWest.eastEdge,
+                    northWest.southEdge,
                     northWest.cornerPosition,
                     wallFloors, edges, walls, corner, intruded);
                 break;
@@ -356,10 +356,10 @@ public class VoxelGrid : MonoBehaviour
             case Directions.North | Directions.SouthEast:
             case Directions.NorthEast | Directions.SouthWest:
                 AddRotatedCell(
-                    northEast, northEast.southEdge,
-                    southEast, southWest.eastEdge,
-                    southWest, northWest.southEdge,
-                    northWest, northWest.eastEdge,
+                    northEast.southEdge,
+                    southWest.eastEdge,
+                    northWest.southEdge,
+                    northWest.eastEdge,
                     northWest.cornerPosition,
                     RotateCCW(wallFloors), RotateCCW(edges), RotateCCW(walls), corner, intruded);
                 break;
@@ -367,10 +367,10 @@ public class VoxelGrid : MonoBehaviour
             case Directions.South:
             case Directions.NorthEast | Directions.South:
                 AddRotatedCell(
-                    southEast, southWest.eastEdge,
-                    southWest, northWest.southEdge,
-                    northWest, northWest.eastEdge,
-                    northEast, northEast.southEdge,
+                    southWest.eastEdge,
+                    northWest.southEdge,
+                    northWest.eastEdge,
+                    northEast.southEdge,
                     northWest.cornerPosition,
                     Rotate180(wallFloors), Rotate180(edges), Rotate180(walls), corner, intruded);
                 break;
@@ -378,10 +378,10 @@ public class VoxelGrid : MonoBehaviour
             case Directions.West:
             case Directions.West | Directions.SouthEast:
                 AddRotatedCell(
-                    southWest, northWest.southEdge,
-                    northWest, northWest.eastEdge,
-                    northEast, northEast.southEdge,
-                    southEast, southWest.eastEdge,
+                    northWest.southEdge,
+                    northWest.eastEdge,
+                    northEast.southEdge,
+                    southWest.eastEdge,
                     northWest.cornerPosition,
                     RotateCW(wallFloors), RotateCW(edges), RotateCW(walls), corner, intruded);
                 break;
@@ -389,13 +389,9 @@ public class VoxelGrid : MonoBehaviour
     }
 
     private void AddRotatedCell(
-        Voxel northWest,
         Vector3 north,
-        Voxel northEast,
         Vector3 east,
-        Voxel southEast,
         Vector3 south,
-        Voxel southWest,
         Vector3 west,
         Vector3 center,
         Directions neighbors,
@@ -415,69 +411,11 @@ public class VoxelGrid : MonoBehaviour
             case Directions.North | Directions.West:
                 AddInnerCornerCell(south, west, north, east, center, corner, edges, walls);
                 break;
-            #region Saddle
             case Directions.NorthWest | Directions.SouthEast:
-                {
-                    var type = corner;
-                    if (!_filledGaps)
-                        type = CornerType.Diamond;
-                    switch (edges)
-                    {
-                        case Directions.North:
-                        case Directions.West:
-                        case Directions.North | Directions.West:
-                            switch (walls)
-                            {
-                                case Directions.NorthWest | Directions.SouthEast:
-                                case Directions.SouthEast:
-                                    AddCorner(wallPolygons, east, south, type == CornerType.Square ? nudge(east, south, center) : center, type, WallType.Both);
-                                    break;
-                                default:
-                                    AddCorner(floorPolygons, east, south, type == CornerType.Square ? nudge(east, south, center) : center, type, WallType.Floor);
-                                    break;
-                            }
-                            break;
-                        case Directions.East:
-                        case Directions.South:
-                        case Directions.NorthEast | Directions.South:
-                            switch (walls)
-                            {
-                                case Directions.NorthWest | Directions.SouthEast:
-                                case Directions.NorthWest:
-                                    AddCorner(wallPolygons, west, north, type == CornerType.Square ? nudge(west, north, center) : center, type, WallType.Both);
-                                    break;
-                                default:
-                                    AddCorner(floorPolygons, west, north, type == CornerType.Square ? nudge(west, north, center) : center, type, WallType.Floor);
-                                    break;
-                            }
-                            break;
-                        default:
-                                switch (walls)
-                                {
-                                    case Directions.NorthWest | Directions.SouthEast:
-                                        AddCorner(wallPolygons, east, south, type == CornerType.Square ? nudge(east, south, center) : center, type, WallType.Both);
-                                        AddCorner(wallPolygons, west, north, type == CornerType.Square ? nudge(west, north, center) : center, type, WallType.Both);
-                                        break;
-                                    case Directions.NorthWest:
-                                        AddCorner(floorPolygons, east, south, type == CornerType.Square ? nudge(east, south, center) : center, type, WallType.Floor);
-                                        AddCorner(wallPolygons, west, north, type == CornerType.Square ? nudge(west, north, center) : center, type, WallType.Both);
-                                        break;
-                                    case Directions.SouthEast:
-                                        AddCorner(wallPolygons, east, south, type == CornerType.Square ? nudge(east, south, center) : center, type, WallType.Both);
-                                        AddCorner(floorPolygons, west, north, type == CornerType.Square ? nudge(west, north, center) : center, type, WallType.Floor);
-                                        break;
-                                    default:
-                                        AddCorner(floorPolygons, east, south, type == CornerType.Square ? nudge(east, south, center) : center, type, WallType.Floor);
-                                        AddCorner(floorPolygons, west, north, type == CornerType.Square ? nudge(west, north, center) : center, type, WallType.Floor);
-                                        break;
-                                }
-                            break;
-                    }
-                    break;
-                }
-            #endregion
-            #region Center
+                AddSaddleCell(north, east, south, west, center, corner, edges, walls);
+                break;
             case Directions.All:
+                AddCenterCell(north, east, south, west, center, corner, edges, walls);
                 switch (edges)
                 {
                     case Directions.North | Directions.West:
@@ -545,7 +483,6 @@ public class VoxelGrid : MonoBehaviour
                         break;
                 }
                 break;
-            #endregion
             default:
                 break;
         }
@@ -653,7 +590,7 @@ public class VoxelGrid : MonoBehaviour
 
     }
 
-    void AddInnerCornerCell(Vector3 south, Vector3 west, Vector3 north, Vector3 east, Vector3 center, CornerType corner, Directions edges, Directions walls)
+    void AddInnerCornerCell(Vector3 north, Vector3 east, Vector3 south, Vector3 west, Vector3 center, CornerType corner, Directions edges, Directions walls)
     {
         switch (edges)
         {
@@ -896,6 +833,125 @@ public class VoxelGrid : MonoBehaviour
                             break;
                     }
                 }
+                break;
+        }
+    }
+
+    void AddSaddleCell(Vector3 north, Vector3 east, Vector3 south, Vector3 west, Vector3 center, CornerType corner, Directions edges, Directions walls)
+    {
+        if (!_filledGaps)
+            corner = CornerType.Diamond;
+        switch (edges)
+        {
+            case Directions.North:
+            case Directions.West:
+            case Directions.North | Directions.West:
+                switch (walls)
+                {
+                    case Directions.NorthWest | Directions.SouthEast:
+                    case Directions.SouthEast:
+                        AddCorner(wallPolygons, east, south, corner == CornerType.Square ? nudge(east, south, center) : center, corner, WallType.Both);
+                        break;
+                    default:
+                        AddCorner(floorPolygons, east, south, corner == CornerType.Square ? nudge(east, south, center) : center, corner, WallType.Floor);
+                        break;
+                }
+                break;
+            case Directions.East:
+            case Directions.South:
+            case Directions.NorthEast | Directions.South:
+                switch (walls)
+                {
+                    case Directions.NorthWest | Directions.SouthEast:
+                    case Directions.NorthWest:
+                        AddCorner(wallPolygons, west, north, corner == CornerType.Square ? nudge(west, north, center) : center, corner, WallType.Both);
+                        break;
+                    default:
+                        AddCorner(floorPolygons, west, north, corner == CornerType.Square ? nudge(west, north, center) : center, corner, WallType.Floor);
+                        break;
+                }
+                break;
+            default:
+                switch (walls)
+                {
+                    case Directions.NorthWest | Directions.SouthEast:
+                        AddCorner(wallPolygons, east, south, corner == CornerType.Square ? nudge(east, south, center) : center, corner, WallType.Both);
+                        AddCorner(wallPolygons, west, north, corner == CornerType.Square ? nudge(west, north, center) : center, corner, WallType.Both);
+                        break;
+                    case Directions.NorthWest:
+                        AddCorner(floorPolygons, east, south, corner == CornerType.Square ? nudge(east, south, center) : center, corner, WallType.Floor);
+                        AddCorner(wallPolygons, west, north, corner == CornerType.Square ? nudge(west, north, center) : center, corner, WallType.Both);
+                        break;
+                    case Directions.SouthEast:
+                        AddCorner(wallPolygons, east, south, corner == CornerType.Square ? nudge(east, south, center) : center, corner, WallType.Both);
+                        AddCorner(floorPolygons, west, north, corner == CornerType.Square ? nudge(west, north, center) : center, corner, WallType.Floor);
+                        break;
+                    default:
+                        AddCorner(floorPolygons, east, south, corner == CornerType.Square ? nudge(east, south, center) : center, corner, WallType.Floor);
+                        AddCorner(floorPolygons, west, north, corner == CornerType.Square ? nudge(west, north, center) : center, corner, WallType.Floor);
+                        break;
+                }
+                break;
+        }
+    }
+
+    void AddCenterCell(Vector3 north, Vector3 east, Vector3 south, Vector3 west, Vector3 center, CornerType corner, Directions edges, Directions walls)
+    {
+        switch (walls)
+        {
+            case Directions.None:
+                return;
+            case Directions.NorthWest:
+            case Directions.North:
+            case Directions.North | Directions.SouthWest:
+            case Directions.NorthWest | Directions.SouthEast:
+            case Directions.All:
+                AddRotatedCenterCell(north, east, south, west, center, corner, edges, walls);
+                break;
+            case Directions.NorthEast:
+            case Directions.East:
+            case Directions.North | Directions.SouthEast:
+            case Directions.NorthEast | Directions.SouthWest:
+                AddRotatedCenterCell(east, south, west, north, center, corner, RotateCCW(edges), RotateCCW(walls));
+                break;
+            case Directions.SouthEast:
+            case Directions.South:
+            case Directions.NorthEast | Directions.South:
+                AddRotatedCenterCell(south, west, north, east, center, corner, Rotate180(edges), Rotate180(walls));
+                break;
+            case Directions.SouthWest:
+            case Directions.West:
+            case Directions.West | Directions.SouthEast:
+                AddRotatedCenterCell(south, west, north, east, center, corner, RotateCW(edges), RotateCW(walls));
+                break;
+        }
+    }
+
+    void AddRotatedCenterCell(Vector3 south, Vector3 west, Vector3 north, Vector3 east, Vector3 center, CornerType corner, Directions edges, Directions walls)
+    {
+        switch (edges)
+        {
+            case Directions.None:
+                break;
+            case Directions.NorthWest:
+                break;
+            case Directions.NorthEast:
+                break;
+            case Directions.SouthWest:
+                break;
+            case Directions.SouthEast:
+                break;
+            case Directions.North:
+                break;
+            case Directions.South:
+                break;
+            case Directions.East:
+                break;
+            case Directions.West:
+                break;
+            case Directions.All:
+                break;
+            default:
                 break;
         }
     }
