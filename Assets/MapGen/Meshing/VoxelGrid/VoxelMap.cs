@@ -126,8 +126,8 @@ public class VoxelMap : MonoBehaviour
 
     private int fillTypeIndex = 2;
     private int radiusIndex, stencilIndex;
-    private int cornerTypeIndex;
-    private int gapTypeIndex;
+    private int cornerTypeIndex = 2;
+    private int gapTypeIndex = 1;
     private int crossingTypeIndex;
 
     private VoxelStencil[] stencils = {
@@ -165,11 +165,11 @@ public class VoxelMap : MonoBehaviour
             }
 
         }
-        if (GUILayout.Button("Invert"))
+        if (GUILayout.Button("Randomize"))
         {
             foreach (var item in chunks)
             {
-                item.Invert();
+                item.Randomize();
             }
         }
         GUILayout.EndArea();
