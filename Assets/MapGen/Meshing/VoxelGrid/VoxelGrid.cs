@@ -406,6 +406,7 @@ public class VoxelGrid : MonoBehaviour
     {
         var eastPoint = nudge(center, center, east);
         var westPoint = nudge(center, center, west);
+        var northPoint = nudge(center, center, north);
         switch (edges & Directions.North)
         {
             case Directions.North:
@@ -419,8 +420,8 @@ public class VoxelGrid : MonoBehaviour
                         else
                         {
                             AddCorner(wallPolygons, west, north, center, corner, WallType.Wall);
-                            AddCorner(floorPolygons, north, westPoint, center, corner, WallType.None);
-                            AddCorner(floorPolygons, westPoint, north, center, CornerType.Square, WallType.Floor);
+                            AddCorner(floorPolygons, northPoint, westPoint, center, corner, WallType.None);
+                            AddCorner(floorPolygons, westPoint, northPoint, center, CornerType.Square, WallType.Floor);
                         }
                         break;
                     case Directions.North:
@@ -440,8 +441,8 @@ public class VoxelGrid : MonoBehaviour
                         else
                         {
                             AddCorner(wallPolygons, north, east, center, corner, WallType.Both);
-                            AddCorner(floorPolygons, eastPoint, north, center, corner, WallType.Both);
-                            AddCorner(floorPolygons, north, eastPoint, center, CornerType.Square, WallType.Floor);
+                            AddCorner(floorPolygons, eastPoint, northPoint, center, corner, WallType.Both);
+                            AddCorner(floorPolygons, northPoint, eastPoint, center, CornerType.Square, WallType.Floor);
                         }
                         break;
                     case Directions.North:
