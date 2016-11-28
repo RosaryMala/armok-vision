@@ -13,15 +13,12 @@ public class VoxelGrid : MonoBehaviour
     private List<Vector2> uvs;
     private List<int> triangles;
 
-    public GameObject voxelPrefab;
     public int resolution;
 
     private Voxel[] voxels;
     private float voxelSize, gridSize;
 
     private Voxel dummyX, dummyY, dummyT;
-
-    private Material[] voxelMaterials;
 
     public VoxelGrid xNeighbor, yNeighbor, xyNeighbor;
 
@@ -65,7 +62,6 @@ public class VoxelGrid : MonoBehaviour
         gridSize = size;
         voxelSize = size / resolution;
         voxels = new Voxel[resolution * resolution];
-        voxelMaterials = new Material[voxels.Length];
 
         dummyX = new Voxel();
         dummyY = new Voxel();
@@ -78,7 +74,6 @@ public class VoxelGrid : MonoBehaviour
                 CreateVoxel(i, x, y, x == 0 || x == resolution - 1 || y == 0 || y == resolution - 1);
             }
         }
-        SetVoxelColors();
 
         GetComponent<MeshFilter>().mesh = mesh = new Mesh();
         mesh.name = "VoxelGrid Mesh";
@@ -90,11 +85,6 @@ public class VoxelGrid : MonoBehaviour
 
     private void CreateVoxel(int i, int x, int y, bool edge)
     {
-        GameObject o = Instantiate(voxelPrefab) as GameObject;
-        o.transform.parent = transform;
-        o.transform.localPosition = new Vector3((x + 0.5f) * voxelSize, GameMap.tileHeight + 0.01f, (y + 0.5f) * -voxelSize);
-        o.transform.localScale = Vector3.one * voxelSize * 0.1f;
-        voxelMaterials[i] = o.GetComponent<MeshRenderer>().material;
         voxels[i] = new Voxel(x, y, voxelSize);
         voxels[i].edge = edge;
     }
@@ -114,38 +104,12 @@ public class VoxelGrid : MonoBehaviour
                 voxels[i].state = stencil.Apply(x, y, voxels[i].state);
             }
         }
-        SetVoxelColors();
         Refresh();
     }
 
-    private void SetVoxelColors()
-    {
-        for (int i = 0; i < voxels.Length; i++)
-        {
-            switch (voxels[i].state)
-            {
-                case Voxel.State.Empty:
-                    voxelMaterials[i].color = Color.white;
-                    break;
-                case Voxel.State.Wall:
-                    voxelMaterials[i].color = Color.blue;
-                    break;
-                case Voxel.State.Floor:
-                    voxelMaterials[i].color = Color.yellow;
-                    break;
-                case Voxel.State.Intruded:
-                    voxelMaterials[i].color = Color.red;
-                    break;
-                default:
-                    voxelMaterials[i].color = Color.white;
-                    break;
-            }
-        }
-    }
 
     private void Refresh()
     {
-        SetVoxelColors();
         Triangulate();
     }
 
