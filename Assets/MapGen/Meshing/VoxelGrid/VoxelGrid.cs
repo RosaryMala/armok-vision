@@ -1092,6 +1092,26 @@ public class VoxelGrid : MonoBehaviour
     {
         wallPolygons.DrawGizmos(transform, Color.green, Color.blue, GameMap.tileHeight);
         floorPolygons.DrawGizmos(transform, Color.magenta, Color.yellow, GameMap.floorHeight);
+        foreach (var item in voxels)
+        {
+            switch (item.state)
+            {
+                case Voxel.State.Empty:
+                    continue;
+                case Voxel.State.Floor:
+                    Gizmos.color = Color.yellow;
+                    break;
+                case Voxel.State.Wall:
+                    Gizmos.color = Color.blue;
+                    break;
+                case Voxel.State.Intruded:
+                    Gizmos.color = Color.red;
+                    break;
+                default:
+                    break;
+            }
+            Gizmos.DrawCube(transform.localToWorldMatrix.MultiplyPoint(item.position), Vector3.one * 0.1f);
+        }
     }
 
 
