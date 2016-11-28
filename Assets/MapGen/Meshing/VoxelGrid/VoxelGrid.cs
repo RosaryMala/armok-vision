@@ -955,9 +955,16 @@ public class VoxelGrid : MonoBehaviour
                         AddCorner(floorPolygons, east, south, center, corner, WallType.Floor);
                         break;
                     case Directions.NorthWest | Directions.SouthEast:
-                        AddCorner(floorPolygons, eastPoint, southPoint, center, CornerType.Square, WallType.Floor);
-                        AddCorner(floorPolygons, southPoint, eastPoint, center, corner, WallType.None);
-                        AddCorner(wallPolygons, southPoint, eastPoint, center, corner, WallType.Wall);
+                        if (corner == CornerType.Square)
+                        {
+                            AddCorner(wallPolygons, east, south, center, corner, WallType.Wall);
+                        }
+                        else
+                        {
+                            AddCorner(floorPolygons, eastPoint, southPoint, center, CornerType.Square, WallType.Floor);
+                            AddCorner(floorPolygons, southPoint, eastPoint, center, corner, WallType.None);
+                            AddCorner(wallPolygons, east, south, center, corner, WallType.Wall);
+                        }
                         break;
                     case Directions.All:
                         AddCorner(wallPolygons, east, south, center, CornerType.Square, WallType.Both);
