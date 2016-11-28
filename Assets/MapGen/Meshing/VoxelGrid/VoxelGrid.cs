@@ -581,9 +581,9 @@ public class VoxelGrid : MonoBehaviour
                         }
                         else
                         {
-                            AddStraight(floorPolygons, north, southPoint, WallType.Floor);
+                            AddStraight(floorPolygons, northPoint, southPoint, WallType.Floor);
                             AddCorner(floorPolygons, southPoint, eastPoint, center, corner, WallType.Floor);
-                            AddCorner(floorPolygons, eastPoint, north, center, corner, WallType.None);
+                            AddCorner(floorPolygons, eastPoint, northPoint, center, corner, WallType.None);
                             AddCorner(wallPolygons, north, east, center, corner, WallType.Wall);
                         }
                         break;
@@ -962,8 +962,8 @@ public class VoxelGrid : MonoBehaviour
                         break;
                     case Directions.West | Directions.North:
                         AddStraight(wallPolygons, north, southPoint, WallType.Both);
-                        AddCorner(wallPolygons, southPoint, east, center, corner, WallType.None);
-                        AddCorner(floorPolygons, east, south, center, corner, WallType.Floor);
+                        AddCorner(wallPolygons, southPoint, east, center, corner, WallType.Wall);
+                        AddCorner(floorPolygons, east, south, center, corner, WallType.None);
                         break;
                     case Directions.NorthWest | Directions.SouthEast:
                         if (!_filledGaps)
