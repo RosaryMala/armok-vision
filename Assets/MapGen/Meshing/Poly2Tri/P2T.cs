@@ -43,7 +43,14 @@ namespace Poly2Tri
             TriangulationContext tcx = CreateContext(_defaultAlgorithm);
             foreach (Polygon p in ps.Polygons)
             {
-                Triangulate(p);
+                try
+                {
+                    Triangulate(p);
+                }
+                catch (System.Exception e)
+                {
+                    UnityEngine.Debug.LogError("Triangulation Exception: " + e.Message);
+                }
             }
         }
 
