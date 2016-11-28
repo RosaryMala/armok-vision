@@ -214,7 +214,7 @@ public class ComplexPoly
         for (int i = 0; i < segment.Count - 1; i++)
         {
             if (i > 0 || closed)
-                Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[i].Xf, height, segment[i].Yf)), 0.2f);
+                Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[i].Xf, height, segment[i].Yf)), 0.05f);
             Gizmos.DrawLine(
                 transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[i].Xf, height, segment[i].Yf)),
                 transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[i + 1].Xf, height, segment[i + 1].Yf)));
@@ -224,7 +224,7 @@ public class ComplexPoly
             Gizmos.DrawLine(
                 transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[segment.Count - 1].Xf, height, segment[segment.Count - 1].Yf)), 
                 transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[0].Xf, height, segment[0].Yf)));
-            Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[segment.Count - 1].Xf, height, segment[segment.Count - 1].Yf)), 0.2f);
+            Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[segment.Count - 1].Xf, height, segment[segment.Count - 1].Yf)), 0.05f);
         }
     }
 
@@ -234,7 +234,7 @@ public class ComplexPoly
         for (int i = 0; i < segment.Count - 1; i++)
         {
             if (i > 0 || closed)
-                Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[i].Xf, height, segment[i].Yf)), 0.2f);
+                Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[i].Xf, height, segment[i].Yf)), 0.05f);
             Gizmos.DrawLine(
                 transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[i].Xf, height, segment[i].Yf)),
                 transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[i + 1].Xf, height, segment[i + 1].Yf)));
@@ -244,7 +244,7 @@ public class ComplexPoly
             Gizmos.DrawLine(
                 transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[segment.Count - 1].Xf, height, segment[segment.Count - 1].Yf)), 
                 transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[0].Xf, height, segment[0].Yf)));
-            Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[segment.Count - 1].Xf, height, segment[segment.Count - 1].Yf)), 0.2f);
+            Gizmos.DrawSphere(transform.localToWorldMatrix.MultiplyPoint(new Vector3(segment[segment.Count - 1].Xf, height, segment[segment.Count - 1].Yf)), 0.05f);
         }
     }
 }
