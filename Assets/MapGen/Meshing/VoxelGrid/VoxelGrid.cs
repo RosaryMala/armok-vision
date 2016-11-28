@@ -409,79 +409,13 @@ public class VoxelGrid : MonoBehaviour
                 AddStraightCell(west, north, east, center, corner, edges, walls);
                 break;
             case Directions.North | Directions.West:
-                AddInnerCornerCell(south, west, north, east, center, corner, edges, walls);
+                AddInnerCornerCell(north, east, south, west, center, corner, edges, walls);
                 break;
             case Directions.NorthWest | Directions.SouthEast:
                 AddSaddleCell(north, east, south, west, center, corner, edges, walls);
                 break;
             case Directions.All:
                 AddCenterCell(north, east, south, west, center, corner, edges, walls);
-                switch (edges)
-                {
-                    case Directions.North | Directions.West:
-                        AddCorner(wallPolygons, east, south, center, CornerType.Square);
-                        break;
-                    case Directions.North | Directions.East:
-                        AddCorner(wallPolygons, south, west, center, CornerType.Square);
-                        break;
-                    case Directions.West | Directions.South:
-                        AddCorner(wallPolygons, north, east, center, CornerType.Square);
-                        break;
-                    case Directions.East | Directions.South:
-                        AddCorner(wallPolygons, west, north, center, CornerType.Square);
-                        break;
-                    case Directions.North:
-                        AddStraight(wallPolygons, east, west);
-                        break;
-                    case Directions.West:
-                        AddStraight(wallPolygons, north, south);
-                        break;
-                    case Directions.East:
-                        AddStraight(wallPolygons, south, north);
-                        break;
-                    case Directions.South:
-                        AddStraight(wallPolygons, west, east);
-                        break;
-                    default:
-                        switch (walls)
-                        {
-                            case Directions.NorthWest:
-                                AddCorner(wallPolygons, west, north, center, corner, WallType.Wall);
-                                AddCorner(floorPolygons, north, west, center, corner);
-                                break;
-                            case Directions.NorthEast:
-                                AddCorner(wallPolygons, north, east, center, corner, WallType.Wall);
-                                AddCorner(floorPolygons, east, north, center, corner);
-                                break;
-                            case Directions.SouthEast:
-                                AddCorner(wallPolygons, east, south, center, corner, WallType.Wall);
-                                AddCorner(floorPolygons, south, east, center, corner);
-                                break;
-                            case Directions.SouthWest:
-                                AddCorner(wallPolygons, south, west, center, corner, WallType.Wall);
-                                AddCorner(floorPolygons, west, south, center, corner);
-                                break;
-                            case Directions.North:
-                                AddStraight(wallPolygons, west, east, WallType.Wall);
-                                AddStraight(floorPolygons, east, west, WallType.None);
-                                break;
-                            case Directions.East:
-                                AddStraight(wallPolygons, north, south, WallType.Wall);
-                                AddStraight(floorPolygons, south, north, WallType.None);
-                                break;
-                            case Directions.South:
-                                AddStraight(wallPolygons, east, west, WallType.Wall);
-                                AddStraight(floorPolygons, west, east, WallType.None);
-                                break;
-                            case Directions.West:
-                                AddStraight(wallPolygons, south, north, WallType.Wall);
-                                AddStraight(floorPolygons, north, south, WallType.None);
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-                }
                 break;
             default:
                 break;
@@ -900,7 +834,6 @@ public class VoxelGrid : MonoBehaviour
         switch (walls)
         {
             case Directions.None:
-                return;
             case Directions.NorthWest:
             case Directions.North:
             case Directions.North | Directions.SouthWest:
@@ -922,36 +855,108 @@ public class VoxelGrid : MonoBehaviour
             case Directions.SouthWest:
             case Directions.West:
             case Directions.West | Directions.SouthEast:
-                AddRotatedCenterCell(south, west, north, east, center, corner, RotateCW(edges), RotateCW(walls));
+                AddRotatedCenterCell(west, north, east, south, center, corner, RotateCW(edges), RotateCW(walls));
                 break;
         }
     }
 
-    void AddRotatedCenterCell(Vector3 south, Vector3 west, Vector3 north, Vector3 east, Vector3 center, CornerType corner, Directions edges, Directions walls)
+    void AddRotatedCenterCell(Vector3 north, Vector3 east, Vector3 south, Vector3 west, Vector3 center, CornerType corner, Directions edges, Directions walls)
     {
         switch (edges)
         {
-            case Directions.None:
-                break;
-            case Directions.NorthWest:
-                break;
-            case Directions.NorthEast:
-                break;
-            case Directions.SouthWest:
-                break;
-            case Directions.SouthEast:
-                break;
             case Directions.North:
+                switch (walls)
+                {
+                    default:
+                        AddStraight(floorPolygons, east, west, WallType.Floor);
+                        break;
+                }
                 break;
             case Directions.South:
+                switch (walls)
+                {
+                    default:
+                        AddStraight(floorPolygons, west, east, WallType.Floor);
+                        break;
+                }
                 break;
             case Directions.East:
+                switch (walls)
+                {
+                    default:
+                        AddStraight(floorPolygons, south, north, WallType.Floor);
+                        break;
+                }
                 break;
             case Directions.West:
+                switch (walls)
+                {
+                    default:
+                        AddStraight(floorPolygons, north, south, WallType.Floor);
+                        break;
+                }
                 break;
-            case Directions.All:
+            case Directions.West | Directions.North:
+                switch (walls)
+                {
+                    default:
+                        AddCorner(floorPolygons, east, south, center, CornerType.Square, WallType.Floor);
+                        break;
+                }
+                break;
+            case Directions.North | Directions.East:
+                switch (walls)
+                {
+                    default:
+                        AddCorner(floorPolygons, south, west, center, CornerType.Square, WallType.Floor);
+                        break;
+                }
+                break;
+            case Directions.East | Directions.South:
+                switch (walls)
+                {
+                    default:
+                        AddCorner(floorPolygons, west, north, center, CornerType.Square, WallType.Floor);
+                        break;
+                }
+                break;
+            case Directions.South | Directions.West:
+                switch (walls)
+                {
+                    default:
+                        AddCorner(floorPolygons, north, east, center, CornerType.Square, WallType.Floor);
+                        break;
+                }
                 break;
             default:
+                switch (walls)
+                {
+                    case Directions.NorthWest:
+                        AddCorner(wallPolygons, west, north, center, corner, WallType.Wall);
+                        AddCorner(floorPolygons, north, west, center, corner, WallType.None);
+                        break;
+                    case Directions.North:
+                        AddStraight(wallPolygons, west, east, WallType.Wall);
+                        AddStraight(floorPolygons, east, west, WallType.None);
+                        break;
+                    case Directions.West | Directions.North:
+                        AddCorner(wallPolygons, south, east, center, corner, WallType.Wall);
+                        AddCorner(floorPolygons, east, south, center, corner, WallType.None);
+                        break;
+                    case Directions.NorthWest | Directions.SouthEast:
+                        if (!_filledGaps)
+                            corner = CornerType.Diamond;
+
+                        AddCorner(wallPolygons, west, north, center, corner, WallType.Wall);
+                        AddCorner(floorPolygons, north, west, center, corner, WallType.None);
+
+                        AddCorner(wallPolygons, east, south, center, corner, WallType.Wall);
+                        AddCorner(floorPolygons, south, east, center, corner, WallType.None);
+
+                        break;
+                    default:
+                        break;
+                }
                 break;
         }
     }
