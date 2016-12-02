@@ -123,13 +123,52 @@ public class GameMap : MonoBehaviour
     BlockMesher mesher;
 
     // The actual unity meshes used to draw things on screen.
-    Mesh[,,] blocks;         // Terrain data.
-    Mesh[,,] stencilBlocks;  // Foliage &ct.
-    Mesh[,,] transparentBlocks;  // Glass &ct.
-    Mesh[,,] topBlocks;         // Terrain data.
-    Mesh[,,] topStencilBlocks;  // Foliage &ct.
-    Mesh[,,] topTransparentBlocks;  // Glass &ct.
-    Mesh[,,,] liquidBlocks; // Water & magma. Extra dimension is a liquid type.
+    /// <summary>
+    /// Opaque terrain built from prefab meshes
+    /// </summary>
+    Mesh[,,] blocks;
+    /// <summary>
+    /// Cout-out terrain built from prefab meshes
+    /// Includes foliage, and things like floor grates.
+    /// </summary>
+    Mesh[,,] stencilBlocks;
+    /// <summary>
+    /// Semitransparent terrain built from prefab meshes.
+    /// </summary>
+    Mesh[,,] transparentBlocks;
+    /// <summary>
+    /// Top face of opaque terrain, only rendered on the top level.
+    /// </summary>
+    Mesh[,,] topBlocks;
+    /// <summary>
+    /// Top face of cutout terrain.
+    /// </summary>
+    Mesh[,,] topStencilBlocks;
+    /// <summary>
+    /// Top face of partially transparent terrain
+    /// includes glass, etc.
+    /// </summary>
+    Mesh[,,] topTransparentBlocks;
+    /// <summary>
+    /// Water and magma meshes.
+    /// W dimension is liquid type.
+    /// </summary>
+    Mesh[,,,] liquidBlocks;
+    /// <summary>
+    /// Procedurally generated terrain blocks.
+    /// </summary>
+    Mesh[,,] terrainBlocks;
+    /// <summary>
+    /// top face of procedurally generated terrain blocks.
+    /// </summary>
+    Mesh[,,] topTerrainBlocks;
+    /// <summary>
+    /// Procedurally generated grass.
+    /// </summary>
+    Mesh[,,] grassBlocks;
+    /// <summary>
+    /// Procedural grass blocks.
+    /// </summary>
     MeshCollider[,,] collisionBlocks;
     public MeshCollider collisionTemplate;
     // Dirty flags for those meshes

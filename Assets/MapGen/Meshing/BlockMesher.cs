@@ -31,6 +31,9 @@ abstract class BlockMesher {
         public CPUMesh water;
         public CPUMesh magma;
         public CPUMesh collisionMesh;
+        public CPUMesh terrainMesh;
+        public CPUMesh topTerrainMesh;
+        public CPUMesh grassMesh;
     }
 
     protected struct Request {
@@ -197,7 +200,7 @@ abstract class BlockMesher {
         }
         if (request.tiles)
         {
-            GenerateTiles(request.data, out result.tiles, out result.stencilTiles, out result.transparentTiles, out result.topTiles, out result.topStencilTiles, out result.topTransparentTiles, out result.collisionMesh, temp);
+            GenerateTiles(request.data, out result.tiles, out result.stencilTiles, out result.transparentTiles, out result.topTiles, out result.topStencilTiles, out result.topTransparentTiles, out result.collisionMesh, out result.terrainMesh, temp);
         }
         return result;
     }
@@ -323,7 +326,7 @@ abstract class BlockMesher {
         }
     }
 
-    bool GenerateTiles(MapDataStore data, out CPUMesh tiles, out CPUMesh stencilTiles, out CPUMesh transparentTiles, out CPUMesh topTiles, out CPUMesh topStencilTiles, out CPUMesh topTransparentTiles, out CPUMesh collisionTiles, TempBuffers temp)
+    bool GenerateTiles(MapDataStore data, out CPUMesh tiles, out CPUMesh stencilTiles, out CPUMesh transparentTiles, out CPUMesh topTiles, out CPUMesh topStencilTiles, out CPUMesh topTransparentTiles, out CPUMesh collisionTiles, out CPUMesh terrainTiles, TempBuffers temp)
     {
         int block_x = data.SliceOrigin.x / GameMap.blockSize;
         int block_y = data.SliceOrigin.y / GameMap.blockSize;
@@ -370,6 +373,8 @@ abstract class BlockMesher {
         topTiles = MeshCombineUtility.ColorCombine(temp.meshBuffer, out dontCare, true);
         tiles = MeshCombineUtility.ColorCombine(temp.meshBuffer, out success, false);
         collisionTiles = MeshCombineUtility.ColorCombine(temp.collisionMeshBuffer, out dontCare, false);
+        VoxelGenerator voxelGen = new VoxelGenerator(data);
+        terrainTiles = voxelGen.TerrainMesh;
 
         return success;
     }
@@ -533,6 +538,11 @@ abstract class BlockMesher {
                 break;
             default:
                 {
+                    if(VoxelGenerator.Handled(tile))
+                    {
+                        buffer.meshData = null;
+                        return;
+                    }
                     if (!ContentLoader.Instance.TileMeshConfiguration.GetValue(tile, layer, out meshContent))
                     {
                         buffer.meshData = null;
