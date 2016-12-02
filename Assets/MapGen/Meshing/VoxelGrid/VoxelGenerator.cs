@@ -1,26 +1,24 @@
-﻿using Poly2Tri;
+﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityExtension;
+using RemoteFortressReader;
+using Poly2Tri;
 
-[SelectionBase]
-public class VoxelGrid : MonoBehaviour
+public class VoxelGenerator
 {
-    private Mesh mesh;
+    MapDataStore map;
+    public VoxelGenerator(MapDataStore map)
+    {
+        this.map = map;
+        Triangulate();
+    }
 
     private List<Vector3> vertices;
     private List<Vector2> uvs;
+    private List<Color> colors;
     private List<int> triangles;
 
-    public int resolution;
-
-    private Voxel[] voxels;
-    private float voxelSize, gridSize;
-
-    private Voxel dummyX, dummyY, dummyT;
-
-    public VoxelGrid xNeighbor, yNeighbor, xyNeighbor;
+    bool OpenedDiagonals { get { return false; } }
 
     public enum CornerType
     {
@@ -29,147 +27,14 @@ public class VoxelGrid : MonoBehaviour
         Rounded
     }
 
-    CornerType _cornerType = CornerType.Rounded;
+    CornerType UsedCornerType { get { return CornerType.Rounded; } }
 
-    public CornerType cornerType
+    public CPUMesh TerrainMesh
     {
         get
         {
-            return _cornerType;
+            return new CPUMesh(vertices.ToArray(), null, null, uvs.ToArray(), null, null, null, triangles.ToArray());
         }
-        set
-        {
-            _cornerType = value;
-            Refresh();
-        }
-    }
-
-    bool _filledGaps = true;
-
-    public bool filledGaps
-    {
-        get { return _filledGaps; }
-        set
-        {
-            _filledGaps = value;
-            Refresh();
-        }
-    }
-
-    public void Initialize(int resolution, float size)
-    {
-        this.resolution = resolution;
-        gridSize = size;
-        voxelSize = size / resolution;
-        voxels = new Voxel[resolution * resolution];
-
-        dummyX = new Voxel();
-        dummyY = new Voxel();
-        dummyT = new Voxel();
-
-        for (int i = 0, y = 0; y < resolution; y++)
-        {
-            for (int x = 0; x < resolution; x++, i++)
-            {
-                CreateVoxel(i, x, y, x == 0 || x == resolution - 1 || y == 0 || y == resolution - 1);
-            }
-        }
-
-        GetComponent<MeshFilter>().mesh = mesh = new Mesh();
-        mesh.name = "VoxelGrid Mesh";
-        vertices = new List<Vector3>();
-        triangles = new List<int>();
-        uvs = new List<Vector2>();
-        Refresh();
-    }
-
-    private void CreateVoxel(int i, int x, int y, bool edge)
-    {
-        voxels[i] = new Voxel(x, y, voxelSize);
-        voxels[i].edge = edge;
-    }
-
-    public void Apply(VoxelStencil stencil)
-    {
-        int xStart = Mathf.Max(stencil.XStart, 0);
-        int xEnd = Mathf.Min(stencil.XEnd, resolution - 1);
-        int yStart = Mathf.Max(stencil.YStart, 0);
-        int yEnd = Mathf.Min(stencil.YEnd, resolution - 1);
-
-        for (int y = yStart; y <= yEnd; y++)
-        {
-            int i = y * resolution + xStart;
-            for (int x = xStart; x <= xEnd; x++, i++)
-            {
-                voxels[i].state = stencil.Apply(x, y, voxels[i].state);
-            }
-        }
-        Refresh();
-    }
-
-
-    private void Refresh()
-    {
-        Triangulate();
-    }
-
-    private void Triangulate()
-    {
-        vertices.Clear();
-        triangles.Clear();
-        mesh.Clear();
-        uvs.Clear();
-
-        wallPolygons.Clear();
-        floorPolygons.Clear();
-
-        if (xNeighbor != null)
-        {
-            dummyX.BecomeXDummyOf(xNeighbor.voxels[0], gridSize);
-        }
-        TriangulateCellRows();
-
-        ConvertToMesh(wallPolygons.Polygons, GameMap.tileHeight);
-        ConvertToMesh(floorPolygons.Polygons, GameMap.floorHeight);
-        mesh.vertices = vertices.ToArray();
-        mesh.triangles = triangles.ToArray();
-        mesh.uv = uvs.ToArray();
-        mesh.RecalculateNormals();
-        mesh.RecalculateTangents();
-    }
-
-    private void TriangulateCellRows()
-    {
-        int cells = resolution - 1;
-        for (int i = 0, y = 0; y < cells; y++, i++)
-        {
-            for (int x = 0; x < cells; x++, i++)
-            {
-                //if (x == 0)
-                //    TriangulateLeftEdge(voxels[i], voxels[i + resolution]);
-                //if (x == cells - 1)
-                //    TriangulateRightEdge(voxels[i + 1], voxels[i + resolution + 1]);
-                //if (y == 0)
-                //    TriangulateTopEdge(voxels[i], voxels[i + 1]);
-                //if (y == cells - 1)
-                //    TriangulateBottomEdge(voxels[i + resolution], voxels[i + resolution + 1]);
-
-                TriangulateCell(
-                    voxels[i],
-                    voxels[i + 1],
-                    voxels[i + resolution],
-                    voxels[i + resolution + 1]);
-            }
-        }
-    }
-
-    internal void Randomize()
-    {
-        for (int i = 0; i < voxels.Length; i++)
-        {
-            voxels[i].state = (Voxel.State)UnityEngine.Random.Range(0, 3);
-        }
-        Refresh();
     }
 
     [Flags]
@@ -213,51 +78,101 @@ public class VoxelGrid : MonoBehaviour
         return RotateCW(RotateCW(RotateCW(dir)));
     }
 
-
-    private void TriangulateCell(Voxel northWest, Voxel northEast, Voxel southWest, Voxel southEast)
+    private void Triangulate()
     {
-        var corner = _cornerType;
-        if (northWest.state == Voxel.State.Intruded
-            || northEast.state == Voxel.State.Intruded
-            || southWest.state == Voxel.State.Intruded
-            || southEast.state == Voxel.State.Intruded
+        TriangulateCellRows();
+    }
+
+    private void TriangulateCellRows()
+    {
+        for (int y = 0; y < map.SliceSize.y - 1; y++)
+        {
+            for (int x = 0; x < map.SliceSize.x - 1; x++)
+            {
+                TriangulateCell(map[x, y, 1], map[x + 1, y, 1], map[x, y + 1, 1], map[x + 1, y + 1, 1]);
+            }
+        }
+    }
+
+    public static bool Handled(MapDataStore.Tile tile)
+    {
+        switch (tile.shape)
+        {
+            case TiletypeShape.NO_SHAPE:
+            case TiletypeShape.EMPTY:
+            case TiletypeShape.FLOOR:
+            case TiletypeShape.WALL:
+                break;
+            default:
+                return false;
+        }
+        switch (tile.tiletypeMaterial)
+        {
+            case TiletypeMaterial.NO_MATERIAL:
+            case TiletypeMaterial.AIR:
+            case TiletypeMaterial.SOIL:
+            case TiletypeMaterial.STONE:
+            case TiletypeMaterial.FEATURE:
+            case TiletypeMaterial.LAVA_STONE:
+            case TiletypeMaterial.MINERAL:
+            case TiletypeMaterial.GRASS_LIGHT:
+            case TiletypeMaterial.GRASS_DARK:
+            case TiletypeMaterial.GRASS_DRY:
+            case TiletypeMaterial.GRASS_DEAD:
+            case TiletypeMaterial.PLANT:
+            case TiletypeMaterial.POOL:
+            case TiletypeMaterial.BROOK:
+            case TiletypeMaterial.RIVER:
+            case TiletypeMaterial.ROOT:
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
+    private void TriangulateCell(MapDataStore.Tile northWest, MapDataStore.Tile northEast, MapDataStore.Tile southWest, MapDataStore.Tile southEast)
+    {
+        var corner = CornerType.Rounded;
+        if (!Handled(northWest)
+            || !Handled(northEast)
+            || !Handled(southWest)
+            || !Handled(southEast)
             )
             corner = CornerType.Square;
 
-
-
         Directions walls = Directions.None;
-        if (northWest.state == Voxel.State.Wall)
+        if (northWest.shape == TiletypeShape.WALL)
         {
             walls |= Directions.NorthWest;
         }
-        if (northEast.state == Voxel.State.Wall)
+        if (northEast.shape == TiletypeShape.WALL)
         {
             walls |= Directions.NorthEast;
         }
-        if (southWest.state == Voxel.State.Wall)
+        if (southWest.shape == TiletypeShape.WALL)
         {
             walls |= Directions.SouthWest;
         }
-        if (southEast.state == Voxel.State.Wall)
+        if (southEast.shape == TiletypeShape.WALL)
         {
             walls |= Directions.SouthEast;
         }
 
         Directions wallFloors = walls;
-        if (northWest.state == Voxel.State.Floor)
+        if (northWest.shape == TiletypeShape.FLOOR)
         {
             wallFloors |= Directions.NorthWest;
         }
-        if (northEast.state == Voxel.State.Floor)
+        if (northEast.shape == TiletypeShape.FLOOR)
         {
             wallFloors |= Directions.NorthEast;
         }
-        if (southWest.state == Voxel.State.Floor)
+        if (southWest.shape == TiletypeShape.FLOOR)
         {
             wallFloors |= Directions.SouthWest;
         }
-        if (southEast.state == Voxel.State.Floor)
+        if (southEast.shape == TiletypeShape.FLOOR)
         {
             wallFloors |= Directions.SouthEast;
         }
@@ -265,23 +180,22 @@ public class VoxelGrid : MonoBehaviour
 
 
         Directions edges = Directions.None;
-        if (northWest.edge)
+        if (northWest.North == null)
         {
-            edges |= Directions.NorthWest;
+            edges |= Directions.North;
         }
-        if (northEast.edge)
+        if (northEast.East == null)
         {
-            edges |= Directions.NorthEast;
+            edges |= Directions.East;
         }
-        if (southWest.edge)
+        if (southWest.West == null)
         {
-            edges |= Directions.SouthWest;
+            edges |= Directions.West;
         }
-        if (southEast.edge)
+        if (southEast.South == null)
         {
-            edges |= Directions.SouthEast;
+            edges |= Directions.South;
         }
-
 
         switch (wallFloors)
         {
@@ -432,7 +346,7 @@ public class VoxelGrid : MonoBehaviour
                 switch (walls)
                 {
                     case Directions.NorthEast:
-                        if(corner == CornerType.Square)
+                        if (corner == CornerType.Square)
                             AddCorner(wallPolygons, north, east, center, corner, WallType.Both);
                         else
                         {
@@ -484,7 +398,7 @@ public class VoxelGrid : MonoBehaviour
         switch (edges)
         {
             case Directions.East:
-                AddStraightCell(south, west, north, center, (walls == Directions.North)? CornerType.Square : corner, RotateCW(edges), RotateCW(walls) & Directions.North);
+                AddStraightCell(south, west, north, center, (walls == Directions.North) ? CornerType.Square : corner, RotateCW(edges), RotateCW(walls) & Directions.North);
                 break;
             case Directions.South:
                 AddStraightCell(west, north, east, center, (walls == Directions.West) ? CornerType.Square : corner, edges, walls & Directions.North);
@@ -507,7 +421,7 @@ public class VoxelGrid : MonoBehaviour
                         }
                         break;
                     case Directions.West:
-                        if(corner == CornerType.Square)
+                        if (corner == CornerType.Square)
                         {
                             AddCorner(wallPolygons, south, west, center, corner, WallType.Both);
                         }
@@ -633,7 +547,7 @@ public class VoxelGrid : MonoBehaviour
                         AddCorner(wallPolygons, west, north, center, CornerType.Square, WallType.Both);
                         break;
                     case Directions.NorthWest:
-                        if(corner == CornerType.Square)
+                        if (corner == CornerType.Square)
                             AddCorner(wallPolygons, west, north, center, CornerType.Square, WallType.Both);
                         else
                         {
@@ -726,7 +640,7 @@ public class VoxelGrid : MonoBehaviour
 
     void AddSaddleCell(Vector3 north, Vector3 east, Vector3 south, Vector3 west, Vector3 center, CornerType corner, Directions edges, Directions walls)
     {
-        if (!_filledGaps)
+        if (OpenedDiagonals)
             corner = CornerType.Diamond;
         switch (edges)
         {
@@ -842,7 +756,7 @@ public class VoxelGrid : MonoBehaviour
                         }
                         break;
                     case Directions.NorthWest | Directions.SouthEast:
-                        if (!_filledGaps)
+                        if (OpenedDiagonals)
                             corner = CornerType.Diamond;
 
                         AddCorner(wallPolygons, east, south, center, corner, WallType.Wall);
@@ -868,7 +782,7 @@ public class VoxelGrid : MonoBehaviour
                         AddStraight(floorPolygons, westPoint, east, WallType.Floor);
                         break;
                     case Directions.NorthWest | Directions.SouthEast:
-                        if (!_filledGaps)
+                        if (OpenedDiagonals)
                             corner = CornerType.Diamond;
 
                         AddCorner(wallPolygons, west, north, center, corner, WallType.Wall);
@@ -898,7 +812,7 @@ public class VoxelGrid : MonoBehaviour
                         AddCorner(floorPolygons, south, west, center, CornerType.Square, WallType.Floor);
                         break;
                     case Directions.NorthWest | Directions.SouthEast:
-                        if (!_filledGaps)
+                        if (OpenedDiagonals)
                             corner = CornerType.Diamond;
 
                         AddCorner(wallPolygons, west, north, center, corner, WallType.Wall);
@@ -927,7 +841,7 @@ public class VoxelGrid : MonoBehaviour
                         AddCorner(floorPolygons, east, south, center, corner, WallType.None);
                         break;
                     case Directions.NorthWest | Directions.SouthEast:
-                        if (!_filledGaps)
+                        if (OpenedDiagonals)
                             corner = CornerType.Diamond;
                         AddCorner(wallPolygons, east, south, center, corner, WallType.Wall);
                         AddCorner(floorPolygons, south, east, center, corner, WallType.None);
@@ -1037,7 +951,7 @@ public class VoxelGrid : MonoBehaviour
                         AddCorner(floorPolygons, east, south, center, corner, WallType.None);
                         break;
                     case Directions.NorthWest | Directions.SouthEast:
-                        if (!_filledGaps)
+                        if (OpenedDiagonals)
                             corner = CornerType.Diamond;
 
                         AddCorner(wallPolygons, west, north, center, corner, WallType.Wall);
@@ -1092,32 +1006,6 @@ public class VoxelGrid : MonoBehaviour
     ComplexPoly wallPolygons = new ComplexPoly();
     ComplexPoly floorPolygons = new ComplexPoly();
 
-    private void OnDrawGizmos()
-    {
-        wallPolygons.DrawGizmos(transform, Color.green, Color.blue, GameMap.tileHeight);
-        floorPolygons.DrawGizmos(transform, Color.magenta, Color.yellow, GameMap.floorHeight);
-        foreach (var item in voxels)
-        {
-            switch (item.state)
-            {
-                case Voxel.State.Empty:
-                    continue;
-                case Voxel.State.Floor:
-                    Gizmos.color = Color.yellow;
-                    break;
-                case Voxel.State.Wall:
-                    Gizmos.color = Color.blue;
-                    break;
-                case Voxel.State.Intruded:
-                    Gizmos.color = Color.red;
-                    break;
-                default:
-                    break;
-            }
-            Gizmos.DrawCube(transform.localToWorldMatrix.MultiplyPoint(item.position), Vector3.one * 0.1f);
-        }
-    }
-
 
     void ConvertToMesh(PolygonSet polySet, float height)
     {
@@ -1127,7 +1015,7 @@ public class VoxelGrid : MonoBehaviour
         {
             foreach (var triangle in polygon.Triangles)
             {
-                for(int i = 2; i >= 0; i--)
+                for (int i = 2; i >= 0; i--)
                 {
                     var point = triangle.Points[i];
                     int index;
@@ -1170,7 +1058,7 @@ public class VoxelGrid : MonoBehaviour
         float uvBottom = bottom / GameMap.tileHeight;
 
         float length = 0;
-        for(int i = 0; i < points.Length-1; i++)
+        for (int i = 0; i < points.Length - 1; i++)
         {
             length += (points[i] - points[i + 1]).magnitude;
         }

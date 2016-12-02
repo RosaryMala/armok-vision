@@ -1317,6 +1317,10 @@ public class MapDataStore {
             }
         }
 
+        public Vector3 eastEdge { get { return GameMap.DFtoUnityCoord(position) + new Vector3(GameMap.tileWidth / 2, 0, 0); } }
+        public Vector3 southEdge { get { return GameMap.DFtoUnityCoord(position) + new Vector3(0, 0, -GameMap.tileWidth / 2); } }
+        public Vector3 cornerPosition { get { return GameMap.DFtoUnityCoord(position) + new Vector3(GameMap.tileWidth / 2, 0, -GameMap.tileWidth / 2); } }
+
         public bool GrowthAppliesEver(TreeGrowth growth)
         {
             if (special == TiletypeSpecial.DEAD
