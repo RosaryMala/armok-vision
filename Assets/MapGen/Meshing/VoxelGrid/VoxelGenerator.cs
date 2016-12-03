@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using RemoteFortressReader;
 using Poly2Tri;
+using DFHack;
 
 public class VoxelGenerator
 {
@@ -13,10 +14,10 @@ public class VoxelGenerator
         Triangulate();
     }
 
-    private List<Vector3> vertices;
-    private List<Vector2> uvs;
-    private List<Color> colors;
-    private List<int> triangles;
+    private List<Vector3> vertices = new List<Vector3>();
+    private List<Vector2> uvs = new List<Vector2>();
+    private List<Color> colors = new List<Color>();
+    private List<int> triangles = new List<int>();
 
     bool OpenedDiagonals { get { return false; } }
 
@@ -80,7 +81,19 @@ public class VoxelGenerator
 
     private void Triangulate()
     {
+        vertices.Clear();
+        uvs.Clear();
+        colors.Clear();
+        triangles.Clear();
+
+        wallPolygons.Clear();
+        floorPolygons.Clear();
+
         TriangulateCellRows();
+
+        ConvertToMesh(wallPolygons.Polygons, GameMap.tileHeight);
+        ConvertToMesh(floorPolygons.Polygons, GameMap.floorHeight);
+
     }
 
     private void TriangulateCellRows()
@@ -89,13 +102,35 @@ public class VoxelGenerator
         {
             for (int x = 0; x < map.SliceSize.x - 1; x++)
             {
-                TriangulateCell(map[x, y, 1], map[x + 1, y, 1], map[x, y + 1, 1], map[x + 1, y + 1, 1]);
+                Directions edges = Directions.None;
+                if (x == 0)
+                    edges |= Directions.West;
+                if (x == map.SliceSize.x - 2)
+                    edges |= Directions.East;
+                if (y == 0)
+                    edges |= Directions.North;
+                if (y == map.SliceSize.y - 2)
+                    edges |= Directions.South;
+
+                TriangulateCell(
+                    map[map.LocalToWorldSpace(new DFCoord(x, y, 1))],
+                    map[map.LocalToWorldSpace(new DFCoord(x + 1, y, 1))],
+                    map[map.LocalToWorldSpace(new DFCoord(x, y + 1, 1))], 
+                    map[map.LocalToWorldSpace(new DFCoord(x + 1, y + 1, 1))],
+                    GameMap.DFtoUnityCoord(new DFCoord(x, y, 1)) + new Vector3(GameMap.tileWidth / 2, 0, 0),
+                    GameMap.DFtoUnityCoord(new DFCoord(x + 1, y, 1)) + new Vector3(0, 0, -GameMap.tileWidth / 2),
+                    GameMap.DFtoUnityCoord(new DFCoord(x, y + 1, 1)) + new Vector3(GameMap.tileWidth / 2, 0, 0),
+                    GameMap.DFtoUnityCoord(new DFCoord(x, y, 1)) + new Vector3(0, 0, -GameMap.tileWidth / 2),
+                    GameMap.DFtoUnityCoord(new DFCoord(x, y, 1)) + new Vector3(GameMap.tileWidth / 2, 0, -GameMap.tileWidth / 2),
+                    edges);
             }
         }
     }
 
     public static bool Handled(MapDataStore.Tile tile)
     {
+        if (tile == null)
+            return true; //means it's air/empty
         switch (tile.shape)
         {
             case TiletypeShape.NO_SHAPE:
@@ -131,7 +166,17 @@ public class VoxelGenerator
         return true;
     }
 
-    private void TriangulateCell(MapDataStore.Tile northWest, MapDataStore.Tile northEast, MapDataStore.Tile southWest, MapDataStore.Tile southEast)
+    private void TriangulateCell(
+        MapDataStore.Tile northWest,
+        MapDataStore.Tile northEast,
+        MapDataStore.Tile southWest, 
+        MapDataStore.Tile southEast,
+        Vector3 northPoint, 
+        Vector3 eastPoint,
+        Vector3 southPoint,
+        Vector3 westPoint,
+        Vector3 centerPoint,
+        Directions edges)
     {
         var corner = CornerType.Rounded;
         if (!Handled(northWest)
@@ -142,59 +187,39 @@ public class VoxelGenerator
             corner = CornerType.Square;
 
         Directions walls = Directions.None;
-        if (northWest.shape == TiletypeShape.WALL)
+        if (northWest != null && northWest.shape == TiletypeShape.WALL)
         {
             walls |= Directions.NorthWest;
         }
-        if (northEast.shape == TiletypeShape.WALL)
+        if (northEast != null && northEast.shape == TiletypeShape.WALL)
         {
             walls |= Directions.NorthEast;
         }
-        if (southWest.shape == TiletypeShape.WALL)
+        if (southWest != null && southWest.shape == TiletypeShape.WALL)
         {
             walls |= Directions.SouthWest;
         }
-        if (southEast.shape == TiletypeShape.WALL)
+        if (southEast != null && southEast.shape == TiletypeShape.WALL)
         {
             walls |= Directions.SouthEast;
         }
 
         Directions wallFloors = walls;
-        if (northWest.shape == TiletypeShape.FLOOR)
+        if (northWest != null && northWest.shape == TiletypeShape.FLOOR)
         {
             wallFloors |= Directions.NorthWest;
         }
-        if (northEast.shape == TiletypeShape.FLOOR)
+        if (northEast != null && northEast.shape == TiletypeShape.FLOOR)
         {
             wallFloors |= Directions.NorthEast;
         }
-        if (southWest.shape == TiletypeShape.FLOOR)
+        if (southWest != null && southWest.shape == TiletypeShape.FLOOR)
         {
             wallFloors |= Directions.SouthWest;
         }
-        if (southEast.shape == TiletypeShape.FLOOR)
+        if (southEast != null && southEast.shape == TiletypeShape.FLOOR)
         {
             wallFloors |= Directions.SouthEast;
-        }
-
-
-
-        Directions edges = Directions.None;
-        if (northWest.North == null)
-        {
-            edges |= Directions.North;
-        }
-        if (northEast.East == null)
-        {
-            edges |= Directions.East;
-        }
-        if (southWest.West == null)
-        {
-            edges |= Directions.West;
-        }
-        if (southEast.South == null)
-        {
-            edges |= Directions.South;
         }
 
         switch (wallFloors)
@@ -207,11 +232,11 @@ public class VoxelGenerator
             case Directions.NorthWest | Directions.SouthEast:
             case Directions.All:
                 AddRotatedCell(
-                    northWest.eastEdge,
-                    northEast.southEdge,
-                    southWest.eastEdge,
-                    northWest.southEdge,
-                    northWest.cornerPosition,
+                    northPoint,
+                    eastPoint,
+                    southPoint,
+                    westPoint,
+                    centerPoint,
                     wallFloors, edges, walls, corner);
                 break;
             case Directions.NorthEast:
@@ -219,33 +244,33 @@ public class VoxelGenerator
             case Directions.North | Directions.SouthEast:
             case Directions.NorthEast | Directions.SouthWest:
                 AddRotatedCell(
-                    northEast.southEdge,
-                    southWest.eastEdge,
-                    northWest.southEdge,
-                    northWest.eastEdge,
-                    northWest.cornerPosition,
+                    eastPoint,
+                    southPoint,
+                    westPoint,
+                    northPoint,
+                    centerPoint,
                     RotateCCW(wallFloors), RotateCCW(edges), RotateCCW(walls), corner);
                 break;
             case Directions.SouthEast:
             case Directions.South:
             case Directions.NorthEast | Directions.South:
                 AddRotatedCell(
-                    southWest.eastEdge,
-                    northWest.southEdge,
-                    northWest.eastEdge,
-                    northEast.southEdge,
-                    northWest.cornerPosition,
+                    southPoint,
+                    westPoint,
+                    northPoint,
+                    eastPoint,
+                    centerPoint,
                     Rotate180(wallFloors), Rotate180(edges), Rotate180(walls), corner);
                 break;
             case Directions.SouthWest:
             case Directions.West:
             case Directions.West | Directions.SouthEast:
                 AddRotatedCell(
-                    northWest.southEdge,
-                    northWest.eastEdge,
-                    northEast.southEdge,
-                    southWest.eastEdge,
-                    northWest.cornerPosition,
+                    westPoint,
+                    northPoint,
+                    eastPoint,
+                    southPoint,
+                    centerPoint,
                     RotateCW(wallFloors), RotateCW(edges), RotateCW(walls), corner);
                 break;
         }

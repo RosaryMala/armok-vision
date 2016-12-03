@@ -1,4 +1,3 @@
-using Collada141;
 using DFHack;
 using MapGen;
 using RemoteFortressReader;
@@ -11,6 +10,7 @@ using UnitFlags;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+using UnityExtension;
 
 // The class responsible for talking to DF and meshing the data it gets.
 // Relevant vocabulary: A "map tile" is an individual square on the map.
@@ -27,6 +27,12 @@ public class GameMap : MonoBehaviour
     public Material basicTerrainArrayMaterial;   // Can be any terrain you want.
     public Material stencilTerrainArrayMaterial; // Foliage & other stenciled materials.
     public Material transparentTerrainArrayMaterial; // Anything with partial transparency.
+
+    /// <summary>
+    /// Used for generated terrain, that needs a splat map.
+    /// </summary>
+    public Material voxelTerrainMaterial;
+
 
     bool arrayTextures = false;
 
@@ -157,7 +163,7 @@ public class GameMap : MonoBehaviour
     /// <summary>
     /// Procedurally generated terrain blocks.
     /// </summary>
-    Mesh[,,] terrainBlocks;
+    Mesh[,,] voxelBlocks;
     /// <summary>
     /// top face of procedurally generated terrain blocks.
     /// </summary>
@@ -445,6 +451,17 @@ public class GameMap : MonoBehaviour
         UpdateSpatters();
         DrawBlocks();
         DrawItems();
+
+        int nullmeshes = 0;
+        int goodmeshes = 0;
+        foreach (var item in voxelBlocks)
+        {
+            if (item == null)
+                nullmeshes++;
+            else
+                goodmeshes++;
+        }
+        Debug.Log(string.Format("{0} good meshes, and {1} nullrefs", goodmeshes, nullmeshes));
     }
 
     public void Refresh()
@@ -463,180 +480,180 @@ public class GameMap : MonoBehaviour
 
     private void SaveMeshes()
     {
-        COLLADA exportScene = new COLLADA();
+        //COLLADA exportScene = new COLLADA();
 
-        List<geometry> geometryList = new List<geometry>();
+        //List<geometry> geometryList = new List<geometry>();
 
-        //if(testMesh!= null)
+        ////if(testMesh!= null)
+        ////{
+        ////    geometry geo = COLLADA.MeshToGeometry(testMesh);
+        ////    if (geo != null)
+        ////        geometryList.Add(geo);
+        ////}
+
+        //Debug.Log("Starting mesh export");
+        //foreach (Mesh mesh in blocks)
         //{
-        //    geometry geo = COLLADA.MeshToGeometry(testMesh);
-        //    if (geo != null)
-        //        geometryList.Add(geo);
+        //    if (mesh != null)
+        //    {
+        //        geometry geo = (COLLADA.MeshToGeometry(mesh));
+        //        if (geo != null)
+        //            geometryList.Add(geo);
+        //    }
+        //}
+        //Debug.Log("Added opaque blocks");
+        //foreach (Mesh mesh in stencilBlocks)
+        //{
+        //    if (mesh != null)
+        //    {
+        //        geometry geo = (COLLADA.MeshToGeometry(mesh));
+        //        if (geo != null)
+        //            geometryList.Add(geo);
+        //    }
+        //}
+        //Debug.Log("Added stencil blocks");
+        //foreach (Mesh mesh in transparentBlocks)
+        //{
+        //    if (mesh != null)
+        //    {
+        //        geometry geo = (COLLADA.MeshToGeometry(mesh));
+        //        if (geo != null)
+        //            geometryList.Add(geo);
+        //    }
+        //}
+        //Debug.Log("Added transparent blocks");
+        //foreach (Mesh mesh in liquidBlocks)
+        //{
+        //    if (mesh != null)
+        //    {
+        //        geometry geo = (COLLADA.MeshToGeometry(mesh));
+        //        if (geo != null)
+        //            geometryList.Add(geo);
+        //    }
+        //}
+        //Debug.Log("Added liquid blocks");
+
+        //library_geometries geometryLib = new library_geometries();
+        //geometryLib.geometry = geometryList.ToArray();
+        //Debug.Log("Added geometry to library");
+
+        //library_visual_scenes visualSceneLib = new library_visual_scenes();
+        //visual_scene visualScene = new visual_scene();
+
+        //visualSceneLib.visual_scene = new visual_scene[1];
+        //visualSceneLib.visual_scene[0] = visualScene;
+
+        //visualScene.id = "Map";
+        //visualScene.name = "Map";
+        //visualScene.node = new node[geometryList.Count];
+        //for (int i = 0; i < geometryList.Count; i++)
+        //{
+        //    node thisNode = new node();
+        //    visualScene.node[i] = thisNode;
+        //    geometry thisGeometry = geometryList[i];
+        //    thisNode.id = thisGeometry.id.Remove(thisGeometry.id.Length - 4);
+        //    thisNode.name = thisGeometry.name.Remove(thisGeometry.name.Length - 6);
+        //    thisNode.sid = thisNode.id;
+
+        //    thisNode.Items = new object[1];
+        //    thisNode.Items[0] = COLLADA.ConvertMatrix(Matrix4x4.identity);
+        //    thisNode.ItemsElementName = new ItemsChoiceType2[1];
+        //    thisNode.ItemsElementName[0] = ItemsChoiceType2.matrix;
+
+        //    thisNode.instance_geometry = new instance_geometry[1];
+        //    thisNode.instance_geometry[0] = new instance_geometry();
+        //    thisNode.instance_geometry[0].url = "#" + thisGeometry.id;
+        //}
+        //Debug.Log("Added geometry to scene");
+
+        //COLLADAScene sceneInstance = new COLLADAScene();
+        //sceneInstance.instance_visual_scene = new InstanceWithExtra();
+        //sceneInstance.instance_visual_scene.url = "#" + visualScene.id;
+
+        //exportScene.scene = sceneInstance;
+
+        //exportScene.Items = new object[2];
+        //exportScene.Items[0] = geometryLib;
+        //exportScene.Items[1] = visualSceneLib;
+
+        //asset assetHeader = new asset();
+        //assetHeader.unit = new assetUnit();
+        //assetHeader.unit.meter = 1;
+        //assetHeader.unit.name = "meter";
+        //assetHeader.up_axis = UpAxisType.Y_UP;
+
+        //exportScene.asset = assetHeader;
+        //Debug.Log("Setup Scene");
+
+        //if (File.Exists("Map.dae"))
+        //    File.Delete("Map.dae");
+        //exportScene.Save("Map.dae");
+        //Debug.Log("Saved Scene");
+
+        //Texture2D mainTex = (Texture2D)BasicTerrainMaterial.GetTexture("_MainTex");
+
+        //Color[] mainTexPixels = mainTex.GetPixels();
+        //Color[] diffusePixels = new Color[mainTexPixels.Length];
+        //Color[] roughnessPixels = new Color[mainTexPixels.Length];
+
+        //for (int i = 0; i < mainTexPixels.Length; i++)
+        //{
+        //    diffusePixels[i] = new Color(mainTexPixels[i].r, mainTexPixels[i].g, mainTexPixels[i].b, 1.0f);
+        //    roughnessPixels[i] = new Color(mainTexPixels[i].a, mainTexPixels[i].a, mainTexPixels[i].a, 1.0f);
         //}
 
-        Debug.Log("Starting mesh export");
-        foreach (Mesh mesh in blocks)
-        {
-            if (mesh != null)
-            {
-                geometry geo = (COLLADA.MeshToGeometry(mesh));
-                if (geo != null)
-                    geometryList.Add(geo);
-            }
-        }
-        Debug.Log("Added opaque blocks");
-        foreach (Mesh mesh in stencilBlocks)
-        {
-            if (mesh != null)
-            {
-                geometry geo = (COLLADA.MeshToGeometry(mesh));
-                if (geo != null)
-                    geometryList.Add(geo);
-            }
-        }
-        Debug.Log("Added stencil blocks");
-        foreach (Mesh mesh in transparentBlocks)
-        {
-            if (mesh != null)
-            {
-                geometry geo = (COLLADA.MeshToGeometry(mesh));
-                if (geo != null)
-                    geometryList.Add(geo);
-            }
-        }
-        Debug.Log("Added transparent blocks");
-        foreach (Mesh mesh in liquidBlocks)
-        {
-            if (mesh != null)
-            {
-                geometry geo = (COLLADA.MeshToGeometry(mesh));
-                if (geo != null)
-                    geometryList.Add(geo);
-            }
-        }
-        Debug.Log("Added liquid blocks");
+        //Texture2D diffuseTex = new Texture2D(mainTex.width, mainTex.height);
+        //Texture2D roughnessTex = new Texture2D(mainTex.width, mainTex.height);
 
-        library_geometries geometryLib = new library_geometries();
-        geometryLib.geometry = geometryList.ToArray();
-        Debug.Log("Added geometry to library");
+        //diffuseTex.SetPixels(diffusePixels);
+        //roughnessTex.SetPixels(roughnessPixels);
 
-        library_visual_scenes visualSceneLib = new library_visual_scenes();
-        visual_scene visualScene = new visual_scene();
+        //diffuseTex.Apply();
+        //roughnessTex.Apply();
 
-        visualSceneLib.visual_scene = new visual_scene[1];
-        visualSceneLib.visual_scene[0] = visualScene;
+        //byte[] diffuseBytes = diffuseTex.EncodeToPNG();
+        //byte[] roughnessBytes = roughnessTex.EncodeToPNG();
 
-        visualScene.id = "Map";
-        visualScene.name = "Map";
-        visualScene.node = new node[geometryList.Count];
-        for (int i = 0; i < geometryList.Count; i++)
-        {
-            node thisNode = new node();
-            visualScene.node[i] = thisNode;
-            geometry thisGeometry = geometryList[i];
-            thisNode.id = thisGeometry.id.Remove(thisGeometry.id.Length - 4);
-            thisNode.name = thisGeometry.name.Remove(thisGeometry.name.Length - 6);
-            thisNode.sid = thisNode.id;
+        //File.WriteAllBytes("pattern.png", diffuseBytes);
+        //File.WriteAllBytes("specular.png", roughnessBytes);
+        //Debug.Log("Saved Maintex");
 
-            thisNode.Items = new object[1];
-            thisNode.Items[0] = COLLADA.ConvertMatrix(Matrix4x4.identity);
-            thisNode.ItemsElementName = new ItemsChoiceType2[1];
-            thisNode.ItemsElementName[0] = ItemsChoiceType2.matrix;
+        //Texture2D bumpMap = (Texture2D)BasicTerrainMaterial.GetTexture("_BumpMap");
 
-            thisNode.instance_geometry = new instance_geometry[1];
-            thisNode.instance_geometry[0] = new instance_geometry();
-            thisNode.instance_geometry[0].url = "#" + thisGeometry.id;
-        }
-        Debug.Log("Added geometry to scene");
+        //Color[] bumpMapPixels = bumpMap.GetPixels();
+        //Color[] normalMapPixels = new Color[bumpMapPixels.Length];
+        //Color[] ambientMapPixels = new Color[bumpMapPixels.Length];
+        //Color[] alphaMapPixels = new Color[bumpMapPixels.Length];
 
-        COLLADAScene sceneInstance = new COLLADAScene();
-        sceneInstance.instance_visual_scene = new InstanceWithExtra();
-        sceneInstance.instance_visual_scene.url = "#" + visualScene.id;
+        //for (int i = 0; i < bumpMapPixels.Length; i++)
+        //{
+        //    normalMapPixels[i] = new Color(bumpMapPixels[i].a, bumpMapPixels[i].g, Mathf.Sqrt(1 - ((bumpMapPixels[i].a * 2 - 1) * (bumpMapPixels[i].a * 2 - 1)) + ((bumpMapPixels[i].g * 2 - 1) * (bumpMapPixels[i].g * 2 - 1))));
+        //    ambientMapPixels[i] = new Color(bumpMapPixels[i].r, bumpMapPixels[i].r, bumpMapPixels[i].r, 1.0f);
+        //    alphaMapPixels[i] = new Color(bumpMapPixels[i].b, bumpMapPixels[i].b, bumpMapPixels[i].b, 1.0f);
+        //}
 
-        exportScene.scene = sceneInstance;
+        //Texture2D normalTex = new Texture2D(bumpMap.width, bumpMap.height);
+        //Texture2D ambientTex = new Texture2D(bumpMap.width, bumpMap.height);
+        //Texture2D alphaTex = new Texture2D(bumpMap.width, bumpMap.height);
 
-        exportScene.Items = new object[2];
-        exportScene.Items[0] = geometryLib;
-        exportScene.Items[1] = visualSceneLib;
+        //normalTex.SetPixels(normalMapPixels);
+        //ambientTex.SetPixels(ambientMapPixels);
+        //alphaTex.SetPixels(alphaMapPixels);
 
-        asset assetHeader = new asset();
-        assetHeader.unit = new assetUnit();
-        assetHeader.unit.meter = 1;
-        assetHeader.unit.name = "meter";
-        assetHeader.up_axis = UpAxisType.Y_UP;
+        //normalTex.Apply();
+        //ambientTex.Apply();
+        //alphaTex.Apply();
 
-        exportScene.asset = assetHeader;
-        Debug.Log("Setup Scene");
+        //byte[] normalBytes = normalTex.EncodeToPNG();
+        //byte[] ambientBytes = ambientTex.EncodeToPNG();
+        //byte[] alphaBytes = alphaTex.EncodeToPNG();
 
-        if (File.Exists("Map.dae"))
-            File.Delete("Map.dae");
-        exportScene.Save("Map.dae");
-        Debug.Log("Saved Scene");
+        //File.WriteAllBytes("normal.png", normalBytes);
+        //File.WriteAllBytes("occlusion.png", ambientBytes);
+        //File.WriteAllBytes("alpha.png", alphaBytes);
+        //Debug.Log("Saved DetailTex");
 
-        Texture2D mainTex = (Texture2D)BasicTerrainMaterial.GetTexture("_MainTex");
-
-        Color[] mainTexPixels = mainTex.GetPixels();
-        Color[] diffusePixels = new Color[mainTexPixels.Length];
-        Color[] roughnessPixels = new Color[mainTexPixels.Length];
-
-        for (int i = 0; i < mainTexPixels.Length; i++)
-        {
-            diffusePixels[i] = new Color(mainTexPixels[i].r, mainTexPixels[i].g, mainTexPixels[i].b, 1.0f);
-            roughnessPixels[i] = new Color(mainTexPixels[i].a, mainTexPixels[i].a, mainTexPixels[i].a, 1.0f);
-        }
-
-        Texture2D diffuseTex = new Texture2D(mainTex.width, mainTex.height);
-        Texture2D roughnessTex = new Texture2D(mainTex.width, mainTex.height);
-
-        diffuseTex.SetPixels(diffusePixels);
-        roughnessTex.SetPixels(roughnessPixels);
-
-        diffuseTex.Apply();
-        roughnessTex.Apply();
-
-        byte[] diffuseBytes = diffuseTex.EncodeToPNG();
-        byte[] roughnessBytes = roughnessTex.EncodeToPNG();
-
-        File.WriteAllBytes("pattern.png", diffuseBytes);
-        File.WriteAllBytes("specular.png", roughnessBytes);
-        Debug.Log("Saved Maintex");
-
-        Texture2D bumpMap = (Texture2D)BasicTerrainMaterial.GetTexture("_BumpMap");
-
-        Color[] bumpMapPixels = bumpMap.GetPixels();
-        Color[] normalMapPixels = new Color[bumpMapPixels.Length];
-        Color[] ambientMapPixels = new Color[bumpMapPixels.Length];
-        Color[] alphaMapPixels = new Color[bumpMapPixels.Length];
-
-        for (int i = 0; i < bumpMapPixels.Length; i++)
-        {
-            normalMapPixels[i] = new Color(bumpMapPixels[i].a, bumpMapPixels[i].g, Mathf.Sqrt(1 - ((bumpMapPixels[i].a * 2 - 1) * (bumpMapPixels[i].a * 2 - 1)) + ((bumpMapPixels[i].g * 2 - 1) * (bumpMapPixels[i].g * 2 - 1))));
-            ambientMapPixels[i] = new Color(bumpMapPixels[i].r, bumpMapPixels[i].r, bumpMapPixels[i].r, 1.0f);
-            alphaMapPixels[i] = new Color(bumpMapPixels[i].b, bumpMapPixels[i].b, bumpMapPixels[i].b, 1.0f);
-        }
-
-        Texture2D normalTex = new Texture2D(bumpMap.width, bumpMap.height);
-        Texture2D ambientTex = new Texture2D(bumpMap.width, bumpMap.height);
-        Texture2D alphaTex = new Texture2D(bumpMap.width, bumpMap.height);
-
-        normalTex.SetPixels(normalMapPixels);
-        ambientTex.SetPixels(ambientMapPixels);
-        alphaTex.SetPixels(alphaMapPixels);
-
-        normalTex.Apply();
-        ambientTex.Apply();
-        alphaTex.Apply();
-
-        byte[] normalBytes = normalTex.EncodeToPNG();
-        byte[] ambientBytes = ambientTex.EncodeToPNG();
-        byte[] alphaBytes = alphaTex.EncodeToPNG();
-
-        File.WriteAllBytes("normal.png", normalBytes);
-        File.WriteAllBytes("occlusion.png", ambientBytes);
-        File.WriteAllBytes("alpha.png", alphaBytes);
-        Debug.Log("Saved DetailTex");
-
-        Debug.Log("Saved map!");
+        //Debug.Log("Saved map!");
     }
 
     void OnDestroy()
@@ -781,6 +798,9 @@ public class GameMap : MonoBehaviour
         topBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         topStencilBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         topTransparentBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
+        voxelBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
+        topTerrainBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
+        grassBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         liquidBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ, 2];
         blockDirtyBits = new bool[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         blockContentBits = new bool[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
@@ -1161,6 +1181,20 @@ public class GameMap : MonoBehaviour
                 transparentMesh.Clear();
                 newMeshes.topTransparentTiles.CopyToMesh(transparentMesh);
             }
+            if(newMeshes.terrainMesh != null)
+            {
+                if(voxelBlocks[block_x, block_y, block_z] == null)
+                {
+                    voxelBlocks[block_x, block_y, block_z] = new Mesh();
+                    voxelBlocks[block_x, block_y, block_z].name = string.Format("block_voxel_{0}_{1}_{2}", block_x, block_y, block_z);
+                }
+                Mesh stupidMesh = voxelBlocks[block_x, block_y, block_z];
+                stupidMesh.Clear();
+                newMeshes.terrainMesh.CopyToMesh(stupidMesh);
+                stupidMesh.RecalculateNormals();
+                stupidMesh.RecalculateTangents();
+                Debug.Log(string.Format("voxelBlocks[{0}, {1}, {2}] = {3}", block_x, block_y, block_z, voxelBlocks[block_x, block_y, block_z]));
+            }
             if (newMeshes.water != null)
             {
                 if (liquidBlocks[block_x, block_y, block_z, MapDataStore.WATER_INDEX] == null)
@@ -1299,6 +1333,11 @@ public class GameMap : MonoBehaviour
                 item.Clear();
         }
         foreach (var item in liquidBlocks)
+        {
+            if (item != null)
+                item.Clear();
+        }
+        foreach (var item in voxelBlocks)
         {
             if (item != null)
                 item.Clear();
@@ -1673,7 +1712,8 @@ public class GameMap : MonoBehaviour
             && transparentBlocks[xx, yy, zz] == null
             && topTransparentBlocks[xx, yy, zz] == null
             && liquidBlocks[xx, yy, zz, MapDataStore.WATER_INDEX] == null
-            && liquidBlocks[xx, yy, zz, MapDataStore.MAGMA_INDEX] == null)
+            && liquidBlocks[xx, yy, zz, MapDataStore.MAGMA_INDEX] == null
+            && voxelBlocks[xx, yy, zz] == null)
             return false;
 
         Profiler.BeginSample("DrawSingleBlock", this);
@@ -1686,6 +1726,13 @@ public class GameMap : MonoBehaviour
         }
 
         bool drewBlock = false;
+        Debug.Log(string.Format("voxelBlocks[{0}, {1}, {2}] = {3}", xx, yy, zz, voxelBlocks[xx, yy, xx]));
+        if (voxelBlocks[xx, yy, xx] != null && voxelBlocks[xx, yy, zz].vertexCount > 0)
+        {
+            Graphics.DrawMesh(voxelBlocks[xx, yy, zz], LocalTransform, voxelTerrainMaterial, 0, null, 0, null, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
+            drewBlock = true;
+        }
+
         if (blocks[xx, yy, zz] != null && blocks[xx, yy, zz].vertexCount > 0)
         {
             Graphics.DrawMesh(blocks[xx, yy, zz], LocalTransform, BasicTerrainMaterial, 0, null, 0, matBlock, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
