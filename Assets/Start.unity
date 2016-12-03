@@ -5663,7 +5663,7 @@ MonoBehaviour:
     type: 2}
   transparentTerrainArrayMaterial: {fileID: 2100000, guid: c7f2fee23d537f248864a173749796d3,
     type: 2}
-  VoxelTerrainMaterial: {fileID: 2100000, guid: 81e581c6cf2a08b468517bb2cd27aeba,
+  voxelTerrainMaterial: {fileID: 2100000, guid: 81e581c6cf2a08b468517bb2cd27aeba,
     type: 2}
   waterMaterial: {fileID: 2100000, guid: 653692fae3c0d494fa3483ac3f95927f, type: 2}
   magmaMaterial: {fileID: 2100000, guid: 0234441288425134d810e44bf8760514, type: 2}
@@ -5679,7 +5679,6 @@ MonoBehaviour:
   posXTile: 0
   posYTile: 0
   posZ: 0
-  terrainBlocksFlat: []
   collisionTemplate: {fileID: 64000010602839068, guid: b2b37d076222dfc418f57692b6563de6,
     type: 2}
   dfScreen: {fileID: 771652859}

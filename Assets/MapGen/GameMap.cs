@@ -128,54 +128,8 @@ public class GameMap : MonoBehaviour
 
     BlockMesher mesher;
 
-    // The actual unity meshes used to draw things on screen.
-    /// <summary>
-    /// Opaque terrain built from prefab meshes
-    /// </summary>
-    Mesh[,,] blocks;
-    /// <summary>
-    /// Cout-out terrain built from prefab meshes
-    /// Includes foliage, and things like floor grates.
-    /// </summary>
-    Mesh[,,] stencilBlocks;
-    /// <summary>
-    /// Semitransparent terrain built from prefab meshes.
-    /// </summary>
-    Mesh[,,] transparentBlocks;
-    /// <summary>
-    /// Top face of opaque terrain, only rendered on the top level.
-    /// </summary>
-    Mesh[,,] topBlocks;
-    /// <summary>
-    /// Top face of cutout terrain.
-    /// </summary>
-    Mesh[,,] topStencilBlocks;
-    /// <summary>
-    /// Top face of partially transparent terrain
-    /// includes glass, etc.
-    /// </summary>
-    Mesh[,,] topTransparentBlocks;
-    /// <summary>
-    /// Water and magma meshes.
-    /// W dimension is liquid type.
-    /// </summary>
-    Mesh[,,,] liquidBlocks;
-    /// <summary>
-    /// Procedurally generated terrain blocks.
-    /// </summary>
-    Mesh[,,] voxelBlocks;
-    /// <summary>
-    /// top face of procedurally generated terrain blocks.
-    /// </summary>
-    Mesh[,,] topTerrainBlocks;
-    /// <summary>
-    /// Procedurally generated grass.
-    /// </summary>
-    Mesh[,,] grassBlocks;
-    /// <summary>
-    /// Procedural grass blocks.
-    /// </summary>
-    MeshCollider[,,] collisionBlocks;
+    BlockMeshSet[,,] mapMeshes;
+
     public MeshCollider collisionTemplate;
     // Dirty flags for those meshes
     bool[,,] blockDirtyBits;
@@ -451,17 +405,6 @@ public class GameMap : MonoBehaviour
         UpdateSpatters();
         DrawBlocks();
         DrawItems();
-
-        int nullmeshes = 0;
-        int goodmeshes = 0;
-        foreach (var item in voxelBlocks)
-        {
-            if (item == null)
-                nullmeshes++;
-            else
-                goodmeshes++;
-        }
-        Debug.Log(string.Format("{0} good meshes, and {1} nullrefs", goodmeshes, nullmeshes));
     }
 
     public void Refresh()
@@ -792,22 +735,13 @@ public class GameMap : MonoBehaviour
         int blockSizeZ = DFConnection.Instance.EmbarkMapSize.z;
         MapZOffset = DFConnection.Instance.EmbarkMapPosition.z;
 
-        blocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
-        stencilBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
-        transparentBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
-        topBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
-        topStencilBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
-        topTransparentBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
-        voxelBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
-        topTerrainBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
-        grassBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
-        liquidBlocks = new Mesh[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ, 2];
+        mapMeshes = new BlockMeshSet[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
+
         blockDirtyBits = new bool[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         blockContentBits = new bool[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         blockUpdateSchedules = new UpdateSchedule[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         liquidBlockDirtyBits = new bool[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         magmaGlow = new Light[blockSizeX * 16, blockSizeY * 16, blockSizeZ];
-        collisionBlocks = new MeshCollider[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         spatterBlockDirtyBits = new bool[blockSizeZ];
         spatterLayers = new Texture2D[blockSizeZ];
 
@@ -1021,12 +955,12 @@ public class GameMap : MonoBehaviour
 
     void DirtySeasonalBlocks()
     {
-        int xmin = Mathf.Clamp(PosXBlock - GameSettings.Instance.rendering.drawRangeSide, 0, blocks.GetLength(0));
-        int xmax = Mathf.Clamp(PosXBlock + GameSettings.Instance.rendering.drawRangeSide, 0, blocks.GetLength(0));
-        int ymin = Mathf.Clamp(PosYBlock - GameSettings.Instance.rendering.drawRangeSide, 0, blocks.GetLength(1));
-        int ymax = Mathf.Clamp(PosYBlock + GameSettings.Instance.rendering.drawRangeSide, 0, blocks.GetLength(1));
-        int zmin = Mathf.Clamp(posZ - GameSettings.Instance.rendering.drawRangeDown, 0, blocks.GetLength(2));
-        int zmax = Mathf.Clamp(posZ + GameSettings.Instance.rendering.drawRangeUp, 0, blocks.GetLength(2));
+        int xmin = Mathf.Clamp(PosXBlock - GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(0));
+        int xmax = Mathf.Clamp(PosXBlock + GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(0));
+        int ymin = Mathf.Clamp(PosYBlock - GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(1));
+        int ymax = Mathf.Clamp(PosYBlock + GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(1));
+        int zmin = Mathf.Clamp(posZ - GameSettings.Instance.rendering.drawRangeDown, 0, mapMeshes.GetLength(2));
+        int zmax = Mathf.Clamp(posZ + GameSettings.Instance.rendering.drawRangeUp, 0, mapMeshes.GetLength(2));
         for (int zz = zmin; zz < zmax; zz++)
             for (int yy = ymin; yy < ymax; yy++)
                 for (int xx = xmin; xx < xmax; xx++)
@@ -1056,15 +990,15 @@ public class GameMap : MonoBehaviour
     // Have the mesher mesh all dirty tiles in the region
     void EnqueueMeshUpdates()
     {
-        int xmin = Mathf.Clamp(PosXBlock - GameSettings.Instance.rendering.drawRangeSide, 0, blocks.GetLength(0));
-        int xmax = Mathf.Clamp(PosXBlock + GameSettings.Instance.rendering.drawRangeSide, 0, blocks.GetLength(0));
-        int ymin = Mathf.Clamp(PosYBlock - GameSettings.Instance.rendering.drawRangeSide, 0, blocks.GetLength(1));
-        int ymax = Mathf.Clamp(PosYBlock + GameSettings.Instance.rendering.drawRangeSide, 0, blocks.GetLength(1));
-        int zmin = Mathf.Clamp(posZ - GameSettings.Instance.rendering.drawRangeDown, 0, blocks.GetLength(2));
-        int zmax = Mathf.Clamp(posZ + GameSettings.Instance.rendering.drawRangeUp, 0, blocks.GetLength(2));
+        int xmin = Mathf.Clamp(PosXBlock - GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(0));
+        int xmax = Mathf.Clamp(PosXBlock + GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(0));
+        int ymin = Mathf.Clamp(PosYBlock - GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(1));
+        int ymax = Mathf.Clamp(PosYBlock + GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(1));
+        int zmin = Mathf.Clamp(posZ - GameSettings.Instance.rendering.drawRangeDown, 0, mapMeshes.GetLength(2));
+        int zmax = Mathf.Clamp(posZ + GameSettings.Instance.rendering.drawRangeUp, 0, mapMeshes.GetLength(2));
         for (int zz = posZ - 1; zz >= zmin; zz--)
         {
-            if (zz >= blocks.GetLength(2))
+            if (zz >= mapMeshes.GetLength(2))
                 continue;
 
             for (int yy = ymin; yy < ymax; yy++)
@@ -1115,121 +1049,26 @@ public class GameMap : MonoBehaviour
             int block_x = newMeshes.location.x / blockSize;
             int block_y = newMeshes.location.y / blockSize;
             int block_z = newMeshes.location.z;
-            if (newMeshes.tiles != null)
-            {
-                if (blocks[block_x, block_y, block_z] == null)
-                {
-                    blocks[block_x, block_y, block_z] = new Mesh();
-                    blocks[block_x, block_y, block_z].name = string.Format("block_solid_{0}_{1}_{2}", block_x, block_y, block_z);
-                }
-                Mesh tileMesh = blocks[block_x, block_y, block_z];
-                tileMesh.Clear();
-                newMeshes.tiles.CopyToMesh(tileMesh);
-            }
-            if (newMeshes.topTiles != null)
-            {
-                if (topBlocks[block_x, block_y, block_z] == null)
-                {
-                    topBlocks[block_x, block_y, block_z] = new Mesh();
-                    topBlocks[block_x, block_y, block_z].name = string.Format("block_solid_top_{0}_{1}_{2}", block_x, block_y, block_z);
-                }
-                Mesh tileMesh = topBlocks[block_x, block_y, block_z];
-                tileMesh.Clear();
-                newMeshes.topTiles.CopyToMesh(tileMesh);
-            }
-            if (newMeshes.stencilTiles != null)
-            {
-                if (stencilBlocks[block_x, block_y, block_z] == null)
-                {
-                    stencilBlocks[block_x, block_y, block_z] = new Mesh();
-                    stencilBlocks[block_x, block_y, block_z].name = string.Format("block_stencil_{0}_{1}_{2}", block_x, block_y, block_z);
-                }
-                Mesh stencilMesh = stencilBlocks[block_x, block_y, block_z];
-                stencilMesh.Clear();
-                newMeshes.stencilTiles.CopyToMesh(stencilMesh);
-            }
-            if (newMeshes.topStencilTiles != null)
-            {
-                if (topStencilBlocks[block_x, block_y, block_z] == null)
-                {
-                    topStencilBlocks[block_x, block_y, block_z] = new Mesh();
-                    topStencilBlocks[block_x, block_y, block_z].name = string.Format("block_stencil_top_{0}_{1}_{2}", block_x, block_y, block_z);
-                }
-                Mesh stencilMesh = topStencilBlocks[block_x, block_y, block_z];
-                stencilMesh.Clear();
-                newMeshes.topStencilTiles.CopyToMesh(stencilMesh);
-            }
-            if (newMeshes.transparentTiles != null)
-            {
-                if (transparentBlocks[block_x, block_y, block_z] == null)
-                {
-                    transparentBlocks[block_x, block_y, block_z] = new Mesh();
-                    transparentBlocks[block_x, block_y, block_z].name = string.Format("block_transparent_{0}_{1}_{2}", block_x, block_y, block_z);
-                }
-                Mesh transparentMesh = transparentBlocks[block_x, block_y, block_z];
-                transparentMesh.Clear();
-                newMeshes.transparentTiles.CopyToMesh(transparentMesh);
-            }
-            if (newMeshes.topTransparentTiles != null)
-            {
-                if (topTransparentBlocks[block_x, block_y, block_z] == null)
-                {
-                    topTransparentBlocks[block_x, block_y, block_z] = new Mesh();
-                    topTransparentBlocks[block_x, block_y, block_z].name = string.Format("block_transparent_top_{0}_{1}_{2}", block_x, block_y, block_z);
-                }
-                Mesh transparentMesh = topTransparentBlocks[block_x, block_y, block_z];
-                transparentMesh.Clear();
-                newMeshes.topTransparentTiles.CopyToMesh(transparentMesh);
-            }
-            if(newMeshes.terrainMesh != null)
-            {
-                if(voxelBlocks[block_x, block_y, block_z] == null)
-                {
-                    voxelBlocks[block_x, block_y, block_z] = new Mesh();
-                    voxelBlocks[block_x, block_y, block_z].name = string.Format("block_voxel_{0}_{1}_{2}", block_x, block_y, block_z);
-                }
-                Mesh stupidMesh = voxelBlocks[block_x, block_y, block_z];
-                stupidMesh.Clear();
-                newMeshes.terrainMesh.CopyToMesh(stupidMesh);
-                stupidMesh.RecalculateNormals();
-                stupidMesh.RecalculateTangents();
-                Debug.Log(string.Format("voxelBlocks[{0}, {1}, {2}] = {3}", block_x, block_y, block_z, voxelBlocks[block_x, block_y, block_z]));
-            }
-            if (newMeshes.water != null)
-            {
-                if (liquidBlocks[block_x, block_y, block_z, MapDataStore.WATER_INDEX] == null)
-                {
-                    liquidBlocks[block_x, block_y, block_z, MapDataStore.WATER_INDEX] = new Mesh();
-                    liquidBlocks[block_x, block_y, block_z, MapDataStore.WATER_INDEX].name = string.Format("liquid_water_{0}_{1}_{2}", block_x, block_y, block_z);
-                }
-                Mesh waterMesh = liquidBlocks[block_x, block_y, block_z, MapDataStore.WATER_INDEX];
-                waterMesh.Clear();
-                newMeshes.water.CopyToMesh(waterMesh);
-            }
-            if (newMeshes.magma != null)
-            {
-                if (liquidBlocks[block_x, block_y, block_z, MapDataStore.MAGMA_INDEX] == null)
-                {
-                    liquidBlocks[block_x, block_y, block_z, MapDataStore.MAGMA_INDEX] = new Mesh();
-                    liquidBlocks[block_x, block_y, block_z, MapDataStore.MAGMA_INDEX].name = string.Format("liquid_magma_{0}_{1}_{2}", block_x, block_y, block_z);
-                }
-                Mesh magmaMesh = liquidBlocks[block_x, block_y, block_z, MapDataStore.MAGMA_INDEX];
-                magmaMesh.Clear();
-                newMeshes.magma.CopyToMesh(magmaMesh);
-            }
+            if (mapMeshes[block_x, block_y, block_z] == null)
+                mapMeshes[block_x, block_y, block_z] = new BlockMeshSet();
+
+            var meshSet = mapMeshes[block_x, block_y, block_z];
+
+            meshSet.LoadMeshes(newMeshes, string.Format("{0}_{1}_{2}", block_x, block_y, block_z));
+
             if (newMeshes.collisionMesh != null)
             {
-                if (collisionBlocks[block_x, block_y, block_z] == null)
+                if (meshSet.collisionBlocks == null)
                 {
-                    collisionBlocks[block_x, block_y, block_z] = Instantiate(collisionTemplate);
-                    collisionBlocks[block_x, block_y, block_z].name = string.Format("collisionBlock_{0}_{1}_{2}", block_x, block_y, block_z);
-                    collisionBlocks[block_x, block_y, block_z].transform.position = DFtoUnityCoord(block_x * blockSize, block_y * blockSize, block_z);
-                    collisionBlocks[block_x, block_y, block_z].transform.parent = this.transform;
+                    meshSet.collisionBlocks = Instantiate(collisionTemplate);
+                    meshSet.collisionBlocks.name = string.Format("collisionBlock_{0}_{1}_{2}", block_x, block_y, block_z);
+                    meshSet.collisionBlocks.transform.position = DFtoUnityCoord(block_x * blockSize, block_y * blockSize, block_z);
+                    meshSet.collisionBlocks.transform.parent = transform;
                 }
                 Mesh collisionMesh = new Mesh();
                 collisionMesh.name = string.Format("block_collision_{0}_{1}_{2}", block_x, block_y, block_z);
                 newMeshes.collisionMesh.CopyToMesh(collisionMesh);
-                collisionBlocks[block_x, block_y, block_z].sharedMesh = collisionMesh;
+                meshSet.collisionBlocks.sharedMesh = collisionMesh;
             }
         }
         Profiler.EndSample();
@@ -1317,27 +1156,7 @@ public class GameMap : MonoBehaviour
 
     void ClearMap()
     {
-        foreach (var item in blocks)
-        {
-            if (item != null)
-                item.Clear();
-        }
-        foreach (var item in stencilBlocks)
-        {
-            if (item != null)
-                item.Clear();
-        }
-        foreach (var item in transparentBlocks)
-        {
-            if (item != null)
-                item.Clear();
-        }
-        foreach (var item in liquidBlocks)
-        {
-            if (item != null)
-                item.Clear();
-        }
-        foreach (var item in voxelBlocks)
+        foreach (var item in mapMeshes)
         {
             if (item != null)
                 item.Clear();
@@ -1705,18 +1524,8 @@ public class GameMap : MonoBehaviour
 
     private bool DrawSingleBlock(int xx, int yy, int zz, bool phantom, Matrix4x4 LocalTransform, bool top)
     {
-        if (blocks[xx, yy, zz] == null
-            && topBlocks[xx, yy, zz] == null
-            && stencilBlocks[xx, yy, zz] == null
-            && topStencilBlocks[xx, yy, zz] == null
-            && transparentBlocks[xx, yy, zz] == null
-            && topTransparentBlocks[xx, yy, zz] == null
-            && liquidBlocks[xx, yy, zz, MapDataStore.WATER_INDEX] == null
-            && liquidBlocks[xx, yy, zz, MapDataStore.MAGMA_INDEX] == null
-            && voxelBlocks[xx, yy, zz] == null)
+        if (mapMeshes[xx, yy, zz] == null)
             return false;
-
-        Profiler.BeginSample("DrawSingleBlock", this);
 
         MaterialPropertyBlock matBlock = null;
         if (spatterLayers[zz] != null)
@@ -1725,79 +1534,30 @@ public class GameMap : MonoBehaviour
             matBlock.SetTexture(spatterID, spatterLayers[zz]);
         }
 
-        bool drewBlock = false;
-        Debug.Log(string.Format("voxelBlocks[{0}, {1}, {2}] = {3}", xx, yy, zz, voxelBlocks[xx, yy, xx]));
-        if (voxelBlocks[xx, yy, xx] != null && voxelBlocks[xx, yy, zz].vertexCount > 0)
-        {
-            Graphics.DrawMesh(voxelBlocks[xx, yy, zz], LocalTransform, voxelTerrainMaterial, 0, null, 0, null, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
-            drewBlock = true;
-        }
 
-        if (blocks[xx, yy, zz] != null && blocks[xx, yy, zz].vertexCount > 0)
-        {
-            Graphics.DrawMesh(blocks[xx, yy, zz], LocalTransform, BasicTerrainMaterial, 0, null, 0, matBlock, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
-            drewBlock = true;
-        }
-        if (topBlocks[xx, yy, zz] != null && topBlocks[xx, yy, zz].vertexCount > 0 && top)
-        {
-            Graphics.DrawMesh(topBlocks[xx, yy, zz], LocalTransform, BasicTerrainMaterial, 0, null, 0, matBlock, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
-            drewBlock = true;
-        }
-
-        if (stencilBlocks[xx, yy, zz] != null && stencilBlocks[xx, yy, zz].vertexCount > 0)
-        {
-            Graphics.DrawMesh(stencilBlocks[xx, yy, zz], LocalTransform, StencilTerrainMaterial, 0, null, 0, matBlock, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
-            drewBlock = true;
-        }
-        if (topStencilBlocks[xx, yy, zz] != null && topStencilBlocks[xx, yy, zz].vertexCount > 0 && top)
-        {
-            Graphics.DrawMesh(topStencilBlocks[xx, yy, zz], LocalTransform, StencilTerrainMaterial, 0, null, 0, matBlock, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
-            drewBlock = true;
-        }
-
-        if (transparentBlocks[xx, yy, zz] != null && transparentBlocks[xx, yy, zz].vertexCount > 0 && !phantom)
-        {
-            Graphics.DrawMesh(transparentBlocks[xx, yy, zz], LocalTransform, TransparentTerrainMaterial, 0, null, 0, matBlock);
-            drewBlock = true;
-        }
-        if (topTransparentBlocks[xx, yy, zz] != null && topTransparentBlocks[xx, yy, zz].vertexCount > 0 && !phantom && top)
-        {
-            Graphics.DrawMesh(topTransparentBlocks[xx, yy, zz], LocalTransform, TransparentTerrainMaterial, 0, null, 0, matBlock);
-            drewBlock = true;
-        }
-
-        if (liquidBlocks[xx, yy, zz, MapDataStore.WATER_INDEX] != null && liquidBlocks[xx, yy, zz, MapDataStore.WATER_INDEX].vertexCount > 0 && !phantom)
-        {
-            Graphics.DrawMesh(liquidBlocks[xx, yy, zz, MapDataStore.WATER_INDEX], LocalTransform, waterMaterial, 4);
-            drewBlock = true;
-        }
-
-        if (liquidBlocks[xx, yy, zz, MapDataStore.MAGMA_INDEX] != null && liquidBlocks[xx, yy, zz, MapDataStore.MAGMA_INDEX].vertexCount > 0 && !phantom)
-        {
-            Graphics.DrawMesh(liquidBlocks[xx, yy, zz, MapDataStore.MAGMA_INDEX], LocalTransform, magmaMaterial, 4);
-            drewBlock = true;
-        }
-        Profiler.EndSample();
-        return drewBlock;
+        return mapMeshes[xx, yy, zz].Render(phantom, LocalTransform, top,
+            BasicTerrainMaterial, StencilTerrainMaterial, TransparentTerrainMaterial, 
+            voxelTerrainMaterial, waterMaterial, magmaMaterial, matBlock
+            );
     }
 
     private void DrawBlocks()
     {
-        if (blocks == null)
+        if (mapMeshes == null)
             return;
         Profiler.BeginSample("DrawBlocks", this);
-        int xmin = Mathf.Clamp(PosXBlock - GameSettings.Instance.rendering.drawRangeSide, 0, blocks.GetLength(0));
-        int xmax = Mathf.Clamp(PosXBlock + GameSettings.Instance.rendering.drawRangeSide, 0, blocks.GetLength(0));
-        int ymin = Mathf.Clamp(PosYBlock - GameSettings.Instance.rendering.drawRangeSide, 0, blocks.GetLength(1));
-        int ymax = Mathf.Clamp(PosYBlock + GameSettings.Instance.rendering.drawRangeSide, 0, blocks.GetLength(1));
-        int zmin = Mathf.Clamp(posZ - GameSettings.Instance.rendering.drawRangeDown, 0, blocks.GetLength(2));
-        int zmax = Mathf.Clamp(posZ + GameSettings.Instance.rendering.drawRangeUp, 0, blocks.GetLength(2));
+        int xmin = Mathf.Clamp(PosXBlock - GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(0));
+        int xmax = Mathf.Clamp(PosXBlock + GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(0));
+        int ymin = Mathf.Clamp(PosYBlock - GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(1));
+        int ymax = Mathf.Clamp(PosYBlock + GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(1));
+        int zmin = Mathf.Clamp(posZ - GameSettings.Instance.rendering.drawRangeDown, 0, mapMeshes.GetLength(2));
+        int zmax = Mathf.Clamp(posZ + GameSettings.Instance.rendering.drawRangeUp, 0, mapMeshes.GetLength(2));
 
         int drawnBlocks = 0;
 
         for (int zz = posZ - 1; zz >= zmin; zz--)
         {
-            if (zz >= blocks.GetLength(2))
+            if (zz >= mapMeshes.GetLength(2))
                 continue;
 
             for (int xx = xmin; xx < xmax; xx++)
