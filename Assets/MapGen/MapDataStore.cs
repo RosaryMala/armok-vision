@@ -88,8 +88,8 @@ public class MapDataStore {
             MaxCoord = _sliceOrigin + SliceSize + new DFCoord(1, 1, 1);
         }
     }
-    DFCoord MinCoord { get; set; }
-    DFCoord MaxCoord { get; set; }
+    public DFCoord MinCoord { get; private set; }
+    public DFCoord MaxCoord { get; private set; }
     // The data
     Tile[,,] _tiles;
 

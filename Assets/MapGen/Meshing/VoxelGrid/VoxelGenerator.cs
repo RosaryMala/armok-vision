@@ -98,30 +98,31 @@ public class VoxelGenerator
 
     private void TriangulateCellRows()
     {
-        for (int y = 0; y < map.SliceSize.y - 1; y++)
+        for (int y = map.MinCoord.y; y < map.MaxCoord.y - 1; y++)
         {
-            for (int x = 0; x < map.SliceSize.x - 1; x++)
+            for (int x = map.MinCoord.x; x < map.MaxCoord.x - 1; x++)
             {
+                int z = map.SliceOrigin.z;
                 Directions edges = Directions.None;
-                if (x == 0)
+                if (x == map.MinCoord.x)
                     edges |= Directions.West;
-                if (x == map.SliceSize.x - 2)
+                if (x == map.MaxCoord.x - 2)
                     edges |= Directions.East;
-                if (y == 0)
+                if (y == map.MinCoord.y)
                     edges |= Directions.North;
-                if (y == map.SliceSize.y - 2)
+                if (y == map.MaxCoord.y - 2)
                     edges |= Directions.South;
 
                 TriangulateCell(
-                    map[map.LocalToWorldSpace(new DFCoord(x, y, 1))],
-                    map[map.LocalToWorldSpace(new DFCoord(x + 1, y, 1))],
-                    map[map.LocalToWorldSpace(new DFCoord(x, y + 1, 1))], 
-                    map[map.LocalToWorldSpace(new DFCoord(x + 1, y + 1, 1))],
-                    GameMap.DFtoUnityCoord(new DFCoord(x, y, 1)) + new Vector3(GameMap.tileWidth / 2, 0, 0),
-                    GameMap.DFtoUnityCoord(new DFCoord(x + 1, y, 1)) + new Vector3(0, 0, -GameMap.tileWidth / 2),
-                    GameMap.DFtoUnityCoord(new DFCoord(x, y + 1, 1)) + new Vector3(GameMap.tileWidth / 2, 0, 0),
-                    GameMap.DFtoUnityCoord(new DFCoord(x, y, 1)) + new Vector3(0, 0, -GameMap.tileWidth / 2),
-                    GameMap.DFtoUnityCoord(new DFCoord(x, y, 1)) + new Vector3(GameMap.tileWidth / 2, 0, -GameMap.tileWidth / 2),
+                    map[x, y, z],
+                    map[x + 1, y, z],
+                    map[x, y + 1, z],
+                    map[x + 1, y + 1, z],
+                    GameMap.DFtoUnityCoord(map.WorldToLocalSpace(new DFCoord(x - 1, y - 1, z))) + new Vector3(GameMap.tileWidth / 2, 0, 0),
+                    GameMap.DFtoUnityCoord(map.WorldToLocalSpace(new DFCoord(x, y - 1, z))) + new Vector3(0, 0, -GameMap.tileWidth / 2),
+                    GameMap.DFtoUnityCoord(map.WorldToLocalSpace(new DFCoord(x - 1, y, z))) + new Vector3(GameMap.tileWidth / 2, 0, 0),
+                    GameMap.DFtoUnityCoord(map.WorldToLocalSpace(new DFCoord(x - 1, y - 1, z))) + new Vector3(0, 0, -GameMap.tileWidth / 2),
+                    GameMap.DFtoUnityCoord(map.WorldToLocalSpace(new DFCoord(x - 1, y - 1, z))) + new Vector3(GameMap.tileWidth / 2, 0, -GameMap.tileWidth / 2),
                     edges);
             }
         }
@@ -187,37 +188,37 @@ public class VoxelGenerator
             corner = CornerType.Square;
 
         Directions walls = Directions.None;
-        if (northWest != null && northWest.shape == TiletypeShape.WALL)
+        if (northWest != null && northWest.shape == TiletypeShape.WALL && Handled(northWest))
         {
             walls |= Directions.NorthWest;
         }
-        if (northEast != null && northEast.shape == TiletypeShape.WALL)
+        if (northEast != null && northEast.shape == TiletypeShape.WALL && Handled(northEast))
         {
             walls |= Directions.NorthEast;
         }
-        if (southWest != null && southWest.shape == TiletypeShape.WALL)
+        if (southWest != null && southWest.shape == TiletypeShape.WALL && Handled(southWest))
         {
             walls |= Directions.SouthWest;
         }
-        if (southEast != null && southEast.shape == TiletypeShape.WALL)
+        if (southEast != null && southEast.shape == TiletypeShape.WALL && Handled(southEast))
         {
             walls |= Directions.SouthEast;
         }
 
         Directions wallFloors = walls;
-        if (northWest != null && northWest.shape == TiletypeShape.FLOOR)
+        if (northWest != null && northWest.shape == TiletypeShape.FLOOR && Handled(northWest))
         {
             wallFloors |= Directions.NorthWest;
         }
-        if (northEast != null && northEast.shape == TiletypeShape.FLOOR)
+        if (northEast != null && northEast.shape == TiletypeShape.FLOOR && Handled(northEast))
         {
             wallFloors |= Directions.NorthEast;
         }
-        if (southWest != null && southWest.shape == TiletypeShape.FLOOR)
+        if (southWest != null && southWest.shape == TiletypeShape.FLOOR && Handled(southWest))
         {
             wallFloors |= Directions.SouthWest;
         }
-        if (southEast != null && southEast.shape == TiletypeShape.FLOOR)
+        if (southEast != null && southEast.shape == TiletypeShape.FLOOR && Handled(southEast))
         {
             wallFloors |= Directions.SouthEast;
         }
