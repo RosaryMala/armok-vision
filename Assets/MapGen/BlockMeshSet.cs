@@ -196,7 +196,7 @@ public class BlockMeshSet
         bool drewBlock = false;
         if (voxelBlocks != null && voxelBlocks.vertexCount > 0)
         {
-            Graphics.DrawMesh(voxelBlocks, LocalTransform, voxelTerrainMaterial, 0, null, 0, null, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
+            Graphics.DrawMesh(voxelBlocks, LocalTransform, voxelTerrainMaterial, 0, null, 0, properties, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
             drewBlock = true;
         }
 
