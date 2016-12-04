@@ -238,6 +238,7 @@ public class GameMap : MonoBehaviour
         BasicTerrainMaterial.SetTexture(spatterID, clear);
         StencilTerrainMaterial.SetTexture(spatterID, clear);
         TransparentTerrainMaterial.SetTexture(spatterID, clear);
+        voxelTerrainMaterial.SetTexture(spatterID, clear);
         sharedMatBlock = new MaterialPropertyBlock();
 
 
@@ -726,6 +727,7 @@ public class GameMap : MonoBehaviour
         BasicTerrainMaterial.SetVector("_WorldBounds", bounds);
         StencilTerrainMaterial.SetVector("_WorldBounds", bounds);
         TransparentTerrainMaterial.SetVector("_WorldBounds", bounds);
+        voxelTerrainMaterial.SetVector("_WorldBounds", bounds);
     }
 
     void InitializeBlocks()
