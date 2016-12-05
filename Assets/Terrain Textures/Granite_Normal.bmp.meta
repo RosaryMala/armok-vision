@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 9766b1e3a943529438774c9b53a6f5d0
-timeCreated: 1479478182
+guid: 809e2e1872999974db5419ce681be877
+timeCreated: 1480943873
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName: {}
@@ -16,11 +16,11 @@ TextureImporter:
     mipMapFadeDistanceEnd: 3
   bumpmap:
     convertToNormalMap: 0
-    externalNormalMap: 0
+    externalNormalMap: 1
     heightScale: 0.25
     normalMapFilter: 0
   isReadable: 0
-  grayScaleToAlpha: 1
+  grayScaleToAlpha: 0
   generateCubemap: 0
   cubemapConvolution: 0
   cubemapConvolutionSteps: 7
@@ -47,7 +47,7 @@ TextureImporter:
   spritePixelsToUnits: 100
   alphaIsTransparency: 0
   spriteTessellationDetail: -1
-  textureType: 5
+  textureType: 1
   buildTargetSettings: []
   spriteSheet:
     serializedVersion: 2
