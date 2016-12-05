@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<shapeTextures>
+    <shapeTexture normal="Bars_N.png" occlusion="Bars_O.png" alpha="Opaque_A.png">
+        <item token="BAR"/>
+        <subObject normal="Bars_N.png" occlusion="Bars_O.png" alpha="Opaque_A.png">
+            <material token="COAL:*"/>
+        </subObject>
+    </shapeTexture>
+    <shapeTexture normal="Tiles_N.png" occlusion="Tiles_O.png" alpha="Opaque_A.png">
+        <item token="BLOCKS"/>
+    </shapeTexture>
+    <shapeTexture normal="Logs_N.png" occlusion="Logs_O.png" alpha="Opaque_A.png">
+        <item token="WOOD"/>
+    </shapeTexture>
+    <shapeTexture normal="Boulders_N.png" occlusion="Boulders_O.png" alpha="Opaque_A.png">
+        <item token="BOULDER"/>
+    </shapeTexture>
+    <shapeTexture normal="Rough_N.png" occlusion="Rough_O.png" alpha="Opaque_A.png">
+        <item token="NONE"/>
+        <subObject normal="Flat_N.png" occlusion="Flat_O.png" alpha="Opaque_A.png">
+            <material token="NONE"/>
+        </subObject>
+        <subObject normal="Rough_N.png" occlusion="Rough_O.png" alpha="Opaque_A.png">
+            <material token="*:*:*" />
+            <subObject normal="Grass_N.png" occlusion="Grass_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:*:GRASS_LIGHT:*:*" />
+            <tiletype token="*:*:GRASS_DARK:*:*" />
+            <tiletype token="*:*:GRASS_DEAD:*:*" />
+            <tiletype token="*:*:GRASS_DRY:*:*" />
+                <subObject normal="Eyes_N.png" occlusion="Eyes_O.png">
+                    <material token="PLANT:EYEBALL:*" />
+                </subObject>
+                <subObject normal="Worms_N.png" occlusion="Worms_O.png">
+                    <material token="PLANT:WORMY TENDRILS:*" />
+                </subObject>
+            </subObject>
+            <subObject normal="Flat_N.png" occlusion="Flat_O.png" alpha="Opaque_A.png">
+                <tiletype token="*:SMOOTH:*:*:*" />
+            </subObject>
+        </subObject>
+    </shapeTexture>
+</shapeTextures>

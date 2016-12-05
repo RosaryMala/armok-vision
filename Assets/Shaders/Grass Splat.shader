@@ -48,6 +48,8 @@
         fixed4 _Color;
         float4 _WorldBounds;
 
+#include "blend.cginc"
+
         fixed4 MixColor(fixed4 bottom, inout fixed4 bottom_n, fixed4 top, fixed4 top_n, fixed top_alpha)
         {
             top = fixed4(top.rgb, max(top.a + top_alpha - 1, 0));
@@ -64,7 +66,7 @@
             fixed4 control = tex2D(_Control, (IN.worldPos.xz - _WorldBounds.xy) / (_WorldBounds.zw - _WorldBounds.xy));
             fixed4 c = tex2D(_Splat0, IN.uv_MainTex);
             fixed4 n = tex2D(_Normal0, IN.uv_MainTex);
-            c = fixed4(c.rgb < 0.5 ? (2.0 * c.rgb * baseControl.rgb) : (1.0 - 2.0 * (1.0 - c.rgb) * (1.0 - baseControl.rgb)), c.a + baseControl.a - 1);
+            c = fixed4(overlay(c.rgb, baseControl.rgb), c.a + baseControl.a - 1);
             c = MixColor(c, n, tex2D(_Splat1, IN.uv_MainTex), tex2D(_Normal1, IN.uv_MainTex), control.r);
             c = MixColor(c, n, tex2D(_Splat2, IN.uv_MainTex), tex2D(_Normal2, IN.uv_MainTex), control.g);
             c = MixColor(c, n, tex2D(_Splat3, IN.uv_MainTex), tex2D(_Normal3, IN.uv_MainTex), control.b);
