@@ -84,13 +84,13 @@ Material:
     - first:
         name: _Normal2
       second:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 0b0207ab531647f43b4e73b143e9d047, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
         name: _Normal3
       second:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: d3e6c06e768120b4da6e83ac5df90c62, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
@@ -150,19 +150,19 @@ Material:
     - first:
         name: _Splat2
       second:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: dfcae359b326f4d46a00d274128722be, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
         name: _Splat3
       second:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: dfcae359b326f4d46a00d274128722be, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
         name: _Splat4
       second:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: dfcae359b326f4d46a00d274128722be, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
@@ -250,13 +250,13 @@ Material:
       second: {r: 0.65172416, g: 0.65172416, b: 0.65172416, a: 1}
     - first:
         name: _Color1
-      second: {r: 1, g: 0.9783737, b: 0.7058824, a: 1}
+      second: {r: 0.85490197, g: 0.8, b: 0.74509805, a: 1}
     - first:
         name: _Color2
-      second: {r: 0.2312373, g: 0.98275864, b: 0, a: 1}
+      second: {r: 0.6985294, g: 0.443134, b: 0.1694961, a: 1}
     - first:
         name: _Color3
-      second: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+      second: {r: 0.8745098, g: 0.32941177, b: 0.13333334, a: 1}
     - first:
         name: _Color4
       second: {r: 0.5, g: 0.5, b: 0.5, a: 1}
