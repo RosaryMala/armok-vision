@@ -67,11 +67,14 @@
 
         fixed4 MixColor(fixed4 bottom, inout fixed4 bottom_c, fixed4 top, fixed4 top_c, fixed top_alpha)
         {
-            top = fixed4(top.rg, max(top.b + top_alpha - 1, 0), top.a);
-            //bottom = fixed4(bottom.rg, max(bottom.b - top_alpha, 0), bottom.a);
-            //crappy blending to test
-            bottom_c = (top.b) > (bottom.b) ? top_c : bottom_c;
-            return (top.b) > (bottom.b) ? top : bottom;
+            fixed depth = 0.2;
+            fixed ma = max(top.b + top_alpha, bottom.b + 1 - top_alpha) - depth;
+
+            fixed b1 = max(top.b + top_alpha - ma, 0);
+            fixed b2 = max(bottom.b + 1 - top_alpha - ma, 0);
+
+            bottom_c = (top_c * b1 + bottom_c * b2) / (b1 + b2);
+            return (top * b1 + bottom * b2) / (b1 + b2);
         }
 
         void surf(Input IN, inout SurfaceOutputStandard o) {
