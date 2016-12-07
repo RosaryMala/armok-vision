@@ -158,6 +158,7 @@ public class ContentLoader : MonoBehaviour
     public TileConfiguration<ColorContent> ColorConfiguration { get; private set; }
     public TileConfiguration<TextureContent> MaterialTextureConfiguration { get; private set; }
     public TileConfiguration<NormalContent> ShapeTextureConfiguration { get; private set; }
+    public TileConfiguration<NormalContent> TerrainShapeTextureConfiguration { get; private set; }
     public TileConfiguration<MeshContent> TileMeshConfiguration { get; private set; }
     public TileConfiguration<MeshContent> GrowthMeshConfiguration { get; private set; }
     public TileConfiguration<LayerContent> MaterialLayerConfiguration { get; private set; }
@@ -318,6 +319,11 @@ public class ContentLoader : MonoBehaviour
                     if (ShapeTextureConfiguration == null)
                         ShapeTextureConfiguration = TileConfiguration<NormalContent>.GetFromRootElement(doc, "shapeTexture");
                     ShapeTextureConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
+                    break;
+                case "terrainTextures":
+                    if (TerrainShapeTextureConfiguration == null)
+                        TerrainShapeTextureConfiguration = TileConfiguration<NormalContent>.GetFromRootElement(doc, "shapeTexture");
+                    TerrainShapeTextureConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
                     break;
                 case "tileMeshes":
                     if (TileMeshConfiguration == null)
