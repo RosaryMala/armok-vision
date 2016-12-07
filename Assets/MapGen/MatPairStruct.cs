@@ -23,6 +23,15 @@ public struct MatPairStruct
 
     }
 
+    public static bool operator !=(MatPairStruct a, MatPairStruct b)
+    {
+        return a.mat_index != b.mat_index || a.mat_type != b.mat_type;
+    }
+    public static bool operator ==(MatPairStruct a, MatPairStruct b)
+    {
+        return a.mat_index == b.mat_index && a.mat_type == b.mat_type;
+    }
+
     public MatPairStruct(int type, int index)
     {
         mat_index = index;
