@@ -57,18 +57,16 @@ public class MapExport : MonoBehaviour
             if (tileCount > 0)
                 yield return null;
             tileCount = 0;
-            for (int y = 0; y < MapDataStore.MapSize.y; y += 16)
-                for (int x = 0; x < MapDataStore.MapSize.x; x += 16)
                 {
                     HashSet<MatPairStruct> materialSet = new HashSet<MatPairStruct>();
                     HashSet<MatPairStruct> baseMaterialSet = new HashSet<MatPairStruct>();
                     HashSet<MatPairStruct> layerMaterialSet = new HashSet<MatPairStruct>();
                     HashSet<MatPairStruct> veinMaterialSet = new HashSet<MatPairStruct>();
 
-                    for (int yy = 0; yy < 16; yy++)
-                        for (int xx = 0; xx < 16; xx++)
-                        {
-                            var tile = MapDataStore.Main[x + xx, y + yy, z];
+                for (int y = 0; y < MapDataStore.MapSize.y; y += 16)
+                    for (int x = 0; x < MapDataStore.MapSize.x; x += 16)
+                    {
+                        var tile = MapDataStore.Main[x, y, z];
                             if (tile == null) continue;
                             if (VoxelGenerator.Handled(tile))
                             {
@@ -111,6 +109,16 @@ public class MapExport : MonoBehaviour
         PrintSet(output, vein_material);
         output.Append("layer_material:").AppendLine();
         PrintSet(output, layer_material);
+
+        output.Append("Summary:").AppendLine();
+        output.Append("material: ");
+        PrintMax(output, material);
+        output.Append("base_material: ");
+        PrintMax(output, base_material);
+        output.Append("vein_material: ");
+        PrintMax(output, vein_material);
+        output.Append("layer_material: ");
+        PrintMax(output, layer_material);
 
         if (File.Exists("Matcount.txt"))
             File.Delete("Matcount.txt");
@@ -193,6 +201,16 @@ public class MapExport : MonoBehaviour
         //
         //statusText.gameObject.SetActive(false);
         //yield return null;
+    }
+
+    private void PrintMax(StringBuilder output, Dictionary<HashSet<MatPairStruct>, int> material)
+    {
+        int max = 0;
+        foreach (var item in material)
+        {
+            max = Mathf.Max(item.Key.Count, max);
+        }
+        output.Append(max).AppendLine();
     }
 
     private void PrintSet(StringBuilder output, Dictionary<HashSet<MatPairStruct>, int> material)
