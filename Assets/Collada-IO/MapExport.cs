@@ -29,6 +29,13 @@ public class MapExport : MonoBehaviour
         else
             dict[value] = dict[value] + 1;
     }
+    void Count(Dictionary<HashSet<MatPairStruct>, int> dict, HashSet<MatPairStruct> value)
+    {
+        if (!dict.ContainsKey(value))
+            dict[value] = 1;
+        else
+            dict[value] = dict[value] + 1;
+    }
 
     private IEnumerator ExportMap(string v)
     {
@@ -37,99 +44,74 @@ public class MapExport : MonoBehaviour
         statusText.gameObject.SetActive(true);
         int tileCount = 0;
         StringBuilder output = new StringBuilder();
+
+        Dictionary<HashSet<MatPairStruct>, int> material = new Dictionary<HashSet<MatPairStruct>, int>(new HashSetEqualityComparer<MatPairStruct>());
+        Dictionary<HashSet<MatPairStruct>, int> base_material = new Dictionary<HashSet<MatPairStruct>, int>(new HashSetEqualityComparer<MatPairStruct>());
+        Dictionary<HashSet<MatPairStruct>, int> layer_material = new Dictionary<HashSet<MatPairStruct>, int>(new HashSetEqualityComparer<MatPairStruct>());
+        Dictionary<HashSet<MatPairStruct>, int> vein_material = new Dictionary<HashSet<MatPairStruct>, int>(new HashSetEqualityComparer<MatPairStruct>());
+
+
         for (int z = 0; z < MapDataStore.MapSize.z; z++)
         {
             statusText.text = string.Format("Collecting meshes from Z-level {0}/{1}", z, MapDataStore.MapSize.z);
             if (tileCount > 0)
                 yield return null;
             tileCount = 0;
-            Dictionary<MatPairStruct, int> materials = new Dictionary<MatPairStruct, int>();
-            Dictionary<MatPairStruct, int> layerMaterials = new Dictionary<MatPairStruct, int>();
-            Dictionary<MatPairStruct, int> baseMaterials = new Dictionary<MatPairStruct, int>();
-            Dictionary<MatPairStruct, int> veinMaterials = new Dictionary<MatPairStruct, int>();
-            Dictionary<MatPairStruct, int> grassMaterials = new Dictionary<MatPairStruct, int>();
-            for (int y = 0; y < MapDataStore.MapSize.y; y++)
-                for (int x = 0; x < MapDataStore.MapSize.x; x++)
+            for (int y = 0; y < MapDataStore.MapSize.y; y += 16)
+                for (int x = 0; x < MapDataStore.MapSize.x; x += 16)
                 {
-                    var tile = MapDataStore.Main[x, y, z];
-                    if (tile == null) continue;
-                    if (tile.shape == TiletypeShape.FLOOR)
-                    {
-                        Count(materials, tile.material);
-                        Count(veinMaterials, tile.vein_material);
-                        Count(layerMaterials, tile.layer_material);
-                        Count(baseMaterials, tile.base_material);
-                    }
-                    if (
-                        tile.tiletypeMaterial == TiletypeMaterial.GRASS_DARK ||
-                        tile.tiletypeMaterial == TiletypeMaterial.GRASS_LIGHT ||
-                        tile.tiletypeMaterial == TiletypeMaterial.GRASS_DEAD ||
-                        tile.tiletypeMaterial == TiletypeMaterial.GRASS_DRY
-                        )
-                    {
-                        Count(grassMaterials, tile.material);
-                    }
-                    //for (int i = 0; i < (int)MeshLayer.Count; i++)
-                    //{
-                    //    CollectModel(tile, (MeshLayer)i, new DFCoord(x,y,z));
-                    //}
-                    tileCount++;
+                    HashSet<MatPairStruct> materialSet = new HashSet<MatPairStruct>();
+                    HashSet<MatPairStruct> baseMaterialSet = new HashSet<MatPairStruct>();
+                    HashSet<MatPairStruct> layerMaterialSet = new HashSet<MatPairStruct>();
+                    HashSet<MatPairStruct> veinMaterialSet = new HashSet<MatPairStruct>();
+
+                    for (int yy = 0; yy < 16; yy++)
+                        for (int xx = 0; xx < 16; xx++)
+                        {
+                            var tile = MapDataStore.Main[x + xx, y + yy, z];
+                            if (tile == null) continue;
+                            if (VoxelGenerator.Handled(tile))
+                            {
+                                if (tile.material != tile.layer_material
+                                    && tile.material != tile.vein_material
+                                    && tile.material != tile.base_material
+                                    && tile.material != new MatPairStruct(-1, -1)
+                                    && tile.material != new MatPairStruct(0, -1))
+                                    materialSet.Add(tile.material);
+
+                                if (tile.base_material != tile.vein_material && tile.base_material != tile.layer_material
+                                    && tile.base_material != new MatPairStruct(-1, -1)
+                                    && tile.base_material != new MatPairStruct(0, -1))
+                                    baseMaterialSet.Add(tile.base_material);
+
+                                if (tile.vein_material != new MatPairStruct(-1, -1) && tile.vein_material != new MatPairStruct(0, -1))
+                                    veinMaterialSet.Add(tile.vein_material);
+
+                                if (tile.layer_material != new MatPairStruct(-1, -1) && tile.layer_material != new MatPairStruct(0, -1))
+                                    layerMaterialSet.Add(tile.layer_material);
+                            }
+                            //for (int i = 0; i < (int)MeshLayer.Count; i++)
+                            //{
+                            //    CollectModel(tile, (MeshLayer)i, new DFCoord(x,y,z));
+                            //}
+                            tileCount++;
+                        }
+
+                    Count(material, materialSet);
+                    Count(base_material, baseMaterialSet);
+                    Count(layer_material, layerMaterialSet);
+                    Count(vein_material, veinMaterialSet);
                 }
-            if (materials.Count + layerMaterials.Count + baseMaterials.Count + veinMaterials.Count + grassMaterials.Count == 0)
-                continue;
-            output.AppendFormat("Layer \t{0}:\t", z);
-            output.AppendLine().Append("Materials -\t");
-            output.Append(materials.Count).Append(":\t");
-            foreach (var item in materials)
-            {
-                if (GameMap.materials.ContainsKey(item.Key))
-                    output.Append(GameMap.materials[item.Key].id);
-                else output.Append(item.Key);
-
-                output.Append(":\t").Append(item.Value).Append(",\t");
-            }
-            output.AppendLine().Append("Vein Materials:\t");
-            output.Append(veinMaterials.Count).Append(":\t");
-            foreach (var item in veinMaterials)
-            {
-                if (GameMap.materials.ContainsKey(item.Key))
-                    output.Append(GameMap.materials[item.Key].id);
-                else output.Append(item.Key);
-
-                output.Append(":\t").Append(item.Value).Append(",\t");
-            }
-            output.AppendLine().Append("Layer Materials:\t");
-            output.Append(layerMaterials.Count).Append(":\t");
-            foreach (var item in layerMaterials)
-            {
-                if (GameMap.materials.ContainsKey(item.Key))
-                    output.Append(GameMap.materials[item.Key].id);
-                else output.Append(item.Key);
-
-                output.Append(":\t").Append(item.Value).Append(",\t");
-            }
-            output.AppendLine().Append("Base Materials:\t");
-            output.Append(baseMaterials.Count).Append(":\t");
-            foreach (var item in baseMaterials)
-            {
-                if (GameMap.materials.ContainsKey(item.Key))
-                    output.Append(GameMap.materials[item.Key].id);
-                else output.Append(item.Key);
-
-                output.Append(":\t").Append(item.Value).Append(",\t");
-            }
-            output.AppendLine().Append("Grass Materials:\t");
-            output.Append(grassMaterials.Count).Append(":\t");
-            foreach (var item in grassMaterials)
-            {
-                if (GameMap.materials.ContainsKey(item.Key))
-                    output.Append(GameMap.materials[item.Key].id);
-                else output.Append(item.Key);
-
-                output.Append(":\t").Append(item.Value).Append(",\t");
-            }
-            output.AppendLine();
         }
+        output.Append("material:").AppendLine();
+        PrintSet(output, material);
+        output.Append("base_material:").AppendLine();
+        PrintSet(output, base_material);
+        output.Append("vein_material:").AppendLine();
+        PrintSet(output, vein_material);
+        output.Append("layer_material:").AppendLine();
+        PrintSet(output, layer_material);
+
         if (File.Exists("Matcount.txt"))
             File.Delete("Matcount.txt");
 
@@ -137,79 +119,102 @@ public class MapExport : MonoBehaviour
 
         statusText.gameObject.SetActive(false);
         yield break;
-        statusText.text = string.Format("Saving {0} textures to disk.", diffuseTextures.Count);
-        yield return null;
-        foreach (var item in diffuseTextures)
-        {
-            var imageBytes = item.Value.EncodeToPNG();
-            File.WriteAllBytes(item.Value.name + ".png", imageBytes);
-        }
-        foreach (var item in specularTextures)
-        {
-            var imageBytes = item.Value.EncodeToPNG();
-            File.WriteAllBytes(item.Value.name + ".png", imageBytes);
-        }
 
-        //build the collada file
-        COLLADA exportScene = new COLLADA();
+        //statusText.text = string.Format("Saving {0} textures to disk.", diffuseTextures.Count);
+        //yield return null;
+        //foreach (var item in diffuseTextures)
+        //{
+        //    var imageBytes = item.Value.EncodeToPNG();
+        //    File.WriteAllBytes(item.Value.name + ".png", imageBytes);
+        //}
+        //foreach (var item in specularTextures)
+        //{
+        //    var imageBytes = item.Value.EncodeToPNG();
+        //    File.WriteAllBytes(item.Value.name + ".png", imageBytes);
+        //}
+        //
+        ////build the collada file
+        //COLLADA exportScene = new COLLADA();
+        //
+        //List<object> sceneItems = new List<object>();
+        //
+        //#region Geometry Library
+        //library_geometries geometryLib = new library_geometries();
+        //geometryLib.geometry = new geometry[geometryLibrary.Count];
+        //{
+        //    int geometryIndex = 0;
+        //    foreach (var item in geometryLibrary)
+        //    {
+        //        geometryLib.geometry[geometryIndex] = item.Value;
+        //        geometryIndex++;
+        //    }
+        //}
+        //sceneItems.Add(geometryLib);
+        //#endregion
+        //
+        //#region Add scenes
+        //library_visual_scenes visualSceneLib = new library_visual_scenes();
+        //visual_scene visualScene = new visual_scene();
+        //
+        //visualSceneLib.visual_scene = new visual_scene[] { visualScene };
+        //
+        //visualScene.id = "Map";
+        //visualScene.name = "Map";
+        //
+        //visualScene.node = nodeList.ToArray();
+        //sceneItems.Add(visualSceneLib);
+        //#endregion
+        //
+        //exportScene.Items = sceneItems.ToArray();
+        //
+        //COLLADAScene sceneInstance = new COLLADAScene();
+        //sceneInstance.instance_visual_scene = new InstanceWithExtra();
+        //sceneInstance.instance_visual_scene.url = "#" + visualScene.id;
+        //
+        //exportScene.scene = sceneInstance;
+        //
+        //statusText.text = "Added geometry to scene";
+        //yield return null;
+        //
+        //asset assetHeader = new asset();
+        //assetHeader.unit = new assetUnit();
+        //assetHeader.unit.meter = 1;
+        //assetHeader.unit.name = "meter";
+        //assetHeader.up_axis = UpAxisType.Y_UP;
+        //
+        //exportScene.asset = assetHeader;
+        //statusText.text = "Saving scene to file.";
+        //yield return null;
+        //
+        //if (File.Exists("Map.dae"))
+        //    File.Delete("Map.dae");
+        //exportScene.Save("Map.dae");
+        //Debug.Log("Saved Scene");
+        //
+        //statusText.gameObject.SetActive(false);
+        //yield return null;
+    }
 
-        List<object> sceneItems = new List<object>();
-
-        #region Geometry Library
-        library_geometries geometryLib = new library_geometries();
-        geometryLib.geometry = new geometry[geometryLibrary.Count];
+    private void PrintSet(StringBuilder output, Dictionary<HashSet<MatPairStruct>, int> material)
+    {
+        foreach (var item in material)
         {
-            int geometryIndex = 0;
-            foreach (var item in geometryLibrary)
+            if (item.Key.Count == 0)
+                output.AppendFormat("Found {0} empty instances.", item.Value).AppendLine();
+            else
             {
-                geometryLib.geometry[geometryIndex] = item.Value;
-                geometryIndex++;
+                output.Append("Found ").Append(item.Value).Append(" instances of:").AppendLine();
+                output.Append(item.Key.Count).Append("; ");
+                foreach (var mat in item.Key)
+                {
+                    if (GameMap.materials.ContainsKey(mat))
+                        output.Append(GameMap.materials[mat].id).Append("; ");
+                    else
+                        output.Append(mat).Append("; ");
+                }
+                output.AppendLine();
             }
         }
-        sceneItems.Add(geometryLib);
-        #endregion
-
-        #region Add scenes
-        library_visual_scenes visualSceneLib = new library_visual_scenes();
-        visual_scene visualScene = new visual_scene();
-
-        visualSceneLib.visual_scene = new visual_scene[] { visualScene };
-
-        visualScene.id = "Map";
-        visualScene.name = "Map";
-
-        visualScene.node = nodeList.ToArray();
-        sceneItems.Add(visualSceneLib);
-        #endregion
-
-        exportScene.Items = sceneItems.ToArray();
-
-        COLLADAScene sceneInstance = new COLLADAScene();
-        sceneInstance.instance_visual_scene = new InstanceWithExtra();
-        sceneInstance.instance_visual_scene.url = "#" + visualScene.id;
-
-        exportScene.scene = sceneInstance;
-
-        statusText.text = "Added geometry to scene";
-        yield return null;
-
-        asset assetHeader = new asset();
-        assetHeader.unit = new assetUnit();
-        assetHeader.unit.meter = 1;
-        assetHeader.unit.name = "meter";
-        assetHeader.up_axis = UpAxisType.Y_UP;
-
-        exportScene.asset = assetHeader;
-        statusText.text = "Saving scene to file.";
-        yield return null;
-
-        if (File.Exists("Map.dae"))
-            File.Delete("Map.dae");
-        exportScene.Save("Map.dae");
-        Debug.Log("Saved Scene");
-
-        statusText.gameObject.SetActive(false);
-        yield return null;
     }
 
     Dictionary<string, Texture2D> diffuseTextures = new Dictionary<string, Texture2D>();

@@ -22,6 +22,12 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
+        name: _Control
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
         name: _DetailAlbedoMap
       second:
         m_Texture: {fileID: 0}
@@ -58,6 +64,36 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
+        name: _Normal0
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _Normal1
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _Normal2
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _Normal3
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _Normal4
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
         name: _OcclusionMap
       second:
         m_Texture: {fileID: 0}
@@ -77,6 +113,36 @@ Material:
         m_Offset: {x: 0, y: 0}
     - first:
         name: _SpatterTex
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _Splat0
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _Splat1
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _Splat2
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _Splat3
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _Splat4
       second:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -138,6 +204,21 @@ Material:
         name: _Color
       second: {r: 1, g: 1, b: 1, a: 1}
     - first:
+        name: _Color0
+      second: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - first:
+        name: _Color1
+      second: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - first:
+        name: _Color2
+      second: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - first:
+        name: _Color3
+      second: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - first:
+        name: _Color4
+      second: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - first:
         name: _EmissionColor
       second: {r: 0, g: 0, b: 0, a: 1}
     - first:
@@ -145,4 +226,4 @@ Material:
       second: {r: 0, g: 1, b: 0, a: 1}
     - first:
         name: _WorldBounds
-      second: {r: -1, g: 1, b: 383, a: -287}
+      second: {r: -1, g: 1, b: 383, a: -383}
