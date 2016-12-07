@@ -8,9 +8,7 @@ using System.Text;
 using System.Threading;
 using UnitFlags;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
-using UnityExtension;
 
 // The class responsible for talking to DF and meshing the data it gets.
 // Relevant vocabulary: A "map tile" is an individual square on the map.
