@@ -1,25 +1,10 @@
 ﻿Shader "Custom/Ground Splat" {
 	Properties {
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
-        _Control("Control (RGBA)", 2D) = "red" {}
-
-        _Color4("Color 4", Color) = (0.5,0.5,0.5,1)
-        _Color3("Color 3", Color) = (0.5,0.5,0.5,1)
-        _Color2("Color 2", Color) = (0.5,0.5,0.5,1)
-        _Color1("Color 1", Color) = (0.5,0.5,0.5,1)
-        _Color0("Color 0", Color) = (0.5,0.5,0.5,1)
-
-
-        _Splat4("Layer 4 (A)", 2D) = "red" {}
-        _Splat3("Layer 3 (B)", 2D) = "red" {}
-        _Splat2("Layer 2 (G)", 2D) = "red" {}
-        _Splat1("Layer 1 (R)", 2D) = "red" {}
-        _Splat0("Layer 0 (Base)", 2D) = "red" {}
-        _Normal4("Normal 4 (A)", 2D) = "red" {}
-        _Normal3("Normal 3 (B)", 2D) = "red" {}
-        _Normal2("Normal 2 (G)", 2D) = "red" {}
-        _Normal1("Normal 1 (R)", 2D) = "red" {}
-        _Normal0("Normal 0 (Base)", 2D) = "red" {}
+        _Control("Control (RGBA)", 2DArray) = "black" {}
+        _Splat("Albedo Splat", 2DArray) = "black" {}
+        _Normal("Shape Texture Splat", 2DArray) = "bump" {}
+        _LayerCount("texture splat layers", Int) = 1
 
         [PerRendererData]_SpatterTex("Spatter", 2D) = "" {}
         _SpatterDirection("Spatter Direction", Vector) = (0,1,0)
@@ -38,11 +23,9 @@
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 3.5
 
-        sampler2D _Control;
-
-        sampler2D _Splat0, _Splat1, _Splat2, _Splat3, _Splat4;
-        sampler2D _Normal0, _Normal1, _Normal2, _Normal3, _Normal4;
-        fixed4 _Color0, _Color1, _Color2, _Color3, _Color4;
+        UNITY_DECLARE_TEX2DARRAY(_Control);
+        UNITY_DECLARE_TEX2DARRAY(_Splat);
+        UNITY_DECLARE_TEX2DARRAY(_Normal);
 
         sampler2D _MainTex;
 
@@ -52,7 +35,8 @@
         float _SpatterSmoothness;
         float4 _WorldBounds;
         float4 _SpatterNoise_ST;
-
+        float _LayerCount;
+        float4 _ArrayIndices[32];
 
 		struct Input {
 			float2 uv_MainTex;
@@ -81,17 +65,18 @@
 
             fixed4 spatter = tex2D(_SpatterTex, (IN.worldPos.xz - _WorldBounds.xy) / (_WorldBounds.zw - _WorldBounds.xy));
             fixed4 noise = tex2D(_SpatterNoise, TRANSFORM_TEX(IN.worldPos.xz, _SpatterNoise));
-            fixed4 control = tex2D(_Control, (IN.worldPos.xz - _WorldBounds.xy) / (_WorldBounds.zw - _WorldBounds.xy));
+            fixed4 control = UNITY_SAMPLE_TEX2DARRAY(_Control, float3((IN.worldPos.xz - _WorldBounds.xy) / (_WorldBounds.zw - _WorldBounds.xy), 0));
 
             // Albedo comes from a texture tinted by color
-            fixed4 c = overlay(tex2D(_Splat0, IN.uv_MainTex), _Color0.rgb);
-            fixed4 n = tex2D(_Normal0, IN.uv_MainTex);
-            n.b = max(n.b - (control.r + control.g + control.b + control.a), 0);
+            fixed4 c = overlay(UNITY_SAMPLE_TEX2DARRAY(_Splat, float3(IN.uv_MainTex, 0)), control.rgb);
+            fixed4 n = UNITY_SAMPLE_TEX2DARRAY(_Normal, float3(IN.uv_MainTex, 0));
+            n.b = max(n.b - control.a, 0);
 
-            n = MixColor(n, c, tex2D(_Normal1, IN.uv_MainTex), overlay(tex2D(_Splat1, IN.uv_MainTex), _Color1.rgb), control.r);
-            n = MixColor(n, c, tex2D(_Normal2, IN.uv_MainTex), overlay(tex2D(_Splat2, IN.uv_MainTex), _Color2.rgb), control.g);
-            n = MixColor(n, c, tex2D(_Normal3, IN.uv_MainTex), overlay(tex2D(_Splat3, IN.uv_MainTex), _Color3.rgb), control.b);
-            n = MixColor(n, c, tex2D(_Normal4, IN.uv_MainTex), overlay(tex2D(_Splat4, IN.uv_MainTex), _Color4.rgb), control.a);
+            for (int i = 1; i < _LayerCount; i++)
+            {
+                fixed4 cont = UNITY_SAMPLE_TEX2DARRAY(_Control, float3((IN.worldPos.xz - _WorldBounds.xy) / (_WorldBounds.zw - _WorldBounds.xy), i));
+                n = MixColor(n, c, UNITY_SAMPLE_TEX2DARRAY(_Normal, float3(IN.uv_MainTex, _ArrayIndices[i].y)), overlay(UNITY_SAMPLE_TEX2DARRAY(_Splat, float3(IN.uv_MainTex, _ArrayIndices[i].x)), cont.rgb), cont.a);
+            }
 
             o.Normal = UnpackNormal(n.ggga);
 
@@ -104,7 +89,7 @@
             else
             {
                 o.Albedo = c.rgb;
-                o.Smoothness = 0.5;// c.a;
+                o.Smoothness = 0.25;// c.a;
 
             }
             o.Occlusion = n.r;

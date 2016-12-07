@@ -64,6 +64,12 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
+        name: _Normal
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
         name: _Normal0
       second:
         m_Texture: {fileID: 0}
@@ -113,6 +119,12 @@ Material:
         m_Offset: {x: 0, y: 0}
     - first:
         name: _SpatterTex
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _Splat
       second:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -170,6 +182,9 @@ Material:
         name: _GlossyReflections
       second: 1
     - first:
+        name: _LayerCount
+      second: 1
+    - first:
         name: _Metallic
       second: 0
     - first:
@@ -201,6 +216,9 @@ Material:
       second: 1
     m_Colors:
     - first:
+        name: _ArrayIndices
+      second: {r: 0, g: 0, b: 0, a: 0}
+    - first:
         name: _Color
       second: {r: 1, g: 1, b: 1, a: 1}
     - first:
@@ -226,4 +244,4 @@ Material:
       second: {r: 0, g: 1, b: 0, a: 1}
     - first:
         name: _WorldBounds
-      second: {r: -1, g: 1, b: 383, a: -383}
+      second: {r: -1, g: 1, b: 287, a: -287}
