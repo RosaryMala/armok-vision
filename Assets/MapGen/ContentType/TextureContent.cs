@@ -8,7 +8,7 @@ public class TextureContent : IContent
     public int UniqueIndex { get; private set; }
 
     TextureStorage store;
-    int storageIndex;
+    public int StorageIndex { get; private set; }
 
     public Texture2D Texture { get; private set; }
 
@@ -16,7 +16,7 @@ public class TextureContent : IContent
     {
         get
         {
-            return store.getUVTransform(storageIndex);
+            return store.getUVTransform(StorageIndex);
         }
     }
 
@@ -24,7 +24,7 @@ public class TextureContent : IContent
     {
         get
         {
-            return (float)storageIndex / store.Count;
+            return (float)StorageIndex / store.Count;
         }
     }
 
@@ -54,9 +54,9 @@ public class TextureContent : IContent
         combinedMap.Apply();
 
         if (store != null)
-            storageIndex = store.AddTexture(combinedMap);
+            StorageIndex = store.AddTexture(combinedMap);
         else
-            storageIndex = -1;
+            StorageIndex = -1;
         Texture = combinedMap;
         UniqueIndex = num_created;
         num_created++;
