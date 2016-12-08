@@ -1,6 +1,7 @@
 ﻿using RemoteFortressReader;
+using System;
 
-public struct MatPairStruct
+public struct MatPairStruct : IComparable
 {
     public readonly int mat_index;
     public readonly int mat_type;
@@ -41,5 +42,16 @@ public struct MatPairStruct
     public override string ToString()
     {
         return string.Format("[{0},{1}]", mat_type, mat_index);
+    }
+
+    public int CompareTo(object obj)
+    {
+        if (obj == null) return 1;
+        if (!(obj is MatPairStruct)) return 1;
+        var b = (MatPairStruct)obj;
+        if (mat_type == b.mat_type)
+            return mat_index.CompareTo(b.mat_index);
+        else
+            return mat_type.CompareTo(b.mat_type);
     }
 }

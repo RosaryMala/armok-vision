@@ -57,49 +57,52 @@ public class MapExport : MonoBehaviour
             if (tileCount > 0)
                 yield return null;
             tileCount = 0;
-                {
-                    HashSet<MatPairStruct> materialSet = new HashSet<MatPairStruct>();
-                    HashSet<MatPairStruct> baseMaterialSet = new HashSet<MatPairStruct>();
-                    HashSet<MatPairStruct> layerMaterialSet = new HashSet<MatPairStruct>();
-                    HashSet<MatPairStruct> veinMaterialSet = new HashSet<MatPairStruct>();
+            {
+                HashSet<MatPairStruct> materialSet = new HashSet<MatPairStruct>();
+                HashSet<MatPairStruct> baseMaterialSet = new HashSet<MatPairStruct>();
+                HashSet<MatPairStruct> layerMaterialSet = new HashSet<MatPairStruct>();
+                HashSet<MatPairStruct> veinMaterialSet = new HashSet<MatPairStruct>();
 
                 for (int y = 0; y < MapDataStore.MapSize.y; y += 16)
                     for (int x = 0; x < MapDataStore.MapSize.x; x += 16)
                     {
                         var tile = MapDataStore.Main[x, y, z];
-                            if (tile == null) continue;
-                            if (VoxelGenerator.Handled(tile))
-                            {
-                                if (tile.material != tile.layer_material
-                                    && tile.material != tile.vein_material
-                                    && tile.material != tile.base_material
-                                    && tile.material != new MatPairStruct(-1, -1)
-                                    && tile.material != new MatPairStruct(0, -1))
-                                    materialSet.Add(tile.material);
+                        if (tile == null) continue;
+                        if (true)
+                        {
+                            if (tile.material != tile.layer_material
+                                && tile.material != tile.vein_material
+                                && tile.material != tile.base_material
+                                && tile.material != new MatPairStruct(-1, -1)
+                                && tile.material != new MatPairStruct(0, -1))
+                                materialSet.Add(tile.material);
 
-                                if (tile.base_material != tile.vein_material && tile.base_material != tile.layer_material
-                                    && tile.base_material != new MatPairStruct(-1, -1)
-                                    && tile.base_material != new MatPairStruct(0, -1))
-                                    baseMaterialSet.Add(tile.base_material);
+                            if (tile.base_material != tile.vein_material && tile.base_material != tile.layer_material
+                                && tile.base_material != new MatPairStruct(-1, -1)
+                                && tile.base_material != new MatPairStruct(0, -1))
+                                baseMaterialSet.Add(tile.base_material);
 
-                                if (tile.vein_material != new MatPairStruct(-1, -1) && tile.vein_material != new MatPairStruct(0, -1))
-                                    veinMaterialSet.Add(tile.vein_material);
+                            if (tile.layer_material != tile.vein_material
+                                && tile.layer_material != new MatPairStruct(-1, -1)
+                                && tile.layer_material != new MatPairStruct(0, -1))
+                                layerMaterialSet.Add(tile.layer_material);
 
-                                if (tile.layer_material != new MatPairStruct(-1, -1) && tile.layer_material != new MatPairStruct(0, -1))
-                                    layerMaterialSet.Add(tile.layer_material);
-                            }
-                            //for (int i = 0; i < (int)MeshLayer.Count; i++)
-                            //{
-                            //    CollectModel(tile, (MeshLayer)i, new DFCoord(x,y,z));
-                            //}
-                            tileCount++;
+                            if (tile.vein_material != new MatPairStruct(-1, -1)
+                                && tile.vein_material != new MatPairStruct(0, -1))
+                                veinMaterialSet.Add(tile.vein_material);
                         }
+                        //for (int i = 0; i < (int)MeshLayer.Count; i++)
+                        //{
+                        //    CollectModel(tile, (MeshLayer)i, new DFCoord(x,y,z));
+                        //}
+                        tileCount++;
+                    }
 
-                    Count(material, materialSet);
-                    Count(base_material, baseMaterialSet);
-                    Count(layer_material, layerMaterialSet);
-                    Count(vein_material, veinMaterialSet);
-                }
+                Count(material, materialSet);
+                Count(base_material, baseMaterialSet);
+                Count(layer_material, layerMaterialSet);
+                Count(vein_material, veinMaterialSet);
+            }
         }
         output.Append("material:").AppendLine();
         PrintSet(output, material);
@@ -223,7 +226,10 @@ public class MapExport : MonoBehaviour
             {
                 output.Append("Found ").Append(item.Value).Append(" instances of:").AppendLine();
                 output.Append(item.Key.Count).Append("; ");
-                foreach (var mat in item.Key)
+                MatPairStruct[] matList = new MatPairStruct[item.Key.Count];
+                item.Key.CopyTo(matList);
+                Array.Sort(matList);
+                foreach (var mat in matList)
                 {
                     if (GameMap.materials.ContainsKey(mat))
                         output.Append(GameMap.materials[mat].id).Append("; ");
@@ -313,11 +319,11 @@ public class MapExport : MonoBehaviour
                 meshContent.GetRotation(tile),
                 Vector3.one))
         };
-        tileNode.ItemsElementName = new ItemsChoiceType2[] { ItemsChoiceType2.matrix};
+        tileNode.ItemsElementName = new ItemsChoiceType2[] { ItemsChoiceType2.matrix };
 
         string geometryName = "Mesh-" + meshContent.UniqueIndex;
 
-        if(!geometryLibrary.ContainsKey(geometryName))
+        if (!geometryLibrary.ContainsKey(geometryName))
         {
             geometryLibrary[geometryName] = COLLADA.MeshToGeometry(meshContent.MeshData[layer], geometryName);
         }
