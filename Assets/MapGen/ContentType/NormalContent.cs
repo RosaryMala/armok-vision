@@ -26,6 +26,13 @@ public class NormalContent : IContent
             return (float)storageIndex / store.Count;
         }
     }
+    public int StorageIndex
+    {
+        get
+        {
+            return storageIndex;
+        }
+    }
 
 
     public bool AddTypeElement(XElement elemtype)

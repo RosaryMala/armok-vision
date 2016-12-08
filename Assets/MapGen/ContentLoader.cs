@@ -104,37 +104,37 @@ public class ContentLoader : MonoBehaviour
     MaterialMatcher<ColorContent> materialColors;
     MaterialMatcher<TextureContent> materialTextures;
 
-    int defaultMatTexIndex;
+    public int DefaultMatTexIndex { get; private set; }
 
     public Matrix4x4 DefaultMatTexTransform
     {
         get
         {
-            return materialTextureStorage.getUVTransform(defaultMatTexIndex);
+            return materialTextureStorage.getUVTransform(DefaultMatTexIndex);
         }
     }
     public float DefaultMatTexArrayIndex
     {
         get
         {
-            return (float)defaultMatTexIndex / materialTextureStorage.Count;
+            return (float)DefaultMatTexIndex / materialTextureStorage.Count;
         }
     }
 
-    int defaultShapeTexIndex;
+    public int DefaultShapeTexIndex { get; private set; }
 
     public Matrix4x4 DefaultShapeTexTransform
     {
         get
         {
-            return shapeTextureStorage.getUVTransform(defaultShapeTexIndex);
+            return shapeTextureStorage.getUVTransform(DefaultShapeTexIndex);
         }
     }
     public float DefaultShapeTexArrayIndex
     {
         get
         {
-            return (float)defaultShapeTexIndex / shapeTextureStorage.Count;
+            return (float)DefaultShapeTexIndex / shapeTextureStorage.Count;
         }
     }
 
@@ -180,8 +180,8 @@ public class ContentLoader : MonoBehaviour
 
 
 
-        defaultMatTexIndex = materialTextureStorage.AddTexture(CreateFlatTexture(new Color(0.5f, 0.5f, 0.5f, 0)));
-        defaultShapeTexIndex = shapeTextureStorage.AddTexture(CreateFlatTexture(new Color(1f, 0.5f, 1f, 0.5f)));
+        DefaultMatTexIndex = materialTextureStorage.AddTexture(CreateFlatTexture(new Color(0.5f, 0.5f, 0.5f, 0)));
+        DefaultShapeTexIndex = shapeTextureStorage.AddTexture(CreateFlatTexture(new Color(1f, 0.5f, 1f, 0.5f)));
         defaultSpecialTexIndex = specialTextureStorage.AddTexture(Texture2D.blackTexture);
     }
 
