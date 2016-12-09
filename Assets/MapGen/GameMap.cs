@@ -132,10 +132,13 @@ public class GameMap : MonoBehaviour
     // Dirty flags for those meshes
     bool[,,] blockDirtyBits;
     bool[,,] blockContentBits;
+    bool[] layerDirtyBits;
     UpdateSchedule[,,] blockUpdateSchedules;
     bool[,,] liquidBlockDirtyBits;
     bool[] spatterBlockDirtyBits;
     Texture2D[] spatterLayers;
+    Texture2D[] terrainSplatLayers;
+    public Texture2D[] terrainTintLayers;
     // Lights from magma.
     Light[,,] magmaGlow;
 
@@ -233,6 +236,8 @@ public class GameMap : MonoBehaviour
 
 
         spatterID = Shader.PropertyToID("_SpatterTex");
+        terrainSplatID = Shader.PropertyToID("_Control");
+        terrainTintID = Shader.PropertyToID("_Tint");
         BasicTerrainMaterial.SetTexture(spatterID, clear);
         StencilTerrainMaterial.SetTexture(spatterID, clear);
         TransparentTerrainMaterial.SetTexture(spatterID, clear);
@@ -402,6 +407,7 @@ public class GameMap : MonoBehaviour
         UpdateCreatures();
         UpdateBlocks();
         UpdateSpatters();
+        UpdateTerrainTextures();
         DrawBlocks();
         DrawItems();
     }
@@ -412,9 +418,13 @@ public class GameMap : MonoBehaviour
             for (int x = 0; x < blockDirtyBits.GetLength(0); x++)
                 for (int y = 0; y < blockDirtyBits.GetLength(1); y++)
                 {
+                    if (blockContentBits[x, y, z])
+                    {
+                        layerDirtyBits[z] = true;
+                        spatterBlockDirtyBits[z] = true;
+                    }
                     blockDirtyBits[x, y, z] = blockContentBits[x, y, z];
                     liquidBlockDirtyBits[x, y, z] = blockContentBits[x, y, z];
-                    spatterBlockDirtyBits[z] = blockContentBits[x, y, z] || spatterBlockDirtyBits[z];
                 }
     }
 
@@ -743,7 +753,11 @@ public class GameMap : MonoBehaviour
         liquidBlockDirtyBits = new bool[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         magmaGlow = new Light[blockSizeX * 16, blockSizeY * 16, blockSizeZ];
         spatterBlockDirtyBits = new bool[blockSizeZ];
+        layerDirtyBits = new bool[blockSizeZ];
         spatterLayers = new Texture2D[blockSizeZ];
+        terrainSplatLayers = new Texture2D[blockSizeZ];
+        terrainTintLayers = new Texture2D[blockSizeZ];
+
 
         Vector3 min = DFtoUnityCoord(0, 0, 0) - new Vector3(tileWidth / 2, 0, -tileWidth / 2);
         Vector3 max = DFtoUnityCoord((blockSizeX * 16) - 1, (blockSizeY * 16) - 1, 0) + new Vector3(tileWidth / 2, 0, -tileWidth / 2);
@@ -788,6 +802,7 @@ public class GameMap : MonoBehaviour
         mapBlockX /= blockSize;
         mapBlockY /= blockSize;
         blockDirtyBits[mapBlockX, mapBlockY, mapBlockZ] = true;
+        layerDirtyBits[mapBlockZ] = true;
     }
     void SetBlockContent(int mapBlockX, int mapBlockY, int mapBlockZ)
     {
@@ -971,6 +986,22 @@ public class GameMap : MonoBehaviour
 
     }
 
+    void UpdateTerrainTextures()
+    {
+        if (ContentLoader.Instance == null)
+            return;
+        Profiler.BeginSample("UpdateTerrainTextures", this);
+        for (int z = layerDirtyBits.Length - 1; z >= 0; z--)
+        {
+            if (layerDirtyBits[z])
+            {
+                GenerateTerrainTexture(z);
+                layerDirtyBits[z] = false;
+            }
+        }
+        Profiler.EndSample();
+    }
+
     void UpdateSpatters()
     {
         if (ContentLoader.Instance == null)
@@ -1071,6 +1102,74 @@ public class GameMap : MonoBehaviour
                 meshSet.collisionBlocks.sharedMesh = collisionMesh;
             }
         }
+        Profiler.EndSample();
+    }
+
+    void GenerateTerrainTexture(int z)
+    {
+        if (ContentLoader.Instance == null)
+            return;
+        Profiler.BeginSample("GenerateSpatterTexture", this);
+
+        Color[] terrainColors = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
+        Color[] terrainIndices = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
+
+        for (int x = 0; x < MapDataStore.MapSize.x; x++)
+            for (int y = 0; y < MapDataStore.MapSize.y; y++)
+            {
+                int index = x + (y * MapDataStore.MapSize.x);
+                var tile = MapDataStore.Main[x, y, z];
+                if (tile == null)
+                {
+                    terrainIndices[index].r = ContentLoader.Instance.DefaultMatTexIndex;
+                    terrainIndices[index].g = ContentLoader.Instance.DefaultShapeTexIndex;
+                    terrainColors[index] = Color.gray;
+                    continue;
+                }
+
+
+                NormalContent normalContent;
+                if (ContentLoader.Instance.TerrainShapeTextureConfiguration.GetValue(tile, MeshLayer.LayerMaterial, out normalContent))
+                    terrainIndices[index].g = normalContent.StorageIndex;
+                else
+                    terrainIndices[index].g = ContentLoader.Instance.DefaultShapeTexIndex;
+
+                TextureContent materialContent;
+                if (ContentLoader.Instance.MaterialTextureConfiguration.GetValue(tile, MeshLayer.LayerMaterial, out materialContent))
+                    terrainIndices[index].r = materialContent.StorageIndex;
+                else
+                    terrainIndices[index].r = ContentLoader.Instance.DefaultMatTexIndex;
+
+                ColorContent colorContent;
+                if (ContentLoader.Instance.ColorConfiguration.GetValue(tile, MeshLayer.LayerMaterial, out colorContent))
+                    terrainColors[index] = colorContent.color;
+                else
+                    terrainColors[index] = Color.gray;
+
+            }
+
+        if(terrainSplatLayers[z] == null)
+        {
+            terrainSplatLayers[z] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGHalf, false, true);
+            terrainSplatLayers[z].filterMode = FilterMode.Point;
+        }
+        if (terrainSplatLayers[z].width != MapDataStore.MapSize.x || terrainSplatLayers[z].height != MapDataStore.MapSize.y)
+            terrainSplatLayers[z].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
+
+        terrainSplatLayers[z].SetPixels(terrainIndices);
+        terrainSplatLayers[z].Apply();
+
+        if (terrainTintLayers[z] == null)
+        {
+            terrainTintLayers[z] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGBA32, false, true);
+            terrainTintLayers[z].filterMode = FilterMode.Point;
+        }
+        if (terrainTintLayers[z].width != MapDataStore.MapSize.x || terrainTintLayers[z].height != MapDataStore.MapSize.y)
+            terrainTintLayers[z].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
+
+        terrainTintLayers[z].SetPixels(terrainColors);
+        terrainTintLayers[z].Apply();
+
         Profiler.EndSample();
     }
 
@@ -1521,6 +1620,8 @@ public class GameMap : MonoBehaviour
 
     MaterialPropertyBlock sharedMatBlock;
     int spatterID;
+    int terrainSplatID;
+    int terrainTintID;
 
     private bool DrawSingleBlock(int xx, int yy, int zz, bool phantom, Matrix4x4 LocalTransform, bool top)
     {
@@ -1532,6 +1633,18 @@ public class GameMap : MonoBehaviour
         {
             matBlock = sharedMatBlock;
             matBlock.SetTexture(spatterID, spatterLayers[zz]);
+        }
+        if (terrainSplatLayers[zz] != null)
+        {
+            if (matBlock == null)
+                matBlock = sharedMatBlock;
+            matBlock.SetTexture(terrainSplatID, terrainSplatLayers[zz]);
+        }
+        if (terrainTintLayers[zz] != null)
+        {
+            if (matBlock == null)
+                matBlock = sharedMatBlock;
+            matBlock.SetTexture(terrainTintID, terrainTintLayers[zz]);
         }
 
 

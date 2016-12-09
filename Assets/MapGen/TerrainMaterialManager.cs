@@ -68,5 +68,12 @@ public class TerrainMaterialManager : MonoBehaviour
                     matList.Add(material);
             }
     }
-
+    private void Start()
+    {
+        for(int i = 1; i < 62; i++)
+        {
+            TextureFormat format = (TextureFormat)i;
+            Debug.Log(format.ToString() + ": " + SystemInfo.SupportsTextureFormat(format));
+        }
+    }
 }
