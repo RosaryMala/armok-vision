@@ -322,7 +322,7 @@ public class ContentLoader : MonoBehaviour
                     break;
                 case "terrainTextures":
                     if (TerrainShapeTextureConfiguration == null)
-                        TerrainShapeTextureConfiguration = TileConfiguration<NormalContent>.GetFromRootElement(doc, "shapeTexture");
+                        TerrainShapeTextureConfiguration = TileConfiguration<NormalContent>.GetFromRootElement(doc, "terrainTexture");
                     TerrainShapeTextureConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
                     break;
                 case "tileMeshes":
@@ -413,7 +413,8 @@ public class ContentLoader : MonoBehaviour
         gameMap.TransparentTerrainMaterial.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
         gameMap.TransparentTerrainMaterial.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
         gameMap.TransparentTerrainMaterial.SetVector("_TexArrayCount", arrayCount);
-
+        gameMap.voxelTerrainMaterial.SetTexture("_Splat", materialTextureStorage.AtlasTexture);
+        gameMap.voxelTerrainMaterial.SetTexture("_Normal", shapeTextureStorage.AtlasTexture);
 
         //get rid of any un-used textures left over.
         Resources.UnloadUnusedAssets();

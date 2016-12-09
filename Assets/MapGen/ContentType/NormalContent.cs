@@ -7,7 +7,7 @@ public class NormalContent : IContent
 {
 
     TextureStorage store;
-    int storageIndex;
+    public int StorageIndex { get; private set; }
     
     public Texture2D Texture { get; private set; }
 
@@ -15,7 +15,7 @@ public class NormalContent : IContent
     {
         get
         {
-            return store.getUVTransform(storageIndex);
+            return store.getUVTransform(StorageIndex);
         }
     }
 
@@ -23,14 +23,7 @@ public class NormalContent : IContent
     {
         get
         {
-            return (float)storageIndex / store.Count;
-        }
-    }
-    public int StorageIndex
-    {
-        get
-        {
-            return storageIndex;
+            return (float)StorageIndex / store.Count;
         }
     }
 
@@ -70,9 +63,9 @@ public class NormalContent : IContent
         combinedMap.Apply();
 
         if (store != null)
-            storageIndex = store.AddTexture(combinedMap);
+            StorageIndex = store.AddTexture(combinedMap);
         else
-            storageIndex = -1;
+            StorageIndex = -1;
         Texture = combinedMap;
         return true;
     }
