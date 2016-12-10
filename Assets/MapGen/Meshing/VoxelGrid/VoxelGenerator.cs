@@ -128,8 +128,25 @@ public class VoxelGenerator
         }
     }
 
+
+    public static bool UseBoth(MapDataStore.Tile tile)
+    {
+        if (tile == null)
+            return true; //means it's air/empty
+        switch (tile.shape)
+        {
+            case TiletypeShape.PEBBLES:
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
     public static bool Handled(MapDataStore.Tile tile)
     {
+        if (UseBoth(tile))
+            return true;
         if (tile == null)
             return true; //means it's air/empty
         switch (tile.shape)
@@ -165,6 +182,21 @@ public class VoxelGenerator
                 return false;
         }
         return true;
+    }
+
+    public static bool IsFloor(MapDataStore.Tile tile)
+    {
+        switch (tile.shape)
+        {
+            case TiletypeShape.FLOOR:
+            case TiletypeShape.BOULDER:
+            case TiletypeShape.PEBBLES:
+            case TiletypeShape.SAPLING:
+            case TiletypeShape.SHRUB:
+                return true;
+            default:
+                return false;
+        }
     }
 
     private void TriangulateCell(
@@ -206,19 +238,19 @@ public class VoxelGenerator
         }
 
         Directions wallFloors = walls;
-        if (northWest != null && northWest.shape == TiletypeShape.FLOOR && Handled(northWest))
+        if (northWest != null && IsFloor(northWest) && Handled(northWest))
         {
             wallFloors |= Directions.NorthWest;
         }
-        if (northEast != null && northEast.shape == TiletypeShape.FLOOR && Handled(northEast))
+        if (northEast != null && IsFloor(northEast) && Handled(northEast))
         {
             wallFloors |= Directions.NorthEast;
         }
-        if (southWest != null && southWest.shape == TiletypeShape.FLOOR && Handled(southWest))
+        if (southWest != null && IsFloor(southWest) && Handled(southWest))
         {
             wallFloors |= Directions.SouthWest;
         }
-        if (southEast != null && southEast.shape == TiletypeShape.FLOOR && Handled(southEast))
+        if (southEast != null && IsFloor(southEast) && Handled(southEast))
         {
             wallFloors |= Directions.SouthEast;
         }
