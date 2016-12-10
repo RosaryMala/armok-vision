@@ -66,10 +66,10 @@
             float2 controlCoordsBase = floor(controlCoords + float2(0.5, 0.5)) - float2(0.5, 0.5);
             float2 controlFraction = controlCoords - controlCoordsBase;
 
-            float2 a_cont = tex2D(_Control, (controlCoordsBase + float2(0.5, 0)) * _Control_TexelSize.xy);
-            float2 b_cont = tex2D(_Control, (controlCoordsBase + float2(1.5, 0)) * _Control_TexelSize.xy);
-            float2 c_cont = tex2D(_Control, (controlCoordsBase + float2(0.5, 1)) * _Control_TexelSize.xy);
-            float2 d_cont = tex2D(_Control, (controlCoordsBase + float2(1.5, 1)) * _Control_TexelSize.xy);
+            float2 a_cont = tex2D(_Control, (controlCoordsBase + float2(0, 0)) * _Control_TexelSize.xy);
+            float2 b_cont = tex2D(_Control, (controlCoordsBase + float2(1, 0)) * _Control_TexelSize.xy);
+            float2 c_cont = tex2D(_Control, (controlCoordsBase + float2(0, 1)) * _Control_TexelSize.xy);
+            float2 d_cont = tex2D(_Control, (controlCoordsBase + float2(1, 1)) * _Control_TexelSize.xy);
 
             float4 a_c = overlay(UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, a_cont.x)), tex2D(_Tint, (controlCoordsBase + float2(0, 0)) * _Control_TexelSize.xy));
             float4 b_c = overlay(UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, b_cont.x)), tex2D(_Tint, (controlCoordsBase + float2(1, 0)) * _Control_TexelSize.xy));
