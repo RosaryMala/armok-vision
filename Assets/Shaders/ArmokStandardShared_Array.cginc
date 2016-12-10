@@ -49,7 +49,7 @@ void surf(Input IN, inout SurfaceOutputStandard o) {
 	else
 	{
 		fixed3 albedo = overlay(c.rgb, IN.color.rgb);
-        o.Albedo = UnpackNormal(bump.ggga); //albedo *(1 - special.g);
+        o.Albedo = albedo *(1 - special.g);
 		o.Metallic = (1.0 - IN.color.a) + special.r;
 		o.Smoothness = c.a;
 		o.Emission = albedo * special.g;
