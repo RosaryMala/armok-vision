@@ -538,7 +538,7 @@ abstract class BlockMesher {
                 break;
             default:
                 {
-                    if(VoxelGenerator.Handled(tile))
+                    if(VoxelGenerator.Handled(tile) & !VoxelGenerator.UseBoth(tile))
                     {
                         buffer.meshData = null;
                         return;

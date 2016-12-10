@@ -1127,21 +1127,25 @@ public class GameMap : MonoBehaviour
                     continue;
                 }
 
+                var layer = MeshLayer.LayerMaterial;
+                if (tile.vein_material.mat_index >= 0)
+                    layer = MeshLayer.VeinMaterial;
+
 
                 NormalContent normalContent;
-                if (ContentLoader.Instance.TerrainShapeTextureConfiguration.GetValue(tile, MeshLayer.LayerMaterial, out normalContent))
+                if (ContentLoader.Instance.TerrainShapeTextureConfiguration.GetValue(tile, layer, out normalContent))
                     terrainIndices[index].g = normalContent.StorageIndex;
                 else
                     terrainIndices[index].g = ContentLoader.Instance.DefaultShapeTexIndex;
 
                 TextureContent materialContent;
-                if (ContentLoader.Instance.MaterialTextureConfiguration.GetValue(tile, MeshLayer.LayerMaterial, out materialContent))
+                if (ContentLoader.Instance.MaterialTextureConfiguration.GetValue(tile, layer, out materialContent))
                     terrainIndices[index].r = materialContent.StorageIndex;
                 else
                     terrainIndices[index].r = ContentLoader.Instance.DefaultMatTexIndex;
 
                 ColorContent colorContent;
-                if (ContentLoader.Instance.ColorConfiguration.GetValue(tile, MeshLayer.LayerMaterial, out colorContent))
+                if (ContentLoader.Instance.ColorConfiguration.GetValue(tile, layer, out colorContent))
                     terrainColors[index] = colorContent.color;
                 else
                     terrainColors[index] = Color.gray;
