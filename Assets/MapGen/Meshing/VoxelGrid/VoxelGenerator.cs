@@ -28,7 +28,7 @@ public class VoxelGenerator
         Rounded
     }
 
-    CornerType UsedCornerType { get { return CornerType.Rounded; } }
+    CornerType UsedCornerType { get { return GameSettings.Instance.meshing.cornerType; } }
 
     public CPUMesh TerrainMesh
     {
@@ -158,6 +158,8 @@ public class VoxelGenerator
             case TiletypeShape.EMPTY:
             case TiletypeShape.FLOOR:
             case TiletypeShape.WALL:
+            case TiletypeShape.BROOK_TOP:
+            case TiletypeShape.RAMP_TOP:
                 break;
             default:
                 return false;
@@ -214,7 +216,7 @@ public class VoxelGenerator
         Vector3 centerPoint,
         Directions edges)
     {
-        var corner = CornerType.Rounded;
+        var corner = UsedCornerType;
         if (!Handled(northWest)
             || !Handled(northEast)
             || !Handled(southWest)

@@ -339,60 +339,60 @@ public class MapExport : MonoBehaviour
         //-----------------------------------------------------------
 
 
-        string patternName = "Tex-";
+        //string patternName = "Tex-";
 
-        Texture2D tiletexture = null;
-        TextureContent textureContent;
-        if (ContentLoader.Instance.MaterialTextureConfiguration.GetValue(tile, layer, out textureContent))
-        {
-            tiletexture = textureContent.Texture;
-            patternName += textureContent.UniqueIndex;
-        }
-        else patternName += "#";
+        //Texture2D tiletexture = null;
+        //TextureContent textureContent;
+        //if (ContentLoader.Instance.MaterialTextureConfiguration.GetValue(tile, layer, out textureContent))
+        //{
+        //    tiletexture = textureContent.Texture;
+        //    patternName += textureContent.UniqueIndex;
+        //}
+        //else patternName += "#";
 
-        patternName += "-#";
+        //patternName += "-#";
 
-        Color color = Color.grey;
-        ColorContent colorContent;
-        if (ContentLoader.Instance.ColorConfiguration.GetValue(tile, layer, out colorContent))
-        {
-            color = colorContent.color;
-        }
+        //Color color = Color.grey;
+        //ColorContent colorContent;
+        //if (ContentLoader.Instance.ColorConfiguration.GetValue(tile, layer, out colorContent))
+        //{
+        //    color = colorContent.color;
+        //}
 
-        patternName += string.Format("{0:X2}{1:X2}{2:X2}", ((Color32)color).r, ((Color32)color).g, ((Color32)color).b);
+        //patternName += string.Format("{0:X2}{1:X2}{2:X2}", ((Color32)color).r, ((Color32)color).g, ((Color32)color).b);
 
-        if (diffuseTextures.ContainsKey(patternName))
-            return;
+        //if (diffuseTextures.ContainsKey(patternName))
+        //    return;
 
-        Color neutralSpec = new Color(0.04f, 0.04f, 0.04f);
-        Texture2D outputDiffuse;
-        Texture2D outputSpec;
-        if (tiletexture != null)
-        {
-            outputDiffuse = new Texture2D(tiletexture.width, tiletexture.height);
-            outputSpec = new Texture2D(tiletexture.width, tiletexture.height);
-            Color[] colors = tiletexture.GetPixels();
-            Color[] specs = new Color[colors.Length];
-            for (int i = 0; i < colors.Length; i++)
-            {
-                var diffuseColor = OverlayBlend(colors[i], color);
-                diffuseColor.a = 1;
-                colors[i] = Color.Lerp(Color.black, diffuseColor, color.a);
-                specs[i] = Color.Lerp(diffuseColor, neutralSpec, color.a);
-            }
-            outputDiffuse.SetPixels(colors);
-            outputSpec.SetPixels(specs);
-        }
-        else
-        {
-            outputDiffuse = ContentLoader.CreateFlatTexture(color);
-            outputSpec = ContentLoader.CreateFlatTexture(neutralSpec);
-        }
-        outputDiffuse.name = patternName + "_Diffuse";
-        outputSpec.name = patternName + "_Specular";
+        //Color neutralSpec = new Color(0.04f, 0.04f, 0.04f);
+        //Texture2D outputDiffuse;
+        //Texture2D outputSpec;
+        //if (tiletexture != null)
+        //{
+        //    outputDiffuse = new Texture2D(tiletexture.width, tiletexture.height);
+        //    outputSpec = new Texture2D(tiletexture.width, tiletexture.height);
+        //    Color[] colors = tiletexture.GetPixels();
+        //    Color[] specs = new Color[colors.Length];
+        //    for (int i = 0; i < colors.Length; i++)
+        //    {
+        //        var diffuseColor = OverlayBlend(colors[i], color);
+        //        diffuseColor.a = 1;
+        //        colors[i] = Color.Lerp(Color.black, diffuseColor, color.a);
+        //        specs[i] = Color.Lerp(diffuseColor, neutralSpec, color.a);
+        //    }
+        //    outputDiffuse.SetPixels(colors);
+        //    outputSpec.SetPixels(specs);
+        //}
+        //else
+        //{
+        //    outputDiffuse = ContentLoader.CreateFlatTexture(color);
+        //    outputSpec = ContentLoader.CreateFlatTexture(neutralSpec);
+        //}
+        //outputDiffuse.name = patternName + "_Diffuse";
+        //outputSpec.name = patternName + "_Specular";
 
-        diffuseTextures[patternName] = outputDiffuse;
-        specularTextures[patternName] = outputSpec;
+        //diffuseTextures[patternName] = outputDiffuse;
+        //specularTextures[patternName] = outputSpec;
 
     }
 
