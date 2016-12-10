@@ -138,6 +138,7 @@ public class VoxelGenerator
             case TiletypeShape.PEBBLES:
             case TiletypeShape.BOULDER:
             case TiletypeShape.SAPLING:
+            case TiletypeShape.SHRUB:
                 break;
             default:
                 return false;
