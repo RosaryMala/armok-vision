@@ -136,6 +136,8 @@ public class VoxelGenerator
         switch (tile.shape)
         {
             case TiletypeShape.PEBBLES:
+            case TiletypeShape.BOULDER:
+            case TiletypeShape.SAPLING:
                 break;
             default:
                 return false;
