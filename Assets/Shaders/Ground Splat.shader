@@ -1,8 +1,7 @@
 ﻿Shader "Custom/Ground Splat" {
 	Properties {
-        _MainTex ("Albedo (RGB)", 2D) = "white" {}
-        _Splat("Albedo Splat", 2DArray) = "black" {}
-        _Normal("Shape Texture Splat", 2DArray) = "bump" {}
+        _MainTex("Albedo (RGB)", 2DArray) = "grey" {}
+        _BumpMap("Shape Texture Splat", 2DArray) = "bump" {}
         [PerRendererData]_Tint("Tint (RGBA)", 2D) = "black" {}
         [PerRendererData]_Control("Control (RG)", 2D) = "black" {}
 
@@ -26,10 +25,8 @@
         sampler2D _Control;
         float4 _Control_TexelSize;
         sampler2D _Tint;
-        UNITY_DECLARE_TEX2DARRAY(_Splat);
-        UNITY_DECLARE_TEX2DARRAY(_Normal);
-
-        sampler2D _MainTex;
+        UNITY_DECLARE_TEX2DARRAY(_MainTex);
+        UNITY_DECLARE_TEX2DARRAY(_BumpMap);
 
         sampler2D _SpatterTex;
         sampler2D _SpatterNoise;
@@ -74,15 +71,15 @@
             float2 c_cont = tex2D(_Control, (controlCoordsBase + float2(0.5, 1)) * _Control_TexelSize.xy);
             float2 d_cont = tex2D(_Control, (controlCoordsBase + float2(1.5, 1)) * _Control_TexelSize.xy);
 
-            float4 a_c = overlay(UNITY_SAMPLE_TEX2DARRAY(_Splat, float3(IN.uv_MainTex, a_cont.x)), tex2D(_Tint, (controlCoordsBase + float2(0, 0)) * _Control_TexelSize.xy));
-            float4 b_c = overlay(UNITY_SAMPLE_TEX2DARRAY(_Splat, float3(IN.uv_MainTex, b_cont.x)), tex2D(_Tint, (controlCoordsBase + float2(1, 0)) * _Control_TexelSize.xy));
-            float4 c_c = overlay(UNITY_SAMPLE_TEX2DARRAY(_Splat, float3(IN.uv_MainTex, c_cont.x)), tex2D(_Tint, (controlCoordsBase + float2(0, 1)) * _Control_TexelSize.xy));
-            float4 d_c = overlay(UNITY_SAMPLE_TEX2DARRAY(_Splat, float3(IN.uv_MainTex, d_cont.x)), tex2D(_Tint, (controlCoordsBase + float2(1, 1)) * _Control_TexelSize.xy));
+            float4 a_c = overlay(UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, a_cont.x)), tex2D(_Tint, (controlCoordsBase + float2(0, 0)) * _Control_TexelSize.xy));
+            float4 b_c = overlay(UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, b_cont.x)), tex2D(_Tint, (controlCoordsBase + float2(1, 0)) * _Control_TexelSize.xy));
+            float4 c_c = overlay(UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, c_cont.x)), tex2D(_Tint, (controlCoordsBase + float2(0, 1)) * _Control_TexelSize.xy));
+            float4 d_c = overlay(UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, d_cont.x)), tex2D(_Tint, (controlCoordsBase + float2(1, 1)) * _Control_TexelSize.xy));
 
-            float4 a_n = UNITY_SAMPLE_TEX2DARRAY(_Normal, float3(IN.uv_MainTex, a_cont.y));
-            float4 b_n = UNITY_SAMPLE_TEX2DARRAY(_Normal, float3(IN.uv_MainTex, b_cont.y));
-            float4 c_n = UNITY_SAMPLE_TEX2DARRAY(_Normal, float3(IN.uv_MainTex, c_cont.y));
-            float4 d_n = UNITY_SAMPLE_TEX2DARRAY(_Normal, float3(IN.uv_MainTex, d_cont.y));
+            float4 a_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, a_cont.y));
+            float4 b_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, b_cont.y));
+            float4 c_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, c_cont.y));
+            float4 d_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, d_cont.y));
 
             float4 ab_c = MixColor(a_c, a_n.b, 1 - controlFraction.x, b_c, b_n.b, controlFraction.x);
             float4 ab_n = MixColor(a_n, a_n.b, 1 - controlFraction.x, b_n, b_n.b, controlFraction.x);
@@ -104,7 +101,7 @@
             }
             else
             {
-                o.Albedo = UnpackNormal(abcd_n.ggga); //abcd_c.rgb;
+                o.Albedo = abcd_c.rgb;
                 o.Smoothness = abcd_c.a;
             }
             o.Occlusion = abcd_n.r;

@@ -1,10 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <terrainTextures>
-    <terrainTexture normal="Sand_Normal.png" occlusion="Sand_AO.png" alpha="Sand_Depth.png">
+    <terrainTexture normal="Rough_Normal.png" occlusion="Rough_AO.png" alpha="Rough_Depth.png">
         <material token="*:*"/>
     </terrainTexture>
     <terrainTexture normal="Granite_Normal.png" occlusion="Granite_AO.png" alpha="Granite_Depth.png">
         <material token="INORGANIC:SANDSTONE"/>
         <material token="INORGANIC:LIMESTONE"/>
+    </terrainTexture>
+    <terrainTexture normal="Sand_Normal.png" occlusion="Sand_AO.png" alpha="Sand_Depth.png">
+        <material token="INORGANIC:SAND_TAN"/>
+        <material token="INORGANIC:SAND_BLACK"/>
+        <material token="INORGANIC:SAND_RED"/>
+        <material token="INORGANIC:SAND_WHITE"/>
+        <material token="INORGANIC:SAND_YELLOW"/>
     </terrainTexture>
 </terrainTextures>
