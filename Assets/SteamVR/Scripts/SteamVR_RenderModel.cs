@@ -364,7 +364,7 @@ public class SteamVR_RenderModel : MonoBehaviour
 		mesh.uv = uv;
 		mesh.triangles = triangles;
 
-		mesh.Optimize();
+		;
 		//mesh.hideFlags = HideFlags.DontUnloadUnusedAsset;
 
 		// Check cache before loading texture.

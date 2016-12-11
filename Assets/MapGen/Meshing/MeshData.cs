@@ -59,7 +59,7 @@ public class CPUMesh
 
     public void CopyToMesh(Mesh target)
     {
-        Profiler.BeginSample("CopyToMesh", target);
+        UnityEngine.Profiling.Profiler.BeginSample("CopyToMesh", target);
         target.vertices = vertices;
         target.normals = normals;
         target.tangents = tangents;
@@ -71,6 +71,6 @@ public class CPUMesh
         target.RecalculateBounds();
         if (target.name == "")
             target.name = name;
-        Profiler.EndSample();
+        UnityEngine.Profiling.Profiler.EndSample();
     }
 }

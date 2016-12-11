@@ -250,4 +250,4 @@ Material:
       second: {r: 0, g: 1, b: 0, a: 1}
     - first:
         name: _WorldBounds
-      second: {r: -1, g: 1, b: 383, a: -287}
+      second: {r: -1, g: 1, b: 383, a: -383}
