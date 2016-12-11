@@ -7,6 +7,28 @@
         <material token="INORGANIC:SANDSTONE"/>
         <material token="INORGANIC:LIMESTONE"/>
     </terrainTexture>
+    <terrainTexture normal="Soil_Normal.png" occlusion="Soil_AO.png" alpha="Soil_Depth.png">
+        <material token="INORGANIC:LOAM"/>
+        <material token="INORGANIC:LOAMY_SAND"/>
+        <material token="INORGANIC:PEAT"/>
+        <material token="INORGANIC:SANDY_CLAY_LOAM"/>
+        <material token="INORGANIC:SANDY_LOAM"/>
+        <material token="INORGANIC:SILT"/>
+        <material token="INORGANIC:SILTY_CLAY_LOAM"/>
+        <material token="INORGANIC:SILT_LOAM"/>
+    </terrainTexture>
+    <terrainTexture normal="Soil_Normal.png" occlusion="Soil_AO.png" alpha="Soil_Depth.png">
+        <material token="INORGANIC:PELAGIC_CLAY"/>
+        <material token="INORGANIC:CALCAREOUS_OOZE"/>
+        <material token="INORGANIC:SILICEOUS_OOZE"/>
+    </terrainTexture>
+    <terrainTexture normal="Soil_Normal.png" occlusion="Soil_AO.png" alpha="Soil_Depth.png">
+        <material token="INORGANIC:CLAY"/>
+        <material token="INORGANIC:CLAY_LOAM"/>
+        <material token="INORGANIC:SANDY_CLAY_LOAM"/>
+        <material token="INORGANIC:SILTY_CLAY"/>
+        <material token="INORGANIC:FIRE_CLAY"/>
+    </terrainTexture>
     <terrainTexture normal="Sand_Normal.png" occlusion="Sand_AO.png" alpha="Sand_Depth.png">
         <material token="INORGANIC:SAND_TAN"/>
         <material token="INORGANIC:SAND_BLACK"/>
