@@ -192,7 +192,7 @@ public class BlockMeshSet
         MaterialPropertyBlock properties
         )
     {
-        Profiler.BeginSample("DrawSingleBlock");
+        UnityEngine.Profiling.Profiler.BeginSample("DrawSingleBlock");
         bool drewBlock = false;
         if (voxelBlocks != null && voxelBlocks.vertexCount > 0)
         {
@@ -246,7 +246,7 @@ public class BlockMeshSet
                 drewBlock = true;
             }
         }
-        Profiler.EndSample();
+        UnityEngine.Profiling.Profiler.EndSample();
         return drewBlock;
 
     }

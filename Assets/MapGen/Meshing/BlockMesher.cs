@@ -109,14 +109,14 @@ abstract class BlockMesher {
         if (!tiles && !liquids) {
             throw new UnityException("Why mesh something without tiles or liquids?");
         }
-        Profiler.BeginSample("BlockMesher.Enqueue");
+        UnityEngine.Profiling.Profiler.BeginSample("BlockMesher.Enqueue");
         // Using our object pool
         MapDataStore targetDataStore = AllocateBlockStore();
 
         // Copy data
         if (!MapDataStore.Main.CopySliceTo(targetLocation, MapDataStore.BLOCK_SIZE, targetDataStore))
         {
-            Profiler.EndSample();
+            UnityEngine.Profiling.Profiler.EndSample();
             return true; //it's empty, but it isn't a failure condition.
         }
 
@@ -132,7 +132,7 @@ abstract class BlockMesher {
             {
                 if (requestQueue.Count >= GameSettings.Instance.meshing.queueLimit)
                 {
-                    Profiler.EndSample();
+                    UnityEngine.Profiling.Profiler.EndSample();
                     return false;
                 }
             }
@@ -151,7 +151,7 @@ abstract class BlockMesher {
                 recycledBlocks.Push(redundant.data);
             }
         }
-        Profiler.EndSample();
+        UnityEngine.Profiling.Profiler.EndSample();
         return true;
     }
 
