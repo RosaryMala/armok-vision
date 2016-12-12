@@ -31,6 +31,8 @@ public class GameMap : MonoBehaviour
     /// </summary>
     public Material voxelTerrainMaterial;
 
+    public Material voxelTerrainMaterialContaminants;
+
 
     bool arrayTextures = false;
 
@@ -736,6 +738,7 @@ public class GameMap : MonoBehaviour
         StencilTerrainMaterial.SetVector("_WorldBounds", bounds);
         TransparentTerrainMaterial.SetVector("_WorldBounds", bounds);
         voxelTerrainMaterial.SetVector("_WorldBounds", bounds);
+        voxelTerrainMaterialContaminants.SetVector("_WorldBounds", bounds);
     }
 
     void InitializeBlocks()
@@ -1631,7 +1634,7 @@ public class GameMap : MonoBehaviour
     {
         if (mapMeshes[xx, yy, zz] == null)
             return false;
-
+        Material tempVoxelMat = voxelTerrainMaterial;
         MaterialPropertyBlock matBlock = null;
         if (spatterLayers[zz] != null)
         {
@@ -1643,6 +1646,7 @@ public class GameMap : MonoBehaviour
             if (matBlock == null)
                 matBlock = sharedMatBlock;
             matBlock.SetTexture(terrainSplatID, terrainSplatLayers[zz]);
+            tempVoxelMat = voxelTerrainMaterialContaminants;
         }
         if (terrainTintLayers[zz] != null)
         {
@@ -1653,8 +1657,8 @@ public class GameMap : MonoBehaviour
 
 
         return mapMeshes[xx, yy, zz].Render(phantom, LocalTransform, top,
-            BasicTerrainMaterial, StencilTerrainMaterial, TransparentTerrainMaterial, 
-            voxelTerrainMaterial, waterMaterial, magmaMaterial, matBlock
+            BasicTerrainMaterial, StencilTerrainMaterial, TransparentTerrainMaterial,
+            tempVoxelMat, waterMaterial, magmaMaterial, matBlock
             );
     }
 

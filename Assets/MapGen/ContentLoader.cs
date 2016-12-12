@@ -415,6 +415,8 @@ public class ContentLoader : MonoBehaviour
         gameMap.TransparentTerrainMaterial.SetVector("_TexArrayCount", arrayCount);
         gameMap.voxelTerrainMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
         gameMap.voxelTerrainMaterial.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
+        gameMap.voxelTerrainMaterialContaminants.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
+        gameMap.voxelTerrainMaterialContaminants.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
 
         //get rid of any un-used textures left over.
         Resources.UnloadUnusedAssets();
