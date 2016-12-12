@@ -187,7 +187,7 @@ Material:
       second: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - first:
         name: _TexArrayCount
-      second: {r: 40, g: 55, b: 15, a: 0}
+      second: {r: 40, g: 58, b: 15, a: 0}
     - first:
         name: _WorldBounds
-      second: {r: -1, g: 1, b: 383, a: -383}
+      second: {r: -1, g: 1, b: 287, a: -287}

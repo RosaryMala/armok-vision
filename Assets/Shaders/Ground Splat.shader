@@ -19,6 +19,8 @@
 		// Physically based Standard lighting model, and enable shadows on all light types
 		#pragma surface surf Standard fullforwardshadows
 
+        #pragma shader_feature CONTAMINANTS
+
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 3.5
 
@@ -28,12 +30,14 @@
         UNITY_DECLARE_TEX2DARRAY(_MainTex);
         UNITY_DECLARE_TEX2DARRAY(_BumpMap);
 
+#ifdef CONTAMINANTS
         sampler2D _SpatterTex;
         sampler2D _SpatterNoise;
         float4 _SpatterDirection;
         float _SpatterSmoothness;
-        float4 _WorldBounds;
         float4 _SpatterNoise_ST;
+#endif
+        float4 _WorldBounds;
 
 		struct Input {
 			float2 uv_MainTex;
@@ -59,8 +63,10 @@
         void surf(Input IN, inout SurfaceOutputStandard o) {
             float2 controlUV = (IN.worldPos.xz - _WorldBounds.xy) / (_WorldBounds.zw - _WorldBounds.xy);
 
+#ifdef CONTAMINANTS
             fixed4 spatter = tex2D(_SpatterTex, controlUV);
             fixed4 noise = tex2D(_SpatterNoise, TRANSFORM_TEX(IN.worldPos.xz, _SpatterNoise));
+#endif
             
             float2 controlCoords = controlUV * _Control_TexelSize.zw;
             float2 controlCoordsBase = floor(controlCoords + float2(0.5, 0.5)) - float2(0.5, 0.5);
@@ -93,6 +99,7 @@
 
             o.Normal = UnpackNormal(abcd_n.ggga);
 
+#ifdef CONTAMINANTS
             if (dot(WorldNormalVector(IN, o.Normal), _SpatterDirection.xyz) >= lerp(1, -1, (spatter.a - noise.r)))
             {
                 o.Albedo = (spatter.rgb / spatter.a);
@@ -101,12 +108,16 @@
             }
             else
             {
+#endif
                 o.Albedo = abcd_c.rgb;
                 o.Smoothness = abcd_c.a;
+#ifdef CONTAMINANTS
             }
+#endif
             o.Occlusion = abcd_n.r;
 		}
 		ENDCG
 	}
 	FallBack "Diffuse"
+    CustomEditor "GroundSplatEditor"
 }
