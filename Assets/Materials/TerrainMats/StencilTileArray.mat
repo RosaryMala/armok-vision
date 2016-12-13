@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: StencilMaterialArray
+  m_Name: StencilTileArray
   m_Shader: {fileID: 4800000, guid: 89168cec8a877544983d6052eb125da4, type: 3}
   m_ShaderKeywords: DIFFCUBE_ON LUX_AO_OFF SPECCUBE_ON _ALPHATEST_ON _NORMALMAP
   m_LightmapFlags: 5
@@ -187,4 +187,4 @@ Material:
       second: {r: 40, g: 58, b: 15, a: 0}
     - first:
         name: _WorldBounds
-      second: {r: -1, g: 1, b: 287, a: -287}
+      second: {r: -1, g: 1, b: 383, a: -287}

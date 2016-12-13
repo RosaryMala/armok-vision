@@ -19,10 +19,12 @@
 		// Physically based Standard lighting model, and enable shadows on all light types
 		#pragma surface surf Standard
         #pragma target 3.5
+        #pragma shader_feature CONTAMINANTS
 
 		#include "ArmokStandardShared_Array.cginc"
 
 		ENDCG
 	} 
 	FallBack "Custom/ArmokStandardPBRNoSpatter"
+            CustomEditor "GroundSplatEditor"
 }
