@@ -10,11 +10,12 @@ public class MaterialManager : MonoBehaviour
         None = 0,
         Contaminants = 1
     }
-    public enum TransparencyType
+    public enum MaterialType
     {
         Opaque,
         Stencil,
-        Transparent
+        Transparent,
+        SplatMap
     }
 
     [SerializeField]
@@ -36,54 +37,95 @@ public class MaterialManager : MonoBehaviour
         Instance = this;
     }
 
-    Material _voxelMaterial = null;
-    Material _voxelMaterialContaminated = null;
-    public Material GetSplatMaterial(MaterialFlags flags)
+    private void Start()
     {
-        switch (flags)
+        InitializeAllTextures();
+    }
+
+    Dictionary<MaterialType, Dictionary<MaterialFlags, Material>> _cachedMaterials = new Dictionary<MaterialType, Dictionary<MaterialFlags, Material>>();
+    private void InitializeAllTextures()
+    {
+        InitializeTextureCategory(MaterialType.Opaque);
+        InitializeTextureCategory(MaterialType.SplatMap);
+        InitializeTextureCategory(MaterialType.Stencil);
+        InitializeTextureCategory(MaterialType.Transparent);
+    }
+
+    private void InitializeTextureCategory(MaterialType type)
+    {
+        InitizalizeTexture(type, MaterialFlags.None);
+        InitizalizeTexture(type, MaterialFlags.Contaminants);
+    }
+
+    private void InitizalizeTexture(MaterialType type, MaterialFlags flags)
+    {
+        if (!_cachedMaterials.ContainsKey(type))
         {
-            case MaterialFlags.Contaminants:
-                if (_voxelMaterialContaminated == null)
-                {
-                    _voxelMaterialContaminated = new Material(baseSplatMaterial);
-                    _voxelMaterialContaminated.EnableKeyword("CONTAMINANTS");
-                    foreach (var item in vectorProperties)
-                    {
-                        _voxelMaterialContaminated.SetVector(item.Key, item.Value);
-                    }
-                    foreach (var item in textureProperties)
-                    {
-                        _voxelMaterialContaminated.SetTexture(item.Key, item.Value);
-                    }
-                }
-                return _voxelMaterialContaminated;
-            default:
-                if (_voxelMaterial == null)
-                {
-                    _voxelMaterial = new Material(baseSplatMaterial);
-                    _voxelMaterial.DisableKeyword("CONTAMINANTS");
-                    foreach (var item in vectorProperties)
-                    {
-                        _voxelMaterial.SetVector(item.Key, item.Value);
-                    }
-                    foreach (var item in textureProperties)
-                    {
-                        _voxelMaterial.SetTexture(item.Key, item.Value);
-                    }
-                }
-                return _voxelMaterial;
+            _cachedMaterials[type] = new Dictionary<MaterialFlags, Material>();
         }
+        if (!_cachedMaterials[type].ContainsKey(flags))
+        {
+            switch (type)
+            {
+                case MaterialType.Opaque:
+                    _cachedMaterials[type][flags] = new Material(baseStandardMaterial);
+                    break;
+                case MaterialType.Stencil:
+                    _cachedMaterials[type][flags] = new Material(baseStandardMaterialCutout);
+                    break;
+                case MaterialType.Transparent:
+                    _cachedMaterials[type][flags] = new Material(baseStandardMaterialTransparent);
+                    break;
+                case MaterialType.SplatMap:
+                    _cachedMaterials[type][flags] = new Material(baseSplatMaterial);
+                    break;
+                default:
+                    break;
+            }
+            if ((flags & MaterialFlags.Contaminants) == MaterialFlags.Contaminants)
+                _cachedMaterials[type][flags].EnableKeyword("CONTAMINANTS");
+            else
+                _cachedMaterials[type][flags].DisableKeyword("CONTAMINANTS");
+
+            foreach (var item in vectorProperties)
+            {
+                _cachedMaterials[type][flags].SetVector(item.Key, item.Value);
+            }
+            foreach (var item in textureProperties)
+            {
+                _cachedMaterials[type][flags].SetTexture(item.Key, item.Value);
+            }
+        }
+    }
+
+    public Material GetMaterial(MaterialType type, MaterialFlags flags)
+    {
+        return _cachedMaterials[type][flags];
     }
 
     Dictionary<string, Vector4> vectorProperties = new Dictionary<string, Vector4>();
     public void SetVector(string property, Vector4 vector)
     {
         vectorProperties[property] = vector;
+        foreach (var item in _cachedMaterials)
+        {
+            foreach (var mat in item.Value)
+            {
+                mat.Value.SetVector(property, vector);
+            }
+        }
     }
 
     Dictionary<string, Texture> textureProperties = new Dictionary<string, Texture>();
     public void SetTexture(string property, Texture texture)
     {
         textureProperties[property] = texture;
+        foreach (var item in _cachedMaterials)
+        {
+            foreach (var mat in item.Value)
+            {
+                mat.Value.SetTexture(property, texture);
+            }
+        }
     }
 }
