@@ -16,46 +16,9 @@ using UnityEngine.UI;
 
 public class GameMap : MonoBehaviour
 {
-    //Atlas materials
-    public Material basicTerrainMaterial;   // Can be any terrain you want.
-    public Material stencilTerrainMaterial; // Foliage & other stenciled materials.
-    public Material transparentTerrainMaterial; // Anything with partial transparency.
-
-    //Texture array materials
-    public Material basicTerrainArrayMaterial;   // Can be any terrain you want.
-    public Material stencilTerrainArrayMaterial; // Foliage & other stenciled materials.
-    public Material transparentTerrainArrayMaterial; // Anything with partial transparency.
 
     bool arrayTextures = false;
 
-    // Things to be set from the Unity Editor.
-    public Material BasicTerrainMaterial
-    {
-        get
-        {
-            if (arrayTextures)
-                return basicTerrainArrayMaterial;
-            return basicTerrainMaterial;
-        }
-    }
-    public Material StencilTerrainMaterial
-    {
-        get
-        {
-            if (arrayTextures)
-                return stencilTerrainArrayMaterial;
-            return stencilTerrainMaterial;
-        }
-    }
-    public Material TransparentTerrainMaterial
-    {
-        get
-        {
-            if (arrayTextures)
-                return transparentTerrainArrayMaterial;
-            return transparentTerrainMaterial;
-        }
-    }
     public Material waterMaterial;
     public Material magmaMaterial;
 
@@ -232,12 +195,7 @@ public class GameMap : MonoBehaviour
         spatterID = Shader.PropertyToID("_SpatterTex");
         terrainSplatID = Shader.PropertyToID("_Control");
         terrainTintID = Shader.PropertyToID("_Tint");
-        BasicTerrainMaterial.SetTexture(spatterID, clear);
-        StencilTerrainMaterial.SetTexture(spatterID, clear);
-        TransparentTerrainMaterial.SetTexture(spatterID, clear);
         sharedMatBlock = new MaterialPropertyBlock();
-
-
     }
 
     public static GameMap Instance { get; private set; }
@@ -725,10 +683,6 @@ public class GameMap : MonoBehaviour
 
     void SetMaterialBounds(Vector4 bounds)
     {
-
-        BasicTerrainMaterial.SetVector("_WorldBounds", bounds);
-        StencilTerrainMaterial.SetVector("_WorldBounds", bounds);
-        TransparentTerrainMaterial.SetVector("_WorldBounds", bounds);
         MaterialManager.Instance.SetVector("_WorldBounds", bounds);
     }
 
@@ -1648,8 +1602,11 @@ public class GameMap : MonoBehaviour
 
 
         return mapMeshes[xx, yy, zz].Render(phantom, LocalTransform, top,
-            BasicTerrainMaterial, StencilTerrainMaterial, TransparentTerrainMaterial,
-            MaterialManager.Instance.GetSplatMaterial(flags), waterMaterial, magmaMaterial, matBlock
+            MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.Opaque, flags),
+            MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.Stencil, flags),
+            MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.Transparent, flags),
+            MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.SplatMap, flags),
+            waterMaterial, magmaMaterial, matBlock
             );
     }
 
