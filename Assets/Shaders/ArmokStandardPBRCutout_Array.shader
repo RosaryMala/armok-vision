@@ -21,10 +21,12 @@
 		// Physically based Standard lighting model, and enable shadows on all light types
 		#pragma surface surf Standard addshadow alphatest:_Cutoff
         #pragma target 3.5
+        #pragma shader_feature CONTAMINANTS
 
 		#include "ArmokStandardShared_Array.cginc"
 
 		ENDCG
 	} 
 	FallBack "Custom/ArmokStandardPBRCutoutNoSpatter"
+            CustomEditor "GroundSplatEditor"
 }

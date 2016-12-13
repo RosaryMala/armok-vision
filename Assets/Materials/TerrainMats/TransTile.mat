@@ -6,10 +6,10 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: TerrainSplatContaminated
-  m_Shader: {fileID: 4800000, guid: 417270ff19a647342b3c44726962acee, type: 3}
-  m_ShaderKeywords: CONTAMINANTS _EMISSION
-  m_LightmapFlags: 1
+  m_Name: TransTile
+  m_Shader: {fileID: 4800000, guid: c52755b7a1220c44590b049631de63cd, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
   m_SavedProperties:
@@ -17,12 +17,6 @@ Material:
     m_TexEnvs:
     - first:
         name: _BumpMap
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
-        name: _Control
       second:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -64,42 +58,6 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
-        name: _Normal
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
-        name: _Normal0
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
-        name: _Normal1
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
-        name: _Normal2
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
-        name: _Normal3
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
-        name: _Normal4
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
         name: _OcclusionMap
       second:
         m_Texture: {fileID: 0}
@@ -115,7 +73,7 @@ Material:
         name: _SpatterNoise
       second:
         m_Texture: {fileID: 2800000, guid: e80c3c84ea861404d8a427db8b7abf04, type: 3}
-        m_Scale: {x: 1, y: 1}
+        m_Scale: {x: 0.5, y: 0.5}
         m_Offset: {x: 0, y: 0}
     - first:
         name: _SpatterTex
@@ -124,43 +82,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
-        name: _Splat
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
-        name: _Splat0
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
-        name: _Splat1
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
-        name: _Splat2
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
-        name: _Splat3
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
-        name: _Splat4
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
-        name: _Tint
+        name: _SpecialTex
       second:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -179,17 +101,8 @@ Material:
         name: _DstBlend
       second: 0
     - first:
-        name: _GlossMapScale
-      second: 1
-    - first:
         name: _Glossiness
       second: 0.5
-    - first:
-        name: _GlossyReflections
-      second: 1
-    - first:
-        name: _LayerCount
-      second: 1
     - first:
         name: _Metallic
       second: 0
@@ -203,14 +116,8 @@ Material:
         name: _Parallax
       second: 0.02
     - first:
-        name: _SmoothnessTextureChannel
-      second: 0
-    - first:
         name: _SpatterSmoothness
       second: 0.5
-    - first:
-        name: _SpecularHighlights
-      second: 1
     - first:
         name: _SrcBlend
       second: 1
@@ -222,26 +129,8 @@ Material:
       second: 1
     m_Colors:
     - first:
-        name: _ArrayIndices
-      second: {r: 0, g: 0, b: 0, a: 0}
-    - first:
         name: _Color
       second: {r: 1, g: 1, b: 1, a: 1}
-    - first:
-        name: _Color0
-      second: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    - first:
-        name: _Color1
-      second: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    - first:
-        name: _Color2
-      second: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    - first:
-        name: _Color3
-      second: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    - first:
-        name: _Color4
-      second: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - first:
         name: _EmissionColor
       second: {r: 0, g: 0, b: 0, a: 1}
@@ -250,4 +139,4 @@ Material:
       second: {r: 0, g: 1, b: 0, a: 1}
     - first:
         name: _WorldBounds
-      second: {r: -1, g: 1, b: 287, a: -287}
+      second: {r: -1, g: 1, b: 383, a: -287}

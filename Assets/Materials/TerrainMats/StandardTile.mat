@@ -6,9 +6,9 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: StencilMaterial
+  m_Name: StandardTile
   m_Shader: {fileID: 4800000, guid: d0a581a1027be304c82e5e7c63008ee8, type: 3}
-  m_ShaderKeywords: DIFFCUBE_ON LUX_AO_OFF SPECCUBE_ON _ALPHATEST_ON _NORMALMAP
+  m_ShaderKeywords: _NORMALMAP
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -18,11 +18,17 @@ Material:
     - first:
         name: _AO
       second:
-        m_Texture: {fileID: 2800000, guid: 9fbcb662b576c8841a4215cd9d6da541, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
         name: _BumpMap
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _Detail
       second:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -108,7 +114,7 @@ Material:
     - first:
         name: _SpecTex
       second:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 3a9bc543b0449a14f9076c7c788c8b88, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
@@ -134,9 +140,6 @@ Material:
         name: _EmissionScaleUI
       second: 0
     - first:
-        name: _Fresnel
-      second: 0.2
-    - first:
         name: _Glossiness
       second: 0.5
     - first:
@@ -144,7 +147,7 @@ Material:
       second: 0
     - first:
         name: _Mode
-      second: 1
+      second: 0
     - first:
         name: _OcclusionStrength
       second: 1
@@ -181,7 +184,7 @@ Material:
       second: {r: 0, g: 1, b: 0, a: 1}
     - first:
         name: _SpecColor
-      second: {r: 0.5, g: 0.5, b: 0.5, a: 0}
+      second: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - first:
         name: _WorldBounds
       second: {r: -1, g: 1, b: 383, a: -287}

@@ -26,14 +26,6 @@ public class GameMap : MonoBehaviour
     public Material stencilTerrainArrayMaterial; // Foliage & other stenciled materials.
     public Material transparentTerrainArrayMaterial; // Anything with partial transparency.
 
-    /// <summary>
-    /// Used for generated terrain, that needs a splat map.
-    /// </summary>
-    public Material voxelTerrainMaterial;
-
-    public Material voxelTerrainMaterialContaminants;
-
-
     bool arrayTextures = false;
 
     // Things to be set from the Unity Editor.
@@ -243,7 +235,6 @@ public class GameMap : MonoBehaviour
         BasicTerrainMaterial.SetTexture(spatterID, clear);
         StencilTerrainMaterial.SetTexture(spatterID, clear);
         TransparentTerrainMaterial.SetTexture(spatterID, clear);
-        voxelTerrainMaterial.SetTexture(spatterID, clear);
         sharedMatBlock = new MaterialPropertyBlock();
 
 
@@ -734,11 +725,11 @@ public class GameMap : MonoBehaviour
 
     void SetMaterialBounds(Vector4 bounds)
     {
+
         BasicTerrainMaterial.SetVector("_WorldBounds", bounds);
         StencilTerrainMaterial.SetVector("_WorldBounds", bounds);
         TransparentTerrainMaterial.SetVector("_WorldBounds", bounds);
-        voxelTerrainMaterial.SetVector("_WorldBounds", bounds);
-        voxelTerrainMaterialContaminants.SetVector("_WorldBounds", bounds);
+        MaterialManager.Instance.SetVector("_WorldBounds", bounds);
     }
 
     void InitializeBlocks()
@@ -1634,19 +1625,19 @@ public class GameMap : MonoBehaviour
     {
         if (mapMeshes[xx, yy, zz] == null)
             return false;
-        Material tempVoxelMat = voxelTerrainMaterial;
         MaterialPropertyBlock matBlock = null;
+        MaterialManager.MaterialFlags flags = MaterialManager.MaterialFlags.None;
         if (spatterLayers[zz] != null)
         {
             matBlock = sharedMatBlock;
             matBlock.SetTexture(spatterID, spatterLayers[zz]);
+            flags |= MaterialManager.MaterialFlags.Contaminants;
         }
         if (terrainSplatLayers[zz] != null)
         {
             if (matBlock == null)
                 matBlock = sharedMatBlock;
             matBlock.SetTexture(terrainSplatID, terrainSplatLayers[zz]);
-            tempVoxelMat = voxelTerrainMaterialContaminants;
         }
         if (terrainTintLayers[zz] != null)
         {
@@ -1658,7 +1649,7 @@ public class GameMap : MonoBehaviour
 
         return mapMeshes[xx, yy, zz].Render(phantom, LocalTransform, top,
             BasicTerrainMaterial, StencilTerrainMaterial, TransparentTerrainMaterial,
-            tempVoxelMat, waterMaterial, magmaMaterial, matBlock
+            MaterialManager.Instance.GetSplatMaterial(flags), waterMaterial, magmaMaterial, matBlock
             );
     }
 

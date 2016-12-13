@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: TransparentMaterialArray
+  m_Name: TransTileArray
   m_Shader: {fileID: 4800000, guid: f4b23652fd7f97d4baf2e089ec7f98e0, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 5
@@ -142,4 +142,4 @@ Material:
       second: {r: 40, g: 58, b: 15, a: 0}
     - first:
         name: _WorldBounds
-      second: {r: -1, g: 1, b: 287, a: -287}
+      second: {r: -1, g: 1, b: 383, a: -287}

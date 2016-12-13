@@ -6663,6 +6663,7 @@ GameObject:
   - component: {fileID: 861361734}
   - component: {fileID: 861361736}
   - component: {fileID: 861361737}
+  - component: {fileID: 861361738}
   m_Layer: 0
   m_Name: '[GameMapObject]'
   m_TagString: Untagged
@@ -6705,10 +6706,6 @@ MonoBehaviour:
   stencilTerrainArrayMaterial: {fileID: 2100000, guid: e8b9f0e49ddfbd04aa18ed86cb44d089,
     type: 2}
   transparentTerrainArrayMaterial: {fileID: 2100000, guid: c7f2fee23d537f248864a173749796d3,
-    type: 2}
-  voxelTerrainMaterial: {fileID: 2100000, guid: 81e581c6cf2a08b468517bb2cd27aeba,
-    type: 2}
-  voxelTerrainMaterialContaminants: {fileID: 2100000, guid: 318a58df68520ac41b3adb1134d63834,
     type: 2}
   waterMaterial: {fileID: 2100000, guid: 653692fae3c0d494fa3483ac3f95927f, type: 2}
   magmaMaterial: {fileID: 2100000, guid: 0234441288425134d810e44bf8760514, type: 2}
@@ -6850,6 +6847,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   statusText: {fileID: 1986774941}
+--- !u!114 &861361738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 861361727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd8a4fd02335b894bb980115b21076e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseStandardMaterial: {fileID: 2100000, guid: b3c307b7b41f1cf49922bbd01b2a4a8f,
+    type: 2}
+  baseStandardMaterialCutout: {fileID: 2100000, guid: e8b9f0e49ddfbd04aa18ed86cb44d089,
+    type: 2}
+  baseStandardMaterialTransparent: {fileID: 2100000, guid: c7f2fee23d537f248864a173749796d3,
+    type: 2}
+  baseSplatMaterial: {fileID: 2100000, guid: 81e581c6cf2a08b468517bb2cd27aeba, type: 2}
 --- !u!1 &874450143
 GameObject:
   m_ObjectHideFlags: 0
