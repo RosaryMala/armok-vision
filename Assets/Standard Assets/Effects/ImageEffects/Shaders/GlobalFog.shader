@@ -32,6 +32,12 @@ CGINCLUDE
 	uniform float4x4 _FrustumCornersWS;
 	uniform float4 _CameraWS;
 
+	struct appdata_fog
+	{
+		float4 vertex : POSITION;
+		half2 texcoord : TEXCOORD0;
+	};
+
 	struct v2f {
 		float4 pos : SV_POSITION;
 		float2 uv : TEXCOORD0;
@@ -39,10 +45,9 @@ CGINCLUDE
 		float4 interpolatedRay : TEXCOORD2;
 	};
 	
-	v2f vert (appdata_img v)
+	v2f vert (appdata_fog v)
 	{
 		v2f o;
-		half index = v.vertex.z;
 		v.vertex.z = 0.1;
 		o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
 		o.uv = v.texcoord.xy;
@@ -53,8 +58,9 @@ CGINCLUDE
 			o.uv.y = 1-o.uv.y;
 		#endif				
 		
-		o.interpolatedRay = _FrustumCornersWS[(int)index];
-		o.interpolatedRay.w = index;
+		int frustumIndex = v.texcoord.x + (2 * o.uv.y);
+		o.interpolatedRay = _FrustumCornersWS[frustumIndex];
+		o.interpolatedRay.w = frustumIndex;
 		
 		return o;
 	}
