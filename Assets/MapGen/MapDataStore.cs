@@ -759,7 +759,10 @@ public class MapDataStore {
                 state = CollisionState.Stairs;
                 break;
             case TiletypeShape.RAMP:
-                DFCoord2d dir = SnapDirection(localPos);
+                if (localPos.y < 0.5f)
+                    state = CollisionState.Solid;
+                else
+                    state = CollisionState.None;
 
                 break;
             case TiletypeShape.RAMP_TOP:
@@ -772,7 +775,6 @@ public class MapDataStore {
 
     DFCoord2d SnapDirection(Vector2 dir)
     {
-        DFCoord2d outDir = new DFCoord2d(0, 0);
         if(Mathf.Abs(dir.x) > Math.Abs(dir.y))
         {
             //x is the dominant direction

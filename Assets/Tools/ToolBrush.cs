@@ -19,7 +19,7 @@ public class ToolBrush : MonoBehaviour
     public Mesh cursorMesh;
     private Camera mainCam;
     private Vector3 lastTargetPosF = Vector3.zero;
-    private DFCoord lastTargetPos;
+    //private DFCoord lastTargetPos;
 
     void Awake()
     {
@@ -52,7 +52,7 @@ public class ToolBrush : MonoBehaviour
                     Vector3 unityTargetPos;
                     if (MapDataStore.FindCurrentTarget(ray, out mapTargetPos, out unityTargetPos))
                     {
-                        lastTargetPos = mapTargetPos;
+                        //lastTargetPos = mapTargetPos;
                         unityTargetPos += (ray.direction * 0.001f);
                         lastTargetPosF = GameMap.UnityToFloatingDFCoord(unityTargetPos);
                         drawing = true;

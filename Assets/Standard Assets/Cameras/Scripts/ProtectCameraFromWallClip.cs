@@ -19,7 +19,7 @@ namespace UnityStandardAssets.Cameras
         private float m_OriginalDist;             // the original distance to the camera before any modification are made
         private float m_MoveVelocity;             // the velocity at which the camera moved
         private float m_CurrentDist;              // the current distance from the camera to the target
-        private Ray m_Ray;                        // the ray used in the lateupdate for casting between the camera and the target
+        private Ray m_Ray = new Ray();                        // the ray used in the lateupdate for casting between the camera and the target
         private RaycastHit[] m_Hits;              // the hits between the camera and the target
         private RayHitComparer m_RayHitComparer;  // variable to compare raycast hit distances
 

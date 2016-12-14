@@ -247,8 +247,7 @@ namespace UnityStandardAssets.CinematicEffects
             importer.textureType = TextureImporterType.Default;
             importer.anisoLevel = 0;
             importer.mipmapEnabled = false;
-            importer.linearTexture = true;
-            importer.textureFormat = TextureImporterFormat.RGB24;
+            importer.sRGBTexture = false;
             importer.SaveAndReimport();
         }
 
@@ -366,8 +365,7 @@ namespace UnityStandardAssets.CinematicEffects
                     TextureImporter importer = (TextureImporter)AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(concreteTarget.lut.texture));
                     bool valid = importer.anisoLevel == 0
                         && importer.mipmapEnabled == false
-                        && importer.linearTexture == true
-                        && (importer.textureFormat == TextureImporterFormat.RGB24 || importer.textureFormat == TextureImporterFormat.AutomaticTruecolor);
+                        && importer.sRGBTexture == false;
 
                     if (!valid)
                     {

@@ -18,7 +18,7 @@ public class VoxelGrid : MonoBehaviour
     private Voxel[] voxels;
     private float voxelSize, gridSize;
 
-    private Voxel dummyX, dummyY, dummyT;
+    private Voxel dummyX;
 
     public VoxelGrid xNeighbor, yNeighbor, xyNeighbor;
 
@@ -64,8 +64,6 @@ public class VoxelGrid : MonoBehaviour
         voxels = new Voxel[resolution * resolution];
 
         dummyX = new Voxel();
-        dummyY = new Voxel();
-        dummyT = new Voxel();
 
         for (int i = 0, y = 0; y < resolution; y++)
         {

@@ -63,7 +63,7 @@ public class SteamVR_Settings : EditorWindow
 			(!EditorPrefs.HasKey(ignore + buildTarget) &&
 				EditorUserBuildSettings.activeBuildTarget != recommended_BuildTarget) ||
 			(!EditorPrefs.HasKey(ignore + showUnitySplashScreen) &&
-				PlayerSettings.showUnitySplashScreen != recommended_ShowUnitySplashScreen) ||
+				PlayerSettings.SplashScreen.show != recommended_ShowUnitySplashScreen) ||
 			(!EditorPrefs.HasKey(ignore + defaultIsFullScreen) &&
 				PlayerSettings.defaultIsFullScreen != recommended_DefaultIsFullScreen) ||
 			(!EditorPrefs.HasKey(ignore + defaultScreenSize) &&
@@ -79,8 +79,8 @@ public class SteamVR_Settings : EditorWindow
 				PlayerSettings.d3d11FullscreenMode != recommended_FullscreenMode) ||
 			(!EditorPrefs.HasKey(ignore + visibleInBackground) &&
 				PlayerSettings.visibleInBackground != recommended_VisibleInBackground) ||
-			(!EditorPrefs.HasKey(ignore + renderingPath) &&
-				PlayerSettings.renderingPath != recommended_RenderPath) ||
+			//(!EditorPrefs.HasKey(ignore + renderingPath) &&
+			//	PlayerSettings.renderingPath != recommended_RenderPath) ||
 			(!EditorPrefs.HasKey(ignore + colorSpace) &&
 				PlayerSettings.colorSpace != recommended_ColorSpace) ||
 			(!EditorPrefs.HasKey(ignore + gpuSkinning) &&
@@ -107,7 +107,7 @@ public class SteamVR_Settings : EditorWindow
 			updated = true;
 		}
 
-		var devices = UnityEditorInternal.VR.VREditor.GetVREnabledDevices(BuildTargetGroup.Standalone);
+		var devices = UnityEditorInternal.VR.VREditor.GetVREnabledDevicesOnTargetGroup(BuildTargetGroup.Standalone);
 		var hasOpenVR = false;
 		foreach (var device in devices)
 			if (device.ToLower() == "openvr")
@@ -128,8 +128,8 @@ public class SteamVR_Settings : EditorWindow
 				newDevices[devices.Length] = "OpenVR";
 				updated = true;
 			}
-			UnityEditorInternal.VR.VREditor.SetVREnabledDevices(BuildTargetGroup.Standalone, newDevices);
-		}
+			UnityEditorInternal.VR.VREditor.SetVREnabledDevicesOnTargetGroup(BuildTargetGroup.Standalone, newDevices);
+        }
 
 		if (updated)
 			Debug.Log("Switching to native OpenVR support.");
@@ -206,17 +206,17 @@ public class SteamVR_Settings : EditorWindow
 		}
 
 		if (!EditorPrefs.HasKey(ignore + showUnitySplashScreen) &&
-			PlayerSettings.showUnitySplashScreen != recommended_ShowUnitySplashScreen)
+			PlayerSettings.SplashScreen.show != recommended_ShowUnitySplashScreen)
 		{
 			++numItems;
 
-			GUILayout.Label(showUnitySplashScreen + string.Format(currentValue, PlayerSettings.showUnitySplashScreen));
+			GUILayout.Label(showUnitySplashScreen + string.Format(currentValue, PlayerSettings.SplashScreen.show));
 
 			GUILayout.BeginHorizontal();
 
 			if (GUILayout.Button(string.Format(useRecommended, recommended_ShowUnitySplashScreen)))
 			{
-				PlayerSettings.showUnitySplashScreen = recommended_ShowUnitySplashScreen;
+				PlayerSettings.SplashScreen.show = recommended_ShowUnitySplashScreen;
 			}
 
 			GUILayout.FlexibleSpace();
@@ -399,29 +399,29 @@ public class SteamVR_Settings : EditorWindow
 			GUILayout.EndHorizontal();
 		}
 
-		if (!EditorPrefs.HasKey(ignore + renderingPath) &&
-			PlayerSettings.renderingPath != recommended_RenderPath)
-		{
-			++numItems;
+		//if (!EditorPrefs.HasKey(ignore + renderingPath) &&
+		//	PlayerSettings.renderingPath != recommended_RenderPath)
+		//{
+		//	++numItems;
 
-			GUILayout.Label(renderingPath + string.Format(currentValue, PlayerSettings.renderingPath));
+		//	GUILayout.Label(renderingPath + string.Format(currentValue, PlayerSettings.renderingPath));
 
-			GUILayout.BeginHorizontal();
+		//	GUILayout.BeginHorizontal();
 
-			if (GUILayout.Button(string.Format(useRecommended, recommended_RenderPath) + " - required for MSAA"))
-			{
-				PlayerSettings.renderingPath = recommended_RenderPath;
-			}
+		//	if (GUILayout.Button(string.Format(useRecommended, recommended_RenderPath) + " - required for MSAA"))
+		//	{
+		//		PlayerSettings.renderingPath = recommended_RenderPath;
+		//	}
 
-			GUILayout.FlexibleSpace();
+		//	GUILayout.FlexibleSpace();
 
-			if (GUILayout.Button("Ignore"))
-			{
-				EditorPrefs.SetBool(ignore + renderingPath, true);
-			}
+		//	if (GUILayout.Button("Ignore"))
+		//	{
+		//		EditorPrefs.SetBool(ignore + renderingPath, true);
+		//	}
 
-			GUILayout.EndHorizontal();
-		}
+		//	GUILayout.EndHorizontal();
+		//}
 
 		if (!EditorPrefs.HasKey(ignore + colorSpace) &&
 			PlayerSettings.colorSpace != recommended_ColorSpace)
@@ -536,7 +536,7 @@ public class SteamVR_Settings : EditorWindow
 				if (!EditorPrefs.HasKey(ignore + buildTarget))
 					EditorUserBuildSettings.SwitchActiveBuildTarget(recommended_BuildTarget);
 				if (!EditorPrefs.HasKey(ignore + showUnitySplashScreen))
-					PlayerSettings.showUnitySplashScreen = recommended_ShowUnitySplashScreen;
+					PlayerSettings.SplashScreen.show = recommended_ShowUnitySplashScreen;
 				if (!EditorPrefs.HasKey(ignore + defaultIsFullScreen))
 					PlayerSettings.defaultIsFullScreen = recommended_DefaultIsFullScreen;
 				if (!EditorPrefs.HasKey(ignore + defaultScreenSize))
@@ -554,9 +554,7 @@ public class SteamVR_Settings : EditorWindow
 					PlayerSettings.d3d11FullscreenMode = recommended_FullscreenMode;
 				if (!EditorPrefs.HasKey(ignore + visibleInBackground))
 					PlayerSettings.visibleInBackground = recommended_VisibleInBackground;
-				if (!EditorPrefs.HasKey(ignore + renderingPath))
-					PlayerSettings.renderingPath = recommended_RenderPath;
-				if (!EditorPrefs.HasKey(ignore + colorSpace))
+                if (!EditorPrefs.HasKey(ignore + colorSpace))
 					PlayerSettings.colorSpace = recommended_ColorSpace;
 				if (!EditorPrefs.HasKey(ignore + gpuSkinning))
 					PlayerSettings.gpuSkinning = recommended_GpuSkinning;
@@ -577,7 +575,7 @@ public class SteamVR_Settings : EditorWindow
 					// Only ignore those that do not currently match our recommended settings.
 					if (EditorUserBuildSettings.activeBuildTarget != recommended_BuildTarget)
 						EditorPrefs.SetBool(ignore + buildTarget, true);
-					if (PlayerSettings.showUnitySplashScreen != recommended_ShowUnitySplashScreen)
+					if (PlayerSettings.SplashScreen.show != recommended_ShowUnitySplashScreen)
 						EditorPrefs.SetBool(ignore + showUnitySplashScreen, true);
 					if (PlayerSettings.defaultIsFullScreen != recommended_DefaultIsFullScreen)
 						EditorPrefs.SetBool(ignore + defaultIsFullScreen, true);
@@ -594,8 +592,6 @@ public class SteamVR_Settings : EditorWindow
 						EditorPrefs.SetBool(ignore + fullscreenMode, true);
 					if (PlayerSettings.visibleInBackground != recommended_VisibleInBackground)
 						EditorPrefs.SetBool(ignore + visibleInBackground, true);
-					if (PlayerSettings.renderingPath != recommended_RenderPath)
-						EditorPrefs.SetBool(ignore + renderingPath, true);
 					if (PlayerSettings.colorSpace != recommended_ColorSpace)
 						EditorPrefs.SetBool(ignore + colorSpace, true);
 					if (PlayerSettings.gpuSkinning != recommended_GpuSkinning)

@@ -57,8 +57,10 @@
             line = transform.FindChild("Line").GetComponent<LineRenderer>();
             line.material = Resources.Load("TooltipLine") as Material;
             line.material.color = lineColor;
-            line.SetColors(lineColor, lineColor);
-            line.SetWidth(lineWidth, lineWidth);
+            line.startColor = lineColor;
+            line.endColor = lineColor;
+            line.startWidth = lineWidth;
+            line.endWidth = lineWidth;
             if (drawLineFrom == null)
             {
                 drawLineFrom = transform;

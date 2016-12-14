@@ -125,7 +125,7 @@ public class SteamVR_SkyboxEditor : Editor
 				{
 					var assetName = string.Format(nameFormat, assetPath, target.name, i);
 					var importer = AssetImporter.GetAtPath(assetName) as TextureImporter;
-					importer.textureFormat = TextureImporterFormat.RGB24;
+					//importer.textureFormat = TextureImporterFormat.RGB24;
 					importer.wrapMode = TextureWrapMode.Clamp;
 					importer.mipmapEnabled = false;
 					importer.SaveAndReimport();
@@ -357,7 +357,11 @@ public class SteamVR_SkyboxEditor : Editor
 					var importer = AssetImporter.GetAtPath(assetName) as TextureImporter;
 					importer.mipmapEnabled = false;
 					importer.wrapMode = TextureWrapMode.Repeat;
-					importer.SetPlatformTextureSettings("Standalone", width, TextureImporterFormat.RGB24);
+                    TextureImporterPlatformSettings settings = new TextureImporterPlatformSettings();
+                    settings.name = "Standalone";
+                    settings.maxTextureSize = width;
+                    settings.format = TextureImporterFormat.RGB24;
+                    importer.SetPlatformTextureSettings(settings);
 					importer.SaveAndReimport();
 
 					var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(assetName);
