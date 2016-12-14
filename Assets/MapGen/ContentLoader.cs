@@ -400,7 +400,6 @@ public class ContentLoader : MonoBehaviour
 
         Vector4 arrayCount = new Vector4(materialTextureStorage.Count, shapeTextureStorage.Count, specialTextureStorage.Count);
 
-        GameMap gameMap = FindObjectOfType<GameMap>();
         MaterialManager.Instance.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
         MaterialManager.Instance.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
         MaterialManager.Instance.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);

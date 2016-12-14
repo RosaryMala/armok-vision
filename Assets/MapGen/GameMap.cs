@@ -16,9 +16,6 @@ using UnityEngine.UI;
 
 public class GameMap : MonoBehaviour
 {
-
-    bool arrayTextures = false;
-
     public Material waterMaterial;
     public Material magmaMaterial;
 
@@ -189,9 +186,6 @@ public class GameMap : MonoBehaviour
 
         dfScreen.SetActive(GameSettings.Instance.game.showDFScreen);
 
-        Texture2D clear = ContentLoader.CreateFlatTexture(Color.clear);
-
-
         spatterID = Shader.PropertyToID("_SpatterTex");
         terrainSplatID = Shader.PropertyToID("_Control");
         terrainTintID = Shader.PropertyToID("_Tint");
@@ -203,7 +197,6 @@ public class GameMap : MonoBehaviour
     // Awake is called when the script instance is being loaded
     public void Awake()
     {
-        arrayTextures = SystemInfo.supports2DArrayTextures;
         Instance = this;
     }
 
@@ -1682,7 +1675,7 @@ public class GameMap : MonoBehaviour
         UnityEngine.Profiling.Profiler.BeginSample("DrawItems", this);
         if (itemParticles == null)
         {
-            itemParticles = new ParticleSystem.Particle[itemParticleSystem.maxParticles];
+            itemParticles = new ParticleSystem.Particle[itemParticleSystem.main.maxParticles];
         }
         MapDataStore.Tile tempTile = new MapDataStore.Tile(null, new DFCoord(0, 0, 0));
         int i = 0;
@@ -1771,7 +1764,7 @@ public class GameMap : MonoBehaviour
                     if (meshContent.SpecialTexture != null)
                         renderer.material.SetTexture("_SpecialTex", meshContent.SpecialTexture.Texture);
                     customItemParticleSystems[meshContent.UniqueIndex] = partSys;
-                    customItemParticles[meshContent.UniqueIndex] = new ParticleSystem.Particle[partSys.maxParticles];
+                    customItemParticles[meshContent.UniqueIndex] = new ParticleSystem.Particle[partSys.main.maxParticles];
                     customItemParticleCount[meshContent.UniqueIndex] = 0;
                 }
                 if (meshContent.Rotation == RotationType.Random)

@@ -87,7 +87,6 @@ public class RegionMaker : MonoBehaviour
     RegionTile[,] tiles;
 
     public Vector3 offset;
-    Vector3 embarkTileOffset;
 
     DFCoord regionOrigin;
 
@@ -131,7 +130,6 @@ public class RegionMaker : MonoBehaviour
         width = 17;
         height = 17;
         worldNameEnglish = remoteMap.name_english;
-        embarkTileOffset = new Vector3((remoteMap.map_x * 16), 0, -(remoteMap.map_y * 16));
         regionOrigin = new DFCoord(remoteMap.map_x * 16, remoteMap.map_y * 16, 0);
         InitArrays();
         for (int x = 0; x < width; x++)

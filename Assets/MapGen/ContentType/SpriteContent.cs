@@ -5,15 +5,15 @@ using UnityEngine;
 public class SpriteContent : IContent
 {
     TextureStorage store;
-    int storageIndex;
+    //int storageIndex;
 
-    public Matrix4x4 UVTransform
-    {
-        get
-        {
-            return store.getUVTransform(storageIndex);
-        }
-    }
+    //public Matrix4x4 UVTransform
+    //{
+    //    get
+    //    {
+    //        return store.getUVTransform(storageIndex);
+    //    }
+    //}
 
     public object ExternalStorage
     {

@@ -241,10 +241,10 @@ public class MapExport : MonoBehaviour
         }
     }
 
-    Dictionary<string, Texture2D> diffuseTextures = new Dictionary<string, Texture2D>();
-    Dictionary<string, Texture2D> specularTextures = new Dictionary<string, Texture2D>();
-    Dictionary<string, geometry> geometryLibrary = new Dictionary<string, geometry>();
-    List<node> nodeList = new List<node>();
+    //Dictionary<string, Texture2D> diffuseTextures = new Dictionary<string, Texture2D>();
+    //Dictionary<string, Texture2D> specularTextures = new Dictionary<string, Texture2D>();
+    //Dictionary<string, geometry> geometryLibrary = new Dictionary<string, geometry>();
+    //List<node> nodeList = new List<node>();
 
     //this is very similar to the blockmesher function.
     void CollectModel(MapDataStore.Tile tile, MeshLayer layer, DFCoord pos)
@@ -321,19 +321,19 @@ public class MapExport : MonoBehaviour
         };
         tileNode.ItemsElementName = new ItemsChoiceType2[] { ItemsChoiceType2.matrix };
 
-        string geometryName = "Mesh-" + meshContent.UniqueIndex;
+        //string geometryName = "Mesh-" + meshContent.UniqueIndex;
 
-        if (!geometryLibrary.ContainsKey(geometryName))
-        {
-            geometryLibrary[geometryName] = COLLADA.MeshToGeometry(meshContent.MeshData[layer], geometryName);
-        }
+        //if (!geometryLibrary.ContainsKey(geometryName))
+        //{
+        //    geometryLibrary[geometryName] = COLLADA.MeshToGeometry(meshContent.MeshData[layer], geometryName);
+        //}
 
-        instance_geometry geometryInstance = new instance_geometry();
-        geometryInstance.url = "#" + geometryLibrary[geometryName].id;
-        tileNode.instance_geometry = new instance_geometry[] { geometryInstance };
+        //instance_geometry geometryInstance = new instance_geometry();
+        //geometryInstance.url = "#" + geometryLibrary[geometryName].id;
+        //tileNode.instance_geometry = new instance_geometry[] { geometryInstance };
 
-        nodeList.Add(tileNode);
-        return;
+        //nodeList.Add(tileNode);
+        //return;
         //-----------------------------------------------------------
         //Put normal map stuff here! Remember!
         //-----------------------------------------------------------

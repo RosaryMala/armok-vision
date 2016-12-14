@@ -32,6 +32,17 @@ public struct MatPairStruct : IComparable
     {
         return a.mat_index == b.mat_index && a.mat_type == b.mat_type;
     }
+    public override bool Equals(object obj)
+    {
+        if (obj == null || !(obj is MatPairStruct))
+            return false;
+        return this == (MatPairStruct)obj;
+    }
+
+    public override int GetHashCode()
+    {
+        return mat_index * 65535 + mat_type;
+    }
 
     public MatPairStruct(int type, int index)
     {

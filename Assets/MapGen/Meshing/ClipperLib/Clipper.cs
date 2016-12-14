@@ -2564,7 +2564,6 @@ namespace ClipperLib
             //same as FixupFirstLefts1 but doesn't call Poly2ContainsPoly1()
             foreach (OutRec outRec in m_PolyOuts)
             {
-                OutRec firstLeft = ParseFirstLeft(outRec.FirstLeft);
                 if (outRec.Pts != null && outRec.FirstLeft == OldOutRec)
                     outRec.FirstLeft = NewOutRec;
             }

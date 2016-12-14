@@ -40,7 +40,6 @@ namespace Poly2Tri
 
         public static void Triangulate(PolygonSet ps)
         {
-            TriangulationContext tcx = CreateContext(_defaultAlgorithm);
             foreach (Polygon p in ps.Polygons)
             {
                 try

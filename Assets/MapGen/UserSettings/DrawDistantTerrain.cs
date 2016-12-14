@@ -17,7 +17,6 @@ namespace UserSettings
         {
             GameSettings.Instance.rendering.distantTerrainDetail = (GameSettings.LandscapeDetail)value;
             valueLabel.text = GameSettings.Instance.rendering.distantTerrainDetail.ToString();
-            var regions = FindObjectsOfType<RegionMaker>();
             worldMap.gameObject.SetActive(GameSettings.Instance.rendering.distantTerrainDetail != GameSettings.LandscapeDetail.Off);
         }
     }

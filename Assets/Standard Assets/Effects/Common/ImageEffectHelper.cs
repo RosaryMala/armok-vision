@@ -21,7 +21,7 @@ namespace UnityStandardAssets.CinematicEffects
                     return false;
                 }
 
-                if (!SystemInfo.supportsImageEffects || !SystemInfo.supportsRenderTextures)
+                if (!SystemInfo.supportsImageEffects)
                 {
                     Debug.LogWarningFormat("Image effects aren't supported on this device ({0})", effect);
                     return false;

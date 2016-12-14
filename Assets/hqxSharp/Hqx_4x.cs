@@ -177,12 +177,6 @@ namespace hqx
                         }
                         flag <<= 1;
                     }
-                    int spam = 0;
-                    if(xx >= 22)
-                    {
-                        spam = xx;
-                    }
-                    int zop = spam;
 
                     switch (pattern)
                     {
