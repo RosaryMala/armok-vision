@@ -401,22 +401,10 @@ public class ContentLoader : MonoBehaviour
         Vector4 arrayCount = new Vector4(materialTextureStorage.Count, shapeTextureStorage.Count, specialTextureStorage.Count);
 
         GameMap gameMap = FindObjectOfType<GameMap>();
-        gameMap.BasicTerrainMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
-        gameMap.BasicTerrainMaterial.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
-        gameMap.BasicTerrainMaterial.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
-        gameMap.BasicTerrainMaterial.SetVector("_TexArrayCount", arrayCount);
-        gameMap.StencilTerrainMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
-        gameMap.StencilTerrainMaterial.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
-        gameMap.StencilTerrainMaterial.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
-        gameMap.StencilTerrainMaterial.SetVector("_TexArrayCount", arrayCount);
-        gameMap.TransparentTerrainMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
-        gameMap.TransparentTerrainMaterial.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
-        gameMap.TransparentTerrainMaterial.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
-        gameMap.TransparentTerrainMaterial.SetVector("_TexArrayCount", arrayCount);
-        gameMap.voxelTerrainMaterial.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
-        gameMap.voxelTerrainMaterial.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
-        gameMap.voxelTerrainMaterialContaminants.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
-        gameMap.voxelTerrainMaterialContaminants.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
+        MaterialManager.Instance.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
+        MaterialManager.Instance.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
+        MaterialManager.Instance.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
+        MaterialManager.Instance.SetVector("_TexArrayCount", arrayCount);
 
         //get rid of any un-used textures left over.
         Resources.UnloadUnusedAssets();

@@ -26,10 +26,12 @@
 		#pragma surface surf Standard alpha
         #pragma target 3.5
         #define TRANS
+        #pragma shader_feature CONTAMINANTS
 
 		#include "ArmokStandardShared_Array.cginc"
 
 		ENDCG
 	} 
 	FallBack "Custom/ArmokStandardPBRTransparentNoSpatter"
+            CustomEditor "GroundSplatEditor"
 }

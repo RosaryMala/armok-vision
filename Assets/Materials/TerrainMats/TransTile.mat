@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: TransparentMaterial
+  m_Name: TransTile
   m_Shader: {fileID: 4800000, guid: c52755b7a1220c44590b049631de63cd, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 5
