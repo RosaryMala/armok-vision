@@ -83,8 +83,10 @@ namespace UnityEngine.PostProcessing
 
             public void ProcessImage(PostProcessingContext context, CommandBuffer cb, ref Settings settings, RenderTargetIdentifier source, RenderTargetIdentifier destination, Material material)
             {
+                const float kMaxBlurRadius = 5f;
+
                 // Calculate the maximum blur radius in pixels.
-                int maxBlurPixels = (int)(settings.maxBlurRadius * context.height / 100);
+                int maxBlurPixels = (int)(kMaxBlurRadius * context.height / 100);
 
                 // Calculate the TileMax size.
                 // It should be a multiple of 8 and larger than maxBlur.
@@ -97,18 +99,18 @@ namespace UnityEngine.PostProcessing
                 cb.SetGlobalFloat(Uniforms._MaxBlurRadius, maxBlurPixels);
 
                 int vbuffer = Uniforms._VelocityTex;
-                cb.GetTemporaryRT(vbuffer, context.width, context.height, 0, FilterMode.Point, m_PackedRTFormat);
+                cb.GetTemporaryRT(vbuffer, context.width, context.height, 0, FilterMode.Point, m_PackedRTFormat, RenderTextureReadWrite.Linear);
                 cb.Blit((Texture)null, vbuffer, material, (int)Pass.VelocitySetup);
 
                 // Pass 2 - First TileMax filter (1/4 downsize)
                 int tile4 = Uniforms._Tile4RT;
-                cb.GetTemporaryRT(tile4, context.width / 4, context.height / 4, 0, FilterMode.Point, m_VectorRTFormat);
+                cb.GetTemporaryRT(tile4, context.width / 4, context.height / 4, 0, FilterMode.Point, m_VectorRTFormat, RenderTextureReadWrite.Linear);
                 cb.SetGlobalTexture(Uniforms._MainTex, vbuffer);
                 cb.Blit(vbuffer, tile4, material, (int)Pass.TileMax4);
 
                 // Pass 3 - Second TileMax filter (1/2 downsize)
                 int tile8 = Uniforms._Tile8RT;
-                cb.GetTemporaryRT(tile8, context.width / 8, context.height / 8, 0, FilterMode.Point, m_VectorRTFormat);
+                cb.GetTemporaryRT(tile8, context.width / 8, context.height / 8, 0, FilterMode.Point, m_VectorRTFormat, RenderTextureReadWrite.Linear);
                 cb.SetGlobalTexture(Uniforms._MainTex, tile4);
                 cb.Blit(tile4, tile8, material, (int)Pass.TileMax2);
                 cb.ReleaseTemporaryRT(tile4);
@@ -119,7 +121,7 @@ namespace UnityEngine.PostProcessing
                 cb.SetGlobalFloat(Uniforms._TileMaxLoop, (int)(tileSize / 8f));
 
                 int tile = Uniforms._TileVRT;
-                cb.GetTemporaryRT(tile, context.width / tileSize, context.height / tileSize, 0, FilterMode.Point, m_VectorRTFormat);
+                cb.GetTemporaryRT(tile, context.width / tileSize, context.height / tileSize, 0, FilterMode.Point, m_VectorRTFormat, RenderTextureReadWrite.Linear);
                 cb.SetGlobalTexture(Uniforms._MainTex, tile8);
                 cb.Blit(tile8, tile, material, (int)Pass.TileMaxV);
                 cb.ReleaseTemporaryRT(tile8);
@@ -128,7 +130,7 @@ namespace UnityEngine.PostProcessing
                 int neighborMax = Uniforms._NeighborMaxTex;
                 int neighborMaxWidth = context.width / tileSize;
                 int neighborMaxHeight = context.height / tileSize;
-                cb.GetTemporaryRT(neighborMax, neighborMaxWidth, neighborMaxHeight, 0, FilterMode.Point, m_VectorRTFormat);
+                cb.GetTemporaryRT(neighborMax, neighborMaxWidth, neighborMaxHeight, 0, FilterMode.Point, m_VectorRTFormat, RenderTextureReadWrite.Linear);
                 cb.SetGlobalTexture(Uniforms._MainTex, tile);
                 cb.Blit(tile, neighborMax, material, (int)Pass.NeighborMax);
                 cb.ReleaseTemporaryRT(tile);
@@ -180,8 +182,8 @@ namespace UnityEngine.PostProcessing
                 {
                     Release();
 
-                    lumaTexture = RenderTexture.GetTemporary(width, height, 0, RenderTextureFormat.R8);
-                    chromaTexture = RenderTexture.GetTemporary(width, height, 0, RenderTextureFormat.R8);
+                    lumaTexture = RenderTexture.GetTemporary(width, height, 0, RenderTextureFormat.R8, RenderTextureReadWrite.Linear);
+                    chromaTexture = RenderTexture.GetTemporary(width, height, 0, RenderTextureFormat.R8, RenderTextureReadWrite.Linear);
 
                     lumaTexture.filterMode = FilterMode.Point;
                     chromaTexture.filterMode = FilterMode.Point;
@@ -343,7 +345,8 @@ namespace UnityEngine.PostProcessing
                 var settings = model.settings;
                 return model.enabled
                        && ((settings.shutterAngle > 0f && reconstructionFilter.IsSupported()) || settings.frameBlending > 0f)
-                       && SystemInfo.graphicsDeviceType != GraphicsDeviceType.OpenGLES2; // No movecs on GLES2 platforms
+                       && SystemInfo.graphicsDeviceType != GraphicsDeviceType.OpenGLES2 // No movecs on GLES2 platforms
+                       && !context.interrupted;
             }
         }
 
@@ -367,7 +370,7 @@ namespace UnityEngine.PostProcessing
 
         public override CameraEvent GetCameraEvent()
         {
-            return CameraEvent.BeforeImageEffectsOpaque;
+            return CameraEvent.BeforeImageEffects;
         }
 
         public override void OnEnable()

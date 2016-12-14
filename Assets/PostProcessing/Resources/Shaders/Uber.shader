@@ -5,7 +5,8 @@ Shader "Hidden/Post FX/Uber Shader"
         _MainTex ("Texture", 2D) = "white" {}
         _AutoExposure ("", 2D) = "" {}
         _BloomTex ("", 2D) = "" {}
-        _Bloom_DirtTex("", 2D) = "" {}
+        _Bloom_DirtTex ("", 2D) = "" {}
+        _GrainTex ("", 2D) = "" {}
         _LogLut ("", 2D) = "" {}
         _UserLut ("", 2D) = "" {}
         _Vignette_Mask ("", 2D) = "" {}
@@ -19,16 +20,16 @@ Shader "Hidden/Post FX/Uber Shader"
         #pragma multi_compile __ UNITY_COLORSPACE_GAMMA
         #pragma multi_compile __ EYE_ADAPTATION
         #pragma multi_compile __ CHROMATIC_ABERRATION
+        #pragma multi_compile __ DEPTH_OF_FIELD DEPTH_OF_FIELD_COC_VIEW
         #pragma multi_compile __ BLOOM
         #pragma multi_compile __ BLOOM_LENS_DIRT
         #pragma multi_compile __ COLOR_GRADING COLOR_GRADING_LOG_VIEW
         #pragma multi_compile __ USER_LUT
-        #pragma multi_compile __ GRAIN_FAST GRAIN_FILMIC
+        #pragma multi_compile __ GRAIN
         #pragma multi_compile __ VIGNETTE_CLASSIC VIGNETTE_ROUND VIGNETTE_MASKED
 
         #include "UnityCG.cginc"
         #include "Bloom.cginc"
-        #include "Grain.cginc"
         #include "ColorGrading.cginc"
 
         // Auto exposure / eye adaptation
@@ -37,6 +38,12 @@ Shader "Hidden/Post FX/Uber Shader"
         // Chromatic aberration
         half _ChromaticAberration_Amount;
         sampler2D _ChromaticAberration_Spectrum;
+
+        // Depth of field
+        sampler2D_float _CameraDepthTexture;
+        sampler2D _DepthOfFieldTex;
+        float4 _DepthOfFieldTex_TexelSize;
+        float2 _DepthOfFieldParams; // x: distance, y: f^2 / (N * (S1 - f) * film_width * 2)
 
         // Bloom
         sampler2D _BloomTex;
@@ -56,8 +63,9 @@ Shader "Hidden/Post FX/Uber Shader"
         half4 _UserLut_Params; // @see _LogLut_Params
 
         // Grain
-        half4 _Grain_Params1; // x: amount, y: size, z: lum_contrib, w: aspect
-        half3 _Grain_Params2; // x: cos_angle, y: sin_angle, z: time
+        half2 _Grain_Params1; // x: lum_contrib, y: intensity
+        half4 _Grain_Params2; // x: xscale, h: yscale, z: xoffset, w: yoffset
+        sampler2D _GrainTex;
 
         // Vignette
         half3 _Vignette_Color;
@@ -95,7 +103,7 @@ Shader "Hidden/Post FX/Uber Shader"
 
         half4 FragUber(VaryingsFlipped i) : SV_Target
         {
-            half2 uv = i.uv;
+            float2 uv = i.uv;
             half autoExposure = 1.0;
 
             // Store the auto exposure value for later
@@ -106,6 +114,9 @@ Shader "Hidden/Post FX/Uber Shader"
             #endif
 
             half3 color = (0.0).xxx;
+            #if DEPTH_OF_FIELD && CHROMATIC_ABERRATION
+            half4 dof = (0.0).xxxx;
+            #endif
 
             //
             // HDR effects
@@ -117,14 +128,25 @@ Shader "Hidden/Post FX/Uber Shader"
             // TODO: Take advantage of TAA to get even smoother results
             #if CHROMATIC_ABERRATION
             {
-                half2 coords = 2.0 * uv - 1.0;
-                half2 end = uv - coords * dot(coords, coords) * _ChromaticAberration_Amount;
+                float2 coords = 2.0 * uv - 1.0;
+                float2 end = uv - coords * dot(coords, coords) * _ChromaticAberration_Amount;
 
-                half2 diff = end - uv;
+                float2 diff = end - uv;
                 int samples = clamp(int(length(_MainTex_TexelSize.zw * diff / 2.0)), 3, 16);
-                half2 delta = diff / samples;
-                half2 pos = uv;
+                float2 delta = diff / samples;
+                float2 pos = uv;
                 half3 sum = (0.0).xxx, filterSum = (0.0).xxx;
+
+                #if DEPTH_OF_FIELD
+                float2 dofDelta = delta;
+                float2 dofPos = pos;
+                if (_MainTex_TexelSize.y < 0.0)
+                {
+                    dofDelta.y = -dofDelta.y;
+                    dofPos.y = 1.0 - dofPos.y;
+                }
+                half4 dofSum = (0.0).xxxx;
+                #endif
 
                 for (int i = 0; i < samples; i++)
                 {
@@ -135,9 +157,18 @@ Shader "Hidden/Post FX/Uber Shader"
                     sum += s * filter;
                     filterSum += filter;
                     pos += delta;
+
+                    #if DEPTH_OF_FIELD
+                    half4 sdof = tex2Dlod(_DepthOfFieldTex, float4(UnityStereoScreenSpaceUVAdjust(dofPos, _MainTex_ST), 0, 0)).rgba;
+                    dofSum += sdof * half4(filter, 1);
+                    dofPos += dofDelta;
+                    #endif
                 }
 
                 color = sum / filterSum;
+                #if DEPTH_OF_FIELD
+                dof = dofSum / half4(filterSum, samples);
+                #endif
             }
             #else
             {
@@ -152,6 +183,40 @@ Shader "Hidden/Post FX/Uber Shader"
             #if UNITY_COLORSPACE_GAMMA
             {
                 color = GammaToLinearSpace(color);
+            }
+            #endif
+
+            // Depth of field
+            #if DEPTH_OF_FIELD
+            {
+                #if !CHROMATIC_ABERRATION
+                half4 dof = tex2D(_DepthOfFieldTex, i.uvFlippedSPR);
+                #endif
+                color = color * dof.a + dof.rgb * autoExposure;
+            }
+            #elif DEPTH_OF_FIELD_COC_VIEW
+            {
+                // Calculate the radiuses of CoC.
+                half4 src = tex2D(_DepthOfFieldTex, uv);
+                float depth = LinearEyeDepth(SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uvFlippedSPR));
+                float coc = (depth - _DepthOfFieldParams.x) * _DepthOfFieldParams.y / depth;
+                coc *= 80;
+
+                // Visualize CoC (white -> red -> gray)
+                half3 rgb = lerp(half3(1, 0, 0), half3(1.0, 1.0, 1.0), saturate(-coc));
+                rgb = lerp(rgb, half3(0.4, 0.4, 0.4), saturate(coc));
+
+                // Black and white image overlay
+                rgb *= AcesLuminance(color) + 0.5;
+
+                // Gamma correction
+                #if !UNITY_COLORSPACE_GAMMA
+                {
+                    rgb = GammaToLinearSpace(rgb);
+                }
+                #endif
+
+                color = rgb;
             }
             #endif
 
@@ -218,10 +283,16 @@ Shader "Hidden/Post FX/Uber Shader"
 
             color = saturate(color);
 
-            // Grain / dithering
-            #if (GRAIN_FAST || GRAIN_FILMIC)
+            // Grain
+            #if (GRAIN)
             {
-                color = ApplyGrain(color, uv, _Grain_Params1, _Grain_Params2);
+                float3 grain = tex2D(_GrainTex, uv * _Grain_Params2.xy + _Grain_Params2.zw).rgb;
+
+                // Noisiness response curve based on scene luminance
+                float lum = 1.0 - sqrt(AcesLuminance(color));
+                lum = lerp(1.0, lum, _Grain_Params1.x);
+
+                color += color * grain * _Grain_Params1.y * lum;
             }
             #endif
 
