@@ -45,16 +45,38 @@ namespace UnityStandardAssets.ImageEffects
                 Graphics.Blit (source, destination);
                 return;
             }
+			Camera camera = GetComponent<Camera>();
 
-            Matrix4x4 P = GetComponent<Camera>().projectionMatrix;
+            Matrix4x4 P = camera.projectionMatrix;
             var invP= P.inverse;
             Vector4 projInfo = new Vector4
-                ((-2.0f / (Screen.width * P[0])),
-                 (-2.0f / (Screen.height * P[5])),
-                 ((1.0f - P[2]) / P[0]),
-                 ((1.0f + P[6]) / P[5]));
+                ((-2.0f / P[0,0]),
+                 (-2.0f / P[1,1]),
+                 ((1.0f - P[0,2]) / P[0,0]),
+                 ((1.0f + P[1,2]) / P[1,1]));
 
-            aoMaterial.SetVector ("_ProjInfo", projInfo); // used for unprojection
+			if (camera.stereoEnabled)
+			{
+				Matrix4x4 P0 = camera.GetStereoProjectionMatrix(Camera.StereoscopicEye.Left);
+				Matrix4x4 P1 = camera.GetStereoProjectionMatrix(Camera.StereoscopicEye.Right);
+
+				Vector4 projInfo0 = new Vector4
+					((-2.0f / (P0[0, 0])),
+					 (-2.0f / (P0[1, 1])),
+					 ((1.0f - P0[0, 2]) / P0[0, 0]),
+					 ((1.0f + P0[1, 2]) / P0[1, 1]));
+
+				Vector4 projInfo1 = new Vector4
+					((-2.0f / (P1[0, 0])),
+					 (-2.0f / (P1[1, 1])),
+					 ((1.0f - P1[0, 2]) / P1[0, 0]),
+					 ((1.0f + P1[1, 2]) / P1[1, 1]));
+
+				aoMaterial.SetVector("_ProjInfoLeft", projInfo0); // used for unprojection
+				aoMaterial.SetVector("_ProjInfoRight", projInfo1); // used for unprojection
+			}
+
+			aoMaterial.SetVector ("_ProjInfo", projInfo); // used for unprojection
             aoMaterial.SetMatrix ("_ProjectionInv", invP); // only used for reference
             aoMaterial.SetTexture ("_Rand", rand); // not needed for DX11 :)
             aoMaterial.SetFloat ("_Radius", radius);

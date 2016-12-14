@@ -52,8 +52,10 @@ namespace UnityStandardAssets.ImageEffects
 
         // camera transforms
         private Matrix4x4 currentViewProjMat;
-        private Matrix4x4 prevViewProjMat;
-        private int prevFrameCount;
+		private Matrix4x4[] currentStereoViewProjMat;
+		private Matrix4x4 prevViewProjMat;
+		private Matrix4x4[] prevStereoViewProjMat;
+		private int prevFrameCount;
         private bool  wasActive;
         // shortcuts to calculate global blur direction when using 'CameraMotion'
         private Vector3 prevFrameForward = Vector3.forward;
@@ -63,9 +65,20 @@ namespace UnityStandardAssets.ImageEffects
 
 
         private void CalculateViewProjection () {
-            Matrix4x4 viewMat = _camera.worldToCameraMatrix;
+			Matrix4x4 viewMat = _camera.worldToCameraMatrix;
             Matrix4x4 projMat = GL.GetGPUProjectionMatrix (_camera.projectionMatrix, true);
             currentViewProjMat = projMat * viewMat;
+
+			if(_camera.stereoEnabled)
+			{
+				for (int eye = 0; eye < 2; ++eye)
+				{
+					Matrix4x4 stereoViewMat = _camera.GetStereoViewMatrix(eye == 0 ? Camera.StereoscopicEye.Left : Camera.StereoscopicEye.Right);
+					Matrix4x4 stereoProjMat = _camera.GetStereoProjectionMatrix(eye == 0 ? Camera.StereoscopicEye.Left : Camera.StereoscopicEye.Right);
+					stereoProjMat = GL.GetGPUProjectionMatrix(stereoProjMat, true);
+					currentStereoViewProjMat[eye] = stereoProjMat * stereoViewMat;
+				}
+			}
         }
 
 
@@ -76,7 +89,9 @@ namespace UnityStandardAssets.ImageEffects
                 _camera = GetComponent<Camera>();
 
             wasActive = gameObject.activeInHierarchy;
-            CalculateViewProjection ();
+			currentStereoViewProjMat = new Matrix4x4[2];
+			prevStereoViewProjMat = new Matrix4x4[2];
+			CalculateViewProjection ();
             Remember ();
             wasActive = false; // hack to fake position/rotation update and prevent bad blurs
         }
@@ -180,6 +195,16 @@ namespace UnityStandardAssets.ImageEffects
             motionBlurMaterial.SetMatrix ("_InvViewProj", invViewPrj);
             motionBlurMaterial.SetMatrix ("_PrevViewProj", prevViewProjMat);
             motionBlurMaterial.SetMatrix ("_ToPrevViewProjCombined", prevViewProjMat * invViewPrj);
+			if(_camera.stereoEnabled)
+			{
+				Matrix4x4[] invStereoViewPrj = new Matrix4x4[2];
+				invStereoViewPrj[0] = Matrix4x4.Inverse(currentStereoViewProjMat[0]);
+				invStereoViewPrj[1] = Matrix4x4.Inverse(currentStereoViewProjMat[1]);
+
+				Matrix4x4 combined = prevStereoViewProjMat[0] * invStereoViewPrj[0];
+				motionBlurMaterial.SetMatrix("_StereoToPrevViewProjCombined0", combined);
+				motionBlurMaterial.SetMatrix("_StereoToPrevViewProjCombined1", prevStereoViewProjMat[1] * invStereoViewPrj[1]);
+			}
 
             motionBlurMaterial.SetFloat ("_MaxVelocity", _maxVelocity);
             motionBlurMaterial.SetFloat ("_MaxRadiusOrKInPaper", _maxVelocity);
@@ -194,7 +219,7 @@ namespace UnityStandardAssets.ImageEffects
             motionBlurMaterial.SetTexture ("_TileTexDebug", tileMax);
 
             if (preview) {
-                // generate an artifical 'previous' matrix to simulate blur look
+                // generate an artificial 'previous' matrix to simulate blur look
                 Matrix4x4 viewMat = _camera.worldToCameraMatrix;
                 Matrix4x4 offset = Matrix4x4.identity;
                 offset.SetTRS(previewScale * 0.3333f, Quaternion.identity, Vector3.one); // using only translation
@@ -339,10 +364,12 @@ namespace UnityStandardAssets.ImageEffects
 
         void Remember () {
             prevViewProjMat = currentViewProjMat;
-            prevFrameForward = transform.forward;
+			prevFrameForward = transform.forward;
             prevFrameUp = transform.up;
             prevFramePos = transform.position;
-        }
+			prevStereoViewProjMat[0] = currentStereoViewProjMat[0];
+			prevStereoViewProjMat[1] = currentStereoViewProjMat[1]; 
+		}
 
         Camera GetTmpCam () {
             if (tmpCam == null) {
