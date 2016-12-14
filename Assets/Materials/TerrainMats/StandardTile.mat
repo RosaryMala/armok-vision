@@ -6,15 +6,21 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: TerrainSplatContaminated
-  m_Shader: {fileID: 4800000, guid: 417270ff19a647342b3c44726962acee, type: 3}
-  m_ShaderKeywords: CONTAMINANTS _EMISSION
-  m_LightmapFlags: 1
+  m_Name: StandardTile
+  m_Shader: {fileID: 4800000, guid: d0a581a1027be304c82e5e7c63008ee8, type: 3}
+  m_ShaderKeywords: _NORMALMAP
+  m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
   m_SavedProperties:
     serializedVersion: 2
     m_TexEnvs:
+    - first:
+        name: _AO
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - first:
         name: _BumpMap
       second:
@@ -22,7 +28,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
-        name: _Control
+        name: _Detail
       second:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -46,6 +52,12 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
+        name: _DiffCubeIBL
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
         name: _EmissionMap
       second:
         m_Texture: {fileID: 0}
@@ -64,42 +76,6 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
-        name: _Normal
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
-        name: _Normal0
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
-        name: _Normal1
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
-        name: _Normal2
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
-        name: _Normal3
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
-        name: _Normal4
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
         name: _OcclusionMap
       second:
         m_Texture: {fileID: 0}
@@ -112,10 +88,16 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
+        name: _Shapetex
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
         name: _SpatterNoise
       second:
         m_Texture: {fileID: 2800000, guid: e80c3c84ea861404d8a427db8b7abf04, type: 3}
-        m_Scale: {x: 1, y: 1}
+        m_Scale: {x: 0.5, y: 0.5}
         m_Offset: {x: 0, y: 0}
     - first:
         name: _SpatterTex
@@ -124,43 +106,19 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
-        name: _Splat
+        name: _SpecCubeIBL
       second:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
-        name: _Splat0
+        name: _SpecTex
       second:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 3a9bc543b0449a14f9076c7c788c8b88, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
-        name: _Splat1
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
-        name: _Splat2
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
-        name: _Splat3
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
-        name: _Splat4
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
-        name: _Tint
+        name: _SpecialTex
       second:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -179,17 +137,11 @@ Material:
         name: _DstBlend
       second: 0
     - first:
-        name: _GlossMapScale
-      second: 1
+        name: _EmissionScaleUI
+      second: 0
     - first:
         name: _Glossiness
       second: 0.5
-    - first:
-        name: _GlossyReflections
-      second: 1
-    - first:
-        name: _LayerCount
-      second: 1
     - first:
         name: _Metallic
       second: 0
@@ -203,14 +155,11 @@ Material:
         name: _Parallax
       second: 0.02
     - first:
-        name: _SmoothnessTextureChannel
-      second: 0
+        name: _Shininess
+      second: 0.5
     - first:
         name: _SpatterSmoothness
       second: 0.5
-    - first:
-        name: _SpecularHighlights
-      second: 1
     - first:
         name: _SrcBlend
       second: 1
@@ -222,32 +171,20 @@ Material:
       second: 1
     m_Colors:
     - first:
-        name: _ArrayIndices
-      second: {r: 0, g: 0, b: 0, a: 0}
-    - first:
         name: _Color
       second: {r: 1, g: 1, b: 1, a: 1}
     - first:
-        name: _Color0
-      second: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    - first:
-        name: _Color1
-      second: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    - first:
-        name: _Color2
-      second: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    - first:
-        name: _Color3
-      second: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    - first:
-        name: _Color4
-      second: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    - first:
         name: _EmissionColor
-      second: {r: 0, g: 0, b: 0, a: 1}
+      second: {r: 0, g: 0, b: 0, a: 0}
+    - first:
+        name: _EmissionColorUI
+      second: {r: 1, g: 1, b: 1, a: 1}
     - first:
         name: _SpatterDirection
       second: {r: 0, g: 1, b: 0, a: 1}
     - first:
+        name: _SpecColor
+      second: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - first:
         name: _WorldBounds
-      second: {r: -1, g: 1, b: 383, a: -383}
+      second: {r: -1, g: 1, b: 383, a: -287}

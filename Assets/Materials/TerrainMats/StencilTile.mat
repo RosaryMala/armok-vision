@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: StencilMaterialArray
-  m_Shader: {fileID: 4800000, guid: 89168cec8a877544983d6052eb125da4, type: 3}
+  m_Name: StencilTile
+  m_Shader: {fileID: 4800000, guid: d0a581a1027be304c82e5e7c63008ee8, type: 3}
   m_ShaderKeywords: DIFFCUBE_ON LUX_AO_OFF SPECCUBE_ON _ALPHATEST_ON _NORMALMAP
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
@@ -183,8 +183,5 @@ Material:
         name: _SpecColor
       second: {r: 0.5, g: 0.5, b: 0.5, a: 0}
     - first:
-        name: _TexArrayCount
-      second: {r: 40, g: 59, b: 15, a: 0}
-    - first:
         name: _WorldBounds
-      second: {r: -1, g: 1, b: 383, a: -383}
+      second: {r: -1, g: 1, b: 383, a: -287}

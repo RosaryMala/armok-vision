@@ -38,7 +38,8 @@ void surf(Input IN, inout SurfaceOutputStandard o) {
 	//o.Albedo = c.rgb * IN.color.rgb;
 	o.Normal = UnpackNormal(bump.ggga);
 	o.Alpha = bump.b;
-	if (dot(WorldNormalVector(IN, o.Normal), _SpatterDirection.xyz) >= lerp(1, -1, (spatter.a - noise.r)))
+#ifdef CONTAMINANTS
+    if (dot(WorldNormalVector(IN, o.Normal), _SpatterDirection.xyz) >= lerp(1, -1, (spatter.a - noise.r)))
 	{
 		o.Albedo = (spatter.rgb / spatter.a);
 		o.Smoothness = _SpatterSmoothness;
@@ -47,7 +48,8 @@ void surf(Input IN, inout SurfaceOutputStandard o) {
 #endif
 	}
 	else
-	{
+#endif
+    {
 		fixed3 albedo = overlay(c.rgb, IN.color.rgb);
         o.Albedo = albedo *(1 - special.g);
 		o.Metallic = (1.0 - IN.color.a) + special.r;

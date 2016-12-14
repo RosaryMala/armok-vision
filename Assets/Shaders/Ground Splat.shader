@@ -107,13 +107,11 @@
                 o.Metallic = 0;
             }
             else
-            {
 #endif
+            {
                 o.Albedo = abcd_c.rgb;
                 o.Smoothness = abcd_c.a;
-#ifdef CONTAMINANTS
             }
-#endif
             o.Occlusion = abcd_n.r;
 		}
 		ENDCG
