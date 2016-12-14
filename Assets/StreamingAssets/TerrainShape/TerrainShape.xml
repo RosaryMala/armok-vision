@@ -3,9 +3,24 @@
     <terrainTexture normal="Rough_Normal.png" occlusion="Rough_AO.png" alpha="Rough_Depth.png">
         <material token="*:*"/>
     </terrainTexture>
-    <terrainTexture normal="Granite_Normal.png" occlusion="Granite_AO.png" alpha="Granite_Depth.png">
-        <material token="INORGANIC:SANDSTONE"/>
+    <terrainTexture normal="Sandstone_NRM.png" occlusion="Sandstone_OCC.png" alpha="Sandstone_DISP.png">
+        <material token="INORGANIC:CALCITE"/>
+        <material token="INORGANIC:CHALK"/>
+        <material token="INORGANIC:CHERT"/>
+        <material token="INORGANIC:CLAYSTONE"/>
+        <material token="INORGANIC:CONGLOMERATE"/>
+        <material token="INORGANIC:DOLOMITE"/>
         <material token="INORGANIC:LIMESTONE"/>
+        <material token="INORGANIC:MUDSTONE"/>
+        <material token="INORGANIC:ROCK_SALT"/>
+        <material token="INORGANIC:SANDSTONE"/>
+        <material token="INORGANIC:SHALE"/>
+        <material token="INORGANIC:SILTSTONE"/>
+    </terrainTexture>
+    <terrainTexture normal="Stone_NRM.png" occlusion="Stone_OCC.png" alpha="Stone_DISP.png">
+        <material token="INORGANIC:GRANITE"/>
+        <material token="INORGANIC:DIORITE"/>
+        <material token="INORGANIC:GABBRO"/>
     </terrainTexture>
     <terrainTexture normal="Soil_Normal.png" occlusion="Soil_AO.png" alpha="Soil_Depth.png">
         <material token="INORGANIC:LOAM"/>
@@ -17,12 +32,12 @@
         <material token="INORGANIC:SILTY_CLAY_LOAM"/>
         <material token="INORGANIC:SILT_LOAM"/>
     </terrainTexture>
-    <terrainTexture normal="Soil_Normal.png" occlusion="Soil_AO.png" alpha="Soil_Depth.png">
+    <terrainTexture normal="Clay_NRM.png" occlusion="Clay_OCC.png" alpha="Clay_DISP.png">
         <material token="INORGANIC:PELAGIC_CLAY"/>
         <material token="INORGANIC:CALCAREOUS_OOZE"/>
         <material token="INORGANIC:SILICEOUS_OOZE"/>
     </terrainTexture>
-    <terrainTexture normal="Soil_Normal.png" occlusion="Soil_AO.png" alpha="Soil_Depth.png">
+    <terrainTexture normal="Clay_NRM.png" occlusion="Clay_OCC.png" alpha="Clay_DISP.png">
         <material token="INORGANIC:CLAY"/>
         <material token="INORGANIC:CLAY_LOAM"/>
         <material token="INORGANIC:SANDY_CLAY_LOAM"/>
