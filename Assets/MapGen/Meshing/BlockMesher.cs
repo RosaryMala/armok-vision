@@ -765,7 +765,7 @@ sealed class MultiThreadedMesher : BlockMesher {
         threads = new Thread[nThreads];
 
         for (int i = 0; i < nThreads; i++) {
-            threads[i] = new Thread(new ThreadStart(this.MeshForever));
+            threads[i] = new Thread(new ThreadStart(MeshForever));
             threads[i].Start();
         }
     }
@@ -778,6 +778,10 @@ sealed class MultiThreadedMesher : BlockMesher {
 
     public override void Terminate() {
         finished = true;
+        foreach (var item in threads)
+        {
+            item.Join(100);
+        }
     }
 
     // The actual computation

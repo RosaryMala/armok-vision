@@ -92,7 +92,9 @@ public class GameMap : MonoBehaviour
     bool[] spatterBlockDirtyBits;
     Texture2D[] spatterLayers;
     Texture2D[] terrainSplatLayers;
-    public Texture2D[] terrainTintLayers;
+    Texture2D[] terrainTintLayers;
+    Texture2D[] grassSplatLayers;
+    Texture2D[] grassTintLayers;
     // Lights from magma.
     Light[,,] magmaGlow;
 
@@ -189,6 +191,8 @@ public class GameMap : MonoBehaviour
         spatterID = Shader.PropertyToID("_SpatterTex");
         terrainSplatID = Shader.PropertyToID("_Control");
         terrainTintID = Shader.PropertyToID("_Tint");
+        grassSplatID = Shader.PropertyToID("_GrassControl");
+        grassTintID = Shader.PropertyToID("_GrassTint");
         sharedMatBlock = new MaterialPropertyBlock();
     }
 
@@ -698,6 +702,8 @@ public class GameMap : MonoBehaviour
         spatterLayers = new Texture2D[blockSizeZ];
         terrainSplatLayers = new Texture2D[blockSizeZ];
         terrainTintLayers = new Texture2D[blockSizeZ];
+        grassSplatLayers = new Texture2D[blockSizeZ];
+        grassTintLayers = new Texture2D[blockSizeZ];
 
 
         Vector3 min = DFtoUnityCoord(0, 0, 0) - new Vector3(tileWidth / 2, 0, -tileWidth / 2);
@@ -1043,6 +1049,85 @@ public class GameMap : MonoBehaviour
                 meshSet.collisionBlocks.sharedMesh = collisionMesh;
             }
         }
+        UnityEngine.Profiling.Profiler.EndSample();
+    }
+
+    void GenerateGrassTexture(int z)
+    {
+        if (ContentLoader.Instance == null)
+            return;
+        UnityEngine.Profiling.Profiler.BeginSample("GenerateGrassTexture", this);
+
+        Color[] grassColors = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
+        Color[] grassIndices = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
+
+        int grassTiles = 0;
+
+        for (int x = 0; x < MapDataStore.MapSize.x; x++)
+            for (int y = 0; y < MapDataStore.MapSize.y; y++)
+            {
+                int index = x + (y * MapDataStore.MapSize.x);
+                var tile = MapDataStore.Main[x, y, z];
+                if (tile == null)
+                {
+                    grassIndices[index].r = ContentLoader.Instance.DefaultMatTexIndex;
+                    grassIndices[index].g = ContentLoader.Instance.DefaultShapeTexIndex;
+                    grassColors[index] = Color.gray;
+                    continue;
+                }
+                if (!(tile.tiletypeMaterial == TiletypeMaterial.GRASS_DARK
+                    || tile.tiletypeMaterial == TiletypeMaterial.GRASS_LIGHT
+                    || tile.tiletypeMaterial == TiletypeMaterial.GRASS_DEAD
+                    || tile.tiletypeMaterial == TiletypeMaterial.GRASS_DRY
+                    ))
+                    continue;
+
+                grassTiles++;
+
+                GrassContent grassTexture;
+                if (ContentLoader.Instance.GrassTextureConfiguration.GetValue(tile, MeshLayer.StaticMaterial, out grassTexture))
+                {
+                    grassIndices[index].r = grassTexture.MaterialTexture.StorageIndex;
+                    grassIndices[index].g = grassTexture.ShapeTexture.StorageIndex;
+                }
+                else
+                {
+                    grassIndices[index].r = ContentLoader.Instance.DefaultMatTexIndex;
+                    grassIndices[index].g = ContentLoader.Instance.DefaultShapeTexIndex;
+                }
+
+                ColorContent colorContent;
+                if (ContentLoader.Instance.ColorConfiguration.GetValue(tile, MeshLayer.StaticMaterial, out colorContent))
+                    grassColors[index] = colorContent.color;
+                else
+                    grassColors[index] = Color.gray;
+
+            }
+        if (grassTiles == 0)
+            return;
+
+        if (grassSplatLayers[z] == null)
+        {
+            grassSplatLayers[z] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGHalf, false, true);
+            grassSplatLayers[z].filterMode = FilterMode.Point;
+        }
+        if (grassSplatLayers[z].width != MapDataStore.MapSize.x || terrainSplatLayers[z].height != MapDataStore.MapSize.y)
+            grassSplatLayers[z].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
+
+        grassSplatLayers[z].SetPixels(grassIndices);
+        grassSplatLayers[z].Apply();
+
+        if (grassTintLayers[z] == null)
+        {
+            grassTintLayers[z] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGBA32, false, true);
+            grassTintLayers[z].filterMode = FilterMode.Point;
+        }
+        if (grassTintLayers[z].width != MapDataStore.MapSize.x || terrainTintLayers[z].height != MapDataStore.MapSize.y)
+            grassTintLayers[z].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
+
+        grassTintLayers[z].SetPixels(grassColors);
+        grassTintLayers[z].Apply();
+
         UnityEngine.Profiling.Profiler.EndSample();
     }
 
@@ -1567,6 +1652,8 @@ public class GameMap : MonoBehaviour
     int spatterID;
     int terrainSplatID;
     int terrainTintID;
+    int grassSplatID;
+    int grassTintID;
 
     private bool DrawSingleBlock(int xx, int yy, int zz, bool phantom, Matrix4x4 LocalTransform, bool top)
     {
@@ -1579,6 +1666,13 @@ public class GameMap : MonoBehaviour
             matBlock = sharedMatBlock;
             matBlock.SetTexture(spatterID, spatterLayers[zz]);
             flags |= MaterialManager.MaterialFlags.Contaminants;
+        }
+        if(grassSplatLayers[zz] != null)
+        {
+            matBlock = sharedMatBlock;
+            matBlock.SetTexture(grassSplatID, grassSplatLayers[zz]);
+            matBlock.SetTexture(grassTintID, grassTintLayers[zz]);
+            flags |= MaterialManager.MaterialFlags.Grass;
         }
         if (terrainSplatLayers[zz] != null)
         {

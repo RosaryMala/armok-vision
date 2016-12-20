@@ -169,6 +169,7 @@ public class ContentLoader : MonoBehaviour
     public TileConfiguration<MeshContent> CollisionMeshConfiguration { get; private set; }
     public TileConfiguration<MeshContent> BuildingCollisionMeshConfiguration { get; private set; }
     public TileConfiguration<MeshContent> ItemMeshConfiguration { get; private set; }
+    public TileConfiguration<GrassContent> GrassTextureConfiguration { get; private set; }
 
     public void Awake()
     {
@@ -374,6 +375,11 @@ public class ContentLoader : MonoBehaviour
                     if (ItemMeshConfiguration == null)
                         ItemMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "itemMesh");
                     ItemMeshConfiguration.AddSingleContentConfig(doc, null);
+                    break;
+                case "grassTextures":
+                    if (GrassTextureConfiguration == null)
+                        GrassTextureConfiguration = TileConfiguration<GrassContent>.GetFromRootElement(doc, "grassTexture");
+                    GrassTextureConfiguration.AddSingleContentConfig(doc, null);
                     break;
                 default:
                     break;
