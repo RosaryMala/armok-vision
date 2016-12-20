@@ -4,6 +4,9 @@
         _BumpMap("Shape Texture Splat", 2DArray) = "bump" {}
         [PerRendererData]_Tint("Tint (RGBA)", 2D) = "black" {}
         [PerRendererData]_Control("Control (RG)", 2D) = "black" {}
+ 
+        [PerRendererData]_GrassTint("Tint (RGBA)", 2D) = "black" {}
+        [PerRendererData]_GrassControl("Control (RG)", 2D) = "black" {}
 
         [PerRendererData]_SpatterTex("Spatter", 2D) = "" {}
         _SpatterDirection("Spatter Direction", Vector) = (0,1,0)
@@ -19,14 +22,17 @@
 		// Physically based Standard lighting model, and enable shadows on all light types
 		#pragma surface surf Standard fullforwardshadows
 
-        #pragma shader_feature CONTAMINANTS
+#pragma multi_compile __ CONTAMINANTS
+#pragma multi_compile __ GRASS
 
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 3.5
 
         sampler2D _Control;
+        sampler2D _GrassControl;
         float4 _Control_TexelSize;
         sampler2D _Tint;
+        sampler2D _GrassTint;
         UNITY_DECLARE_TEX2DARRAY(_MainTex);
         UNITY_DECLARE_TEX2DARRAY(_BumpMap);
 
@@ -60,6 +66,8 @@
             return (texture1 * b1 + texture2 * b2) / (b1 + b2);
         }
 
+
+
         void surf(Input IN, inout SurfaceOutputStandard o) {
             float2 controlUV = (IN.worldPos.xz - _WorldBounds.xy) / (_WorldBounds.zw - _WorldBounds.xy);
 
@@ -77,10 +85,15 @@
             float2 c_cont = tex2D(_Control, (controlCoordsBase + float2(0, 1)) * _Control_TexelSize.xy);
             float2 d_cont = tex2D(_Control, (controlCoordsBase + float2(1, 1)) * _Control_TexelSize.xy);
 
-            float4 a_c = overlay(UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, a_cont.x)), tex2D(_Tint, (controlCoordsBase + float2(0, 0)) * _Control_TexelSize.xy));
-            float4 b_c = overlay(UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, b_cont.x)), tex2D(_Tint, (controlCoordsBase + float2(1, 0)) * _Control_TexelSize.xy));
-            float4 c_c = overlay(UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, c_cont.x)), tex2D(_Tint, (controlCoordsBase + float2(0, 1)) * _Control_TexelSize.xy));
-            float4 d_c = overlay(UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, d_cont.x)), tex2D(_Tint, (controlCoordsBase + float2(1, 1)) * _Control_TexelSize.xy));
+            float4 a_tint = tex2D(_Tint, (controlCoordsBase + float2(0, 0)) * _Control_TexelSize.xy);
+            float4 b_tint = tex2D(_Tint, (controlCoordsBase + float2(1, 0)) * _Control_TexelSize.xy);
+            float4 c_tint = tex2D(_Tint, (controlCoordsBase + float2(0, 1)) * _Control_TexelSize.xy);
+            float4 d_tint = tex2D(_Tint, (controlCoordsBase + float2(1, 1)) * _Control_TexelSize.xy);
+
+            float4 a_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, a_cont.x));
+            float4 b_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, b_cont.x));
+            float4 c_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, c_cont.x));
+            float4 d_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, d_cont.x));
 
             float4 a_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, a_cont.y));
             float4 b_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, b_cont.y));
@@ -89,13 +102,58 @@
 
             float4 ab_c = MixColor(a_c, a_n.b, 1 - controlFraction.x, b_c, b_n.b, controlFraction.x);
             float4 ab_n = MixColor(a_n, a_n.b, 1 - controlFraction.x, b_n, b_n.b, controlFraction.x);
- 
+            float4 ab_tint = MixColor(a_tint, a_n.b, 1 - controlFraction.x, b_tint, b_n.b, controlFraction.x);
+
             float4 cd_c = MixColor(c_c, c_n.b, 1 - controlFraction.x, d_c, d_n.b, controlFraction.x);
             float4 cd_n = MixColor(c_n, c_n.b, 1 - controlFraction.x, d_n, d_n.b, controlFraction.x);
+            float4 cd_tint = MixColor(c_tint, c_n.b, 1 - controlFraction.x, d_tint, d_n.b, controlFraction.x);
 
             float4 abcd_c = MixColor(ab_c, ab_n.b, 1 - controlFraction.y, cd_c, cd_n.b, controlFraction.y);
             float4 abcd_n = MixColor(ab_n, ab_n.b, 1 - controlFraction.y, cd_n, cd_n.b, controlFraction.y);
+            float4 abcd_tint = MixColor(ab_tint, ab_n.b, 1 - controlFraction.y, cd_tint, cd_n.b, controlFraction.y);
 
+#ifdef GRASS
+            float2 a_grass_cont = tex2D(_GrassControl, (controlCoordsBase + float2(0, 0)) * _Control_TexelSize.xy);
+            float2 b_grass_cont = tex2D(_GrassControl, (controlCoordsBase + float2(1, 0)) * _Control_TexelSize.xy);
+            float2 c_grass_cont = tex2D(_GrassControl, (controlCoordsBase + float2(0, 1)) * _Control_TexelSize.xy);
+            float2 d_grass_cont = tex2D(_GrassControl, (controlCoordsBase + float2(1, 1)) * _Control_TexelSize.xy);
+
+            float4 a_grass_tint = tex2D(_Tint, (controlCoordsBase + float2(0, 0)) * _Control_TexelSize.xy);
+            float4 b_grass_tint = tex2D(_Tint, (controlCoordsBase + float2(1, 0)) * _Control_TexelSize.xy);
+            float4 c_grass_tint = tex2D(_Tint, (controlCoordsBase + float2(0, 1)) * _Control_TexelSize.xy);
+            float4 d_grass_tint = tex2D(_Tint, (controlCoordsBase + float2(1, 1)) * _Control_TexelSize.xy);
+
+            float4 a_grass_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, a_grass_cont.x));
+            float4 b_grass_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, b_grass_cont.x));
+            float4 c_grass_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, c_grass_cont.x));
+            float4 d_grass_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, d_grass_cont.x));
+
+            float4 a_grass_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, a_grass_cont.y));
+            float4 b_grass_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, b_grass_cont.y));
+            float4 c_grass_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, c_grass_cont.y));
+            float4 d_grass_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, d_grass_cont.y));
+
+            a_grass_n.b = a_grass_n.b - a_grass_c.a + 1;
+            b_grass_n.b = b_grass_n.b - b_grass_c.a + 1;
+            c_grass_n.b = c_grass_n.b - c_grass_c.a + 1;
+            d_grass_n.b = d_grass_n.b - d_grass_c.a + 1;
+
+            float4 ab_grass_c = MixColor(a_grass_c, a_grass_n.b, 1 - controlFraction.x, b_grass_c, b_grass_n.b, controlFraction.x);
+            float4 ab_grass_n = MixColor(a_grass_n, a_grass_n.b, 1 - controlFraction.x, b_grass_n, b_grass_n.b, controlFraction.x);
+            float4 ab_grass_tint = MixColor(a_grass_tint, a_grass_n.b, 1 - controlFraction.x, b_grass_tint, b_grass_n.b, controlFraction.x);
+
+            float4 cd_grass_c = MixColor(c_grass_c, c_grass_n.b, 1 - controlFraction.x, d_grass_c, d_grass_n.b, controlFraction.x);
+            float4 cd_grass_n = MixColor(c_grass_n, c_grass_n.b, 1 - controlFraction.x, d_grass_n, d_grass_n.b, controlFraction.x);
+            float4 cd_grass_tint = MixColor(c_grass_tint, c_grass_n.b, 1 - controlFraction.x, d_grass_tint, d_grass_n.b, controlFraction.x);
+
+            float4 abcd_grass_c = MixColor(ab_grass_c, ab_grass_n.b, 1 - controlFraction.y, cd_grass_c, cd_grass_n.b, controlFraction.y);
+            float4 abcd_grass_n = MixColor(ab_grass_n, ab_grass_n.b, 1 - controlFraction.y, cd_grass_n, cd_grass_n.b, controlFraction.y);
+            float4 abcd_grass_tint = MixColor(ab_grass_tint, ab_grass_n.b, 1 - controlFraction.y, cd_grass_tint, cd_grass_n.b, controlFraction.y);
+
+            abcd_c = MixColor(abcd_c, 0, 0.5, abcd_grass_c, abcd_grass_n.b, 0.5);
+            abcd_n = MixColor(abcd_n, 0, 0.5, abcd_grass_n, abcd_grass_n.b, 0.5);
+            abcd_c = MixColor(abcd_tint, 0, 0.5, float4(abcd_grass_tint.rgb, 1), abcd_grass_n.b, 0.5);
+#endif
 
             o.Normal = UnpackNormal(abcd_n.ggga);
 
@@ -109,11 +167,12 @@
             else
 #endif
             {
-                o.Albedo = abcd_c.rgb;
+                o.Albedo = overlay(abcd_c.rgb, abcd_tint.rgb);
                 o.Smoothness = abcd_c.a;
+                o.Metallic = 1 - abcd_tint.a;
             }
             o.Occlusion = abcd_n.r;
-		}
+        }
 		ENDCG
 	}
 	FallBack "Diffuse"

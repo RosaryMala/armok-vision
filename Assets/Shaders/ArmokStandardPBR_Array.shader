@@ -19,7 +19,7 @@
 		// Physically based Standard lighting model, and enable shadows on all light types
 		#pragma surface surf Standard
         #pragma target 3.5
-        #pragma shader_feature CONTAMINANTS
+        #pragma multi_compile __ CONTAMINANTS
 
 		#include "ArmokStandardShared_Array.cginc"
 
