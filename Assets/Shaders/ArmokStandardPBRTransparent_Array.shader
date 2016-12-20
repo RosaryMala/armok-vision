@@ -26,7 +26,7 @@
 		#pragma surface surf Standard alpha
         #pragma target 3.5
         #define TRANS
-        #pragma shader_feature CONTAMINANTS
+        #pragma multi_compile __ CONTAMINANTS
 
 		#include "ArmokStandardShared_Array.cginc"
 

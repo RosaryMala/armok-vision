@@ -8,7 +8,8 @@ public class MaterialManager : MonoBehaviour
     public enum MaterialFlags
     {
         None = 0,
-        Contaminants = 1
+        Contaminants = 1,
+        Grass = 2
     }
     public enum MaterialType
     {
@@ -55,6 +56,8 @@ public class MaterialManager : MonoBehaviour
     {
         InitizalizeTexture(type, MaterialFlags.None);
         InitizalizeTexture(type, MaterialFlags.Contaminants);
+        InitizalizeTexture(type, MaterialFlags.Grass);
+        InitizalizeTexture(type, MaterialFlags.Contaminants | MaterialFlags.Contaminants);
     }
 
     private void InitizalizeTexture(MaterialType type, MaterialFlags flags)
@@ -86,6 +89,11 @@ public class MaterialManager : MonoBehaviour
                 _cachedMaterials[type][flags].EnableKeyword("CONTAMINANTS");
             else
                 _cachedMaterials[type][flags].DisableKeyword("CONTAMINANTS");
+
+            if ((flags & MaterialFlags.Contaminants) == MaterialFlags.Grass)
+                _cachedMaterials[type][flags].EnableKeyword("GRASS");
+            else
+                _cachedMaterials[type][flags].DisableKeyword("GRASS");
 
             foreach (var item in vectorProperties)
             {
