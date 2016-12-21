@@ -57,7 +57,7 @@ public class MaterialManager : MonoBehaviour
         InitizalizeTexture(type, MaterialFlags.None);
         InitizalizeTexture(type, MaterialFlags.Contaminants);
         InitizalizeTexture(type, MaterialFlags.Grass);
-        InitizalizeTexture(type, MaterialFlags.Contaminants | MaterialFlags.Contaminants);
+        InitizalizeTexture(type, MaterialFlags.Contaminants | MaterialFlags.Grass);
     }
 
     private void InitizalizeTexture(MaterialType type, MaterialFlags flags)
@@ -90,7 +90,7 @@ public class MaterialManager : MonoBehaviour
             else
                 _cachedMaterials[type][flags].DisableKeyword("CONTAMINANTS");
 
-            if ((flags & MaterialFlags.Contaminants) == MaterialFlags.Grass)
+            if ((flags & MaterialFlags.Grass) == MaterialFlags.Grass)
                 _cachedMaterials[type][flags].EnableKeyword("GRASS");
             else
                 _cachedMaterials[type][flags].DisableKeyword("GRASS");

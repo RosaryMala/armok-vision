@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<grassTextures>
+    <grassTexture pattern="Grass_COLOR.png" specular="Grass_SPEC.png" normal="Grass_NRM.png" occlusion="Grass_OCC.png" alpha="Grass_DISP.png">
+        <material token="PLANT:*:STRUCTURAL"/>
+    </grassTexture>
+</grassTextures>

@@ -379,7 +379,7 @@ public class ContentLoader : MonoBehaviour
                 case "grassTextures":
                     if (GrassTextureConfiguration == null)
                         GrassTextureConfiguration = TileConfiguration<GrassContent>.GetFromRootElement(doc, "grassTexture");
-                    GrassTextureConfiguration.AddSingleContentConfig(doc, null);
+                    GrassTextureConfiguration.AddSingleContentConfig(doc, new GrassContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage));
                     break;
                 default:
                     break;

@@ -943,6 +943,7 @@ public class GameMap : MonoBehaviour
             if (layerDirtyBits[z])
             {
                 GenerateTerrainTexture(z);
+                GenerateGrassTexture(z);
                 layerDirtyBits[z] = false;
             }
         }
@@ -1072,7 +1073,7 @@ public class GameMap : MonoBehaviour
                 {
                     grassIndices[index].r = ContentLoader.Instance.DefaultMatTexIndex;
                     grassIndices[index].g = ContentLoader.Instance.DefaultShapeTexIndex;
-                    grassColors[index] = Color.gray;
+                    grassColors[index] = new Color(0,0,0,0);
                     continue;
                 }
                 if (!(tile.tiletypeMaterial == TiletypeMaterial.GRASS_DARK
