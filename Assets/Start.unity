@@ -6695,18 +6695,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa92a0e1eefe93b40bec1e868142e050, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  basicTerrainMaterial: {fileID: 2100000, guid: 42f4d8e851577004f9b8d3f557aa51ca,
-    type: 2}
-  stencilTerrainMaterial: {fileID: 2100000, guid: abde500abf2267e47b720ae9a33e0262,
-    type: 2}
-  transparentTerrainMaterial: {fileID: 2100000, guid: 3076e8ada8edfce479cc14d26bf56ad9,
-    type: 2}
-  basicTerrainArrayMaterial: {fileID: 2100000, guid: b3c307b7b41f1cf49922bbd01b2a4a8f,
-    type: 2}
-  stencilTerrainArrayMaterial: {fileID: 2100000, guid: e8b9f0e49ddfbd04aa18ed86cb44d089,
-    type: 2}
-  transparentTerrainArrayMaterial: {fileID: 2100000, guid: c7f2fee23d537f248864a173749796d3,
-    type: 2}
   waterMaterial: {fileID: 2100000, guid: 653692fae3c0d494fa3483ac3f95927f, type: 2}
   magmaMaterial: {fileID: 2100000, guid: 0234441288425134d810e44bf8760514, type: 2}
   magmaGlowPrefab: {fileID: 10814916, guid: 1404eb50c31e0534896ff4e91f3785e5, type: 2}
@@ -6723,7 +6711,6 @@ MonoBehaviour:
   posZ: 0
   collisionTemplate: {fileID: 64000010602839068, guid: b2b37d076222dfc418f57692b6563de6,
     type: 2}
-  terrainTintLayers: []
   dfScreen: {fileID: 771652859}
   testMesh: {fileID: 0}
   creatureTemplate: {fileID: 422910, guid: f1c56ebe0ff1ec3439724162aa0556bd, type: 2}
@@ -8538,7 +8525,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1169102434}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76b5ec6153a1d55438228df10fe66844, type: 3}
   m_Name: 
