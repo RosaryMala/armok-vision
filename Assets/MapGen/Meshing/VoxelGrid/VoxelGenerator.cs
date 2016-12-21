@@ -146,24 +146,8 @@ public class VoxelGenerator
         return true;
     }
 
-    public static bool Handled(MapDataStore.Tile tile)
+    public static bool IsNatural(MapDataStore.Tile tile)
     {
-        if (UseBoth(tile))
-            return true;
-        if (tile == null)
-            return true; //means it's air/empty
-        switch (tile.shape)
-        {
-            case TiletypeShape.NO_SHAPE:
-            case TiletypeShape.EMPTY:
-            case TiletypeShape.FLOOR:
-            case TiletypeShape.WALL:
-            case TiletypeShape.BROOK_TOP:
-            case TiletypeShape.RAMP_TOP:
-                break;
-            default:
-                return false;
-        }
         switch (tile.tiletypeMaterial)
         {
             case TiletypeMaterial.NO_MATERIAL:
@@ -182,10 +166,31 @@ public class VoxelGenerator
             case TiletypeMaterial.BROOK:
             case TiletypeMaterial.RIVER:
             case TiletypeMaterial.ROOT:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static bool Handled(MapDataStore.Tile tile)
+    {
+        if (UseBoth(tile))
+            return true;
+        if (tile == null)
+            return true; //means it's air/empty
+        switch (tile.shape)
+        {
+            case TiletypeShape.NO_SHAPE:
+            case TiletypeShape.EMPTY:
+            case TiletypeShape.FLOOR:
+            case TiletypeShape.WALL:
+            case TiletypeShape.BROOK_TOP:
                 break;
             default:
                 return false;
         }
+        if (!IsNatural(tile))
+            return false;
         return true;
     }
 
