@@ -172,12 +172,8 @@ public class VoxelGenerator
         }
     }
 
-    public static bool Handled(MapDataStore.Tile tile)
+    public static bool HandleShape(MapDataStore.Tile tile)
     {
-        if (UseBoth(tile))
-            return true;
-        if (tile == null)
-            return true; //means it's air/empty
         switch (tile.shape)
         {
             case TiletypeShape.NO_SHAPE:
@@ -185,10 +181,21 @@ public class VoxelGenerator
             case TiletypeShape.FLOOR:
             case TiletypeShape.WALL:
             case TiletypeShape.BROOK_TOP:
-                break;
+                return true;
             default:
                 return false;
         }
+
+    }
+
+    public static bool Handled(MapDataStore.Tile tile)
+    {
+        if (UseBoth(tile))
+            return true;
+        if (tile == null)
+            return true; //means it's air/empty
+        if (!HandleShape(tile))
+            return false;
         if (!IsNatural(tile))
             return false;
         return true;

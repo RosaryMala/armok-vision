@@ -55,7 +55,9 @@ abstract class BlockMesher {
             transparentMeshBuffer =
                 new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize * ((int)MeshLayer.Collision - (int)MeshLayer.StaticTransparent)];
             collisionMeshBuffer =
-                new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize * ((int)MeshLayer.Count - (int)MeshLayer.Collision)];
+                new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize * ((int)MeshLayer.NaturalTerrain - (int)MeshLayer.Collision)];
+            terrainMeshBuffer =
+                new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize];
             heights = new float[2, 2];
         }
 
@@ -63,6 +65,7 @@ abstract class BlockMesher {
         public MeshCombineUtility.MeshInstance[] stencilMeshBuffer { get; private set; }
         public MeshCombineUtility.MeshInstance[] transparentMeshBuffer { get; private set; }
         public MeshCombineUtility.MeshInstance[] collisionMeshBuffer { get; private set; }
+        public MeshCombineUtility.MeshInstance[] terrainMeshBuffer { get; private set; }
         public float[,] heights { get; private set; }
     }
 
@@ -200,7 +203,7 @@ abstract class BlockMesher {
         }
         if (request.tiles)
         {
-            GenerateTiles(request.data, out result.tiles, out result.stencilTiles, out result.transparentTiles, out result.topTiles, out result.topStencilTiles, out result.topTransparentTiles, out result.collisionMesh, out result.terrainMesh, temp);
+            GenerateTiles(request.data, out result.tiles, out result.stencilTiles, out result.transparentTiles, out result.topTiles, out result.topStencilTiles, out result.topTransparentTiles, out result.collisionMesh, out result.terrainMesh, out result.topTerrainMesh, temp);
         }
         return result;
     }
@@ -326,7 +329,7 @@ abstract class BlockMesher {
         }
     }
 
-    bool GenerateTiles(MapDataStore data, out CPUMesh tiles, out CPUMesh stencilTiles, out CPUMesh transparentTiles, out CPUMesh topTiles, out CPUMesh topStencilTiles, out CPUMesh topTransparentTiles, out CPUMesh collisionTiles, out CPUMesh terrainTiles, TempBuffers temp)
+    bool GenerateTiles(MapDataStore data, out CPUMesh tiles, out CPUMesh stencilTiles, out CPUMesh transparentTiles, out CPUMesh topTiles, out CPUMesh topStencilTiles, out CPUMesh topTransparentTiles, out CPUMesh collisionTiles, out CPUMesh terrainTiles, out CPUMesh topTerrainTiles, TempBuffers temp)
     {
         int block_x = data.SliceOrigin.x / GameMap.blockSize;
         int block_y = data.SliceOrigin.y / GameMap.blockSize;
@@ -335,6 +338,7 @@ abstract class BlockMesher {
         int stencilBufferIndex = 0;
         int transparentBufferIndex = 0;
         int collisionIndex = 0;
+        int terrainIndex = 0;
         for (int xx = (block_x * GameMap.blockSize); xx < (block_x + 1) * GameMap.blockSize; xx++)
             for (int yy = (block_y * GameMap.blockSize); yy < (block_y + 1) * GameMap.blockSize; yy++)
             {
@@ -358,14 +362,23 @@ abstract class BlockMesher {
                         FillMeshBuffer(out temp.transparentMeshBuffer[transparentBufferIndex], (MeshLayer)i, data[xx, yy, block_z], GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize), yy - (block_y * GameMap.blockSize), -GameMap.MapZOffset));
                         transparentBufferIndex++;
                     }
-                    else
+                    else if (i < (int)MeshLayer.NaturalTerrain)
                     {
                         FillMeshBuffer(out temp.collisionMeshBuffer[collisionIndex], (MeshLayer)i, data[xx, yy, block_z], GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize), yy - (block_y * GameMap.blockSize), -GameMap.MapZOffset));
                         collisionIndex++;
                     }
+                    else if(i == (int)MeshLayer.NaturalTerrain)
+                    {
+                        FillMeshBuffer(out temp.terrainMeshBuffer[terrainIndex], (MeshLayer)i, data[xx, yy, block_z], GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize), yy - (block_y * GameMap.blockSize), -GameMap.MapZOffset));
+                        terrainIndex++;
+                    }
                 }
             }
         bool dontCare, success;
+        VoxelGenerator voxelGen = new VoxelGenerator(data);
+        terrainTiles = voxelGen.TerrainMesh;
+        terrainTiles = MeshCombineUtility.ColorCombine(temp.terrainMeshBuffer, out dontCare, false, terrainTiles);
+        topTerrainTiles = MeshCombineUtility.ColorCombine(temp.terrainMeshBuffer, out dontCare, true);
         stencilTiles = MeshCombineUtility.ColorCombine(temp.stencilMeshBuffer, out dontCare, false);
         topStencilTiles = MeshCombineUtility.ColorCombine(temp.stencilMeshBuffer, out dontCare, true);
         transparentTiles = MeshCombineUtility.ColorCombine(temp.transparentMeshBuffer, out dontCare, false);
@@ -373,8 +386,6 @@ abstract class BlockMesher {
         topTiles = MeshCombineUtility.ColorCombine(temp.meshBuffer, out dontCare, true);
         tiles = MeshCombineUtility.ColorCombine(temp.meshBuffer, out success, false);
         collisionTiles = MeshCombineUtility.ColorCombine(temp.collisionMeshBuffer, out dontCare, false);
-        VoxelGenerator voxelGen = new VoxelGenerator(data);
-        terrainTiles = voxelGen.TerrainMesh;
 
         return success;
     }
@@ -538,7 +549,21 @@ abstract class BlockMesher {
                 break;
             default:
                 {
-                    if(VoxelGenerator.Handled(tile) & !VoxelGenerator.UseBoth(tile))
+                    if (VoxelGenerator.HandleShape(tile))
+                    {
+                        buffer.meshData = null;
+                        return;
+                    }
+                    if (layer == MeshLayer.NaturalTerrain)
+                    {
+                        if (!VoxelGenerator.IsNatural(tile))
+                        {
+                            buffer.meshData = null;
+                            return;
+                        }
+                        layer = MeshLayer.StaticMaterial;
+                    }
+                    else if (VoxelGenerator.IsNatural(tile))
                     {
                         buffer.meshData = null;
                         return;

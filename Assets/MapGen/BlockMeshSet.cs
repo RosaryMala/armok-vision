@@ -44,7 +44,7 @@ public class BlockMeshSet
     /// <summary>
     /// top face of procedurally generated terrain blocks.
     /// </summary>
-    public Mesh topTerrainBlocks;
+    public Mesh topVoxelBlocks;
     /// <summary>
     /// Procedurally generated grass.
     /// </summary>
@@ -128,6 +128,18 @@ public class BlockMeshSet
             voxelBlocks.RecalculateNormals();
             voxelBlocks.RecalculateTangents();
         }
+        if(newMeshes.topTerrainMesh != null)
+        {
+            if(topVoxelBlocks == null)
+            {
+                topVoxelBlocks = new Mesh();
+                topVoxelBlocks.name = string.Format("block_voxel_top_{0}", suffix);
+            }
+            topVoxelBlocks.Clear();
+            newMeshes.topTerrainMesh.CopyToMesh(topVoxelBlocks);
+            topVoxelBlocks.RecalculateNormals();
+            topVoxelBlocks.RecalculateTangents();
+        }
         if (newMeshes.water != null)
         {
             if (liquidBlocks == null)
@@ -167,7 +179,7 @@ public class BlockMeshSet
             ClearMesh(item);
         }
         ClearMesh(voxelBlocks);
-        ClearMesh(topTerrainBlocks);
+        ClearMesh(topVoxelBlocks);
         ClearMesh(grassBlocks);
         if (collisionBlocks != null)
         {
@@ -197,6 +209,11 @@ public class BlockMeshSet
         if (voxelBlocks != null && voxelBlocks.vertexCount > 0)
         {
             Graphics.DrawMesh(voxelBlocks, LocalTransform, voxelTerrainMaterial, 0, null, 0, properties, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
+            drewBlock = true;
+        }
+        if (topVoxelBlocks != null && topVoxelBlocks.vertexCount > 0 && top)
+        {
+            Graphics.DrawMesh(topVoxelBlocks, LocalTransform, voxelTerrainMaterial, 0, null, 0, properties, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
             drewBlock = true;
         }
 
