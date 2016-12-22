@@ -551,7 +551,7 @@ abstract class BlockMesher {
                 {
                     if (layer == MeshLayer.NaturalTerrain)
                     {
-                        if (VoxelGenerator.IsNatural(tile) && !VoxelGenerator.HandleShape(tile))
+                        if (VoxelGenerator.IsNatural(tile) && !VoxelGenerator.HandleShape(tile) && !VoxelGenerator.UseBoth(tile))
                             layer = MeshLayer.StaticMaterial;
                         else
                         {
@@ -559,7 +559,7 @@ abstract class BlockMesher {
                             return;
                         }
                     }
-                    else if (VoxelGenerator.IsNatural(tile))
+                    else if (VoxelGenerator.IsNatural(tile) && !VoxelGenerator.UseBoth(tile))
                     {
                         buffer.meshData = null;
                         return;
