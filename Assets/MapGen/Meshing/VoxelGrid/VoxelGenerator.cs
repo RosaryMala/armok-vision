@@ -194,6 +194,8 @@ public class VoxelGenerator
             return true;
         if (tile == null)
             return true; //means it's air/empty
+        if (tile.Hidden)
+            return false;
         return (HandleShape(tile) && IsNatural(tile));
     }
 
