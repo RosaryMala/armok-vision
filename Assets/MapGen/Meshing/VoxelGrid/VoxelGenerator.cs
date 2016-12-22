@@ -194,11 +194,7 @@ public class VoxelGenerator
             return true;
         if (tile == null)
             return true; //means it's air/empty
-        if (!HandleShape(tile))
-            return false;
-        if (!IsNatural(tile))
-            return false;
-        return true;
+        return (HandleShape(tile) && IsNatural(tile));
     }
 
     public static bool IsFloor(MapDataStore.Tile tile)
