@@ -33,7 +33,7 @@ public class MeshCombineUtility
         public HiddenFaces hiddenFaces;
     }
 
-    public static CPUMesh ColorCombine(MeshInstance[] combines, out bool success, bool topLayer = false)
+    public static CPUMesh ColorCombine(MeshInstance[] combines, out bool success, bool topLayer = false, CPUMesh sourceMesh = null)
     {
         int length = combines.Length;
         int vertexCount = 0;
@@ -64,10 +64,51 @@ public class MeshCombineUtility
         List<Vector2> uv2s = new List<Vector2>(vertexCount);
         List<Vector2> uv3s = new List<Vector2>(vertexCount);
         List<Color> colors = new List<Color>(vertexCount);
+        List<int> triangles = new List<int>(triangleCount);
+
+        if (
+            sourceMesh != null
+            && sourceMesh.vertices != null
+            && sourceMesh.vertices.Length != 0
+            && sourceMesh.triangles != null
+            && sourceMesh.triangles.Length != 0)
+        {
+            vertices.AddRange(sourceMesh.vertices);
+            if (sourceMesh.normals != null)
+                normals.AddRange(sourceMesh.normals);
+            else
+                normals.AddRange(new Vector3[sourceMesh.vertices.Length]);
+
+            if (sourceMesh.tangents != null)
+                tangents.AddRange(sourceMesh.tangents);
+            else
+                tangents.AddRange(new Vector4[sourceMesh.vertices.Length]);
+
+            if (sourceMesh.uv != null)
+                uvs.AddRange(sourceMesh.uv);
+            else
+                uvs.AddRange(new Vector2[sourceMesh.vertices.Length]);
+
+            if (sourceMesh.uv2 != null)
+                uv2s.AddRange(sourceMesh.uv2);
+            else
+                uv2s.AddRange(new Vector2[sourceMesh.vertices.Length]);
+
+            if (sourceMesh.uv3 != null)
+                uv3s.AddRange(sourceMesh.uv3);
+            else
+                uv3s.AddRange(new Vector2[sourceMesh.vertices.Length]);
+
+            if (sourceMesh.colors != null)
+                colors.AddRange(sourceMesh.colors);
+            else
+                colors.AddRange(new Color[sourceMesh.vertices.Length]);
+
+            triangles.AddRange(sourceMesh.triangles);
+        }
 
         Dictionary<int, int> indexTranslation = new Dictionary<int, int>(maxVertices);
 
-        List<int> triangles = new List<int>(triangleCount);
 
         for (int combIndex = 0; combIndex < length; combIndex++)
         {

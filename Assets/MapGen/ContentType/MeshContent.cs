@@ -42,6 +42,7 @@ public enum MeshLayer
     NoMaterialBuildingTransparent,
     Collision,
     BuildingCollision,
+    NaturalTerrain,
     Count
 }
 
