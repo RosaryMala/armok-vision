@@ -105,6 +105,53 @@
             float4 c_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, c_cont.y));
             float4 d_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, d_cont.y));
 
+#ifdef GRASS
+            float up = dot(WorldNormalVector(IN, float3(0.5, 0.5, 1)), float3(0, 1, 0)) > 0 ? 1 : 0;
+            float4 a_grass_tint = tex2D(_GrassTint, (controlCoordsBase + float2(0, 0)) * _Control_TexelSize.xy);
+            a_grass_tint.a *= up;
+            if (a_grass_tint.a > 0)
+            {
+                float2 a_grass_cont = tex2D(_GrassControl, (controlCoordsBase + float2(0, 0)) * _Control_TexelSize.xy);
+                float4 a_grass_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, a_grass_cont.x));
+                float4 a_grass_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, a_grass_cont.y));
+                a_c = MixColor(a_grass_c, a_grass_n.b, a_grass_tint.a, a_c, a_n.b, 1 - a_grass_n.b);
+                a_tint = MixColor(a_grass_tint, a_grass_n.b, a_grass_tint.a, a_tint, a_n.b, 1 - a_grass_n.b);
+                a_n = MixColor(a_grass_n, a_grass_n.b, a_grass_tint.a, a_n, a_n.b, 1 - a_grass_n.b);
+            }
+            float4 b_grass_tint = tex2D(_GrassTint, (controlCoordsBase + float2(1, 0)) * _Control_TexelSize.xy);
+            b_grass_tint.a *= up;
+            if (b_grass_tint.a > 0)
+            {
+                float2 b_grass_cont = tex2D(_GrassControl, (controlCoordsBase + float2(1, 0)) * _Control_TexelSize.xy);
+                float4 b_grass_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, b_grass_cont.x));
+                float4 b_grass_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, b_grass_cont.y));
+                b_c = MixColor(b_grass_c, b_grass_n.b, b_grass_tint.a, b_c, b_n.b, 1 - b_grass_n.b);
+                b_tint = MixColor(b_grass_tint, b_grass_n.b, b_grass_tint.a, b_tint, b_n.b, 1 - b_grass_n.b);
+                b_n = MixColor(b_grass_n, b_grass_n.b, b_grass_tint.a, b_n, b_n.b, 1 - b_grass_n.b);
+            }
+            float4 c_grass_tint = tex2D(_GrassTint, (controlCoordsBase + float2(0, 1)) * _Control_TexelSize.xy);
+            c_grass_tint.a *= up;
+            if (c_grass_tint.a > 0)
+            {
+                float2 c_grass_cont = tex2D(_GrassControl, (controlCoordsBase + float2(0, 1)) * _Control_TexelSize.xy);
+                float4 c_grass_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, c_grass_cont.x));
+                float4 c_grass_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, c_grass_cont.y));
+                c_c = MixColor(c_grass_c, c_grass_n.b, c_grass_tint.a, c_c, c_n.b, 1 - c_grass_n.b);
+                c_tint = MixColor(c_grass_tint, c_grass_n.b, c_grass_tint.a, c_tint, c_n.b, 1 - c_grass_n.b);
+                c_n = MixColor(c_grass_n, c_grass_n.b, c_grass_tint.a, c_n, c_n.b, 1 - c_grass_n.b);
+            }
+            float4 d_grass_tint = tex2D(_GrassTint, (controlCoordsBase + float2(1, 1)) * _Control_TexelSize.xy);
+            d_grass_tint.a *= up;
+            if (d_grass_tint.a > 0)
+            {
+                float2 d_grass_cont = tex2D(_GrassControl, (controlCoordsBase + float2(1, 1)) * _Control_TexelSize.xy);
+                float4 d_grass_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, d_grass_cont.x));
+                float4 d_grass_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, d_grass_cont.y));
+                d_c = MixColor(d_grass_c, d_grass_n.b, d_grass_tint.a, d_c, d_n.b, 1 - d_grass_n.b);
+                d_tint = MixColor(d_grass_tint, d_grass_n.b, d_grass_tint.a, d_tint, d_n.b, 1 - d_grass_n.b);
+                d_n = MixColor(d_grass_n, d_grass_n.b, d_grass_tint.a, d_n, d_n.b, 1 - d_grass_n.b);
+            }
+#endif
             float4 ab_c = MixColor(a_c, a_n.b, 1 - controlFraction.x, b_c, b_n.b, controlFraction.x);
             float4 ab_n = MixColor(a_n, a_n.b, 1 - controlFraction.x, b_n, b_n.b, controlFraction.x);
             float4 ab_tint = MixColor(a_tint, a_n.b, 1 - controlFraction.x, b_tint, b_n.b, controlFraction.x);
@@ -116,48 +163,6 @@
             float4 abcd_c = MixColor(ab_c, ab_n.b, 1 - controlFraction.y, cd_c, cd_n.b, controlFraction.y);
             float4 abcd_n = MixColor(ab_n, ab_n.b, 1 - controlFraction.y, cd_n, cd_n.b, controlFraction.y);
             float4 abcd_tint = MixColor(ab_tint, ab_n.b, 1 - controlFraction.y, cd_tint, cd_n.b, controlFraction.y);
-
-#ifdef GRASS
-            float2 a_grass_cont = tex2D(_GrassControl, (controlCoordsBase + float2(0, 0)) * _Control_TexelSize.xy);
-            float2 b_grass_cont = tex2D(_GrassControl, (controlCoordsBase + float2(1, 0)) * _Control_TexelSize.xy);
-            float2 c_grass_cont = tex2D(_GrassControl, (controlCoordsBase + float2(0, 1)) * _Control_TexelSize.xy);
-            float2 d_grass_cont = tex2D(_GrassControl, (controlCoordsBase + float2(1, 1)) * _Control_TexelSize.xy);
-
-            float4 a_grass_tint = tex2D(_GrassTint, (controlCoordsBase + float2(0, 0)) * _Control_TexelSize.xy);
-            float4 b_grass_tint = tex2D(_GrassTint, (controlCoordsBase + float2(1, 0)) * _Control_TexelSize.xy);
-            float4 c_grass_tint = tex2D(_GrassTint, (controlCoordsBase + float2(0, 1)) * _Control_TexelSize.xy);
-            float4 d_grass_tint = tex2D(_GrassTint, (controlCoordsBase + float2(1, 1)) * _Control_TexelSize.xy);
-
-            float4 a_grass_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, a_grass_cont.x));
-            float4 b_grass_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, b_grass_cont.x));
-            float4 c_grass_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, c_grass_cont.x));
-            float4 d_grass_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, d_grass_cont.x));
-
-            float4 a_grass_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, a_grass_cont.y));
-            float4 b_grass_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, b_grass_cont.y));
-            float4 c_grass_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, c_grass_cont.y));
-            float4 d_grass_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, d_grass_cont.y));
-
-            float4 ab_grass_c = MixColor(a_grass_c, a_grass_n.b, a_grass_tint.a * (1 - controlFraction.x), b_grass_c, b_grass_n.b, controlFraction.x * b_grass_tint.a);
-            float4 ab_grass_n = MixColor(a_grass_n, a_grass_n.b, a_grass_tint.a  * (1 - controlFraction.x), b_grass_n, b_grass_n.b, controlFraction.x * b_grass_tint.a );
-            float4 ab_grass_tint = MixColor(a_grass_tint, a_grass_n.b, a_grass_tint.a  * (1 - controlFraction.x), b_grass_tint, b_grass_n.b, controlFraction.x * b_grass_tint.a);
-
-            float4 cd_grass_c = MixColor(c_grass_c, c_grass_n.b, c_grass_tint.a  * (1 - controlFraction.x), d_grass_c, d_grass_n.b, controlFraction.x * d_grass_tint.a);
-            float4 cd_grass_n = MixColor(c_grass_n, c_grass_n.b, c_grass_tint.a  * (1 - controlFraction.x), d_grass_n, d_grass_n.b, controlFraction.x * d_grass_tint.a);
-            float4 cd_grass_tint = MixColor(c_grass_tint, c_grass_n.b, c_grass_tint.a  * (1 - controlFraction.x), d_grass_tint, d_grass_n.b, controlFraction.x * d_grass_tint.a);
-
-            float4 abcd_grass_c = MixColor(ab_grass_c, ab_grass_n.b, ab_grass_tint.a  * (1 - controlFraction.y), cd_grass_c, cd_grass_n.b, controlFraction.y * cd_grass_tint.a);
-            float4 abcd_grass_n = MixColor(ab_grass_n, ab_grass_n.b, ab_grass_tint.a  * (1 - controlFraction.y), cd_grass_n, cd_grass_n.b, controlFraction.y * cd_grass_tint.a);
-            float4 abcd_grass_tint = MixColor(ab_grass_tint, ab_grass_n.b, ab_grass_tint.a  * (1 - controlFraction.y), cd_grass_tint, cd_grass_n.b, controlFraction.y * cd_grass_tint.a);
-
-            float offset = 0.9;
-
-            abcd_c = MixColor(abcd_grass_c, abcd_grass_n.b, abcd_grass_tint.a, abcd_c, abcd_n.b, 1 - abcd_grass_tint.a);
-            abcd_n = MixColor(abcd_grass_n, abcd_grass_n.b, abcd_grass_tint.a, abcd_n, abcd_n.b, 1 - abcd_grass_tint.a);
-            abcd_tint = MixColor(float4(abcd_grass_tint.rgb, 1), abcd_grass_n.b, abcd_grass_tint.a, abcd_tint, abcd_n.b, 1 - abcd_grass_tint.a);
-
-            //abcd_tint = lerp(abcd_tint, tex2D(_GrassTint, controlCoords * _Control_TexelSize.xy), tex2D(_GrassTint, controlCoords * _Control_TexelSize.xy).a);
-#endif
 
             o.Normal = UnpackNormal(abcd_n.ggga);
 
