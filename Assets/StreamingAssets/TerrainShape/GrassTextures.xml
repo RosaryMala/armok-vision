@@ -21,4 +21,11 @@
                   alpha="Worms_Depth.png">
         <material token="PLANT:WORMY TENDRILS:STRUCTURAL"/>
     </grassTexture>
+    <grassTexture pattern="Grey.png"
+                  specular="Mirror_S.png"
+                  normal="Eyes_N.png"
+                  occlusion="Eyes_O.png"
+                  alpha="Eyes_Depth.png">
+        <material token="PLANT:BUBBLE BULBS:STRUCTURAL"/>
+    </grassTexture>
 </grassTextures>
