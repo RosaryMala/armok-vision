@@ -11,7 +11,6 @@ public class VoxelGenerator
     public VoxelGenerator(MapDataStore map)
     {
         this.map = map;
-        Triangulate();
     }
 
     private List<Vector3> vertices = new List<Vector3>();
@@ -20,6 +19,10 @@ public class VoxelGenerator
     private List<int> triangles = new List<int>();
 
     bool OpenedDiagonals { get { return false; } }
+
+    const float bottomlessDepth = -1000000;
+
+    public bool bottomless = false;
 
     public enum CornerType
     {
@@ -34,6 +37,7 @@ public class VoxelGenerator
     {
         get
         {
+            Triangulate();
             return new CPUMesh(vertices.ToArray(), null, null, uvs.ToArray(), null, null, null, triangles.ToArray());
         }
     }
@@ -166,6 +170,7 @@ public class VoxelGenerator
             case TiletypeMaterial.BROOK:
             case TiletypeMaterial.RIVER:
             case TiletypeMaterial.ROOT:
+            case TiletypeMaterial.HFS:
                 return true;
             default:
                 return false;
@@ -181,6 +186,7 @@ public class VoxelGenerator
             case TiletypeShape.FLOOR:
             case TiletypeShape.WALL:
             case TiletypeShape.BROOK_TOP:
+            case TiletypeShape.ENDLESS_PIT:
                 return true;
             default:
                 return false;
@@ -1112,13 +1118,13 @@ public class VoxelGenerator
         switch (wallType)
         {
             case WallType.Floor:
-                AddWallMesh(GameMap.floorHeight, 0, points);
+                AddWallMesh(GameMap.floorHeight, bottomless ? bottomlessDepth : 0, points);
                 break;
             case WallType.Wall:
                 AddWallMesh(GameMap.tileHeight, GameMap.floorHeight, points);
                 break;
             case WallType.Both:
-                AddWallMesh(GameMap.tileHeight, 0, points);
+                AddWallMesh(GameMap.tileHeight, bottomless ? bottomlessDepth : 0, points);
                 break;
             default:
                 break;

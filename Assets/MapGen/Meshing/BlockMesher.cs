@@ -376,6 +376,8 @@ abstract class BlockMesher {
             }
         bool dontCare, success;
         VoxelGenerator voxelGen = new VoxelGenerator(data);
+        if (block_z == 0)
+            voxelGen.bottomless = true;
         terrainTiles = voxelGen.TerrainMesh;
         terrainTiles = MeshCombineUtility.ColorCombine(temp.terrainMeshBuffer, out dontCare, false, terrainTiles);
         topTerrainTiles = MeshCombineUtility.ColorCombine(temp.terrainMeshBuffer, out dontCare, true);
@@ -801,7 +803,8 @@ sealed class MultiThreadedMesher : BlockMesher {
         finished = true;
         foreach (var item in threads)
         {
-            item.Join(100);
+            if(item != null)
+                item.Join(100);
         }
     }
 
