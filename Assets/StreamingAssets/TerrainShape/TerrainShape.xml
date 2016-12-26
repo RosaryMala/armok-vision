@@ -1,183 +1,186 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <terrainTextures>
-    <terrainTexture normal="Rough_Normal.png" occlusion="Rough_AO.png" alpha="Rough_Depth.png">
-        <material token="*:*"/>
-    </terrainTexture>
-    <terrainTexture normal="Sandstone_NRM.png" occlusion="Sandstone_OCC.png" alpha="Sandstone_DISP.png">
-        <material token="INORGANIC:CALCITE"/>
-        <material token="INORGANIC:CHALK"/>
-        <material token="INORGANIC:CHERT"/>
-        <material token="INORGANIC:CLAYSTONE"/>
-        <material token="INORGANIC:CONGLOMERATE"/>
-        <material token="INORGANIC:DOLOMITE"/>
-        <material token="INORGANIC:LIMESTONE"/>
-        <material token="INORGANIC:MUDSTONE"/>
-        <material token="INORGANIC:ROCK_SALT"/>
-        <material token="INORGANIC:SANDSTONE"/>
-        <material token="INORGANIC:SHALE"/>
-        <material token="INORGANIC:SILTSTONE"/>
-    </terrainTexture>
-    <terrainTexture normal="Stone_NRM.png" occlusion="Stone_OCC.png" alpha="Stone_DISP.png">
-        <material token="INORGANIC:GRANITE"/>
-        <material token="INORGANIC:DIORITE"/>
-        <material token="INORGANIC:GABBRO"/>
-    </terrainTexture>
-    <terrainTexture normal="Soil_Normal.png" occlusion="Soil_AO.png" alpha="Soil_Depth.png">
-        <material token="INORGANIC:LOAM"/>
-        <material token="INORGANIC:LOAMY_SAND"/>
-        <material token="INORGANIC:PEAT"/>
-        <material token="INORGANIC:SANDY_CLAY_LOAM"/>
-        <material token="INORGANIC:SANDY_LOAM"/>
-        <material token="INORGANIC:SILT"/>
-        <material token="INORGANIC:SILTY_CLAY_LOAM"/>
-        <material token="INORGANIC:SILT_LOAM"/>
-    </terrainTexture>
-    <terrainTexture normal="Clay_NRM.png" occlusion="Clay_OCC.png" alpha="Clay_DISP.png">
-        <material token="INORGANIC:PELAGIC_CLAY"/>
-        <material token="INORGANIC:CALCAREOUS_OOZE"/>
-        <material token="INORGANIC:SILICEOUS_OOZE"/>
-    </terrainTexture>
-    <terrainTexture normal="Clay_NRM.png" occlusion="Clay_OCC.png" alpha="Clay_DISP.png">
-        <material token="INORGANIC:CLAY"/>
-        <material token="INORGANIC:CLAY_LOAM"/>
-        <material token="INORGANIC:SANDY_CLAY_LOAM"/>
-        <material token="INORGANIC:SILTY_CLAY"/>
-        <material token="INORGANIC:FIRE_CLAY"/>
-    </terrainTexture>
-    <terrainTexture normal="Sand_Normal.png" occlusion="Sand_AO.png" alpha="Sand_Depth.png">
-        <material token="INORGANIC:SAND_TAN"/>
-        <material token="INORGANIC:SAND_BLACK"/>
-        <material token="INORGANIC:SAND_RED"/>
-        <material token="INORGANIC:SAND_WHITE"/>
-        <material token="INORGANIC:SAND_YELLOW"/>
-    </terrainTexture>
-    <terrainTexture normal="Gems_Nrm.png" occlusion="Gems_AO.png" alpha="Gems_Disp.png">
-		<material token="INORGANIC:ONYX"/>
-		<material token="INORGANIC:MORION"/>
-		<material token="INORGANIC:SCHORL"/>
-		<material token="INORGANIC:LACE AGATE"/>
-		<material token="INORGANIC:BLUE JADE"/>
-		<material token="INORGANIC:LAPIS LAZULI"/>
-		<material token="INORGANIC:PRASE"/>
-		<material token="INORGANIC:PRASE OPAL"/>
-		<material token="INORGANIC:BLOODSTONE"/>
-		<material token="INORGANIC:MOSS AGATE"/>
-		<material token="INORGANIC:MOSS OPAL"/>
-		<material token="INORGANIC:VARISCITE"/>
-		<material token="INORGANIC:CHRYSOPRASE"/>
-		<material token="INORGANIC:CHRYSOCOLLA"/>
-		<material token="INORGANIC:SARD"/>
-		<material token="INORGANIC:CARNELIAN"/>
-		<material token="INORGANIC:BANDED AGATE"/>
-		<material token="INORGANIC:SARDONYX"/>
-		<material token="INORGANIC:CHERRY OPAL"/>
-		<material token="INORGANIC:LAVENDER JADE"/>
-		<material token="INORGANIC:PINK JADE"/>
-		<material token="INORGANIC:TUBE AGATE"/>
-		<material token="INORGANIC:FIRE AGATE"/>
-		<material token="INORGANIC:PLUME AGATE"/>
-		<material token="INORGANIC:BROWN JASPER"/>
-		<material token="INORGANIC:PICTURE JASPER"/>
-		<material token="INORGANIC:SMOKY QUARTZ"/>
-		<material token="INORGANIC:WAX OPAL"/>
-		<material token="INORGANIC:WOOD OPAL"/>
-		<material token="INORGANIC:AMBER OPAL"/>
-		<material token="INORGANIC:GOLD OPAL"/>
-		<material token="INORGANIC:CITRINE"/>
-		<material token="INORGANIC:YELLOW JASPER"/>
-		<material token="INORGANIC:TIGEREYE"/>
-		<material token="INORGANIC:TIGER IRON"/>
-		<material token="INORGANIC:SUNSTONE"/>
-		<material token="INORGANIC:RESIN OPAL"/>
-		<material token="INORGANIC:PYRITE"/>
-		<material token="INORGANIC:CLEAR TOURMALINE"/>
-		<material token="INORGANIC:GRAY CHALCEDONY"/>
-		<material token="INORGANIC:DENDRITIC AGATE"/>
-		<material token="INORGANIC:SHELL OPAL"/>
-		<material token="INORGANIC:BONE OPAL"/>
-		<material token="INORGANIC:WHITE CHALCEDONY"/>
-		<material token="INORGANIC:FORTIFICATION AGATE"/>
-		<material token="INORGANIC:MILK QUARTZ"/>
-		<material token="INORGANIC:MOONSTONE"/>
-		<material token="INORGANIC:WHITE JADE"/>
-		<material token="INORGANIC:JASPER OPAL"/>
-		<material token="INORGANIC:PINEAPPLE OPAL"/>
-		<material token="INORGANIC:ONYX OPAL"/>
-		<material token="INORGANIC:MILK OPAL"/>
-		<material token="INORGANIC:PIPE OPAL"/>
-		<material token="INORGANIC:AVENTURINE"/>
-		<material token="INORGANIC:TURQUOISE"/>
-		<material token="INORGANIC:QUARTZ_ROSE"/>
-		<material token="INORGANIC:CRYSTAL_ROCK"/>
-		<material token="INORGANIC:BLACK ZIRCON"/>
-		<material token="INORGANIC:BLACK PYROPE"/>
-		<material token="INORGANIC:MELANITE"/>
-		<material token="INORGANIC:INDIGO TOURMALINE"/>
-		<material token="INORGANIC:BLUE GARNET"/>
-		<material token="INORGANIC:TSAVORITE"/>
-		<material token="INORGANIC:GREEN TOURMALINE"/>
-		<material token="INORGANIC:DEMANTOID"/>
-		<material token="INORGANIC:GREEN ZIRCON"/>
-		<material token="INORGANIC:GREEN JADE"/>
-		<material token="INORGANIC:HELIODOR"/>
-		<material token="INORGANIC:PERIDOT"/>
-		<material token="INORGANIC:RED ZIRCON"/>
-		<material token="INORGANIC:RED TOURMALINE"/>
-		<material token="INORGANIC:RED PYROPE"/>
-		<material token="INORGANIC:ALMANDINE"/>
-		<material token="INORGANIC:RED GROSSULAR"/>
-		<material token="INORGANIC:PINK TOURMALINE"/>
-		<material token="INORGANIC:RED BERYL"/>
-		<material token="INORGANIC:FIRE OPAL"/>
-		<material token="INORGANIC:RHODOLITE"/>
-		<material token="INORGANIC:SPINEL_PURPLE"/>
-		<material token="INORGANIC:ALEXANDRITE"/>
-		<material token="INORGANIC:TANZANITE"/>
-		<material token="INORGANIC:MORGANITE"/>
-		<material token="INORGANIC:VIOLET SPESSARTINE"/>
-		<material token="INORGANIC:PINK GARNET"/>
-		<material token="INORGANIC:KUNZITE"/>
-		<material token="INORGANIC:CINNAMON GROSSULAR"/>
-		<material token="INORGANIC:HONEY YELLOW BERYL"/>
-		<material token="INORGANIC:JELLY OPAL"/>
-		<material token="INORGANIC:BROWN ZIRCON"/>
-		<material token="INORGANIC:YELLOW ZIRCON"/>
-		<material token="INORGANIC:GOLDEN BERYL"/>
-		<material token="INORGANIC:YELLOW SPESSARTINE"/>
-		<material token="INORGANIC:TOPAZ"/>
-		<material token="INORGANIC:TOPAZOLITE"/>
-		<material token="INORGANIC:YELLOW GROSSULAR"/>
-		<material token="INORGANIC:RUBICELLE"/>
-		<material token="INORGANIC:CLEAR GARNET"/>
-		<material token="INORGANIC:GOSHENITE"/>
-		<material token="INORGANIC:CAT'S EYE"/>
-		<material token="INORGANIC:CLEAR ZIRCON"/>
-		<material token="INORGANIC:AMETHYST"/>
-		<material token="INORGANIC:AQUAMARINE"/>
-		<material token="INORGANIC:SPINEL_RED"/>
-		<material token="INORGANIC:CHRYSOBERYL"/>
-		<material token="INORGANIC:OPAL_PFIRE"/>
-		<material token="INORGANIC:OPAL_REDFLASH"/>
-		<material token="INORGANIC:OPAL_BLACK"/>
-		<material token="INORGANIC:OPAL_WHITE"/>
-		<material token="INORGANIC:OPAL_CRYSTAL"/>
-		<material token="INORGANIC:OPAL_CLARO"/>
-		<material token="INORGANIC:OPAL_LEVIN"/>
-		<material token="INORGANIC:OPAL_HARLEQUIN"/>
-		<material token="INORGANIC:OPAL_PINFIRE"/>
-		<material token="INORGANIC:OPAL_BANDFIRE"/>
-		<material token="INORGANIC:DIAMOND_LY"/>
-		<material token="INORGANIC:DIAMOND_FY"/>
-		<material token="INORGANIC:EMERALD"/>
-		<material token="INORGANIC:RUBY"/>
-		<material token="INORGANIC:SAPPHIRE"/>
-		<material token="INORGANIC:DIAMOND_CLEAR"/>
-		<material token="INORGANIC:DIAMOND_RED"/>
-		<material token="INORGANIC:DIAMOND_GREEN"/>
-		<material token="INORGANIC:DIAMOND_BLUE"/>
-		<material token="INORGANIC:DIAMOND_YELLOW"/>
-		<material token="INORGANIC:DIAMOND_BLACK"/>
-		<material token="INORGANIC:SAPPHIRE_STAR"/>
-		<material token="INORGANIC:RUBY_STAR"/>
-    </terrainTexture>
+	<terrainTexture normal="Flat_N.png" occlusion="Flat_O.png" alpha="Grey.png">
+		<tiletype token="*:SMOOTH:*:*:*"/>
+	</terrainTexture>
+	<terrainTexture normal="Rough_Normal.png" occlusion="Rough_AO.png" alpha="Rough_Depth.png">
+		<tiletype token="*:*:*:*:*"/>
+		<subObject normal="Sandstone_NRM.png" occlusion="Sandstone_OCC.png" alpha="Sandstone_DISP.png">
+			<material token="INORGANIC:CALCITE"/>
+			<material token="INORGANIC:CHALK"/>
+			<material token="INORGANIC:CHERT"/>
+			<material token="INORGANIC:CLAYSTONE"/>
+			<material token="INORGANIC:CONGLOMERATE"/>
+			<material token="INORGANIC:DOLOMITE"/>
+			<material token="INORGANIC:LIMESTONE"/>
+			<material token="INORGANIC:MUDSTONE"/>
+			<material token="INORGANIC:ROCK_SALT"/>
+			<material token="INORGANIC:SANDSTONE"/>
+			<material token="INORGANIC:SHALE"/>
+			<material token="INORGANIC:SILTSTONE"/>
+		</subObject>
+		<subObject normal="Stone_NRM.png" occlusion="Stone_OCC.png" alpha="Stone_DISP.png">
+			<material token="INORGANIC:GRANITE"/>
+			<material token="INORGANIC:DIORITE"/>
+			<material token="INORGANIC:GABBRO"/>
+		</subObject>
+		<subObject normal="Soil_Normal.png" occlusion="Soil_AO.png" alpha="Soil_Depth.png">
+			<material token="INORGANIC:LOAM"/>
+			<material token="INORGANIC:LOAMY_SAND"/>
+			<material token="INORGANIC:PEAT"/>
+			<material token="INORGANIC:SANDY_CLAY_LOAM"/>
+			<material token="INORGANIC:SANDY_LOAM"/>
+			<material token="INORGANIC:SILT"/>
+			<material token="INORGANIC:SILTY_CLAY_LOAM"/>
+			<material token="INORGANIC:SILT_LOAM"/>
+		</subObject>
+		<subObject normal="Clay_NRM.png" occlusion="Clay_OCC.png" alpha="Clay_DISP.png">
+			<material token="INORGANIC:PELAGIC_CLAY"/>
+			<material token="INORGANIC:CALCAREOUS_OOZE"/>
+			<material token="INORGANIC:SILICEOUS_OOZE"/>
+		</subObject>
+		<subObject normal="Clay_NRM.png" occlusion="Clay_OCC.png" alpha="Clay_DISP.png">
+			<material token="INORGANIC:CLAY"/>
+			<material token="INORGANIC:CLAY_LOAM"/>
+			<material token="INORGANIC:SANDY_CLAY_LOAM"/>
+			<material token="INORGANIC:SILTY_CLAY"/>
+			<material token="INORGANIC:FIRE_CLAY"/>
+		</subObject>
+		<subObject normal="Sand_Normal.png" occlusion="Sand_AO.png" alpha="Sand_Depth.png">
+			<material token="INORGANIC:SAND_TAN"/>
+			<material token="INORGANIC:SAND_BLACK"/>
+			<material token="INORGANIC:SAND_RED"/>
+			<material token="INORGANIC:SAND_WHITE"/>
+			<material token="INORGANIC:SAND_YELLOW"/>
+		</subObject>
+		<subObject normal="Gems_Nrm.png" occlusion="Gems_AO.png" alpha="Gems_Disp.png">
+			<material token="INORGANIC:ONYX"/>
+			<material token="INORGANIC:MORION"/>
+			<material token="INORGANIC:SCHORL"/>
+			<material token="INORGANIC:LACE AGATE"/>
+			<material token="INORGANIC:BLUE JADE"/>
+			<material token="INORGANIC:LAPIS LAZULI"/>
+			<material token="INORGANIC:PRASE"/>
+			<material token="INORGANIC:PRASE OPAL"/>
+			<material token="INORGANIC:BLOODSTONE"/>
+			<material token="INORGANIC:MOSS AGATE"/>
+			<material token="INORGANIC:MOSS OPAL"/>
+			<material token="INORGANIC:VARISCITE"/>
+			<material token="INORGANIC:CHRYSOPRASE"/>
+			<material token="INORGANIC:CHRYSOCOLLA"/>
+			<material token="INORGANIC:SARD"/>
+			<material token="INORGANIC:CARNELIAN"/>
+			<material token="INORGANIC:BANDED AGATE"/>
+			<material token="INORGANIC:SARDONYX"/>
+			<material token="INORGANIC:CHERRY OPAL"/>
+			<material token="INORGANIC:LAVENDER JADE"/>
+			<material token="INORGANIC:PINK JADE"/>
+			<material token="INORGANIC:TUBE AGATE"/>
+			<material token="INORGANIC:FIRE AGATE"/>
+			<material token="INORGANIC:PLUME AGATE"/>
+			<material token="INORGANIC:BROWN JASPER"/>
+			<material token="INORGANIC:PICTURE JASPER"/>
+			<material token="INORGANIC:SMOKY QUARTZ"/>
+			<material token="INORGANIC:WAX OPAL"/>
+			<material token="INORGANIC:WOOD OPAL"/>
+			<material token="INORGANIC:AMBER OPAL"/>
+			<material token="INORGANIC:GOLD OPAL"/>
+			<material token="INORGANIC:CITRINE"/>
+			<material token="INORGANIC:YELLOW JASPER"/>
+			<material token="INORGANIC:TIGEREYE"/>
+			<material token="INORGANIC:TIGER IRON"/>
+			<material token="INORGANIC:SUNSTONE"/>
+			<material token="INORGANIC:RESIN OPAL"/>
+			<material token="INORGANIC:PYRITE"/>
+			<material token="INORGANIC:CLEAR TOURMALINE"/>
+			<material token="INORGANIC:GRAY CHALCEDONY"/>
+			<material token="INORGANIC:DENDRITIC AGATE"/>
+			<material token="INORGANIC:SHELL OPAL"/>
+			<material token="INORGANIC:BONE OPAL"/>
+			<material token="INORGANIC:WHITE CHALCEDONY"/>
+			<material token="INORGANIC:FORTIFICATION AGATE"/>
+			<material token="INORGANIC:MILK QUARTZ"/>
+			<material token="INORGANIC:MOONSTONE"/>
+			<material token="INORGANIC:WHITE JADE"/>
+			<material token="INORGANIC:JASPER OPAL"/>
+			<material token="INORGANIC:PINEAPPLE OPAL"/>
+			<material token="INORGANIC:ONYX OPAL"/>
+			<material token="INORGANIC:MILK OPAL"/>
+			<material token="INORGANIC:PIPE OPAL"/>
+			<material token="INORGANIC:AVENTURINE"/>
+			<material token="INORGANIC:TURQUOISE"/>
+			<material token="INORGANIC:QUARTZ_ROSE"/>
+			<material token="INORGANIC:CRYSTAL_ROCK"/>
+			<material token="INORGANIC:BLACK ZIRCON"/>
+			<material token="INORGANIC:BLACK PYROPE"/>
+			<material token="INORGANIC:MELANITE"/>
+			<material token="INORGANIC:INDIGO TOURMALINE"/>
+			<material token="INORGANIC:BLUE GARNET"/>
+			<material token="INORGANIC:TSAVORITE"/>
+			<material token="INORGANIC:GREEN TOURMALINE"/>
+			<material token="INORGANIC:DEMANTOID"/>
+			<material token="INORGANIC:GREEN ZIRCON"/>
+			<material token="INORGANIC:GREEN JADE"/>
+			<material token="INORGANIC:HELIODOR"/>
+			<material token="INORGANIC:PERIDOT"/>
+			<material token="INORGANIC:RED ZIRCON"/>
+			<material token="INORGANIC:RED TOURMALINE"/>
+			<material token="INORGANIC:RED PYROPE"/>
+			<material token="INORGANIC:ALMANDINE"/>
+			<material token="INORGANIC:RED GROSSULAR"/>
+			<material token="INORGANIC:PINK TOURMALINE"/>
+			<material token="INORGANIC:RED BERYL"/>
+			<material token="INORGANIC:FIRE OPAL"/>
+			<material token="INORGANIC:RHODOLITE"/>
+			<material token="INORGANIC:SPINEL_PURPLE"/>
+			<material token="INORGANIC:ALEXANDRITE"/>
+			<material token="INORGANIC:TANZANITE"/>
+			<material token="INORGANIC:MORGANITE"/>
+			<material token="INORGANIC:VIOLET SPESSARTINE"/>
+			<material token="INORGANIC:PINK GARNET"/>
+			<material token="INORGANIC:KUNZITE"/>
+			<material token="INORGANIC:CINNAMON GROSSULAR"/>
+			<material token="INORGANIC:HONEY YELLOW BERYL"/>
+			<material token="INORGANIC:JELLY OPAL"/>
+			<material token="INORGANIC:BROWN ZIRCON"/>
+			<material token="INORGANIC:YELLOW ZIRCON"/>
+			<material token="INORGANIC:GOLDEN BERYL"/>
+			<material token="INORGANIC:YELLOW SPESSARTINE"/>
+			<material token="INORGANIC:TOPAZ"/>
+			<material token="INORGANIC:TOPAZOLITE"/>
+			<material token="INORGANIC:YELLOW GROSSULAR"/>
+			<material token="INORGANIC:RUBICELLE"/>
+			<material token="INORGANIC:CLEAR GARNET"/>
+			<material token="INORGANIC:GOSHENITE"/>
+			<material token="INORGANIC:CAT'S EYE"/>
+			<material token="INORGANIC:CLEAR ZIRCON"/>
+			<material token="INORGANIC:AMETHYST"/>
+			<material token="INORGANIC:AQUAMARINE"/>
+			<material token="INORGANIC:SPINEL_RED"/>
+			<material token="INORGANIC:CHRYSOBERYL"/>
+			<material token="INORGANIC:OPAL_PFIRE"/>
+			<material token="INORGANIC:OPAL_REDFLASH"/>
+			<material token="INORGANIC:OPAL_BLACK"/>
+			<material token="INORGANIC:OPAL_WHITE"/>
+			<material token="INORGANIC:OPAL_CRYSTAL"/>
+			<material token="INORGANIC:OPAL_CLARO"/>
+			<material token="INORGANIC:OPAL_LEVIN"/>
+			<material token="INORGANIC:OPAL_HARLEQUIN"/>
+			<material token="INORGANIC:OPAL_PINFIRE"/>
+			<material token="INORGANIC:OPAL_BANDFIRE"/>
+			<material token="INORGANIC:DIAMOND_LY"/>
+			<material token="INORGANIC:DIAMOND_FY"/>
+			<material token="INORGANIC:EMERALD"/>
+			<material token="INORGANIC:RUBY"/>
+			<material token="INORGANIC:SAPPHIRE"/>
+			<material token="INORGANIC:DIAMOND_CLEAR"/>
+			<material token="INORGANIC:DIAMOND_RED"/>
+			<material token="INORGANIC:DIAMOND_GREEN"/>
+			<material token="INORGANIC:DIAMOND_BLUE"/>
+			<material token="INORGANIC:DIAMOND_YELLOW"/>
+			<material token="INORGANIC:DIAMOND_BLACK"/>
+			<material token="INORGANIC:SAPPHIRE_STAR"/>
+			<material token="INORGANIC:RUBY_STAR"/>
+		</subObject>
+	</terrainTexture>
 </terrainTextures>
