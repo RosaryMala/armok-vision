@@ -1111,6 +1111,7 @@ public class GameMap : MonoBehaviour
         {
             grassSplatLayers[z] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGHalf, false, true);
             grassSplatLayers[z].filterMode = FilterMode.Point;
+            grassSplatLayers[z].wrapMode = TextureWrapMode.Clamp;
         }
         if (grassSplatLayers[z].width != MapDataStore.MapSize.x || terrainSplatLayers[z].height != MapDataStore.MapSize.y)
             grassSplatLayers[z].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
@@ -1122,6 +1123,7 @@ public class GameMap : MonoBehaviour
         {
             grassTintLayers[z] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGBA32, false, true);
             grassTintLayers[z].filterMode = FilterMode.Point;
+            grassTintLayers[z].wrapMode = TextureWrapMode.Clamp;
         }
         if (grassTintLayers[z].width != MapDataStore.MapSize.x || terrainTintLayers[z].height != MapDataStore.MapSize.y)
             grassTintLayers[z].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
@@ -1146,17 +1148,42 @@ public class GameMap : MonoBehaviour
             {
                 int index = x + (y * MapDataStore.MapSize.x);
                 var tile = MapDataStore.Main[x, y, z];
-                if (tile == null)
+                if (IsNullOrEmpty(tile))
                 {
-                    terrainIndices[index].r = ContentLoader.Instance.DefaultMatTexIndex;
-                    terrainIndices[index].g = ContentLoader.Instance.DefaultShapeTexIndex;
-                    terrainColors[index] = Color.gray;
-                    continue;
+                    if (!IsNullOrEmpty(MapDataStore.Main[x - 1, y, z]))
+                        tile = MapDataStore.Main[x - 1, y, z];
+                    else if (!IsNullOrEmpty(MapDataStore.Main[x, y - 1, z]))
+                        tile = MapDataStore.Main[x, y - 1, z];
+                    else if (!IsNullOrEmpty(MapDataStore.Main[x + 1, y, z]))
+                        tile = MapDataStore.Main[x + 1, y, z];
+                    else if (!IsNullOrEmpty(MapDataStore.Main[x, y + 1, z]))
+                        tile = MapDataStore.Main[x, y + 1, z];
+                    else if (!IsNullOrEmpty(MapDataStore.Main[x - 1, y - 1, z]))
+                        tile = MapDataStore.Main[x - 1, y - 1, z];
+                    else if (!IsNullOrEmpty(MapDataStore.Main[x - 1, y + 1, z]))
+                        tile = MapDataStore.Main[x - 1, y + 1, z];
+                    else if (!IsNullOrEmpty(MapDataStore.Main[x + 1, y - 1, z]))
+                        tile = MapDataStore.Main[x + 1, y - 1, z];
+                    else if (!IsNullOrEmpty(MapDataStore.Main[x + 1, y + 1, z]))
+                        tile = MapDataStore.Main[x + 1, y + 1, z];
+                    else
+                    {
+                        terrainIndices[index].r = ContentLoader.Instance.DefaultMatTexIndex;
+                        terrainIndices[index].g = ContentLoader.Instance.DefaultShapeTexIndex;
+                        terrainColors[index] = Color.gray;
+                        continue;
+                    }
                 }
+                if (tile.shape == TiletypeShape.RAMP_TOP && tile.Down != null)
+                    tile = tile.Down;
 
-                var layer = MeshLayer.LayerMaterial;
-                if (tile.vein_material.mat_index >= 0)
-                    layer = MeshLayer.VeinMaterial;
+                var layer = MeshLayer.BaseMaterial;
+                if (tile.tiletypeMaterial == TiletypeMaterial.GRASS_DARK
+                || tile.tiletypeMaterial == TiletypeMaterial.GRASS_DEAD
+                || tile.tiletypeMaterial == TiletypeMaterial.GRASS_DRY
+                || tile.tiletypeMaterial == TiletypeMaterial.GRASS_LIGHT
+                )
+                    layer = MeshLayer.LayerMaterial;
 
 
                 NormalContent normalContent;
@@ -1183,6 +1210,7 @@ public class GameMap : MonoBehaviour
         {
             terrainSplatLayers[z] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGHalf, false, true);
             terrainSplatLayers[z].filterMode = FilterMode.Point;
+            terrainSplatLayers[z].wrapMode = TextureWrapMode.Clamp;
         }
         if (terrainSplatLayers[z].width != MapDataStore.MapSize.x || terrainSplatLayers[z].height != MapDataStore.MapSize.y)
             terrainSplatLayers[z].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
@@ -1194,6 +1222,7 @@ public class GameMap : MonoBehaviour
         {
             terrainTintLayers[z] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGBA32, false, true);
             terrainTintLayers[z].filterMode = FilterMode.Point;
+            terrainTintLayers[z].wrapMode = TextureWrapMode.Clamp;
         }
         if (terrainTintLayers[z].width != MapDataStore.MapSize.x || terrainTintLayers[z].height != MapDataStore.MapSize.y)
             terrainTintLayers[z].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
@@ -1202,6 +1231,17 @@ public class GameMap : MonoBehaviour
         terrainTintLayers[z].Apply();
 
         UnityEngine.Profiling.Profiler.EndSample();
+    }
+
+    private bool IsNullOrEmpty(MapDataStore.Tile tile)
+    {
+        if (tile == null)
+            return true;
+        if (tile.shape == TiletypeShape.EMPTY)
+            return true;
+        if (tile.shape == TiletypeShape.ENDLESS_PIT)
+            return true;
+        return false;
     }
 
     void GenerateSpatterTexture(int z)
@@ -1275,7 +1315,10 @@ public class GameMap : MonoBehaviour
             }
 
         if (spatterLayers[z] == null)
+        {
             spatterLayers[z] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
+            spatterLayers[z].wrapMode = TextureWrapMode.Clamp;
+        }
         if (spatterLayers[z].width != MapDataStore.MapSize.x || spatterLayers[z].height != MapDataStore.MapSize.y)
             spatterLayers[z].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
 
