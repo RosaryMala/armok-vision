@@ -1185,6 +1185,7 @@ public class GameMap : MonoBehaviour
                 || tile.tiletypeMaterial == TiletypeMaterial.GRASS_DEAD
                 || tile.tiletypeMaterial == TiletypeMaterial.GRASS_DRY
                 || tile.tiletypeMaterial == TiletypeMaterial.GRASS_LIGHT
+                || tile.tiletypeMaterial == TiletypeMaterial.PLANT
                 )
                     layer = MeshLayer.LayerMaterial;
 
