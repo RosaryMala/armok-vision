@@ -87,6 +87,7 @@ public class GameMap : MonoBehaviour
     bool[,,] blockDirtyBits;
     bool[,,] blockContentBits;
     bool[] layerDirtyBits;
+    bool[] grassLayerDirtyBits;
     UpdateSchedule[,,] blockUpdateSchedules;
     bool[,,] liquidBlockDirtyBits;
     bool[] spatterBlockDirtyBits;
@@ -354,8 +355,7 @@ public class GameMap : MonoBehaviour
         UpdateRequestRegion();
         UpdateCreatures();
         UpdateBlocks();
-        UpdateSpatters();
-        UpdateTerrainTextures();
+        UpdateSplatTextures();
         DrawBlocks();
         DrawItems();
     }
@@ -369,8 +369,9 @@ public class GameMap : MonoBehaviour
                     if (blockContentBits[x, y, z])
                     {
                         layerDirtyBits[z] = true;
-                        if (z > 0) 
-                            layerDirtyBits[z - 1] = true; //For ramp edges.
+                        grassLayerDirtyBits[z] = true;
+                        if (z < blockDirtyBits.GetLength(2)-1) 
+                            layerDirtyBits[z + 1] = true; //For ramp edges.
                         spatterBlockDirtyBits[z] = true;
                     }
                     blockDirtyBits[x, y, z] = blockContentBits[x, y, z];
@@ -701,6 +702,7 @@ public class GameMap : MonoBehaviour
         magmaGlow = new Light[blockSizeX * 16, blockSizeY * 16, blockSizeZ];
         spatterBlockDirtyBits = new bool[blockSizeZ];
         layerDirtyBits = new bool[blockSizeZ];
+        grassLayerDirtyBits = new bool[blockSizeZ];
         spatterLayers = new Texture2D[blockSizeZ];
         terrainSplatLayers = new Texture2D[blockSizeZ];
         terrainTintLayers = new Texture2D[blockSizeZ];
@@ -935,7 +937,7 @@ public class GameMap : MonoBehaviour
 
     }
 
-    void UpdateTerrainTextures()
+    void UpdateSplatTextures()
     {
         if (ContentLoader.Instance == null)
             return;
@@ -945,25 +947,20 @@ public class GameMap : MonoBehaviour
             if (layerDirtyBits[z])
             {
                 GenerateTerrainTexture(z);
-                GenerateGrassTexture(z);
                 layerDirtyBits[z] = false;
                 break; //don't do more than one set per frame.
             }
-        }
-        UnityEngine.Profiling.Profiler.EndSample();
-    }
-
-    void UpdateSpatters()
-    {
-        if (ContentLoader.Instance == null)
-            return;
-        UnityEngine.Profiling.Profiler.BeginSample("UpdateSpatters", this);
-        for (int z = spatterBlockDirtyBits.Length - 1; z >= 0; z--)
-        {
+            if(grassLayerDirtyBits[z])
+            {
+                GenerateGrassTexture(z);
+                grassLayerDirtyBits[z] = false;
+                break;
+            }
             if (spatterBlockDirtyBits[z])
             {
                 GenerateSpatterTexture(z);
                 spatterBlockDirtyBits[z] = false;
+                break;
             }
         }
         UnityEngine.Profiling.Profiler.EndSample();
