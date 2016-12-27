@@ -369,6 +369,8 @@ public class GameMap : MonoBehaviour
                     if (blockContentBits[x, y, z])
                     {
                         layerDirtyBits[z] = true;
+                        if (z > 0) 
+                            layerDirtyBits[z - 1] = true; //For ramp edges.
                         spatterBlockDirtyBits[z] = true;
                     }
                     blockDirtyBits[x, y, z] = blockContentBits[x, y, z];
@@ -945,6 +947,7 @@ public class GameMap : MonoBehaviour
                 GenerateTerrainTexture(z);
                 GenerateGrassTexture(z);
                 layerDirtyBits[z] = false;
+                break; //don't do more than one set per frame.
             }
         }
         UnityEngine.Profiling.Profiler.EndSample();
