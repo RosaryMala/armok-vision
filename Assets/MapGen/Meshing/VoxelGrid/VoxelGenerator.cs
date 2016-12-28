@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using RemoteFortressReader;
+using Poly2Tri;
 using DFHack;
 
 public class VoxelGenerator
@@ -89,7 +90,14 @@ public class VoxelGenerator
         colors.Clear();
         triangles.Clear();
 
+        wallPolygons.Clear();
+        floorPolygons.Clear();
+
         TriangulateCellRows();
+
+        ConvertToMesh(wallPolygons.Polygons, GameMap.tileHeight);
+        ConvertToMesh(floorPolygons.Polygons, GameMap.floorHeight);
+
     }
 
     private void TriangulateCellRows()
@@ -376,9 +384,9 @@ public class VoxelGenerator
         if ((edges & Directions.NorthWest) != Directions.NorthWest)
         {
             if ((walls & Directions.NorthWest) == Directions.NorthWest)
-                AddCorner(west, north, center, corner, WallType.Both);
+                AddCorner(wallPolygons, west, north, center, corner, WallType.Both);
             else
-                AddCorner(west, north, center, corner, WallType.Floor);
+                AddCorner(floorPolygons, west, north, center, corner, WallType.Floor);
 
         }
     }
@@ -397,19 +405,19 @@ public class VoxelGenerator
                 {
                     case Directions.NorthWest:
                         if (corner == CornerType.Square)
-                            AddCorner(west, north, center, corner, WallType.Wall);
+                            AddCorner(wallPolygons, west, north, center, corner, WallType.Wall);
                         else
                         {
-                            AddCorner(west, north, center, corner, WallType.Wall);
-                            AddCorner(northPoint, westPoint, center, corner, WallType.None);
-                            AddCorner(westPoint, northPoint, center, CornerType.Square, WallType.Floor);
+                            AddCorner(wallPolygons, west, north, center, corner, WallType.Wall);
+                            AddCorner(floorPolygons, northPoint, westPoint, center, corner, WallType.None);
+                            AddCorner(floorPolygons, westPoint, northPoint, center, CornerType.Square, WallType.Floor);
                         }
                         break;
                     case Directions.North:
-                        AddCorner(west, north, center, CornerType.Square, WallType.Both);
+                        AddCorner(wallPolygons, west, north, center, CornerType.Square, WallType.Both);
                         break;
                     default:
-                        AddCorner(west, north, center, CornerType.Square, WallType.Floor);
+                        AddCorner(floorPolygons, west, north, center, CornerType.Square, WallType.Floor);
                         break;
                 }
                 break;
@@ -418,19 +426,19 @@ public class VoxelGenerator
                 {
                     case Directions.NorthEast:
                         if (corner == CornerType.Square)
-                            AddCorner(north, east, center, corner, WallType.Both);
+                            AddCorner(wallPolygons, north, east, center, corner, WallType.Both);
                         else
                         {
-                            AddCorner(north, east, center, corner, WallType.Both);
-                            AddCorner(eastPoint, northPoint, center, corner, WallType.Both);
-                            AddCorner(northPoint, eastPoint, center, CornerType.Square, WallType.Floor);
+                            AddCorner(wallPolygons, north, east, center, corner, WallType.Both);
+                            AddCorner(floorPolygons, eastPoint, northPoint, center, corner, WallType.Both);
+                            AddCorner(floorPolygons, northPoint, eastPoint, center, CornerType.Square, WallType.Floor);
                         }
                         break;
                     case Directions.North:
-                        AddCorner(north, east, center, CornerType.Square, WallType.Both);
+                        AddCorner(wallPolygons, north, east, center, CornerType.Square, WallType.Both);
                         break;
                     default:
-                        AddCorner(north, east, center, CornerType.Square, WallType.Floor);
+                        AddCorner(floorPolygons, north, east, center, CornerType.Square, WallType.Floor);
                         break;
                 }
                 break;
@@ -438,21 +446,21 @@ public class VoxelGenerator
                 switch (walls)
                 {
                     case Directions.North:
-                        AddStraight(west, east, WallType.Both);
+                        AddStraight(wallPolygons, west, east, WallType.Both);
                         break;
                     case Directions.NorthWest:
                         //Todo: convert these to simple segments if the corners are square
-                        AddStraight(westPoint, east, WallType.Floor);
-                        AddCorner(north, westPoint, center, corner, WallType.None);
-                        AddCorner(west, north, center, corner, WallType.Wall);
+                        AddStraight(floorPolygons, westPoint, east, WallType.Floor);
+                        AddCorner(floorPolygons, north, westPoint, center, corner, WallType.None);
+                        AddCorner(wallPolygons, west, north, center, corner, WallType.Wall);
                         break;
                     case Directions.NorthEast:
-                        AddStraight(west, eastPoint, WallType.Floor);
-                        AddCorner(eastPoint, north, center, corner, WallType.None);
-                        AddCorner(north, east, center, corner, WallType.Wall);
+                        AddStraight(floorPolygons, west, eastPoint, WallType.Floor);
+                        AddCorner(floorPolygons, eastPoint, north, center, corner, WallType.None);
+                        AddCorner(wallPolygons, north, east, center, corner, WallType.Wall);
                         break;
                     default:
-                        AddStraight(west, east, WallType.Floor);
+                        AddStraight(floorPolygons, west, east, WallType.Floor);
                         break;
                 }
                 break;
@@ -481,38 +489,38 @@ public class VoxelGenerator
                     case Directions.SouthWest | Directions.NorthEast:
                         if (corner == CornerType.Square)
                         {
-                            AddCorner(south, west, center, corner, WallType.Both);
+                            AddCorner(wallPolygons, south, west, center, corner, WallType.Both);
                         }
                         else
                         {
-                            AddCorner(south, eastPoint, center, corner, WallType.Floor);
-                            AddStraight(eastPoint, westPoint, WallType.Floor);
-                            AddCorner(westPoint, south, center, corner, WallType.None);
-                            AddCorner(south, west, center, corner, WallType.Wall);
+                            AddCorner(floorPolygons, south, eastPoint, center, corner, WallType.Floor);
+                            AddStraight(floorPolygons, eastPoint, westPoint, WallType.Floor);
+                            AddCorner(floorPolygons, westPoint, south, center, corner, WallType.None);
+                            AddCorner(wallPolygons, south, west, center, corner, WallType.Wall);
                         }
                         break;
                     case Directions.West:
                         if (corner == CornerType.Square)
                         {
-                            AddCorner(south, west, center, corner, WallType.Both);
+                            AddCorner(wallPolygons, south, west, center, corner, WallType.Both);
                         }
                         else
                         {
-                            AddCorner(south, west, center, CornerType.Square, WallType.Both);
-                            AddCorner(eastPoint, southPoint, center, CornerType.Square, WallType.Floor);
-                            AddCorner(southPoint, eastPoint, center, corner, WallType.Floor);
+                            AddCorner(wallPolygons, south, west, center, CornerType.Square, WallType.Both);
+                            AddCorner(floorPolygons, eastPoint, southPoint, center, CornerType.Square, WallType.Floor);
+                            AddCorner(floorPolygons, southPoint, eastPoint, center, corner, WallType.Floor);
                         }
                         break;
                     case Directions.West | Directions.North:
-                        AddCorner(south, eastPoint, center, corner, WallType.Both);
-                        AddStraight(eastPoint, west, WallType.Both);
+                        AddCorner(wallPolygons, south, eastPoint, center, corner, WallType.Both);
+                        AddStraight(wallPolygons, eastPoint, west, WallType.Both);
                         break;
                     case Directions.NorthWest:
                     case Directions.NorthEast:
                     case Directions.North:
                     default:
-                        AddCorner(south, eastPoint, center, corner, WallType.Floor);
-                        AddStraight(eastPoint, west, WallType.Floor);
+                        AddCorner(floorPolygons, south, eastPoint, center, corner, WallType.Floor);
+                        AddStraight(floorPolygons, eastPoint, west, WallType.Floor);
                         break;
                 }
                 break;
@@ -523,38 +531,38 @@ public class VoxelGenerator
                     case Directions.NorthEast | Directions.SouthWest:
                         if (corner == CornerType.Square)
                         {
-                            AddCorner(north, east, center, corner, WallType.Both);
+                            AddCorner(wallPolygons, north, east, center, corner, WallType.Both);
                         }
                         else
                         {
-                            AddStraight(northPoint, southPoint, WallType.Floor);
-                            AddCorner(southPoint, eastPoint, center, corner, WallType.Floor);
-                            AddCorner(eastPoint, northPoint, center, corner, WallType.None);
-                            AddCorner(north, east, center, corner, WallType.Wall);
+                            AddStraight(floorPolygons, northPoint, southPoint, WallType.Floor);
+                            AddCorner(floorPolygons, southPoint, eastPoint, center, corner, WallType.Floor);
+                            AddCorner(floorPolygons, eastPoint, northPoint, center, corner, WallType.None);
+                            AddCorner(wallPolygons, north, east, center, corner, WallType.Wall);
                         }
                         break;
                     case Directions.North:
                         if (corner == CornerType.Square)
                         {
-                            AddCorner(north, east, center, corner, WallType.Both);
+                            AddCorner(wallPolygons, north, east, center, corner, WallType.Both);
                         }
                         else
                         {
-                            AddCorner(southPoint, eastPoint, center, corner, WallType.Floor);
-                            AddCorner(eastPoint, southPoint, center, CornerType.Square, WallType.None);
-                            AddCorner(north, east, center, CornerType.Square, WallType.Both);
+                            AddCorner(floorPolygons, southPoint, eastPoint, center, corner, WallType.Floor);
+                            AddCorner(floorPolygons, eastPoint, southPoint, center, CornerType.Square, WallType.None);
+                            AddCorner(wallPolygons, north, east, center, CornerType.Square, WallType.Both);
                         }
                         break;
                     case Directions.North | Directions.West:
-                        AddStraight(north, southPoint, WallType.Both);
-                        AddCorner(southPoint, east, center, corner, WallType.Both);
+                        AddStraight(wallPolygons, north, southPoint, WallType.Both);
+                        AddCorner(wallPolygons, southPoint, east, center, corner, WallType.Both);
                         break;
                     case Directions.NorthWest:
                     case Directions.SouthWest:
                     case Directions.West:
                     default:
-                        AddStraight(north, southPoint, WallType.Floor);
-                        AddCorner(southPoint, east, center, corner, WallType.Floor);
+                        AddStraight(floorPolygons, north, southPoint, WallType.Floor);
+                        AddCorner(floorPolygons, southPoint, east, center, corner, WallType.Floor);
                         break;
                 }
                 break;
@@ -564,8 +572,8 @@ public class VoxelGenerator
                     case Directions.North | Directions.West:
                         if (corner != CornerType.Square)
                         {
-                            AddCorner(southPoint, eastPoint, center, corner, WallType.Both);
-                            AddCorner(eastPoint, southPoint, center, CornerType.Square, WallType.Both);
+                            AddCorner(wallPolygons, southPoint, eastPoint, center, corner, WallType.Both);
+                            AddCorner(wallPolygons, eastPoint, southPoint, center, CornerType.Square, WallType.Both);
                         }
                         break;
                     case Directions.NorthWest:
@@ -577,8 +585,8 @@ public class VoxelGenerator
                     default:
                         if (corner != CornerType.Square)
                         {
-                            AddCorner(southPoint, eastPoint, center, corner, WallType.Floor);
-                            AddCorner(eastPoint, southPoint, center, CornerType.Square, WallType.Floor);
+                            AddCorner(floorPolygons, southPoint, eastPoint, center, corner, WallType.Floor);
+                            AddCorner(floorPolygons, eastPoint, southPoint, center, CornerType.Square, WallType.Floor);
                         }
                         break;
                 }
@@ -588,24 +596,24 @@ public class VoxelGenerator
                 {
                     case Directions.West:
                     case Directions.North | Directions.West:
-                        AddCorner(south, west, center, CornerType.Square, WallType.Both);
+                        AddCorner(wallPolygons, south, west, center, CornerType.Square, WallType.Both);
                         break;
                     case Directions.SouthWest:
                     case Directions.NorthEast | Directions.SouthWest:
                         if (corner == CornerType.Square)
-                            AddCorner(south, west, center, CornerType.Square, WallType.Both);
+                            AddCorner(wallPolygons, south, west, center, CornerType.Square, WallType.Both);
                         else
                         {
-                            AddCorner(south, west, center, corner, WallType.Wall);
-                            AddCorner(westPoint, southPoint, center, corner, WallType.None);
-                            AddCorner(southPoint, westPoint, center, CornerType.Square, WallType.Floor);
+                            AddCorner(wallPolygons, south, west, center, corner, WallType.Wall);
+                            AddCorner(floorPolygons, westPoint, southPoint, center, corner, WallType.None);
+                            AddCorner(floorPolygons, southPoint, westPoint, center, CornerType.Square, WallType.Floor);
                         }
                         break;
                     case Directions.NorthWest:
                     case Directions.NorthEast:
                     case Directions.North:
                     default:
-                        AddCorner(south, west, center, CornerType.Square, WallType.Floor);
+                        AddCorner(floorPolygons, south, west, center, CornerType.Square, WallType.Floor);
                         break;
                 }
                 break;
@@ -615,23 +623,23 @@ public class VoxelGenerator
                     case Directions.North | Directions.West:
                     case Directions.North:
                     case Directions.West:
-                        AddCorner(west, north, center, CornerType.Square, WallType.Both);
+                        AddCorner(wallPolygons, west, north, center, CornerType.Square, WallType.Both);
                         break;
                     case Directions.NorthWest:
                         if (corner == CornerType.Square)
-                            AddCorner(west, north, center, CornerType.Square, WallType.Both);
+                            AddCorner(wallPolygons, west, north, center, CornerType.Square, WallType.Both);
                         else
                         {
-                            AddCorner(west, north, center, corner, WallType.Wall);
-                            AddCorner(northPoint, westPoint, center, corner, WallType.None);
-                            AddCorner(westPoint, northPoint, center, CornerType.Square, WallType.Floor);
+                            AddCorner(wallPolygons, west, north, center, corner, WallType.Wall);
+                            AddCorner(floorPolygons, northPoint, westPoint, center, corner, WallType.None);
+                            AddCorner(floorPolygons, westPoint, northPoint, center, CornerType.Square, WallType.Floor);
                         }
                         break;
                     case Directions.NorthEast:
                     case Directions.SouthWest:
                     case Directions.NorthEast | Directions.SouthWest:
                     default:
-                        AddCorner(west, north, center, CornerType.Square, WallType.Floor);
+                        AddCorner(floorPolygons, west, north, center, CornerType.Square, WallType.Floor);
                         break;
                 }
                 break;
@@ -640,24 +648,24 @@ public class VoxelGenerator
                 {
                     case Directions.North | Directions.West:
                     case Directions.North:
-                        AddCorner(north, east, center, CornerType.Square, WallType.Both);
+                        AddCorner(wallPolygons, north, east, center, CornerType.Square, WallType.Both);
                         break;
                     case Directions.NorthEast:
                     case Directions.NorthEast | Directions.SouthWest:
                         if (corner == CornerType.Square)
-                            AddCorner(north, east, center, corner, WallType.Both);
+                            AddCorner(wallPolygons, north, east, center, corner, WallType.Both);
                         else
                         {
-                            AddCorner(north, east, center, corner, WallType.Both);
-                            AddCorner(eastPoint, northPoint, center, corner, WallType.None);
-                            AddCorner(northPoint, eastPoint, center, CornerType.Square, WallType.Floor);
+                            AddCorner(wallPolygons, north, east, center, corner, WallType.Both);
+                            AddCorner(floorPolygons, eastPoint, northPoint, center, corner, WallType.None);
+                            AddCorner(floorPolygons, northPoint, eastPoint, center, CornerType.Square, WallType.Floor);
                         }
                         break;
                     case Directions.NorthWest:
                     case Directions.SouthWest:
                     case Directions.West:
                     default:
-                        AddCorner(north, east, center, CornerType.Square, WallType.Floor);
+                        AddCorner(floorPolygons, north, east, center, CornerType.Square, WallType.Floor);
                         break;
                 }
                 break;
@@ -666,42 +674,42 @@ public class VoxelGenerator
                     switch (walls)
                     {
                         case Directions.NorthWest:
-                            AddCorner(west, north, center, corner, WallType.Wall);
-                            AddCorner(north, west, center, corner, WallType.None);
-                            AddCorner(south, east, center, corner, WallType.Floor);
+                            AddCorner(wallPolygons, west, north, center, corner, WallType.Wall);
+                            AddCorner(floorPolygons, north, west, center, corner, WallType.None);
+                            AddCorner(floorPolygons, south, east, center, corner, WallType.Floor);
                             break;
                         case Directions.NorthEast:
-                            AddCorner(north, east, center, corner, WallType.Wall);
-                            AddCorner(eastPoint, north, center, corner, WallType.None);
-                            AddCorner(south, eastPoint, center, corner, WallType.Floor);
+                            AddCorner(wallPolygons, north, east, center, corner, WallType.Wall);
+                            AddCorner(floorPolygons, eastPoint, north, center, corner, WallType.None);
+                            AddCorner(floorPolygons, south, eastPoint, center, corner, WallType.Floor);
                             break;
                         case Directions.SouthWest:
-                            AddCorner(south, west, center, corner, WallType.Wall);
-                            AddCorner(west, southPoint, center, corner, WallType.None);
-                            AddCorner(southPoint, east, center, corner, WallType.Floor);
+                            AddCorner(wallPolygons, south, west, center, corner, WallType.Wall);
+                            AddCorner(floorPolygons, west, southPoint, center, corner, WallType.None);
+                            AddCorner(floorPolygons, southPoint, east, center, corner, WallType.Floor);
                             break;
                         case Directions.North:
-                            AddStraight(west, east, WallType.Wall);
-                            AddStraight(eastPoint, west, WallType.None);
-                            AddCorner(south, eastPoint, center, corner, WallType.Floor);
+                            AddStraight(wallPolygons, west, east, WallType.Wall);
+                            AddStraight(floorPolygons, eastPoint, west, WallType.None);
+                            AddCorner(floorPolygons, south, eastPoint, center, corner, WallType.Floor);
                             break;
                         case Directions.West:
-                            AddStraight(south, north, WallType.Wall);
-                            AddStraight(north, southPoint, WallType.None);
-                            AddCorner(southPoint, east, center, corner, WallType.Floor);
+                            AddStraight(wallPolygons, south, north, WallType.Wall);
+                            AddStraight(floorPolygons, north, southPoint, WallType.None);
+                            AddCorner(floorPolygons, southPoint, east, center, corner, WallType.Floor);
                             break;
                         case Directions.NorthEast | Directions.SouthWest:
-                            AddCorner(north, east, center, corner, WallType.Wall);
-                            AddCorner(south, west, center, corner, WallType.Wall);
-                            AddCorner(west, southPoint, center, corner, WallType.None);
-                            AddCorner(southPoint, eastPoint, center, corner, WallType.Floor);
-                            AddCorner(eastPoint, north, center, corner, WallType.None);
+                            AddCorner(wallPolygons, north, east, center, corner, WallType.Wall);
+                            AddCorner(wallPolygons, south, west, center, corner, WallType.Wall);
+                            AddCorner(floorPolygons, west, southPoint, center, corner, WallType.None);
+                            AddCorner(floorPolygons, southPoint, eastPoint, center, corner, WallType.Floor);
+                            AddCorner(floorPolygons, eastPoint, north, center, corner, WallType.None);
                             break;
                         case Directions.North | Directions.West:
-                            AddCorner(south, east, center, corner, WallType.Both);
+                            AddCorner(wallPolygons, south, east, center, corner, WallType.Both);
                             break;
                         default:
-                            AddCorner(south, east, center, corner, WallType.Floor);
+                            AddCorner(floorPolygons, south, east, center, corner, WallType.Floor);
                             break;
                     }
                 }
@@ -725,10 +733,10 @@ public class VoxelGenerator
                 {
                     case Directions.NorthWest | Directions.SouthEast:
                     case Directions.SouthEast:
-                        AddCorner(east, south, center, corner, WallType.Both);
+                        AddCorner(wallPolygons, east, south, center, corner, WallType.Both);
                         break;
                     default:
-                        AddCorner(east, south, center, corner, WallType.Floor);
+                        AddCorner(floorPolygons, east, south, center, corner, WallType.Floor);
                         break;
                 }
                 break;
@@ -739,10 +747,10 @@ public class VoxelGenerator
                 {
                     case Directions.NorthWest | Directions.SouthEast:
                     case Directions.NorthWest:
-                        AddCorner(west, north, center, corner, WallType.Both);
+                        AddCorner(wallPolygons, west, north, center, corner, WallType.Both);
                         break;
                     default:
-                        AddCorner(west, north, center, corner, WallType.Floor);
+                        AddCorner(floorPolygons, west, north, center, corner, WallType.Floor);
                         break;
                 }
                 break;
@@ -750,20 +758,20 @@ public class VoxelGenerator
                 switch (walls)
                 {
                     case Directions.NorthWest | Directions.SouthEast:
-                        AddCorner(east, south, center, corner, WallType.Both);
-                        AddCorner(west, north, center, corner, WallType.Both);
+                        AddCorner(wallPolygons, east, south, center, corner, WallType.Both);
+                        AddCorner(wallPolygons, west, north, center, corner, WallType.Both);
                         break;
                     case Directions.NorthWest:
-                        AddCorner(east, south, center, corner, WallType.Floor);
-                        AddCorner(west, north, center, corner, WallType.Both);
+                        AddCorner(floorPolygons, east, south, center, corner, WallType.Floor);
+                        AddCorner(wallPolygons, west, north, center, corner, WallType.Both);
                         break;
                     case Directions.SouthEast:
-                        AddCorner(east, south, center, corner, WallType.Both);
-                        AddCorner(west, north, center, corner, WallType.Floor);
+                        AddCorner(wallPolygons, east, south, center, corner, WallType.Both);
+                        AddCorner(floorPolygons, west, north, center, corner, WallType.Floor);
                         break;
                     default:
-                        AddCorner(east, south, center, corner, WallType.Floor);
-                        AddCorner(west, north, center, corner, WallType.Floor);
+                        AddCorner(floorPolygons, east, south, center, corner, WallType.Floor);
+                        AddCorner(floorPolygons, west, north, center, corner, WallType.Floor);
                         break;
                 }
                 break;
@@ -816,31 +824,31 @@ public class VoxelGenerator
                     case Directions.West | Directions.North:
                         if (corner == CornerType.Square)
                         {
-                            AddCorner(south, west, center, corner, WallType.Both);
-                            AddCorner(east, south, center, corner, WallType.Floor);
+                            AddCorner(wallPolygons, south, west, center, corner, WallType.Both);
+                            AddCorner(floorPolygons, east, south, center, corner, WallType.Floor);
                         }
                         else
                         {
-                            AddCorner(south, eastPoint, center, corner, WallType.Wall);
-                            AddStraight(eastPoint, west, WallType.Both);
-                            AddCorner(east, south, center, corner, WallType.None);
+                            AddCorner(wallPolygons, south, eastPoint, center, corner, WallType.Wall);
+                            AddStraight(wallPolygons, eastPoint, west, WallType.Both);
+                            AddCorner(floorPolygons, east, south, center, corner, WallType.None);
                         }
                         break;
                     case Directions.NorthWest | Directions.SouthEast:
                         if (OpenedDiagonals)
                             corner = CornerType.Diamond;
 
-                        AddCorner(east, south, center, corner, WallType.Wall);
-                        AddCorner(south, eastPoint, center, corner, WallType.None);
-                        AddStraight(eastPoint, west, WallType.Floor);
+                        AddCorner(wallPolygons, east, south, center, corner, WallType.Wall);
+                        AddCorner(floorPolygons, south, eastPoint, center, corner, WallType.None);
+                        AddStraight(floorPolygons, eastPoint, west, WallType.Floor);
                         break;
                     case Directions.All:
-                        AddStraight(east, west, WallType.Both);
+                        AddStraight(wallPolygons, east, west, WallType.Both);
                         break;
                     case Directions.North:
                     case Directions.NorthWest:
                     default:
-                        AddStraight(east, west, WallType.Floor);
+                        AddStraight(floorPolygons, east, west, WallType.Floor);
                         break;
                 }
                 break;
@@ -848,25 +856,25 @@ public class VoxelGenerator
                 switch (walls)
                 {
                     case Directions.NorthWest:
-                        AddCorner(west, north, center, corner, WallType.Wall);
-                        AddCorner(north, westPoint, center, corner, WallType.None);
-                        AddStraight(westPoint, east, WallType.Floor);
+                        AddCorner(wallPolygons, west, north, center, corner, WallType.Wall);
+                        AddCorner(floorPolygons, north, westPoint, center, corner, WallType.None);
+                        AddStraight(floorPolygons, westPoint, east, WallType.Floor);
                         break;
                     case Directions.NorthWest | Directions.SouthEast:
                         if (OpenedDiagonals)
                             corner = CornerType.Diamond;
 
-                        AddCorner(west, north, center, corner, WallType.Wall);
-                        AddCorner(north, westPoint, center, corner, WallType.None);
-                        AddStraight(westPoint, east, WallType.Floor);
+                        AddCorner(wallPolygons, west, north, center, corner, WallType.Wall);
+                        AddCorner(floorPolygons, north, westPoint, center, corner, WallType.None);
+                        AddStraight(floorPolygons, westPoint, east, WallType.Floor);
                         break;
                     case Directions.West | Directions.North:
                     case Directions.North:
                     case Directions.All:
-                        AddStraight(west, east, WallType.Both);
+                        AddStraight(wallPolygons, west, east, WallType.Both);
                         break;
                     default:
-                        AddStraight(west, east, WallType.Floor);
+                        AddStraight(floorPolygons, west, east, WallType.Floor);
                         break;
                 }
                 break;
@@ -874,28 +882,28 @@ public class VoxelGenerator
                 switch (walls)
                 {
                     case Directions.NorthWest:
-                        AddCorner(west, north, center, corner, WallType.Wall);
-                        AddStraight(south, northPoint, WallType.Floor);
-                        AddCorner(northPoint, west, center, corner, WallType.None);
+                        AddCorner(wallPolygons, west, north, center, corner, WallType.Wall);
+                        AddStraight(floorPolygons, south, northPoint, WallType.Floor);
+                        AddCorner(floorPolygons, northPoint, west, center, corner, WallType.None);
                         break;
                     case Directions.North:
-                        AddCorner(west, north, center, CornerType.Square, WallType.Both);
-                        AddCorner(south, west, center, CornerType.Square, WallType.Floor);
+                        AddCorner(wallPolygons, west, north, center, CornerType.Square, WallType.Both);
+                        AddCorner(floorPolygons, south, west, center, CornerType.Square, WallType.Floor);
                         break;
                     case Directions.NorthWest | Directions.SouthEast:
                         if (OpenedDiagonals)
                             corner = CornerType.Diamond;
 
-                        AddCorner(west, north, center, corner, WallType.Wall);
-                        AddStraight(south, northPoint, WallType.Floor);
-                        AddCorner(northPoint, west, center, corner, WallType.None);
+                        AddCorner(wallPolygons, west, north, center, corner, WallType.Wall);
+                        AddStraight(floorPolygons, south, northPoint, WallType.Floor);
+                        AddCorner(floorPolygons, northPoint, west, center, corner, WallType.None);
                         break;
                     case Directions.West | Directions.North:
                     case Directions.All:
-                        AddStraight(south, north, WallType.Both);
+                        AddStraight(wallPolygons, south, north, WallType.Both);
                         break;
                     default:
-                        AddStraight(south, north, WallType.Floor);
+                        AddStraight(floorPolygons, south, north, WallType.Floor);
                         break;
                 }
                 break;
@@ -903,27 +911,27 @@ public class VoxelGenerator
                 switch (walls)
                 {
                     case Directions.North:
-                        AddCorner(north, east, center, CornerType.Square, WallType.Both);
-                        AddCorner(east, south, center, CornerType.Square, WallType.Floor);
+                        AddCorner(wallPolygons, north, east, center, CornerType.Square, WallType.Both);
+                        AddCorner(floorPolygons, east, south, center, CornerType.Square, WallType.Floor);
                         break;
                     case Directions.West | Directions.North:
-                        AddStraight(north, southPoint, WallType.Both);
-                        AddCorner(southPoint, east, center, corner, WallType.Wall);
-                        AddCorner(east, south, center, corner, WallType.None);
+                        AddStraight(wallPolygons, north, southPoint, WallType.Both);
+                        AddCorner(wallPolygons, southPoint, east, center, corner, WallType.Wall);
+                        AddCorner(floorPolygons, east, south, center, corner, WallType.None);
                         break;
                     case Directions.NorthWest | Directions.SouthEast:
                         if (OpenedDiagonals)
                             corner = CornerType.Diamond;
-                        AddCorner(east, south, center, corner, WallType.Wall);
-                        AddCorner(south, east, center, corner, WallType.None);
-                        AddStraight(north, south, WallType.Floor);
+                        AddCorner(wallPolygons, east, south, center, corner, WallType.Wall);
+                        AddCorner(floorPolygons, south, east, center, corner, WallType.None);
+                        AddStraight(floorPolygons, north, south, WallType.Floor);
                         break;
                     case Directions.All:
-                        AddStraight(north, south, WallType.Both);
+                        AddStraight(wallPolygons, north, south, WallType.Both);
                         break;
                     case Directions.NorthWest:
                     default:
-                        AddStraight(north, south, WallType.Floor);
+                        AddStraight(floorPolygons, north, south, WallType.Floor);
                         break;
                 }
                 break;
@@ -931,29 +939,29 @@ public class VoxelGenerator
                 switch (walls)
                 {
                     case Directions.West | Directions.North:
-                        AddCorner(eastPoint, southPoint, center, CornerType.Square, WallType.Both);
-                        AddCorner(southPoint, eastPoint, center, corner, WallType.None);
-                        AddCorner(east, south, center, corner, WallType.Floor);
+                        AddCorner(wallPolygons, eastPoint, southPoint, center, CornerType.Square, WallType.Both);
+                        AddCorner(wallPolygons, southPoint, eastPoint, center, corner, WallType.None);
+                        AddCorner(floorPolygons, east, south, center, corner, WallType.Floor);
                         break;
                     case Directions.NorthWest | Directions.SouthEast:
                         if (corner == CornerType.Square)
                         {
-                            AddCorner(east, south, center, corner, WallType.Wall);
+                            AddCorner(wallPolygons, east, south, center, corner, WallType.Wall);
                         }
                         else
                         {
-                            AddCorner(eastPoint, southPoint, center, CornerType.Square, WallType.Floor);
-                            AddCorner(southPoint, eastPoint, center, corner, WallType.None);
-                            AddCorner(east, south, center, corner, WallType.Wall);
+                            AddCorner(floorPolygons, eastPoint, southPoint, center, CornerType.Square, WallType.Floor);
+                            AddCorner(floorPolygons, southPoint, eastPoint, center, corner, WallType.None);
+                            AddCorner(wallPolygons, east, south, center, corner, WallType.Wall);
                         }
                         break;
                     case Directions.All:
-                        AddCorner(east, south, center, CornerType.Square, WallType.Both);
+                        AddCorner(wallPolygons, east, south, center, CornerType.Square, WallType.Both);
                         break;
                     case Directions.North:
                     case Directions.NorthWest:
                     default:
-                        AddCorner(east, south, center, CornerType.Square, WallType.Floor);
+                        AddCorner(floorPolygons, east, south, center, CornerType.Square, WallType.Floor);
                         break;
                 }
                 break;
@@ -962,13 +970,13 @@ public class VoxelGenerator
                 {
                     case Directions.West | Directions.North:
                     case Directions.All:
-                        AddCorner(south, west, center, CornerType.Square, WallType.Both);
+                        AddCorner(wallPolygons, south, west, center, CornerType.Square, WallType.Both);
                         break;
                     case Directions.North:
                     case Directions.NorthWest:
                     case Directions.NorthWest | Directions.SouthEast:
                     default:
-                        AddCorner(south, west, center, CornerType.Square, WallType.Floor);
+                        AddCorner(floorPolygons, south, west, center, CornerType.Square, WallType.Floor);
                         break;
                 }
                 break;
@@ -977,17 +985,17 @@ public class VoxelGenerator
                 {
                     case Directions.NorthWest | Directions.SouthEast:
                     case Directions.NorthWest:
-                        AddCorner(west, north, center, corner, WallType.Wall);
-                        AddCorner(northPoint, westPoint, center, corner, WallType.None);
-                        AddCorner(westPoint, northPoint, center, CornerType.Square, WallType.Floor);
+                        AddCorner(wallPolygons, west, north, center, corner, WallType.Wall);
+                        AddCorner(floorPolygons, northPoint, westPoint, center, corner, WallType.None);
+                        AddCorner(floorPolygons, westPoint, northPoint, center, CornerType.Square, WallType.Floor);
                         break;
                     case Directions.North:
                     case Directions.West | Directions.North:
                     case Directions.All:
-                        AddCorner(west, north, center, CornerType.Square, WallType.Both);
+                        AddCorner(wallPolygons, west, north, center, CornerType.Square, WallType.Both);
                         break;
                     default:
-                        AddCorner(west, north, center, CornerType.Square, WallType.Floor);
+                        AddCorner(floorPolygons, west, north, center, CornerType.Square, WallType.Floor);
                         break;
                 }
                 break;
@@ -997,12 +1005,12 @@ public class VoxelGenerator
                     case Directions.North:
                     case Directions.West | Directions.North:
                     case Directions.All:
-                        AddCorner(north, east, center, CornerType.Square, WallType.Both);
+                        AddCorner(wallPolygons, north, east, center, CornerType.Square, WallType.Both);
                         break;
                     case Directions.NorthWest | Directions.SouthEast:
                     case Directions.NorthWest:
                     default:
-                        AddCorner(north, east, center, CornerType.Square, WallType.Floor);
+                        AddCorner(floorPolygons, north, east, center, CornerType.Square, WallType.Floor);
                         break;
                 }
                 break;
@@ -1010,26 +1018,26 @@ public class VoxelGenerator
                 switch (walls)
                 {
                     case Directions.NorthWest:
-                        AddCorner(west, north, center, corner, WallType.Wall);
-                        AddCorner(north, west, center, corner, WallType.None);
+                        AddCorner(wallPolygons, west, north, center, corner, WallType.Wall);
+                        AddCorner(floorPolygons, north, west, center, corner, WallType.None);
                         break;
                     case Directions.North:
-                        AddStraight(west, east, WallType.Wall);
-                        AddStraight(east, west, WallType.None);
+                        AddStraight(wallPolygons, west, east, WallType.Wall);
+                        AddStraight(floorPolygons, east, west, WallType.None);
                         break;
                     case Directions.West | Directions.North:
-                        AddCorner(south, east, center, corner, WallType.Wall);
-                        AddCorner(east, south, center, corner, WallType.None);
+                        AddCorner(wallPolygons, south, east, center, corner, WallType.Wall);
+                        AddCorner(floorPolygons, east, south, center, corner, WallType.None);
                         break;
                     case Directions.NorthWest | Directions.SouthEast:
                         if (OpenedDiagonals)
                             corner = CornerType.Diamond;
 
-                        AddCorner(west, north, center, corner, WallType.Wall);
-                        AddCorner(north, west, center, corner, WallType.None);
+                        AddCorner(wallPolygons, west, north, center, corner, WallType.Wall);
+                        AddCorner(floorPolygons, north, west, center, corner, WallType.None);
 
-                        AddCorner(east, south, center, corner, WallType.Wall);
-                        AddCorner(south, east, center, corner, WallType.None);
+                        AddCorner(wallPolygons, east, south, center, corner, WallType.Wall);
+                        AddCorner(floorPolygons, south, east, center, corner, WallType.None);
                         break;
                     default:
                         break;
@@ -1038,7 +1046,7 @@ public class VoxelGenerator
         }
     }
 
-    private void AddCorner(Vector3 start, Vector3 end, Vector3 center, CornerType type, WallType wallType = WallType.None)
+    private void AddCorner(ComplexPoly poly, Vector3 start, Vector3 end, Vector3 center, CornerType type, WallType wallType = WallType.None)
     {
         center = nudge(start, end, center);
         switch (type)
@@ -1046,9 +1054,15 @@ public class VoxelGenerator
             case CornerType.Diamond:
                 break;
             case CornerType.Square:
+                poly.AddLineSegment(start, center, end);
                 AddWallMesh(wallType, start, center, end);
                 return;
             case CornerType.Rounded:
+                poly.AddLineSegment(
+                    start,
+                    (start + center) / 2,
+                    (end + center) / 2,
+                    end);
                 AddWallMesh(wallType,
                     start,
                     (start + center) / 2,
@@ -1058,12 +1072,45 @@ public class VoxelGenerator
             default:
                 break;
         }
+        poly.AddLineSegment(start, end);
         AddWallMesh(wallType, start, end);
     }
 
-    private void AddStraight(Vector3 a, Vector3 b, WallType wallType = WallType.None)
+    private void AddStraight(ComplexPoly poly, Vector3 a, Vector3 b, WallType wallType = WallType.None)
     {
+        poly.AddLineSegment(a, b);
         AddWallMesh(wallType, a, b);
+    }
+
+    ComplexPoly wallPolygons = new ComplexPoly();
+    ComplexPoly floorPolygons = new ComplexPoly();
+
+
+    void ConvertToMesh(PolygonSet polySet, float height)
+    {
+        Dictionary<TriangulationPoint, int> pointIndices = new Dictionary<TriangulationPoint, int>();
+        P2T.Triangulate(polySet);
+        foreach (var polygon in polySet.Polygons)
+        {
+            foreach (var triangle in polygon.Triangles)
+            {
+                for (int i = 2; i >= 0; i--)
+                {
+                    var point = triangle.Points[i];
+                    int index;
+                    if (!pointIndices.ContainsKey(point))
+                    {
+                        index = vertices.Count;
+                        pointIndices[point] = index;
+                        vertices.Add(new Vector3(point.Xf, height, point.Yf));
+                        uvs.Add(new Vector2(point.Xf / GameMap.tileWidth, point.Yf / GameMap.tileWidth));
+                    }
+                    else
+                        index = pointIndices[point];
+                    triangles.Add(index);
+                }
+            }
+        }
     }
 
     void AddWallMesh(WallType wallType, params Vector3[] points)
