@@ -337,7 +337,7 @@ public class VoxelGenerator
                 AddOuterCornerCell(west, northWest, north, center, corner, edges, walls);
                 break;
             case Directions.North:
-                AddStraightCell(west, northWest, north, northEast, east, center, corner, edges, walls);
+                AddStraightCell(west, north, east, center, corner, edges, walls);
                 break;
             case Directions.North | Directions.West:
                 AddInnerCornerCell(north, east, south, west, center, corner, edges, walls);
@@ -361,76 +361,107 @@ public class VoxelGenerator
         Both
     }
 
-    void AddOuterCornerCell(
-        Vector3 west,
-        Vector3 northWest,
-        Vector3 north,
-        Vector3 center,
-        CornerType corner, 
-        Directions edges,
-        Directions walls
-        )
+    void AddOuterCornerCell(Vector3 west, Vector3 northWest, Vector3 north, Vector3 center, CornerType corner, Directions edges, Directions walls)
     {
         if ((edges & Directions.NorthWest) != Directions.NorthWest)
         {
             if ((walls & Directions.NorthWest) == Directions.NorthWest)
-                AddCornerMesh(west, north, center, northWest, corner, WallType.Both);
+            {
+                AddHorizontalPoly(WallType.Both, northWest, GetCornerPoints(west, north, center, corner));
+                AddWallMesh(WallType.Both, GetCornerPoints(west, north, center, corner));
+            }
             else
-                AddCornerMesh(west, north, center, northWest, corner, WallType.Floor);
+            {
+                AddHorizontalPoly(WallType.Floor, northWest, GetCornerPoints(west, north, center, corner));
+                AddWallMesh(WallType.Floor, GetCornerPoints(west, north, center, corner));
+            }
         }
     }
 
-    void AddStraightCell(
-        Vector3 west,
-        Vector3 northWest,
-        Vector3 north, 
-        Vector3 northEast,
-        Vector3 east,
-        Vector3 center, 
-        CornerType corner, 
-        Directions edges, 
-        Directions walls
-        )
+    void AddStraightCell(Vector3 west, Vector3 north, Vector3 east, Vector3 center, CornerType corner, Directions edges, Directions walls)
     {
-        switch (walls)
+        switch (edges & Directions.North)
         {
             case Directions.North:
-                if ((edges & Directions.NorthWest) != Directions.NorthWest)
-                    AddCornerMesh(west, north, center, northWest, CornerType.Square, WallType.Both, true, false);
-                if ((edges & Directions.NorthEast) != Directions.NorthEast)
-                    AddCornerMesh(north, east, center, northEast, CornerType.Square, WallType.Both, false, true);
-                break;
-            case Directions.NorthWest:
-                if ((edges & Directions.NorthWest) != Directions.NorthWest)
-                    AddCornerMesh(west, north, center, northWest, corner, WallType.Both, true, false);
-                if ((edges & Directions.NorthEast) != Directions.NorthEast)
-                    AddCornerMesh(north, east, center, northEast, CornerType.Square, WallType.Floor, false, true);
                 break;
             case Directions.NorthEast:
-                if ((edges & Directions.NorthWest) != Directions.NorthWest)
-                    AddCornerMesh(west, north, center, northWest, CornerType.Square, WallType.Floor, true, false);
-                if ((edges & Directions.NorthEast) != Directions.NorthEast)
-                    AddCornerMesh(north, east, center, northEast, corner, WallType.Both, false, true);
+                switch (walls)
+                {
+                    case Directions.NorthWest:
+                        if (corner == CornerType.Square)
+                            AddCorner(west, north, center, corner, WallType.Wall);
+                        else
+                        {
+                            AddCorner(west, north, center, corner, WallType.Wall);
+                            AddCorner(north, west, center, corner, WallType.None);
+                            AddCorner(west, north, center, CornerType.Square, WallType.Floor);
+                        }
+                        break;
+                    case Directions.North:
+                        AddCorner(west, north, center, CornerType.Square, WallType.Both);
+                        break;
+                    default:
+                        AddCorner(west, north, center, CornerType.Square, WallType.Floor);
+                        break;
+                }
+                break;
+            case Directions.NorthWest:
+                switch (walls)
+                {
+                    case Directions.NorthEast:
+                        if (corner == CornerType.Square)
+                            AddCorner(north, east, center, corner, WallType.Both);
+                        else
+                        {
+                            AddCorner(north, east, center, corner, WallType.Both);
+                            AddCorner(east, north, center, corner, WallType.Both);
+                            AddCorner(north, east, center, CornerType.Square, WallType.Floor);
+                        }
+                        break;
+                    case Directions.North:
+                        AddCorner(north, east, center, CornerType.Square, WallType.Both);
+                        break;
+                    default:
+                        AddCorner(north, east, center, CornerType.Square, WallType.Floor);
+                        break;
+                }
                 break;
             default:
-                if ((edges & Directions.NorthWest) != Directions.NorthWest)
-                    AddCornerMesh(west, north, center, northWest, CornerType.Square, WallType.Floor, true, false);
-                if ((edges & Directions.NorthEast) != Directions.NorthEast)
-                    AddCornerMesh(north, east, center, northEast, CornerType.Square, WallType.Floor, false, true);
+                switch (walls)
+                {
+                    case Directions.North:
+                        AddStraight(west, east, WallType.Both);
+                        break;
+                    case Directions.NorthWest:
+                        //Todo: convert these to simple segments if the corners are square
+                        AddStraight(west, east, WallType.Floor);
+                        AddCorner(north, west, center, corner, WallType.None);
+                        AddCorner(west, north, center, corner, WallType.Wall);
+                        break;
+                    case Directions.NorthEast:
+                        AddStraight(west, east, WallType.Floor);
+                        AddCorner(east, north, center, corner, WallType.None);
+                        AddCorner(north, east, center, corner, WallType.Wall);
+                        break;
+                    default:
+                        AddStraight(west, east, WallType.Floor);
+                        break;
+                }
                 break;
         }
+
     }
 
     void AddInnerCornerCell(Vector3 north, Vector3 east, Vector3 south, Vector3 west, Vector3 center, CornerType corner, Directions edges, Directions walls)
     {
         switch (edges)
         {
-            //case Directions.East:
-            //    AddStraightCell(south, west, north, center, (walls == Directions.North) ? CornerType.Square : corner, RotateCW(edges), RotateCW(walls) & Directions.North);
-            //    break;
-            //case Directions.South:
-            //    AddStraightCell(west, north, east, center, (walls == Directions.West) ? CornerType.Square : corner, edges, walls & Directions.North);
-            //    break;
+            case Directions.East:
+                AddStraightCell(south, west, north, center, (walls == Directions.North) ? CornerType.Square : corner, RotateCW(edges), RotateCW(walls) & Directions.North);
+                break;
+            case Directions.South:
+                AddStraightCell(west, north, east, center, (walls == Directions.West) ? CornerType.Square : corner, edges, walls & Directions.North);
+                break;
             case Directions.North:
                 switch (walls)
                 {
@@ -1018,46 +1049,17 @@ public class VoxelGenerator
         }
     }
 
-    private void AddCornerMesh(Vector3 start, Vector3 end, Vector3 center, Vector3 corner, CornerType type, WallType wallType, bool startWalls = true, bool endWalls = true)
+    private void AddCorner(Vector3 start, Vector3 end, Vector3 center, CornerType type, WallType wallType = WallType.None)
     {
         switch (type)
         {
             case CornerType.Diamond:
                 break;
             case CornerType.Square:
-                if (startWalls)
-                    AddWallMesh(-0.5f, 0, wallType, start, center);
-                if (endWalls)
-                    AddWallMesh(0, 0.5f, wallType, center, end);
-                break;
-            case CornerType.Rounded:
-                if(startWalls)
-                    AddWallMesh(-0.5f, -0.25f, wallType, start, (start + center) / 2);
-                AddWallMesh(-0.25f, 0.25f, wallType, (start + center) / 2, (end + center) / 2);
-                if (endWalls)
-                    AddWallMesh(0.25f, 0.5f, wallType, (end + center) / 2, end);
-                break;
-            default:
-                AddWallMesh(-0.5f, 0.5f, wallType, start, end);
-                break;
-        }
-        AddHorizontalPoly(wallType, corner, GetCornerPoints(start, end, center, type));
-    }
-
-    private void AddCorner(Vector3 start, Vector3 end, Vector3 center, CornerType type, WallType wallType, bool startWalls = true, bool endWalls = true)
-    {
-        switch (type)
-        {
-            case CornerType.Diamond:
-                break;
-            case CornerType.Square:
-                if (startWalls)
-                    AddWallMesh(-0.5f, 0, wallType, start, center);
-                if (endWalls)
-                    AddWallMesh(0, 0.5f, wallType, center, end);
+                AddWallMesh(wallType, start, center, end);
                 return;
             case CornerType.Rounded:
-                AddWallMesh(-0.5f, 0.5f, wallType,
+                AddWallMesh(wallType,
                     start,
                     (start + center) / 2,
                     (end + center) / 2,
@@ -1066,33 +1068,33 @@ public class VoxelGenerator
             default:
                 break;
         }
-        AddWallMesh(-0.5f, 0.5f, wallType, start, end);
+        AddWallMesh(wallType, start, end);
     }
 
     private void AddStraight(Vector3 a, Vector3 b, WallType wallType = WallType.None)
     {
-        AddWallMesh(-0.5f, 0.5f, wallType, a, b);
+        AddWallMesh(wallType, a, b);
     }
 
-    void AddWallMesh(float startV, float endV, WallType wallType, params Vector3[] points)
+    void AddWallMesh(WallType wallType, params Vector3[] points)
     {
         switch (wallType)
         {
             case WallType.Floor:
-                AddWallMesh(startV, endV, GameMap.floorHeight, bottomless ? bottomlessDepth : 0, points);
+                AddWallMesh(GameMap.floorHeight, bottomless ? bottomlessDepth : 0, points);
                 break;
             case WallType.Wall:
-                AddWallMesh(startV, endV, GameMap.tileHeight, GameMap.floorHeight, points);
+                AddWallMesh(GameMap.tileHeight, GameMap.floorHeight, points);
                 break;
             case WallType.Both:
-                AddWallMesh(startV, endV, GameMap.tileHeight, bottomless ? bottomlessDepth : 0, points);
+                AddWallMesh(GameMap.tileHeight, bottomless ? bottomlessDepth : 0, points);
                 break;
             default:
                 break;
         }
     }
 
-    void AddWallMesh(float startV, float endV, float top, float bottom, params Vector3[] points)
+    void AddWallMesh(float top, float bottom, params Vector3[] points)
     {
         float uvTop = top / GameMap.tileHeight;
         float uvBottom = bottom / GameMap.tileHeight;
@@ -1114,10 +1116,10 @@ public class VoxelGenerator
 
             float thisLength = (points[i] - points[i + 1]).magnitude;
 
-            uvs.Add(new Vector2(Mathf.Lerp(startV, endV, (runningLength / length)), uvTop));
-            uvs.Add(new Vector2(Mathf.Lerp(startV, endV, (runningLength / length)), uvBottom));
-            uvs.Add(new Vector2(Mathf.Lerp(startV, endV, ((runningLength + thisLength) / length)), uvTop));
-            uvs.Add(new Vector2(Mathf.Lerp(startV, endV, ((runningLength + thisLength) / length)), uvBottom));
+            uvs.Add(new Vector2(Mathf.Lerp(-0.5f, 0.5f, (runningLength / length)), uvTop));
+            uvs.Add(new Vector2(Mathf.Lerp(-0.5f, 0.5f, (runningLength / length)), uvBottom));
+            uvs.Add(new Vector2(Mathf.Lerp(-0.5f, 0.5f, ((runningLength + thisLength) / length)), uvTop));
+            uvs.Add(new Vector2(Mathf.Lerp(-0.5f, 0.5f, ((runningLength + thisLength) / length)), uvBottom));
 
             runningLength += thisLength;
 
