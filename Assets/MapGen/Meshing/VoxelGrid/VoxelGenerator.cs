@@ -114,10 +114,11 @@ public class VoxelGenerator
                     map[x + 1, y, z],
                     map[x, y + 1, z],
                     map[x + 1, y + 1, z],
-                    GameMap.DFtoUnityCoord(map.WorldToLocalSpace(new DFCoord(x - 1, y - 1, z))),
-                    GameMap.DFtoUnityCoord(map.WorldToLocalSpace(new DFCoord(x, y - 1, z))),
-                    GameMap.DFtoUnityCoord(map.WorldToLocalSpace(new DFCoord(x, y, z))),
-                    GameMap.DFtoUnityCoord(map.WorldToLocalSpace(new DFCoord(x - 1, y, z))),
+                    GameMap.DFtoUnityCoord(map.WorldToLocalSpace(new DFCoord(x - 1, y - 1, z))) + new Vector3(GameMap.tileWidth / 2, 0, 0),
+                    GameMap.DFtoUnityCoord(map.WorldToLocalSpace(new DFCoord(x, y - 1, z))) + new Vector3(0, 0, -GameMap.tileWidth / 2),
+                    GameMap.DFtoUnityCoord(map.WorldToLocalSpace(new DFCoord(x - 1, y, z))) + new Vector3(GameMap.tileWidth / 2, 0, 0),
+                    GameMap.DFtoUnityCoord(map.WorldToLocalSpace(new DFCoord(x - 1, y - 1, z))) + new Vector3(0, 0, -GameMap.tileWidth / 2),
+                    GameMap.DFtoUnityCoord(map.WorldToLocalSpace(new DFCoord(x - 1, y - 1, z))) + new Vector3(GameMap.tileWidth / 2, 0, -GameMap.tileWidth / 2),
                     edges);
             }
         }
@@ -216,10 +217,11 @@ public class VoxelGenerator
         MapDataStore.Tile northEast,
         MapDataStore.Tile southWest, 
         MapDataStore.Tile southEast,
-        Vector3 northWestPoint,
-        Vector3 northEastPoint,
-        Vector3 southEastPoint,
-        Vector3 southWestPoint,
+        Vector3 northPoint, 
+        Vector3 eastPoint,
+        Vector3 southPoint,
+        Vector3 westPoint,
+        Vector3 centerPoint,
         Directions edges)
     {
         var corner = UsedCornerType;
@@ -276,10 +278,11 @@ public class VoxelGenerator
             case Directions.NorthWest | Directions.SouthEast:
             case Directions.All:
                 AddRotatedCell(
-                    northWestPoint,
-                    northEastPoint,
-                    southEastPoint,
-                    southWestPoint,
+                    northPoint,
+                    eastPoint,
+                    southPoint,
+                    westPoint,
+                    centerPoint,
                     wallFloors, edges, walls, corner);
                 break;
             case Directions.NorthEast:
@@ -287,54 +290,53 @@ public class VoxelGenerator
             case Directions.North | Directions.SouthEast:
             case Directions.NorthEast | Directions.SouthWest:
                 AddRotatedCell(
-                    northEastPoint,
-                    southEastPoint,
-                    southWestPoint,
-                    northWestPoint,
-                  RotateCCW(wallFloors), RotateCCW(edges), RotateCCW(walls), corner);
+                    eastPoint,
+                    southPoint,
+                    westPoint,
+                    northPoint,
+                    centerPoint,
+                    RotateCCW(wallFloors), RotateCCW(edges), RotateCCW(walls), corner);
                 break;
             case Directions.SouthEast:
             case Directions.South:
             case Directions.NorthEast | Directions.South:
                 AddRotatedCell(
-                    southEastPoint,
-                    southWestPoint,
-                    northWestPoint,
-                    northEastPoint,
+                    southPoint,
+                    westPoint,
+                    northPoint,
+                    eastPoint,
+                    centerPoint,
                     Rotate180(wallFloors), Rotate180(edges), Rotate180(walls), corner);
                 break;
             case Directions.SouthWest:
             case Directions.West:
             case Directions.West | Directions.SouthEast:
                 AddRotatedCell(
-                    southWestPoint,
-                    northWestPoint,
-                    northEastPoint,
-                    southEastPoint,
+                    westPoint,
+                    northPoint,
+                    eastPoint,
+                    southPoint,
+                    centerPoint,
                     RotateCW(wallFloors), RotateCW(edges), RotateCW(walls), corner);
                 break;
         }
     }
 
     private void AddRotatedCell(
-        Vector3 northWest,
-        Vector3 northEast,
-        Vector3 southEast,
-        Vector3 southWest,
+        Vector3 north,
+        Vector3 east,
+        Vector3 south,
+        Vector3 west,
+        Vector3 center,
         Directions neighbors,
         Directions edges,
         Directions walls,
         CornerType corner)
     {
-        Vector3 north = (northWest + northEast) / 2;
-        Vector3 east = (northEast + southEast) / 2;
-        Vector3 south = (southEast + southWest) / 2;
-        Vector3 west = (southWest + northWest) / 2;
-        Vector3 center = (north + south) / 2;
         switch (neighbors)
         {
             case Directions.NorthWest:
-                AddOuterCornerCell(west, northWest, north, center, corner, edges, walls);
+                AddOuterCornerCell(west, north, center, corner, edges, walls);
                 break;
             case Directions.North:
                 AddStraightCell(west, north, east, center, corner, edges, walls);
@@ -353,6 +355,14 @@ public class VoxelGenerator
         }
     }
 
+    //The triangulator doesn't like points in the same place. This makes things just far enough apart that they work.
+    Vector3 nudge(Vector3 a, Vector3 b, Vector3 center)
+    {
+        Vector3 average = (a + b) / 2;
+        Vector3 direction = center - average;
+        return center - (direction * 0.001f);
+    }
+
     enum WallType
     {
         None,
@@ -361,25 +371,23 @@ public class VoxelGenerator
         Both
     }
 
-    void AddOuterCornerCell(Vector3 west, Vector3 northWest, Vector3 north, Vector3 center, CornerType corner, Directions edges, Directions walls)
+    void AddOuterCornerCell(Vector3 west, Vector3 north, Vector3 center, CornerType corner, Directions edges, Directions walls)
     {
         if ((edges & Directions.NorthWest) != Directions.NorthWest)
         {
             if ((walls & Directions.NorthWest) == Directions.NorthWest)
-            {
-                AddHorizontalPoly(WallType.Both, northWest, GetCornerPoints(west, north, center, corner));
-                AddWallMesh(WallType.Both, GetCornerPoints(west, north, center, corner));
-            }
+                AddCorner(west, north, center, corner, WallType.Both);
             else
-            {
-                AddHorizontalPoly(WallType.Floor, northWest, GetCornerPoints(west, north, center, corner));
-                AddWallMesh(WallType.Floor, GetCornerPoints(west, north, center, corner));
-            }
+                AddCorner(west, north, center, corner, WallType.Floor);
+
         }
     }
 
     void AddStraightCell(Vector3 west, Vector3 north, Vector3 east, Vector3 center, CornerType corner, Directions edges, Directions walls)
     {
+        var eastPoint = nudge(center, center, east);
+        var westPoint = nudge(center, center, west);
+        var northPoint = nudge(center, center, north);
         switch (edges & Directions.North)
         {
             case Directions.North:
@@ -393,8 +401,8 @@ public class VoxelGenerator
                         else
                         {
                             AddCorner(west, north, center, corner, WallType.Wall);
-                            AddCorner(north, west, center, corner, WallType.None);
-                            AddCorner(west, north, center, CornerType.Square, WallType.Floor);
+                            AddCorner(northPoint, westPoint, center, corner, WallType.None);
+                            AddCorner(westPoint, northPoint, center, CornerType.Square, WallType.Floor);
                         }
                         break;
                     case Directions.North:
@@ -414,8 +422,8 @@ public class VoxelGenerator
                         else
                         {
                             AddCorner(north, east, center, corner, WallType.Both);
-                            AddCorner(east, north, center, corner, WallType.Both);
-                            AddCorner(north, east, center, CornerType.Square, WallType.Floor);
+                            AddCorner(eastPoint, northPoint, center, corner, WallType.Both);
+                            AddCorner(northPoint, eastPoint, center, CornerType.Square, WallType.Floor);
                         }
                         break;
                     case Directions.North:
@@ -434,13 +442,13 @@ public class VoxelGenerator
                         break;
                     case Directions.NorthWest:
                         //Todo: convert these to simple segments if the corners are square
-                        AddStraight(west, east, WallType.Floor);
-                        AddCorner(north, west, center, corner, WallType.None);
+                        AddStraight(westPoint, east, WallType.Floor);
+                        AddCorner(north, westPoint, center, corner, WallType.None);
                         AddCorner(west, north, center, corner, WallType.Wall);
                         break;
                     case Directions.NorthEast:
-                        AddStraight(west, east, WallType.Floor);
-                        AddCorner(east, north, center, corner, WallType.None);
+                        AddStraight(west, eastPoint, WallType.Floor);
+                        AddCorner(eastPoint, north, center, corner, WallType.None);
                         AddCorner(north, east, center, corner, WallType.Wall);
                         break;
                     default:
@@ -454,6 +462,10 @@ public class VoxelGenerator
 
     void AddInnerCornerCell(Vector3 north, Vector3 east, Vector3 south, Vector3 west, Vector3 center, CornerType corner, Directions edges, Directions walls)
     {
+        var eastPoint = nudge(center, center, east);
+        var westPoint = nudge(center, center, west);
+        var northPoint = nudge(center, center, north);
+        var southPoint = nudge(center, center, south);
         switch (edges)
         {
             case Directions.East:
@@ -473,9 +485,9 @@ public class VoxelGenerator
                         }
                         else
                         {
-                            AddCorner(south, east, center, corner, WallType.Floor);
-                            AddStraight(east, west, WallType.Floor);
-                            AddCorner(west, south, center, corner, WallType.None);
+                            AddCorner(south, eastPoint, center, corner, WallType.Floor);
+                            AddStraight(eastPoint, westPoint, WallType.Floor);
+                            AddCorner(westPoint, south, center, corner, WallType.None);
                             AddCorner(south, west, center, corner, WallType.Wall);
                         }
                         break;
@@ -487,20 +499,20 @@ public class VoxelGenerator
                         else
                         {
                             AddCorner(south, west, center, CornerType.Square, WallType.Both);
-                            AddCorner(east, south, center, CornerType.Square, WallType.Floor);
-                            AddCorner(south, east, center, corner, WallType.Floor);
+                            AddCorner(eastPoint, southPoint, center, CornerType.Square, WallType.Floor);
+                            AddCorner(southPoint, eastPoint, center, corner, WallType.Floor);
                         }
                         break;
                     case Directions.West | Directions.North:
-                        AddCorner(south, east, center, corner, WallType.Both);
-                        AddStraight(east, west, WallType.Both);
+                        AddCorner(south, eastPoint, center, corner, WallType.Both);
+                        AddStraight(eastPoint, west, WallType.Both);
                         break;
                     case Directions.NorthWest:
                     case Directions.NorthEast:
                     case Directions.North:
                     default:
-                        AddCorner(south, east, center, corner, WallType.Floor);
-                        AddStraight(east, west, WallType.Floor);
+                        AddCorner(south, eastPoint, center, corner, WallType.Floor);
+                        AddStraight(eastPoint, west, WallType.Floor);
                         break;
                 }
                 break;
@@ -515,9 +527,9 @@ public class VoxelGenerator
                         }
                         else
                         {
-                            AddStraight(north, south, WallType.Floor);
-                            AddCorner(south, east, center, corner, WallType.Floor);
-                            AddCorner(east, north, center, corner, WallType.None);
+                            AddStraight(northPoint, southPoint, WallType.Floor);
+                            AddCorner(southPoint, eastPoint, center, corner, WallType.Floor);
+                            AddCorner(eastPoint, northPoint, center, corner, WallType.None);
                             AddCorner(north, east, center, corner, WallType.Wall);
                         }
                         break;
@@ -528,21 +540,21 @@ public class VoxelGenerator
                         }
                         else
                         {
-                            AddCorner(south, east, center, corner, WallType.Floor);
-                            AddCorner(east, south, center, CornerType.Square, WallType.None);
+                            AddCorner(southPoint, eastPoint, center, corner, WallType.Floor);
+                            AddCorner(eastPoint, southPoint, center, CornerType.Square, WallType.None);
                             AddCorner(north, east, center, CornerType.Square, WallType.Both);
                         }
                         break;
                     case Directions.North | Directions.West:
-                        AddStraight(north, south, WallType.Both);
-                        AddCorner(south, east, center, corner, WallType.Both);
+                        AddStraight(north, southPoint, WallType.Both);
+                        AddCorner(southPoint, east, center, corner, WallType.Both);
                         break;
                     case Directions.NorthWest:
                     case Directions.SouthWest:
                     case Directions.West:
                     default:
-                        AddStraight(north, south, WallType.Floor);
-                        AddCorner(south, east, center, corner, WallType.Floor);
+                        AddStraight(north, southPoint, WallType.Floor);
+                        AddCorner(southPoint, east, center, corner, WallType.Floor);
                         break;
                 }
                 break;
@@ -552,8 +564,8 @@ public class VoxelGenerator
                     case Directions.North | Directions.West:
                         if (corner != CornerType.Square)
                         {
-                            AddCorner(south, east, center, corner, WallType.Both);
-                            AddCorner(east, south, center, CornerType.Square, WallType.Both);
+                            AddCorner(southPoint, eastPoint, center, corner, WallType.Both);
+                            AddCorner(eastPoint, southPoint, center, CornerType.Square, WallType.Both);
                         }
                         break;
                     case Directions.NorthWest:
@@ -565,8 +577,8 @@ public class VoxelGenerator
                     default:
                         if (corner != CornerType.Square)
                         {
-                            AddCorner(south, east, center, corner, WallType.Floor);
-                            AddCorner(east, south, center, CornerType.Square, WallType.Floor);
+                            AddCorner(southPoint, eastPoint, center, corner, WallType.Floor);
+                            AddCorner(eastPoint, southPoint, center, CornerType.Square, WallType.Floor);
                         }
                         break;
                 }
@@ -585,8 +597,8 @@ public class VoxelGenerator
                         else
                         {
                             AddCorner(south, west, center, corner, WallType.Wall);
-                            AddCorner(west, south, center, corner, WallType.None);
-                            AddCorner(south, west, center, CornerType.Square, WallType.Floor);
+                            AddCorner(westPoint, southPoint, center, corner, WallType.None);
+                            AddCorner(southPoint, westPoint, center, CornerType.Square, WallType.Floor);
                         }
                         break;
                     case Directions.NorthWest:
@@ -611,8 +623,8 @@ public class VoxelGenerator
                         else
                         {
                             AddCorner(west, north, center, corner, WallType.Wall);
-                            AddCorner(north, west, center, corner, WallType.None);
-                            AddCorner(west, north, center, CornerType.Square, WallType.Floor);
+                            AddCorner(northPoint, westPoint, center, corner, WallType.None);
+                            AddCorner(westPoint, northPoint, center, CornerType.Square, WallType.Floor);
                         }
                         break;
                     case Directions.NorthEast:
@@ -637,8 +649,8 @@ public class VoxelGenerator
                         else
                         {
                             AddCorner(north, east, center, corner, WallType.Both);
-                            AddCorner(east, north, center, corner, WallType.None);
-                            AddCorner(north, east, center, CornerType.Square, WallType.Floor);
+                            AddCorner(eastPoint, northPoint, center, corner, WallType.None);
+                            AddCorner(northPoint, eastPoint, center, CornerType.Square, WallType.Floor);
                         }
                         break;
                     case Directions.NorthWest:
@@ -660,30 +672,30 @@ public class VoxelGenerator
                             break;
                         case Directions.NorthEast:
                             AddCorner(north, east, center, corner, WallType.Wall);
-                            AddCorner(east, north, center, corner, WallType.None);
-                            AddCorner(south, east, center, corner, WallType.Floor);
+                            AddCorner(eastPoint, north, center, corner, WallType.None);
+                            AddCorner(south, eastPoint, center, corner, WallType.Floor);
                             break;
                         case Directions.SouthWest:
                             AddCorner(south, west, center, corner, WallType.Wall);
-                            AddCorner(west, south, center, corner, WallType.None);
-                            AddCorner(south, east, center, corner, WallType.Floor);
+                            AddCorner(west, southPoint, center, corner, WallType.None);
+                            AddCorner(southPoint, east, center, corner, WallType.Floor);
                             break;
                         case Directions.North:
                             AddStraight(west, east, WallType.Wall);
-                            AddStraight(east, west, WallType.None);
-                            AddCorner(south, east, center, corner, WallType.Floor);
+                            AddStraight(eastPoint, west, WallType.None);
+                            AddCorner(south, eastPoint, center, corner, WallType.Floor);
                             break;
                         case Directions.West:
                             AddStraight(south, north, WallType.Wall);
-                            AddStraight(north, south, WallType.None);
-                            AddCorner(south, east, center, corner, WallType.Floor);
+                            AddStraight(north, southPoint, WallType.None);
+                            AddCorner(southPoint, east, center, corner, WallType.Floor);
                             break;
                         case Directions.NorthEast | Directions.SouthWest:
                             AddCorner(north, east, center, corner, WallType.Wall);
                             AddCorner(south, west, center, corner, WallType.Wall);
-                            AddCorner(west, south, center, corner, WallType.None);
-                            AddCorner(south, east, center, corner, WallType.Floor);
-                            AddCorner(east, north, center, corner, WallType.None);
+                            AddCorner(west, southPoint, center, corner, WallType.None);
+                            AddCorner(southPoint, eastPoint, center, corner, WallType.Floor);
+                            AddCorner(eastPoint, north, center, corner, WallType.None);
                             break;
                         case Directions.North | Directions.West:
                             AddCorner(south, east, center, corner, WallType.Both);
@@ -791,6 +803,11 @@ public class VoxelGenerator
 
     void AddRotatedCenterCell(Vector3 north, Vector3 east, Vector3 south, Vector3 west, Vector3 center, CornerType corner, Directions edges, Directions walls)
     {
+        var eastPoint = nudge(center, center, east);
+        var westPoint = nudge(center, center, west);
+        var northPoint = nudge(center, center, north);
+        var southPoint = nudge(center, center, south);
+
         switch (edges)
         {
             case Directions.North:
@@ -804,8 +821,8 @@ public class VoxelGenerator
                         }
                         else
                         {
-                            AddCorner(south, east, center, corner, WallType.Wall);
-                            AddStraight(east, west, WallType.Both);
+                            AddCorner(south, eastPoint, center, corner, WallType.Wall);
+                            AddStraight(eastPoint, west, WallType.Both);
                             AddCorner(east, south, center, corner, WallType.None);
                         }
                         break;
@@ -814,8 +831,8 @@ public class VoxelGenerator
                             corner = CornerType.Diamond;
 
                         AddCorner(east, south, center, corner, WallType.Wall);
-                        AddCorner(south, east, center, corner, WallType.None);
-                        AddStraight(east, west, WallType.Floor);
+                        AddCorner(south, eastPoint, center, corner, WallType.None);
+                        AddStraight(eastPoint, west, WallType.Floor);
                         break;
                     case Directions.All:
                         AddStraight(east, west, WallType.Both);
@@ -832,16 +849,16 @@ public class VoxelGenerator
                 {
                     case Directions.NorthWest:
                         AddCorner(west, north, center, corner, WallType.Wall);
-                        AddCorner(north, west, center, corner, WallType.None);
-                        AddStraight(west, east, WallType.Floor);
+                        AddCorner(north, westPoint, center, corner, WallType.None);
+                        AddStraight(westPoint, east, WallType.Floor);
                         break;
                     case Directions.NorthWest | Directions.SouthEast:
                         if (OpenedDiagonals)
                             corner = CornerType.Diamond;
 
                         AddCorner(west, north, center, corner, WallType.Wall);
-                        AddCorner(north, west, center, corner, WallType.None);
-                        AddStraight(west, east, WallType.Floor);
+                        AddCorner(north, westPoint, center, corner, WallType.None);
+                        AddStraight(westPoint, east, WallType.Floor);
                         break;
                     case Directions.West | Directions.North:
                     case Directions.North:
@@ -858,8 +875,8 @@ public class VoxelGenerator
                 {
                     case Directions.NorthWest:
                         AddCorner(west, north, center, corner, WallType.Wall);
-                        AddStraight(south, north, WallType.Floor);
-                        AddCorner(north, west, center, corner, WallType.None);
+                        AddStraight(south, northPoint, WallType.Floor);
+                        AddCorner(northPoint, west, center, corner, WallType.None);
                         break;
                     case Directions.North:
                         AddCorner(west, north, center, CornerType.Square, WallType.Both);
@@ -870,8 +887,8 @@ public class VoxelGenerator
                             corner = CornerType.Diamond;
 
                         AddCorner(west, north, center, corner, WallType.Wall);
-                        AddStraight(south, north, WallType.Floor);
-                        AddCorner(north, west, center, corner, WallType.None);
+                        AddStraight(south, northPoint, WallType.Floor);
+                        AddCorner(northPoint, west, center, corner, WallType.None);
                         break;
                     case Directions.West | Directions.North:
                     case Directions.All:
@@ -890,8 +907,8 @@ public class VoxelGenerator
                         AddCorner(east, south, center, CornerType.Square, WallType.Floor);
                         break;
                     case Directions.West | Directions.North:
-                        AddStraight(north, south, WallType.Both);
-                        AddCorner(south, east, center, corner, WallType.Wall);
+                        AddStraight(north, southPoint, WallType.Both);
+                        AddCorner(southPoint, east, center, corner, WallType.Wall);
                         AddCorner(east, south, center, corner, WallType.None);
                         break;
                     case Directions.NorthWest | Directions.SouthEast:
@@ -914,8 +931,8 @@ public class VoxelGenerator
                 switch (walls)
                 {
                     case Directions.West | Directions.North:
-                        AddCorner(east, south, center, CornerType.Square, WallType.Both);
-                        AddCorner(south, east, center, corner, WallType.None);
+                        AddCorner(eastPoint, southPoint, center, CornerType.Square, WallType.Both);
+                        AddCorner(southPoint, eastPoint, center, corner, WallType.None);
                         AddCorner(east, south, center, corner, WallType.Floor);
                         break;
                     case Directions.NorthWest | Directions.SouthEast:
@@ -925,8 +942,8 @@ public class VoxelGenerator
                         }
                         else
                         {
-                            AddCorner(east, south, center, CornerType.Square, WallType.Floor);
-                            AddCorner(south, east, center, corner, WallType.None);
+                            AddCorner(eastPoint, southPoint, center, CornerType.Square, WallType.Floor);
+                            AddCorner(southPoint, eastPoint, center, corner, WallType.None);
                             AddCorner(east, south, center, corner, WallType.Wall);
                         }
                         break;
@@ -961,8 +978,8 @@ public class VoxelGenerator
                     case Directions.NorthWest | Directions.SouthEast:
                     case Directions.NorthWest:
                         AddCorner(west, north, center, corner, WallType.Wall);
-                        AddCorner(north, west, center, corner, WallType.None);
-                        AddCorner(west, north, center, CornerType.Square, WallType.Floor);
+                        AddCorner(northPoint, westPoint, center, corner, WallType.None);
+                        AddCorner(westPoint, northPoint, center, CornerType.Square, WallType.Floor);
                         break;
                     case Directions.North:
                     case Directions.West | Directions.North:
@@ -1021,36 +1038,9 @@ public class VoxelGenerator
         }
     }
 
-    private Vector3[] GetCornerPoints(Vector3 start, Vector3 end, Vector3 center, CornerType type)
-    {
-        switch (type)
-        {
-            case CornerType.Square:
-                return new Vector3[]
-                {
-                    start,
-                    center,
-                    end
-                };
-            case CornerType.Rounded:
-                return new Vector3[] 
-                {
-                    start,
-                    (start + center) / 2,
-                    (end + center) / 2,
-                    end
-                };
-            default:
-                return new Vector3[]
-                {
-                    start,
-                    end
-                };
-        }
-    }
-
     private void AddCorner(Vector3 start, Vector3 end, Vector3 center, CornerType type, WallType wallType = WallType.None)
     {
+        center = nudge(start, end, center);
         switch (type)
         {
             case CornerType.Diamond:
@@ -1131,61 +1121,4 @@ public class VoxelGenerator
             triangles.Add(vertIndex + (i * 4) + 3);
         }
     }
-
-    void AddHorizontalPoly(WallType type, Vector3 origin, params Vector3[] points)
-    {
-        Vector3[] newPoints = new Vector3[points.Length + 1];
-        newPoints[0] = origin;
-        Array.Copy(points, 0, newPoints, 1, points.Length);
-        AddHorizontalPoly(type, newPoints);
-    }
-
-    void AddHorizontalPoly(WallType type, params Vector3[] points)
-    {
-        switch (type)
-        {
-            case WallType.Floor:
-                AddHorizontalPoly(GameMap.floorHeight, false, points);
-                AddHorizontalPoly(bottomless ? bottomlessDepth : 0.0f, true, points);
-                break;
-            case WallType.Wall:
-                AddHorizontalPoly(GameMap.tileHeight, false, points);
-                break;
-            case WallType.Both:
-                AddHorizontalPoly(GameMap.tileHeight, false, points);
-                AddHorizontalPoly(bottomless ? bottomlessDepth : 0.0f, true, points);
-                break;
-            default:
-                break;
-        }
-    }
-
-
-    void AddHorizontalPoly(float height, bool flip, params Vector3[] points)
-    {
-        if (points.Length < 3)
-            return;
-        int vertIndex = vertices.Count;
-        vertices.Add(new Vector3(points[0].x, height, points[0].z));
-        uvs.Add(new Vector2(points[0].x / GameMap.tileWidth, -points[0].z / GameMap.tileWidth));
-        vertices.Add(new Vector3(points[1].x, height, points[1].z));
-        uvs.Add(new Vector2(points[1].x / GameMap.tileWidth, -points[1].z / GameMap.tileWidth));
-        for(int i = 2; i < points.Length;i++)
-        {
-            vertices.Add(new Vector3(points[i].x, height, points[i].z));
-            uvs.Add(new Vector2(points[i].x / GameMap.tileWidth, -points[i].z / GameMap.tileWidth));
-            triangles.Add(vertIndex);
-            if (flip)
-            {
-                triangles.Add(vertIndex + i - 1);
-                triangles.Add(vertIndex + i);
-            }
-            else
-            {
-                triangles.Add(vertIndex + i);
-                triangles.Add(vertIndex + i - 1);
-            }
-        }
-    }
-
 }
