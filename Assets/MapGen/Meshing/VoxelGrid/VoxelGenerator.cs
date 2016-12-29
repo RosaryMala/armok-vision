@@ -123,7 +123,7 @@ public class VoxelGenerator
         }
     }
 
-
+    #region Tile Test Conditions
     public static bool UseBoth(MapDataStore.Tile tile)
     {
         if (tile == null)
@@ -210,6 +210,7 @@ public class VoxelGenerator
                 return false;
         }
     }
+    #endregion
 
     private void TriangulateCell(
         MapDataStore.Tile northWest,
@@ -1015,6 +1016,45 @@ public class VoxelGenerator
                     start,
                     end
                 };
+        }
+    }
+
+    private void AddMicroCell(CornerType type, Vector3 center, Vector3 start, Vector3 end, Vector3 corner,  float centerHeight, float cornerHeight, bool startWall, bool endWall)
+    {
+        if(centerHeight == cornerHeight)
+        {
+            AddHorizontalPoly(centerHeight, false, center, start, corner, end);
+            AddHorizontalPoly(bottomless ? bottomlessDepth : 0, true, center, start, corner, end);
+            return;
+        }
+        switch (type)
+        {
+            case CornerType.Square:
+                AddHorizontalPoly(centerHeight, false, center, start, corner, end);
+                AddHorizontalPoly(bottomless ? bottomlessDepth : 0, true, center, start, corner, end);
+                break;
+            case CornerType.Rounded:
+                break;
+            default:
+                if (centerHeight > 0.001f)
+                {
+                    AddHorizontalPoly(centerHeight, false, center, start, end);
+                    if(cornerHeight <= 0.00f)
+                        AddHorizontalPoly(bottomless ? bottomlessDepth : 0, true, center, start, end);
+                    else
+                        AddHorizontalPoly(bottomless ? bottomlessDepth : 0, true, center, start, corner, end);
+                }
+                if (cornerHeight > 0.001f)
+                {
+                    AddHorizontalPoly(cornerHeight, false, corner, end, center);
+                    if (centerHeight <= 0.00f)
+                        AddHorizontalPoly(bottomless ? bottomlessDepth : 0, false, corner, end, center);
+                }
+                if (centerHeight > cornerHeight)
+                    AddWallMesh(-0.5f, 0.5f, centerHeight, bottomless ? bottomlessDepth : 0, start, end);
+                else
+                    AddWallMesh(-0.5f, 0.5f, cornerHeight, bottomless ? bottomlessDepth : 0, end, start);
+                break;
         }
     }
 
