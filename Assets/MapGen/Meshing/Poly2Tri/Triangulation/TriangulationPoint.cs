@@ -39,11 +39,7 @@ namespace Poly2Tri
 
     public class TriangulationPoint : Point2D
     {
-<<<<<<< HEAD
         public const double kVertexCodeDefaultPrecision = 3.0;
-=======
-        public static readonly double kVertexCodeDefaultPrecision = 3.0;
->>>>>>> parent of 58b45cc... PURGE THE UNCLEAN, BURN THE UNCLEAN
 
         public override double X
         {

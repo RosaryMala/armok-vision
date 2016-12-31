@@ -63,7 +63,6 @@ namespace Poly2Tri
 {
     public class Point2DList : IEnumerable<Point2D>, IList<Point2D> // : List<Point2D>
     {
-<<<<<<< HEAD
         public const int kMaxPolygonVertices = 100000; // adjust to suit...
 
         /// A small length used as a collision and constraint tolerance. Usually it is
@@ -73,17 +72,6 @@ namespace Poly2Tri
         /// A small angle used as a collision and constraint tolerance. Usually it is
         /// chosen to be numerically significant, but visually insignificant.
         public const double kAngularSlop = (2.0 / (180.0 * Math.PI));
-=======
-        public static readonly int kMaxPolygonVertices = 100000; // adjust to suit...
-
-        /// A small length used as a collision and constraint tolerance. Usually it is
-        /// chosen to be numerically significant, but visually insignificant.
-        public static readonly double kLinearSlop = 0.005;
-
-        /// A small angle used as a collision and constraint tolerance. Usually it is
-        /// chosen to be numerically significant, but visually insignificant.
-        public static readonly double kAngularSlop = (2.0 / (180.0 * Math.PI));
->>>>>>> parent of 58b45cc... PURGE THE UNCLEAN, BURN THE UNCLEAN
 
         public enum WindingOrderType
         {
