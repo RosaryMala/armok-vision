@@ -819,6 +819,11 @@ public sealed class DFConnection : MonoBehaviour
         }
     }
 
+    internal void ResumeGame()
+    {
+        networkClient.resume_game();
+    }
+
     /// <summary>
     /// An exception with communication.
     /// </summary>
@@ -920,7 +925,8 @@ public sealed class DFConnection : MonoBehaviour
             public override void Terminate()
             {
                 finished = true;
-                connectionThread.Join(100);
+                if (!connectionThread.Join(1000))
+                    connectionThread.Abort();//we asked nicely once.
             }
 
             private void RunForever()
@@ -934,7 +940,8 @@ public sealed class DFConnection : MonoBehaviour
                     catch (System.Exception e)
                     {
                         crashError.Set(e);
-                        return;
+                        connection.ResumeGame();
+                            return;
                     }
                     Thread.Sleep(SLEEP_TIME);
                 }

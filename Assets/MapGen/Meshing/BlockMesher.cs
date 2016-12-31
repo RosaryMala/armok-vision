@@ -1,6 +1,8 @@
 ﻿using DFHack;
 using RemoteFortressReader;
+using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using UnityEngine;
 
@@ -33,7 +35,6 @@ abstract class BlockMesher {
         public CPUMesh collisionMesh;
         public CPUMesh terrainMesh;
         public CPUMesh topTerrainMesh;
-        public CPUMesh grassMesh;
     }
 
     protected struct Request {
@@ -42,31 +43,32 @@ abstract class BlockMesher {
         public MapDataStore data;
     }
 
-    // There is REALLY NO REASON FOR THIS TO EXIST.
-    // If unity was SENSIBLE we could use thread-local storage,
-    // but unity is insensible, so we have to thread one of these through every method
-    // that uses temporary buffers instead.
-    protected struct TempBuffers {
-        public void Init() {
-            meshBuffer =
-                new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize * (int)MeshLayer.StaticCutout];
-            stencilMeshBuffer =
-                new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize * ((int)MeshLayer.StaticTransparent - (int)MeshLayer.StaticCutout)];
-            transparentMeshBuffer =
-                new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize * ((int)MeshLayer.Collision - (int)MeshLayer.StaticTransparent)];
-            collisionMeshBuffer =
-                new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize * ((int)MeshLayer.NaturalTerrain - (int)MeshLayer.Collision)];
-            terrainMeshBuffer =
-                new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize];
-            heights = new float[2, 2];
-        }
+    [ThreadStatic]
+    static MeshCombineUtility.MeshInstance[] meshBuffer;
+    [ThreadStatic]
+    static MeshCombineUtility.MeshInstance[] stencilMeshBuffer;
+    [ThreadStatic]
+    static MeshCombineUtility.MeshInstance[] transparentMeshBuffer;
+    [ThreadStatic]
+    static MeshCombineUtility.MeshInstance[] collisionMeshBuffer;
+    [ThreadStatic]
+    static MeshCombineUtility.MeshInstance[] terrainMeshBuffer;
+    [ThreadStatic]
+    static float[,] heights;
 
-        public MeshCombineUtility.MeshInstance[] meshBuffer { get; private set; }
-        public MeshCombineUtility.MeshInstance[] stencilMeshBuffer { get; private set; }
-        public MeshCombineUtility.MeshInstance[] transparentMeshBuffer { get; private set; }
-        public MeshCombineUtility.MeshInstance[] collisionMeshBuffer { get; private set; }
-        public MeshCombineUtility.MeshInstance[] terrainMeshBuffer { get; private set; }
-        public float[,] heights { get; private set; }
+    static protected void InitBuffers()
+    {
+        meshBuffer =
+            new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize * (int)MeshLayer.StaticCutout];
+        stencilMeshBuffer =
+            new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize * ((int)MeshLayer.StaticTransparent - (int)MeshLayer.StaticCutout)];
+        transparentMeshBuffer =
+            new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize * ((int)MeshLayer.Collision - (int)MeshLayer.StaticTransparent)];
+        collisionMeshBuffer =
+            new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize * ((int)MeshLayer.NaturalTerrain - (int)MeshLayer.Collision)];
+        terrainMeshBuffer =
+            new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize];
+        heights = new float[2, 2];
     }
 
     // Stuff for runtime configuration.
@@ -103,6 +105,12 @@ abstract class BlockMesher {
 
     // Does what you'd expect.
     public abstract void Terminate();
+
+    /// <summary>
+    /// Gets the status of the current generator
+    /// </summary>
+    /// <returns>status of the threaded mesher, if applicable.</returns>
+    public abstract string Status();
 
     // Enqueue a block for meshing; inclde 
     public bool Enqueue(DFCoord targetLocation, bool tiles, bool liquids) {
@@ -192,18 +200,18 @@ abstract class BlockMesher {
     // ACTUAL MESHING CODE!
     // -------------------------------------------------
 
-    protected Result CreateMeshes(Request request, TempBuffers temp)
+    protected Result CreateMeshes(Request request)
     {
         Result result = new Result();
         result.location = request.data.SliceOrigin;
         if (request.liquids)
         {
-            result.water = GenerateLiquidSurface(request.data, MapDataStore.WATER_INDEX, temp);
-            result.magma = GenerateLiquidSurface(request.data, MapDataStore.MAGMA_INDEX, temp);
+            result.water = GenerateLiquidSurface(request.data, MapDataStore.WATER_INDEX);
+            result.magma = GenerateLiquidSurface(request.data, MapDataStore.MAGMA_INDEX);
         }
         if (request.tiles)
         {
-            GenerateTiles(request.data, out result.tiles, out result.stencilTiles, out result.transparentTiles, out result.topTiles, out result.topStencilTiles, out result.topTransparentTiles, out result.collisionMesh, out result.terrainMesh, out result.topTerrainMesh, temp);
+            GenerateTiles(request.data, out result.tiles, out result.stencilTiles, out result.transparentTiles, out result.topTiles, out result.topStencilTiles, out result.topTransparentTiles, out result.collisionMesh, out result.terrainMesh, out result.topTerrainMesh);
         }
         return result;
     }
@@ -212,7 +220,7 @@ abstract class BlockMesher {
     {
         return (x * (GameMap.blockSize + 1)) + y;
     }
-    CPUMesh GenerateLiquidSurface(MapDataStore data, int liquid_select, TempBuffers temp)
+    CPUMesh GenerateLiquidSurface(MapDataStore data, int liquid_select)
     {
         int block_x = data.SliceOrigin.x / GameMap.blockSize;
         int block_y = data.SliceOrigin.y / GameMap.blockSize;
@@ -224,15 +232,15 @@ abstract class BlockMesher {
         List<int> finalFaces = new List<int>();
 
         // Is this necessary?
-        temp.heights[0,0] = 0;
-        temp.heights[0,1] = 0;
-        temp.heights[1,0] = 0;
-        temp.heights[1,1] = 0;
+        heights[0,0] = 0;
+        heights[0,1] = 0;
+        heights[1,0] = 0;
+        heights[1,1] = 0;
 
         for (int xx = 0; xx <= GameMap.blockSize; xx++)
             for (int yy = 0; yy <= GameMap.blockSize; yy++)
             {
-                //first find the temp.heights of all tiles sharing one corner.
+                //first find the heights of all tiles sharing one corner.
                 for (int xxx = 0; xxx < 2; xxx++)
                     for (int yyy = 0; yyy < 2; yyy++)
                     {
@@ -240,37 +248,37 @@ abstract class BlockMesher {
                         int y = (block_y * GameMap.blockSize) + yy + yyy - 1;
                         if (x < 0 || y < 0 || x >= MapDataStore.MapSize.x || y >= MapDataStore.MapSize.y)
                         {
-                            temp.heights[xxx, yyy] = -1;
+                            heights[xxx, yyy] = -1;
                             continue;
                         }
                         var maybeTile = data[x, y, block_z];
                         if (maybeTile == null)
                         {
-                            temp.heights[xxx, yyy] = -1;
+                            heights[xxx, yyy] = -1;
                             continue;
                         }
                         var tile = maybeTile;
                         if (tile.isWall)
                         {
-                            temp.heights[xxx, yyy] = -1;
+                            heights[xxx, yyy] = -1;
                             continue;
                         }
-                        temp.heights[xxx, yyy] = data.GetLiquidLevel(new DFCoord(x,y,block_z), liquid_select);
-                        temp.heights[xxx, yyy] /= 7.0f;
+                        heights[xxx, yyy] = data.GetLiquidLevel(new DFCoord(x,y,block_z), liquid_select);
+                        heights[xxx, yyy] /= 7.0f;
                         if (tile.isFloor)
                         {
-                            temp.heights[xxx, yyy] *= (GameMap.tileHeight - GameMap.floorHeight);
-                            temp.heights[xxx, yyy] += GameMap.floorHeight;
+                            heights[xxx, yyy] *= (GameMap.tileHeight - GameMap.floorHeight);
+                            heights[xxx, yyy] += GameMap.floorHeight;
                         }
                         else
-                            temp.heights[xxx, yyy] *= GameMap.tileHeight;
+                            heights[xxx, yyy] *= GameMap.tileHeight;
 
                     }
 
                 //now find their average, discaring invalid ones.
                 float height = 0;
                 float total = 0;
-                foreach (var item in temp.heights)
+                foreach (var item in heights)
                 {
                     if (item < 0)
                         continue;
@@ -281,15 +289,15 @@ abstract class BlockMesher {
                     height /= total;
                 //find the slopes.
                 float sx = ((
-                    (temp.heights[0, 0] < 0 ? height : temp.heights[0, 0]) +
-                    (temp.heights[0, 1] < 0 ? height : temp.heights[0, 1])) / 2) - ((
-                    (temp.heights[1, 0] < 0 ? height : temp.heights[1, 0]) +
-                    (temp.heights[1, 1] < 0 ? height : temp.heights[1, 1])) / 2);
+                    (heights[0, 0] < 0 ? height : heights[0, 0]) +
+                    (heights[0, 1] < 0 ? height : heights[0, 1])) / 2) - ((
+                    (heights[1, 0] < 0 ? height : heights[1, 0]) +
+                    (heights[1, 1] < 0 ? height : heights[1, 1])) / 2);
                 float sy = ((
-                    (temp.heights[0, 0] < 0 ? height : temp.heights[0, 0]) +
-                    (temp.heights[1, 0] < 0 ? height : temp.heights[1, 0])) / 2) - ((
-                    (temp.heights[0, 1] < 0 ? height : temp.heights[0, 1]) +
-                    (temp.heights[1, 1] < 0 ? height : temp.heights[1, 1])) / 2);
+                    (heights[0, 0] < 0 ? height : heights[0, 0]) +
+                    (heights[1, 0] < 0 ? height : heights[1, 0])) / 2) - ((
+                    (heights[0, 1] < 0 ? height : heights[0, 1]) +
+                    (heights[1, 1] < 0 ? height : heights[1, 1])) / 2);
                 finalNormals[coord2Index(xx, yy)] = new Vector3(sx, GameMap.tileWidth * 2, -sy);
                 finalNormals[coord2Index(xx, yy)].Normalize();
 
@@ -329,7 +337,7 @@ abstract class BlockMesher {
         }
     }
 
-    bool GenerateTiles(MapDataStore data, out CPUMesh tiles, out CPUMesh stencilTiles, out CPUMesh transparentTiles, out CPUMesh topTiles, out CPUMesh topStencilTiles, out CPUMesh topTransparentTiles, out CPUMesh collisionTiles, out CPUMesh terrainTiles, out CPUMesh topTerrainTiles, TempBuffers temp)
+    bool GenerateTiles(MapDataStore data, out CPUMesh tiles, out CPUMesh stencilTiles, out CPUMesh transparentTiles, out CPUMesh topTiles, out CPUMesh topStencilTiles, out CPUMesh topTransparentTiles, out CPUMesh collisionTiles, out CPUMesh terrainTiles, out CPUMesh topTerrainTiles)
     {
         int block_x = data.SliceOrigin.x / GameMap.blockSize;
         int block_y = data.SliceOrigin.y / GameMap.blockSize;
@@ -349,27 +357,56 @@ abstract class BlockMesher {
                 {
                     if (i < (int)MeshLayer.StaticCutout)
                     {
-                        FillMeshBuffer(out temp.meshBuffer[bufferIndex], (MeshLayer)i, data[xx, yy, block_z], GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize), yy - (block_y * GameMap.blockSize), -GameMap.MapZOffset));
+                        FillMeshBuffer(
+                            out meshBuffer[bufferIndex],
+                            (MeshLayer)i,
+                            data[xx, yy, block_z],
+                            GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize),
+                            yy - (block_y * GameMap.blockSize),
+                            -GameMap.MapZOffset));
                         bufferIndex++;
                     }
                     else if (i < (int)MeshLayer.StaticTransparent)
                     {
-                        FillMeshBuffer(out temp.stencilMeshBuffer[stencilBufferIndex], (MeshLayer)i, data[xx, yy, block_z], GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize), yy - (block_y * GameMap.blockSize), -GameMap.MapZOffset));
+                        FillMeshBuffer(
+                            out stencilMeshBuffer[stencilBufferIndex],
+                            (MeshLayer)i,
+                            data[xx, yy, block_z],
+                            GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize),
+                            yy - (block_y * GameMap.blockSize),
+                            -GameMap.MapZOffset));
                         stencilBufferIndex++;
                     }
                     else if (i < (int)MeshLayer.Collision)
                     {
-                        FillMeshBuffer(out temp.transparentMeshBuffer[transparentBufferIndex], (MeshLayer)i, data[xx, yy, block_z], GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize), yy - (block_y * GameMap.blockSize), -GameMap.MapZOffset));
+                        FillMeshBuffer(
+                            out transparentMeshBuffer[transparentBufferIndex],
+                            (MeshLayer)i,
+                            data[xx, yy, block_z],
+                            GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize),
+                            yy - (block_y * GameMap.blockSize),
+                            -GameMap.MapZOffset));
                         transparentBufferIndex++;
                     }
                     else if (i < (int)MeshLayer.NaturalTerrain)
                     {
-                        FillMeshBuffer(out temp.collisionMeshBuffer[collisionIndex], (MeshLayer)i, data[xx, yy, block_z], GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize), yy - (block_y * GameMap.blockSize), -GameMap.MapZOffset));
+                        FillMeshBuffer(
+                            out collisionMeshBuffer[collisionIndex],
+                            (MeshLayer)i,
+                            data[xx, yy, block_z],
+                            GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize),
+                            yy - (block_y * GameMap.blockSize),
+                            -GameMap.MapZOffset));
                         collisionIndex++;
                     }
                     else if(i == (int)MeshLayer.NaturalTerrain)
                     {
-                        FillMeshBuffer(out temp.terrainMeshBuffer[terrainIndex], (MeshLayer)i, data[xx, yy, block_z], GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize), yy - (block_y * GameMap.blockSize), -GameMap.MapZOffset));
+                        FillMeshBuffer(out terrainMeshBuffer[terrainIndex],
+                            (MeshLayer)i, 
+                            data[xx, yy, block_z],
+                            GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize),
+                            yy - (block_y * GameMap.blockSize),
+                            -GameMap.MapZOffset));
                         terrainIndex++;
                     }
                 }
@@ -379,15 +416,15 @@ abstract class BlockMesher {
         if (block_z == 0)
             voxelGen.bottomless = true;
         terrainTiles = voxelGen.TerrainMesh;
-        terrainTiles = MeshCombineUtility.ColorCombine(temp.terrainMeshBuffer, out dontCare, false, terrainTiles);
-        topTerrainTiles = MeshCombineUtility.ColorCombine(temp.terrainMeshBuffer, out dontCare, true);
-        stencilTiles = MeshCombineUtility.ColorCombine(temp.stencilMeshBuffer, out dontCare, false);
-        topStencilTiles = MeshCombineUtility.ColorCombine(temp.stencilMeshBuffer, out dontCare, true);
-        transparentTiles = MeshCombineUtility.ColorCombine(temp.transparentMeshBuffer, out dontCare, false);
-        topTransparentTiles = MeshCombineUtility.ColorCombine(temp.transparentMeshBuffer, out dontCare, true);
-        topTiles = MeshCombineUtility.ColorCombine(temp.meshBuffer, out dontCare, true);
-        tiles = MeshCombineUtility.ColorCombine(temp.meshBuffer, out success, false);
-        collisionTiles = MeshCombineUtility.ColorCombine(temp.collisionMeshBuffer, out dontCare, false);
+        terrainTiles = MeshCombineUtility.ColorCombine(terrainMeshBuffer, out dontCare, false, terrainTiles);
+        topTerrainTiles = MeshCombineUtility.ColorCombine(terrainMeshBuffer, out dontCare, true);
+        stencilTiles = MeshCombineUtility.ColorCombine(stencilMeshBuffer, out dontCare, false);
+        topStencilTiles = MeshCombineUtility.ColorCombine(stencilMeshBuffer, out dontCare, true);
+        transparentTiles = MeshCombineUtility.ColorCombine(transparentMeshBuffer, out dontCare, false);
+        topTransparentTiles = MeshCombineUtility.ColorCombine(transparentMeshBuffer, out dontCare, true);
+        topTiles = MeshCombineUtility.ColorCombine(meshBuffer, out dontCare, true);
+        tiles = MeshCombineUtility.ColorCombine(meshBuffer, out success, false);
+        collisionTiles = MeshCombineUtility.ColorCombine(collisionMeshBuffer, out dontCare, false);
 
         return success;
     }
@@ -757,10 +794,9 @@ abstract class BlockMesher {
 // For meshing on the Unity thread.
 // Mostly for debugging purposes.
 sealed class SingleThreadedMesher : BlockMesher {
-    private readonly TempBuffers temp;
-    public SingleThreadedMesher() {
-        temp = new TempBuffers();
-        temp.Init();
+    public SingleThreadedMesher()
+    {
+        InitBuffers();
     }
 
     public override void Poll() {
@@ -769,8 +805,13 @@ sealed class SingleThreadedMesher : BlockMesher {
         StatsReadout.QueueLength = requestQueue.Count;
         if (requestQueue.Count == 0) return;
         Request req = requestQueue.Dequeue();
-        resultQueue.Enqueue(CreateMeshes(req, temp));
+        resultQueue.Enqueue(CreateMeshes(req));
         recycledBlocks.Push(req.data);
+    }
+
+    public override string Status()
+    {
+        return "Single threaded.";
     }
 
     public override void Terminate() {}
@@ -803,67 +844,94 @@ sealed class MultiThreadedMesher : BlockMesher {
         finished = true;
         foreach (var item in threads)
         {
-            if(item != null)
-                item.Join(100);
+            if (item != null)
+            {
+                if (!item.Join(1000))
+                {
+                    Debug.Log("Thread failed to join in time, attempting to kill it.");
+                    item.Abort(); //we asked nicely.
+                }
+            }
         }
     }
 
     // The actual computation
-    public void MeshForever() {
-        // Allocate our buffers
-        TempBuffers temp = new TempBuffers();
-        temp.Init();
+    public void MeshForever()
+    {
+        InitBuffers();
         long[] times = new long[10];
         int index = 0;
         System.Diagnostics.Stopwatch watch;
         // Loop forever
-        while (!finished) {
-            if(ContentLoader.Instance == null)
+        while (!finished)
+        {
+            try
             {
-                //If there's nothing loaded yet, don't do anything.
-                Thread.Sleep(SLEEP_TIME);
-                continue;
-            }
-            Request? maybeWorkItem;
-            // Check for an item
-            lock (requestQueue)
-            {
-                if (requestQueue.Count > 0)
+                if (ContentLoader.Instance == null)
                 {
-                    maybeWorkItem = requestQueue.Dequeue();
+                    //If there's nothing loaded yet, don't do anything.
+                    Thread.Sleep(SLEEP_TIME);
+                    continue;
                 }
-                else {
-                    maybeWorkItem = null;
+                Request? maybeWorkItem;
+                // Check for an item
+                lock (requestQueue)
+                {
+                    if (requestQueue.Count > 0)
+                    {
+                        maybeWorkItem = requestQueue.Dequeue();
+                    }
+                    else
+                    {
+                        maybeWorkItem = null;
+                    }
+                    StatsReadout.QueueLength = requestQueue.Count;
                 }
-                StatsReadout.QueueLength = requestQueue.Count;
+                if (!maybeWorkItem.HasValue)
+                {
+                    // Wait a bit; TODO tune SLEEP_TIME
+                    Thread.Sleep(SLEEP_TIME);
+                    continue;
+                }
+                // We've got something to do!
+                Request workItem = maybeWorkItem.Value;
+                watch = System.Diagnostics.Stopwatch.StartNew();
+                Result result = CreateMeshes(workItem);
+                watch.Stop();
+                times[index] = watch.ElapsedTicks;
+                index++;
+                if (index >= times.Length)
+                    index = 0;
+                long average = 0;
+                foreach (long item in times)
+                {
+                    average += item;
+                }
+                average /= times.Length;
+                StatsReadout.BlockProcessTime = new System.TimeSpan(average);
+                lock (resultQueue)
+                {
+                    resultQueue.Enqueue(result);
+                }
+                lock (recycledBlocks)
+                {
+                    recycledBlocks.Push(workItem.data);
+                }
             }
-            if (!maybeWorkItem.HasValue) {
-                // Wait a bit; TODO tune SLEEP_TIME
-                Thread.Sleep(SLEEP_TIME);
-                continue;
-            }
-            // We've got something to do!
-            Request workItem = maybeWorkItem.Value;
-            watch = System.Diagnostics.Stopwatch.StartNew();
-            Result result = CreateMeshes(workItem, temp);
-            watch.Stop();
-            times[index] = watch.ElapsedTicks;
-            index++;
-            if (index >= times.Length)
-                index = 0;
-            long average = 0;
-            foreach (long item in times)
+            catch(Exception e)
             {
-                average += item;
-            }
-            average /= times.Length;
-            StatsReadout.BlockProcessTime = new System.TimeSpan(average);
-            lock (resultQueue) {
-                resultQueue.Enqueue(result);
-            }
-            lock (recycledBlocks) {
-                recycledBlocks.Push(workItem.data);
+                Debug.LogError(e);
             }
         }
+    }
+
+    public override string Status()
+    {
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < threads.Length; i++)
+        {
+            sb.Append("Thread ").Append(i).Append(": ").Append(threads[i] == null ? "NULL" : threads[i].ThreadState.ToString()).AppendLine();
+        }
+        return sb.ToString();
     }
 }
