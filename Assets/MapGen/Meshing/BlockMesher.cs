@@ -166,21 +166,41 @@ abstract class BlockMesher {
         return true;
     }
 
-    public Result? Dequeue() {
-        lock (resultQueue) {
-            if (resultQueue.Count > 0) {
-                return resultQueue.Dequeue();
-            } else {
-                return null;
+    public Result? Dequeue()
+    {
+        if (Monitor.TryEnter(resultQueue, 1000))
+            try
+            {
+                if (resultQueue.Count > 0)
+                {
+                    return resultQueue.Dequeue();
+                }
+                else
+                {
+                    return null;
+                }
             }
-        }
+            finally
+            {
+                Monitor.Exit(resultQueue);
+            }
+        else
+            return null;
     }
 
     public bool HasNewMeshes {
         get {
-            lock (resultQueue) {
-                return resultQueue.Count > 0;
-            }
+            if (Monitor.TryEnter(resultQueue, 1000))
+                try
+                {
+                    return resultQueue.Count > 0;
+                }
+                finally
+                {
+                    Monitor.Exit(resultQueue);
+                }
+            else
+                return false;
         }
     }
 
@@ -875,17 +895,29 @@ sealed class MultiThreadedMesher : BlockMesher {
                 }
                 Request? maybeWorkItem;
                 // Check for an item
-                lock (requestQueue)
+                if (Monitor.TryEnter(requestQueue, 1000))
                 {
-                    if (requestQueue.Count > 0)
+                    try
                     {
-                        maybeWorkItem = requestQueue.Dequeue();
+                        if (requestQueue.Count > 0)
+                        {
+                            maybeWorkItem = requestQueue.Dequeue();
+                        }
+                        else
+                        {
+                            maybeWorkItem = null;
+                        }
+                        StatsReadout.QueueLength = requestQueue.Count;
                     }
-                    else
+                    finally
                     {
-                        maybeWorkItem = null;
+                        Monitor.Exit(requestQueue);
                     }
-                    StatsReadout.QueueLength = requestQueue.Count;
+                }
+                else
+                {
+                    maybeWorkItem = null;
+                    Debug.Log("Meshing thread timed out getting a lock on the task queue");
                 }
                 if (!maybeWorkItem.HasValue)
                 {
