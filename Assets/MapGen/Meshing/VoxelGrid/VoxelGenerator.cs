@@ -7,11 +7,6 @@ using DFHack;
 
 public class VoxelGenerator
 {
-    MapDataStore map;
-    public VoxelGenerator(MapDataStore map)
-    {
-        this.map = map;
-    }
 
     private List<Vector3> vertices = new List<Vector3>();
     private List<Vector2> uvs = new List<Vector2>();
@@ -32,15 +27,6 @@ public class VoxelGenerator
     }
 
     CornerType UsedCornerType { get { return GameSettings.Instance.meshing.cornerType; } }
-
-    public CPUMesh TerrainMesh
-    {
-        get
-        {
-            Triangulate();
-            return new CPUMesh(vertices.ToArray(), null, null, uvs.ToArray(), null, null, null, triangles.ToArray());
-        }
-    }
 
     [Flags]
     enum Directions
@@ -83,7 +69,7 @@ public class VoxelGenerator
         return RotateCW(RotateCW(RotateCW(dir)));
     }
 
-    private void Triangulate()
+    public CPUMesh Triangulate(MapDataStore map)
     {
         vertices.Clear();
         uvs.Clear();
@@ -93,14 +79,16 @@ public class VoxelGenerator
         wallPolygons.Clear();
         floorPolygons.Clear();
 
-        TriangulateCellRows();
+        TriangulateCellRows(map);
 
         ConvertToMesh(wallPolygons.Polygons, GameMap.tileHeight);
         ConvertToMesh(floorPolygons.Polygons, GameMap.floorHeight);
 
+        return new CPUMesh(vertices.ToArray(), null, null, uvs.ToArray(), null, null, null, triangles.ToArray());
+
     }
 
-    private void TriangulateCellRows()
+    private void TriangulateCellRows(MapDataStore map)
     {
         for (int y = map.MinCoord.y; y < map.MaxCoord.y - 1; y++)
         {

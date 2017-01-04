@@ -432,10 +432,10 @@ abstract class BlockMesher {
                 }
             }
         bool dontCare, success;
-        VoxelGenerator voxelGen = new VoxelGenerator(data);
+        VoxelGenerator voxelGen = new VoxelGenerator();
         if (block_z == 0)
             voxelGen.bottomless = true;
-        terrainTiles = voxelGen.TerrainMesh;
+        terrainTiles = voxelGen.Triangulate(data);
         terrainTiles = MeshCombineUtility.ColorCombine(terrainMeshBuffer, out dontCare, false, terrainTiles);
         topTerrainTiles = MeshCombineUtility.ColorCombine(terrainMeshBuffer, out dontCare, true);
         stencilTiles = MeshCombineUtility.ColorCombine(stencilMeshBuffer, out dontCare, false);
