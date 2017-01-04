@@ -282,8 +282,6 @@ public class GameMap : MonoBehaviour
 
     public GameObject dfScreen;
 
-    public Text threadStatus;
-
     // Run once per frame.
     void Update()
     {
@@ -294,9 +292,6 @@ public class GameMap : MonoBehaviour
 
             dfScreen.SetActive(GameSettings.Instance.game.showDFScreen);
         }
-
-        if(mesher != null)
-            threadStatus.text = mesher.Status();
 
         var camera = FindObjectOfType<CameraMovement>();
 
