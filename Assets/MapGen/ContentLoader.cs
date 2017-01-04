@@ -55,8 +55,6 @@ public class ContentLoader : MonoBehaviour
         DFConnection.RegisterConnectionCallback(Initialize);
     }
 
-    public Text statusText;
-
     public static ContentLoader Instance { get; private set; }
 
     public static MatBasic lookupMaterialType(string value)
@@ -247,15 +245,13 @@ public class ContentLoader : MonoBehaviour
         watch.Stop();
         Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
         Debug.Log(string.Format("loaded {0} meshes, {1} pattern textures, {2} colors, and {3} shape textures.", MeshContent.NumCreated, TextureContent.NumCreated, ColorContent.NumCreated, "XXX"));
-        statusText.gameObject.SetActive(false);
         yield return null;
     }
 
 
     IEnumerator ParseContentIndexFile(string path)
     {
-        if (statusText != null)
-            statusText.text = "Loading Index File: " + path;
+        Debug.Log("Loading Index File: " + path);
 
         string line;
         List<string> fileArray = new List<string>(); //This allows us to parse the file in reverse.
@@ -299,8 +295,7 @@ public class ContentLoader : MonoBehaviour
 
     IEnumerator ParseContentXMLFile(string path)
     {
-        if(statusText != null)
-            statusText.text = "Loading XML File: " + path;
+            Debug.Log("Loading XML File: " + path);
         XElement doc = XElement.Load(path, LoadOptions.SetBaseUri | LoadOptions.SetLineInfo);
         while (doc != null)
         {
@@ -391,16 +386,13 @@ public class ContentLoader : MonoBehaviour
 
     IEnumerator FinalizeTextureAtlases()
     {
-        if (statusText != null)
-            statusText.text = "Building material textures...";
+        Debug.Log("Building material textures...");
         yield return null;
         materialTextureStorage.CompileTextures("MaterialTexture");
-        if (statusText != null)
-            statusText.text = "Building shape textures...";
+        Debug.Log("Building shape textures...");
         yield return null;
         shapeTextureStorage.CompileTextures("ShapeTexture", TextureFormat.RGBA32, new Color(1.0f, 0.5f, 0.0f, 0.5f), true);
-        if (statusText != null)
-            statusText.text = "Building special textures...";
+        Debug.Log("Building special textures...");
         yield return null;
         specialTextureStorage.CompileTextures("SpecialTexture");
 
