@@ -244,7 +244,7 @@ public class ContentLoader : MonoBehaviour
         Instance = this;
         watch.Stop();
         Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
-        Debug.Log(string.Format("loaded {0} meshes, {1} pattern textures, {2} colors, and {3} shape textures.", MeshContent.NumCreated, TextureContent.NumCreated, ColorContent.NumCreated, "XXX"));
+        Debug.Log(string.Format("loaded {0} meshes, {1} pattern textures, {2} colors, and {3} shape textures.", MeshContent.NumCreated, TextureContent.NumCreated, ColorContent.NumCreated, NormalContent.NumCreated));
         yield return null;
     }
 
