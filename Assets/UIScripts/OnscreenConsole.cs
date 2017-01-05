@@ -63,7 +63,7 @@ public class OnscreenConsole : MonoBehaviour
                     item.color = Color.white;
                     break;
                 case LogType.Exception:
-                    item.color = Color.green;
+                    item.color = new Color(1, 0.5f, 0);
                     break;
                 default:
                     break;
