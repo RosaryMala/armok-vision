@@ -568,6 +568,11 @@ public class GameMap : MonoBehaviour
         }
     }
 
+    public void OpenEmail()
+    {
+        Application.OpenURL("mailto:japa.mala.illo@gmail.com");
+    }
+
     void UpdateView()
     {
         RemoteFortressReader.ViewInfo newView = DFConnection.Instance.PopViewInfoUpdate();
