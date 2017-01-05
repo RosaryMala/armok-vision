@@ -73,7 +73,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a563f1bacb2125d4d92c458b02227a8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startfade: 3
+  startfade: 5
   fadelength: 3
 --- !u!222 &222928836244905866
 CanvasRenderer:
