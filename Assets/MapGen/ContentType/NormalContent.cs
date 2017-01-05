@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class NormalContent : IContent
 {
+    static int num_created = 0;
+    public static int NumCreated { get { return num_created; } }
+    public int UniqueIndex { get; private set; }
 
     TextureStorage store;
     public int StorageIndex { get; private set; }
@@ -67,6 +70,8 @@ public class NormalContent : IContent
         else
             StorageIndex = -1;
         Texture = combinedMap;
+        UniqueIndex = num_created;
+        num_created++;
         return true;
     }
 
