@@ -8,14 +8,23 @@ public class BuildingMatcher<T> {
     {
         set
         {
-            if (!BuildingTokenList.BuildingLookup.ContainsKey(token))
+            BuildingStruct bld = new BuildingStruct();
+            if (token == "*")
             {
-                Debug.Log("Invalid building: " + token);
-                return;
+                bld = new BuildingStruct(-1, -1, -1);
+            }
+            else
+            {
+                if (!BuildingTokenList.BuildingLookup.ContainsKey(token))
+                {
+                    Debug.Log("Invalid building: " + token);
+                    return;
+                }
+                bld = BuildingTokenList.BuildingLookup[token].building_type;
             }
             if (buildingList == null)
                 buildingList = new Dictionary<BuildingStruct, T>();
-            buildingList[BuildingTokenList.BuildingLookup[token].building_type] = value;
+            buildingList[bld] = value;
         }
     }
     public T this[BuildingStruct bld]
