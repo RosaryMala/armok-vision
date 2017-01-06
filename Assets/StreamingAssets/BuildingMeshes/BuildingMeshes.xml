@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <buildingMeshes>
+    <buildingMesh file="Unknown.obj">
+        <buildingType token="*"/>
+    </buildingMesh>
     <buildingMesh file="Chair.obj">
         <buildingType token="Chair"/>
     </buildingMesh>
