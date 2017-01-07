@@ -7,6 +7,8 @@ v0.15.0
  * Added onscreen debug logging.
  * Added a feedback button in the options menu.
  * Added a donate button in the options menu.
+ * Added coffin and slab models
+ * Added floating Question marks for unknown buildings.
 
 v 0.14.0
  * Added basic designation support. Only freehand at the moment. More brush types will come later.
