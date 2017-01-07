@@ -49,14 +49,14 @@ public class TileRenderer : MonoBehaviour
         if (capture == null)
             return;
 
-        if(width != capture.width || height != capture.height)
+        if (width != capture.width || height != capture.height)
         {
-            width = (int)capture.width;
+            width = Mathf.Min((int)capture.width, 16383 / (int)capture.height);
             height = (int)capture.height;
             GenerateTiles();
         }
 
-        for(int i = 0; i < capture.tiles.Count; i++)
+        for (int i = 0; i < width * height; i++)
         {
             var tile = capture.tiles[i];
 
@@ -90,8 +90,8 @@ public class TileRenderer : MonoBehaviour
         uvs = new Vector2[width * height * 4];
         triangles = new int[width * height * 6];
 
-        for(int x = 0; x < width; x++)
-            for(int y = 0; y < height; y++)
+        for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
             {
                 int index = coord2index(x, height - y - 1) * 4;
 
@@ -111,7 +111,7 @@ public class TileRenderer : MonoBehaviour
 
                 triangles[triIndex + 3] = index + 1;
                 triangles[triIndex + 4] = index + 2;
-                triangles[triIndex + 5] = index +3;
+                triangles[triIndex + 5] = index + 3;
             }
 
         mesh.Clear();
@@ -138,7 +138,7 @@ public class TileRenderer : MonoBehaviour
 
                 uvs[index * 4] = new Vector2(uvx / 16.0f, uvy / 16.0f);
                 uvs[(index * 4) + 1] = new Vector2((uvx + 1) / 16.0f, uvy / 16.0f);
-                uvs[(index * 4) + 2] = new Vector2(uvx / 16.0f, (uvy+1) / 16.0f);
+                uvs[(index * 4) + 2] = new Vector2(uvx / 16.0f, (uvy + 1) / 16.0f);
                 uvs[(index * 4) + 3] = new Vector2((uvx + 1) / 16.0f, (uvy + 1) / 16.0f);
 
                 Color color = new Color((fgColors[index] + 0.5f) / 16.0f, (bgColors[index] + 0.5f) / 16.0f, 0.5f);
