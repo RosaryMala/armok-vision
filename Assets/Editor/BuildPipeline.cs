@@ -14,6 +14,12 @@ public class BuildFactory
         BuildRelease(BuildTarget.StandaloneWindows64);
     }
 
+    [MenuItem("Mytools/Build Windows Release")]
+    public static void BuildWin()
+    {
+        BuildRelease(BuildTarget.StandaloneWindows64);
+    }
+
     static void BuildRelease(BuildTarget target)
     {
         BuildSettings buildSettings = Resources.Load("Build Settings", typeof(BuildSettings)) as BuildSettings;

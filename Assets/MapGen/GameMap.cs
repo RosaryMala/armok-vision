@@ -758,10 +758,10 @@ public class GameMap : MonoBehaviour
         blockDirtyBits[mapBlockX, mapBlockY, mapBlockZ] = true;
         grassLayerDirtyBits[mapBlockZ] = true;
         layerDirtyBits[mapBlockZ] = true;
-        if (mapBlockZ > 0)
+        if (mapBlockZ < layerDirtyBits.Length - 1)
         {
-            layerDirtyBits[mapBlockZ - 1] = true; //For ramp edges.
-            grassLayerDirtyBits[mapBlockZ] = true;
+            layerDirtyBits[mapBlockZ + 1] = true; //For ramp edges.
+            grassLayerDirtyBits[mapBlockZ + 1] = true;
         }
 
     }
