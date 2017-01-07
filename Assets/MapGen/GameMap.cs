@@ -568,9 +568,9 @@ public class GameMap : MonoBehaviour
         }
     }
 
-    public void OpenEmail()
+    public void OpenURL(string url)
     {
-        Application.OpenURL("mailto:japa.mala.illo@gmail.com");
+        Application.OpenURL(url);
     }
 
     void UpdateView()
