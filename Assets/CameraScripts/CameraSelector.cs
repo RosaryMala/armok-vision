@@ -109,12 +109,14 @@ public class CameraSelector : MonoBehaviour
 
     public void Start()
     {
+#if !UNITY_STANDALONE_LINUX
         if (VRSettings.loadedDeviceName == "OpenVR")
         {
             ChangeCamera(CameraOption.VR);
             Debug.Log("Started VR Mode");
         }
         else
+#endif
         {
             ChangeCamera(CameraOption.GodView);
             Debug.Log("Started Monitor Mode");

@@ -19,8 +19,10 @@ public class SteamVR : System.IDisposable
 	{
 		get
 		{
-			if (!UnityEngine.VR.VRSettings.enabled)
-				enabled = false;
+#if !UNITY_STANDALONE_LINUX
+            if (!UnityEngine.VR.VRSettings.enabled)
+#endif
+                enabled = false;
 			return _enabled;
 		}
 		set
@@ -56,12 +58,19 @@ public class SteamVR : System.IDisposable
 		}
 	}
 
-	public static bool usingNativeSupport
-	{
-		get { return UnityEngine.VR.VRDevice.GetNativePtr() != System.IntPtr.Zero; }
-	}
+    public static bool usingNativeSupport
+    {
+        get
+        {
+#if UNITY_STANDALONE_LINUX
+            return false;
+#else
+            return UnityEngine.VR.VRDevice.GetNativePtr() != System.IntPtr.Zero;
+#endif
+        }
+    }
 
-	static SteamVR CreateInstance()
+    static SteamVR CreateInstance()
 	{
 		try
 		{
@@ -180,7 +189,7 @@ public class SteamVR : System.IDisposable
 		return hmd.GetFloatTrackedDeviceProperty(OpenVR.k_unTrackedDeviceIndex_Hmd, prop, ref error);
 	}
 
-	#region Event callbacks
+#region Event callbacks
 
 	private void OnInitializing(params object[] args)
 	{
@@ -248,7 +257,7 @@ public class SteamVR : System.IDisposable
 		}
 	}
 
-	#endregion
+#endregion
 
 	private SteamVR()
 	{
