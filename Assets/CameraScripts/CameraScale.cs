@@ -46,14 +46,14 @@ public class CameraScale : MonoBehaviour
                     gameMap.firstPerson = false;
             }
         }
-
+#if !UNITY_STANDALONE_LINUX
         if (VRSettings.enabled)
         {
             Vector3 angles = transform.rotation.eulerAngles;
             angles = new Vector3(0, angles.y, 0);
             viewCamera.transform.rotation = Quaternion.Euler(angles);
         }
-
+#endif
     }
 
 
