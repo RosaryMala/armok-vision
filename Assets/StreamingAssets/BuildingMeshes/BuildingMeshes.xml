@@ -6,6 +6,9 @@
     <buildingMesh file="Coffin.obj" rotation="AwayFromWall">
         <buildingType token="Coffin"/>
     </buildingMesh>
+    <buildingMesh file="Slab.obj" rotation="AwayFromWall">
+        <buildingType token="Slab"/>
+    </buildingMesh>
     <buildingMesh file="Chair.obj">
         <buildingType token="Chair"/>
     </buildingMesh>
