@@ -370,8 +370,6 @@ public class GameMap : MonoBehaviour
                     {
                         layerDirtyBits[z] = true;
                         grassLayerDirtyBits[z] = true;
-                        if (z < blockDirtyBits.GetLength(2)-1) 
-                            layerDirtyBits[z + 1] = true; //For ramp edges.
                         spatterBlockDirtyBits[z] = true;
                     }
                     blockDirtyBits[x, y, z] = blockContentBits[x, y, z];
@@ -758,7 +756,14 @@ public class GameMap : MonoBehaviour
         mapBlockX /= blockSize;
         mapBlockY /= blockSize;
         blockDirtyBits[mapBlockX, mapBlockY, mapBlockZ] = true;
+        grassLayerDirtyBits[mapBlockZ] = true;
         layerDirtyBits[mapBlockZ] = true;
+        if (mapBlockZ > 0)
+        {
+            layerDirtyBits[mapBlockZ - 1] = true; //For ramp edges.
+            grassLayerDirtyBits[mapBlockZ] = true;
+        }
+
     }
     void SetBlockContent(int mapBlockX, int mapBlockY, int mapBlockZ)
     {
