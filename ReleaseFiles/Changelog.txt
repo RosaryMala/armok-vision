@@ -1,3 +1,13 @@
+v0.15.0
+ * Use HQ4x scaling on small sprites
+ * Completely new terrain generation system, with rounded corners, and fewer polygons
+ * New terrain texturing system, with smoothly blended textures
+ * Lots of new terrain textures to go with the new system.
+ * New grass textures, including custom textures for evil and good grass.
+ * Added onscreen debug logging.
+ * Added a feedback button in the options menu.
+ * Added a donate button in the options menu.
+
 v 0.14.0
  * Added basic designation support. Only freehand at the moment. More brush types will come later.
  * Added support for items on the floor.
