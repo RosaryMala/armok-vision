@@ -135,11 +135,11 @@
 		float weight = 1.0;
 		float4 sum = cx * weight;
  
-		uint centerSample = (uint)(NUM_SAMPLES-1) / 2;
+		int centerSample = (int)(NUM_SAMPLES-1) / 2;
  
 		// in DX11 county we take more samples and interleave with sampling along vx direction to break up "patternized" look
 
-		for(uint l=0; l<NUM_SAMPLES; l++) 
+		for(int l=0; l<NUM_SAMPLES; l++) 
 		{
 			if (l==centerSample) continue;	// skip center sample
 
