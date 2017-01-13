@@ -46,21 +46,23 @@ public class CameraFacing : MonoBehaviour
 
     void Update()
     {
+#if SteamVR
         //We need a different type of facing between VR and 2D
         if (SteamVR.active)
+        {
+             // look at players position with quaternion magic
+            // code above matches camera rotation, this is position based       
+            transform.rotation = Quaternion.LookRotation(transform.position - referenceCamera.transform.position);
+        }
+        else
+#endif
         {
             // rotates the object relative to the camera
             Vector3 targetPos = transform.position + referenceCamera.transform.rotation * (reverseFace ? Vector3.forward : Vector3.back);
             Vector3 targetOrientation = referenceCamera.transform.rotation * GetAxis(axis);
             if (stayVertical)
-                targetPos = new Vector3(transform.position.x, transform.position.y, targetPos.z);
+                targetPos = new Vector3(targetPos.x, transform.position.y, targetPos.z);
             transform.LookAt(targetPos, targetOrientation);
-        }
-        else
-        {
-            // look at players position with quaternion magic
-            // code above matches camera rotation, this is position based       
-            transform.rotation = Quaternion.LookRotation(transform.position - referenceCamera.transform.position);
         }
     }
 }
