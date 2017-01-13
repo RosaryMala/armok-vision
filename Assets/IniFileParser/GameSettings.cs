@@ -237,7 +237,6 @@ public class GameSettings : MonoBehaviour
     Slider postprocessSlider;
     public void InitPostProcessing(GameObject go)
     {
-        UnityEngine.Debug.Log("Invoked from " + go);
         postprocessSlider = go.GetComponent<Slider>();
         SetSlider(postprocessSlider, Convert.ToInt32(Instance.camera.postProcessing));
     }
