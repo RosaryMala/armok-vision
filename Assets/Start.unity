@@ -8685,7 +8685,6 @@ GameObject:
   - component: {fileID: 1169102435}
   - component: {fileID: 1169102444}
   - component: {fileID: 1169102441}
-  - component: {fileID: 1169102436}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -8710,20 +8709,6 @@ MonoBehaviour:
   dfCoord: {x: 0, y: 0, z: 0}
   highlightLineMaterial: {fileID: 2100000, guid: 1c9356298dc65654d87468f4b00d9831,
     type: 2}
---- !u!114 &1169102436
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1169102434}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bca9ccf900ccc84c887d783321d27e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _head: {fileID: 0}
-  _ears: {fileID: 0}
-  wireframe: 0
 --- !u!114 &1169102437
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10312,6 +10297,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 904a144b62f48c841afda923f3c73423, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slider: {fileID: 0}
+  valueLabel: {fileID: 0}
+  cam: {fileID: 0}
+  gameMap: {fileID: 0}
+  ssao: {fileID: 0}
 --- !u!1 &1459889553
 GameObject:
   m_ObjectHideFlags: 0
