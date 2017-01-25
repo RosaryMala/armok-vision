@@ -265,7 +265,7 @@ public class ContentLoader : MonoBehaviour
             if (line[0] == '#') //Allow comments
                 continue;
 
-            fileArray.Add(string.Copy(line));
+            fileArray.Add(line);
         }
         file.Close();
         string filePath;
@@ -282,7 +282,12 @@ public class ContentLoader : MonoBehaviour
             switch (Path.GetExtension(filePath))
             {
                 case ".txt":
-                    yield return StartCoroutine(ParseContentIndexFile(filePath));
+                    StreamReader mightBeRaw = new StreamReader(filePath);
+                    //first check if it's a DF raw file.
+                    if (mightBeRaw.ReadLine() == Path.GetFileNameWithoutExtension(filePath))
+                        yield return StartCoroutine(ParseContentRawFile(filePath));
+                    else
+                        yield return StartCoroutine(ParseContentIndexFile(filePath));
                     break;
                 case ".xml":
                     yield return StartCoroutine(ParseContentXMLFile(filePath));
@@ -382,6 +387,15 @@ public class ContentLoader : MonoBehaviour
             }
             doc = doc.NextNode as XElement;
         }
+        yield return null;
+    }
+
+    IEnumerator ParseContentRawFile(string path)
+    {
+        Debug.Log("Loading Raw File: " + path);
+
+        RawLoader.ParseRaw(File.ReadAllText(path));
+
         yield return null;
     }
 
