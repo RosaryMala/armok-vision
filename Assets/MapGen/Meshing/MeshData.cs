@@ -1,7 +1,8 @@
-﻿using UnityEngine;
-using UnityExtension;
+﻿using System;
+using UnityEngine;
 
 // Stores data like a Mesh, but doesn't talk to the graphics card.
+[Serializable]
 public class CPUMesh
 {
     // Everything is readonly because this will be accessed from
