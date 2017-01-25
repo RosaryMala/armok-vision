@@ -48,7 +48,7 @@ namespace hqx
             var dest = new Texture2D(bitmap.width * 4, bitmap.height * 4);
 
             var bmpData = bitmap.GetPixels32();
-            var destData = dest.GetPixels32();
+            Color32[] destData = new Color32[bitmap.width * 4 * bitmap.height * 4];
 
             Scale4(bmpData, destData, Xres, Yres, trY, trU, trV, trA, wrapX, wrapY);
 
