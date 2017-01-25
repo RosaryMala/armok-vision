@@ -96,6 +96,9 @@ public class ContentLoader : MonoBehaviour
         }
     }
 
+    Dictionary<string, int> spritePageIndices = new Dictionary<string, int>();
+    List<TextureStorage> spritePages = new List<TextureStorage>();
+
     TextureStorage materialTextureStorage;
     TextureStorage shapeTextureStorage;
     TextureStorage specialTextureStorage;
@@ -423,5 +426,4 @@ public class ContentLoader : MonoBehaviour
         GC.Collect();
         yield return null;
     }
-
 }
