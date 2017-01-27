@@ -282,21 +282,28 @@ public class ContentLoader : MonoBehaviour
             {
                 continue; //Todo: Make an error message here
             }
-            switch (Path.GetExtension(filePath))
+            if (Directory.Exists(filePath)) //if it's a directory, just parse the contents
             {
-                case ".txt":
-                    StreamReader mightBeRaw = new StreamReader(filePath);
-                    //first check if it's a DF raw file.
-                    if (mightBeRaw.ReadLine() == Path.GetFileNameWithoutExtension(filePath))
-                        yield return StartCoroutine(ParseContentRawFile(filePath));
-                    else
-                        yield return StartCoroutine(ParseContentIndexFile(filePath));
-                    break;
-                case ".xml":
-                    yield return StartCoroutine(ParseContentXMLFile(filePath));
-                    break;
-                default:
-                    break;
+                ParseContentDirectory(filePath);
+            }
+            else
+            {
+                switch (Path.GetExtension(filePath))
+                {
+                    case ".txt":
+                        StreamReader mightBeRaw = new StreamReader(filePath);
+                        //first check if it's a DF raw file.
+                        if (mightBeRaw.ReadLine() == Path.GetFileNameWithoutExtension(filePath))
+                            yield return StartCoroutine(ParseContentRawFile(filePath));
+                        else
+                            yield return StartCoroutine(ParseContentIndexFile(filePath));
+                        break;
+                    case ".xml":
+                        yield return StartCoroutine(ParseContentXMLFile(filePath));
+                        break;
+                    default:
+                        break;
+                }
             }
         }
         yield return null;
@@ -399,6 +406,18 @@ public class ContentLoader : MonoBehaviour
 
         RawLoader.ParseRaw(File.ReadAllText(path));
 
+        yield return null;
+    }
+
+    IEnumerator ParseContentDirectory(string path)
+    {
+        foreach (var file in Directory.GetFiles(path, "*.txt", SearchOption.AllDirectories))
+        {
+            StreamReader mightBeRaw = new StreamReader(file);
+            //first check if it's a DF raw file.
+            if (mightBeRaw.ReadLine() == Path.GetFileNameWithoutExtension(file))
+                yield return StartCoroutine(ParseContentRawFile(file));
+        }
         yield return null;
     }
 
