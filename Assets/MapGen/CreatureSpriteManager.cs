@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -11,7 +12,7 @@ public class CreatureSpriteManager
 
     CreatureRaceMatcher<MatPairStruct> creatureMatcher = new CreatureRaceMatcher<MatPairStruct>();
 
-    public void ParseGraphics(ref List<RawToken>.Enumerator tokenEnumerator)
+    public void ParseGraphics(ref List<RawToken>.Enumerator tokenEnumerator, string path)
     {
         Assert.AreEqual("GRAPHICS", tokenEnumerator.Current.Parameters[0]);
         bool rawLeft = true;
@@ -28,7 +29,7 @@ public class CreatureSpriteManager
             switch (tokenEnumerator.Current.Token)
             {
                 case "TILE_PAGE":
-                    rawLeft = ParseTilePage(ref tokenEnumerator);
+                    rawLeft = ParseTilePage(ref tokenEnumerator, path);
                     break;
                 case "CREATURE_GRAPHICS":
                     rawLeft = ParseGreatureGraphics(ref tokenEnumerator);
@@ -77,13 +78,13 @@ public class CreatureSpriteManager
         return rawLeft;
     }
 
-    private bool ParseTilePage(ref List<RawToken>.Enumerator tokenEnumerator)
+    private bool ParseTilePage(ref List<RawToken>.Enumerator tokenEnumerator, string path)
     {
         Assert.AreEqual("TILE_PAGE", tokenEnumerator.Current.Token);
 
         string pageName = tokenEnumerator.Current.Parameters[0];
 
-        string path = null;
+        path = Path.GetDirectoryName(path);
         int tileWidth = 0;
         int tileHeight = 0;
         int pageWidth = 0;
@@ -99,7 +100,7 @@ public class CreatureSpriteManager
                 case "TILE_PAGE":
                     goto loopExit;
                 case "FILE":
-                    path = token.Parameters[0];
+                    path = Path.Combine(path, token.Parameters[0]);
                     break;
                 case "TILE_DIM":
                     tileWidth = int.Parse(token.Parameters[0]);
@@ -123,9 +124,12 @@ public class CreatureSpriteManager
 
     public void FinalizeSprites()
     {
+        int count = 0;
         foreach (var page in tilePages)
         {
             page.FinalizeTextures();
+            count += page.Count;
         }
+        Debug.LogFormat("Loaded {0} creature sprites.", count);
     }
 }

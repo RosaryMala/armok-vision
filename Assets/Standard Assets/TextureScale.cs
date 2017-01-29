@@ -37,19 +37,26 @@ public static class TextureScale
 
     private static void ThreadedScale(Texture2D tex, int newWidth, int newHeight, bool useBilinear)
     {
-        texColors = tex.GetPixels();
+        tex.Resize(newWidth, newHeight);
+        tex.SetPixels(ThreadedScale(tex.GetPixels(), tex.width, tex.height, newWidth, newHeight, useBilinear));
+        tex.Apply();
+    }
+
+    public static Color[] ThreadedScale(Color[] texColors, int oldWidth, int oldHeight, int newWidth, int newHeight, bool useBilinear)
+    {
+        TextureScale.texColors = texColors;
         newColors = new Color[newWidth * newHeight];
         if (useBilinear)
         {
-            ratioX = 1.0f / ((float)newWidth / (tex.width - 1));
-            ratioY = 1.0f / ((float)newHeight / (tex.height - 1));
+            ratioX = 1.0f / ((float)newWidth / (oldWidth - 1));
+            ratioY = 1.0f / ((float)newHeight / (oldHeight - 1));
         }
         else
         {
-            ratioX = ((float)tex.width) / newWidth;
-            ratioY = ((float)tex.height) / newHeight;
+            ratioX = ((float)oldWidth) / newWidth;
+            ratioY = ((float)oldHeight) / newHeight;
         }
-        w = tex.width;
+        w = oldWidth;
         w2 = newWidth;
         var cores = Mathf.Min(SystemInfo.processorCount, newHeight);
         var slice = newHeight / cores;
@@ -97,9 +104,7 @@ public static class TextureScale
             }
         }
 
-        tex.Resize(newWidth, newHeight);
-        tex.SetPixels(newColors);
-        tex.Apply();
+        return newColors;
     }
 
     public static void BilinearScale(System.Object obj)
