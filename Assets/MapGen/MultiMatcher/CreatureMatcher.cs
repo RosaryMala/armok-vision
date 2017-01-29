@@ -55,7 +55,12 @@ public class CreatureRaceMatcher<T>
         }
     }
 
-
+    /// <summary>
+    /// sets an object to the specified token, using a static creature token list
+    /// that is populated from DF the first time it's used.
+    /// </summary>
+    /// <param name="token">String token in the form of "RACE:CASTE"</param>
+    /// <returns></returns>
     public T this[string token]
     {
         set
@@ -77,6 +82,12 @@ public class CreatureRaceMatcher<T>
             }
         }
     }
+    /// <summary>
+    /// sets an object to the specified race/caste ID.
+    /// This will always take precedence over objects set by string tokens.
+    /// </summary>
+    /// <param name="caste">numerical race/caste</param>
+    /// <returns></returns>
     public T this[MatPairStruct caste]
     {
         set
