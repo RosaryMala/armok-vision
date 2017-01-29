@@ -1,10 +1,12 @@
 ﻿using DFHack;
 using hqx;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using System;
 
-public class TilePage
+public class TilePage : ICollection
 {
     Texture2D originalPage;
     readonly int tileWidth;
@@ -16,20 +18,44 @@ public class TilePage
     List<DFCoord2d> coordList = new List<DFCoord2d>();
     Texture2DArray tileArray;
 
+    public int Count
+    {
+        get
+        {
+            return ((ICollection)coordList).Count;
+        }
+    }
+
+    public bool IsSynchronized
+    {
+        get
+        {
+            return ((ICollection)coordList).IsSynchronized;
+        }
+    }
+
+    public object SyncRoot
+    {
+        get
+        {
+            return ((ICollection)coordList).SyncRoot;
+        }
+    }
 
     public TilePage(string path, string pageName, int tileWidth, int tileHeight, int pageWidth, int pageHeight)
     {
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
-        this.pageWidth = pageWidth;
-        this.pageHeight = pageHeight;
-        this.pageName = pageName;
 
 
         var pageData = File.ReadAllBytes(path);
         originalPage = new Texture2D(2, 2, TextureFormat.ARGB32, false);
         originalPage.LoadImage(pageData);
         originalPage.name = pageName;
+
+        this.tileWidth = originalPage.width / pageWidth;
+        this.tileHeight = originalPage.height / pageHeight;
+        this.pageWidth = pageWidth;
+        this.pageHeight = pageHeight;
+        this.pageName = pageName;
     }
 
     public int AddTilePage(DFCoord2d coord)
@@ -58,7 +84,9 @@ public class TilePage
             scaleFactor = 2;
         }
 
-        tileArray = new Texture2DArray(tileWidth * scaleFactor, tileHeight * scaleFactor, coordList.Count, TextureFormat.ARGB32, true);
+
+
+        tileArray = new Texture2DArray(Mathf.ClosestPowerOfTwo(tileWidth * scaleFactor), Mathf.ClosestPowerOfTwo(tileHeight * scaleFactor), coordList.Count, TextureFormat.ARGB32, true);
 
         for (int i = 0; i < coordList.Count; i++)
         {
@@ -85,8 +113,21 @@ public class TilePage
                     tileDest32 = tileSource32;
                     break;
             }
-            tileArray.SetPixels32(tileDest32, i);
+            Texture2D texture = new Texture2D(tileWidth * scaleFactor, tileHeight * scaleFactor, TextureFormat.ARGB32, false);
+            texture.SetPixels32(tileDest32);
+            TextureScale.Bilinear(texture, Mathf.ClosestPowerOfTwo(tileWidth * scaleFactor), Mathf.ClosestPowerOfTwo(tileHeight * scaleFactor));
+            tileArray.SetPixels(texture.GetPixels(), i);
         }
         tileArray.Apply();
+    }
+
+    public void CopyTo(Array array, int index)
+    {
+        ((ICollection)coordList).CopyTo(array, index);
+    }
+
+    public IEnumerator GetEnumerator()
+    {
+        return ((ICollection)coordList).GetEnumerator();
     }
 }

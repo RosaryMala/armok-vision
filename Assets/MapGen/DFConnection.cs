@@ -513,6 +513,12 @@ public sealed class DFConnection : MonoBehaviour
             Debug.Log("Plant Raws fetched: " + netPlantRawList.plant_raws.Count);
         }
 
+        if(netCreatureRawList != null)
+        {
+            CreatureTokenList.CreatureRawList = netCreatureRawList.creature_raws;
+            Debug.Log("Creature Raws fetched: " + netCreatureRawList.creature_raws.Count);
+        }
+
         //Debug.Log("Buildingtypes fetched: " + netBuildingList.building_list.Count);
         //Debug.Log("Creature Raws fetched: " + netCreatureRawList.creature_raws.Count);
     }

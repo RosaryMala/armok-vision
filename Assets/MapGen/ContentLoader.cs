@@ -282,7 +282,7 @@ public class ContentLoader : MonoBehaviour
             }
             if (Directory.Exists(filePath)) //if it's a directory, just parse the contents
             {
-                ParseContentDirectory(filePath);
+                yield return ParseContentDirectory(filePath);
             }
             else
             {
@@ -409,7 +409,7 @@ public class ContentLoader : MonoBehaviour
                     {
                         case "GRAPHICS":
                             Debug.Log("Found graphics raws");
-                            SpriteManager.ParseGraphics(ref tokenEnumerator);
+                            SpriteManager.ParseGraphics(ref tokenEnumerator, path);
                             break;
                         default:
                             Debug.Log("Unhandled Token: " + tokenEnumerator.Current.Parameters[0]);
@@ -434,7 +434,7 @@ public class ContentLoader : MonoBehaviour
             StreamReader mightBeRaw = new StreamReader(file);
             //first check if it's a DF raw file.
             if (mightBeRaw.ReadLine() == Path.GetFileNameWithoutExtension(file))
-                yield return StartCoroutine(ParseContentRawFile(file));
+                yield return ParseContentRawFile(file);
         }
         yield return null;
     }
