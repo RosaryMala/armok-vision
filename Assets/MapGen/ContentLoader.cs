@@ -95,10 +95,6 @@ public class ContentLoader : MonoBehaviour
                 return MatBasic.INVALID;
         }
     }
-
-    Dictionary<string, int> spritePageIndices = new Dictionary<string, int>();
-    List<TextureStorage> spritePages = new List<TextureStorage>();
-
     TextureStorage materialTextureStorage;
     TextureStorage shapeTextureStorage;
     TextureStorage specialTextureStorage;
@@ -165,12 +161,14 @@ public class ContentLoader : MonoBehaviour
     public TileConfiguration<LayerContent> MaterialLayerConfiguration { get; private set; }
     public TileConfiguration<MeshContent> BuildingMeshConfiguration { get; private set; }
     public TileConfiguration<NormalContent> BuildingShapeTextureConfiguration { get; private set; }
-    public CreatureConfiguration<MeshContent> CreatureMeshConfiguration { get; private set; }
     public TileConfiguration<MeshContent> DesignationMeshConfiguration { get; private set; }
     public TileConfiguration<MeshContent> CollisionMeshConfiguration { get; private set; }
     public TileConfiguration<MeshContent> BuildingCollisionMeshConfiguration { get; private set; }
     public TileConfiguration<MeshContent> ItemMeshConfiguration { get; private set; }
     public TileConfiguration<GrassContent> GrassTextureConfiguration { get; private set; }
+
+    public CreatureSpriteManager _spriteManager = new CreatureSpriteManager();
+    public CreatureSpriteManager SpriteManager { get { return _spriteManager; } }
 
     public void Awake()
     {
@@ -357,11 +355,6 @@ public class ContentLoader : MonoBehaviour
                         BuildingShapeTextureConfiguration = TileConfiguration<NormalContent>.GetFromRootElement(doc, "buildingShapeTexture");
                     BuildingShapeTextureConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
                     break;
-                case "creatureMeshes":
-                    if (CreatureMeshConfiguration == null)
-                        CreatureMeshConfiguration = CreatureConfiguration<MeshContent>.GetFromRootElement(doc, "creatureMesh");
-                    CreatureMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage, specialTextureStorage));
-                    break;
                 case "growthMeshes":
                     if (GrowthMeshConfiguration == null)
                         GrowthMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "growthMesh");
@@ -404,8 +397,33 @@ public class ContentLoader : MonoBehaviour
     {
         Debug.Log("Loading Raw File: " + path);
 
-        RawLoader.ParseRaw(File.ReadAllText(path));
-
+        var tokenList = RawLoader.SplitRawFileText(File.ReadAllText(path));
+        var tokenEnumerator = tokenList.GetEnumerator();
+        try
+        {
+            if (tokenEnumerator.MoveNext()) // Because they always start at -1.
+            {
+                if (tokenEnumerator.Current.Token == "OBJECT")
+                {
+                    switch (tokenEnumerator.Current.Parameters[0])
+                    {
+                        case "GRAPHICS":
+                            Debug.Log("Found graphics raws");
+                            SpriteManager.ParseGraphics(ref tokenEnumerator);
+                            break;
+                        default:
+                            Debug.Log("Unhandled Token: " + tokenEnumerator.Current.Parameters[0]);
+                            break;
+                    }
+                }
+                else
+                    Debug.Log("Unexpected Token: " + tokenEnumerator.Current.Token);
+            }
+        }
+        finally
+        {
+            tokenEnumerator.Dispose();
+        }
         yield return null;
     }
 
@@ -439,6 +457,11 @@ public class ContentLoader : MonoBehaviour
         MaterialManager.Instance.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
         MaterialManager.Instance.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
         MaterialManager.Instance.SetVector("_TexArrayCount", arrayCount);
+
+        Debug.Log("Finalizing creature sprites");
+        yield return null;
+        SpriteManager.FinalizeSprites();
+        Debug.Log("Done!");
 
         //get rid of any un-used textures left over.
         Resources.UnloadUnusedAssets();
