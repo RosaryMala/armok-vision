@@ -167,7 +167,8 @@ public class ContentLoader : MonoBehaviour
     public TileConfiguration<MeshContent> ItemMeshConfiguration { get; private set; }
     public TileConfiguration<GrassContent> GrassTextureConfiguration { get; private set; }
 
-    public CreatureSpriteManager _spriteManager = new CreatureSpriteManager();
+    [SerializeField]
+    private CreatureSpriteManager _spriteManager = new CreatureSpriteManager();
     public CreatureSpriteManager SpriteManager { get { return _spriteManager; } }
 
     public void Awake()
@@ -217,15 +218,15 @@ public class ContentLoader : MonoBehaviour
         texture.name = texturePath;
         if (texture.width * 4 <= GameSettings.Instance.rendering.maxTextureSize && texture.height * 4 <= GameSettings.Instance.rendering.maxTextureSize)
         {
-            texture = HqxSharp.Scale4(texture);
+            HqxSharp.Scale4(texture);
         }
         else if (texture.width * 3 <= GameSettings.Instance.rendering.maxTextureSize && texture.height * 3 <= GameSettings.Instance.rendering.maxTextureSize)
         {
-            texture = HqxSharp.Scale3(texture);
+            HqxSharp.Scale3(texture);
         }
         else if (texture.width * 2 <= GameSettings.Instance.rendering.maxTextureSize && texture.height * 2 <= GameSettings.Instance.rendering.maxTextureSize)
         {
-            texture = HqxSharp.Scale2(texture);
+            HqxSharp.Scale2(texture);
         }
         return texture;
     }

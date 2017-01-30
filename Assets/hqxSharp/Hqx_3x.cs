@@ -39,22 +39,21 @@ namespace hqx
         /// <param name="wrapX">Used for images that can be seamlessly repeated horizontally.</param>
         /// <param name="wrapY">Used for images that can be seamlessly repeated vertically.</param>
         /// <returns>A new Bitmap instance that contains the source imagage scaled to three times its size.</returns>
-        public static Texture2D Scale3(Texture2D bitmap, uint trY = 48, uint trU = 7, uint trV = 6, uint trA = 0, bool wrapX = false, bool wrapY = false)
+        public static void Scale3(Texture2D bitmap, uint trY = 48, uint trU = 7, uint trV = 6, uint trA = 0, bool wrapX = false, bool wrapY = false)
         {
             int Xres = bitmap.width;
             int Yres = bitmap.height;
 
-            var dest = new Texture2D(bitmap.width * 3, bitmap.height * 3);
 
             var bmpData = bitmap.GetPixels32();
-            var destData = dest.GetPixels32();
+            var destData = new Color32[bitmap.width * 3 * bitmap.height * 3];
+            bitmap.Resize(bitmap.width * 3, bitmap.height * 3);
+
 
             Scale3(bmpData, destData, Xres, Yres, trY, trU, trV, trA, wrapX, wrapY);
 
-            dest.SetPixels32(destData);
-            dest.Apply();
-
-            return dest;
+            bitmap.SetPixels32(destData);
+            bitmap.Apply();
         }
 
         /// <summary>
