@@ -6,6 +6,7 @@ using System.IO;
 using UnityEngine;
 using System;
 
+[Serializable]
 public class TilePage : ICollection
 {
     Texture2D originalPage;
@@ -16,6 +17,7 @@ public class TilePage : ICollection
     readonly string pageName;
     Dictionary<DFCoord2d, int> spriteIndices = new Dictionary<DFCoord2d, int>();
     List<DFCoord2d> coordList = new List<DFCoord2d>();
+    [SerializeField]
     Texture2DArray tileArray;
 
     public int Count

@@ -37,8 +37,9 @@ public static class TextureScale
 
     private static void ThreadedScale(Texture2D tex, int newWidth, int newHeight, bool useBilinear)
     {
+        var newPix = ThreadedScale(tex.GetPixels(), tex.width, tex.height, newWidth, newHeight, useBilinear);
         tex.Resize(newWidth, newHeight);
-        tex.SetPixels(ThreadedScale(tex.GetPixels(), tex.width, tex.height, newWidth, newHeight, useBilinear));
+        tex.SetPixels(newPix);
         tex.Apply();
     }
 

@@ -1578,12 +1578,19 @@ public class GameMap : MonoBehaviour
     UnitList unitList = null;
     private int screenshotCount;
 
+    int unitSpriteID = int.MinValue;
+
     void UpdateCreatures()
     {
         if (!GameSettings.Instance.units.drawUnits)
             return;
         if (creatureTemplate == null)
             return;
+
+        if(unitSpriteID == int.MinValue)
+        {
+            unitSpriteID = Shader.PropertyToID("_SpriteIndex");
+        }
         CultureInfo cultureInfo = Thread.CurrentThread.CurrentCulture;
         TextInfo textInfo = cultureInfo.TextInfo;
         unitList = DFConnection.Instance.PopUnitListUpdate();
@@ -1620,14 +1627,16 @@ public class GameMap : MonoBehaviour
                     creatureList[unit.id] = Instantiate(creatureTemplate);
                     creatureList[unit.id].transform.parent = gameObject.transform;
                     creatureList[unit.id].name = "Unit_" + unit.id;
-                    creatureList[unit.id].GetComponentInChildren<AtlasSprite>().ClearMesh();
 
                     Color color = Color.white;
                     if (unit.profession_color != null)
                         color = new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1);
 
                     if (creatureRaw != null)
-                        creatureList[unit.id].GetComponentInChildren<AtlasSprite>().AddTile(creatureRaw.creature_tile, color);
+                    {
+                        creatureList[unit.id].GetComponentInChildren<MeshRenderer>().material.SetInt(unitSpriteID, creatureRaw.creature_tile);
+                        creatureList[unit.id].GetComponentInChildren<MeshRenderer>().material.color = new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1);
+                    }
 
                 }
                 MapDataStore.Tile tile = null;
@@ -1649,26 +1658,26 @@ public class GameMap : MonoBehaviour
                         scale = 1;
                     creatureList[unit.id].transform.localScale = new Vector3(scale, scale, scale);
                     creatureList[unit.id].GetComponentInChildren<Light>().range = scale * 10;
-                    AtlasSprite sprite = creatureList[unit.id].GetComponentInChildren<AtlasSprite>();
+                    CameraFacing cameraFacing = creatureList[unit.id].GetComponentInChildren<CameraFacing>();
                     if ((flags1 & UnitFlags1.on_ground) == UnitFlags1.on_ground)
                     {
-                        sprite.transform.localPosition = Vector3.zero;
-                        sprite.cameraFacing.enabled = false;
-                        sprite.transform.rotation = Quaternion.Euler(90, 0, 0);
+                        cameraFacing.transform.localPosition = Vector3.zero;
+                        cameraFacing.enabled = false;
+                        cameraFacing.transform.rotation = Quaternion.Euler(90, 0, 0);
                     }
                     else
                     {
-                        sprite.transform.localPosition = new Vector3(0, 1.0f, 0);
-                        sprite.cameraFacing.enabled = true;
+                        cameraFacing.transform.localPosition = new Vector3(0, 1.0f, 0);
+                        cameraFacing.enabled = true;
                     }
                     if (unit.profession_color != null)
-                        creatureList[unit.id].GetComponentInChildren<AtlasSprite>().SetColor(0, new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1));
+                        creatureList[unit.id].GetComponentInChildren<MeshRenderer>().material.color = new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1);
                     if (creatureRaw != null)
                     {
                         if (unit.is_soldier && creatureRaw.creature_soldier_tile != 0)
-                            creatureList[unit.id].GetComponentInChildren<AtlasSprite>().SetTile(0, creatureRaw.creature_soldier_tile);
+                            creatureList[unit.id].GetComponentInChildren<MeshRenderer>().material.SetInt(unitSpriteID, creatureRaw.creature_soldier_tile);
                         else
-                            creatureList[unit.id].GetComponentInChildren<AtlasSprite>().SetTile(0, creatureRaw.creature_tile);
+                            creatureList[unit.id].GetComponentInChildren<MeshRenderer>().material.SetInt(unitSpriteID, creatureRaw.creature_tile);
                         Text unitText = creatureList[unit.id].GetComponentInChildren<Text>();
                         if (unitText != null)
                         {
