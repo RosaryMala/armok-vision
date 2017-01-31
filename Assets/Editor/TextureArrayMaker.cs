@@ -30,8 +30,11 @@ public class TextureArrayMaker : EditorWindow
         window.Show();
     }
 
+    Vector2 scrollPosition;
+
     private void OnGUI()
     {
+        scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
         GUILayout.Label("Texure array maker", EditorStyles.boldLabel);
         baseTexture = (Texture2D)EditorGUILayout.ObjectField("Base texture image", baseTexture, typeof(Texture2D), false);
         tiles_x = EditorGUILayout.IntField("Horizontal Tiles", tiles_x);
@@ -62,17 +65,30 @@ public class TextureArrayMaker : EditorWindow
         }
         if (baseTexture != null)
         {
+            int sourceWidth = baseTexture.width / tiles_x;
+            int sourceHeight = baseTexture.height / tiles_y;
+            GUILayout.Label("Source Width: " + sourceWidth);
+            GUILayout.Label("Source Height: " + sourceHeight);
+
+            int scaledWidth = sourceWidth * scale;
+            int scaledHeight = sourceHeight * scale;
+            GUILayout.Label("Scaled Width: " + scaledWidth);
+            GUILayout.Label("Scaled Height: " + scaledHeight);
+
+            int potWidth = Mathf.ClosestPowerOfTwo(scaledWidth);
+            int potHeight = Mathf.ClosestPowerOfTwo(scaledHeight);
+            GUILayout.Label("Final Width: " + potWidth);
+            GUILayout.Label("Final Height: " + potHeight);
+
             if (GUILayout.Button("Build Array"))
             {
-                int sourceWidth = baseTexture.width / tiles_x;
-                int sourceHeight = baseTexture.height / tiles_y;
-                texArray = new Texture2DArray(scale * sourceWidth, scale * sourceHeight, tiles_x * tiles_y, TextureFormat.ARGB32, mipmaps);
-                var tempTex = new Texture2D(baseTexture.width / tiles_x, baseTexture.height / tiles_y, TextureFormat.ARGB32, false);
+                texArray = new Texture2DArray(potWidth, potHeight, tiles_x * tiles_y, TextureFormat.ARGB32, mipmaps);
+                var tempTex = new Texture2D(sourceWidth, sourceHeight, TextureFormat.ARGB32, false);
                 int i = 0;
                 for (int y = tiles_y-1; y >= 0 ; y--)
                     for (int x = 0; x < tiles_x; x++)
                     {
-                        tempTex.Resize(baseTexture.width / tiles_x, baseTexture.height / tiles_y);
+                        tempTex.Resize(sourceWidth, sourceHeight);
                         tempTex.SetPixels(baseTexture.GetPixels(sourceWidth * x, sourceHeight * y, sourceWidth, sourceHeight));
                         switch (scaleMode)
                         {
@@ -88,6 +104,7 @@ public class TextureArrayMaker : EditorWindow
                             default:
                                 break;
                         }
+                        TextureScale.Bilinear(tempTex, potWidth, potHeight);
                         texArray.SetPixels(tempTex.GetPixels(), i);
                         i++;
                     }
@@ -125,5 +142,6 @@ public class TextureArrayMaker : EditorWindow
                 AssetDatabase.Refresh();
             }
         }
+        EditorGUILayout.EndScrollView();
     }
 }

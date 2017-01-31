@@ -3,7 +3,8 @@
 Shader "Custom/ToplitSprite" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
-		_MainTex ("Albedo (RGB)", 2D) = "white" {}
+        _SpriteArray("Sprite Array", 2DArray) = "white" {}
+        _SpriteIndex("Sprite Index", Int) = 1
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
 		_Metallic ("Metallic", Range(0,1)) = 0.0
 
@@ -20,25 +21,25 @@ Shader "Custom/ToplitSprite" {
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 3.0
 
-		sampler2D _MainTex;
+        UNITY_DECLARE_TEX2DARRAY(_SpriteArray);
 
 		struct Input {
 			float2 uv_MainTex;
-			float4 color: Color; // Vertex color
 		};
 
 		half _Glossiness;
 		half _Metallic;
 		fixed4 _Color;
+        int _SpriteIndex;
 
-		void vert(inout appdata_full v) {
-			v.normal = mul(unity_WorldToObject, float4(0,1,0, 0));
-		}
+        void vert(inout appdata_full v) {
+            v.normal = mul(unity_WorldToObject, float4(0, 1, 0, 0));
+        }
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
 			// Albedo comes from a texture tinted by color
-			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-			o.Albedo = c.rgb * IN.color.rgb;
+            fixed4 c = _Color * UNITY_SAMPLE_TEX2DARRAY(_SpriteArray, float3(IN.uv_MainTex, _SpriteIndex));
+            o.Albedo = c.rgb;
 			// Metallic and smoothness come from slider variables
 			o.Metallic = _Metallic;
 			o.Smoothness = _Glossiness;

@@ -1,12 +1,14 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Assertions;
 
+[Serializable]
 public class CreatureSpriteManager
 {
     Dictionary<string, int> tilePageIndices = new Dictionary<string, int>();
+    [SerializeField]
     List<TilePage> tilePages = new List<TilePage>();
     Dictionary<MatPairStruct, bool> creatureColorized = new Dictionary<MatPairStruct, bool>();
 
