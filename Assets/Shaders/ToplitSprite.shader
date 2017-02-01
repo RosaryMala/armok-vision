@@ -18,8 +18,7 @@ Shader "Custom/ToplitSprite" {
 		// Physically based Standard lighting model, and enable shadows on all light types
 		#pragma surface surf Standard addshadow vertex:vert alphatest:_Cutoff
 
-		// Use shader model 3.0 target, to get nicer looking lighting
-		#pragma target 3.0
+        #pragma target 3.5
 
         UNITY_DECLARE_TEX2DARRAY(_SpriteArray);
 

@@ -24,7 +24,7 @@ Material:
     - first:
         name: _SpriteArray
       second:
-        m_Texture: {fileID: 18700000, guid: 099059a42f9cb254da95f4cd814d0e0e, type: 2}
+        m_Texture: {fileID: 18700000, guid: 6fcc78502286209408f46548a4f8827b, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:

@@ -11,8 +11,30 @@ public class CreatureSpriteManager
     [SerializeField]
     List<TilePage> tilePages = new List<TilePage>();
     Dictionary<MatPairStruct, bool> creatureColorized = new Dictionary<MatPairStruct, bool>();
+    List<Material> mats = new List<Material>();
 
     CreatureRaceMatcher<MatPairStruct> creatureMatcher = new CreatureRaceMatcher<MatPairStruct>();
+
+    public Material baseCreatureMaterial;
+
+    public bool getCreatureSprite(MatPairStruct creature, out Material mat, out int index, out bool colored)
+    {
+        MatPairStruct page;
+        if (!creatureMatcher.TryGetValue(creature, out page))
+        {
+            mat = null;
+            index = 0;
+            colored = false;
+            return false;
+        }
+        mat = mats[page.mat_type];
+        index = page.mat_index;
+        if (creatureColorized.ContainsKey(page))
+            colored = creatureColorized[page];
+        else
+            colored = true;
+        return true;
+    }
 
     public void ParseGraphics(ref List<RawToken>.Enumerator tokenEnumerator, string path)
     {
@@ -61,7 +83,7 @@ public class CreatureSpriteManager
                     break;
             }
             //Todo: add support for separate professions
-            if(token.Token == "DEFAULT")
+            if(token.Token == "DEFAULT" || token.Token == "STANDARD")
             {
                 int pageIndex = tilePageIndices[token.Parameters[0]];
                 int pagesubIndex =
@@ -131,6 +153,9 @@ public class CreatureSpriteManager
         {
             page.FinalizeTextures();
             count += page.Count;
+            var mat = new Material(baseCreatureMaterial);
+            mat.SetTexture("_SpriteArray", page.TileArray);
+            mats.Add(mat);
         }
         Debug.LogFormat("Loaded {0} creature sprites.", count);
     }

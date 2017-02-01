@@ -1580,14 +1580,21 @@ public class GameMap : MonoBehaviour
 
     int unitSpriteID = int.MinValue;
 
+    MaterialPropertyBlock creatureMaterialProperties = null;
+
     void UpdateCreatures()
     {
         if (!GameSettings.Instance.units.drawUnits)
             return;
         if (creatureTemplate == null)
             return;
+        if (ContentLoader.Instance == null)
+            return;
 
-        if(unitSpriteID == int.MinValue)
+        if (creatureMaterialProperties == null)
+            creatureMaterialProperties = new MaterialPropertyBlock();
+
+        if (unitSpriteID == int.MinValue)
         {
             unitSpriteID = Shader.PropertyToID("_SpriteIndex");
         }
@@ -1670,14 +1677,34 @@ public class GameMap : MonoBehaviour
                         cameraFacing.transform.localPosition = new Vector3(0, 1.0f, 0);
                         cameraFacing.enabled = true;
                     }
-                    if (unit.profession_color != null)
-                        creatureList[unit.id].GetComponentInChildren<MeshRenderer>().material.color = new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1);
+                    Material mat;
+                    int index;
+                    bool colored;
+                    if (ContentLoader.Instance.SpriteManager.getCreatureSprite(unit.race, out mat, out index, out colored))
+                    {
+                        creatureList[unit.id].GetComponentInChildren<MeshRenderer>().material = mat;
+                        creatureMaterialProperties.SetFloat(unitSpriteID, index);
+                    }
+                    else
+                    {
+                        creatureList[unit.id].GetComponentInChildren<MeshRenderer>().material = creatureTemplate.GetComponentInChildren<MeshRenderer>().sharedMaterial;
+                        if (creatureRaw != null)
+                        {
+                            if (unit.is_soldier && creatureRaw.creature_soldier_tile != 0)
+                                creatureMaterialProperties.SetFloat(unitSpriteID, creatureRaw.creature_soldier_tile);
+                            else
+                                creatureMaterialProperties.SetFloat(unitSpriteID, creatureRaw.creature_tile);
+                        }
+                    }
+                    if (colored && unit.profession_color != null)
+                        creatureMaterialProperties.SetColor("_Color", new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1));
+                    else
+                        creatureMaterialProperties.SetColor("_Color", Color.white);
+
+                    creatureList[unit.id].GetComponentInChildren<MeshRenderer>().SetPropertyBlock(creatureMaterialProperties);
+
                     if (creatureRaw != null)
                     {
-                        if (unit.is_soldier && creatureRaw.creature_soldier_tile != 0)
-                            creatureList[unit.id].GetComponentInChildren<MeshRenderer>().material.SetInt(unitSpriteID, creatureRaw.creature_soldier_tile);
-                        else
-                            creatureList[unit.id].GetComponentInChildren<MeshRenderer>().material.SetInt(unitSpriteID, creatureRaw.creature_tile);
                         Text unitText = creatureList[unit.id].GetComponentInChildren<Text>();
                         if (unitText != null)
                         {
