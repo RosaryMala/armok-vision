@@ -19,6 +19,7 @@ public class TilePage : ICollection
     List<DFCoord2d> coordList = new List<DFCoord2d>();
     [SerializeField]
     Texture2DArray tileArray;
+    public Texture2DArray TileArray { get { return tileArray; } }
 
     public int Count
     {
@@ -72,6 +73,11 @@ public class TilePage : ICollection
 
     public void FinalizeTextures()
     {
+        if (coordList.Count == 0) // There's nothing that uses this.
+        {
+            Debug.LogWarningFormat("Tile page \"{0}\" has no sprites used!", pageName);
+            return;
+        }
         int scaleFactor = 1;
         if (tileWidth * 4 <= GameSettings.Instance.rendering.maxTextureSize && tileHeight * 4 <= GameSettings.Instance.rendering.maxTextureSize)
         {
@@ -93,7 +99,7 @@ public class TilePage : ICollection
         for (int i = 0; i < coordList.Count; i++)
         {
             var coord = coordList[i];
-            var tileSource = originalPage.GetPixels(coord.x * tileWidth, coord.y * tileHeight, tileWidth, tileHeight);
+            var tileSource = originalPage.GetPixels(coord.x * tileWidth, (pageHeight - coord.y - 1) * tileHeight, tileWidth, tileHeight);
             var tileSource32 = new Color32[tileSource.Length];
             for(int j = 0; j < tileSource.Length; j++)
             {

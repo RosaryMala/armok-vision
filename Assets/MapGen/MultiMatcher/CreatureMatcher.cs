@@ -22,36 +22,36 @@ public class CreatureRaceMatcher<T>
         creatureRaceList[mat] = match;
     }
 
-    void Setwords(string race, Dictionary<string, MatPairStruct> wordList, RaceMatch match)
+    void Setwords(string caste, Dictionary<string, MatPairStruct> casteIDList, RaceMatch match)
     {
-        if (race == "*")
+        if (caste == "*")
         {
             match.difference |= 2;
-            foreach (var item in wordList.Values)
+            foreach (var item in casteIDList.Values)
             {
                 TrySetMatch(match, item);
             }
         }
         else
         {
-            if (wordList.ContainsKey(race))
-                TrySetMatch(match, wordList[race]);
+            if (casteIDList.ContainsKey(caste))
+                TrySetMatch(match, casteIDList[caste]);
         }
     }
     void Setwords(string race, string caste, RaceMatch match)
     {
-        if (caste == "*")
+        if (race == "*")
         {
             match.difference |= 1;
             foreach (var item in CreatureTokenList.CasteIDs.Values)
             {
-                Setwords(race, item, match);
+                Setwords(caste, item, match);
             }
         }
         else
         {
-            if (CreatureTokenList.CasteIDs.ContainsKey(caste))
-                Setwords(race, CreatureTokenList.CasteIDs[caste], match);
+            if (CreatureTokenList.CasteIDs.ContainsKey(race))
+                Setwords(caste, CreatureTokenList.CasteIDs[race], match);
         }
     }
 

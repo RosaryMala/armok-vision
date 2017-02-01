@@ -6782,6 +6782,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03ebb23c98a48ec4ea9d9803606b334a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spriteManager:
+    tilePages: []
+    baseCreatureMaterial: {fileID: 2100000, guid: 9cb4e5368216ece42b83524d72cc6d9e,
+      type: 2}
 --- !u!114 &861361734
 MonoBehaviour:
   m_ObjectHideFlags: 0
