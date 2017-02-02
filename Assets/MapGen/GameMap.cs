@@ -1680,7 +1680,7 @@ public class GameMap : MonoBehaviour
                     Material mat;
                     int index;
                     bool colored;
-                    if (ContentLoader.Instance.SpriteManager.getCreatureSprite(unit.race, out mat, out index, out colored))
+                    if (ContentLoader.Instance.SpriteManager.getCreatureSprite(unit, out mat, out index, out colored))
                     {
                         creatureList[unit.id].GetComponentInChildren<MeshRenderer>().material = mat;
                         creatureMaterialProperties.SetFloat(unitSpriteID, index);
