@@ -1116,6 +1116,21 @@ namespace RemoteFortressReader
       get { return _appearance; }
       set { _appearance = value; }
     }
+    private int _profession_id = default(int);
+    [global::ProtoBuf.ProtoMember(17, IsRequired = false, Name=@"profession_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int profession_id
+    {
+      get { return _profession_id; }
+      set { _profession_id = value; }
+    }
+    private readonly global::System.Collections.Generic.List<string> _noble_positions = new global::System.Collections.Generic.List<string>();
+    [global::ProtoBuf.ProtoMember(18, Name=@"noble_positions", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<string> noble_positions
+    {
+      get { return _noble_positions; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
