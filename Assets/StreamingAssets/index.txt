@@ -5,3 +5,4 @@ TileMeshes/index.txt
 BuildingMeshes/index.txt
 ItemMeshes/index.txt
 TerrainShape/index.txt
+graphics/
