@@ -60,16 +60,8 @@ public class CreatureSpriteManager
     {
         Assert.AreEqual("GRAPHICS", tokenEnumerator.Current.Parameters[0]);
         bool rawLeft = true;
-        int count = 0;
-
         while (rawLeft)
         {
-            if (count > 1000)
-            {
-                Debug.LogError("Infinite loop!");
-                break;
-            }
-            count++;
             switch (tokenEnumerator.Current.Token)
             {
                 case "TILE_PAGE":
