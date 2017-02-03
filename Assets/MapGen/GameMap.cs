@@ -1,3 +1,4 @@
+using DF.Enums;
 using DFHack;
 using MapGen;
 using RemoteFortressReader;
@@ -1410,8 +1411,6 @@ public class GameMap : MonoBehaviour
                 else
                     statusText.AppendLine();
 
-                statusText.AppendLine();
-
                 var basemat = tile.base_material;
                 statusText.Append("Base Material: ");
                 statusText.Append(basemat);
@@ -1423,8 +1422,6 @@ public class GameMap : MonoBehaviour
                 }
                 else
                     statusText.Append("Unknown Base Material\n");
-
-                statusText.AppendLine();
 
                 var layermat = tile.layer_material;
                 statusText.Append("Layer Material: ");
@@ -1438,8 +1435,6 @@ public class GameMap : MonoBehaviour
                 else
                     statusText.Append("Unknown Layer Material\n");
 
-                statusText.AppendLine();
-
                 var veinmat = tile.vein_material;
                 statusText.Append("Vein Material: ");
                 statusText.Append(veinmat);
@@ -1451,8 +1446,6 @@ public class GameMap : MonoBehaviour
                 }
                 else
                     statusText.Append("Unknown Vein Material\n");
-
-                statusText.AppendLine();
 
                 var cons = tile.construction_item;
                 statusText.Append("Construction Item: ");
@@ -1485,7 +1478,7 @@ public class GameMap : MonoBehaviour
                     statusText.Append("Building Coord: ");
                     statusText.Append(tile.buildingLocalPos).AppendLine();
                     statusText.Append("Building Direction: ").Append(tile.buildingDirection).AppendLine();
-
+                    statusText.AppendLine();
                 }
 
                 if (tile.spatters != null)
@@ -1513,11 +1506,11 @@ public class GameMap : MonoBehaviour
             }
 
             if (unitList != null)
+            {
+                UnitDefinition foundUnit = null;
                 foreach (UnitDefinition unit in unitList.creature_list)
                 {
                     UnitFlags1 flags1 = (UnitFlags1)unit.flags1;
-                    UnitFlags2 flags2 = (UnitFlags2)unit.flags2;
-                    //UnitFlags3 flags3 = (UnitFlags3)unit.flags3;
 
                     if (((flags1 & UnitFlags1.dead) == UnitFlags1.dead)
                          || ((flags1 & UnitFlags1.left) == UnitFlags1.left)
@@ -1525,12 +1518,23 @@ public class GameMap : MonoBehaviour
                          || ((flags1 & UnitFlags1.forest) == UnitFlags1.forest)
                          )
                         continue;
-                    if (unit.pos_x != cursX || unit.pos_y != cursY || unit.pos_z != cursZ)
-                        continue;
+                    if (unit.pos_x == cursX && unit.pos_y == cursY && unit.pos_z == cursZ)
+                    {
+                        foundUnit = unit;
+                        if ((flags1 & UnitFlags1.on_ground) == UnitFlags1.on_ground)
+                            continue; // Keep looking until we find a standing unit.
+                        else
+                            break;
+                    }
+                }
+                if (foundUnit != null)
+                {
+                    UnitFlags1 flags1 = (UnitFlags1)foundUnit.flags1;
+                    UnitFlags2 flags2 = (UnitFlags2)foundUnit.flags2;
 
                     CreatureRaw creatureRaw = null;
                     if (DFConnection.Instance.NetCreatureRawList != null)
-                        creatureRaw = DFConnection.Instance.NetCreatureRawList.creature_raws[unit.race.mat_type];
+                        creatureRaw = DFConnection.Instance.NetCreatureRawList.creature_raws[foundUnit.race.mat_type];
 
                     if (creatureRaw != null)
                     {
@@ -1538,19 +1542,25 @@ public class GameMap : MonoBehaviour
 
                         statusText.Append("Race: ");
                         statusText.Append(creatureRaw.creature_id + ":");
-                        statusText.Append(creatureRaw.caste[unit.race.mat_index].caste_id);
+                        statusText.Append(creatureRaw.caste[foundUnit.race.mat_index].caste_id);
                         statusText.AppendLine();
 
                         statusText.Append(flags1).AppendLine();
                         statusText.Append(flags2).AppendLine();
                         //statusText.Append(flags3).AppendLine();
-                        statusText.Append("Length: ").Append(unit.size_info.length_cur).Append("/").Append(Mathf.FloorToInt(Mathf.Pow(creatureRaw.adultsize * 10000, 1.0f / 3.0f))).AppendLine();
-
+                        statusText.Append("Length: ").Append(foundUnit.size_info.length_cur).Append("/").Append(Mathf.FloorToInt(Mathf.Pow(creatureRaw.adultsize * 10000, 1.0f / 3.0f))).AppendLine();
+                        statusText.Append("Profession: ").Append((profession)foundUnit.profession_id).AppendLine();
+                        foreach (var noble in foundUnit.noble_positions)
+                        {
+                            statusText.Append(noble).Append(", ");
+                        }
+                        statusText.AppendLine();
                     }
-                    break;
                 }
+            }
 
-            if(itemPositions.ContainsKey(new DFCoord(cursX, cursY, cursZ)))
+
+            if (itemPositions.ContainsKey(new DFCoord(cursX, cursY, cursZ)))
             {
                 Item item = itemPositions[new DFCoord(cursX, cursY, cursZ)];
                 statusText.Append("Item ").Append(item.id).Append(": ");
@@ -1600,8 +1610,11 @@ public class GameMap : MonoBehaviour
         }
         CultureInfo cultureInfo = Thread.CurrentThread.CurrentCulture;
         TextInfo textInfo = cultureInfo.TextInfo;
-        unitList = DFConnection.Instance.PopUnitListUpdate();
-        if (unitList == null) return;
+        var tempUnitList = DFConnection.Instance.PopUnitListUpdate();
+        if (tempUnitList == null)
+            return;
+        else
+            unitList = tempUnitList;
         UnityEngine.Profiling.Profiler.BeginSample("UpdateCreatures", this);
         lastUnitList = unitList;
         foreach (var unit in unitList.creature_list)
