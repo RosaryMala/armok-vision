@@ -47,6 +47,7 @@ public class OnscreenConsole : MonoBehaviour
             var item = Instantiate(logItem);
             item.text = log.logString;
             item.rectTransform.SetParent(logParent);
+            item.rectTransform.localScale = logItem.rectTransform.localScale;
             item.rectTransform.SetAsLastSibling();
             switch (log.type)
             {
