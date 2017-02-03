@@ -19,7 +19,8 @@ public class ProfessionMatcher<T>
         {
             if (token == "DEFAULT")
                 _default = value;
-            professionCollection[token] = value;
+            else
+                professionCollection[token] = value;
         }
         get
         {
@@ -58,7 +59,7 @@ public class ProfessionMatcher<T>
         else
         {
             result = _default;
-            return false;
+            return true;
         }
     }
 
