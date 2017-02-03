@@ -40,7 +40,8 @@ public class CreatureSpriteManager
         }
         if(!set)
         {
-            set = prof.TryGetValue((DF.Enums.profession)unit.profession_id, out def);
+            prof.TryGetValue((DF.Enums.profession)unit.profession_id, out def);
+            set = (def.page != -1);
         }
         if(!set)
         {
