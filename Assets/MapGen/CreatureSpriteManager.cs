@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using TokenLists;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -87,8 +88,22 @@ public class CreatureSpriteManager
     {
         Assert.AreEqual("CREATURE_GRAPHICS", tokenEnumerator.Current.Token);
         string raceToken = tokenEnumerator.Current.Parameters[0];
+        MatPairStruct creatureID;
+        bool raceRecognized = true;
+        if(!CreatureTokenList.TryGetCasteID(raceToken, out creatureID))
+        {
+            raceRecognized = false;
+        }
+        ProfessionMatcher<TileDef> professionCollection = null;
+        if (raceRecognized)
+        {
+            if (!creatureMatcher.TryGetValue(creatureID, out professionCollection))
+            {
+                professionCollection = new ProfessionMatcher<TileDef>(new TileDef(-1, -1, true));
+                creatureMatcher[creatureID] = professionCollection;
+            }
+        }
 
-        ProfessionMatcher<TileDef> professionCollection = new ProfessionMatcher<TileDef>(new TileDef(-1,-1,true));
 
         bool rawLeft = true;
         while (rawLeft = tokenEnumerator.MoveNext())
@@ -102,26 +117,27 @@ public class CreatureSpriteManager
                 default:
                     break;
             }
-            if(!tilePageIndices.ContainsKey(token.Parameters[0]))
+            if (raceRecognized)
             {
-                Debug.LogWarning("Could not find tile page for: " + token);
-                continue;
+                if (!tilePageIndices.ContainsKey(token.Parameters[0]))
+                {
+                    Debug.LogWarning("Could not find tile page for: " + token);
+                    continue;
+                }
+                int pageIndex = tilePageIndices[token.Parameters[0]];
+                int pagesubIndex =
+                    tilePages[pageIndex].AddTilePage(
+                        new DFHack.DFCoord2d(
+                            int.Parse(token.Parameters[1]),
+                            int.Parse(token.Parameters[2])
+                            )
+                        );
+                bool colored = token.Parameters[3] == "ADD_COLOR";
+                TileDef tile = new TileDef(pageIndex, pagesubIndex, colored);
+                professionCollection[token.Token] = tile;
             }
-            int pageIndex = tilePageIndices[token.Parameters[0]];
-            int pagesubIndex =
-                tilePages[pageIndex].AddTilePage(
-                    new DFHack.DFCoord2d(
-                        int.Parse(token.Parameters[1]),
-                        int.Parse(token.Parameters[2])
-                        )
-                    );
-            bool colored = token.Parameters[3] == "ADD_COLOR";
-            TileDef tile = new TileDef(pageIndex, pagesubIndex, colored);
-            professionCollection[token.Token] = tile;
-            MatPairStruct creatureSprite = new MatPairStruct(pageIndex, pagesubIndex);
         }
     loopExit:
-        creatureMatcher[raceToken] = professionCollection;
         return rawLeft;
     }
 
