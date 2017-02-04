@@ -10,7 +10,6 @@ public class RawLoader
     public static List<RawToken> SplitRawFileText(string rawFile)
     {
         var matches = Regex.Matches(rawFile, @"\[([^]]*)\]");
-        Debug.Log("Found " + matches.Count + " matches");
         List<RawToken> output = new List<RawToken>(matches.Count);
 
         foreach (Match item in matches)

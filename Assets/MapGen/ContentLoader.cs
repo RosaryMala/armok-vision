@@ -409,7 +409,6 @@ public class ContentLoader : MonoBehaviour
                     switch (tokenEnumerator.Current.Parameters[0])
                     {
                         case "GRAPHICS":
-                            Debug.Log("Found graphics raws");
                             SpriteManager.ParseGraphics(ref tokenEnumerator, path);
                             break;
                         default:
