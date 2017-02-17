@@ -81,8 +81,10 @@ public class VoxelGenerator
 
         TriangulateCellRows(map);
 
-        ConvertToMesh(wallPolygons.Polygons, GameMap.tileHeight);
-        ConvertToMesh(floorPolygons.Polygons, GameMap.floorHeight);
+        ConvertToMesh(wallPolygons.Polygons, GameMap.tileHeight, true);
+        ConvertToMesh(floorPolygons.Polygons, GameMap.floorHeight, true);
+        ConvertToMesh(wallPolygons.Polygons, 0, false);
+        ConvertToMesh(floorPolygons.Polygons, 0, false);
 
         return new CPUMesh(vertices.ToArray(), null, null, uvs.ToArray(), null, null, null, triangles.ToArray());
 
@@ -1074,7 +1076,7 @@ public class VoxelGenerator
     ComplexPoly floorPolygons = new ComplexPoly();
 
 
-    void ConvertToMesh(PolygonSet polySet, float height)
+    void ConvertToMesh(PolygonSet polySet, float height, bool up)
     {
         Dictionary<TriangulationPoint, int> pointIndices = new Dictionary<TriangulationPoint, int>();
         P2T.Triangulate(polySet);
@@ -1082,9 +1084,9 @@ public class VoxelGenerator
         {
             foreach (var triangle in polygon.Triangles)
             {
-                for (int i = 2; i >= 0; i--)
+                for (int i = 0; i < 3; i++)
                 {
-                    var point = triangle.Points[i];
+                    var point = triangle.Points[up ? 2 - i : i];
                     int index;
                     if (!pointIndices.ContainsKey(point))
                     {
