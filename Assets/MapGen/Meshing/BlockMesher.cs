@@ -65,7 +65,7 @@ abstract class BlockMesher {
         transparentMeshBuffer =
             new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize * ((int)MeshLayer.Collision - (int)MeshLayer.StaticTransparent)];
         collisionMeshBuffer =
-            new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize * ((int)MeshLayer.NaturalTerrain - (int)MeshLayer.Collision)];
+            new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize * ((int)MeshLayer.Count - (int)MeshLayer.Collision)];
         terrainMeshBuffer =
             new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize];
         heights = new float[2, 2];
@@ -435,8 +435,8 @@ abstract class BlockMesher {
         VoxelGenerator voxelGen = new VoxelGenerator();
         if (block_z == 0)
             voxelGen.bottomless = true;
-        terrainTiles = voxelGen.Triangulate(data);
-        terrainTiles = MeshCombineUtility.ColorCombine(terrainMeshBuffer, out dontCare, false, terrainTiles);
+         var naturalTerrain = voxelGen.Triangulate(data);
+        terrainTiles = MeshCombineUtility.ColorCombine(terrainMeshBuffer, out dontCare, false, naturalTerrain);
         topTerrainTiles = MeshCombineUtility.ColorCombine(terrainMeshBuffer, out dontCare, true);
         stencilTiles = MeshCombineUtility.ColorCombine(stencilMeshBuffer, out dontCare, false);
         topStencilTiles = MeshCombineUtility.ColorCombine(stencilMeshBuffer, out dontCare, true);
@@ -444,7 +444,7 @@ abstract class BlockMesher {
         topTransparentTiles = MeshCombineUtility.ColorCombine(transparentMeshBuffer, out dontCare, true);
         topTiles = MeshCombineUtility.ColorCombine(meshBuffer, out dontCare, true);
         tiles = MeshCombineUtility.ColorCombine(meshBuffer, out success, false);
-        collisionTiles = MeshCombineUtility.ColorCombine(collisionMeshBuffer, out dontCare, false);
+        collisionTiles = MeshCombineUtility.ColorCombine(collisionMeshBuffer, out dontCare, false, naturalTerrain);
 
         return success;
     }
