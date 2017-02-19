@@ -24,6 +24,9 @@
     </tileMesh>
     <tileMesh file = "FORTIFICATION.obj">
         <tiletype token="FORTIFICATION:*:*:*:*" />
+        <subObject file = "FORTIFICATION Open.obj">
+            <coverage state="OPEN"/>
+        </subObject>
     </tileMesh>
     <tileMesh file = "STAIRS_UP.obj">
         <tiletype token="STAIR_UP:*:*:*:*" />
