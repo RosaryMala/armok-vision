@@ -981,7 +981,7 @@ public class MapDataStore {
             get {
                 switch (shape) {
                 case TiletypeShape.WALL:
-                case TiletypeShape.FORTIFICATION:
+                //case TiletypeShape.FORTIFICATION: //dwarfs can't go through, but visibly, they're not solid.
                 //case TiletypeShape.BROOK_BED: //Dwarfs can't go through this, but it's permiable to water and also doesn't generally have solid tiles.
                 case TiletypeShape.TREE_SHAPE:
                     return true;
@@ -999,6 +999,7 @@ public class MapDataStore {
                     || buildingType.building_type == 9 //Floodgate
                     || buildingType.building_type == 16 //WindowGlass
                     || buildingType.building_type == 17 //WindowGem
+                    || shape == TiletypeShape.FORTIFICATION //since isWall doesn't handle this.
                     ;
             }
         }

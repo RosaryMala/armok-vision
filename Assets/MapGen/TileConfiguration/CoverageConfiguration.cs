@@ -6,14 +6,13 @@ using UnityEngine;
 
 public class CoverageConfiguration<T> : TileConfiguration<T> where T : IContent, new()
 {
-    Content closed = null;
+    Content covered = null;
     Content open = null;
 
     public override object SecondaryDictionary
     {
         set
         {
-            throw new NotImplementedException();
         }
     }
 
@@ -53,9 +52,9 @@ public class CoverageConfiguration<T> : TileConfiguration<T> where T : IContent,
                     return false;
                 }
             default:
-                if (closed != null)
+                if (covered != null)
                 {
-                    value = closed.GetValue(tile, layer);
+                    value = covered.GetValue(tile, layer);
                     return true;
                 }
                 else
@@ -76,13 +75,14 @@ public class CoverageConfiguration<T> : TileConfiguration<T> where T : IContent,
             {
                 switch (coverElem.Value)
                 {
-                    case "open":
+                    case "OPEN":
                         open = content;
                         break;
-                    case "covered":
-                        closed = content;
+                    case "COVERED":
+                        covered = content;
                         break;
                     default:
+                        Debug.LogErrorFormat("{0} is not a valid coverage state. Needs OPEN or COVERED");
                         continue;
                 }
             }
