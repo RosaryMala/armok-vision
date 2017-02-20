@@ -486,4 +486,7 @@
         <buildingType token="Stockpile"/>
         <buildingType token="Civzone"/>
     </buildingMesh>
+    <buildingMesh file="Spike.obj">
+        <buildingType token="Weapon"/>
+    </buildingMesh>
 </buildingMeshes>
