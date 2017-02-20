@@ -1,185 +1,186 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <tileMeshes>
-    <tileMesh file = "FLOOR.obj">
-        <tiletype token="FLOOR:*:*:*:*" />
-        <tiletype token="BRANCH:SMOOTH:*:*:--------" />
-    </tileMesh>
-    <tileMesh file = "WALL.obj">
-        <tiletype token="WALL:*:*:*:*" />
-    </tileMesh>
-    <tileMesh file = "TreeTrunkPillar.obj">
-        <tiletype token="WALL:*:TREE_MATERIAL:*:--------" />
-    </tileMesh>
-    <tileMesh file = "BOULDER.obj">
-        <tiletype token="BOULDER:*:*:*:*" />
-    </tileMesh>
-    <tileMesh file = "PEBBLES.obj">
-        <tiletype token="PEBBLES:*:*:*:*" />
-    </tileMesh>
-    <tileMesh file = "SAPLING.obj">
-        <tiletype token="SAPLING:*:*:*:*" />
-    </tileMesh>
-    <tileMesh file = "BUSH.obj">
-        <tiletype token="SHRUB:*:*:*:*" />
-    </tileMesh>
-    <tileMesh file = "FORTIFICATION.obj">
-        <tiletype token="FORTIFICATION:*:*:*:*" />
-        <subObject file = "FORTIFICATION Open.obj">
-            <coverage state="OPEN"/>
-        </subObject>
-    </tileMesh>
-    <tileMesh file = "STAIRS_UP.obj">
-        <tiletype token="STAIR_UP:*:*:*:*" />
-    </tileMesh>
-    <tileMesh file = "STAIRS_DOWN.obj">
-        <tiletype token="STAIR_DOWN:*:*:*:*" />
-    </tileMesh>
-    <tileMesh file = "STAIRS_UPDOWN.obj">
-        <tiletype token="STAIR_UPDOWN:*:*:*:*" />
-    </tileMesh>
-    <tileMesh file = "BROOK_BED.obj">
-        <tiletype token="BROOK_BED:*:*:*:*" />
-    </tileMesh>
-    <tileMesh file = "TREE.obj">
-        <tiletype token="TREE_SHAPE:*:*:*:*" />
-    </tileMesh>
-    <tileMesh file = "TreeBranches.obj" rotation = "Random90">
-        <tiletype token="BRANCH:*:*:*:--------" />
-    </tileMesh>
-    <tileMesh file = "TreeBranchEW.obj" >
-        <tiletype token="BRANCH:*:*:*:----W-E-" />
-    </tileMesh>
-    <tileMesh file = "TreeBranchSE.obj" >
-        <tiletype token="BRANCH:*:*:*:--S---E-" />
-    </tileMesh>
-    <tileMesh file = "TreeBranchSW.obj" >
-        <tiletype token="BRANCH:*:*:*:--S-W---" />
-    </tileMesh>
-    <tileMesh file = "TreeBranchSEW.obj" >
-        <tiletype token="BRANCH:*:*:*:--S-W-E-" />
-    </tileMesh>
-    <tileMesh file = "TreeBranchNE.obj" >
-        <tiletype token="BRANCH:*:*:*:N-----E-" />
-    </tileMesh>
-    <tileMesh file = "TreeBranchNW.obj" >
-        <tiletype token="BRANCH:*:*:*:N---W---" />
-    </tileMesh>
-    <tileMesh file = "TreeBranchNEW.obj" >
-        <tiletype token="BRANCH:*:*:*:N---W-E-" />
-    </tileMesh>
-    <tileMesh file = "TreeBranchNS.obj" >
-        <tiletype token="BRANCH:*:*:*:N-S-----" />
-    </tileMesh>
-    <tileMesh file = "TreeBranchNSE.obj" >
-        <tiletype token="BRANCH:*:*:*:N-S---E-" />
-    </tileMesh>
-    <tileMesh file = "TreeBranchNSW.obj" >
-        <tiletype token="BRANCH:*:*:*:N-S-W---" />
-    </tileMesh>
-    <tileMesh file = "TreeBranchNSEW.obj" >
-        <tiletype token="BRANCH:*:*:*:N-S-W-E-" />
-    </tileMesh>
-    <tileMesh file = "FLOOR.obj">
-        <tiletype token="TRUNK_BRANCH:*:*:*:*" />
-        <tiletype token="BRANCH:*:*:*:*" />
-    </tileMesh>
-
-    <tileMesh file = "TreeTwigs.obj" rotation="Random90" >
-        <tiletype token="TWIG:*:*:*:*" />
-    </tileMesh>
-
-    <!--<tileMesh file = "Grass Big.obj">
-        <tiletype token="FLOOR:*:GRASS_LIGHT:*:*" />
-        <tiletype token="FLOOR:*:GRASS_DARK:*:*" />
-    </tileMesh>-->
-    <tileMesh file = "TreeTrunkSloping_1.obj">
-        <tiletype token="RAMP:*:TREE_MATERIAL:*:*" />
-        <subObject file ="TreeTrunkSloping_1.obj">
-            <ramp index="1"/>
-        </subObject>
-    </tileMesh>
-    <tileMesh file = "Ramps/RAMP_1.obj">
-        <tiletype token="RAMP:*:*:*:*" />
-        <subObject file ="Ramps/RAMP_1.obj">
-            <subObject file ="TreeTrunkSloping_1.obj">
-                <tiletype token="*:*:TREE_MATERIAL:*:*" />
-            </subObject>
-            <ramp index="1"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_2.obj">
-            <ramp index="2"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_3.obj">
-            <ramp index="3"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_4.obj">
-            <ramp index="4"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_5.obj">
-            <ramp index="5"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_6_sharp.obj">
-            <ramp index="6"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_7_sharp.obj">
-            <ramp index="7"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_8_sharp.obj">
-            <ramp index="8"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_9_sharp.obj">
-            <ramp index="9"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_10_sharp.obj">
-            <ramp index="10"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_11_sharp.obj">
-            <ramp index="11"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_12_sharp.obj">
-            <ramp index="12"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_13_sharp.obj">
-            <ramp index="13"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_14_sharp.obj">
-            <ramp index="15"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_15_sharp.obj">
-            <ramp index="15"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_16.obj">
-            <ramp index="16"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_17.obj">
-            <ramp index="17"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_18_sharp.obj">
-            <ramp index="18"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_19_sharp.obj">
-            <ramp index="19"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_20_sharp.obj">
-            <ramp index="20"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_21_sharp.obj">
-            <ramp index="21"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_22_sharp.obj">
-            <ramp index="22"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_23_sharp.obj">
-            <ramp index="23"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_24_sharp.obj">
-            <ramp index="24"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_25_sharp.obj">
-            <ramp index="25"/>
-        </subObject>
-        <subObject file ="Ramps/RAMP_26_sharp.obj">
-            <ramp index="26"/>
-        </subObject>
-    </tileMesh>
+  <tileMesh file="FLOOR.obj">
+    <tiletype token="FLOOR:*:*:*:*"/>
+    <tiletype token="BRANCH:SMOOTH:*:*:--------"/>
+  </tileMesh>
+  <tileMesh file="WALL.obj">
+    <tiletype token="WALL:*:*:*:*"/>
+  </tileMesh>
+  <tileMesh file="TreeTrunkPillar.obj">
+    <tiletype token="WALL:*:TREE_MATERIAL:*:--------"/>
+  </tileMesh>
+  <tileMesh file="BOULDER.obj">
+    <tiletype token="BOULDER:*:*:*:*"/>
+  </tileMesh>
+  <tileMesh file="PEBBLES.obj">
+    <tiletype token="PEBBLES:*:*:*:*"/>
+  </tileMesh>
+  <tileMesh file="SAPLING.obj">
+    <tiletype token="SAPLING:*:*:*:*"/>
+    <subObject file="Mushroom.obj" rotation="Random">
+      <material token="PLANT:BLACK_CAP:STRUCTURAL"/>
+      <material token="PLANT:TOWER_CAP:STRUCTURAL"/>
+      <material token="PLANT:GOBLIN_CAP:STRUCTURAL"/>
+      <material token="PLANT:NETHER_CAP:STRUCTURAL"/>
+    </subObject>
+  </tileMesh>
+  <tileMesh file="BUSH.obj">
+    <tiletype token="SHRUB:*:*:*:*"/>
+  </tileMesh>
+  <tileMesh file="FORTIFICATION.obj">
+    <tiletype token="FORTIFICATION:*:*:*:*"/>
+    <subObject file="FORTIFICATION Open.obj">
+      <coverage state="OPEN"/>
+    </subObject>
+  </tileMesh>
+  <tileMesh file="STAIRS_UP.obj">
+    <tiletype token="STAIR_UP:*:*:*:*"/>
+  </tileMesh>
+  <tileMesh file="STAIRS_DOWN.obj">
+    <tiletype token="STAIR_DOWN:*:*:*:*"/>
+  </tileMesh>
+  <tileMesh file="STAIRS_UPDOWN.obj">
+    <tiletype token="STAIR_UPDOWN:*:*:*:*"/>
+  </tileMesh>
+  <tileMesh file="BROOK_BED.obj">
+    <tiletype token="BROOK_BED:*:*:*:*"/>
+  </tileMesh>
+  <tileMesh file="TREE.obj">
+    <tiletype token="TREE_SHAPE:*:*:*:*"/>
+  </tileMesh>
+  <tileMesh file="TreeBranches.obj" rotation="Random90">
+    <tiletype token="BRANCH:*:*:*:--------"/>
+  </tileMesh>
+  <tileMesh file="TreeBranchEW.obj">
+    <tiletype token="BRANCH:*:*:*:----W-E-"/>
+  </tileMesh>
+  <tileMesh file="TreeBranchSE.obj">
+    <tiletype token="BRANCH:*:*:*:--S---E-"/>
+  </tileMesh>
+  <tileMesh file="TreeBranchSW.obj">
+    <tiletype token="BRANCH:*:*:*:--S-W---"/>
+  </tileMesh>
+  <tileMesh file="TreeBranchSEW.obj">
+    <tiletype token="BRANCH:*:*:*:--S-W-E-"/>
+  </tileMesh>
+  <tileMesh file="TreeBranchNE.obj">
+    <tiletype token="BRANCH:*:*:*:N-----E-"/>
+  </tileMesh>
+  <tileMesh file="TreeBranchNW.obj">
+    <tiletype token="BRANCH:*:*:*:N---W---"/>
+  </tileMesh>
+  <tileMesh file="TreeBranchNEW.obj">
+    <tiletype token="BRANCH:*:*:*:N---W-E-"/>
+  </tileMesh>
+  <tileMesh file="TreeBranchNS.obj">
+    <tiletype token="BRANCH:*:*:*:N-S-----"/>
+  </tileMesh>
+  <tileMesh file="TreeBranchNSE.obj">
+    <tiletype token="BRANCH:*:*:*:N-S---E-"/>
+  </tileMesh>
+  <tileMesh file="TreeBranchNSW.obj">
+    <tiletype token="BRANCH:*:*:*:N-S-W---"/>
+  </tileMesh>
+  <tileMesh file="TreeBranchNSEW.obj">
+    <tiletype token="BRANCH:*:*:*:N-S-W-E-"/>
+  </tileMesh>
+  <tileMesh file="FLOOR.obj">
+    <tiletype token="TRUNK_BRANCH:*:*:*:*"/>
+    <tiletype token="BRANCH:*:*:*:*"/>
+  </tileMesh>
+  <tileMesh file="TreeTwigs.obj" rotation="Random90">
+    <tiletype token="TWIG:*:*:*:*"/>
+  </tileMesh>
+  <!--<tileMesh file = "Grass Big.obj"><tiletype token="FLOOR:*:GRASS_LIGHT:*:*" /><tiletype token="FLOOR:*:GRASS_DARK:*:*" /></tileMesh>-->
+  <tileMesh file="TreeTrunkSloping_1.obj">
+    <tiletype token="RAMP:*:TREE_MATERIAL:*:*"/>
+    <subObject file="TreeTrunkSloping_1.obj">
+      <ramp index="1"/>
+    </subObject>
+  </tileMesh>
+  <tileMesh file="Ramps/RAMP_1.obj">
+    <tiletype token="RAMP:*:*:*:*"/>
+    <subObject file="Ramps/RAMP_1.obj">
+      <subObject file="TreeTrunkSloping_1.obj">
+        <tiletype token="*:*:TREE_MATERIAL:*:*"/>
+      </subObject>
+      <ramp index="1"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_2.obj">
+      <ramp index="2"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_3.obj">
+      <ramp index="3"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_4.obj">
+      <ramp index="4"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_5.obj">
+      <ramp index="5"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_6_sharp.obj">
+      <ramp index="6"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_7_sharp.obj">
+      <ramp index="7"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_8_sharp.obj">
+      <ramp index="8"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_9_sharp.obj">
+      <ramp index="9"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_10_sharp.obj">
+      <ramp index="10"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_11_sharp.obj">
+      <ramp index="11"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_12_sharp.obj">
+      <ramp index="12"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_13_sharp.obj">
+      <ramp index="13"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_14_sharp.obj">
+      <ramp index="15"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_15_sharp.obj">
+      <ramp index="15"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_16.obj">
+      <ramp index="16"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_17.obj">
+      <ramp index="17"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_18_sharp.obj">
+      <ramp index="18"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_19_sharp.obj">
+      <ramp index="19"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_20_sharp.obj">
+      <ramp index="20"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_21_sharp.obj">
+      <ramp index="21"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_22_sharp.obj">
+      <ramp index="22"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_23_sharp.obj">
+      <ramp index="23"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_24_sharp.obj">
+      <ramp index="24"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_25_sharp.obj">
+      <ramp index="25"/>
+    </subObject>
+    <subObject file="Ramps/RAMP_26_sharp.obj">
+      <ramp index="26"/>
+    </subObject>
+  </tileMesh>
 </tileMeshes>
