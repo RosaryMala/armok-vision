@@ -287,7 +287,7 @@ public class GameMap : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetButtonDown("ToggleDF"))
+        if (Input.GetButtonDown("ToggleDF") && !Stomt.StomtPopup.Instance.Visible)
         {
             GameSettings.Instance.game.showDFScreen = !GameSettings.Instance.game.showDFScreen;
 
@@ -300,7 +300,7 @@ public class GameMap : MonoBehaviour
             UpdateView();
 
 
-        if (!GameSettings.Instance.game.showDFScreen)
+        if (!GameSettings.Instance.game.showDFScreen && !Stomt.StomtPopup.Instance.Visible)
         {
             if (Input.GetButtonDown("ScaleUnits"))
             {
