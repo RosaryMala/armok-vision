@@ -560,7 +560,7 @@ public sealed class DFConnection : MonoBehaviour
     // OnGUI is called for rendering and handling GUI events
     public void OnGUI()
     {
-        if (GameSettings.Instance.game.showDFScreen)
+        if (GameSettings.Instance.game.showDFScreen && !Stomt.StomtPopup.Instance.Visible)
         {
             Event e = Event.current;
             if (e.isKey)

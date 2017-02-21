@@ -102,7 +102,7 @@ public class CameraSelector : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C) && !Stomt.StomtPopup.Instance.Visible)
             CycleCamera();
     }
 
