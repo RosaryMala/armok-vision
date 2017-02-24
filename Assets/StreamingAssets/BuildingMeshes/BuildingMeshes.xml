@@ -62,6 +62,7 @@
     </buildingMesh>
     <buildingMesh file="Bridge.obj">
         <buildingType token="Bridge"/>
+        <buildingType token="RoadPaved"/>
     </buildingMesh>
     <buildingMesh file="Support.obj">
         <buildingType token="Support"/>
@@ -488,5 +489,8 @@
     </buildingMesh>
     <buildingMesh file="Spike.obj">
         <buildingType token="Weapon"/>
+    </buildingMesh>
+    <buildingMesh file="FarmPlot.obj">
+        <buildingType token="FarmPlot"/>
     </buildingMesh>
 </buildingMeshes>
