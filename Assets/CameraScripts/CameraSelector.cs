@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.VR;
 
 public class CameraSelector : MonoBehaviour
@@ -102,7 +103,7 @@ public class CameraSelector : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C) && !Stomt.StomtPopup.Instance.Visible)
+        if (Input.GetKeyDown(KeyCode.C) && EventSystem.current.currentSelectedGameObject == null)
             CycleCamera();
     }
 

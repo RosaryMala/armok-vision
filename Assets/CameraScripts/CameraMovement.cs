@@ -1,5 +1,6 @@
 ﻿using DFHack;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CameraMovement : MonoBehaviour
 {
@@ -45,7 +46,7 @@ public class CameraMovement : MonoBehaviour
                 transform.Translate(diff * interp, Space.World);
             }
         }
-        if (GameSettings.Instance.game.showDFScreen)
+        if (GameSettings.Instance.game.showDFScreen || EventSystem.current.currentSelectedGameObject != null)
             return;
 
         float moveZ = Input.GetAxis("CamUpDown");

@@ -493,4 +493,13 @@
     <buildingMesh file="FarmPlot.obj">
         <buildingType token="FarmPlot"/>
     </buildingMesh>
+    <buildingMesh file="WeaponRack.obj" rotation="AwayFromWall">
+        <buildingType token="Weaponrack"/>
+    </buildingMesh>
+    <buildingMesh file="Armorstand.obj" rotation="AwayFromWall">
+        <buildingType token="Armorstand"/>
+    </buildingMesh>
+    <buildingMesh file="Trap_Lever.obj" rotation="AwayFromWall">
+        <buildingType token="Trap_Lever"/>
+    </buildingMesh>
 </buildingMeshes>
