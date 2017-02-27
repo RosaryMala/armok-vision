@@ -188,6 +188,9 @@ public class GameMap : MonoBehaviour
     {
         enabled = false;
 
+        BuildSettings buildSettings = Resources.Load("Build Settings", typeof(BuildSettings)) as BuildSettings;
+        Debug.Log("Started Armok Vision version " + buildSettings.content_version);
+
         DFConnection.RegisterConnectionCallback(OnConnectToDF);
 
         dfScreen.SetActive(GameSettings.Instance.game.showDFScreen);
