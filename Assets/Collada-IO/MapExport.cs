@@ -8,6 +8,7 @@ using RemoteFortressReader;
 using Collada141;
 using DFHack;
 using System.Text;
+using UnityEngine.EventSystems;
 
 public class MapExport : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class MapExport : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("SaveMeshes") && Input.GetButton("Mod"))
+        if (Input.GetButtonDown("SaveMeshes") && Input.GetButton("Mod") && EventSystem.current.currentSelectedGameObject == null)
         {
             StartCoroutine(ExportMap("map.dae"));
         }

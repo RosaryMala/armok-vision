@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.VR;
 using UnityStandardAssets.Characters.FirstPerson;
 
@@ -25,7 +26,7 @@ public class CameraScale : MonoBehaviour
     private void HandleMouseRotation()
     {
         //horizontal rotation
-        if (Input.GetAxis("Mouse ScrollWheel") != 0)
+        if (Input.GetAxis("Mouse ScrollWheel") != 0 && EventSystem.current.currentSelectedGameObject == null)
         {
             zoomLevel -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
             if (zoomLevel > maxZoom)

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.EventSystems;
 
 public class CameraRotateVertical : MonoBehaviour
 {
@@ -53,7 +54,7 @@ public class CameraRotateVertical : MonoBehaviour
 
     public void HandleMouseRotation()
     {
-        if (Input.GetMouseButton(1))
+        if (Input.GetMouseButton(1) && EventSystem.current.currentSelectedGameObject == null)
         {
             //horizontal rotation
             if (verticalRotationEnabled && Input.mousePosition.y != mouseY)

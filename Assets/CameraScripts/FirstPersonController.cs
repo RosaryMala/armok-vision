@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Utility;
 using Random = UnityEngine.Random;
@@ -93,6 +94,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         private void FixedUpdate()
         {
+            if (EventSystem.current.currentSelectedGameObject != null)
+                return;
             float speed;
             GetInput(out speed);
             // always move along the camera forward as it is the direction that it being aimed at

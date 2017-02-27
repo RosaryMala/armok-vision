@@ -10,6 +10,8 @@ using System.Threading;
 using UnitFlags;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 // The class responsible for talking to DF and meshing the data it gets.
 // Relevant vocabulary: A "map tile" is an individual square on the map.
@@ -283,11 +285,13 @@ public class GameMap : MonoBehaviour
 
     public GameObject dfScreen;
 
+
+    GameObject selected;
+
     // Run once per frame.
     void Update()
     {
-
-        if (Input.GetButtonDown("ToggleDF") && !Stomt.StomtPopup.Instance.Visible)
+        if (Input.GetButtonDown("ToggleDF") && EventSystem.current.currentSelectedGameObject == null)
         {
             GameSettings.Instance.game.showDFScreen = !GameSettings.Instance.game.showDFScreen;
 
@@ -300,7 +304,7 @@ public class GameMap : MonoBehaviour
             UpdateView();
 
 
-        if (!GameSettings.Instance.game.showDFScreen && !Stomt.StomtPopup.Instance.Visible)
+        if (!GameSettings.Instance.game.showDFScreen && EventSystem.current.currentSelectedGameObject == null)
         {
             if (Input.GetButtonDown("ScaleUnits"))
             {

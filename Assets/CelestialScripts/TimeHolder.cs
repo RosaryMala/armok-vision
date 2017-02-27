@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Threading;
+using UnityEngine.EventSystems;
 
 public class TimeHolder : MonoBehaviour {
 
@@ -25,19 +26,19 @@ public class TimeHolder : MonoBehaviour {
 
     void Update()
     {
-        if (Input.GetButtonDown("PauseTime"))
+        if (Input.GetButtonDown("PauseTime") && EventSystem.current.currentSelectedGameObject == null)
         {
             if (useFixedTime == false)
                 StopTime();
             else
                 useFixedTime = false;
         }
-        if (Input.GetButtonDown("TimeForward"))
+        if (Input.GetButtonDown("TimeForward") && EventSystem.current.currentSelectedGameObject == null)
         {
             StopTime();
             fixedHour += 1;
         }
-        if (Input.GetButtonDown("TimeReverse"))
+        if (Input.GetButtonDown("TimeReverse") && EventSystem.current.currentSelectedGameObject == null)
         {
             StopTime();
             fixedHour -= 1;
