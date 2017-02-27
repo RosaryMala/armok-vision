@@ -1,3 +1,12 @@
+v0.16.0
+ * Removed VR support until a dedicated dev steps forward.
+ * Load creature sprites from DF graphics packs.
+ * Added Gemset creature graphics as a default sprite set.
+ * Made open-air fortifications have a different model.
+ * Added models for menacing spikes, levers, farm plots, roads, weapon racks, and armor stands.
+ * Added a quick feedback mechanism using Stomt.
+ * Fixed some bugs with UI stuff not blocking keyboard input to the rest of the program.
+
 v0.15.0
  * Use HQ4x scaling on small sprites
  * Completely new terrain generation system, with rounded corners, and fewer polygons
