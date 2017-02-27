@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Stomt
@@ -158,8 +159,9 @@ namespace Stomt
 		{
 			// Hide UI
 			_ui.SetActive(false);
-		}
-		void Reset()
+            EventSystem.current.SetSelectedGameObject(null);
+        }
+        void Reset()
 		{
 			_targetText.text = _api.TargetName;
 
