@@ -15,7 +15,6 @@
     <buildingMesh file="NestBox.obj"
                   rotation="AwayFromWall"
                   pattern="NestBox_P.png"
-                  specular="NestBox_S.png"
                   normal="NestBox_N.png"
                   alpha="NestBox_A.png"
                   metallic="NestBox_M.png">
