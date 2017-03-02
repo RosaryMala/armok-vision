@@ -12,17 +12,15 @@
     <buildingMesh file="Chair.obj">
         <buildingType token="Chair"/>
     </buildingMesh>
-    <buildingMeshes>
-        <buildingMesh file="NestBox.obj"
-                      rotation="AwayFromWall"
-                      pattern="NestBox_P.png"
-                      specular="NestBox_S.png"
-                      normal="NestBox_N.png"
-                      alpha="Opaque_A.png"
-                      metallic="NestBox_M.png">
-            <buildingType token="NestBox"/>
-        </buildingMesh>
-    </buildingMeshes>
+    <buildingMesh file="NestBox.obj"
+                  rotation="AwayFromWall"
+                  pattern="NestBox_P.png"
+                  specular="NestBox_S.png"
+                  normal="NestBox_N.png"
+                  alpha="NestBox_A.png"
+                  metallic="NestBox_M.png">
+        <buildingType token="NestBox"/>
+    </buildingMesh>
     <buildingMesh file="Bed_Sheet.obj"
                   rotation="AwayFromWall"
                   pattern="Bed_Sheet_P.png"
