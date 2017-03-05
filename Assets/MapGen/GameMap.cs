@@ -19,6 +19,8 @@ using UnityEngine.EventSystems;
 
 public class GameMap : MonoBehaviour
 {
+    public CanvasGroup helpOverlay;
+
     public Material waterMaterial;
     public Material magmaMaterial;
 
@@ -309,6 +311,8 @@ public class GameMap : MonoBehaviour
 
         if (!GameSettings.Instance.game.showDFScreen && EventSystem.current.currentSelectedGameObject == null)
         {
+            if (Input.GetKeyDown(KeyCode.F1))
+                helpOverlay.gameObject.SetActive(!helpOverlay.gameObject.activeSelf);
             if (Input.GetButtonDown("ScaleUnits"))
             {
                 GameSettings.Instance.units.scaleUnits = !GameSettings.Instance.units.scaleUnits;
