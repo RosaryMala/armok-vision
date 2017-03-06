@@ -377,19 +377,24 @@ public class GameMap : MonoBehaviour
     }
 
     public float helpFadeLength = 0.5f;
+    Coroutine helpFade;
     bool helpEnabled = false;
     private void ToggleHelp()
     {
-        StopCoroutine(EnableHelp());
-        StopCoroutine(DisableHelp());
+        StopCoroutine(helpFade);
         if (helpEnabled)
         {
-            StartCoroutine(DisableHelp());
+            helpFade = StartCoroutine(DisableHelp());
         }
         else
         {
-            StartCoroutine(EnableHelp());
+            ShowHelp();
         }
+    }
+
+    public void ShowHelp()
+    {
+        helpFade = StartCoroutine(EnableHelp());
     }
 
     IEnumerator DisableHelp()
@@ -403,7 +408,7 @@ public class GameMap : MonoBehaviour
         helpOverlay.gameObject.SetActive(false);
         yield return null;
     }
-    public IEnumerator EnableHelp()
+    IEnumerator EnableHelp()
     {
         helpEnabled = true;
         helpOverlay.gameObject.SetActive(true);
