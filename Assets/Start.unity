@@ -10063,6 +10063,11 @@ Prefab:
       propertyPath: m_Text
       value: F
       objectReference: {fileID: 0}
+    - target: {fileID: 114570351823763994, guid: bf094266df1576a4984dbc90d2f89ef5,
+        type: 2}
+      propertyPath: m_Text
+      value: Follow the DF Screen
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bf094266df1576a4984dbc90d2f89ef5, type: 2}
   m_IsPrefabParent: 0
@@ -12220,6 +12225,13 @@ Prefab:
         type: 2}
       propertyPath: m_Text
       value: O
+      objectReference: {fileID: 0}
+    - target: {fileID: 114570351823763994, guid: bf094266df1576a4984dbc90d2f89ef5,
+        type: 2}
+      propertyPath: m_Text
+      value: 'Overhead
+
+        Shadows'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bf094266df1576a4984dbc90d2f89ef5, type: 2}
@@ -17088,6 +17100,11 @@ Prefab:
       propertyPath: m_Text
       value: F9
       objectReference: {fileID: 0}
+    - target: {fileID: 114570351823763994, guid: bf094266df1576a4984dbc90d2f89ef5,
+        type: 2}
+      propertyPath: m_Text
+      value: Screenshot
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bf094266df1576a4984dbc90d2f89ef5, type: 2}
   m_IsPrefabParent: 0
@@ -21162,6 +21179,11 @@ Prefab:
       propertyPath: m_Text
       value: L
       objectReference: {fileID: 0}
+    - target: {fileID: 114570351823763994, guid: bf094266df1576a4984dbc90d2f89ef5,
+        type: 2}
+      propertyPath: m_Text
+      value: Scale Creatures by Body Size
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bf094266df1576a4984dbc90d2f89ef5, type: 2}
   m_IsPrefabParent: 0
@@ -21496,6 +21518,11 @@ Prefab:
       value: '~
 
         `'
+      objectReference: {fileID: 0}
+    - target: {fileID: 114570351823763994, guid: bf094266df1576a4984dbc90d2f89ef5,
+        type: 2}
+      propertyPath: m_Text
+      value: Toggle DF Screen
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bf094266df1576a4984dbc90d2f89ef5, type: 2}
