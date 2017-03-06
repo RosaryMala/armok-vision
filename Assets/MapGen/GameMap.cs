@@ -12,6 +12,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using System;
+using System.Collections;
 
 // The class responsible for talking to DF and meshing the data it gets.
 // Relevant vocabulary: A "map tile" is an individual square on the map.
@@ -123,7 +125,7 @@ public class GameMap : MonoBehaviour
     public const float tileWidth = 2.0f;
     public const int blockSize = 16;
 
-    static Object mapZOffsetLock = new Object();
+    static object mapZOffsetLock = new object();
     static int _mapZoffset = 0;
     public static int MapZOffset
     {
@@ -312,7 +314,9 @@ public class GameMap : MonoBehaviour
         if (!GameSettings.Instance.game.showDFScreen && EventSystem.current.currentSelectedGameObject == null)
         {
             if (Input.GetKeyDown(KeyCode.F1))
-                helpOverlay.gameObject.SetActive(!helpOverlay.gameObject.activeSelf);
+            {
+                ToggleHelp();
+            }
             if (Input.GetButtonDown("ScaleUnits"))
             {
                 GameSettings.Instance.units.scaleUnits = !GameSettings.Instance.units.scaleUnits;
@@ -371,6 +375,48 @@ public class GameMap : MonoBehaviour
         DrawBlocks();
         DrawItems();
     }
+
+    public float helpFadeLength = 0.5f;
+    bool helpEnabled = false;
+    private void ToggleHelp()
+    {
+        StopCoroutine(EnableHelp());
+        StopCoroutine(DisableHelp());
+        if (helpEnabled)
+        {
+            StartCoroutine(DisableHelp());
+        }
+        else
+        {
+            StartCoroutine(EnableHelp());
+        }
+    }
+
+    IEnumerator DisableHelp()
+    {
+        helpEnabled = false;
+        for (float f = helpOverlay.alpha; f >= 0; f -= (Time.deltaTime / helpFadeLength))
+        {
+            helpOverlay.alpha = f;
+            yield return null;
+        }
+        helpOverlay.gameObject.SetActive(false);
+        yield return null;
+    }
+    public IEnumerator EnableHelp()
+    {
+        helpEnabled = true;
+        helpOverlay.gameObject.SetActive(true);
+        for (float f = helpOverlay.alpha; f <= 1; f += (Time.deltaTime / helpFadeLength))
+        {
+            helpOverlay.alpha = f;
+            yield return null;
+        }
+        yield return null;
+    }
+
+
+
 
     public void Refresh()
     {
