@@ -24,6 +24,10 @@ MonoBehaviour:
         motionVectorsOpacity: 1
         motionVectorsResolution: 24
         motionVectorsAmplitude: 64
+  fog:
+    m_Enabled: 1
+    m_Settings:
+      excludeSkybox: 1
   antialiasing:
     m_Enabled: 1
     m_Settings:
@@ -32,11 +36,9 @@ MonoBehaviour:
         preset: 2
       taaSettings:
         jitterSpread: 0.75
-        sampleCount: 8
         sharpen: 0.3
         stationaryBlending: 0.95
         motionBlending: 0.85
-        renderQueue: 0
   ambientOcclusion:
     m_Enabled: 1
     m_Settings:
@@ -44,6 +46,7 @@ MonoBehaviour:
       radius: 2
       sampleCount: 10
       downsampling: 1
+      forceForwardCompatibility: 0
       ambientOnly: 0
       highPrecision: 0
   screenSpaceReflection:
@@ -67,12 +70,17 @@ MonoBehaviour:
         intensity: 0.03
   depthOfField:
     m_Enabled: 0
+    m_Settings:
+      focusDistance: 10
+      aperture: 5.6
+      focalLength: 50
+      useCameraFov: 0
+      kernelSize: 1
   motionBlur:
     m_Enabled: 0
     m_Settings:
       shutterAngle: 270
       sampleCount: 10
-      maxBlurRadius: 5
       frameBlending: 0
   eyeAdaptation:
     m_Enabled: 1
@@ -123,10 +131,11 @@ MonoBehaviour:
         blue: {x: 0, y: 0, z: 1}
         currentEditingChannel: 0
       colorWheels:
+        mode: 1
         log:
-          slope: {r: 0, g: 0, b: 0, a: 0}
-          power: {r: 0, g: 0, b: 0, a: 0}
-          offset: {r: 0, g: 0, b: 0, a: 0}
+          slope: {r: 1, g: 1, b: 1, a: 0}
+          power: {r: 1, g: 1, b: 1, a: 0}
+          offset: {r: 1, g: 1, b: 1, a: 0}
         linear:
           lift: {r: 0, g: 0, b: 0, a: 0}
           gamma: {r: 0, g: 0, b: 0, a: 0}
@@ -136,19 +145,21 @@ MonoBehaviour:
           curve:
             serializedVersion: 2
             m_Curve:
-            - time: 0
+            - serializedVersion: 2
+              time: 0
               value: 0
               inSlope: 1
               outSlope: 1
               tangentMode: 0
-            - time: 1
+            - serializedVersion: 2
+              time: 1
               value: 1
               inSlope: 1
               outSlope: 1
               tangentMode: 0
             m_PreInfinity: 2
             m_PostInfinity: 2
-            m_RotationOrder: 4
+            m_RotationOrder: 0
           m_Loop: 0
           m_ZeroValue: 0
           m_Range: 1
@@ -156,12 +167,14 @@ MonoBehaviour:
           curve:
             serializedVersion: 2
             m_Curve:
-            - time: 0
+            - serializedVersion: 2
+              time: 0
               value: 0
               inSlope: 1
               outSlope: 1
               tangentMode: 0
-            - time: 1
+            - serializedVersion: 2
+              time: 1
               value: 1
               inSlope: 1
               outSlope: 1
@@ -176,12 +189,14 @@ MonoBehaviour:
           curve:
             serializedVersion: 2
             m_Curve:
-            - time: 0
+            - serializedVersion: 2
+              time: 0
               value: 0
               inSlope: 1
               outSlope: 1
               tangentMode: 0
-            - time: 1
+            - serializedVersion: 2
+              time: 1
               value: 1
               inSlope: 1
               outSlope: 1
@@ -196,12 +211,14 @@ MonoBehaviour:
           curve:
             serializedVersion: 2
             m_Curve:
-            - time: 0
+            - serializedVersion: 2
+              time: 0
               value: 0
               inSlope: 1
               outSlope: 1
               tangentMode: 0
-            - time: 1
+            - serializedVersion: 2
+              time: 1
               value: 1
               inSlope: 1
               outSlope: 1
@@ -270,7 +287,7 @@ MonoBehaviour:
   grain:
     m_Enabled: 0
     m_Settings:
-      mode: 1
+      colored: 1
       intensity: 0.12
       size: 1.6
       luminanceContribution: 0.75
@@ -285,6 +302,8 @@ MonoBehaviour:
       roundness: 1
       mask: {fileID: 0}
       opacity: 1
+  dithering:
+    m_Enabled: 0
   monitors:
     currentMonitorID: 1
     refreshOnPlay: 0
