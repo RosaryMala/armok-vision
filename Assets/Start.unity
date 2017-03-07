@@ -17,8 +17,8 @@ RenderSettings:
   m_Fog: 1
   m_FogColor: {r: 0.71323526, g: 0.82200813, b: 1, a: 1}
   m_FogMode: 1
-  m_FogDensity: 0.0001
-  m_LinearFogStart: 1000
+  m_FogDensity: 0.001
+  m_LinearFogStart: 100
   m_LinearFogEnd: 10000
   m_AmbientSkyColor: {r: 0.71323526, g: 0.82200813, b: 1, a: 1}
   m_AmbientEquatorColor: {r: 0.9624784, g: 0.9930945, b: 1, a: 1}
@@ -13381,7 +13381,6 @@ GameObject:
   - component: {fileID: 1404020253}
   - component: {fileID: 1485797796}
   - component: {fileID: 1169102440}
-  - component: {fileID: 1169102438}
   - component: {fileID: 1169102437}
   - component: {fileID: 1169102435}
   - component: {fileID: 1169102444}
@@ -13422,25 +13421,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   profile: {fileID: 11400000, guid: 69c347a1e6c41d945a26ccd69063a9b4, type: 2}
---- !u!114 &1169102438
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1169102434}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76b5ec6153a1d55438228df10fe66844, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  distanceFog: 1
-  excludeFarPixels: 1
-  useRadialDistance: 1
-  heightFog: 0
-  height: 1
-  heightDensity: 2
-  startDistance: 0
-  fogShader: {fileID: 4800000, guid: 70d8568987ac0499f952b54c7c13e265, type: 3}
 --- !u!124 &1169102440
 Behaviour:
   m_ObjectHideFlags: 0
