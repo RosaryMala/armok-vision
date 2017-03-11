@@ -241,6 +241,7 @@ public class ContentLoader : MonoBehaviour
     {
         System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         watch.Start();
+        GameMap.Instance.ShowHelp();
         yield return StartCoroutine(ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt"));
         yield return StartCoroutine(FinalizeTextureAtlases());
         Instance = this;
@@ -248,7 +249,7 @@ public class ContentLoader : MonoBehaviour
         Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
         Debug.Log(string.Format("loaded {0} meshes, {1} pattern textures, {2} colors, and {3} shape textures.", MeshContent.NumCreated, TextureContent.NumCreated, ColorContent.NumCreated, NormalContent.NumCreated));
         Debug.Log("Loading Complete. Press ESC to change settings or leave feedback. Have a nice day!");
-        GameMap.Instance.ShowHelp();
+        GameMap.Instance.HideHelp();
         yield return null;
     }
 
