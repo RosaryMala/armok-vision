@@ -384,12 +384,17 @@ public class GameMap : MonoBehaviour
         StopCoroutine(helpFade);
         if (helpEnabled)
         {
-            helpFade = StartCoroutine(DisableHelp());
+            HideHelp();
         }
         else
         {
             ShowHelp();
         }
+    }
+
+    public void HideHelp()
+    {
+        helpFade = StartCoroutine(DisableHelp());
     }
 
     public void ShowHelp()
