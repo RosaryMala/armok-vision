@@ -19,7 +19,9 @@ public class TilePage : ICollection
     List<DFCoord2d> coordList = new List<DFCoord2d>();
     [SerializeField]
     Texture2DArray tileArray;
+    Texture2DArray normalArray;
     public Texture2DArray TileArray { get { return tileArray; } }
+    public Texture2DArray NormalArray { get { return normalArray; } }
 
     public int Count
     {
@@ -95,6 +97,7 @@ public class TilePage : ICollection
 
 
         tileArray = new Texture2DArray(Mathf.ClosestPowerOfTwo(tileWidth * scaleFactor), Mathf.ClosestPowerOfTwo(tileHeight * scaleFactor), coordList.Count, TextureFormat.ARGB32, true);
+        normalArray = new Texture2DArray(Mathf.ClosestPowerOfTwo(tileWidth * scaleFactor), Mathf.ClosestPowerOfTwo(tileHeight * scaleFactor), coordList.Count, TextureFormat.ARGB32, true, true);
 
         for (int i = 0; i < coordList.Count; i++)
         {
@@ -125,8 +128,10 @@ public class TilePage : ICollection
             texture.SetPixels32(tileDest32);
             TextureScale.Bilinear(texture, Mathf.ClosestPowerOfTwo(tileWidth * scaleFactor), Mathf.ClosestPowerOfTwo(tileHeight * scaleFactor));
             tileArray.SetPixels(texture.GetPixels(), i);
+            normalArray.SetPixels(TextureTools.Bevel(texture.GetPixels(), texture.width, texture.height), i);
         }
         tileArray.Apply();
+        normalArray.Apply();
     }
 
     public void CopyTo(Array array, int index)

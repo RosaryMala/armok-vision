@@ -4,6 +4,7 @@ Shader "Custom/ToplitSprite" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
         _SpriteArray("Sprite Array", 2DArray) = "white" {}
+        _NormalArray("Normal Array", 2DArray) = "bump" {}
         _SpriteIndex("Sprite Index", Int) = 1
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
 		_Metallic ("Metallic", Range(0,1)) = 0.0
@@ -20,6 +21,7 @@ Shader "Custom/ToplitSprite" {
         #pragma target 3.5
 
         UNITY_DECLARE_TEX2DARRAY(_SpriteArray);
+        UNITY_DECLARE_TEX2DARRAY(_NormalArray);
 
 		struct Input {
 			float2 uv_MainTex;
@@ -30,10 +32,6 @@ Shader "Custom/ToplitSprite" {
 		fixed4 _Color;
         int _SpriteIndex;
 
-        void vert(inout appdata_full v) {
-            v.normal = mul(unity_WorldToObject, float4(0, 1, 0, 0));
-        }
-
 		void surf (Input IN, inout SurfaceOutputStandard o) {
 			// Albedo comes from a texture tinted by color
             fixed4 c = _Color * UNITY_SAMPLE_TEX2DARRAY(_SpriteArray, float3(IN.uv_MainTex, _SpriteIndex));
@@ -41,6 +39,7 @@ Shader "Custom/ToplitSprite" {
 			// Metallic and smoothness come from slider variables
 			o.Metallic = _Metallic;
 			o.Smoothness = _Glossiness;
+            o.Normal = UnpackNormal(UNITY_SAMPLE_TEX2DARRAY(_NormalArray, float3(IN.uv_MainTex, _SpriteIndex)));
 			o.Alpha = c.a;
 		}
 		ENDCG

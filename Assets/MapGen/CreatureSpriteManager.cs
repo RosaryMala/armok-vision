@@ -187,6 +187,7 @@ public class CreatureSpriteManager
             count += page.Count;
             var mat = new Material(baseCreatureMaterial);
             mat.SetTexture("_SpriteArray", page.TileArray);
+            mat.SetTexture("_NormalArray", page.NormalArray);
             mats.Add(mat);
         }
         Debug.LogFormat("Loaded {0} creature sprites.", count);

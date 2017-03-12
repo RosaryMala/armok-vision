@@ -453,6 +453,9 @@ public class ContentLoader : MonoBehaviour
         yield return null;
         specialTextureStorage.CompileTextures("SpecialTexture");
 
+        Debug.Log("Updating Material Manager...");
+        yield return null;
+
         Vector4 arrayCount = new Vector4(materialTextureStorage.Count, shapeTextureStorage.Count, specialTextureStorage.Count);
 
         MaterialManager.Instance.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
@@ -464,7 +467,7 @@ public class ContentLoader : MonoBehaviour
         yield return null;
         SpriteManager.FinalizeSprites();
         Debug.Log("Done!");
-
+        yield return null;
         //get rid of any un-used textures left over.
         Resources.UnloadUnusedAssets();
         GC.Collect();
