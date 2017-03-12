@@ -43,7 +43,7 @@ public class CreatureSpriteManager
             prof.TryGetValue((DF.Enums.profession)unit.profession_id, out def);
             set = (def.page != -1);
         }
-        if(!set)
+        if(!set || def.page == -1)
         {
             mat = null;
             index = 0;
