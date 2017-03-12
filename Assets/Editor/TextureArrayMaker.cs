@@ -20,8 +20,10 @@ public class TextureArrayMaker : EditorWindow
     ScaleMode scaleMode = ScaleMode.None;
     bool mipmaps = true;
     Texture2DArray texArray;
+    Texture2DArray normalArray;
     int previewIndex = 0;
     Texture2D previewTexture;
+    Texture2D normalPreviewTexture;
 
     [MenuItem("Mytools/Texture Array Builder")]
     public static void BuildTextureArray()
@@ -139,6 +141,43 @@ public class TextureArrayMaker : EditorWindow
             {
                 var path = EditorUtility.SaveFilePanelInProject("Save texture array to asset", texArray.name + ".asset", "asset", "Please select a filename to save the texture atlas to.");
                 AssetDatabase.CreateAsset(texArray, path);
+                AssetDatabase.Refresh();
+            }
+            if(GUILayout.Button("Generate Bump"))
+            {
+                normalArray = new Texture2DArray(texArray.width, texArray.height, texArray.depth, TextureFormat.ARGB32, true, true);
+                for(int i = 0; i < normalArray.depth; i++)
+                {
+                    normalArray.SetPixels(TextureTools.Bevel(texArray.GetPixels(i), texArray.width, texArray.height), i);
+                }
+                normalArray.Apply();
+            }
+        }
+        if (normalArray != null)
+        {
+            previewIndex = EditorGUILayout.IntSlider(previewIndex, 0, normalArray.depth - 1);
+            if (normalPreviewTexture == null)
+                normalPreviewTexture = new Texture2D(normalArray.width, normalArray.height, TextureFormat.ARGB32, false);
+            if (normalPreviewTexture.width != normalArray.width || normalPreviewTexture.height != normalArray.height)
+                normalPreviewTexture.Resize(normalArray.width, normalArray.height);
+
+            var previewPixels = normalArray.GetPixels(previewIndex);
+
+            for(int i = 0; i < previewPixels.Length; i++)
+            {
+                Color color = previewPixels[i];
+                previewPixels[i] = new Color(color.a, color.g, Mathf.Sqrt(1 - (color.a * 2 - 1) * (color.a * 2 - 1) - (color.g * 2 - 1) * (color.g * 2 - 1)));
+            }
+
+            normalPreviewTexture.SetPixels(previewPixels);
+            normalPreviewTexture.Apply();
+
+            EditorGUI.DrawPreviewTexture(EditorGUILayout.GetControlRect(false, normalPreviewTexture.height), normalPreviewTexture, null, UnityEngine.ScaleMode.ScaleToFit);
+
+            if (GUILayout.Button("Save Texture Array"))
+            {
+                var path = EditorUtility.SaveFilePanelInProject("Save texture array to asset", normalArray.name + ".asset", "asset", "Please select a filename to save the texture atlas to.");
+                AssetDatabase.CreateAsset(normalArray, path);
                 AssetDatabase.Refresh();
             }
         }

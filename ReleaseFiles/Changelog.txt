@@ -2,6 +2,7 @@ v0.16.2
  * Fixed fog.
  * Made the help menu automatically show only when loading.
  * Fixed creature sprites so they don't glow in the dark.
+ * Added fake 3D effect to creature sprites.
 
 v0.16.1
  * Added new nestbox model, made by Ola Tuvesson

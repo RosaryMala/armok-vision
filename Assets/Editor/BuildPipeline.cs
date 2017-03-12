@@ -9,9 +9,9 @@ public class BuildFactory
     [MenuItem("Mytools/Build Release")]
     public static void BuildAll()
     {
+        BuildRelease(BuildTarget.StandaloneWindows64);
         BuildRelease(BuildTarget.StandaloneOSXIntel64);
         BuildRelease(BuildTarget.StandaloneLinux64);
-        BuildRelease(BuildTarget.StandaloneWindows64);
     }
 
     [MenuItem("Mytools/Build Windows Release")]
