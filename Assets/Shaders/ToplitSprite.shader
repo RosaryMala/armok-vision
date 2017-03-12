@@ -11,11 +11,11 @@ Shader "Custom/ToplitSprite" {
 		_Cutoff("Alpha cutoff", Range(0,1)) = 0.5
 	}
 	SubShader {
-		Tags { "Queue" = "Transparent"  "RenderType"="Transparent" }
+		Tags { "RenderType"="TransparentCutout" }
 		LOD 200
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf Standard addshadow vertex:vert alphatest:_Cutoff
+		#pragma surface surf Standard addshadow alphatest:_Cutoff
 
         #pragma target 3.5
 
