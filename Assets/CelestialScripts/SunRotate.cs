@@ -11,18 +11,18 @@ public class SunRotate : MonoBehaviour
 
     public float GetLongitudeFromWorld(RemoteFortressReader.WorldMap world)
     {
-        float tude = Mathf.InverseLerp(0, world.world_height, world.center_y);
-        switch (world.world_poles)
+        float tude = Mathf.InverseLerp(0, world.WorldHeight, world.CenterY);
+        switch (world.WorldPoles)
         {
-            case RemoteFortressReader.WorldPoles.NO_POLES:
+            case RemoteFortressReader.WorldPoles.NoPoles:
                 return 0;
-            case RemoteFortressReader.WorldPoles.NORTH_POLE:
+            case RemoteFortressReader.WorldPoles.NorthPole:
                 tude = (1-tude) * 90;
                     break;
-            case RemoteFortressReader.WorldPoles.SOUTH_POLE:
+            case RemoteFortressReader.WorldPoles.SouthPole:
                 tude = tude * 90;
                 break;
-            case RemoteFortressReader.WorldPoles.BOTH_POLES:
+            case RemoteFortressReader.WorldPoles.BothPoles:
                 tude = ((tude * 2) - 1) * -180;
                 break;
             default:

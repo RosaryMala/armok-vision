@@ -13,7 +13,7 @@ public class RampConfiguration<T> : TileConfiguration<T> where T : IContent, new
 
     public override bool GetValue(MapDataStore.Tile tile, MeshLayer layer, out T value)
     {
-        if (tile.shape != RemoteFortressReader.TiletypeShape.RAMP)
+        if (tile.shape != RemoteFortressReader.TiletypeShape.Ramp)
         {
             value = default(T);
             return false;

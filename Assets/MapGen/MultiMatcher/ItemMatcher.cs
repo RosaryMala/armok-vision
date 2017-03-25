@@ -16,7 +16,7 @@ public class ItemMatcher<T>
             }
             if (itemList == null)
                 itemList = new Dictionary<MatPairStruct, T>();
-            itemList[ItemTokenList.ItemLookup[token].mat_pair] = value;
+            itemList[ItemTokenList.ItemLookup[token].MatPair] = value;
         }
     }
     public T this[MatPairStruct mat]

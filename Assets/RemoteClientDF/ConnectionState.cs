@@ -9,14 +9,14 @@ public class ConnectionState {
     public RemoteFortressReader.UnitList net_unit_list;
     public RemoteFortressReader.ViewInfo net_view_info;
     public RemoteFortressReader.MapInfo net_map_info;
-    public RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MaterialList> MaterialListCall;
-    public RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.TiletypeList> TiletypeListCall;
+    public RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.MaterialList> MaterialListCall;
+    public RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.TiletypeList> TiletypeListCall;
     public RemoteFunction<RemoteFortressReader.BlockRequest, RemoteFortressReader.BlockList> BlockListCall;
-    public RemoteFunction<dfproto.EmptyMessage> HashCheckCall;
-    public RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.UnitList> UnitListCall;
-    public RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.ViewInfo> ViewInfoCall;
-    public RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MapInfo> MapInfoCall;
-    public RemoteFunction<dfproto.EmptyMessage> MapResetCall;
+    public RemoteFunction<Dfproto.EmptyMessage> HashCheckCall;
+    public RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.UnitList> UnitListCall;
+    public RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.ViewInfo> ViewInfoCall;
+    public RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.MapInfo> MapInfoCall;
+    public RemoteFunction<Dfproto.EmptyMessage> MapResetCall;
     color_ostream df_network_out;
     public RemoteClient network_client;
 
@@ -26,21 +26,21 @@ public class ConnectionState {
         is_connected = network_client.connect();
         if (!is_connected) return;
         net_block_request = new RemoteFortressReader.BlockRequest();
-        MaterialListCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MaterialList>();
+        MaterialListCall = new RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.MaterialList>();
         MaterialListCall.bind(network_client, "GetMaterialList", "RemoteFortressReader");
-        TiletypeListCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.TiletypeList>();
+        TiletypeListCall = new RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.TiletypeList>();
         TiletypeListCall.bind(network_client, "GetTiletypeList", "RemoteFortressReader");
         BlockListCall = new RemoteFunction<RemoteFortressReader.BlockRequest, RemoteFortressReader.BlockList>();
         BlockListCall.bind(network_client, "GetBlockList", "RemoteFortressReader");
-        HashCheckCall = new RemoteFunction<dfproto.EmptyMessage>();
+        HashCheckCall = new RemoteFunction<Dfproto.EmptyMessage>();
         HashCheckCall.bind(network_client, "CheckHashes", "RemoteFortressReader");
-        UnitListCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.UnitList>();
+        UnitListCall = new RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.UnitList>();
         UnitListCall.bind(network_client, "GetUnitList", "RemoteFortressReader");
-        ViewInfoCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.ViewInfo>();
+        ViewInfoCall = new RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.ViewInfo>();
         ViewInfoCall.bind(network_client, "GetViewInfo", "RemoteFortressReader");
-        MapInfoCall = new RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MapInfo>();
+        MapInfoCall = new RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.MapInfo>();
         MapInfoCall.bind(network_client, "GetMapInfo", "RemoteFortressReader");
-        MapResetCall = new RemoteFunction<dfproto.EmptyMessage>();
+        MapResetCall = new RemoteFunction<Dfproto.EmptyMessage>();
         MapResetCall.bind(network_client, "ResetMapHashes", "RemoteFortressReader");
     }
 

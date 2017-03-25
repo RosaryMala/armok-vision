@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using AT.MIN;
-using dfproto;
+using Dfproto;
 
 namespace  DFHack
 {
@@ -95,9 +95,9 @@ namespace  DFHack
 
         public virtual color_ostream proxy_target() { return target; }
 
-        public void decode(dfproto.CoreTextNotification data)
+        public void decode(CoreTextNotification data)
         {
-            int cnt = data.fragments.Count;
+            int cnt = data.Fragments.Count;
 
             if (cnt > 0)
             {
@@ -105,10 +105,10 @@ namespace  DFHack
 
                 for (int i = 0; i < cnt; i++)
                 {
-                    var frag = data.fragments[i];
+                    var frag = data.Fragments[i];
 
                     //color_value color = frag.has_color() ? color_value(frag.color()) : COLOR_RESET;
-                    target.add_text(color_value.COLOR_RESET, frag.text);
+                    target.add_text(color_value.COLOR_RESET, frag.Text);
                     //target.printerr(data.fragments[i].text);
                 }
 

@@ -41,8 +41,8 @@ namespace TokenLists
             {
                 if (tileTokens == null)
                     tileTokens = new Dictionary<string, Tiletype>();
-                tileTokens[token.name] = token;
-                AddTile(token.shape, token.special, token.material, token.variant, token.direction, token);
+                tileTokens[token.Name] = token;
+                AddTile(token.Shape, token.Special, token.Material, token.Variant, token.Direction, token);
             }
         }
     }

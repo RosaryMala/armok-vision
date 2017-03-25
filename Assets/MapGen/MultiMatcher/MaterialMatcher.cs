@@ -30,13 +30,13 @@ public class MaterialMatcher<T>
             match.difference |= 4;
             foreach (MaterialDefinition item in wordList.Values)
             {
-                TrySetMatch(match, item.mat_pair);
+                TrySetMatch(match, item.MatPair);
             }
         }
         else
         {
             if (wordList.ContainsKey(word))
-                TrySetMatch(match, wordList[word].mat_pair);
+                TrySetMatch(match, wordList[word].MatPair);
         }
     }
     void Setwords(string word, string suffix, Dictionary<string, Dictionary<string, MaterialDefinition>> wordList, MaterialMatch match)

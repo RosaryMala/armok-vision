@@ -32,13 +32,13 @@ public class TiletypeMatcher<T>
             match.difference |= 1;
             foreach (var item in optionList.Values)
             {
-                TrySetMatch(match, item.id);
+                TrySetMatch(match, item.Id);
             }
         }
         else
         {
             if (optionList.ContainsKey(direction))
-                TrySetMatch(match, optionList[direction].id);
+                TrySetMatch(match, optionList[direction].Id);
         }
     }
 
@@ -160,7 +160,7 @@ public class TiletypeMatcher<T>
             {
                 case 1:
                     if (TiletypeTokenList.tileTokens.ContainsKey(parts[0]))
-                        TrySetMatch(newItem, TiletypeTokenList.tileTokens[parts[0]].id);
+                        TrySetMatch(newItem, TiletypeTokenList.tileTokens[parts[0]].Id);
                     break;
                 case 5:
                     newItem.difference |= 32;

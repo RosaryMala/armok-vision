@@ -63,14 +63,14 @@ public class WorldMapMaker : MonoBehaviour
         }
         if (GameSettings.Instance.rendering.distantTerrainDetail == GameSettings.LandscapeDetail.Off)
             return;
-        width = remoteMap.world_width;
-        height = remoteMap.world_height;
-        worldName = remoteMap.name;
-        worldNameEnglish = remoteMap.name_english;
+        width = remoteMap.WorldWidth;
+        height = remoteMap.WorldHeight;
+        worldName = remoteMap.Name;
+        worldNameEnglish = remoteMap.NameEnglish;
         transform.position = new Vector3(
-        ((-remoteMap.center_x * 48) - 0.5f) * GameMap.tileWidth,
+        ((-remoteMap.CenterX * 48) - 0.5f) * GameMap.tileWidth,
         0,
-        ((remoteMap.center_y * 48) + 0.5f) * GameMap.tileWidth);
+        ((remoteMap.CenterY * 48) + 0.5f) * GameMap.tileWidth);
 
         terrainMat.SetFloat("_Scale", scale);
         terrainMat.SetFloat("_SeaLevel", (99 * GameMap.tileHeight) + transform.position.y);
@@ -79,20 +79,20 @@ public class WorldMapMaker : MonoBehaviour
         for (int x = 0; x < width; x++)
             for (int y = 0; y < height; y++)
             {
-                int index = y * remoteMap.world_width + x;
-                regionTiles[x,y] = remoteMap.region_tiles[index];
+                int index = y * remoteMap.WorldWidth + x;
+                regionTiles[x,y] = remoteMap.RegionTiles[index];
                 if (GameSettings.Instance.rendering.drawClouds)
                 {
-                    cumulusMedium[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_MEDIUM;
-                    cumulusMulti[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_MULTI;
-                    cumulusNimbus[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_NIMBUS;
-                    stratusAlto[x, y] = remoteMap.clouds[index].stratus == StratusType.STRATUS_ALTO;
-                    stratusProper[x, y] = remoteMap.clouds[index].stratus == StratusType.STRATUS_PROPER;
-                    stratusNimbus[x, y] = remoteMap.clouds[index].stratus == StratusType.STRATUS_NIMBUS;
-                    cirrus[x, y] = remoteMap.clouds[index].cirrus;
-                    fogMist[x, y] = remoteMap.clouds[index].fog == FogType.FOG_MIST;
-                    fogNormal[x, y] = remoteMap.clouds[index].fog == FogType.FOG_NORMAL;
-                    fogThick[x, y] = remoteMap.clouds[index].fog == FogType.F0G_THICK;
+                    cumulusMedium[x, y] = remoteMap.Clouds[index].Cumulus == CumulusType.CumulusMedium;
+                    cumulusMulti[x, y] = remoteMap.Clouds[index].Cumulus == CumulusType.CumulusMulti;
+                    cumulusNimbus[x, y] = remoteMap.Clouds[index].Cumulus == CumulusType.CumulusNimbus;
+                    stratusAlto[x, y] = remoteMap.Clouds[index].Stratus == StratusType.StratusAlto;
+                    stratusProper[x, y] = remoteMap.Clouds[index].Stratus == StratusType.StratusProper;
+                    stratusNimbus[x, y] = remoteMap.Clouds[index].Stratus == StratusType.StratusNimbus;
+                    cirrus[x, y] = remoteMap.Clouds[index].Cirrus;
+                    fogMist[x, y] = remoteMap.Clouds[index].Fog == FogType.FogMist;
+                    fogNormal[x, y] = remoteMap.Clouds[index].Fog == FogType.FogNone;
+                    fogThick[x, y] = remoteMap.Clouds[index].Fog == FogType.F0GThick;
                 }
             }
         if(ContentLoader.Instance != null)
@@ -118,17 +118,17 @@ public class WorldMapMaker : MonoBehaviour
         for (int x = 0; x < width; x++)
             for (int y = 0; y < height; y++)
             {
-                int index = y * remoteMap.world_width + x;
-                cumulusMedium[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_MEDIUM;
-                cumulusMulti[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_MULTI;
-                cumulusNimbus[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_NIMBUS;
-                stratusAlto[x, y] = remoteMap.clouds[index].stratus == StratusType.STRATUS_ALTO;
-                stratusProper[x, y] = remoteMap.clouds[index].stratus == StratusType.STRATUS_PROPER;
-                stratusNimbus[x, y] = remoteMap.clouds[index].stratus == StratusType.STRATUS_NIMBUS;
-                cirrus[x, y] = remoteMap.clouds[index].cirrus;
-                fogMist[x, y] = remoteMap.clouds[index].fog == FogType.FOG_MIST;
-                fogNormal[x, y] = remoteMap.clouds[index].fog == FogType.FOG_NORMAL;
-                fogThick[x, y] = remoteMap.clouds[index].fog == FogType.F0G_THICK;
+                int index = y * remoteMap.WorldWidth + x;
+                cumulusMedium[x, y] = remoteMap.Clouds[index].Cumulus == CumulusType.CumulusMedium;
+                cumulusMulti[x, y] = remoteMap.Clouds[index].Cumulus == CumulusType.CumulusMulti;
+                cumulusNimbus[x, y] = remoteMap.Clouds[index].Cumulus == CumulusType.CumulusNimbus;
+                stratusAlto[x, y] = remoteMap.Clouds[index].Stratus == StratusType.StratusAlto;
+                stratusProper[x, y] = remoteMap.Clouds[index].Stratus == StratusType.StratusProper;
+                stratusNimbus[x, y] = remoteMap.Clouds[index].Stratus == StratusType.StratusNimbus;
+                cirrus[x, y] = remoteMap.Clouds[index].Cirrus;
+                fogMist[x, y] = remoteMap.Clouds[index].Fog == FogType.FogMist;
+                fogNormal[x, y] = remoteMap.Clouds[index].Fog == FogType.FogNormal;
+                fogThick[x, y] = remoteMap.Clouds[index].Fog == FogType.F0GThick;
             }
         GenerateClouds();
     }
@@ -222,15 +222,15 @@ public class WorldMapMaker : MonoBehaviour
         if (GameSettings.Instance.rendering.distantTerrainDetail == GameSettings.LandscapeDetail.Off)
             return;
 
-        foreach (RegionMap map in regionMaps.region_maps)
+        foreach (RegionMap map in regionMaps.RegionMaps_)
         {
-            DFCoord2d pos = new DFCoord2d(map.map_x, map.map_y);
+            DFCoord2d pos = new DFCoord2d(map.MapX, map.MapY);
             RegionMaker region;
             if (!DetailRegions.ContainsKey(pos))
             {
                 region = Instantiate(regionPrefab);
                 region.transform.parent = transform;
-                region.transform.localPosition = RegionToUnityCoords(map.map_x, map.map_y, 0);
+                region.transform.localPosition = RegionToUnityCoords(map.MapX, map.MapY, 0);
                 DetailRegions[pos] = region;
             }
             else
@@ -301,43 +301,43 @@ public class WorldMapMaker : MonoBehaviour
 
                 MapDataStore.Tile fakeTile = new MapDataStore.Tile(null, new DFCoord(0, 0, 0));
 
-                fakeTile.material = regionTiles[x, y].surface_material;
+                fakeTile.material = regionTiles[x, y].SurfaceMaterial;
 
                 ColorContent colorContent;
                 ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorContent);
                 Color terrainColor = colorContent.color;
 
                 Color plantColor = Color.black;
-                float grassPercent = Mathf.Pow(regionTiles[x, y].vegetation / 100.0f, 0.25F);
-                float treePercent = Mathf.Pow(regionTiles[x, y].vegetation / 100.0f, 0.5F);
+                float grassPercent = Mathf.Pow(regionTiles[x, y].Vegetation / 100.0f, 0.25F);
+                float treePercent = Mathf.Pow(regionTiles[x, y].Vegetation / 100.0f, 0.5F);
 
-                foreach (var item in regionTiles[x, y].plant_materials)
+                foreach (var item in regionTiles[x, y].PlantMaterials)
                 {
                     fakeTile.material = item;
                     ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorContent);
                     plantColor += colorContent.color;
                 }
-                if (regionTiles[x, y].plant_materials.Count == 0)
+                if (regionTiles[x, y].PlantMaterials.Count == 0)
                     grassPercent = 0;
                 else
-                    plantColor /= regionTiles[x, y].plant_materials.Count;
+                    plantColor /= regionTiles[x, y].PlantMaterials.Count;
 
                 Color treeColor = Color.black;
                 int treeCount = 0;
-                foreach (var tree in regionTiles[x,y].tree_materials)
+                foreach (var tree in regionTiles[x,y].TreeMaterials)
                 {
-                    int plantIndex = tree.mat_index;
-                    if (tree.mat_type != 419
+                    int plantIndex = tree.MatIndex;
+                    if (tree.MatType != 419
                         || DFConnection.Instance.NetPlantRawList == null
-                        || DFConnection.Instance.NetPlantRawList.plant_raws.Count <= plantIndex)
+                        || DFConnection.Instance.NetPlantRawList.PlantRaws.Count <= plantIndex)
                         continue;
                     var treeMat = tree;
-                    foreach (var growth in DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths)
+                    foreach (var growth in DFConnection.Instance.NetPlantRawList.PlantRaws[plantIndex].Growths)
                     {
                         int currentTicks = TimeHolder.DisplayedTime.CurrentYearTicks;
-                        if ((growth.timing_start != -1 && growth.timing_start > currentTicks) || (growth.timing_end != -1 && growth.timing_end < currentTicks))
+                        if ((growth.TimingStart != -1 && growth.TimingStart > currentTicks) || (growth.TimingEnd != -1 && growth.TimingEnd < currentTicks))
                             continue;
-                        treeMat = growth.mat;
+                        treeMat = growth.Mat;
                         break;
                     }
                     fakeTile.material = treeMat;
@@ -357,29 +357,29 @@ public class WorldMapMaker : MonoBehaviour
                 terrainColor = Color.Lerp(terrainColor, plantColor, grassPercent);
                 terrainColor = Color.Lerp(terrainColor, treeColor, treePercent);
 
-                Vector2 biome = new Vector2(regionTiles[x, y].rainfall, 100 - regionTiles[x, y].drainage) / 100;
+                Vector2 biome = new Vector2(regionTiles[x, y].Rainfall, 100 - regionTiles[x, y].Drainage) / 100;
 
-                Vector3 vert1 = RegionToUnityCoords(x, y, regionTiles[x, y].elevation);
-                Vector3 vert2 = RegionToUnityCoords(x + 1, y + 1, regionTiles[x, y].elevation);
+                Vector3 vert1 = RegionToUnityCoords(x, y, regionTiles[x, y].Elevation);
+                Vector3 vert2 = RegionToUnityCoords(x + 1, y + 1, regionTiles[x, y].Elevation);
 
-                bool snow = regionTiles[x, y].snow > 0;
+                bool snow = regionTiles[x, y].Snow > 0;
 
                 RegionMaker.AddHorizontalQuad(vert1, vert2, biome, terrainColor, vertices, colors, uvs, uv2s, uv3s, triangles, snow);
 
-                if (regionTiles[x, y].elevation < regionTiles[x, y].water_elevation)
+                if (regionTiles[x, y].Elevation < regionTiles[x, y].WaterElevation)
                 {
-                    vert1 = RegionToUnityCoords(x, y, regionTiles[x, y].water_elevation);
-                    vert2 = RegionToUnityCoords(x + 1, y + 1, regionTiles[x, y].water_elevation);
+                    vert1 = RegionToUnityCoords(x, y, regionTiles[x, y].WaterElevation);
+                    vert2 = RegionToUnityCoords(x + 1, y + 1, regionTiles[x, y].WaterElevation);
 
                     RegionMaker.AddHorizontalQuad(vert1, vert2, biome, terrainColor, waterVerts, null, waterUvs, null, null, waterTris, false);
                 }
 
                 int north = 0;
                 if (y > 0 && !DetailRegions.ContainsKey(new DFCoord2d(x, y - 1)))
-                    north = regionTiles[x, y - 1].elevation;
-                if (north < regionTiles[x, y].elevation)
+                    north = regionTiles[x, y - 1].Elevation;
+                if (north < regionTiles[x, y].Elevation)
                 {
-                    vert1 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, regionTiles[x, y].elevation * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth)) * scale;
+                    vert1 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, regionTiles[x, y].Elevation * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth)) * scale;
                     vert2 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, north * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth)) * scale;
 
                     RegionMaker.AddVerticalQuad(vert1, vert2, biome, terrainColor, vertices, colors, uvs, uv2s, uv3s, triangles, snow);
@@ -387,10 +387,10 @@ public class WorldMapMaker : MonoBehaviour
 
                 int south = 0;
                 if (y < height - 1 && !DetailRegions.ContainsKey(new DFCoord2d(x, y + 1)))
-                    south = regionTiles[x, y + 1].elevation;
-                if (south < regionTiles[x, y].elevation)
+                    south = regionTiles[x, y + 1].Elevation;
+                if (south < regionTiles[x, y].Elevation)
                 {
-                    vert1 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, regionTiles[x, y].elevation * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth)) * scale;
+                    vert1 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, regionTiles[x, y].Elevation * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth)) * scale;
                     vert2 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, south * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth)) * scale;
 
                     RegionMaker.AddVerticalQuad(vert1, vert2, biome, terrainColor, vertices, colors, uvs, uv2s, uv3s, triangles, snow);
@@ -398,20 +398,20 @@ public class WorldMapMaker : MonoBehaviour
 
                 int east = 0;
                 if (x < width - 1 && !DetailRegions.ContainsKey(new DFCoord2d(x + 1, y)))
-                    east = regionTiles[x + 1, y].elevation;
-                if (east < regionTiles[x, y].elevation)
+                    east = regionTiles[x + 1, y].Elevation;
+                if (east < regionTiles[x, y].Elevation)
                 {
-                    vert1 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, regionTiles[x, y].elevation * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth)) * scale;
+                    vert1 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, regionTiles[x, y].Elevation * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth)) * scale;
                     vert2 = (new Vector3((x + 1) * 48 * 16 * GameMap.tileWidth, east * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth)) * scale;
 
                     RegionMaker.AddVerticalQuad(vert1, vert2, biome, terrainColor, vertices, colors, uvs, uv2s, uv3s, triangles, snow);
                 }
                 int west = 0;
                 if (x > 0 && !DetailRegions.ContainsKey(new DFCoord2d(x - 1, y)))
-                    west = regionTiles[x - 1, y].elevation;
-                if (west < regionTiles[x, y].elevation)
+                    west = regionTiles[x - 1, y].Elevation;
+                if (west < regionTiles[x, y].Elevation)
                 {
-                    vert1 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, regionTiles[x, y].elevation * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth)) * scale;
+                    vert1 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, regionTiles[x, y].Elevation * GameMap.tileHeight, -(y + 1) * 48 * 16 * GameMap.tileWidth)) * scale;
                     vert2 = (new Vector3(x * 48 * 16 * GameMap.tileWidth, west * GameMap.tileHeight, -y * 48 * 16 * GameMap.tileWidth)) * scale;
 
                     RegionMaker.AddVerticalQuad(vert1, vert2, biome, terrainColor, vertices, colors, uvs, uv2s, uv3s, triangles, snow);

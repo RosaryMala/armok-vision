@@ -92,9 +92,9 @@ abstract class BlockMesher {
 
         // Load materials
         materials = new Dictionary<MatPairStruct, MaterialDefinition>();
-        foreach (MaterialDefinition material in DFConnection.Instance.NetMaterialList.material_list)
+        foreach (MaterialDefinition material in DFConnection.Instance.NetMaterialList.MaterialList_)
         {
-            materials[material.mat_pair] = material;
+            materials[material.MatPair] = material;
         }
         System.GC.Collect(); //force a garbage collect after initial load.
     }
@@ -571,10 +571,10 @@ abstract class BlockMesher {
                 {
                     switch (tile.tiletypeMaterial)
                     {
-                        case TiletypeMaterial.PLANT:
-                        case TiletypeMaterial.ROOT:
-                        case TiletypeMaterial.TREE_MATERIAL:
-                        case TiletypeMaterial.MUSHROOM:
+                        case TiletypeMaterial.Plant:
+                        case TiletypeMaterial.Root:
+                        case TiletypeMaterial.TreeMaterial:
+                        case TiletypeMaterial.Mushroom:
                             if (!ContentLoader.Instance.GrowthMeshConfiguration.GetValue(tile, layer, out meshContent))
                             {
                                 buffer.meshData = null;
@@ -758,11 +758,11 @@ abstract class BlockMesher {
             MaterialDefinition mattie;
             if (materials.TryGetValue(mat, out mattie))
             {
-                ColorDefinition color = mattie.state_color;
+                ColorDefinition color = mattie.StateColor;
                 if (color == null)
                     newColor = Color.cyan;
                 else
-                    newColor = new Color(color.red / 255.0f, color.green / 255.0f, color.blue / 255.0f, 1);
+                    newColor = new Color(color.Red / 255.0f, color.Green / 255.0f, color.Blue / 255.0f, 1);
             }
             else
             {

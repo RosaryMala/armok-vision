@@ -28,44 +28,44 @@ public class TileDesignationConfiguration<T> : TileConfiguration<T> where T : IC
     {
         switch (tile.digDesignation)
         {
-            case RemoteFortressReader.TileDigDesignation.NO_DIG:
+            case RemoteFortressReader.TileDigDesignation.NoDig:
                 break;
-            case RemoteFortressReader.TileDigDesignation.DEFAULT_DIG:
+            case RemoteFortressReader.TileDigDesignation.DefaultDig:
                 if (designationBlocks.ContainsKey(DesignationTypes.Default))
                 {
                     value = designationBlocks[DesignationTypes.Default].GetValue(tile, layer);
                     return true;
                 }
                 break;
-            case RemoteFortressReader.TileDigDesignation.UP_DOWN_STAIR_DIG:
+            case RemoteFortressReader.TileDigDesignation.UpDownStairDig:
                 if (designationBlocks.ContainsKey(DesignationTypes.UpDownStairs))
                 {
                     value = designationBlocks[DesignationTypes.UpDownStairs].GetValue(tile, layer);
                     return true;
                 }
                 break;
-            case RemoteFortressReader.TileDigDesignation.CHANNEL_DIG:
+            case RemoteFortressReader.TileDigDesignation.ChannelDig:
                 if (designationBlocks.ContainsKey(DesignationTypes.Channel))
                 {
                     value = designationBlocks[DesignationTypes.Channel].GetValue(tile, layer);
                     return true;
                 }
                 break;
-            case RemoteFortressReader.TileDigDesignation.RAMP_DIG:
+            case RemoteFortressReader.TileDigDesignation.RampDig:
                 if (designationBlocks.ContainsKey(DesignationTypes.Ramp))
                 {
                     value = designationBlocks[DesignationTypes.Ramp].GetValue(tile, layer);
                     return true;
                 }
                 break;
-            case RemoteFortressReader.TileDigDesignation.DOWN_STAIR_DIG:
+            case RemoteFortressReader.TileDigDesignation.DownStairDig:
                 if (designationBlocks.ContainsKey(DesignationTypes.DownStairs))
                 {
                     value = designationBlocks[DesignationTypes.DownStairs].GetValue(tile, layer);
                     return true;
                 }
                 break;
-            case RemoteFortressReader.TileDigDesignation.UP_STAIR_DIG:
+            case RemoteFortressReader.TileDigDesignation.UpStairDig:
                 if (designationBlocks.ContainsKey(DesignationTypes.UpStairs))
                 {
                     value = designationBlocks[DesignationTypes.UpStairs].GetValue(tile, layer);

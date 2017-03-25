@@ -1,4 +1,5 @@
 using DFHack;
+using Google.Protobuf;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -54,25 +55,25 @@ public sealed class DFConnection : MonoBehaviour
     #region RPC Bindings
 
     // Remote bindings
-    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MaterialList> materialListCall;
-    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MaterialList> itemListCall;
-    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.TiletypeList> tiletypeListCall;
+    private RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.MaterialList> materialListCall;
+    private RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.MaterialList> itemListCall;
+    private RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.TiletypeList> tiletypeListCall;
     private RemoteFunction<RemoteFortressReader.BlockRequest, RemoteFortressReader.BlockList> blockListCall;
-    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.UnitList> unitListCall;
-    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.ViewInfo> viewInfoCall;
-    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MapInfo> mapInfoCall;
-    private RemoteFunction<dfproto.EmptyMessage> mapResetCall;
-    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.BuildingList> buildingListCall;
-    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.WorldMap> worldMapCall;
-    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.WorldMap> worldMapCenterCall;
-    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.RegionMaps> regionMapCall;
-    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.CreatureRawList> creatureRawListCall;
-    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.PlantRawList> plantRawListCall;
+    private RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.UnitList> unitListCall;
+    private RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.ViewInfo> viewInfoCall;
+    private RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.MapInfo> mapInfoCall;
+    private RemoteFunction<Dfproto.EmptyMessage> mapResetCall;
+    private RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.BuildingList> buildingListCall;
+    private RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.WorldMap> worldMapCall;
+    private RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.WorldMap> worldMapCenterCall;
+    private RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.RegionMaps> regionMapCall;
+    private RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.CreatureRawList> creatureRawListCall;
+    private RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.PlantRawList> plantRawListCall;
     private RemoteFunction<RemoteFortressReader.KeyboardEvent> keyboardEventCall;
-    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.ScreenCapture> copyScreenCall;
+    private RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.ScreenCapture> copyScreenCall;
     private RemoteFunction<RemoteFortressReader.DigCommand> digCommandCall;
     private RemoteFunction<RemoteFortressReader.SingleBool> pauseCommandCall;
-    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.SingleBool> pauseStatusCall;
+    private RemoteFunction<Dfproto.EmptyMessage, RemoteFortressReader.SingleBool> pauseStatusCall;
     private color_ostream dfNetworkOut = new color_ostream();
     private RemoteClient networkClient;
 
@@ -84,7 +85,7 @@ public sealed class DFConnection : MonoBehaviour
     /// <param name="name">Name of the RPC function to bind to</param>
     /// <param name="proto">Name of the protobuf file to use</param>
     /// <returns>Bound remote function on success, otherwise null.</returns>
-    RemoteFunction<Input> CreateAndBind<Input>(RemoteClient client, string name, string proto = "") where Input : class, ProtoBuf.IExtensible, new()
+    RemoteFunction<Input> CreateAndBind<Input>(RemoteClient client, string name, string proto = "") where Input : class, IMessage, new()
     {
         RemoteFunction<Input> output = new RemoteFunction<Input>();
         if (output.bind(client, name, proto))
@@ -103,8 +104,8 @@ public sealed class DFConnection : MonoBehaviour
     /// <param name="proto">Name of the protobuf file to use</param>
     /// <returns>Bound remote function on success, otherwise null.</returns>
     RemoteFunction<Input, Output> CreateAndBind<Input, Output>(RemoteClient client, string name, string proto = "")
-        where Input : class, ProtoBuf.IExtensible, new()
-        where Output : class, ProtoBuf.IExtensible, new()
+        where Input : class, IMessage, new()
+        where Output : class, IMessage, new()
     {
         RemoteFunction<Input, Output> output = new RemoteFunction<Input, Output>();
         if (output.bind(client, name, proto))
@@ -118,25 +119,25 @@ public sealed class DFConnection : MonoBehaviour
     /// </summary>
     void BindMethods()
     {
-        materialListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.MaterialList>(networkClient, "GetMaterialList", "RemoteFortressReader");
-        itemListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.MaterialList>(networkClient, "GetItemList", "RemoteFortressReader");
-        tiletypeListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.TiletypeList>(networkClient, "GetTiletypeList", "RemoteFortressReader");
+        materialListCall = CreateAndBind<Dfproto.EmptyMessage, RemoteFortressReader.MaterialList>(networkClient, "GetMaterialList", "RemoteFortressReader");
+        itemListCall = CreateAndBind<Dfproto.EmptyMessage, RemoteFortressReader.MaterialList>(networkClient, "GetItemList", "RemoteFortressReader");
+        tiletypeListCall = CreateAndBind<Dfproto.EmptyMessage, RemoteFortressReader.TiletypeList>(networkClient, "GetTiletypeList", "RemoteFortressReader");
         blockListCall = CreateAndBind<RemoteFortressReader.BlockRequest, RemoteFortressReader.BlockList>(networkClient, "GetBlockList", "RemoteFortressReader");
-        unitListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.UnitList>(networkClient, "GetUnitList", "RemoteFortressReader");
-        viewInfoCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.ViewInfo>(networkClient, "GetViewInfo", "RemoteFortressReader");
-        mapInfoCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.MapInfo>(networkClient, "GetMapInfo", "RemoteFortressReader");
-        mapResetCall = CreateAndBind<dfproto.EmptyMessage>(networkClient, "ResetMapHashes", "RemoteFortressReader");
-        buildingListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.BuildingList>(networkClient, "GetBuildingDefList", "RemoteFortressReader");
-        worldMapCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.WorldMap>(networkClient, "GetWorldMapNew", "RemoteFortressReader");
-        worldMapCenterCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.WorldMap>(networkClient, "GetWorldMapCenter", "RemoteFortressReader");
-        regionMapCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.RegionMaps>(networkClient, "GetRegionMapsNew", "RemoteFortressReader");
-        creatureRawListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.CreatureRawList>(networkClient, "GetCreatureRaws", "RemoteFortressReader");
-        plantRawListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.PlantRawList>(networkClient, "GetPlantRaws", "RemoteFortressReader");
+        unitListCall = CreateAndBind<Dfproto.EmptyMessage, RemoteFortressReader.UnitList>(networkClient, "GetUnitList", "RemoteFortressReader");
+        viewInfoCall = CreateAndBind<Dfproto.EmptyMessage, RemoteFortressReader.ViewInfo>(networkClient, "GetViewInfo", "RemoteFortressReader");
+        mapInfoCall = CreateAndBind<Dfproto.EmptyMessage, RemoteFortressReader.MapInfo>(networkClient, "GetMapInfo", "RemoteFortressReader");
+        mapResetCall = CreateAndBind<Dfproto.EmptyMessage>(networkClient, "ResetMapHashes", "RemoteFortressReader");
+        buildingListCall = CreateAndBind<Dfproto.EmptyMessage, RemoteFortressReader.BuildingList>(networkClient, "GetBuildingDefList", "RemoteFortressReader");
+        worldMapCall = CreateAndBind<Dfproto.EmptyMessage, RemoteFortressReader.WorldMap>(networkClient, "GetWorldMapNew", "RemoteFortressReader");
+        worldMapCenterCall = CreateAndBind<Dfproto.EmptyMessage, RemoteFortressReader.WorldMap>(networkClient, "GetWorldMapCenter", "RemoteFortressReader");
+        regionMapCall = CreateAndBind<Dfproto.EmptyMessage, RemoteFortressReader.RegionMaps>(networkClient, "GetRegionMapsNew", "RemoteFortressReader");
+        creatureRawListCall = CreateAndBind<Dfproto.EmptyMessage, RemoteFortressReader.CreatureRawList>(networkClient, "GetCreatureRaws", "RemoteFortressReader");
+        plantRawListCall = CreateAndBind<Dfproto.EmptyMessage, RemoteFortressReader.PlantRawList>(networkClient, "GetPlantRaws", "RemoteFortressReader");
         keyboardEventCall = CreateAndBind<RemoteFortressReader.KeyboardEvent>(networkClient, "PassKeyboardEvent", "RemoteFortressReader");
-        copyScreenCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.ScreenCapture>(networkClient, "CopyScreen", "RemoteFortressReader");
+        copyScreenCall = CreateAndBind<Dfproto.EmptyMessage, RemoteFortressReader.ScreenCapture>(networkClient, "CopyScreen", "RemoteFortressReader");
         digCommandCall = CreateAndBind<RemoteFortressReader.DigCommand>(networkClient, "SendDigCommand", "RemoteFortressReader");
         pauseCommandCall = CreateAndBind<RemoteFortressReader.SingleBool>(networkClient, "SetPauseState", "RemoteFortressReader");
-        pauseStatusCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.SingleBool>(networkClient, "GetPauseState", "RemoteFortressReader");
+        pauseStatusCall = CreateAndBind<Dfproto.EmptyMessage, RemoteFortressReader.SingleBool>(networkClient, "GetPauseState", "RemoteFortressReader");
     }
 
     #endregion
@@ -366,7 +367,7 @@ public sealed class DFConnection : MonoBehaviour
     /// </summary>
     void ConnectAndInit()
     {
-        blockRequest.blocks_needed = BlocksToFetch;
+        blockRequest.BlocksNeeded = BlocksToFetch;
         networkClient = new DFHack.RemoteClient(dfNetworkOut);
         bool success = networkClient.connect();
         if (!success)
@@ -469,27 +470,27 @@ public sealed class DFConnection : MonoBehaviour
     {
         if (netMaterialList != null)
         {
-            MaterialTokenList.MaterialTokens = netMaterialList.material_list;
-            Debug.Log("Materials fetched: " + netMaterialList.material_list.Count);
+            MaterialTokenList.MaterialTokens = new List<RemoteFortressReader.MaterialDefinition>(netMaterialList.MaterialList_);
+            Debug.Log("Materials fetched: " + netMaterialList.MaterialList_.Count);
         }
         if (netTiletypeList != null)
         {
-            TiletypeTokenList.tiletypeTokenList = netTiletypeList.tiletype_list;
-            Debug.Log("Tiletypes fetched: " + netTiletypeList.tiletype_list.Count);
+            TiletypeTokenList.tiletypeTokenList = new List<RemoteFortressReader.Tiletype>(netTiletypeList.TiletypeList_);
+            Debug.Log("Tiletypes fetched: " + netTiletypeList.TiletypeList_.Count);
         }
         if (netItemList != null)
         {
-            ItemTokenList.ItemTokens = netItemList.material_list;
-            Debug.Log("Itemtypes fetched: " + netItemList.material_list.Count);
+            ItemTokenList.ItemTokens = new List<RemoteFortressReader.MaterialDefinition>(netItemList.MaterialList_);
+            Debug.Log("Itemtypes fetched: " + netItemList.MaterialList_.Count);
         }
         else
         {
             RemoteFortressReader.MaterialDefinition blankMaterial = new RemoteFortressReader.MaterialDefinition();
-            blankMaterial.id = "NONE";
-            blankMaterial.name = "NONE";
-            blankMaterial.mat_pair = new RemoteFortressReader.MatPair();
-            blankMaterial.mat_pair.mat_type = -1;
-            blankMaterial.mat_pair.mat_index = -1;
+            blankMaterial.Id = "NONE";
+            blankMaterial.Name = "NONE";
+            blankMaterial.MatPair = new RemoteFortressReader.MatPair();
+            blankMaterial.MatPair.MatType = -1;
+            blankMaterial.MatPair.MatIndex = -1;
             List<RemoteFortressReader.MaterialDefinition> blankItemList = new List<RemoteFortressReader.MaterialDefinition>();
             blankItemList.Add(blankMaterial);
             ItemTokenList.ItemTokens = blankItemList;
@@ -497,26 +498,26 @@ public sealed class DFConnection : MonoBehaviour
         }
         if (netBuildingList != null)
         {
-            BuildingTokenList.BuildingTokens = netBuildingList.building_list;
-            Debug.Log("Buildingtypes fetched: " + netBuildingList.building_list.Count);
+            BuildingTokenList.BuildingTokens = new List<RemoteFortressReader.BuildingDefinition>(netBuildingList.BuildingList_);
+            Debug.Log("Buildingtypes fetched: " + netBuildingList.BuildingList_.Count);
         }
 
         if (netTiletypeList != null)
         {
-            MapDataStore.tiletypeTokenList = netTiletypeList.tiletype_list;
-            Debug.Log("Tiletypes fetched: " + netTiletypeList.tiletype_list.Count);
+            MapDataStore.tiletypeTokenList = new List<RemoteFortressReader.Tiletype>(netTiletypeList.TiletypeList_);
+            Debug.Log("Tiletypes fetched: " + netTiletypeList.TiletypeList_.Count);
         }
 
         if (netPlantRawList != null)
         {
-            PlantTokenList.PlantRawList = netPlantRawList.plant_raws;
-            Debug.Log("Plant Raws fetched: " + netPlantRawList.plant_raws.Count);
+            PlantTokenList.PlantRawList = new List<RemoteFortressReader.PlantRaw>(netPlantRawList.PlantRaws);
+            Debug.Log("Plant Raws fetched: " + netPlantRawList.PlantRaws.Count);
         }
 
         if(netCreatureRawList != null)
         {
-            CreatureTokenList.CreatureRawList = netCreatureRawList.creature_raws;
-            Debug.Log("Creature Raws fetched: " + netCreatureRawList.creature_raws.Count);
+            CreatureTokenList.CreatureRawList = new List<RemoteFortressReader.CreatureRaw>(netCreatureRawList.CreatureRaws);
+            Debug.Log("Creature Raws fetched: " + netCreatureRawList.CreatureRaws.Count);
         }
 
         //Debug.Log("Buildingtypes fetched: " + netBuildingList.building_list.Count);
@@ -569,12 +570,12 @@ public sealed class DFConnection : MonoBehaviour
                 switch (e.type)
                 {
                     case EventType.KeyDown:
-                        dfEvent.type = 2;
-                        dfEvent.state = 0;
+                        dfEvent.Type = 2;
+                        dfEvent.State = 0;
                         break;
                     case EventType.KeyUp:
-                        dfEvent.type = 3;
-                        dfEvent.state = 0;
+                        dfEvent.Type = 3;
+                        dfEvent.State = 0;
                         break;
                 }
                 SDL.Mod mod = SDL.Mod.KMOD_NONE;
@@ -589,10 +590,10 @@ public sealed class DFConnection : MonoBehaviour
                 if (e.capsLock)
                     mod |= SDL.Mod.KMOD_CAPS;
 
-                dfEvent.mod = (uint)mod;
-                dfEvent.scancode = (uint)e.keyCode;
-                dfEvent.sym = (uint)e.keyCode;
-                dfEvent.unicode = e.character;
+                dfEvent.Mod = (uint)mod;
+                dfEvent.Scancode = (uint)e.keyCode;
+                dfEvent.Sym = (uint)e.keyCode;
+                dfEvent.Unicode = e.character;
 
                 if (e.keyCode == KeyCode.None && e.character != '\0')
                     StartCoroutine(delayedKeyboardEvent(dfEvent)); // Unity doesn't give any keyboard events for character up, but DF expect it.
@@ -606,8 +607,8 @@ public sealed class DFConnection : MonoBehaviour
     {
         keyPresses.Enqueue(dfEvent);
         yield return new WaitForSeconds(0.1f);
-        dfEvent.type = 3;
-        dfEvent.state = 0;
+        dfEvent.Type = 3;
+        dfEvent.State = 0;
         keyPresses.Enqueue(dfEvent);
     }
 
@@ -686,17 +687,17 @@ public sealed class DFConnection : MonoBehaviour
             }
             else {
                 if ((netMapInfo == null)
-                    || mapInfo.block_pos_x != netMapInfo.block_pos_x
-                    || mapInfo.block_pos_y != netMapInfo.block_pos_y
-                    || mapInfo.block_pos_z != netMapInfo.block_pos_z
-                    || mapInfo.block_size_x != netMapInfo.block_size_x
-                    || mapInfo.block_size_y != netMapInfo.block_size_y
-                    || mapInfo.block_size_z != netMapInfo.block_size_z)
+                    || mapInfo.BlockPosX != netMapInfo.BlockPosX
+                    || mapInfo.BlockPosY != netMapInfo.BlockPosY
+                    || mapInfo.BlockPosZ != netMapInfo.BlockPosZ
+                    || mapInfo.BlockSizeX != netMapInfo.BlockSizeX
+                    || mapInfo.BlockSizeY != netMapInfo.BlockSizeY
+                    || mapInfo.BlockSizeZ != netMapInfo.BlockSizeZ)
                 {
                     lock (mapInfoLock)
                     {
-                        embarkMapPosition = new DFCoord(mapInfo.block_pos_x, mapInfo.block_pos_y, mapInfo.block_pos_z);
-                        embarkMapSize = new DFCoord(mapInfo.block_size_x, mapInfo.block_size_y, mapInfo.block_size_z);
+                        embarkMapPosition = new DFCoord(mapInfo.BlockPosX, mapInfo.BlockPosY, mapInfo.BlockPosZ);
+                        embarkMapSize = new DFCoord(mapInfo.BlockSizeX, mapInfo.BlockSizeY, mapInfo.BlockSizeZ);
                         MapDataStore.InitMainMap(EmbarkMapSize.x * 16, EmbarkMapSize.y * 16, EmbarkMapSize.z);
                         mapResetCall.execute();
                     }
@@ -730,10 +731,10 @@ public sealed class DFConnection : MonoBehaviour
             RemoteFortressReader.WorldMap tempWorldMap;
             worldMapCenterCall.execute(null, out tempWorldMap);
             if (tempWorldMap != null)
-                DFTime = new DFTime(tempWorldMap.cur_year, tempWorldMap.cur_year_tick);
+                DFTime = new DFTime(tempWorldMap.CurYear, tempWorldMap.CurYearTick);
             if (netWorldMapCenter == null || (tempWorldMap != null &&
-                    (netWorldMapCenter.center_x != tempWorldMap.center_x
-                    || netWorldMapCenter.center_y != tempWorldMap.center_y)))
+                    (netWorldMapCenter.CenterX != tempWorldMap.CenterX
+                    || netWorldMapCenter.CenterY != tempWorldMap.CenterY)))
             {
                 if (worldMapCall != null)
                 {
@@ -799,12 +800,12 @@ public sealed class DFConnection : MonoBehaviour
 
             if (requestRangeUpdate != null)
             {
-                blockRequest.min_x = requestRangeUpdate.Value.Min.x;
-                blockRequest.min_y = requestRangeUpdate.Value.Min.y;
-                blockRequest.min_z = requestRangeUpdate.Value.Min.z;
-                blockRequest.max_x = requestRangeUpdate.Value.Max.x;
-                blockRequest.max_y = requestRangeUpdate.Value.Max.y;
-                blockRequest.max_z = requestRangeUpdate.Value.Max.z;
+                blockRequest.MinX = requestRangeUpdate.Value.Min.x;
+                blockRequest.MinY = requestRangeUpdate.Value.Min.y;
+                blockRequest.MinZ = requestRangeUpdate.Value.Min.z;
+                blockRequest.MaxX = requestRangeUpdate.Value.Max.x;
+                blockRequest.MaxY = requestRangeUpdate.Value.Max.y;
+                blockRequest.MaxZ = requestRangeUpdate.Value.Max.z;
             }
 
             if (blockListCall != null)
@@ -818,7 +819,7 @@ public sealed class DFConnection : MonoBehaviour
 
         if (resultList != null)
         {
-            foreach (RemoteFortressReader.MapBlock mapBlock in resultList.map_blocks)
+            foreach (RemoteFortressReader.MapBlock mapBlock in resultList.MapBlocks)
             {
                 pendingBlocks.Enqueue(mapBlock);
             }
