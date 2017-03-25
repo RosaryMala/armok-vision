@@ -49,20 +49,20 @@ public class TileRenderer : MonoBehaviour
         if (capture == null)
             return;
 
-        if (width != capture.Width || height != capture.Height)
+        if (width != capture.width || height != capture.height)
         {
-            width = Mathf.Min((int)capture.Width, 16383 / (int)capture.Height);
-            height = (int)capture.Height;
+            width = Mathf.Min((int)capture.width, 16383 / (int)capture.height);
+            height = (int)capture.height;
             GenerateTiles();
         }
 
         for (int i = 0; i < width * height; i++)
         {
-            var tile = capture.Tiles[i];
+            var tile = capture.tiles[i];
 
-            tiles[i] = (byte)tile.Character;
-            fgColors[i] = (byte)tile.Foreground;
-            bgColors[i] = (byte)tile.Background;
+            tiles[i] = (byte)tile.character;
+            fgColors[i] = (byte)tile.foreground;
+            bgColors[i] = (byte)tile.background;
         }
 
         UpdateTiles();

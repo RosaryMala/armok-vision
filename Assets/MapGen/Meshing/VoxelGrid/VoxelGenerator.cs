@@ -129,10 +129,10 @@ public class VoxelGenerator
             return true; //means it's air/empty
         switch (tile.shape)
         {
-            case TiletypeShape.Pebbles:
-            case TiletypeShape.Boulder:
-            case TiletypeShape.Sapling:
-            case TiletypeShape.Shrub:
+            case TiletypeShape.PEBBLES:
+            case TiletypeShape.BOULDER:
+            case TiletypeShape.SAPLING:
+            case TiletypeShape.SHRUB:
                 break;
             default:
                 return false;
@@ -144,23 +144,23 @@ public class VoxelGenerator
     {
         switch (tile.tiletypeMaterial)
         {
-            case TiletypeMaterial.NoMaterial:
-            case TiletypeMaterial.Air:
-            case TiletypeMaterial.Soil:
-            case TiletypeMaterial.Stone:
-            case TiletypeMaterial.Feature:
-            case TiletypeMaterial.LavaStone:
-            case TiletypeMaterial.Mineral:
-            case TiletypeMaterial.GrassLight:
-            case TiletypeMaterial.GrassDark:
-            case TiletypeMaterial.GrassDry:
-            case TiletypeMaterial.GrassDead:
-            case TiletypeMaterial.Plant:
-            case TiletypeMaterial.Pool:
-            case TiletypeMaterial.Brook:
-            case TiletypeMaterial.River:
-            case TiletypeMaterial.Root:
-            case TiletypeMaterial.Hfs:
+            case TiletypeMaterial.NO_MATERIAL:
+            case TiletypeMaterial.AIR:
+            case TiletypeMaterial.SOIL:
+            case TiletypeMaterial.STONE:
+            case TiletypeMaterial.FEATURE:
+            case TiletypeMaterial.LAVA_STONE:
+            case TiletypeMaterial.MINERAL:
+            case TiletypeMaterial.GRASS_LIGHT:
+            case TiletypeMaterial.GRASS_DARK:
+            case TiletypeMaterial.GRASS_DRY:
+            case TiletypeMaterial.GRASS_DEAD:
+            case TiletypeMaterial.PLANT:
+            case TiletypeMaterial.POOL:
+            case TiletypeMaterial.BROOK:
+            case TiletypeMaterial.RIVER:
+            case TiletypeMaterial.ROOT:
+            case TiletypeMaterial.HFS:
                 return true;
             default:
                 return false;
@@ -171,12 +171,12 @@ public class VoxelGenerator
     {
         switch (tile.shape)
         {
-            case TiletypeShape.NoShape:
-            case TiletypeShape.Empty:
-            case TiletypeShape.Floor:
-            case TiletypeShape.Wall:
-            case TiletypeShape.BrookTop:
-            case TiletypeShape.EndlessPit:
+            case TiletypeShape.NO_SHAPE:
+            case TiletypeShape.EMPTY:
+            case TiletypeShape.FLOOR:
+            case TiletypeShape.WALL:
+            case TiletypeShape.BROOK_TOP:
+            case TiletypeShape.ENDLESS_PIT:
                 return true;
             default:
                 return false;
@@ -199,11 +199,11 @@ public class VoxelGenerator
     {
         switch (tile.shape)
         {
-            case TiletypeShape.Floor:
-            case TiletypeShape.Boulder:
-            case TiletypeShape.Pebbles:
-            case TiletypeShape.Sapling:
-            case TiletypeShape.Shrub:
+            case TiletypeShape.FLOOR:
+            case TiletypeShape.BOULDER:
+            case TiletypeShape.PEBBLES:
+            case TiletypeShape.SAPLING:
+            case TiletypeShape.SHRUB:
                 return true;
             default:
                 return false;
@@ -231,19 +231,19 @@ public class VoxelGenerator
             corner = CornerType.Square;
 
         Directions walls = Directions.None;
-        if (northWest != null && northWest.shape == TiletypeShape.Wall && Handled(northWest))
+        if (northWest != null && northWest.shape == TiletypeShape.WALL && Handled(northWest))
         {
             walls |= Directions.NorthWest;
         }
-        if (northEast != null && northEast.shape == TiletypeShape.Wall && Handled(northEast))
+        if (northEast != null && northEast.shape == TiletypeShape.WALL && Handled(northEast))
         {
             walls |= Directions.NorthEast;
         }
-        if (southWest != null && southWest.shape == TiletypeShape.Wall && Handled(southWest))
+        if (southWest != null && southWest.shape == TiletypeShape.WALL && Handled(southWest))
         {
             walls |= Directions.SouthWest;
         }
-        if (southEast != null && southEast.shape == TiletypeShape.Wall && Handled(southEast))
+        if (southEast != null && southEast.shape == TiletypeShape.WALL && Handled(southEast))
         {
             walls |= Directions.SouthEast;
         }

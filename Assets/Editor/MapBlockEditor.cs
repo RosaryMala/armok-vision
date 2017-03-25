@@ -8,7 +8,7 @@ using RemoteFortressReader;
 public class MapBlockEditor : Editor
 {
     static Color32 selectedColor = Color.white;
-    static TiletypeShape selectedShape = TiletypeShape.Wall;
+    static TiletypeShape selectedShape = TiletypeShape.WALL;
     bool showEditorGrid = false;
     public GameMap parent = null;
 
@@ -58,29 +58,29 @@ public class MapBlockEditor : Editor
                     {
                         if (tile != targetBlocks[index].GetSingleTile(tempCoord))
                         {
-                            tile = TiletypeShape.Empty;
+                            tile = TiletypeShape.EMPTY;
                             break;
                         }
 
                     }
                     switch (tile)
                     {
-                        case TiletypeShape.NoShape:
+                        case TiletypeShape.NO_SHAPE:
                             buttonIcon = "?";
                             break;
-                        case TiletypeShape.Wall:
+                        case TiletypeShape.WALL:
                             buttonIcon = "▓";
                             break;
-                        case TiletypeShape.Floor:
+                        case TiletypeShape.FLOOR:
                             buttonIcon = "+";
                             break;
-                        case TiletypeShape.Empty:
+                        case TiletypeShape.EMPTY:
                             buttonIcon = "\u00A0";
                             break;
-                        case TiletypeShape.Ramp:
+                        case TiletypeShape.RAMP:
                             buttonIcon = "▲";
                             break;
-                        case TiletypeShape.RampTop:
+                        case TiletypeShape.RAMP_TOP:
                             buttonIcon = "▼";
                             break;
                         default:

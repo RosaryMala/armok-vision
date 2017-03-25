@@ -8,15 +8,15 @@ public struct BuildingStruct
 
     public static implicit operator BuildingStruct(BuildingType input)
     {
-        return new BuildingStruct(input.BuildingType_, input.BuildingSubtype, input.BuildingCustom);
+        return new BuildingStruct(input.building_type, input.building_subtype, input.building_custom);
     }
 
     public static implicit operator BuildingType(BuildingStruct input)
     {
         BuildingType output = new BuildingType();
-        output.BuildingType_ = input.building_type;
-        output.BuildingSubtype = input.building_subtype;
-        output.BuildingCustom = input.building_custom;
+        output.building_type = input.building_type;
+        output.building_subtype = input.building_subtype;
+        output.building_custom = input.building_custom;
         return output;
     }
 
