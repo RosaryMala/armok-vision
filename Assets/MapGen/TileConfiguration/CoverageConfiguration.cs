@@ -33,14 +33,14 @@ public class CoverageConfiguration<T> : TileConfiguration<T> where T : IContent,
         }
         switch (tile.Up.shape)
         {
-            case RemoteFortressReader.TiletypeShape.NoShape:
-            case RemoteFortressReader.TiletypeShape.Empty:
-            case RemoteFortressReader.TiletypeShape.RampTop:
-            case RemoteFortressReader.TiletypeShape.BrookTop:
-            case RemoteFortressReader.TiletypeShape.EndlessPit:
-            case RemoteFortressReader.TiletypeShape.Branch:
-            case RemoteFortressReader.TiletypeShape.TrunkBranch:
-            case RemoteFortressReader.TiletypeShape.Twig:
+            case RemoteFortressReader.TiletypeShape.NO_SHAPE:
+            case RemoteFortressReader.TiletypeShape.EMPTY:
+            case RemoteFortressReader.TiletypeShape.RAMP_TOP:
+            case RemoteFortressReader.TiletypeShape.BROOK_TOP:
+            case RemoteFortressReader.TiletypeShape.ENDLESS_PIT:
+            case RemoteFortressReader.TiletypeShape.BRANCH:
+            case RemoteFortressReader.TiletypeShape.TRUNK_BRANCH:
+            case RemoteFortressReader.TiletypeShape.TWIG:
                 if (open != null)
                 {
                     value = open.GetValue(tile, layer);

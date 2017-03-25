@@ -48,16 +48,16 @@ public class DiggingTool : MonoBehaviour
         TileDigDesignation designation;
         if (!GetDesignation(out designation))
             return;
-        command.Designation = designation;
+        command.designation = designation;
         foreach (var item in coordList)
         {
             MapDataStore.Tile tile = MapDataStore.Main[item];
             if (tile == null)
                 continue;
             if (DesignationApplies(tile))
-                command.Locations.Add(item);
+                command.locations.Add(item);
         }
-        if (command.Locations.Count > 0)
+        if (command.locations.Count > 0)
             DFConnection.Instance.EnqueueDigCommand(command);
 
     }
@@ -67,31 +67,31 @@ public class DiggingTool : MonoBehaviour
         switch (digMode)
         {
             case DigMode.Dig:
-                designation = TileDigDesignation.DefaultDig;
+                designation = TileDigDesignation.DEFAULT_DIG;
                 break;
             case DigMode.Channel:
-                designation = TileDigDesignation.ChannelDig;
+                designation = TileDigDesignation.CHANNEL_DIG;
                 break;
             case DigMode.UpStair:
-                designation = TileDigDesignation.UpStairDig;
+                designation = TileDigDesignation.UP_STAIR_DIG;
                 break;
             case DigMode.DownStair:
-                designation = TileDigDesignation.DownStairDig;
+                designation = TileDigDesignation.DOWN_STAIR_DIG;
                 break;
             case DigMode.UpDownStair:
-                designation = TileDigDesignation.UpDownStairDig;
+                designation = TileDigDesignation.UP_DOWN_STAIR_DIG;
                 break;
             case DigMode.UpRamp:
-                designation = TileDigDesignation.RampDig;
+                designation = TileDigDesignation.RAMP_DIG;
                 break;
             case DigMode.RemoveUpStairRamp:
-                designation = TileDigDesignation.DefaultDig;
+                designation = TileDigDesignation.DEFAULT_DIG;
                 break;
             case DigMode.ChopTrees:
-                designation = TileDigDesignation.DefaultDig;
+                designation = TileDigDesignation.DEFAULT_DIG;
                 break;
             case DigMode.GatherPlants:
-                designation = TileDigDesignation.DefaultDig;
+                designation = TileDigDesignation.DEFAULT_DIG;
                 break;
             //case DigMode.SmoothStone:
             //    command.designation = TileDigDesignation.DEFAULT_DIG;
@@ -106,10 +106,10 @@ public class DiggingTool : MonoBehaviour
             //    command.designation = TileDigDesignation.DEFAULT_DIG;
             //    break;
             case DigMode.RemoveDesignation:
-                designation = TileDigDesignation.NoDig;
+                designation = TileDigDesignation.NO_DIG;
                 break;
             default:
-                designation = TileDigDesignation.NoDig;
+                designation = TileDigDesignation.NO_DIG;
                 return false;
         }
         return true;
@@ -125,16 +125,16 @@ public class DiggingTool : MonoBehaviour
             case DigMode.UpStair:
             case DigMode.UpDownStair:
             case DigMode.UpRamp:
-                return tile.Hidden || (tile.isWall && tile.tiletypeMaterial != TiletypeMaterial.TreeMaterial);
+                return tile.Hidden || (tile.isWall && tile.tiletypeMaterial != TiletypeMaterial.TREE_MATERIAL);
             case DigMode.Channel:
             case DigMode.DownStair:
-                return tile.Hidden || (tile.tiletypeMaterial != TiletypeMaterial.TreeMaterial);
+                return tile.Hidden || (tile.tiletypeMaterial != TiletypeMaterial.TREE_MATERIAL);
             case DigMode.RemoveUpStairRamp:
-                return tile.shape == TiletypeShape.Ramp || tile.shape == TiletypeShape.StairUp || tile.shape == TiletypeShape.StairUpdown;
+                return tile.shape == TiletypeShape.RAMP || tile.shape == TiletypeShape.STAIR_UP || tile.shape == TiletypeShape.STAIR_UPDOWN;
             case DigMode.ChopTrees:
-                return tile.tiletypeMaterial == TiletypeMaterial.TreeMaterial;
+                return tile.tiletypeMaterial == TiletypeMaterial.TREE_MATERIAL;
             case DigMode.GatherPlants:
-                return tile.tiletypeMaterial == TiletypeMaterial.Plant;
+                return tile.tiletypeMaterial == TiletypeMaterial.PLANT;
             case DigMode.SmoothStone:
                 break;
             case DigMode.EngraveStone:

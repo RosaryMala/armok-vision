@@ -41,7 +41,7 @@ namespace TokenLists
     {
         foreach (MaterialDefinition token in _matTokenList)
         {
-            var parts = token.Id.Split(':');
+            var parts = token.id.Split(':');
             switch (parts.Length)
             {
                 case 1:

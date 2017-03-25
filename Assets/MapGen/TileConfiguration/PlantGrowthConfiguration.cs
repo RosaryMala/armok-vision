@@ -16,7 +16,8 @@ class PlantGrowthConfiguration<T> : TileConfiguration<T> where T : IContent, new
     public override bool GetValue(MapDataStore.Tile tile, MeshLayer layer, out T value)
     {
         //let's just get rid of dead trees right away
-        if(tile.special == TiletypeSpecial.Dead || tile.special == TiletypeSpecial.SmoothDead)
+        if(tile.special == TiletypeSpecial.DEAD
+            || tile.special == TiletypeSpecial.SMOOTH_DEAD)
         {
             value = default(T);
             return false;
@@ -53,13 +54,13 @@ class PlantGrowthConfiguration<T> : TileConfiguration<T> where T : IContent, new
         int plantIndex = mat.mat_index;
         if ((mat.mat_type != PlantType)
             || DFConnection.Instance.NetPlantRawList == null
-            || DFConnection.Instance.NetPlantRawList.PlantRaws.Count <= plantIndex
-            || DFConnection.Instance.NetPlantRawList.PlantRaws[plantIndex].Growths.Count <= growthLayer)
+            || DFConnection.Instance.NetPlantRawList.plant_raws.Count <= plantIndex
+            || DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths.Count <= growthLayer)
         {
             value = default(T);
             return false;
         }
-        TreeGrowth growth = DFConnection.Instance.NetPlantRawList.PlantRaws[plantIndex].Growths[growthLayer];
+        TreeGrowth growth = DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths[growthLayer];
 
         if(!tile.GrowthAppliesNow(growth))
         {
@@ -71,10 +72,10 @@ class PlantGrowthConfiguration<T> : TileConfiguration<T> where T : IContent, new
 
         GrowthPrint print = null;
         int printIndex = 0;
-        for (int i = 0; i < growth.Prints.Count; i++)
+        for (int i = 0; i < growth.prints.Count; i++)
         {
-            var tempPrint = growth.Prints[i];
-            if (!((tempPrint.TimingStart != -1 && tempPrint.TimingStart > currentTicks) || (tempPrint.TimingEnd != -1 && tempPrint.TimingEnd < currentTicks)))
+            var tempPrint = growth.prints[i];
+            if (!((tempPrint.timing_start != -1 && tempPrint.timing_start > currentTicks) || (tempPrint.timing_end != -1 && tempPrint.timing_end < currentTicks)))
             {
                 print = tempPrint;
                 printIndex = i;

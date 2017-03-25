@@ -61,18 +61,18 @@ namespace TokenLists
         {
             foreach (PlantRaw plantRaw in _plantRawList)
             {
-                if(plantRaw.Growths.Count == 0)
-                    AddPlant(plantRaw.Id, "NONE", "NONE", new BuildingStruct(plantRaw.Index, -1, -1));
-                foreach (TreeGrowth growthRaw in plantRaw.Growths)
+                if(plantRaw.growths.Count == 0)
+                    AddPlant(plantRaw.id, "NONE", "NONE", new BuildingStruct(plantRaw.index, -1, -1));
+                foreach (TreeGrowth growthRaw in plantRaw.growths)
                 {
-                    if(growthRaw.Prints.Count == 0)
-                        AddPlant(plantRaw.Id, growthRaw.Id, "NONE", new BuildingStruct(plantRaw.Index, growthRaw.Index, -1));
+                    if(growthRaw.prints.Count == 0)
+                        AddPlant(plantRaw.id, growthRaw.id, "NONE", new BuildingStruct(plantRaw.index, growthRaw.index, -1));
                     int printIndex = 0;
-                    foreach (GrowthPrint growthPrintRaw in growthRaw.Prints)
+                    foreach (GrowthPrint growthPrintRaw in growthRaw.prints)
                     {
-                        if (growthPrintRaw.Color >= 16)
-                            UnityEngine.Debug.LogError("What the hell is color " + growthPrintRaw.Color);
-                        AddPlant(plantRaw.Id, growthRaw.Id, ColorTable[growthPrintRaw.Color], new BuildingStruct(plantRaw.Index, growthRaw.Index, printIndex));
+                        if (growthPrintRaw.color >= 16)
+                            UnityEngine.Debug.LogError("What the hell is color " + growthPrintRaw.color);
+                        AddPlant(plantRaw.id, growthRaw.id, ColorTable[growthPrintRaw.color], new BuildingStruct(plantRaw.index, growthRaw.index, printIndex));
                         printIndex++;
                     }
                 }

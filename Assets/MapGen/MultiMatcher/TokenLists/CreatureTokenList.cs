@@ -61,22 +61,22 @@ namespace TokenLists
         {
             foreach (var race in _creatureRawList)
             {
-                foreach (var caste in race.Caste)
+                foreach (var caste in race.caste)
                 {
-                    MatPairStruct id = new MatPairStruct(race.Index, caste.Index);
+                    MatPairStruct id = new MatPairStruct(race.index, caste.index);
                     if (_casteIds == null)
                         _casteIds = new Dictionary<string, Dictionary<string, MatPairStruct>>();
-                    if (!_casteIds.ContainsKey(race.CreatureId))
-                        _casteIds[race.CreatureId] = new Dictionary<string, MatPairStruct>();
-                    _casteIds[race.CreatureId][caste.CasteId] = id;
+                    if (!_casteIds.ContainsKey(race.creature_id))
+                        _casteIds[race.creature_id] = new Dictionary<string, MatPairStruct>();
+                    _casteIds[race.creature_id][caste.caste_id] = id;
                 }
                 {
-                    MatPairStruct id = new MatPairStruct(race.Index, -1);
+                    MatPairStruct id = new MatPairStruct(race.index, -1);
                     if (_casteIds == null)
                         _casteIds = new Dictionary<string, Dictionary<string, MatPairStruct>>();
-                    if (!_casteIds.ContainsKey(race.CreatureId))
-                        _casteIds[race.CreatureId] = new Dictionary<string, MatPairStruct>();
-                    _casteIds[race.CreatureId]["*"] = id;
+                    if (!_casteIds.ContainsKey(race.creature_id))
+                        _casteIds[race.creature_id] = new Dictionary<string, MatPairStruct>();
+                    _casteIds[race.creature_id]["*"] = id;
                 }
             }
         }

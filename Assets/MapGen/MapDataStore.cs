@@ -133,7 +133,7 @@ public class MapDataStore {
                         continue;
                     }
                     //pre-calculate it before we copy, because afterwards we won't have contextual data.
-                    if (this[x,y,z].shape == TiletypeShape.Ramp)
+                    if (this[x,y,z].shape == TiletypeShape.RAMP)
                         this[x, y, z].CalculateRampType();
                     target[x, y, z] = this[x,y,z];
                     success = true;
@@ -252,22 +252,22 @@ public class MapDataStore {
                     // Yes.
                     switch (currentTile.shape)
                     {
-                        case TiletypeShape.Empty:
-                        case TiletypeShape.NoShape:
+                        case TiletypeShape.EMPTY:
+                        case TiletypeShape.NO_SHAPE:
                             // We're not hitting anything, though.
                             break;
                         //case RemoteFortressReader.TiletypeShape.SHRUB:
                         //case RemoteFortressReader.TiletypeShape.SAPLING:
-                        case TiletypeShape.Wall:
-                        case TiletypeShape.Fortification:
+                        case TiletypeShape.WALL:
+                        case TiletypeShape.FORTIFICATION:
                         //case RemoteFortressReader.TiletypeShape.TRUNK_BRANCH:
-                        case TiletypeShape.Twig:
+                        case TiletypeShape.TWIG:
                             // We must be hitting things.
                             // (maybe adjust shrub, saplings out of this group?)
                             tileCoord = currentCoord;
                             unityCoord = lastHit;
                             return true;
-                        case TiletypeShape.Ramp:
+                        case TiletypeShape.RAMP:
                             {
                                 // Check if we're in the ramp.
                                 // (that we're in the tile is implied.)
@@ -290,14 +290,14 @@ public class MapDataStore {
                                 }
                             }
                             break;
-                        case TiletypeShape.Floor:
-                        case TiletypeShape.Boulder:
-                        case TiletypeShape.Pebbles:
-                        case TiletypeShape.BrookTop:
-                        case TiletypeShape.Sapling:
-                        case TiletypeShape.Shrub:
-                        case TiletypeShape.Branch:
-                        case TiletypeShape.TrunkBranch:
+                        case TiletypeShape.FLOOR:
+                        case TiletypeShape.BOULDER:
+                        case TiletypeShape.PEBBLES:
+                        case TiletypeShape.BROOK_TOP:
+                        case TiletypeShape.SAPLING:
+                        case TiletypeShape.SHRUB:
+                        case TiletypeShape.BRANCH:
+                        case TiletypeShape.TRUNK_BRANCH:
                             {
                                 // Check if we're in the floor.
                                 // (that we're in the tile is implied.)
@@ -415,15 +415,15 @@ public class MapDataStore {
     }
 
     public void StoreTiles(RemoteFortressReader.MapBlock block, out bool setTiles, out bool setLiquids, out bool setSpatters) {
-        setTiles = block.Tiles.Count > 0;
-        setLiquids = block.Water.Count > 0 || block.Magma.Count > 0;
-        setSpatters = block.SpatterPile.Count > 0;
+        setTiles = block.tiles.Count > 0;
+        setLiquids = block.water.Count > 0 || block.magma.Count > 0;
+        setSpatters = block.spatterPile.Count > 0;
         if (!setTiles && !setLiquids) return;
 
         for (int xx = 0; xx < 16; xx++)
             for (int yy = 0; yy < 16; yy++)
             {
-                DFCoord worldCoord = new DFCoord(block.MapX + xx, block.MapY + yy, block.MapZ);
+                DFCoord worldCoord = new DFCoord(block.map_x + xx, block.map_y + yy, block.map_z);
                 if (!InSliceBounds(worldCoord))
                 {
                     Debug.LogError(worldCoord + " is out of bounds for " + MapSize);
@@ -432,21 +432,21 @@ public class MapDataStore {
                 int netIndex = xx + (yy * 16);
                 if (this[worldCoord] == null)
                     this[worldCoord] = new Tile(this, worldCoord);
-                if (block.Tiles.Count > 0)
+                if (block.tiles.Count > 0)
                 {
-                    this[worldCoord].tileType = block.Tiles[netIndex];
-                    this[worldCoord].material = block.Materials[netIndex];
-                    this[worldCoord].base_material = block.BaseMaterials[netIndex];
-                    this[worldCoord].layer_material = block.LayerMaterials[netIndex];
-                    this[worldCoord].vein_material = block.VeinMaterials[netIndex];
-                    if (block.ConstructionItems != null && block.ConstructionItems.Count > netIndex)
-                        this[worldCoord].construction_item = block.ConstructionItems[netIndex];
+                    this[worldCoord].tileType = block.tiles[netIndex];
+                    this[worldCoord].material = block.materials[netIndex];
+                    this[worldCoord].base_material = block.base_materials[netIndex];
+                    this[worldCoord].layer_material = block.layer_materials[netIndex];
+                    this[worldCoord].vein_material = block.vein_materials[netIndex];
+                    if (block.construction_items != null && block.construction_items.Count > netIndex)
+                        this[worldCoord].construction_item = block.construction_items[netIndex];
                     else
                         this[worldCoord].construction_item = new MatPairStruct(-1, -1);
-                    if (block.TreePercent != null && block.TreePercent.Count > netIndex)
+                    if (block.tree_percent != null && block.tree_percent.Count > netIndex)
                     {
-                        this[worldCoord].trunkPercent = (byte)block.TreePercent[netIndex];
-                        this[worldCoord].positionOnTree = new DFCoord(block.TreeX[netIndex], block.TreeY[netIndex], block.TreeZ[netIndex]);
+                        this[worldCoord].trunkPercent = (byte)block.tree_percent[netIndex];
+                        this[worldCoord].positionOnTree = new DFCoord(block.tree_x[netIndex], block.tree_y[netIndex], block.tree_z[netIndex]);
                     }
                     else
                     {
@@ -456,46 +456,46 @@ public class MapDataStore {
                 }
                 if (setLiquids)
                 {
-                    this[worldCoord].waterLevel = block.Water[netIndex];
-                    this[worldCoord].magmaLevel = block.Magma[netIndex];
-                    if (this[worldCoord].Hidden != block.Hidden[netIndex])
+                    this[worldCoord].waterLevel = block.water[netIndex];
+                    this[worldCoord].magmaLevel = block.magma[netIndex];
+                    if (this[worldCoord].Hidden != block.hidden[netIndex])
                     {
-                        this[worldCoord].Hidden  = block.Hidden[netIndex];
+                        this[worldCoord].Hidden  = block.hidden[netIndex];
                         setTiles = true;
                     }
-                    if (block.TileDigDesignation != null && block.TileDigDesignation.Count > netIndex)
+                    if (block.tile_dig_designation != null && block.tile_dig_designation.Count > netIndex)
                     {
-                        if (this[worldCoord].digDesignation != block.TileDigDesignation[netIndex])
+                        if (this[worldCoord].digDesignation != block.tile_dig_designation[netIndex])
                         {
-                            this[worldCoord].digDesignation = block.TileDigDesignation[netIndex];
+                            this[worldCoord].digDesignation = block.tile_dig_designation[netIndex];
                             setTiles = true;
                         }
                     }
                 }
                 if(setSpatters)
                 {
-                    this[worldCoord].spatters = new List<Spatter>(block.SpatterPile[netIndex].Spatters);
+                    this[worldCoord].spatters = block.spatterPile[netIndex].spatters;
                 }
             }
-        foreach (var building in block.Buildings)
+        foreach (var building in block.buildings)
         {
-            if (building.BuildingType.BuildingType_ == 30)
+            if (building.building_type.building_type == 30)
                 continue; // We won't do civzones right now.
-            for (int xx = building.PosXMin; xx <= building.PosXMax; xx++)
-                for (int yy = building.PosYMin; yy <= building.PosYMax; yy++)
+            for (int xx = building.pos_x_min; xx <= building.pos_x_max; xx++)
+                for (int yy = building.pos_y_min; yy <= building.pos_y_max; yy++)
                 {
 
-                    if((building.BuildingType.BuildingType_ == 29)
-                        && building.Room != null && building.Room.Extents.Count > 0)
+                    if((building.building_type.building_type == 29)
+                        && building.room != null && building.room.extents.Count > 0)
                     {
-                        int buildingLocalX = xx - building.Room.PosX;
-                        int buildingLocalY = yy - building.Room.PosY;
+                        int buildingLocalX = xx - building.room.pos_x;
+                        int buildingLocalY = yy - building.room.pos_y;
 
-                        if (building.Room.Extents[buildingLocalY * building.Room.Width + buildingLocalX] == 0)
+                        if (building.room.extents[buildingLocalY * building.room.width + buildingLocalX] == 0)
                             continue;
                     }
 
-                    DFCoord worldCoord = new DFCoord(xx,yy, block.MapZ);
+                    DFCoord worldCoord = new DFCoord(xx,yy, block.map_z);
                     DFCoord2d buildingLocalCoord = GetRotatedLocalCoord(worldCoord, building);// = new DFCoord2d(xx - building.pos_x_min, yy - building.pos_y_min);
                     if (!InSliceBounds(worldCoord))
                     {
@@ -504,28 +504,28 @@ public class MapDataStore {
                     }
                     if (this[worldCoord] == null)
                         this[worldCoord] = new Tile(this, worldCoord);
-                    this[worldCoord].buildingType = building.BuildingType;
-                    this[worldCoord].buildingMaterial = building.Material;
+                    this[worldCoord].buildingType = building.building_type;
+                    this[worldCoord].buildingMaterial = building.material;
                     this[worldCoord].buildingLocalPos = buildingLocalCoord;
-                    this[worldCoord].buildingDirection = building.Direction;
+                    this[worldCoord].buildingDirection = building.direction;
                 }
         }
     }
 
     private DFCoord2d GetRotatedLocalCoord(DFCoord worldCoord, BuildingInstance building)
     {
-        switch (building.Direction)
+        switch (building.direction)
         {
-            case BuildingDirection.North:
-                return new DFCoord2d(worldCoord.x - building.PosXMin, worldCoord.y - building.PosYMin);
-            case BuildingDirection.East:
-                return new DFCoord2d(worldCoord.y - building.PosYMin, building.PosXMax - worldCoord.x);
-            case BuildingDirection.South:
-                return new DFCoord2d(building.PosXMax - worldCoord.x, building.PosYMax - worldCoord.y);
-            case BuildingDirection.West:
-                return new DFCoord2d(building.PosYMax - worldCoord.y, worldCoord.x - building.PosXMin);
+            case BuildingDirection.NORTH:
+                return new DFCoord2d(worldCoord.x - building.pos_x_min, worldCoord.y - building.pos_y_min);
+            case BuildingDirection.EAST:
+                return new DFCoord2d(worldCoord.y - building.pos_y_min, building.pos_x_max - worldCoord.x);
+            case BuildingDirection.SOUTH:
+                return new DFCoord2d(building.pos_x_max - worldCoord.x, building.pos_y_max - worldCoord.y);
+            case BuildingDirection.WEST:
+                return new DFCoord2d(building.pos_y_max - worldCoord.y, worldCoord.x - building.pos_x_min);
             default:
-                return new DFCoord2d(worldCoord.x - building.PosXMin, worldCoord.y - building.PosYMin);
+                return new DFCoord2d(worldCoord.x - building.pos_x_min, worldCoord.y - building.pos_y_min);
         }
     }
 
@@ -718,54 +718,54 @@ public class MapDataStore {
 
         switch (shape)
         {
-            case TiletypeShape.NoShape:
-            case TiletypeShape.Empty:
-            case TiletypeShape.EndlessPit:
-            case TiletypeShape.Twig:
+            case TiletypeShape.NO_SHAPE:
+            case TiletypeShape.EMPTY:
+            case TiletypeShape.ENDLESS_PIT:
+            case TiletypeShape.TWIG:
                 state = CollisionState.None;
                 break;
-            case TiletypeShape.Floor:
-            case TiletypeShape.Boulder:
-            case TiletypeShape.Pebbles:
-            case TiletypeShape.BrookTop:
-            case TiletypeShape.Sapling:
-            case TiletypeShape.Shrub:
-            case TiletypeShape.Branch:
-            case TiletypeShape.TrunkBranch:
+            case TiletypeShape.FLOOR:
+            case TiletypeShape.BOULDER:
+            case TiletypeShape.PEBBLES:
+            case TiletypeShape.BROOK_TOP:
+            case TiletypeShape.SAPLING:
+            case TiletypeShape.SHRUB:
+            case TiletypeShape.BRANCH:
+            case TiletypeShape.TRUNK_BRANCH:
                 if (localPos.y < 0.5f)
                     state = CollisionState.Solid;
                 else
                     state = CollisionState.None;
                 break;
-            case TiletypeShape.Wall:
-            case TiletypeShape.Fortification:
-            case TiletypeShape.BrookBed:
-            case TiletypeShape.TreeShape:
+            case TiletypeShape.WALL:
+            case TiletypeShape.FORTIFICATION:
+            case TiletypeShape.BROOK_BED:
+            case TiletypeShape.TREE_SHAPE:
                 state = CollisionState.Solid;
                 break;
-            case TiletypeShape.StairUp:
+            case TiletypeShape.STAIR_UP:
                 if (localPos.y < 0.5f)
                     state = CollisionState.Solid;
                 else
                     state = CollisionState.Stairs;
                 break;
-            case TiletypeShape.StairDown:
+            case TiletypeShape.STAIR_DOWN:
                 if (localPos.y < 0.5f)
                     state = CollisionState.Stairs;
                 else
                     state = CollisionState.None;
                 break;
-            case TiletypeShape.StairUpdown:
+            case TiletypeShape.STAIR_UPDOWN:
                 state = CollisionState.Stairs;
                 break;
-            case TiletypeShape.Ramp:
+            case TiletypeShape.RAMP:
                 if (localPos.y < 0.5f)
                     state = CollisionState.Solid;
                 else
                     state = CollisionState.None;
 
                 break;
-            case TiletypeShape.RampTop:
+            case TiletypeShape.RAMP_TOP:
                 break;
             default:
                 break;
@@ -816,7 +816,7 @@ public class MapDataStore {
             Hidden = false;
             trunkPercent = 0;
             positionOnTree = default(DFCoord);
-            digDesignation = TileDigDesignation.NoDig;
+            digDesignation = TileDigDesignation.NO_DIG;
             spatters = null;
         }
 
@@ -884,17 +884,17 @@ public class MapDataStore {
         public TileDigDesignation digDesignation;
         public List<Spatter> spatters;
 
-        public TiletypeShape shape { get { return tiletypeTokenList [tileType].Shape; } }
-        public TiletypeMaterial tiletypeMaterial { get { return tiletypeTokenList [tileType].Material; } }
-        public TiletypeSpecial special { get { return tiletypeTokenList [tileType].Special; } }
-        public TiletypeVariant variant { get { return tiletypeTokenList [tileType].Variant; } }
-        public string direction { get { return tiletypeTokenList [tileType].Direction; } }
+        public TiletypeShape shape { get { return tiletypeTokenList [tileType].shape; } }
+        public TiletypeMaterial tiletypeMaterial { get { return tiletypeTokenList [tileType].material; } }
+        public TiletypeSpecial special { get { return tiletypeTokenList [tileType].special; } }
+        public TiletypeVariant variant { get { return tiletypeTokenList [tileType].variant; } }
+        public string direction { get { return tiletypeTokenList [tileType].direction; } }
 
         public int RampType
         {
             get
             {
-                if (shape != TiletypeShape.Ramp)
+                if (shape != TiletypeShape.RAMP)
                     return 0;
                 if (rampType == 0)
                     CalculateRampType();
@@ -980,10 +980,10 @@ public class MapDataStore {
         public bool isWall {
             get {
                 switch (shape) {
-                case TiletypeShape.Wall:
+                case TiletypeShape.WALL:
                 //case TiletypeShape.FORTIFICATION: //dwarfs can't go through, but visibly, they're not solid.
                 //case TiletypeShape.BROOK_BED: //Dwarfs can't go through this, but it's permiable to water and also doesn't generally have solid tiles.
-                case TiletypeShape.TreeShape:
+                case TiletypeShape.TREE_SHAPE:
                     return true;
                 default:
                     return false;
@@ -999,22 +999,22 @@ public class MapDataStore {
                     || buildingType.building_type == 9 //Floodgate
                     || buildingType.building_type == 16 //WindowGlass
                     || buildingType.building_type == 17 //WindowGem
-                    || shape == TiletypeShape.Fortification //since isWall doesn't handle this.
+                    || shape == TiletypeShape.FORTIFICATION //since isWall doesn't handle this.
                     ;
             }
         }
         public bool isFloor {
             get {
                 switch (shape) {
-                case TiletypeShape.Ramp:
-                case TiletypeShape.Floor:
-                case TiletypeShape.Boulder:
-                case TiletypeShape.Pebbles:
+                case TiletypeShape.RAMP:
+                case TiletypeShape.FLOOR:
+                case TiletypeShape.BOULDER:
+                case TiletypeShape.PEBBLES:
                 //case TiletypeShape.BROOK_TOP: Not even visible, really.
-                case TiletypeShape.Sapling:
-                case TiletypeShape.Shrub:
-                case TiletypeShape.Branch:
-                case TiletypeShape.TrunkBranch:
+                case TiletypeShape.SAPLING:
+                case TiletypeShape.SHRUB:
+                case TiletypeShape.BRANCH:
+                case TiletypeShape.TRUNK_BRANCH:
                     return true;
                 default:
                     return false;
@@ -1027,17 +1027,17 @@ public class MapDataStore {
             {
                 switch (shape)
                 {
-                    case TiletypeShape.Floor:
-                    case TiletypeShape.Boulder:
-                    case TiletypeShape.Pebbles:
-                    case TiletypeShape.Wall:
-                    case TiletypeShape.Fortification:
-                    case TiletypeShape.StairUp:
-                    case TiletypeShape.Ramp:
-                    case TiletypeShape.BrookBed:
-                    case TiletypeShape.TreeShape:
-                    case TiletypeShape.Sapling:
-                    case TiletypeShape.Shrub:
+                    case TiletypeShape.FLOOR:
+                    case TiletypeShape.BOULDER:
+                    case TiletypeShape.PEBBLES:
+                    case TiletypeShape.WALL:
+                    case TiletypeShape.FORTIFICATION:
+                    case TiletypeShape.STAIR_UP:
+                    case TiletypeShape.RAMP:
+                    case TiletypeShape.BROOK_BED:
+                    case TiletypeShape.TREE_SHAPE:
+                    case TiletypeShape.SAPLING:
+                    case TiletypeShape.SHRUB:
                         return true;
                     default:
                         return false;
@@ -1322,67 +1322,68 @@ public class MapDataStore {
 
         public bool GrowthAppliesEver(TreeGrowth growth)
         {
-            if (special == TiletypeSpecial.Dead || special == TiletypeSpecial.SmoothDead)
+            if (special == TiletypeSpecial.DEAD
+                || special == TiletypeSpecial.SMOOTH_DEAD)
             {
                 return false;
             }
             switch (tiletypeMaterial)
             {
-                case TiletypeMaterial.Plant:
+                case TiletypeMaterial.PLANT:
                     switch (shape)
                     {
-                        case TiletypeShape.Sapling:
-                            if (!growth.Sapling)
+                        case TiletypeShape.SAPLING:
+                            if (!growth.sapling)
                                 return false;
                             break;
-                        case TiletypeShape.Shrub:
+                        case TiletypeShape.SHRUB:
                             //so far as I can understand, this is always on
                             break;
                         default:
                             return false;
                     }
                     break;
-                case TiletypeMaterial.Root:
-                    if (!growth.Roots)
+                case TiletypeMaterial.ROOT:
+                    if (!growth.roots)
                         return false;
                     break;
-                case TiletypeMaterial.TreeMaterial:
+                case TiletypeMaterial.TREE_MATERIAL:
                     switch (shape)
                     {
-                        case TiletypeShape.Wall:
-                        case TiletypeShape.Ramp:
-                        case TiletypeShape.TrunkBranch:
-                            if (!growth.Trunk)
+                        case TiletypeShape.WALL:
+                        case TiletypeShape.RAMP:
+                        case TiletypeShape.TRUNK_BRANCH:
+                            if (!growth.trunk)
                                 return false;
                             break;
-                        case TiletypeShape.Branch:
-                            if (special == TiletypeSpecial.Smooth)
+                        case TiletypeShape.BRANCH:
+                            if (special == TiletypeSpecial.SMOOTH)
                                 return false;
                             if (direction == "--------")
                             {
-                                if (!growth.LightBranches)
+                                if (!growth.light_branches)
                                     return false;
                             }
-                            else if (!growth.HeavyBranches)
+                            else if (!growth.heavy_branches)
                                 return false;
                             break;
-                        case TiletypeShape.Twig:
-                            if (!growth.Twigs)
+                        case TiletypeShape.TWIG:
+                            if (!growth.twigs)
                                 return false;
                             break;
                         default:
                             return false;
                     }
                     break;
-                case TiletypeMaterial.Mushroom:
-                    if (!growth.Cap)
+                case TiletypeMaterial.MUSHROOM:
+                    if (!growth.cap)
                         return false;
                     break;
                 default:
                     return false;
             }
 
-            if ((growth.TrunkHeightStart != -1 && growth.TrunkHeightStart > trunkPercent) || (growth.TrunkHeightEnd != -1 && growth.TrunkHeightEnd < trunkPercent))
+            if ((growth.trunk_height_start != -1 && growth.trunk_height_start > trunkPercent) || (growth.trunk_height_end != -1 && growth.trunk_height_end < trunkPercent))
                 return false;
 
             return true;
@@ -1393,7 +1394,7 @@ public class MapDataStore {
             if (!GrowthAppliesEver(growth))
                 return false;
             int currentTicks = TimeHolder.DisplayedTime.CurrentYearTicks;
-            if ((growth.TimingStart != -1 && growth.TimingStart > currentTicks) || (growth.TimingEnd != -1 && growth.TimingEnd < currentTicks))
+            if ((growth.timing_start != -1 && growth.timing_start > currentTicks) || (growth.timing_end != -1 && growth.timing_end < currentTicks))
             {
                 return false;
             }
