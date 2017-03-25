@@ -21,7 +21,7 @@ public class CreatureSpriteManager
     public bool getCreatureSprite(UnitDefinition unit, out Material mat, out int index, out bool colored)
     {
         ProfessionMatcher<TileDef> prof;
-        if (!creatureMatcher.TryGetValue(unit.race, out prof))
+        if (!creatureMatcher.TryGetValue(unit.Race, out prof))
         {
             mat = null;
             index = 0;
@@ -30,7 +30,7 @@ public class CreatureSpriteManager
         }
         TileDef def = new TileDef(-1,-1,true);
         bool set = false;
-        foreach (var item in unit.noble_positions)
+        foreach (var item in unit.NoblePositions)
         {
             if(prof.TryGetValue(item, out def))
             {
@@ -40,7 +40,7 @@ public class CreatureSpriteManager
         }
         if(!set)
         {
-            prof.TryGetValue((DF.Enums.profession)unit.profession_id, out def);
+            prof.TryGetValue((DF.Enums.profession)unit.ProfessionId, out def);
             set = (def.page != -1);
         }
         if(!set || def.page == -1)

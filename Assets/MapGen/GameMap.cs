@@ -226,9 +226,9 @@ public class GameMap : MonoBehaviour
             if (materials == null)
                 materials = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
             materials.Clear();
-            foreach (RemoteFortressReader.MaterialDefinition material in DFConnection.Instance.NetMaterialList.material_list)
+            foreach (RemoteFortressReader.MaterialDefinition material in DFConnection.Instance.NetMaterialList.MaterialList_)
             {
-                materials[material.mat_pair] = material;
+                materials[material.MatPair] = material;
             }
             if (GameSettings.Instance.debug.saveMaterialList)
                 SaveMaterialList(materials, "MaterialList.csv");
@@ -239,9 +239,9 @@ public class GameMap : MonoBehaviour
             if (items == null)
                 items = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
             items.Clear();
-            foreach (MaterialDefinition material in DFConnection.Instance.NetItemList.material_list)
+            foreach (MaterialDefinition material in DFConnection.Instance.NetItemList.MaterialList_)
             {
-                items[material.mat_pair] = material;
+                items[material.MatPair] = material;
             }
             if (GameSettings.Instance.debug.saveItemList)
                 SaveMaterialList(items, "ItemList.csv");
@@ -251,9 +251,9 @@ public class GameMap : MonoBehaviour
             if (buildings == null)
                 buildings = new Dictionary<BuildingStruct, BuildingDefinition>();
             buildings.Clear();
-            foreach (BuildingDefinition building in DFConnection.Instance.NetBuildingList.building_list)
+            foreach (BuildingDefinition building in DFConnection.Instance.NetBuildingList.BuildingList_)
             {
-                buildings[building.building_type] = building;
+                buildings[building.BuildingType] = building;
             }
             if (GameSettings.Instance.debug.saveBuildingList)
                 SaveBuildingList();
@@ -262,16 +262,16 @@ public class GameMap : MonoBehaviour
         {
             if (creatures == null)
                 creatures = new Dictionary<MatPairStruct, MaterialDefinition>();
-            foreach (CreatureRaw creatureRaw in DFConnection.Instance.NetCreatureRawList.creature_raws)
+            foreach (CreatureRaw creatureRaw in DFConnection.Instance.NetCreatureRawList.CreatureRaws)
             {
-                foreach (var caste in creatureRaw.caste)
+                foreach (var caste in creatureRaw.Caste)
                 {
-                    MatPairStruct creatureCaste = new MatPairStruct(creatureRaw.index, caste.index);
+                    MatPairStruct creatureCaste = new MatPairStruct(creatureRaw.Index, caste.Index);
                     MaterialDefinition creatureDef = new MaterialDefinition();
-                    creatureDef.mat_pair = creatureCaste;
-                    creatureDef.id = creatureRaw.creature_id + ":" + caste.caste_id;
-                    creatureDef.name = caste.caste_name[0];
-                    creatureDef.state_color = creatureRaw.color;
+                    creatureDef.MatPair = creatureCaste;
+                    creatureDef.Id = creatureRaw.CreatureId + ":" + caste.CasteId;
+                    creatureDef.Name = caste.CasteName[0];
+                    creatureDef.StateColor = creatureRaw.Color;
                     creatures[creatureCaste] = creatureDef;
                 }
             }
@@ -648,23 +648,23 @@ public class GameMap : MonoBehaviour
         //Debug.Log("Got view");
         view = newView;
 
-        if (view.follow_unit_id != -1 && lastUnitList != null)
+        if (view.FollowUnitId != -1 && lastUnitList != null)
         {
-            foreach (var unit in lastUnitList.creature_list)
+            foreach (var unit in lastUnitList.CreatureList)
             {
-                if (unit.id == view.follow_unit_id)
+                if (unit.Id == view.FollowUnitId)
                 {
-                    posXTile = unit.pos_x;
-                    posYTile = unit.pos_y;
-                    posZ = unit.pos_z + 1;
+                    posXTile = unit.PosX;
+                    posYTile = unit.PosY;
+                    posZ = unit.PosZ + 1;
                     return;
                 }
             }
         }
 
-        posXTile = (view.view_pos_x + (view.view_size_x / 2));
-        posYTile = (view.view_pos_y + (view.view_size_y / 2));
-        posZ = view.view_pos_z + 1;
+        posXTile = (view.ViewPosX + (view.ViewSizeX / 2));
+        posYTile = (view.ViewPosY + (view.ViewSizeY / 2));
+        posZ = view.ViewPosZ + 1;
         UnityEngine.Profiling.Profiler.EndSample();
     }
 
@@ -718,28 +718,28 @@ public class GameMap : MonoBehaviour
             UnityEngine.Profiling.Profiler.EndSample();
             if (setTiles)
             {
-                addSeasonalUpdates(block, block.map_x, block.map_y, block.map_z);
-                SetDirtyBlock(block.map_x, block.map_y, block.map_z);
-                SetBlockContent(block.map_x, block.map_y, block.map_z);
+                addSeasonalUpdates(block, block.MapX, block.MapY, block.MapZ);
+                SetDirtyBlock(block.MapX, block.MapY, block.MapZ);
+                SetBlockContent(block.MapX, block.MapY, block.MapZ);
             }
             if (setLiquids)
             {
-                SetDirtyLiquidBlock(block.map_x, block.map_y, block.map_z);
-                SetBlockContent(block.map_x, block.map_y, block.map_z);
+                SetDirtyLiquidBlock(block.MapX, block.MapY, block.MapZ);
+                SetBlockContent(block.MapX, block.MapY, block.MapZ);
             }
             if (setSpatters)
             {
-                SetDirtySpatterBlock(block.map_x, block.map_y, block.map_z);
+                SetDirtySpatterBlock(block.MapX, block.MapY, block.MapZ);
             }
-            foreach (var item in block.items)
+            foreach (var item in block.Items)
             {
-                itemInstances[item.id] = item;
+                itemInstances[item.Id] = item;
             }
         }
         itemPositions.Clear();
         foreach (var item in itemInstances)
         {
-            itemPositions[item.Value.pos] = item.Value;
+            itemPositions[item.Value.Pos] = item.Value;
         }
         DirtySeasonalBlocks();
         UnityEngine.Profiling.Profiler.BeginSample("EnqueueMeshUpdates", this);
@@ -795,25 +795,25 @@ public class GameMap : MonoBehaviour
         mapBlockY /= blockSize;
         if (blockUpdateSchedules[mapBlockX, mapBlockY, mapBlockZ] != null)
             blockUpdateSchedules[mapBlockX, mapBlockY, mapBlockZ].Clear();
-        foreach (var material in block.materials)
+        foreach (var material in block.Materials)
         {
-            if (material.mat_type != 419
-                    || material.mat_index < 0
-                    || DFConnection.Instance.NetPlantRawList.plant_raws.Count <= material.mat_index
-                    || DFConnection.Instance.NetPlantRawList.plant_raws[material.mat_index].growths.Count == 0)
+            if (material.MatType != 419
+                    || material.MatIndex < 0
+                    || DFConnection.Instance.NetPlantRawList.PlantRaws.Count <= material.MatIndex
+                    || DFConnection.Instance.NetPlantRawList.PlantRaws[material.MatIndex].Growths.Count == 0)
                 continue;
-            PlantRaw plantRaw = DFConnection.Instance.NetPlantRawList.plant_raws[material.mat_index];
+            PlantRaw plantRaw = DFConnection.Instance.NetPlantRawList.PlantRaws[material.MatIndex];
             if (blockUpdateSchedules[mapBlockX, mapBlockY, mapBlockZ] == null)
                 blockUpdateSchedules[mapBlockX, mapBlockY, mapBlockZ] = new UpdateSchedule();
             var schedule = blockUpdateSchedules[mapBlockX, mapBlockY, mapBlockZ];
-            foreach (TreeGrowth growth in plantRaw.growths)
+            foreach (TreeGrowth growth in plantRaw.Growths)
             {
-                schedule.Add(growth.timing_start);
-                schedule.Add(growth.timing_end);
-                foreach (GrowthPrint print in growth.prints)
+                schedule.Add(growth.TimingStart);
+                schedule.Add(growth.TimingEnd);
+                foreach (GrowthPrint print in growth.Prints)
                 {
-                    schedule.Add(print.timing_start);
-                    schedule.Add(print.timing_end);
+                    schedule.Add(print.TimingStart);
+                    schedule.Add(print.TimingEnd);
                 }
             }
         }
@@ -855,7 +855,7 @@ public class GameMap : MonoBehaviour
 
     void PrintFullMaterialList()
     {
-        int totalCount = DFConnection.Instance.NetMaterialList.material_list.Count;
+        int totalCount = DFConnection.Instance.NetMaterialList.MaterialList_.Count;
         int limit = totalCount;
         if (limit >= 100)
             limit = 100;
@@ -863,8 +863,8 @@ public class GameMap : MonoBehaviour
         for (int i = totalCount - limit; i < totalCount; i++)
         {
             //no really, don't.
-            RemoteFortressReader.MaterialDefinition material = DFConnection.Instance.NetMaterialList.material_list[i];
-            Debug.Log("{" + material.mat_pair.mat_index + "," + material.mat_pair.mat_type + "}, " + material.id + ", " + material.name);
+            RemoteFortressReader.MaterialDefinition material = DFConnection.Instance.NetMaterialList.MaterialList_[i];
+            Debug.Log("{" + material.MatPair.MatIndex + "," + material.MatPair.MatType + "}, " + material.Id + ", " + material.Name);
         }
     }
 
@@ -882,15 +882,15 @@ public class GameMap : MonoBehaviour
         }
         using (StreamWriter writer = new StreamWriter("TiletypeList.csv"))
         {
-            foreach (Tiletype item in DFConnection.Instance.NetTiletypeList.tiletype_list)
+            foreach (Tiletype item in DFConnection.Instance.NetTiletypeList.TiletypeList_)
             {
                 writer.WriteLine(
-                    item.name + ";" +
-                    item.shape + ":" +
-                    item.special + ":" +
-                    item.material + ":" +
-                    item.variant + ":" +
-                    item.direction
+                    item.Name + ";" +
+                    item.Shape + ":" +
+                    item.Special + ":" +
+                    item.Material + ":" +
+                    item.Variant + ":" +
+                    item.Direction
                     );
             }
         }
@@ -909,14 +909,14 @@ public class GameMap : MonoBehaviour
         }
         using (StreamWriter writer = new StreamWriter("BuildingList.csv"))
         {
-            foreach (var item in DFConnection.Instance.NetBuildingList.building_list)
+            foreach (var item in DFConnection.Instance.NetBuildingList.BuildingList_)
             {
                 writer.WriteLine(
-                    item.name + ";" +
-                    item.id + ";" +
-                    item.building_type.building_type + ":" +
-                    item.building_type.building_subtype + ":" +
-                    item.building_type.building_custom
+                    item.Name + ";" +
+                    item.Id + ";" +
+                    item.BuildingType.BuildingType_ + ":" +
+                    item.BuildingType.BuildingSubtype + ":" +
+                    item.BuildingType.BuildingCustom
                     );
             }
         }
@@ -938,10 +938,10 @@ public class GameMap : MonoBehaviour
             foreach (var item in list)
             {
                 writer.WriteLine(
-                    item.Value.name + ";" +
-                    item.Value.id + ";" +
-                    item.Value.mat_pair.mat_type + ";" +
-                    item.Value.mat_pair.mat_index
+                    item.Value.Name + ";" +
+                    item.Value.Id + ";" +
+                    item.Value.MatPair.MatType + ";" +
+                    item.Value.MatPair.MatIndex
                     );
             }
         }
@@ -1154,10 +1154,10 @@ public class GameMap : MonoBehaviour
                     grassColors[index] = new Color(0,0,0,0);
                     continue;
                 }
-                if (!(tile.tiletypeMaterial == TiletypeMaterial.GRASS_DARK
-                    || tile.tiletypeMaterial == TiletypeMaterial.GRASS_LIGHT
-                    || tile.tiletypeMaterial == TiletypeMaterial.GRASS_DEAD
-                    || tile.tiletypeMaterial == TiletypeMaterial.GRASS_DRY
+                if (!(tile.tiletypeMaterial == TiletypeMaterial.GrassDark
+                    || tile.tiletypeMaterial == TiletypeMaterial.GrassLight
+                    || tile.tiletypeMaterial == TiletypeMaterial.GrassDead
+                    || tile.tiletypeMaterial == TiletypeMaterial.GrassDry
                     ))
                     continue;
 
@@ -1252,15 +1252,15 @@ public class GameMap : MonoBehaviour
                         continue;
                     }
                 }
-                if (tile.shape == TiletypeShape.RAMP_TOP && tile.Down != null)
+                if (tile.shape == TiletypeShape.RampTop && tile.Down != null)
                     tile = tile.Down;
 
                 var layer = MeshLayer.BaseMaterial;
-                if (tile.tiletypeMaterial == TiletypeMaterial.GRASS_DARK
-                || tile.tiletypeMaterial == TiletypeMaterial.GRASS_DEAD
-                || tile.tiletypeMaterial == TiletypeMaterial.GRASS_DRY
-                || tile.tiletypeMaterial == TiletypeMaterial.GRASS_LIGHT
-                || tile.tiletypeMaterial == TiletypeMaterial.PLANT
+                if (tile.tiletypeMaterial == TiletypeMaterial.GrassDark
+                || tile.tiletypeMaterial == TiletypeMaterial.GrassDead
+                || tile.tiletypeMaterial == TiletypeMaterial.GrassDry
+                || tile.tiletypeMaterial == TiletypeMaterial.GrassLight
+                || tile.tiletypeMaterial == TiletypeMaterial.Plant
                 )
                     layer = MeshLayer.LayerMaterial;
 
@@ -1316,9 +1316,9 @@ public class GameMap : MonoBehaviour
     {
         if (tile == null)
             return true;
-        if (tile.shape == TiletypeShape.EMPTY)
+        if (tile.shape == TiletypeShape.Empty)
             return true;
-        if (tile.shape == TiletypeShape.ENDLESS_PIT)
+        if (tile.shape == TiletypeShape.EndlessPit)
             return true;
         return false;
     }
@@ -1348,18 +1348,18 @@ public class GameMap : MonoBehaviour
 
                 foreach (var spatter in tile.spatters)
                 {
-                    if (spatter.amount == 0)
+                    if (spatter.Amount == 0)
                         continue;
 
                     MapDataStore.Tile fakeTile = new MapDataStore.Tile(null, new DFCoord(0, 0, 0));
 
-                    fakeTile.material = spatter.material;
+                    fakeTile.material = spatter.Material;
 
                     Color color = Color.white;
 
                     ColorContent cont;
 
-                    if (spatter.material.mat_type == (int)MatBasic.ICE && spatter.state == MatterState.Powder)
+                    if (spatter.Material.MatType == (int)MatBasic.ICE && spatter.State == MatterState.Powder)
                     {
                         color = Color.white;
                     }
@@ -1367,13 +1367,13 @@ public class GameMap : MonoBehaviour
                     {
                         color = cont.color;
                     }
-                    else if (materials.ContainsKey(spatter.material))
+                    else if (materials.ContainsKey(spatter.Material))
                     {
-                        var colorDef = materials[spatter.material].state_color;
-                        color = new Color32((byte)colorDef.red, (byte)colorDef.green, (byte)colorDef.blue, 255);
+                        var colorDef = materials[spatter.Material].StateColor;
+                        color = new Color32((byte)colorDef.Red, (byte)colorDef.Green, (byte)colorDef.Blue, 255);
                     }
-                    float amount = spatter.amount;
-                    if (spatter.item != null)
+                    float amount = spatter.Amount;
+                    if (spatter.Item != null)
                         amount /= 3000;
                     else
                         amount /= 100;
@@ -1447,15 +1447,15 @@ public class GameMap : MonoBehaviour
             if (tile != null)
             {
                 statusText.Append("Tiletype:\n");
-                var tiletype = DFConnection.Instance.NetTiletypeList.tiletype_list
+                var tiletype = DFConnection.Instance.NetTiletypeList.TiletypeList_
                     [tile.tileType];
-                statusText.Append(tiletype.name).AppendLine();
+                statusText.Append(tiletype.Name).AppendLine();
                 statusText.Append(
-                    tiletype.shape).Append(":").Append(
-                    tiletype.special).Append(":").Append(
-                    tiletype.material).Append(":").Append(
-                    tiletype.variant).Append(":").Append(
-                    tiletype.direction).AppendLine();
+                    tiletype.Shape).Append(":").Append(
+                    tiletype.Special).Append(":").Append(
+                    tiletype.Material).Append(":").Append(
+                    tiletype.Variant).Append(":").Append(
+                    tiletype.Direction).AppendLine();
 
                 statusText.Append("Tree: ").Append(tile.positionOnTree).Append(" (").Append(tile.trunkPercent).Append("%)").AppendLine();
 
@@ -1473,7 +1473,7 @@ public class GameMap : MonoBehaviour
                 if (materials.ContainsKey(mat))
                 {
                     statusText.Append(", ");
-                    statusText.Append(materials[mat].id).AppendLine();
+                    statusText.Append(materials[mat].Id).AppendLine();
                 }
                 else
                     statusText.AppendLine();
@@ -1485,7 +1485,7 @@ public class GameMap : MonoBehaviour
                 if (materials.ContainsKey(basemat))
                 {
                     statusText.Append(", ");
-                    statusText.Append(materials[basemat].id).AppendLine();
+                    statusText.Append(materials[basemat].Id).AppendLine();
                 }
                 else
                     statusText.Append("Unknown Base Material\n");
@@ -1497,7 +1497,7 @@ public class GameMap : MonoBehaviour
                 if (materials.ContainsKey(layermat))
                 {
                     statusText.Append(", ");
-                    statusText.Append(materials[layermat].id).AppendLine();
+                    statusText.Append(materials[layermat].Id).AppendLine();
                 }
                 else
                     statusText.Append("Unknown Layer Material\n");
@@ -1509,7 +1509,7 @@ public class GameMap : MonoBehaviour
                 if (materials.ContainsKey(veinmat))
                 {
                     statusText.Append(", ");
-                    statusText.Append(materials[veinmat].id).AppendLine();
+                    statusText.Append(materials[veinmat].Id).AppendLine();
                 }
                 else
                     statusText.Append("Unknown Vein Material\n");
@@ -1521,7 +1521,7 @@ public class GameMap : MonoBehaviour
                 if (items.ContainsKey(cons))
                 {
                     statusText.Append(", ");
-                    statusText.Append(items[cons].id).AppendLine();
+                    statusText.Append(items[cons].Id).AppendLine();
                 }
                 else
                     statusText.Append("Unknown Construction Item\n");
@@ -1532,12 +1532,12 @@ public class GameMap : MonoBehaviour
                 {
                     if (buildings.ContainsKey(tile.buildingType))
                         statusText.Append("Building: ");
-                    statusText.Append(buildings[tile.buildingType].id).AppendLine();
+                    statusText.Append(buildings[tile.buildingType].Id).AppendLine();
 
                     if (materials.ContainsKey(tile.buildingMaterial))
                     {
                         statusText.Append("Building Material: ");
-                        statusText.Append(materials[tile.buildingMaterial].id).AppendLine();
+                        statusText.Append(materials[tile.buildingMaterial].Id).AppendLine();
                     }
                     else
                         statusText.Append("Unknown Building Material\n");
@@ -1551,33 +1551,33 @@ public class GameMap : MonoBehaviour
                 if (tile.spatters != null)
                     foreach (var spatter in tile.spatters)
                     {
-                        string matString = ((MatPairStruct)spatter.material).ToString();
-                        if (materials.ContainsKey(spatter.material))
-                            matString = materials[spatter.material].id;
-                        if (spatter.item != null)
+                        string matString = ((MatPairStruct)spatter.Material).ToString();
+                        if (materials.ContainsKey(spatter.Material))
+                            matString = materials[spatter.Material].Id;
+                        if (spatter.Item != null)
                         {
-                            string item = ((MatPairStruct)spatter.item).ToString();
-                            if (spatter.item.mat_type == 55)//Plant Growth
+                            string item = ((MatPairStruct)spatter.Item).ToString();
+                            if (spatter.Item.MatType == 55)//Plant Growth
                             {
-                                item = DFConnection.Instance.NetPlantRawList.plant_raws[spatter.material.mat_index].growths[spatter.item.mat_index].id;
+                                item = DFConnection.Instance.NetPlantRawList.PlantRaws[spatter.Material.MatIndex].Growths[spatter.Item.MatIndex].Id;
                             }
-                            else if (items.ContainsKey(spatter.item))
-                                item = items[spatter.item].id;
-                            else if (items.ContainsKey(new MatPairStruct(spatter.item.mat_type, -1)))
-                                item = items[new MatPairStruct(spatter.item.mat_type, -1)].id;
-                            statusText.AppendFormat("{0} {1}: {2}", matString, item, spatter.amount).AppendLine();
+                            else if (items.ContainsKey(spatter.Item))
+                                item = items[spatter.Item].Id;
+                            else if (items.ContainsKey(new MatPairStruct(spatter.Item.MatType, -1)))
+                                item = items[new MatPairStruct(spatter.Item.MatType, -1)].Id;
+                            statusText.AppendFormat("{0} {1}: {2}", matString, item, spatter.Amount).AppendLine();
                         }
                         else
-                            statusText.AppendFormat("{0} {1}: {2}", matString, spatter.state, spatter.amount).AppendLine();
+                            statusText.AppendFormat("{0} {1}: {2}", matString, spatter.State, spatter.Amount).AppendLine();
                     }
             }
 
             if (unitList != null)
             {
                 UnitDefinition foundUnit = null;
-                foreach (UnitDefinition unit in unitList.creature_list)
+                foreach (UnitDefinition unit in unitList.CreatureList)
                 {
-                    UnitFlags1 flags1 = (UnitFlags1)unit.flags1;
+                    UnitFlags1 flags1 = (UnitFlags1)unit.Flags1;
 
                     if (((flags1 & UnitFlags1.dead) == UnitFlags1.dead)
                          || ((flags1 & UnitFlags1.left) == UnitFlags1.left)
@@ -1585,7 +1585,7 @@ public class GameMap : MonoBehaviour
                          || ((flags1 & UnitFlags1.forest) == UnitFlags1.forest)
                          )
                         continue;
-                    if (unit.pos_x == cursX && unit.pos_y == cursY && unit.pos_z == cursZ)
+                    if (unit.PosX == cursX && unit.PosY == cursY && unit.PosZ == cursZ)
                     {
                         foundUnit = unit;
                         if ((flags1 & UnitFlags1.on_ground) == UnitFlags1.on_ground)
@@ -1596,28 +1596,28 @@ public class GameMap : MonoBehaviour
                 }
                 if (foundUnit != null)
                 {
-                    UnitFlags1 flags1 = (UnitFlags1)foundUnit.flags1;
-                    UnitFlags2 flags2 = (UnitFlags2)foundUnit.flags2;
+                    UnitFlags1 flags1 = (UnitFlags1)foundUnit.Flags1;
+                    UnitFlags2 flags2 = (UnitFlags2)foundUnit.Flags2;
 
                     CreatureRaw creatureRaw = null;
                     if (DFConnection.Instance.NetCreatureRawList != null)
-                        creatureRaw = DFConnection.Instance.NetCreatureRawList.creature_raws[foundUnit.race.mat_type];
+                        creatureRaw = DFConnection.Instance.NetCreatureRawList.CreatureRaws[foundUnit.Race.MatType];
 
                     if (creatureRaw != null)
                     {
                         statusText.Append("Unit:   \n");
 
                         statusText.Append("Race: ");
-                        statusText.Append(creatureRaw.creature_id + ":");
-                        statusText.Append(creatureRaw.caste[foundUnit.race.mat_index].caste_id);
+                        statusText.Append(creatureRaw.CreatureId + ":");
+                        statusText.Append(creatureRaw.Caste[foundUnit.Race.MatIndex].CasteId);
                         statusText.AppendLine();
 
                         statusText.Append(flags1).AppendLine();
                         statusText.Append(flags2).AppendLine();
                         //statusText.Append(flags3).AppendLine();
-                        statusText.Append("Length: ").Append(foundUnit.size_info.length_cur).Append("/").Append(Mathf.FloorToInt(Mathf.Pow(creatureRaw.adultsize * 10000, 1.0f / 3.0f))).AppendLine();
-                        statusText.Append("Profession: ").Append((profession)foundUnit.profession_id).AppendLine();
-                        foreach (var noble in foundUnit.noble_positions)
+                        statusText.Append("Length: ").Append(foundUnit.SizeInfo.LengthCur).Append("/").Append(Mathf.FloorToInt(Mathf.Pow(creatureRaw.Adultsize * 10000, 1.0f / 3.0f))).AppendLine();
+                        statusText.Append("Profession: ").Append((profession)foundUnit.ProfessionId).AppendLine();
+                        foreach (var noble in foundUnit.NoblePositions)
                         {
                             statusText.Append(noble).Append(", ");
                         }
@@ -1630,15 +1630,15 @@ public class GameMap : MonoBehaviour
             if (itemPositions.ContainsKey(new DFCoord(cursX, cursY, cursZ)))
             {
                 Item item = itemPositions[new DFCoord(cursX, cursY, cursZ)];
-                statusText.Append("Item ").Append(item.id).Append(": ");
-                if (materials.ContainsKey(item.material))
-                    statusText.Append(materials[item.material].id);
+                statusText.Append("Item ").Append(item.Id).Append(": ");
+                if (materials.ContainsKey(item.Material))
+                    statusText.Append(materials[item.Material].Id);
                 else
-                    statusText.Append(((MatPairStruct)item.material).ToString());
+                    statusText.Append(((MatPairStruct)item.Material).ToString());
                 statusText.Append(" ");
-                if (items.ContainsKey(item.type))
-                    statusText.Append(items[item.type].id);
-                statusText.Append("(").Append(((MatPairStruct)item.type)).Append(")");
+                if (items.ContainsKey(item.Type))
+                    statusText.Append(items[item.Type].Id);
+                statusText.Append("(").Append(((MatPairStruct)item.Type)).Append(")");
                 statusText.AppendLine();
 
                 statusText.Append(itemInstances.Count).Append(" items total.");
@@ -1684,11 +1684,11 @@ public class GameMap : MonoBehaviour
             unitList = tempUnitList;
         UnityEngine.Profiling.Profiler.BeginSample("UpdateCreatures", this);
         lastUnitList = unitList;
-        foreach (var unit in unitList.creature_list)
+        foreach (var unit in unitList.CreatureList)
         {
             if (creatureList == null)
                 creatureList = new Dictionary<int, Transform>();
-            UnitFlags1 flags1 = (UnitFlags1)unit.flags1;
+            UnitFlags1 flags1 = (UnitFlags1)unit.Flags1;
             //UnitFlags2 flags2 = (UnitFlags2)unit.flags2;
             //UnitFlags3 flags3 = (UnitFlags3)unit.flags3;
             if (((flags1 & UnitFlags1.dead) == UnitFlags1.dead)
@@ -1697,55 +1697,55 @@ public class GameMap : MonoBehaviour
                  || ((flags1 & UnitFlags1.forest) == UnitFlags1.forest)
                  )
             {
-                if (creatureList.ContainsKey(unit.id))
+                if (creatureList.ContainsKey(unit.Id))
                 {
-                    Destroy(creatureList[unit.id].gameObject);
-                    creatureList.Remove(unit.id);
+                    Destroy(creatureList[unit.Id].gameObject);
+                    creatureList.Remove(unit.Id);
                 }
             }
             else
             {
                 CreatureRaw creatureRaw = null;
                 if (DFConnection.Instance.NetCreatureRawList != null)
-                    creatureRaw = DFConnection.Instance.NetCreatureRawList.creature_raws[unit.race.mat_type];
+                    creatureRaw = DFConnection.Instance.NetCreatureRawList.CreatureRaws[unit.Race.MatType];
 
-                if (!creatureList.ContainsKey(unit.id))
+                if (!creatureList.ContainsKey(unit.Id))
                 {
-                    creatureList[unit.id] = Instantiate(creatureTemplate);
-                    creatureList[unit.id].transform.parent = gameObject.transform;
-                    creatureList[unit.id].name = "Unit_" + unit.id;
+                    creatureList[unit.Id] = Instantiate(creatureTemplate);
+                    creatureList[unit.Id].transform.parent = gameObject.transform;
+                    creatureList[unit.Id].name = "Unit_" + unit.Id;
 
                     Color color = Color.white;
-                    if (unit.profession_color != null)
-                        color = new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1);
+                    if (unit.ProfessionColor != null)
+                        color = new Color(unit.ProfessionColor.Red / 255.0f, unit.ProfessionColor.Green / 255.0f, unit.ProfessionColor.Blue / 255.0f, 1);
 
                     if (creatureRaw != null)
                     {
-                        creatureList[unit.id].GetComponentInChildren<MeshRenderer>().material.SetInt(unitSpriteID, creatureRaw.creature_tile);
-                        creatureList[unit.id].GetComponentInChildren<MeshRenderer>().material.color = new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1);
+                        creatureList[unit.Id].GetComponentInChildren<MeshRenderer>().material.SetInt(unitSpriteID, creatureRaw.CreatureTile);
+                        creatureList[unit.Id].GetComponentInChildren<MeshRenderer>().material.color = new Color(unit.ProfessionColor.Red / 255.0f, unit.ProfessionColor.Green / 255.0f, unit.ProfessionColor.Blue / 255.0f, 1);
                     }
 
                 }
                 MapDataStore.Tile tile = null;
                 if (MapDataStore.Main != null)
-                    tile = MapDataStore.Main[unit.pos_x, unit.pos_y, unit.pos_z];
-                creatureList[unit.id].gameObject.SetActive(
-                    unit.pos_z < PosZ && unit.pos_z >= (PosZ - GameSettings.Instance.rendering.drawRangeDown)
+                    tile = MapDataStore.Main[unit.PosX, unit.PosY, unit.PosZ];
+                creatureList[unit.Id].gameObject.SetActive(
+                    unit.PosZ < PosZ && unit.PosZ >= (PosZ - GameSettings.Instance.rendering.drawRangeDown)
                     && (tile != null ? !tile.Hidden : false)
                     );
 
-                if (creatureList[unit.id].gameObject.activeSelf) //Only update stuff if it's actually visible.
+                if (creatureList[unit.Id].gameObject.activeSelf) //Only update stuff if it's actually visible.
                 {
-                    Vector3 position = DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z);
-                    creatureList[unit.id].transform.position = position + new Vector3(0, 0.51f, 0);
+                    Vector3 position = DFtoUnityCoord(unit.PosX, unit.PosY, unit.PosZ);
+                    creatureList[unit.Id].transform.position = position + new Vector3(0, 0.51f, 0);
                     float scale;
                     if (GameSettings.Instance.units.scaleUnits)
-                        scale = unit.size_info.length_cur / 391.0f;
+                        scale = unit.SizeInfo.LengthCur / 391.0f;
                     else
                         scale = 1;
-                    creatureList[unit.id].transform.localScale = new Vector3(scale, scale, scale);
-                    creatureList[unit.id].GetComponentInChildren<Light>().range = scale * 10;
-                    CameraFacing cameraFacing = creatureList[unit.id].GetComponentInChildren<CameraFacing>();
+                    creatureList[unit.Id].transform.localScale = new Vector3(scale, scale, scale);
+                    creatureList[unit.Id].GetComponentInChildren<Light>().range = scale * 10;
+                    CameraFacing cameraFacing = creatureList[unit.Id].GetComponentInChildren<CameraFacing>();
                     if ((flags1 & UnitFlags1.on_ground) == UnitFlags1.on_ground)
                     {
                         cameraFacing.transform.localPosition = Vector3.zero;
@@ -1762,37 +1762,37 @@ public class GameMap : MonoBehaviour
                     bool colored;
                     if (ContentLoader.Instance.SpriteManager.getCreatureSprite(unit, out mat, out index, out colored))
                     {
-                        creatureList[unit.id].GetComponentInChildren<MeshRenderer>().material = mat;
+                        creatureList[unit.Id].GetComponentInChildren<MeshRenderer>().material = mat;
                         creatureMaterialProperties.SetFloat(unitSpriteID, index);
                     }
                     else
                     {
-                        creatureList[unit.id].GetComponentInChildren<MeshRenderer>().material = creatureTemplate.GetComponentInChildren<MeshRenderer>().sharedMaterial;
+                        creatureList[unit.Id].GetComponentInChildren<MeshRenderer>().material = creatureTemplate.GetComponentInChildren<MeshRenderer>().sharedMaterial;
                         if (creatureRaw != null)
                         {
-                            if (unit.is_soldier && creatureRaw.creature_soldier_tile != 0)
-                                creatureMaterialProperties.SetFloat(unitSpriteID, creatureRaw.creature_soldier_tile);
+                            if (unit.IsSoldier && creatureRaw.CreatureSoldierTile != 0)
+                                creatureMaterialProperties.SetFloat(unitSpriteID, creatureRaw.CreatureSoldierTile);
                             else
-                                creatureMaterialProperties.SetFloat(unitSpriteID, creatureRaw.creature_tile);
+                                creatureMaterialProperties.SetFloat(unitSpriteID, creatureRaw.CreatureTile);
                         }
                     }
-                    if (colored && unit.profession_color != null)
-                        creatureMaterialProperties.SetColor("_Color", new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1));
+                    if (colored && unit.ProfessionColor != null)
+                        creatureMaterialProperties.SetColor("_Color", new Color(unit.ProfessionColor.Red / 255.0f, unit.ProfessionColor.Green / 255.0f, unit.ProfessionColor.Blue / 255.0f, 1));
                     else
                         creatureMaterialProperties.SetColor("_Color", Color.white);
 
-                    creatureList[unit.id].GetComponentInChildren<MeshRenderer>().SetPropertyBlock(creatureMaterialProperties);
+                    creatureList[unit.Id].GetComponentInChildren<MeshRenderer>().SetPropertyBlock(creatureMaterialProperties);
 
                     if (creatureRaw != null)
                     {
-                        Text unitText = creatureList[unit.id].GetComponentInChildren<Text>();
+                        Text unitText = creatureList[unit.Id].GetComponentInChildren<Text>();
                         if (unitText != null)
                         {
-                            if (unit.name == "")
-                                unitText.text = textInfo.ToTitleCase(creatureRaw.caste[unit.race.mat_index].caste_name[0]);
+                            if (unit.Name == "")
+                                unitText.text = textInfo.ToTitleCase(creatureRaw.Caste[unit.Race.MatIndex].CasteName[0]);
                             else
                             {
-                                unitText.text = unit.name;
+                                unitText.text = unit.Name;
                             }
                         }
                     }
@@ -1954,27 +1954,27 @@ public class GameMap : MonoBehaviour
             if (!(pos.z < PosZ && pos.z >= (PosZ - GameSettings.Instance.rendering.drawRangeDown)))
                 continue;
 
-            tempTile.material = item.Value.material;
-            tempTile.construction_item = item.Value.type;
+            tempTile.material = item.Value.Material;
+            tempTile.construction_item = item.Value.Type;
             ColorContent colorContent;
             MeshContent meshContent;
 
             var part = new ParticleSystem.Particle();
             part.startSize = 1;
-            part.position = DFtoUnityCoord(item.Value.pos) + new Vector3(0, floorHeight + 0.5f, 0);
+            part.position = DFtoUnityCoord(item.Value.Pos) + new Vector3(0, floorHeight + 0.5f, 0);
             if (ContentLoader.Instance.ColorConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out colorContent))
                 part.startColor = colorContent.color;
-            else if (materials.ContainsKey(item.Value.material) && materials[item.Value.material].state_color != null)
+            else if (materials.ContainsKey(item.Value.Material) && materials[item.Value.Material].StateColor != null)
             {
-                var stateColor = materials[item.Value.material].state_color;
-                part.startColor = new Color32((byte)stateColor.red, (byte)stateColor.green, (byte)stateColor.blue, 255);
+                var stateColor = materials[item.Value.Material].StateColor;
+                part.startColor = new Color32((byte)stateColor.Red, (byte)stateColor.Green, (byte)stateColor.Blue, 255);
             }
             else
                 part.startColor = Color.gray;
 
-            if(item.Value.dye != null)
+            if(item.Value.Dye != null)
             {
-                part.startColor *= (Color)(new Color32((byte)item.Value.dye.red, (byte)item.Value.dye.green, (byte)item.Value.dye.blue, 255));
+                part.startColor *= (Color)(new Color32((byte)item.Value.Dye.Red, (byte)item.Value.Dye.Green, (byte)item.Value.Dye.Blue, 255));
             }
 
             if (ContentLoader.Instance.ItemMeshConfiguration != null && ContentLoader.Instance.ItemMeshConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out meshContent))
@@ -2034,7 +2034,7 @@ public class GameMap : MonoBehaviour
                 }
                 if (meshContent.Rotation == RotationType.Random)
                     part.rotation = (float)noise.eval(pos.x, pos.y, pos.z) * 360;
-                part.position = DFtoUnityCoord(item.Value.pos) + new Vector3(0, floorHeight, 0);
+                part.position = DFtoUnityCoord(item.Value.Pos) + new Vector3(0, floorHeight, 0);
                 if (noCustomParticleColor[meshContent.UniqueIndex])
                     part.startColor = Color.gray;
                 customItemParticles[meshContent.UniqueIndex][customItemParticleCount[meshContent.UniqueIndex]] = part;
@@ -2042,7 +2042,7 @@ public class GameMap : MonoBehaviour
             }
             else
             {
-                part.position = DFtoUnityCoord(item.Value.pos) + new Vector3(0, floorHeight + 0.5f, 0);
+                part.position = DFtoUnityCoord(item.Value.Pos) + new Vector3(0, floorHeight + 0.5f, 0);
                 itemParticles[i] = part;
                 i++;
             }

@@ -159,13 +159,13 @@ public class MeshContent : IContent
                 {
                     switch (tile.buildingDirection)
                     {
-                        case RemoteFortressReader.BuildingDirection.NORTH:
+                        case RemoteFortressReader.BuildingDirection.North:
                             return Quaternion.Euler(0, 0, 0);
-                        case RemoteFortressReader.BuildingDirection.EAST:
+                        case RemoteFortressReader.BuildingDirection.East:
                             return Quaternion.Euler(0, 90, 0);
-                        case RemoteFortressReader.BuildingDirection.SOUTH:
+                        case RemoteFortressReader.BuildingDirection.South:
                             return Quaternion.Euler(0, 180, 0);
-                        case RemoteFortressReader.BuildingDirection.WEST:
+                        case RemoteFortressReader.BuildingDirection.West:
                             return Quaternion.Euler(0, -90, 0);
                         default:
                             return Quaternion.Euler(0, 0, 0);

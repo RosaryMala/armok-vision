@@ -22,7 +22,7 @@ must not be misrepresented as being the original software.
 distribution.
 */
 
-using dfproto;
+using Dfproto;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -35,6 +35,7 @@ using System.Diagnostics;
 
 namespace DFHack
 {
+    using Google.Protobuf;
     using message_type = ProtoBuf.IExtensible;
 
     public enum command_result
@@ -168,14 +169,14 @@ namespace DFHack
         public static implicit operator RemoteFortressReader.Coord(DFCoord a)
         {
             RemoteFortressReader.Coord b = new RemoteFortressReader.Coord();
-            b.x = a.x;
-            b.y = a.y;
-            b.z = a.z;
+            b.X = a.x;
+            b.Y = a.y;
+            b.Z = a.z;
             return b;
         }
         public static implicit operator DFCoord(RemoteFortressReader.Coord a)
         {
-            return new DFCoord(a.x, a.y, a.z);
+            return new DFCoord(a.X, a.Y, a.Z);
         }
     }
     public struct DFCoord2d
@@ -394,15 +395,15 @@ namespace DFHack
     public class RPCFunctionBase
     {
 
-        public message_type p_in_template;
-        public message_type p_out_template;
+        public IMessage p_in_template;
+        public IMessage p_out_template;
 
-        public message_type make_in()
+        public IMessage make_in()
         {
-            return (message_type)Activator.CreateInstance(p_in_template.GetType());
+            return (IMessage)Activator.CreateInstance(p_in_template.GetType());
         }
 
-        public message_type input
+        public IMessage input
         {
             get
             {
@@ -418,12 +419,12 @@ namespace DFHack
             }
         }
 
-        public message_type make_out()
+        public IMessage make_out()
         {
-            return (message_type)Activator.CreateInstance(p_out_template.GetType());
+            return (IMessage)Activator.CreateInstance(p_out_template.GetType());
         }
 
-        public message_type output
+        public IMessage output
         {
             get
             {
@@ -449,13 +450,13 @@ namespace DFHack
             else
             {
                 if (p_in != null)
-                    p_in = (message_type)Activator.CreateInstance(p_in.GetType());
+                    p_in = (Google.Protobuf.IMessage)Activator.CreateInstance(p_in.GetType());
                 if (p_out != null)
-                    p_out = (message_type)Activator.CreateInstance(p_out.GetType());
+                    p_out = (Google.Protobuf.IMessage)Activator.CreateInstance(p_out.GetType());
             }
         }
 
-        public RPCFunctionBase(message_type input, message_type output)
+        public RPCFunctionBase(Google.Protobuf.IMessage input, Google.Protobuf.IMessage output)
         {
             p_in_template = input;
             p_out_template = output;
@@ -463,8 +464,8 @@ namespace DFHack
             p_out = null;
         }
 
-        message_type p_in;
-        message_type p_out;
+        Google.Protobuf.IMessage p_in;
+        Google.Protobuf.IMessage p_out;
     }
 
     public class RemoteFunctionBase : RPCFunctionBase
@@ -497,7 +498,7 @@ namespace DFHack
 
         public bool isValid() { return (id >= 0); }
 
-        public RemoteFunctionBase(message_type input, message_type output)
+        public RemoteFunctionBase(IMessage input, IMessage output)
             : base(input, output)
         {
             p_client = null;
@@ -546,8 +547,8 @@ namespace DFHack
         }
 
         protected command_result execute<Input, Output>(color_ostream outString, Input input, out Output output)
-            where Input : class, message_type, new()
-            where Output : class, message_type, new()
+            where Input : class, Google.Protobuf.IMessage, new()
+            where Output : class, Google.Protobuf.IMessage, new()
         {
             if (!isValid())
             {
@@ -688,8 +689,8 @@ namespace DFHack
     }
 
     public class RemoteFunction<Input, Output> : RemoteFunctionBase
-        where Input : class, message_type, new()
-        where Output : class, message_type, new()
+        where Input : class, Google.Protobuf.IMessage, new()
+        where Output : class, Google.Protobuf.IMessage, new()
     {
         public new Input make_in() { return (Input)(base.make_in()); }
         public new Input input
@@ -756,7 +757,7 @@ namespace DFHack
     }
 
     public class RemoteFunction<Input> : RemoteFunctionBase
-        where Input : class, message_type, new()
+        where Input : class, IMessage, new()
     {
         public new Input make_in() { return (Input)(base.make_in()); }
         public new Input input
@@ -836,17 +837,17 @@ namespace DFHack
             {
                 var input = bind_call.input;
 
-                input.method = name;
+                input.Method = name;
                 if (proto.Length != 0)
-                    input.plugin = proto;
-                input.input_msg = function.p_in_template.GetType().ToString();
-                input.output_msg = function.p_out_template.GetType().ToString();
+                    input.Plugin = proto;
+                input.InputMsg = function.p_in_template.GetType().ToString();
+                input.OutputMsg = function.p_out_template.GetType().ToString();
             }
 
             if (bind_call.execute(outStream) != command_result.CR_OK)
                 return false;
 
-            function.id = (Int16)bind_call.output.assigned_id;
+            function.id = (Int16)bind_call.output.AssignedId;
 
             return true;
         }
@@ -1034,9 +1035,9 @@ namespace DFHack
 
             runcmd_call.reset();
 
-            runcmd_call.input.command = cmd;
+            runcmd_call.input.Command = cmd;
             for (int i = 0; i < args.Count; i++)
-                runcmd_call.input.arguments.Add(args[i]);
+                runcmd_call.input.Arguments.Add(args[i]);
 
             return runcmd_call.execute(output);
         }
@@ -1056,7 +1057,7 @@ namespace DFHack
             }
 
             if (suspend_call.execute(default_output()) == command_result.CR_OK)
-                return suspend_call.output.value;
+                return suspend_call.output.Value;
             else
                 return -1;
         }
@@ -1066,7 +1067,7 @@ namespace DFHack
                 return -1;
 
             if (resume_call.execute(default_output()) == command_result.CR_OK)
-                return resume_call.output.value;
+                return resume_call.output.Value;
             else
                 return -1;
         }
@@ -1076,8 +1077,8 @@ namespace DFHack
         public Socket socket;
         color_ostream p_default_output;
 
-        RemoteFunction<dfproto.CoreBindRequest, dfproto.CoreBindReply> bind_call;
-        RemoteFunction<dfproto.CoreRunCommandRequest> runcmd_call;
+        RemoteFunction<Dfproto.CoreBindRequest, Dfproto.CoreBindReply> bind_call;
+        RemoteFunction<Dfproto.CoreRunCommandRequest> runcmd_call;
 
         bool suspend_ready;
         RemoteFunction<EmptyMessage, IntMessage> suspend_call = new RemoteFunction<EmptyMessage, IntMessage>();

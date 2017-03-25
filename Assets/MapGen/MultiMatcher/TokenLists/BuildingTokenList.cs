@@ -31,7 +31,7 @@ namespace TokenLists
                 BuildingLookup = new Dictionary<string, BuildingDefinition>();
             foreach (BuildingDefinition token in _buildingTokenList)
             {
-                BuildingLookup[token.id] = token;
+                BuildingLookup[token.Id] = token;
             }
         }
 

@@ -32,7 +32,7 @@ namespace TokenLists
                 ItemLookup = new Dictionary<string, MaterialDefinition>();
             foreach (MaterialDefinition token in _itemTokenList)
             {
-                ItemLookup[token.id] = token;
+                ItemLookup[token.Id] = token;
             }
         }
 

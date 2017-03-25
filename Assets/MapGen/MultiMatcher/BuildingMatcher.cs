@@ -20,7 +20,7 @@ public class BuildingMatcher<T> {
                     Debug.Log("Invalid building: " + token);
                     return;
                 }
-                bld = BuildingTokenList.BuildingLookup[token].building_type;
+                bld = BuildingTokenList.BuildingLookup[token].BuildingType;
             }
             if (buildingList == null)
                 buildingList = new Dictionary<BuildingStruct, T>();

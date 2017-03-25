@@ -13,13 +13,13 @@ public struct MatPairStruct : IComparable
     {
         if (input == null)
             return new MatPairStruct(-1, -1);
-        return new MatPairStruct(input.mat_type, input.mat_index);
+        return new MatPairStruct(input.MatType, input.MatIndex);
     }
     public static implicit operator MatPair(MatPairStruct input)
     {
         MatPair output = new MatPair();
-        output.mat_index = input.mat_index;
-        output.mat_type = input.mat_type;
+        output.MatIndex = input.mat_index;
+        output.MatType = input.mat_type;
         return output;
 
     }

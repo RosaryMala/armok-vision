@@ -233,7 +233,7 @@ public class MapExport : MonoBehaviour
                 foreach (var mat in matList)
                 {
                     if (GameMap.materials.ContainsKey(mat))
-                        output.Append(GameMap.materials[mat].id).Append("; ");
+                        output.Append(GameMap.materials[mat].Id).Append("; ");
                     else
                         output.Append(mat).Append("; ");
                 }
@@ -272,10 +272,10 @@ public class MapExport : MonoBehaviour
                 {
                     switch (tile.tiletypeMaterial)
                     {
-                        case TiletypeMaterial.PLANT:
-                        case TiletypeMaterial.ROOT:
-                        case TiletypeMaterial.TREE_MATERIAL:
-                        case TiletypeMaterial.MUSHROOM:
+                        case TiletypeMaterial.Plant:
+                        case TiletypeMaterial.Root:
+                        case TiletypeMaterial.TreeMaterial:
+                        case TiletypeMaterial.Mushroom:
                             if (!ContentLoader.Instance.GrowthMeshConfiguration.GetValue(tile, layer, out meshContent))
                                 return;
                             break;

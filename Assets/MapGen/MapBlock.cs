@@ -66,9 +66,9 @@ public class MapBlock : MonoBehaviour
         for (int x = 0; x < blockWidthTiles; x++)
             for (int y = 0; y < blockWidthTiles; y++)
             {
-                if (terrain[y * blockWidthTiles + x] == TiletypeShape.EMPTY || terrain[y * blockWidthTiles + x] == TiletypeShape.NO_SHAPE)
+                if (terrain[y * blockWidthTiles + x] == TiletypeShape.Empty || terrain[y * blockWidthTiles + x] == TiletypeShape.NoShape)
                     air++;
-                else if (terrain[y * blockWidthTiles + x] == TiletypeShape.WALL)
+                else if (terrain[y * blockWidthTiles + x] == TiletypeShape.Wall)
                     solid++;
             }
         if (air == blockAreaTiles)
@@ -80,12 +80,12 @@ public class MapBlock : MonoBehaviour
 
     public void Reposition(RemoteFortressReader.BlockList input)
     {
-        int diff_x = input.map_x - map_coords.x;
-        int diff_y = input.map_y - map_coords.y;
+        int diff_x = input.MapX - map_coords.x;
+        int diff_y = input.MapY - map_coords.y;
         coordinates.x += (diff_x * 3);
         coordinates.y += (diff_y * 3);
-        map_coords.x = input.map_x;
-        map_coords.y = input.map_y;
+        map_coords.x = input.MapX;
+        map_coords.y = input.MapY;
         SetUnityPosition();
     }
 
@@ -128,21 +128,21 @@ public class MapBlock : MonoBehaviour
 
     public void SetAllTiles(RemoteFortressReader.MapBlock DFBlock, RemoteFortressReader.BlockList blockList, RemoteFortressReader.TiletypeList tiletypeList)
     {
-        if (DFBlock.tiles.Count != terrain.Length)
+        if (DFBlock.Tiles.Count != terrain.Length)
         {
-            Debug.LogError("Map Block has " + DFBlock.tiles.Count + " tiles, should be " + terrain.Length);
+            Debug.LogError("Map Block has " + DFBlock.Tiles.Count + " tiles, should be " + terrain.Length);
         }
-        for (int i = 0; i < DFBlock.tiles.Count; i++)
+        for (int i = 0; i < DFBlock.Tiles.Count; i++)
         {
-            terrain[i] = tiletypeList.tiletype_list[DFBlock.tiles[i]].shape;
+            terrain[i] = tiletypeList.TiletypeList_[DFBlock.Tiles[i]].Shape;
             colors[i] = Color.white;
         }
         SetOpenness();
-        coordinates.x = DFBlock.map_x;
-        coordinates.y = DFBlock.map_y;
-        coordinates.z = DFBlock.map_z;
-        map_coords.x = blockList.map_x;
-        map_coords.y = blockList.map_y;
+        coordinates.x = DFBlock.MapX;
+        coordinates.y = DFBlock.MapY;
+        coordinates.z = DFBlock.MapZ;
+        map_coords.x = blockList.MapX;
+        map_coords.y = blockList.MapY;
         SetUnityPosition();
     }
 
@@ -151,7 +151,7 @@ public class MapBlock : MonoBehaviour
         if (position.x >= 0 && position.x < blockWidthTiles && position.y >= 0 && position.y < blockWidthTiles)
             return terrain[position.x + position.y * blockWidthTiles];
         else
-            return TiletypeShape.EMPTY;
+            return TiletypeShape.Empty;
     }
 
     public void Regenerate()
@@ -284,12 +284,12 @@ public class MapBlock : MonoBehaviour
         float adjacentFloorHeight = -0.5f * tileHeight;
         switch (GetSingleTile(position))
         {
-            case TiletypeShape.WALL:
+            case TiletypeShape.Wall:
                 currentFloorHeight = 0.5f * tileHeight;
                 topLayer = Layer.Top;
                 break;
-            case TiletypeShape.RAMP:
-            case TiletypeShape.FLOOR:
+            case TiletypeShape.Ramp:
+            case TiletypeShape.Floor:
                 currentFloorHeight = floorHeight - (0.5f * tileHeight);
                 topLayer = Layer.Floor;
                 break;
@@ -298,11 +298,11 @@ public class MapBlock : MonoBehaviour
         }
         switch (GetRelativeTile(position, direction))
         {
-            case TiletypeShape.WALL:
+            case TiletypeShape.Wall:
                 adjacentFloorHeight = 0.5f * tileHeight;
                 bottomLayer = Layer.Top;
                 break;
-            case TiletypeShape.FLOOR:
+            case TiletypeShape.Floor:
                 adjacentFloorHeight = floorHeight - (0.5f * tileHeight);
                 bottomLayer = Layer.Floor;
                 break;
@@ -368,9 +368,9 @@ public class MapBlock : MonoBehaviour
     void AddTopFace(DFCoord2d position, float height)
     {
         Layer layer = Layer.Base;
-        if (GetSingleTile(position) == TiletypeShape.FLOOR)
+        if (GetSingleTile(position) == TiletypeShape.Floor)
             layer = Layer.Floor;
-        else if (GetSingleTile(position) == TiletypeShape.WALL)
+        else if (GetSingleTile(position) == TiletypeShape.Wall)
             layer = Layer.Top;
         height -= 0.5f * tileHeight;
         //Todo: Weld vertices that should be welded
