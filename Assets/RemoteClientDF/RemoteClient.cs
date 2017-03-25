@@ -28,12 +28,15 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 using System.Text;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace DFHack
 {
     using Google.Protobuf;
+    using message_type = ProtoBuf.IExtensible;
 
     public enum command_result
     {
@@ -565,8 +568,7 @@ namespace DFHack
 
             MemoryStream sendStream = new MemoryStream();
 
-            if(input != null)
-                input.WriteTo(sendStream);
+            ProtoBuf.Serializer.Serialize<Input>(sendStream, input);
 
             long send_size = sendStream.Length;
 
@@ -653,8 +655,7 @@ namespace DFHack
                         //    }
                         //    UnityEngine.Debug.Log("Got buf[" + buf.Length + "] = " + tempString);
                         //}
-                        output = new Output();
-                        output.MergeFrom(buf);
+                        output = ProtoBuf.Serializer.Deserialize<Output>(new MemoryStream(buf));
                         if (output == null)
                         {
                             outString.printerr("In call to %s::%s: error parsing received result.\n",
@@ -664,8 +665,7 @@ namespace DFHack
                         return command_result.CR_OK;
 
                     case DFHackReplyCode.RPC_REPLY_TEXT:
-                        text_data = new CoreTextNotification();
-                        text_data.MergeFrom(buf);
+                        text_data = ProtoBuf.Serializer.Deserialize<CoreTextNotification>(new MemoryStream(buf));
 
                         if (text_data != null)
                         {
@@ -840,8 +840,8 @@ namespace DFHack
                 input.Method = name;
                 if (proto.Length != 0)
                     input.Plugin = proto;
-                input.InputMsg = function.p_in_template.Descriptor.FullName;
-                input.OutputMsg = function.p_out_template.Descriptor.FullName;
+                input.InputMsg = function.p_in_template.GetType().ToString();
+                input.OutputMsg = function.p_out_template.GetType().ToString();
             }
 
             if (bind_call.execute(outStream) != command_result.CR_OK)
