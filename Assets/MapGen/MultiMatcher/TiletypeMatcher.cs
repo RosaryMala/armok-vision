@@ -1,4 +1,5 @@
-﻿using RemoteFortressReader;
+﻿using Google.Protobuf.Reflection;
+using RemoteFortressReader;
 using System;
 using System.Collections.Generic;
 using TokenLists;
@@ -56,7 +57,8 @@ public class TiletypeMatcher<T>
         {
             try
             {
-                TiletypeVariant tileVariant = (TiletypeVariant)Enum.Parse(typeof(TiletypeVariant), variant);
+                var desc = RemoteFortressReaderReflection.Descriptor.FindTypeByName<EnumDescriptor>("TiletypeVariant");
+                TiletypeVariant tileVariant = (TiletypeVariant)desc.FindValueByName(variant).Number;
                 if (optionList.ContainsKey(tileVariant))
                     SetOptions(direction, optionList[tileVariant], match);
             }
@@ -82,7 +84,8 @@ public class TiletypeMatcher<T>
         {
             try
             {
-                TiletypeMaterial tileMaterial = (TiletypeMaterial)Enum.Parse(typeof(TiletypeMaterial), material);
+                var desc = RemoteFortressReaderReflection.Descriptor.FindTypeByName<EnumDescriptor>("TiletypeMaterial");
+                TiletypeMaterial tileMaterial = (TiletypeMaterial)desc.FindValueByName(material).Number;
                 if (optionList.ContainsKey(tileMaterial))
                     SetOptions(variant, direction, optionList[tileMaterial], match);
             }
@@ -111,7 +114,8 @@ public class TiletypeMatcher<T>
         {
             try
             {
-                TiletypeSpecial tileSpecial = (TiletypeSpecial)Enum.Parse(typeof(TiletypeSpecial), special);
+                var desc = RemoteFortressReaderReflection.Descriptor.FindTypeByName<EnumDescriptor>("TiletypeSpecial");
+                TiletypeSpecial tileSpecial = (TiletypeSpecial)desc.FindValueByName(special).Number;
                 if (optionList.ContainsKey(tileSpecial))
                     SetOptions(material, variant, direction, optionList[tileSpecial], match);
             }
@@ -136,7 +140,8 @@ public class TiletypeMatcher<T>
         {
             try
             {
-                TiletypeShape tileShape = (TiletypeShape)Enum.Parse(typeof(TiletypeShape), shape);
+                var desc = RemoteFortressReaderReflection.Descriptor.FindTypeByName<EnumDescriptor>("TiletypeShape");
+                TiletypeShape tileShape = (TiletypeShape)desc.FindValueByName(shape).Number;
                 if (TiletypeTokenList.tileDefs.ContainsKey(tileShape))
                     SetOptions(special, material, variant, direction, TiletypeTokenList.tileDefs[tileShape], match);
             }
