@@ -179,6 +179,32 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BuildingItem")]
+  public partial class BuildingItem : global::ProtoBuf.IExtensible
+  {
+    public BuildingItem() {}
+    
+    private RemoteFortressReader.Item _item = null;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"item", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Item item
+    {
+      get { return _item; }
+      set { _item = value; }
+    }
+    private int _mode = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"mode", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int mode
+    {
+      get { return _mode; }
+      set { _mode = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BuildingInstance")]
   public partial class BuildingInstance : global::ProtoBuf.IExtensible
   {
@@ -287,6 +313,13 @@ namespace RemoteFortressReader
       get { return _direction; }
       set { _direction = value; }
     }
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.BuildingItem> _items = new global::System.Collections.Generic.List<RemoteFortressReader.BuildingItem>();
+    [global::ProtoBuf.ProtoMember(14, Name=@"items", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.BuildingItem> items
+    {
+      get { return _items; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

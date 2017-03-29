@@ -102,6 +102,7 @@ public class BuildFactory
         protogen.ErrorDataReceived += (sender, args) => UnityEngine.Debug.LogError(args.Data);
 
         protogen.StartInfo.UseShellExecute = false;
+        protogen.StartInfo.CreateNoWindow = true;
 
         protogen.Start();
 
