@@ -3,6 +3,7 @@ using UnityEngine;
 using Ionic.Zip;
 using Newtonsoft.Json;
 using System.IO;
+using System.Diagnostics;
 
 public class BuildFactory
 {
@@ -26,7 +27,7 @@ public class BuildFactory
 
         if(buildSettings == null)
         {
-            Debug.LogError("Can't find build settings");
+            UnityEngine.Debug.LogError("Can't find build settings");
             return;
         }
 
@@ -62,7 +63,7 @@ public class BuildFactory
 
         string[] levels = new string[] { "Assets/Start.unity" };
         EditorUserBuildSettings.SetPlatformSettings("Standalone", "CopyPDBFiles", "false");
-        Debug.Log(BuildPipeline.BuildPlayer(levels, path + releaseName, target, BuildOptions.None));
+        UnityEngine.Debug.Log(BuildPipeline.BuildPlayer(levels, path + releaseName, target, BuildOptions.None));
         CopyExtras(path);
 
         using (ZipFile zip = new ZipFile())
@@ -81,5 +82,34 @@ public class BuildFactory
         FileUtil.ReplaceFile("ReleaseFiles/Readme.txt", path + "Readme.txt");
         FileUtil.ReplaceDirectory("ReleaseFiles/Plugins/", path + "Plugins");
         File.WriteAllText(path + "manifest.json", JsonConvert.SerializeObject(buildSettings, Formatting.Indented));
+    }
+
+    [MenuItem("Mytools/Build Proto")]
+    public static void BuildProto()
+    {
+        File.Copy("D:\\Home\\Documents\\GitHub\\dfhack\\plugins\\proto\\RemoteFortressReader.proto", "Assets\\RemoteClientDF\\RemoteFortressReader.proto", true);
+        Process protogen = new Process();
+
+        protogen.StartInfo.WorkingDirectory = "Assets\\RemoteClientDF\\";
+        protogen.StartInfo.FileName = "ProtoGen\\protogen.exe";
+        protogen.StartInfo.Arguments = "-i:RemoteFortressReader.proto -o:RemoteFortressReader.cs";
+
+        //redirect output
+        protogen.StartInfo.RedirectStandardError = true;
+        protogen.StartInfo.RedirectStandardOutput = true;
+
+        protogen.OutputDataReceived += (sender, args) => UnityEngine.Debug.Log(args.Data);
+        protogen.ErrorDataReceived += (sender, args) => UnityEngine.Debug.LogError(args.Data);
+
+        protogen.StartInfo.UseShellExecute = false;
+
+        protogen.Start();
+
+        protogen.BeginOutputReadLine();
+        protogen.BeginErrorReadLine();
+
+        protogen.WaitForExit();
+
+        UnityEngine.Debug.Log("Finished compiling protos");
     }
 }
