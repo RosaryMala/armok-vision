@@ -98,8 +98,8 @@ public class BuildFactory
         protogen.StartInfo.RedirectStandardError = true;
         protogen.StartInfo.RedirectStandardOutput = true;
 
-        protogen.OutputDataReceived += (sender, args) => UnityEngine.Debug.Log(args.Data);
-        protogen.ErrorDataReceived += (sender, args) => UnityEngine.Debug.LogError(args.Data);
+        protogen.OutputDataReceived += (sender, args) => { if (args.Data != null) UnityEngine.Debug.Log(args.Data); };
+        protogen.ErrorDataReceived += (sender, args) => { if (args.Data != null) UnityEngine.Debug.LogError(args.Data); };
 
         protogen.StartInfo.UseShellExecute = false;
         protogen.StartInfo.CreateNoWindow = true;
