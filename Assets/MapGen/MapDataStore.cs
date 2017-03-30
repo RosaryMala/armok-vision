@@ -508,6 +508,7 @@ public class MapDataStore {
                     this[worldCoord].buildingMaterial = building.material;
                     this[worldCoord].buildingLocalPos = buildingLocalCoord;
                     this[worldCoord].buildingDirection = building.direction;
+                    this[worldCoord].buildingItems = building.items;
                 }
         }
     }
@@ -813,6 +814,7 @@ public class MapDataStore {
             buildingType = default(BuildingStruct);
             buildingLocalPos = default(DFCoord2d);
             buildingDirection = 0;
+            buildingItems = new List<BuildingItem>();
             Hidden = false;
             trunkPercent = 0;
             positionOnTree = default(DFCoord);
@@ -842,6 +844,7 @@ public class MapDataStore {
             buildingMaterial = orig.buildingMaterial;
             buildingLocalPos = orig.buildingLocalPos;
             buildingDirection = orig.buildingDirection;
+            buildingItems = orig.buildingItems;
             Hidden = orig.Hidden;
             trunkPercent = orig.trunkPercent;
             positionOnTree = orig.positionOnTree;
@@ -864,6 +867,7 @@ public class MapDataStore {
         public MatPairStruct buildingMaterial;
         public DFCoord2d buildingLocalPos;
         public BuildingDirection buildingDirection;
+        public List<BuildingItem> buildingItems;
         private bool _hidden;
         public bool Hidden
         {
@@ -1097,6 +1101,7 @@ public class MapDataStore {
             3 , 10 ,  3 , 10 , 17 , 17 , 17 , 17 ,  3 , 10 , 26 , 10 , 17 , 17 , 17 , 17 ,
             11 , 16 , 11 , 16 , 17 , 16 , 17 , 10 , 11 , 16 , 11 , 16 , 17 , 11 , 17 , 26
         };
+
         public void CalculateRampType()
         {
             int ramplookup = 0;
