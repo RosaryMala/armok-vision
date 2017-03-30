@@ -1984,7 +1984,7 @@ public class GameMap : MonoBehaviour
 
                 var part = new ParticleSystem.Particle();
                 part.startSize = 1;
-                part.position = DFtoUnityCoord(currentItem.pos) + new Vector3(0, floorHeight + 0.5f + (index * 0.1f), 0);
+                part.position = DFtoUnityCoord(currentItem.pos) + new Vector3(0, floorHeight + 0.1f, 0) + Stacker.SpiralHemisphere(index);
                 if (ContentLoader.Instance.ColorConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out colorContent))
                     part.startColor = colorContent.color;
                 else if (materials.ContainsKey(currentItem.material) && materials[currentItem.material].state_color != null)
@@ -2057,7 +2057,6 @@ public class GameMap : MonoBehaviour
                     }
                     if (meshContent.Rotation == RotationType.Random)
                         part.rotation = (float)noise.eval(pos.x, pos.y, pos.z) * 360;
-                    part.position = DFtoUnityCoord(currentItem.pos) + new Vector3(0, floorHeight + 0.5f + (index * 0.1f), 0);
                     if (noCustomParticleColor[meshContent.UniqueIndex])
                         part.startColor = Color.gray;
                     customItemParticles[meshContent.UniqueIndex][customItemParticleCount[meshContent.UniqueIndex]] = part;
@@ -2065,7 +2064,6 @@ public class GameMap : MonoBehaviour
                 }
                 else
                 {
-                    part.position = DFtoUnityCoord(currentItem.pos) + new Vector3(0, floorHeight + 0.5f + (index * 0.1f), 0);
                     itemParticles[i] = part;
                     i++;
                 }
