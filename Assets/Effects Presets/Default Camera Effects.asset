@@ -83,13 +83,14 @@ MonoBehaviour:
       sampleCount: 10
       frameBlending: 0
   eyeAdaptation:
-    m_Enabled: 1
+    m_Enabled: 0
     m_Settings:
       lowPercent: 65
       highPercent: 95
       minLuminance: 0.2
       maxLuminance: 2
-      exposureCompensation: 0.5
+      keyValue: 0.25
+      dynamicKeyValue: 1
       adaptationType: 0
       speedUp: 2
       speedDown: 1
@@ -302,6 +303,7 @@ MonoBehaviour:
       roundness: 1
       mask: {fileID: 0}
       opacity: 1
+      rounded: 0
   dithering:
     m_Enabled: 0
   monitors:
