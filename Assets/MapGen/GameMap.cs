@@ -117,7 +117,7 @@ public class GameMap : MonoBehaviour
 
     //Items list. Pretty simple right now.
     Dictionary<int, Item> itemInstances = new Dictionary<int, Item>();
-    Dictionary<DFCoord, Item> itemPositions = new Dictionary<DFCoord, Item>();
+    Dictionary<DFCoord, List<Item>> itemPositions = new Dictionary<DFCoord, List<Item>>();
 
     // Coordinate system stuff.
     public const float tileHeight = 3.0f;
@@ -739,7 +739,9 @@ public class GameMap : MonoBehaviour
         itemPositions.Clear();
         foreach (var item in itemInstances)
         {
-            itemPositions[item.Value.pos] = item.Value;
+            if (!itemPositions.ContainsKey(item.Value.pos) || itemPositions[item.Value.pos] == null)
+                itemPositions[item.Value.pos] = new List<Item>();
+            itemPositions[item.Value.pos].Add(item.Value);
         }
         DirtySeasonalBlocks();
         UnityEngine.Profiling.Profiler.BeginSample("EnqueueMeshUpdates", this);
@@ -1559,6 +1561,7 @@ public class GameMap : MonoBehaviour
                             statusText.Append(" [").Append(item.mode).Append("]");
                             statusText.Append((DFCoord)item.item.pos).AppendLine();
                         }
+                        statusText.AppendLine();
                     }
                 }
 
@@ -1643,19 +1646,22 @@ public class GameMap : MonoBehaviour
 
             if (itemPositions.ContainsKey(new DFCoord(cursX, cursY, cursZ)))
             {
-                Item item = itemPositions[new DFCoord(cursX, cursY, cursZ)];
-                statusText.Append("Item ").Append(item.id).Append(": ");
-                if (materials.ContainsKey(item.material))
-                    statusText.Append(materials[item.material].id);
-                else
-                    statusText.Append(((MatPairStruct)item.material).ToString());
-                statusText.Append(" ");
-                if (items.ContainsKey(item.type))
-                    statusText.Append(items[item.type].id);
-                statusText.Append("(").Append(((MatPairStruct)item.type)).Append(")");
-                statusText.AppendLine();
-
-                statusText.Append(itemInstances.Count).Append(" items total.");
+                for(int itemIndex = 0; itemIndex < itemPositions[new DFCoord(cursX, cursY, cursZ)].Count && itemIndex < 5; itemIndex++)
+                {
+                    var item = itemPositions[new DFCoord(cursX, cursY, cursZ)][itemIndex];
+                    statusText.Append("Item ").Append(item.id).Append(": ");
+                    if (materials.ContainsKey(item.material))
+                        statusText.Append(materials[item.material].id);
+                    else
+                        statusText.Append(((MatPairStruct)item.material).ToString());
+                    statusText.Append(" ");
+                    if (items.ContainsKey(item.type))
+                        statusText.Append(items[item.type].id);
+                    statusText.Append("(").Append(((MatPairStruct)item.type)).Append(")");
+                    statusText.AppendLine();
+                }
+                if(itemPositions[new DFCoord(cursX, cursY, cursZ)].Count > 4)
+                    statusText.Append(itemPositions[new DFCoord(cursX, cursY, cursZ)].Count - 4).Append(" items more.");
             }
         }
         cursorProperties.text = statusText.ToString();
@@ -1968,97 +1974,101 @@ public class GameMap : MonoBehaviour
             if (!(pos.z < PosZ && pos.z >= (PosZ - GameSettings.Instance.rendering.drawRangeDown)))
                 continue;
 
-            tempTile.material = item.Value.material;
-            tempTile.construction_item = item.Value.type;
-            ColorContent colorContent;
-            MeshContent meshContent;
-
-            var part = new ParticleSystem.Particle();
-            part.startSize = 1;
-            part.position = DFtoUnityCoord(item.Value.pos) + new Vector3(0, floorHeight + 0.5f, 0);
-            if (ContentLoader.Instance.ColorConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out colorContent))
-                part.startColor = colorContent.color;
-            else if (materials.ContainsKey(item.Value.material) && materials[item.Value.material].state_color != null)
+            for(int index = 0; index < item.Value.Count; index++)
             {
-                var stateColor = materials[item.Value.material].state_color;
-                part.startColor = new Color32((byte)stateColor.red, (byte)stateColor.green, (byte)stateColor.blue, 255);
-            }
-            else
-                part.startColor = Color.gray;
+                var currentItem = item.Value[index];
+                tempTile.material = currentItem.material;
+                tempTile.construction_item = currentItem.type;
+                ColorContent colorContent;
+                MeshContent meshContent;
 
-            if(item.Value.dye != null)
-            {
-                part.startColor *= (Color)(new Color32((byte)item.Value.dye.red, (byte)item.Value.dye.green, (byte)item.Value.dye.blue, 255));
-            }
-
-            if (ContentLoader.Instance.ItemMeshConfiguration != null && ContentLoader.Instance.ItemMeshConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out meshContent))
-            {
-                ParticleSystem partSys;
-                if (!customItemParticleSystems.ContainsKey(meshContent.UniqueIndex))
+                var part = new ParticleSystem.Particle();
+                part.startSize = 1;
+                part.position = DFtoUnityCoord(currentItem.pos) + new Vector3(0, floorHeight + 0.5f + (index * 0.1f), 0);
+                if (ContentLoader.Instance.ColorConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out colorContent))
+                    part.startColor = colorContent.color;
+                else if (materials.ContainsKey(currentItem.material) && materials[currentItem.material].state_color != null)
                 {
-                    partSys = Instantiate(itemParticleSystem);
-                    partSys.transform.parent = transform;
-                    var renderer = partSys.GetComponent<ParticleSystemRenderer>();
-                    Mesh mesh = new Mesh();
-                    if (meshContent.MeshData.ContainsKey(MeshLayer.StaticCutout))
-                    {
-                        meshContent.MeshData[MeshLayer.StaticCutout].CopyToMesh(mesh);
-                        noCustomParticleColor[meshContent.UniqueIndex] = false;
-                    }
-                    else if (meshContent.MeshData.ContainsKey(MeshLayer.NoMaterialCutout))
-                    {
-                        meshContent.MeshData[MeshLayer.NoMaterialCutout].CopyToMesh(mesh);
-                        noCustomParticleColor[meshContent.UniqueIndex] = true;
-                    }
-                    else
-                    {
-                        bool copied = false;
-                        foreach (var backup in meshContent.MeshData)
-                        {
-                            backup.Value.CopyToMesh(mesh);
-                            noCustomParticleColor[meshContent.UniqueIndex] = false;
-                            copied = true;
-                            break;
-                        }
-                        if (!copied)
-                            continue;
-                    }
-                    renderer.mesh = mesh;
-                    if (meshContent.MaterialTexture != null)
-                        renderer.material.SetTexture("_MainTex", meshContent.MaterialTexture.Texture);
-                    else
-                    {
-                        TextureContent texCon;
-                        if(ContentLoader.Instance.MaterialTextureConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out texCon))
-                            renderer.material.SetTexture("_MainTex", texCon.Texture);
-                    }
-                    if (meshContent.ShapeTexture != null)
-                        renderer.material.SetTexture("_BumpMap", meshContent.ShapeTexture.Texture);
-                    else
-                    {
-                        NormalContent normalCon;
-                        if(ContentLoader.Instance.ShapeTextureConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out normalCon))
-                            renderer.material.SetTexture("_BumpMap", normalCon.Texture);
-                    }
-                    if (meshContent.SpecialTexture != null)
-                        renderer.material.SetTexture("_SpecialTex", meshContent.SpecialTexture.Texture);
-                    customItemParticleSystems[meshContent.UniqueIndex] = partSys;
-                    customItemParticles[meshContent.UniqueIndex] = new ParticleSystem.Particle[partSys.main.maxParticles];
-                    customItemParticleCount[meshContent.UniqueIndex] = 0;
+                    var stateColor = materials[currentItem.material].state_color;
+                    part.startColor = new Color32((byte)stateColor.red, (byte)stateColor.green, (byte)stateColor.blue, 255);
                 }
-                if (meshContent.Rotation == RotationType.Random)
-                    part.rotation = (float)noise.eval(pos.x, pos.y, pos.z) * 360;
-                part.position = DFtoUnityCoord(item.Value.pos) + new Vector3(0, floorHeight, 0);
-                if (noCustomParticleColor[meshContent.UniqueIndex])
+                else
                     part.startColor = Color.gray;
-                customItemParticles[meshContent.UniqueIndex][customItemParticleCount[meshContent.UniqueIndex]] = part;
-                customItemParticleCount[meshContent.UniqueIndex]++;
-            }
-            else
-            {
-                part.position = DFtoUnityCoord(item.Value.pos) + new Vector3(0, floorHeight + 0.5f, 0);
-                itemParticles[i] = part;
-                i++;
+
+                if (currentItem.dye != null)
+                {
+                    part.startColor *= (Color)(new Color32((byte)currentItem.dye.red, (byte)currentItem.dye.green, (byte)currentItem.dye.blue, 255));
+                }
+
+                if (ContentLoader.Instance.ItemMeshConfiguration != null && ContentLoader.Instance.ItemMeshConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out meshContent))
+                {
+                    ParticleSystem partSys;
+                    if (!customItemParticleSystems.ContainsKey(meshContent.UniqueIndex))
+                    {
+                        partSys = Instantiate(itemParticleSystem);
+                        partSys.transform.parent = transform;
+                        var renderer = partSys.GetComponent<ParticleSystemRenderer>();
+                        Mesh mesh = new Mesh();
+                        if (meshContent.MeshData.ContainsKey(MeshLayer.StaticCutout))
+                        {
+                            meshContent.MeshData[MeshLayer.StaticCutout].CopyToMesh(mesh);
+                            noCustomParticleColor[meshContent.UniqueIndex] = false;
+                        }
+                        else if (meshContent.MeshData.ContainsKey(MeshLayer.NoMaterialCutout))
+                        {
+                            meshContent.MeshData[MeshLayer.NoMaterialCutout].CopyToMesh(mesh);
+                            noCustomParticleColor[meshContent.UniqueIndex] = true;
+                        }
+                        else
+                        {
+                            bool copied = false;
+                            foreach (var backup in meshContent.MeshData)
+                            {
+                                backup.Value.CopyToMesh(mesh);
+                                noCustomParticleColor[meshContent.UniqueIndex] = false;
+                                copied = true;
+                                break;
+                            }
+                            if (!copied)
+                                continue;
+                        }
+                        renderer.mesh = mesh;
+                        if (meshContent.MaterialTexture != null)
+                            renderer.material.SetTexture("_MainTex", meshContent.MaterialTexture.Texture);
+                        else
+                        {
+                            TextureContent texCon;
+                            if (ContentLoader.Instance.MaterialTextureConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out texCon))
+                                renderer.material.SetTexture("_MainTex", texCon.Texture);
+                        }
+                        if (meshContent.ShapeTexture != null)
+                            renderer.material.SetTexture("_BumpMap", meshContent.ShapeTexture.Texture);
+                        else
+                        {
+                            NormalContent normalCon;
+                            if (ContentLoader.Instance.ShapeTextureConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out normalCon))
+                                renderer.material.SetTexture("_BumpMap", normalCon.Texture);
+                        }
+                        if (meshContent.SpecialTexture != null)
+                            renderer.material.SetTexture("_SpecialTex", meshContent.SpecialTexture.Texture);
+                        customItemParticleSystems[meshContent.UniqueIndex] = partSys;
+                        customItemParticles[meshContent.UniqueIndex] = new ParticleSystem.Particle[partSys.main.maxParticles];
+                        customItemParticleCount[meshContent.UniqueIndex] = 0;
+                    }
+                    if (meshContent.Rotation == RotationType.Random)
+                        part.rotation = (float)noise.eval(pos.x, pos.y, pos.z) * 360;
+                    part.position = DFtoUnityCoord(currentItem.pos) + new Vector3(0, floorHeight + 0.5f + (index * 0.1f), 0);
+                    if (noCustomParticleColor[meshContent.UniqueIndex])
+                        part.startColor = Color.gray;
+                    customItemParticles[meshContent.UniqueIndex][customItemParticleCount[meshContent.UniqueIndex]] = part;
+                    customItemParticleCount[meshContent.UniqueIndex]++;
+                }
+                else
+                {
+                    part.position = DFtoUnityCoord(currentItem.pos) + new Vector3(0, floorHeight + 0.5f + (index * 0.1f), 0);
+                    itemParticles[i] = part;
+                    i++;
+                }
             }
         }
         itemParticleSystem.SetParticles(itemParticles, i);
