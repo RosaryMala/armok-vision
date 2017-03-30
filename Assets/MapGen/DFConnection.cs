@@ -73,6 +73,7 @@ public sealed class DFConnection : MonoBehaviour
     private RemoteFunction<RemoteFortressReader.DigCommand> digCommandCall;
     private RemoteFunction<RemoteFortressReader.SingleBool> pauseCommandCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.SingleBool> pauseStatusCall;
+    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.VersionInfo> versionInfoCall;
     private color_ostream dfNetworkOut = new color_ostream();
     private RemoteClient networkClient;
 
@@ -137,6 +138,7 @@ public sealed class DFConnection : MonoBehaviour
         digCommandCall = CreateAndBind<RemoteFortressReader.DigCommand>(networkClient, "SendDigCommand", "RemoteFortressReader");
         pauseCommandCall = CreateAndBind<RemoteFortressReader.SingleBool>(networkClient, "SetPauseState", "RemoteFortressReader");
         pauseStatusCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.SingleBool>(networkClient, "GetPauseState", "RemoteFortressReader");
+        versionInfoCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.VersionInfo>(networkClient, "GetVersionInfo", "RemoteFortressReader");
     }
 
     #endregion
@@ -376,6 +378,18 @@ public sealed class DFConnection : MonoBehaviour
             throw new UnityException("DF Connection Failure");
         }
         BindMethods();
+
+        if(versionInfoCall != null)
+        {
+            RemoteFortressReader.VersionInfo versionInfo;
+            versionInfoCall.execute(null, out versionInfo);
+            Debug.LogFormat("Connected to DF version {0}, running DFHack version {1}, and RemoteFortressReader version {2}", versionInfo.dwarf_fortress_version, versionInfo.dfhack_version, versionInfo.remote_fortress_reader_version);
+        }
+        else
+        {
+            Debug.Log("Connected to an old version of RemoteFortressReader");
+        }
+
         FetchUnchangingInfo();
 
         // Get some initial stuff
