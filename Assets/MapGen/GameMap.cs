@@ -1546,6 +1546,20 @@ public class GameMap : MonoBehaviour
                     statusText.Append(tile.buildingLocalPos).AppendLine();
                     statusText.Append("Building Direction: ").Append(tile.buildingDirection).AppendLine();
                     statusText.AppendLine();
+
+                    if(tile.buildingItems != null && tile.buildingItems.Count > 0)
+                    {
+                        statusText.Append("Building items:").AppendLine();
+                        foreach (var item in tile.buildingItems)
+                        {
+                            if (items.ContainsKey(item.item.type))
+                                statusText.Append(items[item.item.type].id);
+                            else
+                                statusText.Append(item.item.type);
+                            statusText.Append(" [").Append(item.mode).Append("]");
+                            statusText.Append((DFCoord)item.item.pos).AppendLine();
+                        }
+                    }
                 }
 
                 if (tile.spatters != null)
