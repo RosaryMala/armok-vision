@@ -51,7 +51,7 @@ MonoBehaviour:
   logLevel: 1
   anonymizeIP: 0
   UncaughtExceptionReporting: 0
-  sendLaunchEvent: 0
+  sendLaunchEvent: 1
   dryRun: 0
   sessionTimeout: 1800
   enableAdId: 0
