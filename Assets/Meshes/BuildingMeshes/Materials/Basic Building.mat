@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Well
+  m_Name: Basic Building
   m_Shader: {fileID: 4800000, guid: 8e4ce6b05b428be429618524e5c8e765, type: 3}
   m_ShaderKeywords: _EMISSION _NORMALMAP
   m_LightmapFlags: 1
@@ -18,7 +18,7 @@ Material:
     - first:
         name: _BumpMap
       second:
-        m_Texture: {fileID: 2800000, guid: 85eec403a7d64264c918be9ff0f02487, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
@@ -54,13 +54,13 @@ Material:
     - first:
         name: _MainTex
       second:
-        m_Texture: {fileID: 2800000, guid: dfcae359b326f4d46a00d274128722be, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
         name: _MatTex
       second:
-        m_Texture: {fileID: 18700000, guid: 6fcc78502286209408f46548a4f8827b, type: 2}
+        m_Texture: {fileID: 18700000, guid: 1ff7ae7a0de62fa4eb8fa864f88cf54f, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
@@ -105,10 +105,10 @@ Material:
       second: 1
     - first:
         name: _MatIndex
-      second: 1
+      second: 0
     - first:
         name: _Metallic
-      second: 1
+      second: 0
     - first:
         name: _Mode
       second: 0
@@ -142,4 +142,4 @@ Material:
       second: {r: 0, g: 0, b: 0, a: 1}
     - first:
         name: _MatColor
-      second: {r: 0.7827586, g: 0.7827586, b: 0.7827586, a: 1}
+      second: {r: 0.8235294, g: 0.76105475, b: 0.55709344, a: 0}
