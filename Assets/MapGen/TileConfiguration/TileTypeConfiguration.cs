@@ -3,7 +3,6 @@
 public class TileTypeConfiguration<T> : TileConfiguration<T> where T : IContent, new()
 {
     TiletypeMatcher<Content> tiletypeMatcher = new TiletypeMatcher<Content>();
-    Content defaultTile = null;
     Content invalidContent = new Content();
 
     public override object SecondaryDictionary
@@ -21,10 +20,7 @@ public class TileTypeConfiguration<T> : TileConfiguration<T> where T : IContent,
             XAttribute elemToken = elemTiletype.Attribute("token");
             if (elemToken != null)
             {
-                if (elemToken.Value == "NONE")
-                    defaultTile = content;
-                else
-                    tiletypeMatcher[elemToken.Value] = content;
+                tiletypeMatcher[elemToken.Value] = content;
                 continue;
             }
         }
@@ -33,25 +29,10 @@ public class TileTypeConfiguration<T> : TileConfiguration<T> where T : IContent,
     public override bool GetValue(MapDataStore.Tile tile, MeshLayer layer, out T value)
     {
         Content cont;
-        switch (layer)
+        if (tiletypeMatcher.Get(tile.tileType, out cont))
         {
-            case MeshLayer.BuildingMaterial:
-            case MeshLayer.NoMaterialBuilding:
-            case MeshLayer.BuildingMaterialCutout:
-            case MeshLayer.NoMaterialBuildingCutout:
-                if (defaultTile != null)
-                {
-                    value = defaultTile.GetValue(tile, layer);
-                    return true;
-                }
-                break;
-            default:
-                if (tiletypeMatcher.Get(tile.tileType, out cont))
-                {
-                    value = cont.GetValue(tile, layer);
-                    return true;
-                }
-                break;
+            value = cont.GetValue(tile, layer);
+            return true;
         }
         value = invalidContent.GetValue(tile, layer);
         return false;

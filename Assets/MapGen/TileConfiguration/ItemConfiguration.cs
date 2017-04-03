@@ -15,20 +15,21 @@ public class ItemConfiguration<T> : TileConfiguration<T> where T : IContent, new
     public override bool GetValue(MapDataStore.Tile tile, MeshLayer layer, out T value)
     {
         Content cont;
-        if (layer == MeshLayer.BuildingMaterial
-            || layer == MeshLayer.BuildingMaterialCutout
-            || layer == MeshLayer.NoMaterialBuilding
-            || layer == MeshLayer.NoMaterialBuildingCutout
-            )
-        {
-            //Buildings are always built from the same item type, generally.
-            if (itemMatcher.Get(new MatPairStruct(-1, -1), out cont))
-            {
-                value = cont.GetValue(tile, layer);
-                return true;
-            }
-        }
-        else if (itemMatcher.Get(tile.construction_item, out cont))
+        //if (layer == MeshLayer.BuildingMaterial
+        //    || layer == MeshLayer.BuildingMaterialCutout
+        //    || layer == MeshLayer.NoMaterialBuilding
+        //    || layer == MeshLayer.NoMaterialBuildingCutout
+        //    )
+        //{
+        //    //Buildings are always built from the same item type, generally.
+        //    if (itemMatcher.Get(new MatPairStruct(-1, -1), out cont))
+        //    {
+        //        value = cont.GetValue(tile, layer);
+        //        return true;
+        //    }
+        //}
+        //else
+        if (itemMatcher.Get(tile.construction_item, out cont))
         {
             value = cont.GetValue(tile, layer);
             return true;

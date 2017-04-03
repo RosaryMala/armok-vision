@@ -483,30 +483,30 @@ abstract class BlockMesher {
             return;
         }
 
-        if (layer == MeshLayer.BuildingCollision)
-        {
-            if (tile.buildingType == default(BuildingStruct) || !ContentLoader.Instance.BuildingCollisionMeshConfiguration.GetValue(tile, layer, out meshContent))
-            {
-                buffer.meshData = null;
-                return;
-            }
-            if (meshContent.MeshData.ContainsKey(MeshLayer.Collision))
-                buffer.meshData = meshContent.MeshData[MeshLayer.Collision];
-            else if (meshContent.MeshData.ContainsKey(MeshLayer.BuildingMaterial))
-                buffer.meshData = meshContent.MeshData[MeshLayer.BuildingMaterial];
-            else if (meshContent.MeshData.ContainsKey(MeshLayer.BuildingMaterialCutout))
-                buffer.meshData = meshContent.MeshData[MeshLayer.BuildingMaterialCutout];
-            else if (meshContent.MeshData.ContainsKey(MeshLayer.BuildingMaterialTransparent))
-                buffer.meshData = meshContent.MeshData[MeshLayer.BuildingMaterialTransparent];
-            else
-            {
-                buffer.meshData = null;
-                return;
-            }
-            buffer.transform = Matrix4x4.TRS(pos, meshContent.GetRotation(tile), Vector3.one);
-            buffer.hiddenFaces = CalculateHiddenFaces(tile, meshContent.Rotation);
-            return;
-        }
+        //if (layer == MeshLayer.BuildingCollision)
+        //{
+        //    if (tile.buildingType == default(BuildingStruct) || !ContentLoader.Instance.BuildingCollisionMeshConfiguration.GetValue(tile, layer, out meshContent))
+        //    {
+        //        buffer.meshData = null;
+        //        return;
+        //    }
+        //    if (meshContent.MeshData.ContainsKey(MeshLayer.Collision))
+        //        buffer.meshData = meshContent.MeshData[MeshLayer.Collision];
+        //    else if (meshContent.MeshData.ContainsKey(MeshLayer.BuildingMaterial))
+        //        buffer.meshData = meshContent.MeshData[MeshLayer.BuildingMaterial];
+        //    else if (meshContent.MeshData.ContainsKey(MeshLayer.BuildingMaterialCutout))
+        //        buffer.meshData = meshContent.MeshData[MeshLayer.BuildingMaterialCutout];
+        //    else if (meshContent.MeshData.ContainsKey(MeshLayer.BuildingMaterialTransparent))
+        //        buffer.meshData = meshContent.MeshData[MeshLayer.BuildingMaterialTransparent];
+        //    else
+        //    {
+        //        buffer.meshData = null;
+        //        return;
+        //    }
+        //    buffer.transform = Matrix4x4.TRS(pos, meshContent.GetRotation(tile), Vector3.one);
+        //    buffer.hiddenFaces = CalculateHiddenFaces(tile, meshContent.Rotation);
+        //    return;
+        //}
         if (ContentLoader.Instance.DesignationMeshConfiguration.GetValue(tile, layer, out meshContent))
         {
             if (!meshContent.MeshData.ContainsKey(layer))
@@ -587,25 +587,25 @@ abstract class BlockMesher {
                     }
                 }
                 break;
-            case MeshLayer.BuildingMaterial:
-            case MeshLayer.NoMaterialBuilding:
-            case MeshLayer.BuildingMaterialCutout:
-            case MeshLayer.NoMaterialBuildingCutout:
-            case MeshLayer.BuildingMaterialTransparent:
-            case MeshLayer.NoMaterialBuildingTransparent:
-                {
-                    if (tile.buildingType == default(BuildingStruct))
-                    {
-                        buffer.meshData = null;
-                        return;
-                    }
-                    if (!ContentLoader.Instance.BuildingMeshConfiguration.GetValue(tile, layer, out meshContent))
-                    {
-                        buffer.meshData = null;
-                        return;
-                    }
-                }
-                break;
+            //case MeshLayer.BuildingMaterial:
+            //case MeshLayer.NoMaterialBuilding:
+            //case MeshLayer.BuildingMaterialCutout:
+            //case MeshLayer.NoMaterialBuildingCutout:
+            //case MeshLayer.BuildingMaterialTransparent:
+            //case MeshLayer.NoMaterialBuildingTransparent:
+            //    {
+            //        if (tile.buildingType == default(BuildingStruct))
+            //        {
+            //            buffer.meshData = null;
+            //            return;
+            //        }
+            //        if (!ContentLoader.Instance.BuildingMeshConfiguration.GetValue(tile, layer, out meshContent))
+            //        {
+            //            buffer.meshData = null;
+            //            return;
+            //        }
+            //    }
+            //    break;
             default:
                 {
                     if (layer == MeshLayer.NaturalTerrain)
@@ -646,21 +646,21 @@ abstract class BlockMesher {
         NormalContent tileTexContent;
         if (meshContent.ShapeTexture == null)
         {
-            if (layer == MeshLayer.BuildingMaterial
-                || layer == MeshLayer.BuildingMaterialCutout
-                || layer == MeshLayer.NoMaterialBuilding
-                || layer == MeshLayer.NoMaterialBuildingCutout
-                || layer == MeshLayer.BuildingMaterialTransparent
-                || layer == MeshLayer.NoMaterialBuildingTransparent
-                )
-            {
-                if (ContentLoader.Instance.BuildingShapeTextureConfiguration.GetValue(tile, layer, out tileTexContent))
-                {
-                    shapeTextTransform = tileTexContent.UVTransform;
-                    index1.y = tileTexContent.ArrayIndex;
-                }
-            }
-            else
+            //if (layer == MeshLayer.BuildingMaterial
+            //    || layer == MeshLayer.BuildingMaterialCutout
+            //    || layer == MeshLayer.NoMaterialBuilding
+            //    || layer == MeshLayer.NoMaterialBuildingCutout
+            //    || layer == MeshLayer.BuildingMaterialTransparent
+            //    || layer == MeshLayer.NoMaterialBuildingTransparent
+            //    )
+            //{
+            //    if (ContentLoader.Instance.BuildingShapeTextureConfiguration.GetValue(tile, layer, out tileTexContent))
+            //    {
+            //        shapeTextTransform = tileTexContent.UVTransform;
+            //        index1.y = tileTexContent.ArrayIndex;
+            //    }
+            //}
+            //else
             {
                 if (ContentLoader.Instance.ShapeTextureConfiguration.GetValue(tile, layer, out tileTexContent))
                 {
@@ -677,9 +677,9 @@ abstract class BlockMesher {
 
         if (meshContent.MaterialTexture != null
             && (layer == MeshLayer.NoMaterial
-            || layer == MeshLayer.NoMaterialBuilding
-            || layer == MeshLayer.NoMaterialBuildingCutout
-            || layer == MeshLayer.NoMaterialBuildingTransparent
+            //|| layer == MeshLayer.NoMaterialBuilding
+            //|| layer == MeshLayer.NoMaterialBuildingCutout
+            //|| layer == MeshLayer.NoMaterialBuildingTransparent
             || layer == MeshLayer.NoMaterialCutout
             || layer == MeshLayer.NoMaterialTransparent))
         {
@@ -742,16 +742,16 @@ abstract class BlockMesher {
                     break;
                 case MeshLayer.NoMaterial:
                 case MeshLayer.NoMaterialCutout:
-                case MeshLayer.NoMaterialBuildingCutout:
-                case MeshLayer.NoMaterialBuilding:
-                case MeshLayer.NoMaterialBuildingTransparent:
+                //case MeshLayer.NoMaterialBuildingCutout:
+                //case MeshLayer.NoMaterialBuilding:
+                //case MeshLayer.NoMaterialBuildingTransparent:
                 case MeshLayer.NoMaterialTransparent:
                     break;
-                case MeshLayer.BuildingMaterial:
-                case MeshLayer.BuildingMaterialCutout:
-                case MeshLayer.BuildingMaterialTransparent:
-                    mat = tile.buildingMaterial;
-                    break;
+                //case MeshLayer.BuildingMaterial:
+                //case MeshLayer.BuildingMaterialCutout:
+                //case MeshLayer.BuildingMaterialTransparent:
+                //    mat = tile.buildingMaterial;
+                //    break;
                 default:
                     break;
             }
