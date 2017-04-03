@@ -9703,8 +9703,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fd683a03d291e24ca6911f9717c2ab8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BuildingRawList:
-  - Token: Chair
+  defaultBuilding: {fileID: 114614645816580460, guid: cbf968a1862b11c4e88a9042e3f6968b,
+    type: 2}
 --- !u!114 &861361738
 MonoBehaviour:
   m_ObjectHideFlags: 0
