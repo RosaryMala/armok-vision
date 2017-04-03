@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuildingPart : MonoBehaviour
+namespace Building
 {
-    public string item;
+    [RequireComponent(typeof(MeshRenderer))]
+    [RequireComponent(typeof(MeshFilter))]
+    public class BuildingPart : MonoBehaviour
+    {
+        public string item;
+    }
 }
