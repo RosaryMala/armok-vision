@@ -16,7 +16,7 @@ public class GATest : MonoBehaviour {
 	{
 		while (true) {
 			yield return new WaitForSeconds (timer);
-			GoogleAnalyticsV4.instance.SendDeviceData ("v1.012", "1.0");
+			GoogleAnalyticsV4.instance.SendDeviceData ("v0.00", "0.0");
 			Debug.Log ("Data sent");
 		}
 	}
