@@ -65,18 +65,18 @@ public class TileMaterialConfiguration<T> : TileConfiguration<T> where T : ICont
                 return GetMaterialRef(tile.vein_material, tile, layer, out value);
             case MeshLayer.NoMaterial:
             case MeshLayer.NoMaterialCutout:
-            case MeshLayer.NoMaterialBuildingCutout:
-            case MeshLayer.NoMaterialBuilding:
-            case MeshLayer.NoMaterialBuildingTransparent:
+            //case MeshLayer.NoMaterialBuildingCutout:
+            //case MeshLayer.NoMaterialBuilding:
+            //case MeshLayer.NoMaterialBuildingTransparent:
             case MeshLayer.NoMaterialTransparent:
                 if (defaultMaterial == null)
                     break;
                 value = defaultMaterial.GetValue(tile, layer);
                 return true;
-            case MeshLayer.BuildingMaterial:
-            case MeshLayer.BuildingMaterialCutout:
-            case MeshLayer.BuildingMaterialTransparent:
-                return GetMaterialRef(tile.buildingMaterial, tile, layer, out value);
+            //case MeshLayer.BuildingMaterial:
+            //case MeshLayer.BuildingMaterialCutout:
+            //case MeshLayer.BuildingMaterialTransparent:
+            //    return GetMaterialRef(tile.buildingMaterial, tile, layer, out value);
             case MeshLayer.GrowthMaterial:
             case MeshLayer.GrowthCutout:
             case MeshLayer.GrowthTransparent:

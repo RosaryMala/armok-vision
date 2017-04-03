@@ -1974,7 +1974,7 @@ public class GameMap : MonoBehaviour
             if (!(pos.z < PosZ && pos.z >= (PosZ - GameSettings.Instance.rendering.drawRangeDown)))
                 continue;
 
-            for(int index = 0; index < item.Value.Count; index++)
+            for(int index = 0; index < item.Value.Count && index < 100; index++)
             {
                 var currentItem = item.Value[index];
                 tempTile.material = currentItem.material;
@@ -2057,6 +2057,7 @@ public class GameMap : MonoBehaviour
                     }
                     if (meshContent.Rotation == RotationType.Random)
                         part.rotation = (float)noise.eval(pos.x, pos.y, pos.z) * 360;
+                    part.rotation += index * 254.558f;
                     if (noCustomParticleColor[meshContent.UniqueIndex])
                         part.startColor = Color.gray;
                     customItemParticles[meshContent.UniqueIndex][customItemParticleCount[meshContent.UniqueIndex]] = part;

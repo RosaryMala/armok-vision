@@ -159,11 +159,11 @@ public class ContentLoader : MonoBehaviour
     public TileConfiguration<MeshContent> TileMeshConfiguration { get; private set; }
     public TileConfiguration<MeshContent> GrowthMeshConfiguration { get; private set; }
     public TileConfiguration<LayerContent> MaterialLayerConfiguration { get; private set; }
-    public TileConfiguration<MeshContent> BuildingMeshConfiguration { get; private set; }
-    public TileConfiguration<NormalContent> BuildingShapeTextureConfiguration { get; private set; }
+    //public TileConfiguration<MeshContent> BuildingMeshConfiguration { get; private set; }
+    //public TileConfiguration<NormalContent> BuildingShapeTextureConfiguration { get; private set; }
     public TileConfiguration<MeshContent> DesignationMeshConfiguration { get; private set; }
     public TileConfiguration<MeshContent> CollisionMeshConfiguration { get; private set; }
-    public TileConfiguration<MeshContent> BuildingCollisionMeshConfiguration { get; private set; }
+    //public TileConfiguration<MeshContent> BuildingCollisionMeshConfiguration { get; private set; }
     public TileConfiguration<MeshContent> ItemMeshConfiguration { get; private set; }
     public TileConfiguration<GrassContent> GrassTextureConfiguration { get; private set; }
 
@@ -348,16 +348,16 @@ public class ContentLoader : MonoBehaviour
                         MaterialLayerConfiguration = TileConfiguration<LayerContent>.GetFromRootElement(doc, "materialLayer");
                     MaterialLayerConfiguration.AddSingleContentConfig(doc);
                     break;
-                case "buildingMeshes":
-                    if (BuildingMeshConfiguration == null)
-                        BuildingMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "buildingMesh");
-                    BuildingMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage, specialTextureStorage));
-                    break;
-                case "buildingShapeTextures":
-                    if (BuildingShapeTextureConfiguration == null)
-                        BuildingShapeTextureConfiguration = TileConfiguration<NormalContent>.GetFromRootElement(doc, "buildingShapeTexture");
-                    BuildingShapeTextureConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
-                    break;
+                //case "buildingMeshes":
+                //    if (BuildingMeshConfiguration == null)
+                //        BuildingMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "buildingMesh");
+                //    BuildingMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage, specialTextureStorage));
+                //    break;
+                //case "buildingShapeTextures":
+                //    if (BuildingShapeTextureConfiguration == null)
+                //        BuildingShapeTextureConfiguration = TileConfiguration<NormalContent>.GetFromRootElement(doc, "buildingShapeTexture");
+                //    BuildingShapeTextureConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
+                //    break;
                 case "growthMeshes":
                     if (GrowthMeshConfiguration == null)
                         GrowthMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "growthMesh");
@@ -373,11 +373,11 @@ public class ContentLoader : MonoBehaviour
                         CollisionMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "collisionMesh");
                     CollisionMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage, specialTextureStorage));
                     break;
-                case "buildingCollisionMeshes":
-                    if (BuildingCollisionMeshConfiguration == null)
-                        BuildingCollisionMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "buildingCollisionMesh");
-                    BuildingCollisionMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage, specialTextureStorage));
-                    break;
+                //case "buildingCollisionMeshes":
+                //    if (BuildingCollisionMeshConfiguration == null)
+                //        BuildingCollisionMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "buildingCollisionMesh");
+                //    BuildingCollisionMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage, specialTextureStorage));
+                //    break;
                 case "itemMeshes":
                     if (ItemMeshConfiguration == null)
                         ItemMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "itemMesh");

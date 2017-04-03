@@ -250,7 +250,7 @@ public class MapExport : MonoBehaviour
     //this is very similar to the blockmesher function.
     void CollectModel(MapDataStore.Tile tile, MeshLayer layer, DFCoord pos)
     {
-        if (layer == MeshLayer.Collision || layer == MeshLayer.BuildingCollision)
+        if (layer == MeshLayer.Collision)
             return;
 
         #region Mesh Selection
@@ -284,19 +284,19 @@ public class MapExport : MonoBehaviour
                     }
                 }
                 break;
-            case MeshLayer.BuildingMaterial:
-            case MeshLayer.NoMaterialBuilding:
-            case MeshLayer.BuildingMaterialCutout:
-            case MeshLayer.NoMaterialBuildingCutout:
-            case MeshLayer.BuildingMaterialTransparent:
-            case MeshLayer.NoMaterialBuildingTransparent:
-                {
-                    if (tile.buildingType == default(BuildingStruct))
-                        return;
-                    if (!ContentLoader.Instance.BuildingMeshConfiguration.GetValue(tile, layer, out meshContent))
-                        return;
-                }
-                break;
+            //case MeshLayer.BuildingMaterial:
+            //case MeshLayer.NoMaterialBuilding:
+            //case MeshLayer.BuildingMaterialCutout:
+            //case MeshLayer.NoMaterialBuildingCutout:
+            //case MeshLayer.BuildingMaterialTransparent:
+            //case MeshLayer.NoMaterialBuildingTransparent:
+            //    {
+            //        if (tile.buildingType == default(BuildingStruct))
+            //            return;
+            //        if (!ContentLoader.Instance.BuildingMeshConfiguration.GetValue(tile, layer, out meshContent))
+            //            return;
+            //    }
+            //    break;
             default:
                 {
                     if (!ContentLoader.Instance.TileMeshConfiguration.GetValue(tile, layer, out meshContent))
