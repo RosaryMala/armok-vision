@@ -35,7 +35,7 @@ public static class GoogleAnalyticExtensions{
 		#if !UNITY_EDITOR
 
 		GA.LogEvent (new EventHitBuilder ()
-			.SetCustomDimension (3, SystemInfo.operatingSystemFamily.ToString ())
+			.SetCustomDimension (1, SystemInfo.operatingSystemFamily.ToString ())
 			.SetEventCategory ("Graphics Card")
 			.SetEventAction (SystemInfo.graphicsDeviceVendor)
 			.SetEventLabel (SystemInfo.graphicsDeviceName)
@@ -44,7 +44,7 @@ public static class GoogleAnalyticExtensions{
 		);
 
 		GA.LogEvent (new EventHitBuilder ()
-			.SetCustomDimension (3, SystemInfo.operatingSystemFamily.ToString ())
+			.SetCustomDimension (1, SystemInfo.operatingSystemFamily.ToString ())
 			.SetEventCategory ("Processor")
 			.SetEventAction ("Core number")
 			.SetEventLabel (SystemInfo.processorCount.ToString ())
@@ -53,7 +53,7 @@ public static class GoogleAnalyticExtensions{
 		);
 
 		GA.LogEvent (new EventHitBuilder ()
-			.SetCustomDimension (3, SystemInfo.operatingSystemFamily.ToString ())
+			.SetCustomDimension (1, SystemInfo.operatingSystemFamily.ToString ())
 			.SetEventCategory ("Processor")
 			.SetEventAction ("Core frequency")
 			.SetEventLabel (SystemInfo.processorFrequency.ToString ())
@@ -62,7 +62,7 @@ public static class GoogleAnalyticExtensions{
 		);
 
 		GA.LogEvent (new EventHitBuilder ()
-			.SetCustomDimension (3, SystemInfo.operatingSystemFamily.ToString ())
+			.SetCustomDimension (1, SystemInfo.operatingSystemFamily.ToString ())
 			.SetEventCategory ("OS Version")
 			.SetEventAction (SystemInfo.operatingSystem)
 			.SetEventLabel (SystemInfo.operatingSystem)
@@ -72,7 +72,7 @@ public static class GoogleAnalyticExtensions{
 
 
 		GA.LogEvent (new EventHitBuilder ()
-			.SetCustomDimension (3, SystemInfo.operatingSystemFamily.ToString ())
+			.SetCustomDimension (1, SystemInfo.operatingSystemFamily.ToString ())
 			.SetEventCategory ("Program Version")
 			.SetEventAction ("Dwarf Fortress Version")
 			.SetEventLabel (DFVersion)
@@ -81,7 +81,7 @@ public static class GoogleAnalyticExtensions{
 		);
 
 		GA.LogEvent (new EventHitBuilder ()
-			.SetCustomDimension (3, SystemInfo.operatingSystemFamily.ToString ())
+			.SetCustomDimension (1, SystemInfo.operatingSystemFamily.ToString ())
 			.SetEventCategory ("Program Version")
 			.SetEventAction ("Plugin Version")
 			.SetEventLabel (pluginVersion)
