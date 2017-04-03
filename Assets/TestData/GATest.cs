@@ -16,17 +16,25 @@ public class GATest : MonoBehaviour {
 	{
 		while (true) {
 			yield return new WaitForSeconds (timer);
-			SendDeviceData ("v1.012");
-
+			GoogleAnalyticsV4.instance.SendDeviceData ("v1.012", "1.0");
 			Debug.Log ("Data sent");
 		}
 	}
 
+}
 
-	public void SendDeviceData (string DFVersion)
+public static class GoogleAnalyticExtensions{
+	/// <summary>
+	/// Will only send data if not in Editor mode.
+	/// </summary>
+	/// <param name="GA">G.</param>
+	/// <param name="DFVersion">Dwarf Fortress version.</param>
+	/// <param name="pluginVersion">Plugin version.</param>
+	public static void SendDeviceData (this GoogleAnalyticsV4 GA, string DFVersion , string pluginVersion)
 	{
+		#if !UNITY_EDITOR
 
-		GoogleAnalyticsV4.instance.LogEvent (new EventHitBuilder ()
+		GA.LogEvent (new EventHitBuilder ()
 			.SetCustomDimension (3, SystemInfo.operatingSystemFamily.ToString ())
 			.SetEventCategory ("Graphics Card")
 			.SetEventAction (SystemInfo.graphicsDeviceVendor)
@@ -35,7 +43,7 @@ public class GATest : MonoBehaviour {
 			.Validate ()
 		);
 
-		GoogleAnalyticsV4.instance.LogEvent (new EventHitBuilder ()
+		GA.LogEvent (new EventHitBuilder ()
 			.SetCustomDimension (3, SystemInfo.operatingSystemFamily.ToString ())
 			.SetEventCategory ("Processor")
 			.SetEventAction ("Core number")
@@ -44,7 +52,7 @@ public class GATest : MonoBehaviour {
 			.Validate ()
 		);
 
-		GoogleAnalyticsV4.instance.LogEvent (new EventHitBuilder ()
+		GA.LogEvent (new EventHitBuilder ()
 			.SetCustomDimension (3, SystemInfo.operatingSystemFamily.ToString ())
 			.SetEventCategory ("Processor")
 			.SetEventAction ("Core frequency")
@@ -53,7 +61,7 @@ public class GATest : MonoBehaviour {
 			.Validate ()
 		);
 
-		GoogleAnalyticsV4.instance.LogEvent (new EventHitBuilder ()
+		GA.LogEvent (new EventHitBuilder ()
 			.SetCustomDimension (3, SystemInfo.operatingSystemFamily.ToString ())
 			.SetEventCategory ("OS Version")
 			.SetEventAction (SystemInfo.operatingSystem)
@@ -63,18 +71,26 @@ public class GATest : MonoBehaviour {
 		);
 
 
-		SendDwarfFortressVesion (DFVersion);
-	}
-
-	void SendDwarfFortressVesion (string version)
-	{
-		GoogleAnalyticsV4.instance.LogEvent (new EventHitBuilder ()
+		GA.LogEvent (new EventHitBuilder ()
 			.SetCustomDimension (3, SystemInfo.operatingSystemFamily.ToString ())
 			.SetEventCategory ("Program Version")
 			.SetEventAction ("Dwarf Fortress Version")
-			.SetEventLabel (version)
+			.SetEventLabel (DFVersion)
 			.SetEventValue (1)
 			.Validate ()
 		);
+
+		GA.LogEvent (new EventHitBuilder ()
+			.SetCustomDimension (3, SystemInfo.operatingSystemFamily.ToString ())
+			.SetEventCategory ("Program Version")
+			.SetEventAction ("Plugin Version")
+			.SetEventLabel (pluginVersion)
+			.SetEventValue (1)
+			.Validate ()
+		);
+		#endif
+
 	}
+
+
 }
