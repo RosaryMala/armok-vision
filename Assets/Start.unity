@@ -9528,7 +9528,6 @@ GameObject:
   - component: {fileID: 861361736}
   - component: {fileID: 861361738}
   - component: {fileID: 861361739}
-  - component: {fileID: 861361737}
   m_Layer: 0
   m_Name: '[GameMapObject]'
   m_TagString: Untagged
@@ -9692,19 +9691,6 @@ MonoBehaviour:
     type: 2}
   cursorMesh: {fileID: 4300000, guid: 4bd277bd94c5c0f4c93e139ab2b6ae76, type: 3}
   diggingTool: {fileID: 861361734}
---- !u!114 &861361737
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 861361727}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fd683a03d291e24ca6911f9717c2ab8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  defaultBuilding: {fileID: 114614645816580460, guid: cbf968a1862b11c4e88a9042e3f6968b,
-    type: 2}
 --- !u!114 &861361738
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22142,6 +22128,48 @@ RectTransform:
   m_PrefabParentObject: {fileID: 224855155805226694, guid: bf094266df1576a4984dbc90d2f89ef5,
     type: 2}
   m_PrefabInternal: {fileID: 2076747503}
+--- !u!1 &2090294051
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 2090294053}
+  - component: {fileID: 2090294052}
+  m_Layer: 0
+  m_Name: BuildingManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2090294052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2090294051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fd683a03d291e24ca6911f9717c2ab8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultBuilding: {fileID: 114614645816580460, guid: cbf968a1862b11c4e88a9042e3f6968b,
+    type: 2}
+--- !u!4 &2090294053
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2090294051}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2107402903
 Prefab:
   m_ObjectHideFlags: 0

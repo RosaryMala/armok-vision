@@ -17,8 +17,8 @@
         <item token="WOOD"/>
     </itemMesh>
     <itemMesh file = "DOOR.obj"
-                    normal="../BuildingMeshes/Door_N.png"
-                    occlusion="../BuildingMeshes/Door_O.png"
+                    normal="Door_N.png"
+                    occlusion="Door_O.png"
                     alpha="Opaque_A.png">
         <item token="DOOR"/>
         <item token="FLOODGATE"/>

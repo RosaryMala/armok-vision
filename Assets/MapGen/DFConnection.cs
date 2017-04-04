@@ -355,6 +355,15 @@ public sealed class DFConnection : MonoBehaviour
         }
     }
 
+    bool _needNewBlocks = false;
+    public bool NeedNewBlocks
+    {
+        set
+        {
+            _needNewBlocks = value;
+        }
+    }
+
     /// <summary>
     /// Queue a map hash reset, forcing a re-send of all map blocks
     /// </summary>
@@ -799,14 +808,13 @@ public sealed class DFConnection : MonoBehaviour
                 _dfPauseState = status.Value;
         }
 
-        #endregion
 
         // since enqueueing results can block, we do it after we've unsuspended df
         RemoteFortressReader.BlockList resultList = null;
 
         if (EmbarkMapSize.x > 0
             && EmbarkMapSize.y > 0
-            && EmbarkMapSize.z > 0)
+            && EmbarkMapSize.z > 0 && _needNewBlocks)
         {
 
             BlockCoord.Range? requestRangeUpdate = requestRegion.Pop();
@@ -826,6 +834,7 @@ public sealed class DFConnection : MonoBehaviour
                 blockListCall.execute(blockRequest, out resultList);
             }
         }
+        #endregion
 
         //All communication with DF should be before this.
         networkClient.resume_game();

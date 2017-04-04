@@ -367,6 +367,9 @@ public class GameMap : MonoBehaviour
             }
         }
 
+        if (ContentLoader.Instance == null)
+            return;
+
         ShowCursorInfo();
         UpdateRequestRegion();
         UpdateCreatures();
@@ -735,6 +738,9 @@ public class GameMap : MonoBehaviour
             {
                 itemInstances[item.id] = item;
             }
+            UnityEngine.Profiling.Profiler.BeginSample("LoadBuildings", this);
+            Building.BuildingManager.Instance.LoadBlock(block);
+            UnityEngine.Profiling.Profiler.EndSample();
         }
         itemPositions.Clear();
         foreach (var item in itemInstances)
