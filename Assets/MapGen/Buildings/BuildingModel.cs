@@ -8,7 +8,11 @@ namespace Building
     {
         public void Initialize(RemoteFortressReader.BuildingInstance buildingInput)
         {
-
+            var parts = GetComponentsInChildren<BuildingPart>();
+            foreach (var part in parts)
+            {
+                part.SetMaterial(buildingInput);
+            }
         }
     }
 }

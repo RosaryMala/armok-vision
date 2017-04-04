@@ -95,11 +95,11 @@ public class ContentLoader : MonoBehaviour
                 return MatBasic.INVALID;
         }
     }
-    TextureStorage materialTextureStorage;
-    TextureStorage shapeTextureStorage;
-    TextureStorage specialTextureStorage;
-    MaterialMatcher<ColorContent> materialColors;
-    MaterialMatcher<TextureContent> materialTextures;
+    public TextureStorage materialTextureStorage { get; private set; }
+    public TextureStorage shapeTextureStorage { get; private set; }
+    public TextureStorage specialTextureStorage { get; private set; }
+    public MaterialMatcher<ColorContent> MaterialColors { get; private set; }
+    public MaterialMatcher<TextureContent> MaterialTextures { get; private set; }
 
     public int DefaultMatTexIndex { get; private set; }
 
@@ -176,8 +176,8 @@ public class ContentLoader : MonoBehaviour
         materialTextureStorage = new TextureStorage();
         shapeTextureStorage = new TextureStorage();
         specialTextureStorage = new TextureStorage();
-        materialColors = new MaterialMatcher<ColorContent>();
-        materialTextures = new MaterialMatcher<TextureContent>();
+        MaterialColors = new MaterialMatcher<ColorContent>();
+        MaterialTextures = new MaterialMatcher<TextureContent>();
 
 
 
@@ -322,12 +322,12 @@ public class ContentLoader : MonoBehaviour
                 case "colors":
                     if (ColorConfiguration == null)
                         ColorConfiguration = TileConfiguration<ColorContent>.GetFromRootElement(doc, "color");
-                    ColorConfiguration.AddSingleContentConfig(doc, null, materialColors);
+                    ColorConfiguration.AddSingleContentConfig(doc, null, MaterialColors);
                     break;
                 case "materialTextures":
                     if (MaterialTextureConfiguration == null)
                         MaterialTextureConfiguration = TileConfiguration<TextureContent>.GetFromRootElement(doc, "materialTexture");
-                    MaterialTextureConfiguration.AddSingleContentConfig(doc, materialTextureStorage, materialTextures);
+                    MaterialTextureConfiguration.AddSingleContentConfig(doc, materialTextureStorage, MaterialTextures);
                     break;
                 case "shapeTextures":
                     if (ShapeTextureConfiguration == null)
