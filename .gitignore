@@ -31,3 +31,6 @@ Thumbs.db.meta
 
 ~\$*
 .~lock\.*
+/BuildingList.txt
+
+ItemList\.txt
