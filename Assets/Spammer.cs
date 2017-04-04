@@ -11,8 +11,11 @@ public class Spammer : MonoBehaviour
 
     public float spacing = 1;
 
+    Color[] colors = { Color.red, Color.green, Color.blue };
+
     IEnumerator Spam()
     {
+        MaterialPropertyBlock prop = new MaterialPropertyBlock();
         for (int x = 0; x < numX; x++)
             for (int y = 0; y < numY; y++)
             {
@@ -22,6 +25,9 @@ public class Spammer : MonoBehaviour
                     instance.parent = transform;
                     instance.position = new Vector3(x, y, z) * spacing;
                     instance.name = x + ", " + y + ", " + z;
+                    //prop.SetColor("_MatColor", colors[Random.Range(0, 3)]);
+                    prop.SetColor("_MatColor", colors[x % 3]);
+                    instance.GetComponent<MeshRenderer>().SetPropertyBlock(prop);
                 }
                 yield return null;
             }

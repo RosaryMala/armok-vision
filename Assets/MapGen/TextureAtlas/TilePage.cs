@@ -12,7 +12,6 @@ public class TilePage : ICollection
     Texture2D originalPage;
     readonly int tileWidth;
     readonly int tileHeight;
-    readonly int pageWidth;
     readonly int pageHeight;
     readonly string pageName;
     Dictionary<DFCoord2d, int> spriteIndices = new Dictionary<DFCoord2d, int>();
@@ -58,7 +57,6 @@ public class TilePage : ICollection
 
         this.tileWidth = originalPage.width / pageWidth;
         this.tileHeight = originalPage.height / pageHeight;
-        this.pageWidth = pageWidth;
         this.pageHeight = pageHeight;
         this.pageName = pageName;
     }

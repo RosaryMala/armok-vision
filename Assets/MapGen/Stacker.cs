@@ -11,8 +11,6 @@ public class Stacker : MonoBehaviour {
     }
 
     static List<Vector3> pointList = new List<Vector3>();
-    static float minDistance = float.MaxValue;
-    static int minIndex = 0;
     static List<int> levelCount = new List<int>();
 
 

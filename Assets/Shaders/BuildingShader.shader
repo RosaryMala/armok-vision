@@ -7,7 +7,7 @@
         _BumpMap("Normalmap ", 2D) = "bump" {}
         _DFMat("DF Material Splat", 2D) = "white" {}
         _MatTex("DF Material Texture", 2DArray) = "grey" {}
-        _MatColor("DF Material Color", Color) = (0.5,0.5,0.5,1)
+        [PerRendererData] _MatColor("DF Material Color", Color) = (0.5,0.5,0.5,1)
         _MatIndex("DF Material Array Index", int) = 0
     }
 	SubShader {
