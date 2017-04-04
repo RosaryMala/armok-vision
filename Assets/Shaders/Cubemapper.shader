@@ -1,4 +1,6 @@
-﻿Shader "cube map for cubes"
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "cube map for cubes"
 {
     Properties
     {
@@ -36,7 +38,7 @@
                 vertexOutput output;
 
                 output.texDir = input.vertex;
-                output.pos = mul(UNITY_MATRIX_MVP, input.vertex);
+                output.pos = UnityObjectToClipPos(input.vertex);
                 return output;
             }
 
