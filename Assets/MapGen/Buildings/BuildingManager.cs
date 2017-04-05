@@ -74,11 +74,10 @@ namespace Building
                             Quaternion.identity, transform);
 
                     sceneBuildings[building.index] = builtBuilding;
+                    builtBuilding.Initialize(building);
                 }
                 else
                     builtBuilding = sceneBuildings[building.index];
-
-                builtBuilding.Initialize(building);
             }
         }
     }

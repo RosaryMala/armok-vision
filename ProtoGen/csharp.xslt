@@ -368,6 +368,7 @@ namespace <xsl:value-of select="translate($namespace,':-/\','__..')"/>
     <xsl:variable name="field"><xsl:apply-templates select="." mode="field"/></xsl:variable>
     <xsl:variable name="specified" select="$optionDetectMissing and ($primitiveType='struct' or $primitiveType='class')"/>
     <xsl:variable name="fieldType"><xsl:value-of select="$propType"/><xsl:if test="$specified and $primitiveType='struct'">?</xsl:if></xsl:variable>
+    [UnityEngine.SerializeField]
     private <xsl:value-of select="concat($fieldType,' ',$field)"/><xsl:if test="not($specified)"> = <xsl:value-of select="$defaultValue"/></xsl:if>;
     [<xsl:apply-templates select="." mode="checkDeprecated"/>global::ProtoBuf.ProtoMember(<xsl:value-of select="number"/>, IsRequired = false, Name=@"<xsl:value-of select="name"/>", DataFormat = global::ProtoBuf.DataFormat.<xsl:value-of select="$format"/>)]<!--
     --><xsl:if test="not($specified)">
@@ -390,6 +391,7 @@ namespace <xsl:value-of select="translate($namespace,':-/\','__..')"/>
     <xsl:variable name="type"><xsl:apply-templates select="." mode="type"/></xsl:variable>
     <xsl:variable name="format"><xsl:apply-templates select="." mode="format"/></xsl:variable>
     <xsl:variable name="field"><xsl:apply-templates select="." mode="field"/></xsl:variable>
+    [UnityEngine.SerializeField]
     private <xsl:value-of select="concat($type, ' ', $field)"/>;
     [<xsl:apply-templates select="." mode="checkDeprecated"/>global::ProtoBuf.ProtoMember(<xsl:value-of select="number"/>, IsRequired = true, Name=@"<xsl:value-of select="name"/>", DataFormat = global::ProtoBuf.DataFormat.<xsl:value-of select="$format"/>)]<!--
     --><xsl:if test="$optionXml">
