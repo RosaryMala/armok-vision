@@ -54,9 +54,15 @@ namespace Building
             if (dye != null)
                 partColor *= (Color)new Color32((byte)dye.red, (byte)dye.green, (byte)dye.blue, 255);
 
+            int textureIndex = 0;
+            TextureContent textureContent;
+            if (ContentLoader.Instance.MaterialTextures.TryGetValue(mat, out textureContent))
+                textureIndex = textureContent.StorageIndex;
+
             meshRenderer.sharedMaterial.SetTexture("_MatTex", ContentLoader.Instance.materialTextureStorage.AtlasTexture);
             MaterialPropertyBlock prop = new MaterialPropertyBlock();
             prop.SetColor("_MatColor", partColor);
+            prop.SetFloat("_MatIndex", textureIndex);
             meshRenderer.SetPropertyBlock(prop);
         }
     }
