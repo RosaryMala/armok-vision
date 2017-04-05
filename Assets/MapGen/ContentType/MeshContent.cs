@@ -103,6 +103,11 @@ public class MeshContent : IContent
 
     public Quaternion GetRotation(MapDataStore.Tile tile)
     {
+        return TranslateRotation(rotationType, tile);
+    }
+
+    public static Quaternion TranslateRotation(RotationType rotationType, MapDataStore.Tile tile)
+    {
         switch (rotationType)
         {
             case RotationType.None:

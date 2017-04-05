@@ -10,3717 +10,3717 @@
 // Generated from: RemoteFortressReader.proto
 namespace RemoteFortressReader
 {
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Coord")]
-  public partial class Coord : global::ProtoBuf.IExtensible
-  {
-    public Coord() {}
-    
-    private int _x = default(int);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int x
-    {
-      get { return _x; }
-      set { _x = value; }
-    }
-    private int _y = default(int);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int y
-    {
-      get { return _y; }
-      set { _y = value; }
-    }
-    private int _z = default(int);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int z
-    {
-      get { return _z; }
-      set { _z = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Tiletype")]
-  public partial class Tiletype : global::ProtoBuf.IExtensible
-  {
-    public Tiletype() {}
-    
-    private int _id;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int id
-    {
-      get { return _id; }
-      set { _id = value; }
-    }
-    private string _name = "";
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string name
-    {
-      get { return _name; }
-      set { _name = value; }
-    }
-    private string _caption = "";
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"caption", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string caption
-    {
-      get { return _caption; }
-      set { _caption = value; }
-    }
-    private RemoteFortressReader.TiletypeShape _shape = RemoteFortressReader.TiletypeShape.NO_SHAPE;
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"shape", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.TiletypeShape.NO_SHAPE)]
-    public RemoteFortressReader.TiletypeShape shape
-    {
-      get { return _shape; }
-      set { _shape = value; }
-    }
-    private RemoteFortressReader.TiletypeSpecial _special = RemoteFortressReader.TiletypeSpecial.NO_SPECIAL;
-    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"special", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.TiletypeSpecial.NO_SPECIAL)]
-    public RemoteFortressReader.TiletypeSpecial special
-    {
-      get { return _special; }
-      set { _special = value; }
-    }
-    private RemoteFortressReader.TiletypeMaterial _material = RemoteFortressReader.TiletypeMaterial.NO_MATERIAL;
-    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"material", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.TiletypeMaterial.NO_MATERIAL)]
-    public RemoteFortressReader.TiletypeMaterial material
-    {
-      get { return _material; }
-      set { _material = value; }
-    }
-    private RemoteFortressReader.TiletypeVariant _variant = RemoteFortressReader.TiletypeVariant.NO_VARIANT;
-    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"variant", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.TiletypeVariant.NO_VARIANT)]
-    public RemoteFortressReader.TiletypeVariant variant
-    {
-      get { return _variant; }
-      set { _variant = value; }
-    }
-    private string _direction = "";
-    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"direction", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string direction
-    {
-      get { return _direction; }
-      set { _direction = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"TiletypeList")]
-  public partial class TiletypeList : global::ProtoBuf.IExtensible
-  {
-    public TiletypeList() {}
-    
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.Tiletype> _tiletype_list = new global::System.Collections.Generic.List<RemoteFortressReader.Tiletype>();
-    [global::ProtoBuf.ProtoMember(1, Name=@"tiletype_list", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.Tiletype> tiletype_list
-    {
-      get { return _tiletype_list; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BuildingExtents")]
-  public partial class BuildingExtents : global::ProtoBuf.IExtensible
-  {
-    public BuildingExtents() {}
-    
-    private int _pos_x;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"pos_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int pos_x
-    {
-      get { return _pos_x; }
-      set { _pos_x = value; }
-    }
-    private int _pos_y;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"pos_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int pos_y
-    {
-      get { return _pos_y; }
-      set { _pos_y = value; }
-    }
-    private int _width;
-    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"width", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int width
-    {
-      get { return _width; }
-      set { _width = value; }
-    }
-    private int _height;
-    [global::ProtoBuf.ProtoMember(4, IsRequired = true, Name=@"height", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int height
-    {
-      get { return _height; }
-      set { _height = value; }
-    }
-    private readonly global::System.Collections.Generic.List<int> _extents = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(5, Name=@"extents", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> extents
-    {
-      get { return _extents; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BuildingItem")]
-  public partial class BuildingItem : global::ProtoBuf.IExtensible
-  {
-    public BuildingItem() {}
-    
-    private RemoteFortressReader.Item _item = null;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"item", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.Item item
-    {
-      get { return _item; }
-      set { _item = value; }
-    }
-    private int _mode = default(int);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"mode", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int mode
-    {
-      get { return _mode; }
-      set { _mode = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BuildingInstance")]
-  public partial class BuildingInstance : global::ProtoBuf.IExtensible
-  {
-    public BuildingInstance() {}
-    
-    private int _index;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int index
-    {
-      get { return _index; }
-      set { _index = value; }
-    }
-    private int _pos_x_min = default(int);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"pos_x_min", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int pos_x_min
-    {
-      get { return _pos_x_min; }
-      set { _pos_x_min = value; }
-    }
-    private int _pos_y_min = default(int);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"pos_y_min", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int pos_y_min
-    {
-      get { return _pos_y_min; }
-      set { _pos_y_min = value; }
-    }
-    private int _pos_z_min = default(int);
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"pos_z_min", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int pos_z_min
-    {
-      get { return _pos_z_min; }
-      set { _pos_z_min = value; }
-    }
-    private int _pos_x_max = default(int);
-    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"pos_x_max", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int pos_x_max
-    {
-      get { return _pos_x_max; }
-      set { _pos_x_max = value; }
-    }
-    private int _pos_y_max = default(int);
-    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"pos_y_max", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int pos_y_max
-    {
-      get { return _pos_y_max; }
-      set { _pos_y_max = value; }
-    }
-    private int _pos_z_max = default(int);
-    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"pos_z_max", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int pos_z_max
-    {
-      get { return _pos_z_max; }
-      set { _pos_z_max = value; }
-    }
-    private RemoteFortressReader.BuildingType _building_type = null;
-    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"building_type", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.BuildingType building_type
-    {
-      get { return _building_type; }
-      set { _building_type = value; }
-    }
-    private RemoteFortressReader.MatPair _material = null;
-    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"material", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.MatPair material
-    {
-      get { return _material; }
-      set { _material = value; }
-    }
-    private uint _building_flags = default(uint);
-    [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name=@"building_flags", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(uint))]
-    public uint building_flags
-    {
-      get { return _building_flags; }
-      set { _building_flags = value; }
-    }
-    private bool _is_room = default(bool);
-    [global::ProtoBuf.ProtoMember(11, IsRequired = false, Name=@"is_room", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(default(bool))]
-    public bool is_room
-    {
-      get { return _is_room; }
-      set { _is_room = value; }
-    }
-    private RemoteFortressReader.BuildingExtents _room = null;
-    [global::ProtoBuf.ProtoMember(12, IsRequired = false, Name=@"room", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.BuildingExtents room
-    {
-      get { return _room; }
-      set { _room = value; }
-    }
-    private RemoteFortressReader.BuildingDirection _direction = RemoteFortressReader.BuildingDirection.NORTH;
-    [global::ProtoBuf.ProtoMember(13, IsRequired = false, Name=@"direction", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.BuildingDirection.NORTH)]
-    public RemoteFortressReader.BuildingDirection direction
-    {
-      get { return _direction; }
-      set { _direction = value; }
-    }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.BuildingItem> _items = new global::System.Collections.Generic.List<RemoteFortressReader.BuildingItem>();
-    [global::ProtoBuf.ProtoMember(14, Name=@"items", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.BuildingItem> items
-    {
-      get { return _items; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"RiverEdge")]
-  public partial class RiverEdge : global::ProtoBuf.IExtensible
-  {
-    public RiverEdge() {}
-    
-    private int _min_pos = default(int);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"min_pos", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int min_pos
-    {
-      get { return _min_pos; }
-      set { _min_pos = value; }
-    }
-    private int _max_pos = default(int);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"max_pos", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int max_pos
-    {
-      get { return _max_pos; }
-      set { _max_pos = value; }
-    }
-    private int _active = default(int);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"active", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int active
-    {
-      get { return _active; }
-      set { _active = value; }
-    }
-    private int _elevation = default(int);
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"elevation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int elevation
-    {
-      get { return _elevation; }
-      set { _elevation = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"RiverTile")]
-  public partial class RiverTile : global::ProtoBuf.IExtensible
-  {
-    public RiverTile() {}
-    
-    private RemoteFortressReader.RiverEdge _north = null;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"north", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.RiverEdge north
-    {
-      get { return _north; }
-      set { _north = value; }
-    }
-    private RemoteFortressReader.RiverEdge _south = null;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"south", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.RiverEdge south
-    {
-      get { return _south; }
-      set { _south = value; }
-    }
-    private RemoteFortressReader.RiverEdge _east = null;
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"east", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.RiverEdge east
-    {
-      get { return _east; }
-      set { _east = value; }
-    }
-    private RemoteFortressReader.RiverEdge _west = null;
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"west", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.RiverEdge west
-    {
-      get { return _west; }
-      set { _west = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Spatter")]
-  public partial class Spatter : global::ProtoBuf.IExtensible
-  {
-    public Spatter() {}
-    
-    private RemoteFortressReader.MatPair _material = null;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"material", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.MatPair material
-    {
-      get { return _material; }
-      set { _material = value; }
-    }
-    private int _amount = default(int);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"amount", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int amount
-    {
-      get { return _amount; }
-      set { _amount = value; }
-    }
-    private RemoteFortressReader.MatterState _state = RemoteFortressReader.MatterState.Solid;
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"state", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.MatterState.Solid)]
-    public RemoteFortressReader.MatterState state
-    {
-      get { return _state; }
-      set { _state = value; }
-    }
-    private RemoteFortressReader.MatPair _item = null;
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"item", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.MatPair item
-    {
-      get { return _item; }
-      set { _item = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"SpatterPile")]
-  public partial class SpatterPile : global::ProtoBuf.IExtensible
-  {
-    public SpatterPile() {}
-    
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.Spatter> _spatters = new global::System.Collections.Generic.List<RemoteFortressReader.Spatter>();
-    [global::ProtoBuf.ProtoMember(1, Name=@"spatters", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.Spatter> spatters
-    {
-      get { return _spatters; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Item")]
-  public partial class Item : global::ProtoBuf.IExtensible
-  {
-    public Item() {}
-    
-    private int _id = default(int);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int id
-    {
-      get { return _id; }
-      set { _id = value; }
-    }
-    private RemoteFortressReader.Coord _pos = null;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"pos", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.Coord pos
-    {
-      get { return _pos; }
-      set { _pos = value; }
-    }
-    private uint _flags1 = default(uint);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"flags1", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(uint))]
-    public uint flags1
-    {
-      get { return _flags1; }
-      set { _flags1 = value; }
-    }
-    private uint _flags2 = default(uint);
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"flags2", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(uint))]
-    public uint flags2
-    {
-      get { return _flags2; }
-      set { _flags2 = value; }
-    }
-    private RemoteFortressReader.MatPair _type = null;
-    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"type", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.MatPair type
-    {
-      get { return _type; }
-      set { _type = value; }
-    }
-    private RemoteFortressReader.MatPair _material = null;
-    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"material", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.MatPair material
-    {
-      get { return _material; }
-      set { _material = value; }
-    }
-    private RemoteFortressReader.ColorDefinition _dye = null;
-    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"dye", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.ColorDefinition dye
-    {
-      get { return _dye; }
-      set { _dye = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MapBlock")]
-  public partial class MapBlock : global::ProtoBuf.IExtensible
-  {
-    public MapBlock() {}
-    
-    private int _map_x;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"map_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int map_x
-    {
-      get { return _map_x; }
-      set { _map_x = value; }
-    }
-    private int _map_y;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"map_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int map_y
-    {
-      get { return _map_y; }
-      set { _map_y = value; }
-    }
-    private int _map_z;
-    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"map_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int map_z
-    {
-      get { return _map_z; }
-      set { _map_z = value; }
-    }
-    private readonly global::System.Collections.Generic.List<int> _tiles = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(4, Name=@"tiles", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> tiles
-    {
-      get { return _tiles; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
-    [global::ProtoBuf.ProtoMember(5, Name=@"materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> materials
-    {
-      get { return _materials; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _layer_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
-    [global::ProtoBuf.ProtoMember(6, Name=@"layer_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> layer_materials
-    {
-      get { return _layer_materials; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _vein_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
-    [global::ProtoBuf.ProtoMember(7, Name=@"vein_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> vein_materials
-    {
-      get { return _vein_materials; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _base_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
-    [global::ProtoBuf.ProtoMember(8, Name=@"base_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> base_materials
-    {
-      get { return _base_materials; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<int> _magma = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(9, Name=@"magma", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> magma
-    {
-      get { return _magma; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<int> _water = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(10, Name=@"water", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> water
-    {
-      get { return _water; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<bool> _hidden = new global::System.Collections.Generic.List<bool>();
-    [global::ProtoBuf.ProtoMember(11, Name=@"hidden", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<bool> hidden
-    {
-      get { return _hidden; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<bool> _light = new global::System.Collections.Generic.List<bool>();
-    [global::ProtoBuf.ProtoMember(12, Name=@"light", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<bool> light
-    {
-      get { return _light; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<bool> _subterranean = new global::System.Collections.Generic.List<bool>();
-    [global::ProtoBuf.ProtoMember(13, Name=@"subterranean", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<bool> subterranean
-    {
-      get { return _subterranean; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<bool> _outside = new global::System.Collections.Generic.List<bool>();
-    [global::ProtoBuf.ProtoMember(14, Name=@"outside", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<bool> outside
-    {
-      get { return _outside; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<bool> _aquifer = new global::System.Collections.Generic.List<bool>();
-    [global::ProtoBuf.ProtoMember(15, Name=@"aquifer", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<bool> aquifer
-    {
-      get { return _aquifer; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<bool> _water_stagnant = new global::System.Collections.Generic.List<bool>();
-    [global::ProtoBuf.ProtoMember(16, Name=@"water_stagnant", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<bool> water_stagnant
-    {
-      get { return _water_stagnant; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<bool> _water_salt = new global::System.Collections.Generic.List<bool>();
-    [global::ProtoBuf.ProtoMember(17, Name=@"water_salt", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<bool> water_salt
-    {
-      get { return _water_salt; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _construction_items = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
-    [global::ProtoBuf.ProtoMember(18, Name=@"construction_items", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> construction_items
-    {
-      get { return _construction_items; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.BuildingInstance> _buildings = new global::System.Collections.Generic.List<RemoteFortressReader.BuildingInstance>();
-    [global::ProtoBuf.ProtoMember(19, Name=@"buildings", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.BuildingInstance> buildings
-    {
-      get { return _buildings; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<int> _tree_percent = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(20, Name=@"tree_percent", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> tree_percent
-    {
-      get { return _tree_percent; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<int> _tree_x = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(21, Name=@"tree_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> tree_x
-    {
-      get { return _tree_x; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<int> _tree_y = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(22, Name=@"tree_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> tree_y
-    {
-      get { return _tree_y; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<int> _tree_z = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(23, Name=@"tree_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> tree_z
-    {
-      get { return _tree_z; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.TileDigDesignation> _tile_dig_designation = new global::System.Collections.Generic.List<RemoteFortressReader.TileDigDesignation>();
-    [global::ProtoBuf.ProtoMember(24, Name=@"tile_dig_designation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.TileDigDesignation> tile_dig_designation
-    {
-      get { return _tile_dig_designation; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.SpatterPile> _spatterPile = new global::System.Collections.Generic.List<RemoteFortressReader.SpatterPile>();
-    [global::ProtoBuf.ProtoMember(25, Name=@"spatterPile", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.SpatterPile> spatterPile
-    {
-      get { return _spatterPile; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.Item> _items = new global::System.Collections.Generic.List<RemoteFortressReader.Item>();
-    [global::ProtoBuf.ProtoMember(26, Name=@"items", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.Item> items
-    {
-      get { return _items; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MatPair")]
-  public partial class MatPair : global::ProtoBuf.IExtensible
-  {
-    public MatPair() {}
-    
-    private int _mat_type;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"mat_type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int mat_type
-    {
-      get { return _mat_type; }
-      set { _mat_type = value; }
-    }
-    private int _mat_index;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"mat_index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int mat_index
-    {
-      get { return _mat_index; }
-      set { _mat_index = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ColorDefinition")]
-  public partial class ColorDefinition : global::ProtoBuf.IExtensible
-  {
-    public ColorDefinition() {}
-    
-    private int _red;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"red", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int red
-    {
-      get { return _red; }
-      set { _red = value; }
-    }
-    private int _green;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"green", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int green
-    {
-      get { return _green; }
-      set { _green = value; }
-    }
-    private int _blue;
-    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"blue", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int blue
-    {
-      get { return _blue; }
-      set { _blue = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MaterialDefinition")]
-  public partial class MaterialDefinition : global::ProtoBuf.IExtensible
-  {
-    public MaterialDefinition() {}
-    
-    private RemoteFortressReader.MatPair _mat_pair;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"mat_pair", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public RemoteFortressReader.MatPair mat_pair
-    {
-      get { return _mat_pair; }
-      set { _mat_pair = value; }
-    }
-    private string _id = "";
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string id
-    {
-      get { return _id; }
-      set { _id = value; }
-    }
-    private string _name = "";
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string name
-    {
-      get { return _name; }
-      set { _name = value; }
-    }
-    private RemoteFortressReader.ColorDefinition _state_color = null;
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"state_color", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.ColorDefinition state_color
-    {
-      get { return _state_color; }
-      set { _state_color = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BuildingType")]
-  public partial class BuildingType : global::ProtoBuf.IExtensible
-  {
-    public BuildingType() {}
-    
-    private int _building_type;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"building_type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int building_type
-    {
-      get { return _building_type; }
-      set { _building_type = value; }
-    }
-    private int _building_subtype;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"building_subtype", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int building_subtype
-    {
-      get { return _building_subtype; }
-      set { _building_subtype = value; }
-    }
-    private int _building_custom;
-    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"building_custom", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int building_custom
-    {
-      get { return _building_custom; }
-      set { _building_custom = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BuildingDefinition")]
-  public partial class BuildingDefinition : global::ProtoBuf.IExtensible
-  {
-    public BuildingDefinition() {}
-    
-    private RemoteFortressReader.BuildingType _building_type;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"building_type", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public RemoteFortressReader.BuildingType building_type
-    {
-      get { return _building_type; }
-      set { _building_type = value; }
-    }
-    private string _id = "";
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string id
-    {
-      get { return _id; }
-      set { _id = value; }
-    }
-    private string _name = "";
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string name
-    {
-      get { return _name; }
-      set { _name = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BuildingList")]
-  public partial class BuildingList : global::ProtoBuf.IExtensible
-  {
-    public BuildingList() {}
-    
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.BuildingDefinition> _building_list = new global::System.Collections.Generic.List<RemoteFortressReader.BuildingDefinition>();
-    [global::ProtoBuf.ProtoMember(1, Name=@"building_list", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.BuildingDefinition> building_list
-    {
-      get { return _building_list; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MaterialList")]
-  public partial class MaterialList : global::ProtoBuf.IExtensible
-  {
-    public MaterialList() {}
-    
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MaterialDefinition> _material_list = new global::System.Collections.Generic.List<RemoteFortressReader.MaterialDefinition>();
-    [global::ProtoBuf.ProtoMember(1, Name=@"material_list", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.MaterialDefinition> material_list
-    {
-      get { return _material_list; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BodySizeInfo")]
-  public partial class BodySizeInfo : global::ProtoBuf.IExtensible
-  {
-    public BodySizeInfo() {}
-    
-    private int _size_cur = default(int);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"size_cur", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int size_cur
-    {
-      get { return _size_cur; }
-      set { _size_cur = value; }
-    }
-    private int _size_base = default(int);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"size_base", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int size_base
-    {
-      get { return _size_base; }
-      set { _size_base = value; }
-    }
-    private int _area_cur = default(int);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"area_cur", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int area_cur
-    {
-      get { return _area_cur; }
-      set { _area_cur = value; }
-    }
-    private int _area_base = default(int);
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"area_base", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int area_base
-    {
-      get { return _area_base; }
-      set { _area_base = value; }
-    }
-    private int _length_cur = default(int);
-    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"length_cur", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int length_cur
-    {
-      get { return _length_cur; }
-      set { _length_cur = value; }
-    }
-    private int _length_base = default(int);
-    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"length_base", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int length_base
-    {
-      get { return _length_base; }
-      set { _length_base = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"UnitAppearance")]
-  public partial class UnitAppearance : global::ProtoBuf.IExtensible
-  {
-    public UnitAppearance() {}
-    
-    private readonly global::System.Collections.Generic.List<int> _body_modifiers = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(1, Name=@"body_modifiers", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> body_modifiers
-    {
-      get { return _body_modifiers; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<int> _bp_modifiers = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(2, Name=@"bp_modifiers", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> bp_modifiers
-    {
-      get { return _bp_modifiers; }
-    }
-  
-    private int _size_modifier = default(int);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"size_modifier", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int size_modifier
-    {
-      get { return _size_modifier; }
-      set { _size_modifier = value; }
-    }
-    private readonly global::System.Collections.Generic.List<int> _colors = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(4, Name=@"colors", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> colors
-    {
-      get { return _colors; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"UnitDefinition")]
-  public partial class UnitDefinition : global::ProtoBuf.IExtensible
-  {
-    public UnitDefinition() {}
-    
-    private int _id;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int id
-    {
-      get { return _id; }
-      set { _id = value; }
-    }
-    private bool _isValid = default(bool);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"isValid", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(default(bool))]
-    public bool isValid
-    {
-      get { return _isValid; }
-      set { _isValid = value; }
-    }
-    private int _pos_x = default(int);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"pos_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int pos_x
-    {
-      get { return _pos_x; }
-      set { _pos_x = value; }
-    }
-    private int _pos_y = default(int);
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"pos_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int pos_y
-    {
-      get { return _pos_y; }
-      set { _pos_y = value; }
-    }
-    private int _pos_z = default(int);
-    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"pos_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int pos_z
-    {
-      get { return _pos_z; }
-      set { _pos_z = value; }
-    }
-    private RemoteFortressReader.MatPair _race = null;
-    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"race", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.MatPair race
-    {
-      get { return _race; }
-      set { _race = value; }
-    }
-    private RemoteFortressReader.ColorDefinition _profession_color = null;
-    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"profession_color", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.ColorDefinition profession_color
-    {
-      get { return _profession_color; }
-      set { _profession_color = value; }
-    }
-    private uint _flags1 = default(uint);
-    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"flags1", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(uint))]
-    public uint flags1
-    {
-      get { return _flags1; }
-      set { _flags1 = value; }
-    }
-    private uint _flags2 = default(uint);
-    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"flags2", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(uint))]
-    public uint flags2
-    {
-      get { return _flags2; }
-      set { _flags2 = value; }
-    }
-    private uint _flags3 = default(uint);
-    [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name=@"flags3", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(uint))]
-    public uint flags3
-    {
-      get { return _flags3; }
-      set { _flags3 = value; }
-    }
-    private bool _is_soldier = default(bool);
-    [global::ProtoBuf.ProtoMember(11, IsRequired = false, Name=@"is_soldier", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(default(bool))]
-    public bool is_soldier
-    {
-      get { return _is_soldier; }
-      set { _is_soldier = value; }
-    }
-    private RemoteFortressReader.BodySizeInfo _size_info = null;
-    [global::ProtoBuf.ProtoMember(12, IsRequired = false, Name=@"size_info", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.BodySizeInfo size_info
-    {
-      get { return _size_info; }
-      set { _size_info = value; }
-    }
-    private string _name = "";
-    [global::ProtoBuf.ProtoMember(13, IsRequired = false, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string name
-    {
-      get { return _name; }
-      set { _name = value; }
-    }
-    private int _blood_max = default(int);
-    [global::ProtoBuf.ProtoMember(14, IsRequired = false, Name=@"blood_max", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int blood_max
-    {
-      get { return _blood_max; }
-      set { _blood_max = value; }
-    }
-    private int _blood_count = default(int);
-    [global::ProtoBuf.ProtoMember(15, IsRequired = false, Name=@"blood_count", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int blood_count
-    {
-      get { return _blood_count; }
-      set { _blood_count = value; }
-    }
-    private RemoteFortressReader.UnitAppearance _appearance = null;
-    [global::ProtoBuf.ProtoMember(16, IsRequired = false, Name=@"appearance", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.UnitAppearance appearance
-    {
-      get { return _appearance; }
-      set { _appearance = value; }
-    }
-    private int _profession_id = default(int);
-    [global::ProtoBuf.ProtoMember(17, IsRequired = false, Name=@"profession_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int profession_id
-    {
-      get { return _profession_id; }
-      set { _profession_id = value; }
-    }
-    private readonly global::System.Collections.Generic.List<string> _noble_positions = new global::System.Collections.Generic.List<string>();
-    [global::ProtoBuf.ProtoMember(18, Name=@"noble_positions", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<string> noble_positions
-    {
-      get { return _noble_positions; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"UnitList")]
-  public partial class UnitList : global::ProtoBuf.IExtensible
-  {
-    public UnitList() {}
-    
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition> _creature_list = new global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition>();
-    [global::ProtoBuf.ProtoMember(1, Name=@"creature_list", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition> creature_list
-    {
-      get { return _creature_list; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BlockRequest")]
-  public partial class BlockRequest : global::ProtoBuf.IExtensible
-  {
-    public BlockRequest() {}
-    
-    private int _blocks_needed = default(int);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"blocks_needed", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int blocks_needed
-    {
-      get { return _blocks_needed; }
-      set { _blocks_needed = value; }
-    }
-    private int _min_x = default(int);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"min_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int min_x
-    {
-      get { return _min_x; }
-      set { _min_x = value; }
-    }
-    private int _max_x = default(int);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"max_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int max_x
-    {
-      get { return _max_x; }
-      set { _max_x = value; }
-    }
-    private int _min_y = default(int);
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"min_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int min_y
-    {
-      get { return _min_y; }
-      set { _min_y = value; }
-    }
-    private int _max_y = default(int);
-    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"max_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int max_y
-    {
-      get { return _max_y; }
-      set { _max_y = value; }
-    }
-    private int _min_z = default(int);
-    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"min_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int min_z
-    {
-      get { return _min_z; }
-      set { _min_z = value; }
-    }
-    private int _max_z = default(int);
-    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"max_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int max_z
-    {
-      get { return _max_z; }
-      set { _max_z = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BlockList")]
-  public partial class BlockList : global::ProtoBuf.IExtensible
-  {
-    public BlockList() {}
-    
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MapBlock> _map_blocks = new global::System.Collections.Generic.List<RemoteFortressReader.MapBlock>();
-    [global::ProtoBuf.ProtoMember(1, Name=@"map_blocks", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.MapBlock> map_blocks
-    {
-      get { return _map_blocks; }
-    }
-  
-    private int _map_x = default(int);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"map_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int map_x
-    {
-      get { return _map_x; }
-      set { _map_x = value; }
-    }
-    private int _map_y = default(int);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"map_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int map_y
-    {
-      get { return _map_y; }
-      set { _map_y = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"PlantDef")]
-  public partial class PlantDef : global::ProtoBuf.IExtensible
-  {
-    public PlantDef() {}
-    
-    private int _pos_x;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"pos_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int pos_x
-    {
-      get { return _pos_x; }
-      set { _pos_x = value; }
-    }
-    private int _pos_y;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"pos_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int pos_y
-    {
-      get { return _pos_y; }
-      set { _pos_y = value; }
-    }
-    private int _pos_z;
-    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"pos_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int pos_z
-    {
-      get { return _pos_z; }
-      set { _pos_z = value; }
-    }
-    private int _index;
-    [global::ProtoBuf.ProtoMember(4, IsRequired = true, Name=@"index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int index
-    {
-      get { return _index; }
-      set { _index = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"PlantList")]
-  public partial class PlantList : global::ProtoBuf.IExtensible
-  {
-    public PlantList() {}
-    
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.PlantDef> _plant_list = new global::System.Collections.Generic.List<RemoteFortressReader.PlantDef>();
-    [global::ProtoBuf.ProtoMember(1, Name=@"plant_list", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.PlantDef> plant_list
-    {
-      get { return _plant_list; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ViewInfo")]
-  public partial class ViewInfo : global::ProtoBuf.IExtensible
-  {
-    public ViewInfo() {}
-    
-    private int _view_pos_x = default(int);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"view_pos_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int view_pos_x
-    {
-      get { return _view_pos_x; }
-      set { _view_pos_x = value; }
-    }
-    private int _view_pos_y = default(int);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"view_pos_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int view_pos_y
-    {
-      get { return _view_pos_y; }
-      set { _view_pos_y = value; }
-    }
-    private int _view_pos_z = default(int);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"view_pos_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int view_pos_z
-    {
-      get { return _view_pos_z; }
-      set { _view_pos_z = value; }
-    }
-    private int _view_size_x = default(int);
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"view_size_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int view_size_x
-    {
-      get { return _view_size_x; }
-      set { _view_size_x = value; }
-    }
-    private int _view_size_y = default(int);
-    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"view_size_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int view_size_y
-    {
-      get { return _view_size_y; }
-      set { _view_size_y = value; }
-    }
-    private int _cursor_pos_x = default(int);
-    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"cursor_pos_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int cursor_pos_x
-    {
-      get { return _cursor_pos_x; }
-      set { _cursor_pos_x = value; }
-    }
-    private int _cursor_pos_y = default(int);
-    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"cursor_pos_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int cursor_pos_y
-    {
-      get { return _cursor_pos_y; }
-      set { _cursor_pos_y = value; }
-    }
-    private int _cursor_pos_z = default(int);
-    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"cursor_pos_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int cursor_pos_z
-    {
-      get { return _cursor_pos_z; }
-      set { _cursor_pos_z = value; }
-    }
-    private int _follow_unit_id = (int)-1;
-    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"follow_unit_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue((int)-1)]
-    public int follow_unit_id
-    {
-      get { return _follow_unit_id; }
-      set { _follow_unit_id = value; }
-    }
-    private int _follow_item_id = (int)-1;
-    [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name=@"follow_item_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue((int)-1)]
-    public int follow_item_id
-    {
-      get { return _follow_item_id; }
-      set { _follow_item_id = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MapInfo")]
-  public partial class MapInfo : global::ProtoBuf.IExtensible
-  {
-    public MapInfo() {}
-    
-    private int _block_size_x = default(int);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"block_size_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int block_size_x
-    {
-      get { return _block_size_x; }
-      set { _block_size_x = value; }
-    }
-    private int _block_size_y = default(int);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"block_size_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int block_size_y
-    {
-      get { return _block_size_y; }
-      set { _block_size_y = value; }
-    }
-    private int _block_size_z = default(int);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"block_size_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int block_size_z
-    {
-      get { return _block_size_z; }
-      set { _block_size_z = value; }
-    }
-    private int _block_pos_x = default(int);
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"block_pos_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int block_pos_x
-    {
-      get { return _block_pos_x; }
-      set { _block_pos_x = value; }
-    }
-    private int _block_pos_y = default(int);
-    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"block_pos_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int block_pos_y
-    {
-      get { return _block_pos_y; }
-      set { _block_pos_y = value; }
-    }
-    private int _block_pos_z = default(int);
-    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"block_pos_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int block_pos_z
-    {
-      get { return _block_pos_z; }
-      set { _block_pos_z = value; }
-    }
-    private string _world_name = "";
-    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"world_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string world_name
-    {
-      get { return _world_name; }
-      set { _world_name = value; }
-    }
-    private string _world_name_english = "";
-    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"world_name_english", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string world_name_english
-    {
-      get { return _world_name_english; }
-      set { _world_name_english = value; }
-    }
-    private string _save_name = "";
-    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"save_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string save_name
-    {
-      get { return _save_name; }
-      set { _save_name = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Cloud")]
-  public partial class Cloud : global::ProtoBuf.IExtensible
-  {
-    public Cloud() {}
-    
-    private RemoteFortressReader.FrontType _front = RemoteFortressReader.FrontType.FRONT_NONE;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"front", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.FrontType.FRONT_NONE)]
-    public RemoteFortressReader.FrontType front
-    {
-      get { return _front; }
-      set { _front = value; }
-    }
-    private RemoteFortressReader.CumulusType _cumulus = RemoteFortressReader.CumulusType.CUMULUS_NONE;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"cumulus", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.CumulusType.CUMULUS_NONE)]
-    public RemoteFortressReader.CumulusType cumulus
-    {
-      get { return _cumulus; }
-      set { _cumulus = value; }
-    }
-    private bool _cirrus = default(bool);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"cirrus", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(default(bool))]
-    public bool cirrus
-    {
-      get { return _cirrus; }
-      set { _cirrus = value; }
-    }
-    private RemoteFortressReader.StratusType _stratus = RemoteFortressReader.StratusType.STRATUS_NONE;
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"stratus", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.StratusType.STRATUS_NONE)]
-    public RemoteFortressReader.StratusType stratus
-    {
-      get { return _stratus; }
-      set { _stratus = value; }
-    }
-    private RemoteFortressReader.FogType _fog = RemoteFortressReader.FogType.FOG_NONE;
-    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"fog", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.FogType.FOG_NONE)]
-    public RemoteFortressReader.FogType fog
-    {
-      get { return _fog; }
-      set { _fog = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"WorldMap")]
-  public partial class WorldMap : global::ProtoBuf.IExtensible
-  {
-    public WorldMap() {}
-    
-    private int _world_width;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"world_width", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int world_width
-    {
-      get { return _world_width; }
-      set { _world_width = value; }
-    }
-    private int _world_height;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"world_height", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int world_height
-    {
-      get { return _world_height; }
-      set { _world_height = value; }
-    }
-    private string _name = "";
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string name
-    {
-      get { return _name; }
-      set { _name = value; }
-    }
-    private string _name_english = "";
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"name_english", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string name_english
-    {
-      get { return _name_english; }
-      set { _name_english = value; }
-    }
-    private readonly global::System.Collections.Generic.List<int> _elevation = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(5, Name=@"elevation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> elevation
-    {
-      get { return _elevation; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<int> _rainfall = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(6, Name=@"rainfall", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> rainfall
-    {
-      get { return _rainfall; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<int> _vegetation = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(7, Name=@"vegetation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> vegetation
-    {
-      get { return _vegetation; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<int> _temperature = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(8, Name=@"temperature", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> temperature
-    {
-      get { return _temperature; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<int> _evilness = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(9, Name=@"evilness", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> evilness
-    {
-      get { return _evilness; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<int> _drainage = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(10, Name=@"drainage", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> drainage
-    {
-      get { return _drainage; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<int> _volcanism = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(11, Name=@"volcanism", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> volcanism
-    {
-      get { return _volcanism; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<int> _savagery = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(12, Name=@"savagery", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> savagery
-    {
-      get { return _savagery; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.Cloud> _clouds = new global::System.Collections.Generic.List<RemoteFortressReader.Cloud>();
-    [global::ProtoBuf.ProtoMember(13, Name=@"clouds", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.Cloud> clouds
-    {
-      get { return _clouds; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<int> _salinity = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(14, Name=@"salinity", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> salinity
-    {
-      get { return _salinity; }
-    }
-  
-    private int _map_x = default(int);
-    [global::ProtoBuf.ProtoMember(15, IsRequired = false, Name=@"map_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int map_x
-    {
-      get { return _map_x; }
-      set { _map_x = value; }
-    }
-    private int _map_y = default(int);
-    [global::ProtoBuf.ProtoMember(16, IsRequired = false, Name=@"map_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int map_y
-    {
-      get { return _map_y; }
-      set { _map_y = value; }
-    }
-    private int _center_x = default(int);
-    [global::ProtoBuf.ProtoMember(17, IsRequired = false, Name=@"center_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int center_x
-    {
-      get { return _center_x; }
-      set { _center_x = value; }
-    }
-    private int _center_y = default(int);
-    [global::ProtoBuf.ProtoMember(18, IsRequired = false, Name=@"center_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int center_y
-    {
-      get { return _center_y; }
-      set { _center_y = value; }
-    }
-    private int _center_z = default(int);
-    [global::ProtoBuf.ProtoMember(19, IsRequired = false, Name=@"center_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int center_z
-    {
-      get { return _center_z; }
-      set { _center_z = value; }
-    }
-    private int _cur_year = default(int);
-    [global::ProtoBuf.ProtoMember(20, IsRequired = false, Name=@"cur_year", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int cur_year
-    {
-      get { return _cur_year; }
-      set { _cur_year = value; }
-    }
-    private int _cur_year_tick = default(int);
-    [global::ProtoBuf.ProtoMember(21, IsRequired = false, Name=@"cur_year_tick", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int cur_year_tick
-    {
-      get { return _cur_year_tick; }
-      set { _cur_year_tick = value; }
-    }
-    private RemoteFortressReader.WorldPoles _world_poles = RemoteFortressReader.WorldPoles.NO_POLES;
-    [global::ProtoBuf.ProtoMember(22, IsRequired = false, Name=@"world_poles", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.WorldPoles.NO_POLES)]
-    public RemoteFortressReader.WorldPoles world_poles
-    {
-      get { return _world_poles; }
-      set { _world_poles = value; }
-    }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.RiverTile> _river_tiles = new global::System.Collections.Generic.List<RemoteFortressReader.RiverTile>();
-    [global::ProtoBuf.ProtoMember(23, Name=@"river_tiles", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.RiverTile> river_tiles
-    {
-      get { return _river_tiles; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<int> _water_elevation = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(24, Name=@"water_elevation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> water_elevation
-    {
-      get { return _water_elevation; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.RegionTile> _region_tiles = new global::System.Collections.Generic.List<RemoteFortressReader.RegionTile>();
-    [global::ProtoBuf.ProtoMember(25, Name=@"region_tiles", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.RegionTile> region_tiles
-    {
-      get { return _region_tiles; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"SiteRealizationBuildingWall")]
-  public partial class SiteRealizationBuildingWall : global::ProtoBuf.IExtensible
-  {
-    public SiteRealizationBuildingWall() {}
-    
-    private int _start_x = default(int);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"start_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int start_x
-    {
-      get { return _start_x; }
-      set { _start_x = value; }
-    }
-    private int _start_y = default(int);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"start_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int start_y
-    {
-      get { return _start_y; }
-      set { _start_y = value; }
-    }
-    private int _start_z = default(int);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"start_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int start_z
-    {
-      get { return _start_z; }
-      set { _start_z = value; }
-    }
-    private int _end_x = default(int);
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"end_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int end_x
-    {
-      get { return _end_x; }
-      set { _end_x = value; }
-    }
-    private int _end_y = default(int);
-    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"end_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int end_y
-    {
-      get { return _end_y; }
-      set { _end_y = value; }
-    }
-    private int _end_z = default(int);
-    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"end_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int end_z
-    {
-      get { return _end_z; }
-      set { _end_z = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"SiteRealizationBuildingTower")]
-  public partial class SiteRealizationBuildingTower : global::ProtoBuf.IExtensible
-  {
-    public SiteRealizationBuildingTower() {}
-    
-    private int _roof_z = default(int);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"roof_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int roof_z
-    {
-      get { return _roof_z; }
-      set { _roof_z = value; }
-    }
-    private bool _round = default(bool);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"round", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(default(bool))]
-    public bool round
-    {
-      get { return _round; }
-      set { _round = value; }
-    }
-    private bool _goblin = default(bool);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"goblin", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(default(bool))]
-    public bool goblin
-    {
-      get { return _goblin; }
-      set { _goblin = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"TrenchSpoke")]
-  public partial class TrenchSpoke : global::ProtoBuf.IExtensible
-  {
-    public TrenchSpoke() {}
-    
-    private int _mound_start = default(int);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"mound_start", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int mound_start
-    {
-      get { return _mound_start; }
-      set { _mound_start = value; }
-    }
-    private int _trench_start = default(int);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"trench_start", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int trench_start
-    {
-      get { return _trench_start; }
-      set { _trench_start = value; }
-    }
-    private int _trench_end = default(int);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"trench_end", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int trench_end
-    {
-      get { return _trench_end; }
-      set { _trench_end = value; }
-    }
-    private int _mound_end = default(int);
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"mound_end", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int mound_end
-    {
-      get { return _mound_end; }
-      set { _mound_end = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"SiteRealizationBuildingTrenches")]
-  public partial class SiteRealizationBuildingTrenches : global::ProtoBuf.IExtensible
-  {
-    public SiteRealizationBuildingTrenches() {}
-    
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.TrenchSpoke> _spokes = new global::System.Collections.Generic.List<RemoteFortressReader.TrenchSpoke>();
-    [global::ProtoBuf.ProtoMember(1, Name=@"spokes", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.TrenchSpoke> spokes
-    {
-      get { return _spokes; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"SiteRealizationBuilding")]
-  public partial class SiteRealizationBuilding : global::ProtoBuf.IExtensible
-  {
-    public SiteRealizationBuilding() {}
-    
-    private int _id = default(int);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int id
-    {
-      get { return _id; }
-      set { _id = value; }
-    }
-    private RemoteFortressReader.SiteRealizationBuildingType _type = RemoteFortressReader.SiteRealizationBuildingType.cottage_plot;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.SiteRealizationBuildingType.cottage_plot)]
-    public RemoteFortressReader.SiteRealizationBuildingType type
-    {
-      get { return _type; }
-      set { _type = value; }
-    }
-    private int _min_x = default(int);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"min_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int min_x
-    {
-      get { return _min_x; }
-      set { _min_x = value; }
-    }
-    private int _min_y = default(int);
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"min_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int min_y
-    {
-      get { return _min_y; }
-      set { _min_y = value; }
-    }
-    private int _max_x = default(int);
-    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"max_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int max_x
-    {
-      get { return _max_x; }
-      set { _max_x = value; }
-    }
-    private int _max_y = default(int);
-    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"max_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int max_y
-    {
-      get { return _max_y; }
-      set { _max_y = value; }
-    }
-    private RemoteFortressReader.MatPair _material = null;
-    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"material", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.MatPair material
-    {
-      get { return _material; }
-      set { _material = value; }
-    }
-    private RemoteFortressReader.SiteRealizationBuildingWall _wall_info = null;
-    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"wall_info", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.SiteRealizationBuildingWall wall_info
-    {
-      get { return _wall_info; }
-      set { _wall_info = value; }
-    }
-    private RemoteFortressReader.SiteRealizationBuildingTower _tower_info = null;
-    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"tower_info", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.SiteRealizationBuildingTower tower_info
-    {
-      get { return _tower_info; }
-      set { _tower_info = value; }
-    }
-    private RemoteFortressReader.SiteRealizationBuildingTrenches _trench_info = null;
-    [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name=@"trench_info", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.SiteRealizationBuildingTrenches trench_info
-    {
-      get { return _trench_info; }
-      set { _trench_info = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"RegionTile")]
-  public partial class RegionTile : global::ProtoBuf.IExtensible
-  {
-    public RegionTile() {}
-    
-    private int _elevation = default(int);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"elevation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int elevation
-    {
-      get { return _elevation; }
-      set { _elevation = value; }
-    }
-    private int _rainfall = default(int);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"rainfall", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int rainfall
-    {
-      get { return _rainfall; }
-      set { _rainfall = value; }
-    }
-    private int _vegetation = default(int);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"vegetation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int vegetation
-    {
-      get { return _vegetation; }
-      set { _vegetation = value; }
-    }
-    private int _temperature = default(int);
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"temperature", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int temperature
-    {
-      get { return _temperature; }
-      set { _temperature = value; }
-    }
-    private int _evilness = default(int);
-    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"evilness", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int evilness
-    {
-      get { return _evilness; }
-      set { _evilness = value; }
-    }
-    private int _drainage = default(int);
-    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"drainage", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int drainage
-    {
-      get { return _drainage; }
-      set { _drainage = value; }
-    }
-    private int _volcanism = default(int);
-    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"volcanism", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int volcanism
-    {
-      get { return _volcanism; }
-      set { _volcanism = value; }
-    }
-    private int _savagery = default(int);
-    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"savagery", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int savagery
-    {
-      get { return _savagery; }
-      set { _savagery = value; }
-    }
-    private int _salinity = default(int);
-    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"salinity", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int salinity
-    {
-      get { return _salinity; }
-      set { _salinity = value; }
-    }
-    private RemoteFortressReader.RiverTile _river_tiles = null;
-    [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name=@"river_tiles", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.RiverTile river_tiles
-    {
-      get { return _river_tiles; }
-      set { _river_tiles = value; }
-    }
-    private int _water_elevation = default(int);
-    [global::ProtoBuf.ProtoMember(11, IsRequired = false, Name=@"water_elevation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int water_elevation
-    {
-      get { return _water_elevation; }
-      set { _water_elevation = value; }
-    }
-    private RemoteFortressReader.MatPair _surface_material = null;
-    [global::ProtoBuf.ProtoMember(12, IsRequired = false, Name=@"surface_material", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.MatPair surface_material
-    {
-      get { return _surface_material; }
-      set { _surface_material = value; }
-    }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _plant_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
-    [global::ProtoBuf.ProtoMember(13, Name=@"plant_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> plant_materials
-    {
-      get { return _plant_materials; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.SiteRealizationBuilding> _buildings = new global::System.Collections.Generic.List<RemoteFortressReader.SiteRealizationBuilding>();
-    [global::ProtoBuf.ProtoMember(14, Name=@"buildings", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.SiteRealizationBuilding> buildings
-    {
-      get { return _buildings; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _stone_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
-    [global::ProtoBuf.ProtoMember(15, Name=@"stone_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> stone_materials
-    {
-      get { return _stone_materials; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _tree_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
-    [global::ProtoBuf.ProtoMember(16, Name=@"tree_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> tree_materials
-    {
-      get { return _tree_materials; }
-    }
-  
-    private int _snow = default(int);
-    [global::ProtoBuf.ProtoMember(17, IsRequired = false, Name=@"snow", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int snow
-    {
-      get { return _snow; }
-      set { _snow = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"RegionMap")]
-  public partial class RegionMap : global::ProtoBuf.IExtensible
-  {
-    public RegionMap() {}
-    
-    private int _map_x = default(int);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"map_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int map_x
-    {
-      get { return _map_x; }
-      set { _map_x = value; }
-    }
-    private int _map_y = default(int);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"map_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int map_y
-    {
-      get { return _map_y; }
-      set { _map_y = value; }
-    }
-    private string _name = "";
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string name
-    {
-      get { return _name; }
-      set { _name = value; }
-    }
-    private string _name_english = "";
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"name_english", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string name_english
-    {
-      get { return _name_english; }
-      set { _name_english = value; }
-    }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.RegionTile> _tiles = new global::System.Collections.Generic.List<RemoteFortressReader.RegionTile>();
-    [global::ProtoBuf.ProtoMember(5, Name=@"tiles", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.RegionTile> tiles
-    {
-      get { return _tiles; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"RegionMaps")]
-  public partial class RegionMaps : global::ProtoBuf.IExtensible
-  {
-    public RegionMaps() {}
-    
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.WorldMap> _world_maps = new global::System.Collections.Generic.List<RemoteFortressReader.WorldMap>();
-    [global::ProtoBuf.ProtoMember(1, Name=@"world_maps", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.WorldMap> world_maps
-    {
-      get { return _world_maps; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.RegionMap> _region_maps = new global::System.Collections.Generic.List<RemoteFortressReader.RegionMap>();
-    [global::ProtoBuf.ProtoMember(2, Name=@"region_maps", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.RegionMap> region_maps
-    {
-      get { return _region_maps; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"PatternDescriptor")]
-  public partial class PatternDescriptor : global::ProtoBuf.IExtensible
-  {
-    public PatternDescriptor() {}
-    
-    private string _id = "";
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string id
-    {
-      get { return _id; }
-      set { _id = value; }
-    }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.ColorDefinition> _colors = new global::System.Collections.Generic.List<RemoteFortressReader.ColorDefinition>();
-    [global::ProtoBuf.ProtoMember(2, Name=@"colors", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.ColorDefinition> colors
-    {
-      get { return _colors; }
-    }
-  
-    private RemoteFortressReader.PatternType _pattern = RemoteFortressReader.PatternType.MONOTONE;
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"pattern", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.PatternType.MONOTONE)]
-    public RemoteFortressReader.PatternType pattern
-    {
-      get { return _pattern; }
-      set { _pattern = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ColorModifierRaw")]
-  public partial class ColorModifierRaw : global::ProtoBuf.IExtensible
-  {
-    public ColorModifierRaw() {}
-    
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.PatternDescriptor> _patterns = new global::System.Collections.Generic.List<RemoteFortressReader.PatternDescriptor>();
-    [global::ProtoBuf.ProtoMember(1, Name=@"patterns", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.PatternDescriptor> patterns
-    {
-      get { return _patterns; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<int> _body_part_id = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(2, Name=@"body_part_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> body_part_id
-    {
-      get { return _body_part_id; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<int> _tissue_layer_id = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(3, Name=@"tissue_layer_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> tissue_layer_id
-    {
-      get { return _tissue_layer_id; }
-    }
-  
-    private int _start_date = default(int);
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"start_date", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int start_date
-    {
-      get { return _start_date; }
-      set { _start_date = value; }
-    }
-    private int _end_date = default(int);
-    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"end_date", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int end_date
-    {
-      get { return _end_date; }
-      set { _end_date = value; }
-    }
-    private string _part = "";
-    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"part", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string part
-    {
-      get { return _part; }
-      set { _part = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BodyPartLayerRaw")]
-  public partial class BodyPartLayerRaw : global::ProtoBuf.IExtensible
-  {
-    public BodyPartLayerRaw() {}
-    
-    private string _layer_name = "";
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"layer_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string layer_name
-    {
-      get { return _layer_name; }
-      set { _layer_name = value; }
-    }
-    private int _tissue_id = default(int);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"tissue_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int tissue_id
-    {
-      get { return _tissue_id; }
-      set { _tissue_id = value; }
-    }
-    private int _layer_depth = default(int);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"layer_depth", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int layer_depth
-    {
-      get { return _layer_depth; }
-      set { _layer_depth = value; }
-    }
-    private readonly global::System.Collections.Generic.List<int> _bp_modifiers = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(4, Name=@"bp_modifiers", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> bp_modifiers
-    {
-      get { return _bp_modifiers; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BodyPartRaw")]
-  public partial class BodyPartRaw : global::ProtoBuf.IExtensible
-  {
-    public BodyPartRaw() {}
-    
-    private string _token = "";
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"token", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string token
-    {
-      get { return _token; }
-      set { _token = value; }
-    }
-    private string _category = "";
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"category", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string category
-    {
-      get { return _category; }
-      set { _category = value; }
-    }
-    private int _parent = default(int);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"parent", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int parent
-    {
-      get { return _parent; }
-      set { _parent = value; }
-    }
-    private readonly global::System.Collections.Generic.List<bool> _flags = new global::System.Collections.Generic.List<bool>();
-    [global::ProtoBuf.ProtoMember(4, Name=@"flags", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<bool> flags
-    {
-      get { return _flags; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.BodyPartLayerRaw> _layers = new global::System.Collections.Generic.List<RemoteFortressReader.BodyPartLayerRaw>();
-    [global::ProtoBuf.ProtoMember(5, Name=@"layers", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.BodyPartLayerRaw> layers
-    {
-      get { return _layers; }
-    }
-  
-    private int _relsize = default(int);
-    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"relsize", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int relsize
-    {
-      get { return _relsize; }
-      set { _relsize = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BpAppearanceModifier")]
-  public partial class BpAppearanceModifier : global::ProtoBuf.IExtensible
-  {
-    public BpAppearanceModifier() {}
-    
-    private string _type = "";
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"type", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string type
-    {
-      get { return _type; }
-      set { _type = value; }
-    }
-    private int _mod_min = default(int);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"mod_min", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int mod_min
-    {
-      get { return _mod_min; }
-      set { _mod_min = value; }
-    }
-    private int _mod_max = default(int);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"mod_max", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int mod_max
-    {
-      get { return _mod_max; }
-      set { _mod_max = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"TissueRaw")]
-  public partial class TissueRaw : global::ProtoBuf.IExtensible
-  {
-    public TissueRaw() {}
-    
-    private string _id = "";
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string id
-    {
-      get { return _id; }
-      set { _id = value; }
-    }
-    private string _name = "";
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string name
-    {
-      get { return _name; }
-      set { _name = value; }
-    }
-    private RemoteFortressReader.MatPair _material = null;
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"material", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.MatPair material
-    {
-      get { return _material; }
-      set { _material = value; }
-    }
-    private string _subordinate_to_tissue = "";
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"subordinate_to_tissue", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string subordinate_to_tissue
-    {
-      get { return _subordinate_to_tissue; }
-      set { _subordinate_to_tissue = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"CasteRaw")]
-  public partial class CasteRaw : global::ProtoBuf.IExtensible
-  {
-    public CasteRaw() {}
-    
-    private int _index = default(int);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int index
-    {
-      get { return _index; }
-      set { _index = value; }
-    }
-    private string _caste_id = "";
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"caste_id", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string caste_id
-    {
-      get { return _caste_id; }
-      set { _caste_id = value; }
-    }
-    private readonly global::System.Collections.Generic.List<string> _caste_name = new global::System.Collections.Generic.List<string>();
-    [global::ProtoBuf.ProtoMember(3, Name=@"caste_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<string> caste_name
-    {
-      get { return _caste_name; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<string> _baby_name = new global::System.Collections.Generic.List<string>();
-    [global::ProtoBuf.ProtoMember(4, Name=@"baby_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<string> baby_name
-    {
-      get { return _baby_name; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<string> _child_name = new global::System.Collections.Generic.List<string>();
-    [global::ProtoBuf.ProtoMember(5, Name=@"child_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<string> child_name
-    {
-      get { return _child_name; }
-    }
-  
-    private int _gender = default(int);
-    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"gender", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int gender
-    {
-      get { return _gender; }
-      set { _gender = value; }
-    }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.BodyPartRaw> _body_parts = new global::System.Collections.Generic.List<RemoteFortressReader.BodyPartRaw>();
-    [global::ProtoBuf.ProtoMember(7, Name=@"body_parts", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.BodyPartRaw> body_parts
-    {
-      get { return _body_parts; }
-    }
-  
-    private int _total_relsize = default(int);
-    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"total_relsize", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int total_relsize
-    {
-      get { return _total_relsize; }
-      set { _total_relsize = value; }
-    }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier> _modifiers = new global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier>();
-    [global::ProtoBuf.ProtoMember(9, Name=@"modifiers", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier> modifiers
-    {
-      get { return _modifiers; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<int> _modifier_idx = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(10, Name=@"modifier_idx", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> modifier_idx
-    {
-      get { return _modifier_idx; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<int> _part_idx = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(11, Name=@"part_idx", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> part_idx
-    {
-      get { return _part_idx; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<int> _layer_idx = new global::System.Collections.Generic.List<int>();
-    [global::ProtoBuf.ProtoMember(12, Name=@"layer_idx", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public global::System.Collections.Generic.List<int> layer_idx
-    {
-      get { return _layer_idx; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier> _body_appearance_modifiers = new global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier>();
-    [global::ProtoBuf.ProtoMember(13, Name=@"body_appearance_modifiers", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier> body_appearance_modifiers
-    {
-      get { return _body_appearance_modifiers; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.ColorModifierRaw> _color_modifiers = new global::System.Collections.Generic.List<RemoteFortressReader.ColorModifierRaw>();
-    [global::ProtoBuf.ProtoMember(14, Name=@"color_modifiers", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.ColorModifierRaw> color_modifiers
-    {
-      get { return _color_modifiers; }
-    }
-  
-    private string _description = "";
-    [global::ProtoBuf.ProtoMember(15, IsRequired = false, Name=@"description", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string description
-    {
-      get { return _description; }
-      set { _description = value; }
-    }
-    private int _adult_size = default(int);
-    [global::ProtoBuf.ProtoMember(16, IsRequired = false, Name=@"adult_size", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int adult_size
-    {
-      get { return _adult_size; }
-      set { _adult_size = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"CreatureRaw")]
-  public partial class CreatureRaw : global::ProtoBuf.IExtensible
-  {
-    public CreatureRaw() {}
-    
-    private int _index = default(int);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int index
-    {
-      get { return _index; }
-      set { _index = value; }
-    }
-    private string _creature_id = "";
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"creature_id", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string creature_id
-    {
-      get { return _creature_id; }
-      set { _creature_id = value; }
-    }
-    private readonly global::System.Collections.Generic.List<string> _name = new global::System.Collections.Generic.List<string>();
-    [global::ProtoBuf.ProtoMember(3, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<string> name
-    {
-      get { return _name; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<string> _general_baby_name = new global::System.Collections.Generic.List<string>();
-    [global::ProtoBuf.ProtoMember(4, Name=@"general_baby_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<string> general_baby_name
-    {
-      get { return _general_baby_name; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<string> _general_child_name = new global::System.Collections.Generic.List<string>();
-    [global::ProtoBuf.ProtoMember(5, Name=@"general_child_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<string> general_child_name
-    {
-      get { return _general_child_name; }
-    }
-  
-    private int _creature_tile = default(int);
-    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"creature_tile", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int creature_tile
-    {
-      get { return _creature_tile; }
-      set { _creature_tile = value; }
-    }
-    private int _creature_soldier_tile = default(int);
-    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"creature_soldier_tile", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int creature_soldier_tile
-    {
-      get { return _creature_soldier_tile; }
-      set { _creature_soldier_tile = value; }
-    }
-    private RemoteFortressReader.ColorDefinition _color = null;
-    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"color", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.ColorDefinition color
-    {
-      get { return _color; }
-      set { _color = value; }
-    }
-    private int _adultsize = default(int);
-    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"adultsize", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int adultsize
-    {
-      get { return _adultsize; }
-      set { _adultsize = value; }
-    }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.CasteRaw> _caste = new global::System.Collections.Generic.List<RemoteFortressReader.CasteRaw>();
-    [global::ProtoBuf.ProtoMember(10, Name=@"caste", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.CasteRaw> caste
-    {
-      get { return _caste; }
-    }
-  
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.TissueRaw> _tissues = new global::System.Collections.Generic.List<RemoteFortressReader.TissueRaw>();
-    [global::ProtoBuf.ProtoMember(11, Name=@"tissues", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.TissueRaw> tissues
-    {
-      get { return _tissues; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"CreatureRawList")]
-  public partial class CreatureRawList : global::ProtoBuf.IExtensible
-  {
-    public CreatureRawList() {}
-    
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.CreatureRaw> _creature_raws = new global::System.Collections.Generic.List<RemoteFortressReader.CreatureRaw>();
-    [global::ProtoBuf.ProtoMember(1, Name=@"creature_raws", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.CreatureRaw> creature_raws
-    {
-      get { return _creature_raws; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Army")]
-  public partial class Army : global::ProtoBuf.IExtensible
-  {
-    public Army() {}
-    
-    private int _id = default(int);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int id
-    {
-      get { return _id; }
-      set { _id = value; }
-    }
-    private int _pos_x = default(int);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"pos_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int pos_x
-    {
-      get { return _pos_x; }
-      set { _pos_x = value; }
-    }
-    private int _pos_y = default(int);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"pos_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int pos_y
-    {
-      get { return _pos_y; }
-      set { _pos_y = value; }
-    }
-    private int _pos_z = default(int);
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"pos_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int pos_z
-    {
-      get { return _pos_z; }
-      set { _pos_z = value; }
-    }
-    private RemoteFortressReader.UnitDefinition _leader = null;
-    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"leader", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.UnitDefinition leader
-    {
-      get { return _leader; }
-      set { _leader = value; }
-    }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition> _members = new global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition>();
-    [global::ProtoBuf.ProtoMember(6, Name=@"members", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition> members
-    {
-      get { return _members; }
-    }
-  
-    private uint _flags = default(uint);
-    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"flags", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(uint))]
-    public uint flags
-    {
-      get { return _flags; }
-      set { _flags = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ArmyList")]
-  public partial class ArmyList : global::ProtoBuf.IExtensible
-  {
-    public ArmyList() {}
-    
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.Army> _armies = new global::System.Collections.Generic.List<RemoteFortressReader.Army>();
-    [global::ProtoBuf.ProtoMember(1, Name=@"armies", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.Army> armies
-    {
-      get { return _armies; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"GrowthPrint")]
-  public partial class GrowthPrint : global::ProtoBuf.IExtensible
-  {
-    public GrowthPrint() {}
-    
-    private int _priority = default(int);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"priority", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int priority
-    {
-      get { return _priority; }
-      set { _priority = value; }
-    }
-    private int _color = default(int);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"color", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int color
-    {
-      get { return _color; }
-      set { _color = value; }
-    }
-    private int _timing_start = default(int);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"timing_start", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int timing_start
-    {
-      get { return _timing_start; }
-      set { _timing_start = value; }
-    }
-    private int _timing_end = default(int);
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"timing_end", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int timing_end
-    {
-      get { return _timing_end; }
-      set { _timing_end = value; }
-    }
-    private int _tile = default(int);
-    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"tile", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int tile
-    {
-      get { return _tile; }
-      set { _tile = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"TreeGrowth")]
-  public partial class TreeGrowth : global::ProtoBuf.IExtensible
-  {
-    public TreeGrowth() {}
-    
-    private int _index = default(int);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int index
-    {
-      get { return _index; }
-      set { _index = value; }
-    }
-    private string _id = "";
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string id
-    {
-      get { return _id; }
-      set { _id = value; }
-    }
-    private string _name = "";
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string name
-    {
-      get { return _name; }
-      set { _name = value; }
-    }
-    private RemoteFortressReader.MatPair _mat = null;
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"mat", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.MatPair mat
-    {
-      get { return _mat; }
-      set { _mat = value; }
-    }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.GrowthPrint> _prints = new global::System.Collections.Generic.List<RemoteFortressReader.GrowthPrint>();
-    [global::ProtoBuf.ProtoMember(5, Name=@"prints", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.GrowthPrint> prints
-    {
-      get { return _prints; }
-    }
-  
-    private int _timing_start = default(int);
-    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"timing_start", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int timing_start
-    {
-      get { return _timing_start; }
-      set { _timing_start = value; }
-    }
-    private int _timing_end = default(int);
-    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"timing_end", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int timing_end
-    {
-      get { return _timing_end; }
-      set { _timing_end = value; }
-    }
-    private bool _twigs = default(bool);
-    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"twigs", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(default(bool))]
-    public bool twigs
-    {
-      get { return _twigs; }
-      set { _twigs = value; }
-    }
-    private bool _light_branches = default(bool);
-    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"light_branches", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(default(bool))]
-    public bool light_branches
-    {
-      get { return _light_branches; }
-      set { _light_branches = value; }
-    }
-    private bool _heavy_branches = default(bool);
-    [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name=@"heavy_branches", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(default(bool))]
-    public bool heavy_branches
-    {
-      get { return _heavy_branches; }
-      set { _heavy_branches = value; }
-    }
-    private bool _trunk = default(bool);
-    [global::ProtoBuf.ProtoMember(11, IsRequired = false, Name=@"trunk", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(default(bool))]
-    public bool trunk
-    {
-      get { return _trunk; }
-      set { _trunk = value; }
-    }
-    private bool _roots = default(bool);
-    [global::ProtoBuf.ProtoMember(12, IsRequired = false, Name=@"roots", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(default(bool))]
-    public bool roots
-    {
-      get { return _roots; }
-      set { _roots = value; }
-    }
-    private bool _cap = default(bool);
-    [global::ProtoBuf.ProtoMember(13, IsRequired = false, Name=@"cap", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(default(bool))]
-    public bool cap
-    {
-      get { return _cap; }
-      set { _cap = value; }
-    }
-    private bool _sapling = default(bool);
-    [global::ProtoBuf.ProtoMember(14, IsRequired = false, Name=@"sapling", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(default(bool))]
-    public bool sapling
-    {
-      get { return _sapling; }
-      set { _sapling = value; }
-    }
-    private int _trunk_height_start = default(int);
-    [global::ProtoBuf.ProtoMember(15, IsRequired = false, Name=@"trunk_height_start", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int trunk_height_start
-    {
-      get { return _trunk_height_start; }
-      set { _trunk_height_start = value; }
-    }
-    private int _trunk_height_end = default(int);
-    [global::ProtoBuf.ProtoMember(16, IsRequired = false, Name=@"trunk_height_end", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int trunk_height_end
-    {
-      get { return _trunk_height_end; }
-      set { _trunk_height_end = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"PlantRaw")]
-  public partial class PlantRaw : global::ProtoBuf.IExtensible
-  {
-    public PlantRaw() {}
-    
-    private int _index = default(int);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int index
-    {
-      get { return _index; }
-      set { _index = value; }
-    }
-    private string _id = "";
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string id
-    {
-      get { return _id; }
-      set { _id = value; }
-    }
-    private string _name = "";
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string name
-    {
-      get { return _name; }
-      set { _name = value; }
-    }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.TreeGrowth> _growths = new global::System.Collections.Generic.List<RemoteFortressReader.TreeGrowth>();
-    [global::ProtoBuf.ProtoMember(4, Name=@"growths", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.TreeGrowth> growths
-    {
-      get { return _growths; }
-    }
-  
-    private int _tile = default(int);
-    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"tile", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int tile
-    {
-      get { return _tile; }
-      set { _tile = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"PlantRawList")]
-  public partial class PlantRawList : global::ProtoBuf.IExtensible
-  {
-    public PlantRawList() {}
-    
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.PlantRaw> _plant_raws = new global::System.Collections.Generic.List<RemoteFortressReader.PlantRaw>();
-    [global::ProtoBuf.ProtoMember(1, Name=@"plant_raws", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.PlantRaw> plant_raws
-    {
-      get { return _plant_raws; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ScreenTile")]
-  public partial class ScreenTile : global::ProtoBuf.IExtensible
-  {
-    public ScreenTile() {}
-    
-    private uint _character = default(uint);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"character", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(uint))]
-    public uint character
-    {
-      get { return _character; }
-      set { _character = value; }
-    }
-    private uint _foreground = default(uint);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"foreground", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(uint))]
-    public uint foreground
-    {
-      get { return _foreground; }
-      set { _foreground = value; }
-    }
-    private uint _background = default(uint);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"background", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(uint))]
-    public uint background
-    {
-      get { return _background; }
-      set { _background = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ScreenCapture")]
-  public partial class ScreenCapture : global::ProtoBuf.IExtensible
-  {
-    public ScreenCapture() {}
-    
-    private uint _width = default(uint);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"width", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(uint))]
-    public uint width
-    {
-      get { return _width; }
-      set { _width = value; }
-    }
-    private uint _height = default(uint);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"height", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(uint))]
-    public uint height
-    {
-      get { return _height; }
-      set { _height = value; }
-    }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.ScreenTile> _tiles = new global::System.Collections.Generic.List<RemoteFortressReader.ScreenTile>();
-    [global::ProtoBuf.ProtoMember(3, Name=@"tiles", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.ScreenTile> tiles
-    {
-      get { return _tiles; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"KeyboardEvent")]
-  public partial class KeyboardEvent : global::ProtoBuf.IExtensible
-  {
-    public KeyboardEvent() {}
-    
-    private uint _type = default(uint);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(uint))]
-    public uint type
-    {
-      get { return _type; }
-      set { _type = value; }
-    }
-    private uint _which = default(uint);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"which", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(uint))]
-    public uint which
-    {
-      get { return _which; }
-      set { _which = value; }
-    }
-    private uint _state = default(uint);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"state", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(uint))]
-    public uint state
-    {
-      get { return _state; }
-      set { _state = value; }
-    }
-    private uint _scancode = default(uint);
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"scancode", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(uint))]
-    public uint scancode
-    {
-      get { return _scancode; }
-      set { _scancode = value; }
-    }
-    private uint _sym = default(uint);
-    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"sym", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(uint))]
-    public uint sym
-    {
-      get { return _sym; }
-      set { _sym = value; }
-    }
-    private uint _mod = default(uint);
-    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"mod", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(uint))]
-    public uint mod
-    {
-      get { return _mod; }
-      set { _mod = value; }
-    }
-    private uint _unicode = default(uint);
-    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"unicode", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(uint))]
-    public uint unicode
-    {
-      get { return _unicode; }
-      set { _unicode = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"DigCommand")]
-  public partial class DigCommand : global::ProtoBuf.IExtensible
-  {
-    public DigCommand() {}
-    
-    private RemoteFortressReader.TileDigDesignation _designation = RemoteFortressReader.TileDigDesignation.NO_DIG;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"designation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.TileDigDesignation.NO_DIG)]
-    public RemoteFortressReader.TileDigDesignation designation
-    {
-      get { return _designation; }
-      set { _designation = value; }
-    }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.Coord> _locations = new global::System.Collections.Generic.List<RemoteFortressReader.Coord>();
-    [global::ProtoBuf.ProtoMember(2, Name=@"locations", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.Coord> locations
-    {
-      get { return _locations; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"SingleBool")]
-  public partial class SingleBool : global::ProtoBuf.IExtensible
-  {
-    public SingleBool() {}
-    
-    private bool _Value = default(bool);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"Value", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(default(bool))]
-    public bool Value
-    {
-      get { return _Value; }
-      set { _Value = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"VersionInfo")]
-  public partial class VersionInfo : global::ProtoBuf.IExtensible
-  {
-    public VersionInfo() {}
-    
-    private string _dwarf_fortress_version = "";
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"dwarf_fortress_version", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string dwarf_fortress_version
-    {
-      get { return _dwarf_fortress_version; }
-      set { _dwarf_fortress_version = value; }
-    }
-    private string _dfhack_version = "";
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"dfhack_version", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string dfhack_version
-    {
-      get { return _dfhack_version; }
-      set { _dfhack_version = value; }
-    }
-    private string _remote_fortress_reader_version = "";
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"remote_fortress_reader_version", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string remote_fortress_reader_version
-    {
-      get { return _remote_fortress_reader_version; }
-      set { _remote_fortress_reader_version = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-    [global::ProtoBuf.ProtoContract(Name=@"TiletypeShape")]
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"Coord")]
+    public partial class Coord : global::ProtoBuf.IExtensible
+    {
+        public Coord() { }
+
+        [UnityEngine.SerializeField]private int _x = default(int);
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int x
+        {
+            get { return _x; }
+            set { _x = value; }
+        }
+        [UnityEngine.SerializeField]private int _y = default(int);
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int y
+        {
+            get { return _y; }
+            set { _y = value; }
+        }
+        [UnityEngine.SerializeField]private int _z = default(int);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int z
+        {
+            get { return _z; }
+            set { _z = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"Tiletype")]
+    public partial class Tiletype : global::ProtoBuf.IExtensible
+    {
+        public Tiletype() { }
+
+        [UnityEngine.SerializeField]private int _id;
+        [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name = @"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+        [UnityEngine.SerializeField]private string _name = "";
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+        [UnityEngine.SerializeField]private string _caption = "";
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"caption", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string caption
+        {
+            get { return _caption; }
+            set { _caption = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.TiletypeShape _shape = RemoteFortressReader.TiletypeShape.NO_SHAPE;
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"shape", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(RemoteFortressReader.TiletypeShape.NO_SHAPE)]
+        public RemoteFortressReader.TiletypeShape shape
+        {
+            get { return _shape; }
+            set { _shape = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.TiletypeSpecial _special = RemoteFortressReader.TiletypeSpecial.NO_SPECIAL;
+        [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name = @"special", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(RemoteFortressReader.TiletypeSpecial.NO_SPECIAL)]
+        public RemoteFortressReader.TiletypeSpecial special
+        {
+            get { return _special; }
+            set { _special = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.TiletypeMaterial _material = RemoteFortressReader.TiletypeMaterial.NO_MATERIAL;
+        [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name = @"material", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(RemoteFortressReader.TiletypeMaterial.NO_MATERIAL)]
+        public RemoteFortressReader.TiletypeMaterial material
+        {
+            get { return _material; }
+            set { _material = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.TiletypeVariant _variant = RemoteFortressReader.TiletypeVariant.NO_VARIANT;
+        [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name = @"variant", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(RemoteFortressReader.TiletypeVariant.NO_VARIANT)]
+        public RemoteFortressReader.TiletypeVariant variant
+        {
+            get { return _variant; }
+            set { _variant = value; }
+        }
+        [UnityEngine.SerializeField]private string _direction = "";
+        [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name = @"direction", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string direction
+        {
+            get { return _direction; }
+            set { _direction = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"TiletypeList")]
+    public partial class TiletypeList : global::ProtoBuf.IExtensible
+    {
+        public TiletypeList() { }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.Tiletype> _tiletype_list = new global::System.Collections.Generic.List<RemoteFortressReader.Tiletype>();
+        [global::ProtoBuf.ProtoMember(1, Name = @"tiletype_list", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.Tiletype> tiletype_list
+        {
+            get { return _tiletype_list; }
+        }
+
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"BuildingExtents")]
+    public partial class BuildingExtents : global::ProtoBuf.IExtensible
+    {
+        public BuildingExtents() { }
+
+        [UnityEngine.SerializeField]private int _pos_x;
+        [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name = @"pos_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int pos_x
+        {
+            get { return _pos_x; }
+            set { _pos_x = value; }
+        }
+        [UnityEngine.SerializeField]private int _pos_y;
+        [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name = @"pos_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int pos_y
+        {
+            get { return _pos_y; }
+            set { _pos_y = value; }
+        }
+        [UnityEngine.SerializeField]private int _width;
+        [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name = @"width", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int width
+        {
+            get { return _width; }
+            set { _width = value; }
+        }
+        [UnityEngine.SerializeField]private int _height;
+        [global::ProtoBuf.ProtoMember(4, IsRequired = true, Name = @"height", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int height
+        {
+            get { return _height; }
+            set { _height = value; }
+        }
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _extents = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(5, Name = @"extents", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> extents
+        {
+            get { return _extents; }
+        }
+
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"BuildingItem")]
+    public partial class BuildingItem : global::ProtoBuf.IExtensible
+    {
+        public BuildingItem() { }
+
+        [UnityEngine.SerializeField]private RemoteFortressReader.Item _item = null;
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"item", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.Item item
+        {
+            get { return _item; }
+            set { _item = value; }
+        }
+        [UnityEngine.SerializeField]private int _mode = default(int);
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"mode", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int mode
+        {
+            get { return _mode; }
+            set { _mode = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"BuildingInstance")]
+    public partial class BuildingInstance : global::ProtoBuf.IExtensible
+    {
+        public BuildingInstance() { }
+
+        [UnityEngine.SerializeField]private int _index;
+        [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name = @"index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int index
+        {
+            get { return _index; }
+            set { _index = value; }
+        }
+        [UnityEngine.SerializeField]private int _pos_x_min = default(int);
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"pos_x_min", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int pos_x_min
+        {
+            get { return _pos_x_min; }
+            set { _pos_x_min = value; }
+        }
+        [UnityEngine.SerializeField]private int _pos_y_min = default(int);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"pos_y_min", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int pos_y_min
+        {
+            get { return _pos_y_min; }
+            set { _pos_y_min = value; }
+        }
+        [UnityEngine.SerializeField]private int _pos_z_min = default(int);
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"pos_z_min", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int pos_z_min
+        {
+            get { return _pos_z_min; }
+            set { _pos_z_min = value; }
+        }
+        [UnityEngine.SerializeField]private int _pos_x_max = default(int);
+        [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name = @"pos_x_max", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int pos_x_max
+        {
+            get { return _pos_x_max; }
+            set { _pos_x_max = value; }
+        }
+        [UnityEngine.SerializeField]private int _pos_y_max = default(int);
+        [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name = @"pos_y_max", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int pos_y_max
+        {
+            get { return _pos_y_max; }
+            set { _pos_y_max = value; }
+        }
+        [UnityEngine.SerializeField]private int _pos_z_max = default(int);
+        [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name = @"pos_z_max", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int pos_z_max
+        {
+            get { return _pos_z_max; }
+            set { _pos_z_max = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.BuildingType _building_type = null;
+        [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name = @"building_type", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.BuildingType building_type
+        {
+            get { return _building_type; }
+            set { _building_type = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.MatPair _material = null;
+        [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name = @"material", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.MatPair material
+        {
+            get { return _material; }
+            set { _material = value; }
+        }
+        [UnityEngine.SerializeField]private uint _building_flags = default(uint);
+        [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name = @"building_flags", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(uint))]
+        public uint building_flags
+        {
+            get { return _building_flags; }
+            set { _building_flags = value; }
+        }
+        [UnityEngine.SerializeField]private bool _is_room = default(bool);
+        [global::ProtoBuf.ProtoMember(11, IsRequired = false, Name = @"is_room", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(default(bool))]
+        public bool is_room
+        {
+            get { return _is_room; }
+            set { _is_room = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.BuildingExtents _room = null;
+        [global::ProtoBuf.ProtoMember(12, IsRequired = false, Name = @"room", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.BuildingExtents room
+        {
+            get { return _room; }
+            set { _room = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.BuildingDirection _direction = RemoteFortressReader.BuildingDirection.NORTH;
+        [global::ProtoBuf.ProtoMember(13, IsRequired = false, Name = @"direction", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(RemoteFortressReader.BuildingDirection.NORTH)]
+        public RemoteFortressReader.BuildingDirection direction
+        {
+            get { return _direction; }
+            set { _direction = value; }
+        }
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.BuildingItem> _items = new global::System.Collections.Generic.List<RemoteFortressReader.BuildingItem>();
+        [global::ProtoBuf.ProtoMember(14, Name = @"items", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.BuildingItem> items
+        {
+            get { return _items; }
+        }
+
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"RiverEdge")]
+    public partial class RiverEdge : global::ProtoBuf.IExtensible
+    {
+        public RiverEdge() { }
+
+        [UnityEngine.SerializeField]private int _min_pos = default(int);
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"min_pos", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int min_pos
+        {
+            get { return _min_pos; }
+            set { _min_pos = value; }
+        }
+        [UnityEngine.SerializeField]private int _max_pos = default(int);
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"max_pos", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int max_pos
+        {
+            get { return _max_pos; }
+            set { _max_pos = value; }
+        }
+        [UnityEngine.SerializeField]private int _active = default(int);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"active", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int active
+        {
+            get { return _active; }
+            set { _active = value; }
+        }
+        [UnityEngine.SerializeField]private int _elevation = default(int);
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"elevation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int elevation
+        {
+            get { return _elevation; }
+            set { _elevation = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"RiverTile")]
+    public partial class RiverTile : global::ProtoBuf.IExtensible
+    {
+        public RiverTile() { }
+
+        [UnityEngine.SerializeField]private RemoteFortressReader.RiverEdge _north = null;
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"north", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.RiverEdge north
+        {
+            get { return _north; }
+            set { _north = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.RiverEdge _south = null;
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"south", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.RiverEdge south
+        {
+            get { return _south; }
+            set { _south = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.RiverEdge _east = null;
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"east", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.RiverEdge east
+        {
+            get { return _east; }
+            set { _east = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.RiverEdge _west = null;
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"west", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.RiverEdge west
+        {
+            get { return _west; }
+            set { _west = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"Spatter")]
+    public partial class Spatter : global::ProtoBuf.IExtensible
+    {
+        public Spatter() { }
+
+        [UnityEngine.SerializeField]private RemoteFortressReader.MatPair _material = null;
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"material", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.MatPair material
+        {
+            get { return _material; }
+            set { _material = value; }
+        }
+        [UnityEngine.SerializeField]private int _amount = default(int);
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"amount", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int amount
+        {
+            get { return _amount; }
+            set { _amount = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.MatterState _state = RemoteFortressReader.MatterState.Solid;
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"state", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(RemoteFortressReader.MatterState.Solid)]
+        public RemoteFortressReader.MatterState state
+        {
+            get { return _state; }
+            set { _state = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.MatPair _item = null;
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"item", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.MatPair item
+        {
+            get { return _item; }
+            set { _item = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"SpatterPile")]
+    public partial class SpatterPile : global::ProtoBuf.IExtensible
+    {
+        public SpatterPile() { }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.Spatter> _spatters = new global::System.Collections.Generic.List<RemoteFortressReader.Spatter>();
+        [global::ProtoBuf.ProtoMember(1, Name = @"spatters", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.Spatter> spatters
+        {
+            get { return _spatters; }
+        }
+
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"Item")]
+    public partial class Item : global::ProtoBuf.IExtensible
+    {
+        public Item() { }
+
+        [UnityEngine.SerializeField]private int _id = default(int);
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.Coord _pos = null;
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"pos", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.Coord pos
+        {
+            get { return _pos; }
+            set { _pos = value; }
+        }
+        [UnityEngine.SerializeField]private uint _flags1 = default(uint);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"flags1", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(uint))]
+        public uint flags1
+        {
+            get { return _flags1; }
+            set { _flags1 = value; }
+        }
+        [UnityEngine.SerializeField]private uint _flags2 = default(uint);
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"flags2", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(uint))]
+        public uint flags2
+        {
+            get { return _flags2; }
+            set { _flags2 = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.MatPair _type = null;
+        [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name = @"type", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.MatPair type
+        {
+            get { return _type; }
+            set { _type = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.MatPair _material = null;
+        [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name = @"material", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.MatPair material
+        {
+            get { return _material; }
+            set { _material = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.ColorDefinition _dye = null;
+        [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name = @"dye", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.ColorDefinition dye
+        {
+            get { return _dye; }
+            set { _dye = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"MapBlock")]
+    public partial class MapBlock : global::ProtoBuf.IExtensible
+    {
+        public MapBlock() { }
+
+        [UnityEngine.SerializeField]private int _map_x;
+        [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name = @"map_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int map_x
+        {
+            get { return _map_x; }
+            set { _map_x = value; }
+        }
+        [UnityEngine.SerializeField]private int _map_y;
+        [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name = @"map_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int map_y
+        {
+            get { return _map_y; }
+            set { _map_y = value; }
+        }
+        [UnityEngine.SerializeField]private int _map_z;
+        [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name = @"map_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int map_z
+        {
+            get { return _map_z; }
+            set { _map_z = value; }
+        }
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _tiles = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(4, Name = @"tiles", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> tiles
+        {
+            get { return _tiles; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
+        [global::ProtoBuf.ProtoMember(5, Name = @"materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> materials
+        {
+            get { return _materials; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _layer_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
+        [global::ProtoBuf.ProtoMember(6, Name = @"layer_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> layer_materials
+        {
+            get { return _layer_materials; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _vein_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
+        [global::ProtoBuf.ProtoMember(7, Name = @"vein_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> vein_materials
+        {
+            get { return _vein_materials; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _base_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
+        [global::ProtoBuf.ProtoMember(8, Name = @"base_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> base_materials
+        {
+            get { return _base_materials; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _magma = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(9, Name = @"magma", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> magma
+        {
+            get { return _magma; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _water = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(10, Name = @"water", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> water
+        {
+            get { return _water; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<bool> _hidden = new global::System.Collections.Generic.List<bool>();
+        [global::ProtoBuf.ProtoMember(11, Name = @"hidden", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<bool> hidden
+        {
+            get { return _hidden; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<bool> _light = new global::System.Collections.Generic.List<bool>();
+        [global::ProtoBuf.ProtoMember(12, Name = @"light", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<bool> light
+        {
+            get { return _light; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<bool> _subterranean = new global::System.Collections.Generic.List<bool>();
+        [global::ProtoBuf.ProtoMember(13, Name = @"subterranean", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<bool> subterranean
+        {
+            get { return _subterranean; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<bool> _outside = new global::System.Collections.Generic.List<bool>();
+        [global::ProtoBuf.ProtoMember(14, Name = @"outside", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<bool> outside
+        {
+            get { return _outside; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<bool> _aquifer = new global::System.Collections.Generic.List<bool>();
+        [global::ProtoBuf.ProtoMember(15, Name = @"aquifer", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<bool> aquifer
+        {
+            get { return _aquifer; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<bool> _water_stagnant = new global::System.Collections.Generic.List<bool>();
+        [global::ProtoBuf.ProtoMember(16, Name = @"water_stagnant", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<bool> water_stagnant
+        {
+            get { return _water_stagnant; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<bool> _water_salt = new global::System.Collections.Generic.List<bool>();
+        [global::ProtoBuf.ProtoMember(17, Name = @"water_salt", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<bool> water_salt
+        {
+            get { return _water_salt; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _construction_items = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
+        [global::ProtoBuf.ProtoMember(18, Name = @"construction_items", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> construction_items
+        {
+            get { return _construction_items; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.BuildingInstance> _buildings = new global::System.Collections.Generic.List<RemoteFortressReader.BuildingInstance>();
+        [global::ProtoBuf.ProtoMember(19, Name = @"buildings", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.BuildingInstance> buildings
+        {
+            get { return _buildings; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _tree_percent = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(20, Name = @"tree_percent", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> tree_percent
+        {
+            get { return _tree_percent; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _tree_x = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(21, Name = @"tree_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> tree_x
+        {
+            get { return _tree_x; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _tree_y = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(22, Name = @"tree_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> tree_y
+        {
+            get { return _tree_y; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _tree_z = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(23, Name = @"tree_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> tree_z
+        {
+            get { return _tree_z; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.TileDigDesignation> _tile_dig_designation = new global::System.Collections.Generic.List<RemoteFortressReader.TileDigDesignation>();
+        [global::ProtoBuf.ProtoMember(24, Name = @"tile_dig_designation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.TileDigDesignation> tile_dig_designation
+        {
+            get { return _tile_dig_designation; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.SpatterPile> _spatterPile = new global::System.Collections.Generic.List<RemoteFortressReader.SpatterPile>();
+        [global::ProtoBuf.ProtoMember(25, Name = @"spatterPile", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.SpatterPile> spatterPile
+        {
+            get { return _spatterPile; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.Item> _items = new global::System.Collections.Generic.List<RemoteFortressReader.Item>();
+        [global::ProtoBuf.ProtoMember(26, Name = @"items", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.Item> items
+        {
+            get { return _items; }
+        }
+
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"MatPair")]
+    public partial class MatPair : global::ProtoBuf.IExtensible
+    {
+        public MatPair() { }
+
+        [UnityEngine.SerializeField]private int _mat_type;
+        [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name = @"mat_type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int mat_type
+        {
+            get { return _mat_type; }
+            set { _mat_type = value; }
+        }
+        [UnityEngine.SerializeField]private int _mat_index;
+        [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name = @"mat_index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int mat_index
+        {
+            get { return _mat_index; }
+            set { _mat_index = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"ColorDefinition")]
+    public partial class ColorDefinition : global::ProtoBuf.IExtensible
+    {
+        public ColorDefinition() { }
+
+        [UnityEngine.SerializeField]private int _red;
+        [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name = @"red", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int red
+        {
+            get { return _red; }
+            set { _red = value; }
+        }
+        [UnityEngine.SerializeField]private int _green;
+        [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name = @"green", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int green
+        {
+            get { return _green; }
+            set { _green = value; }
+        }
+        [UnityEngine.SerializeField]private int _blue;
+        [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name = @"blue", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int blue
+        {
+            get { return _blue; }
+            set { _blue = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"MaterialDefinition")]
+    public partial class MaterialDefinition : global::ProtoBuf.IExtensible
+    {
+        public MaterialDefinition() { }
+
+        [UnityEngine.SerializeField]private RemoteFortressReader.MatPair _mat_pair;
+        [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name = @"mat_pair", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public RemoteFortressReader.MatPair mat_pair
+        {
+            get { return _mat_pair; }
+            set { _mat_pair = value; }
+        }
+        [UnityEngine.SerializeField]private string _id = "";
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"id", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+        [UnityEngine.SerializeField]private string _name = "";
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.ColorDefinition _state_color = null;
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"state_color", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.ColorDefinition state_color
+        {
+            get { return _state_color; }
+            set { _state_color = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"BuildingType")]
+    public partial class BuildingType : global::ProtoBuf.IExtensible
+    {
+        public BuildingType() { }
+
+        [UnityEngine.SerializeField]private int _building_type;
+        [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name = @"building_type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int building_type
+        {
+            get { return _building_type; }
+            set { _building_type = value; }
+        }
+        [UnityEngine.SerializeField]private int _building_subtype;
+        [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name = @"building_subtype", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int building_subtype
+        {
+            get { return _building_subtype; }
+            set { _building_subtype = value; }
+        }
+        [UnityEngine.SerializeField]private int _building_custom;
+        [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name = @"building_custom", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int building_custom
+        {
+            get { return _building_custom; }
+            set { _building_custom = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"BuildingDefinition")]
+    public partial class BuildingDefinition : global::ProtoBuf.IExtensible
+    {
+        public BuildingDefinition() { }
+
+        [UnityEngine.SerializeField]private RemoteFortressReader.BuildingType _building_type;
+        [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name = @"building_type", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public RemoteFortressReader.BuildingType building_type
+        {
+            get { return _building_type; }
+            set { _building_type = value; }
+        }
+        [UnityEngine.SerializeField]private string _id = "";
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"id", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+        [UnityEngine.SerializeField]private string _name = "";
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"BuildingList")]
+    public partial class BuildingList : global::ProtoBuf.IExtensible
+    {
+        public BuildingList() { }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.BuildingDefinition> _building_list = new global::System.Collections.Generic.List<RemoteFortressReader.BuildingDefinition>();
+        [global::ProtoBuf.ProtoMember(1, Name = @"building_list", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.BuildingDefinition> building_list
+        {
+            get { return _building_list; }
+        }
+
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"MaterialList")]
+    public partial class MaterialList : global::ProtoBuf.IExtensible
+    {
+        public MaterialList() { }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.MaterialDefinition> _material_list = new global::System.Collections.Generic.List<RemoteFortressReader.MaterialDefinition>();
+        [global::ProtoBuf.ProtoMember(1, Name = @"material_list", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.MaterialDefinition> material_list
+        {
+            get { return _material_list; }
+        }
+
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"BodySizeInfo")]
+    public partial class BodySizeInfo : global::ProtoBuf.IExtensible
+    {
+        public BodySizeInfo() { }
+
+        [UnityEngine.SerializeField]private int _size_cur = default(int);
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"size_cur", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int size_cur
+        {
+            get { return _size_cur; }
+            set { _size_cur = value; }
+        }
+        [UnityEngine.SerializeField]private int _size_base = default(int);
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"size_base", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int size_base
+        {
+            get { return _size_base; }
+            set { _size_base = value; }
+        }
+        [UnityEngine.SerializeField]private int _area_cur = default(int);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"area_cur", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int area_cur
+        {
+            get { return _area_cur; }
+            set { _area_cur = value; }
+        }
+        [UnityEngine.SerializeField]private int _area_base = default(int);
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"area_base", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int area_base
+        {
+            get { return _area_base; }
+            set { _area_base = value; }
+        }
+        [UnityEngine.SerializeField]private int _length_cur = default(int);
+        [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name = @"length_cur", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int length_cur
+        {
+            get { return _length_cur; }
+            set { _length_cur = value; }
+        }
+        [UnityEngine.SerializeField]private int _length_base = default(int);
+        [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name = @"length_base", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int length_base
+        {
+            get { return _length_base; }
+            set { _length_base = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"UnitAppearance")]
+    public partial class UnitAppearance : global::ProtoBuf.IExtensible
+    {
+        public UnitAppearance() { }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _body_modifiers = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(1, Name = @"body_modifiers", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> body_modifiers
+        {
+            get { return _body_modifiers; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _bp_modifiers = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(2, Name = @"bp_modifiers", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> bp_modifiers
+        {
+            get { return _bp_modifiers; }
+        }
+
+        [UnityEngine.SerializeField]private int _size_modifier = default(int);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"size_modifier", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int size_modifier
+        {
+            get { return _size_modifier; }
+            set { _size_modifier = value; }
+        }
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _colors = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(4, Name = @"colors", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> colors
+        {
+            get { return _colors; }
+        }
+
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"UnitDefinition")]
+    public partial class UnitDefinition : global::ProtoBuf.IExtensible
+    {
+        public UnitDefinition() { }
+
+        [UnityEngine.SerializeField]private int _id;
+        [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name = @"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+        [UnityEngine.SerializeField]private bool _isValid = default(bool);
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"isValid", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(default(bool))]
+        public bool isValid
+        {
+            get { return _isValid; }
+            set { _isValid = value; }
+        }
+        [UnityEngine.SerializeField]private int _pos_x = default(int);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"pos_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int pos_x
+        {
+            get { return _pos_x; }
+            set { _pos_x = value; }
+        }
+        [UnityEngine.SerializeField]private int _pos_y = default(int);
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"pos_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int pos_y
+        {
+            get { return _pos_y; }
+            set { _pos_y = value; }
+        }
+        [UnityEngine.SerializeField]private int _pos_z = default(int);
+        [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name = @"pos_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int pos_z
+        {
+            get { return _pos_z; }
+            set { _pos_z = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.MatPair _race = null;
+        [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name = @"race", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.MatPair race
+        {
+            get { return _race; }
+            set { _race = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.ColorDefinition _profession_color = null;
+        [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name = @"profession_color", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.ColorDefinition profession_color
+        {
+            get { return _profession_color; }
+            set { _profession_color = value; }
+        }
+        [UnityEngine.SerializeField]private uint _flags1 = default(uint);
+        [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name = @"flags1", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(uint))]
+        public uint flags1
+        {
+            get { return _flags1; }
+            set { _flags1 = value; }
+        }
+        [UnityEngine.SerializeField]private uint _flags2 = default(uint);
+        [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name = @"flags2", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(uint))]
+        public uint flags2
+        {
+            get { return _flags2; }
+            set { _flags2 = value; }
+        }
+        [UnityEngine.SerializeField]private uint _flags3 = default(uint);
+        [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name = @"flags3", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(uint))]
+        public uint flags3
+        {
+            get { return _flags3; }
+            set { _flags3 = value; }
+        }
+        [UnityEngine.SerializeField]private bool _is_soldier = default(bool);
+        [global::ProtoBuf.ProtoMember(11, IsRequired = false, Name = @"is_soldier", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(default(bool))]
+        public bool is_soldier
+        {
+            get { return _is_soldier; }
+            set { _is_soldier = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.BodySizeInfo _size_info = null;
+        [global::ProtoBuf.ProtoMember(12, IsRequired = false, Name = @"size_info", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.BodySizeInfo size_info
+        {
+            get { return _size_info; }
+            set { _size_info = value; }
+        }
+        [UnityEngine.SerializeField]private string _name = "";
+        [global::ProtoBuf.ProtoMember(13, IsRequired = false, Name = @"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+        [UnityEngine.SerializeField]private int _blood_max = default(int);
+        [global::ProtoBuf.ProtoMember(14, IsRequired = false, Name = @"blood_max", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int blood_max
+        {
+            get { return _blood_max; }
+            set { _blood_max = value; }
+        }
+        [UnityEngine.SerializeField]private int _blood_count = default(int);
+        [global::ProtoBuf.ProtoMember(15, IsRequired = false, Name = @"blood_count", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int blood_count
+        {
+            get { return _blood_count; }
+            set { _blood_count = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.UnitAppearance _appearance = null;
+        [global::ProtoBuf.ProtoMember(16, IsRequired = false, Name = @"appearance", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.UnitAppearance appearance
+        {
+            get { return _appearance; }
+            set { _appearance = value; }
+        }
+        [UnityEngine.SerializeField]private int _profession_id = default(int);
+        [global::ProtoBuf.ProtoMember(17, IsRequired = false, Name = @"profession_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int profession_id
+        {
+            get { return _profession_id; }
+            set { _profession_id = value; }
+        }
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<string> _noble_positions = new global::System.Collections.Generic.List<string>();
+        [global::ProtoBuf.ProtoMember(18, Name = @"noble_positions", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<string> noble_positions
+        {
+            get { return _noble_positions; }
+        }
+
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"UnitList")]
+    public partial class UnitList : global::ProtoBuf.IExtensible
+    {
+        public UnitList() { }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition> _creature_list = new global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition>();
+        [global::ProtoBuf.ProtoMember(1, Name = @"creature_list", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition> creature_list
+        {
+            get { return _creature_list; }
+        }
+
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"BlockRequest")]
+    public partial class BlockRequest : global::ProtoBuf.IExtensible
+    {
+        public BlockRequest() { }
+
+        [UnityEngine.SerializeField]private int _blocks_needed = default(int);
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"blocks_needed", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int blocks_needed
+        {
+            get { return _blocks_needed; }
+            set { _blocks_needed = value; }
+        }
+        [UnityEngine.SerializeField]private int _min_x = default(int);
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"min_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int min_x
+        {
+            get { return _min_x; }
+            set { _min_x = value; }
+        }
+        [UnityEngine.SerializeField]private int _max_x = default(int);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"max_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int max_x
+        {
+            get { return _max_x; }
+            set { _max_x = value; }
+        }
+        [UnityEngine.SerializeField]private int _min_y = default(int);
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"min_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int min_y
+        {
+            get { return _min_y; }
+            set { _min_y = value; }
+        }
+        [UnityEngine.SerializeField]private int _max_y = default(int);
+        [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name = @"max_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int max_y
+        {
+            get { return _max_y; }
+            set { _max_y = value; }
+        }
+        [UnityEngine.SerializeField]private int _min_z = default(int);
+        [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name = @"min_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int min_z
+        {
+            get { return _min_z; }
+            set { _min_z = value; }
+        }
+        [UnityEngine.SerializeField]private int _max_z = default(int);
+        [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name = @"max_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int max_z
+        {
+            get { return _max_z; }
+            set { _max_z = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"BlockList")]
+    public partial class BlockList : global::ProtoBuf.IExtensible
+    {
+        public BlockList() { }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.MapBlock> _map_blocks = new global::System.Collections.Generic.List<RemoteFortressReader.MapBlock>();
+        [global::ProtoBuf.ProtoMember(1, Name = @"map_blocks", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.MapBlock> map_blocks
+        {
+            get { return _map_blocks; }
+        }
+
+        [UnityEngine.SerializeField]private int _map_x = default(int);
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"map_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int map_x
+        {
+            get { return _map_x; }
+            set { _map_x = value; }
+        }
+        [UnityEngine.SerializeField]private int _map_y = default(int);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"map_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int map_y
+        {
+            get { return _map_y; }
+            set { _map_y = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"PlantDef")]
+    public partial class PlantDef : global::ProtoBuf.IExtensible
+    {
+        public PlantDef() { }
+
+        [UnityEngine.SerializeField]private int _pos_x;
+        [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name = @"pos_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int pos_x
+        {
+            get { return _pos_x; }
+            set { _pos_x = value; }
+        }
+        [UnityEngine.SerializeField]private int _pos_y;
+        [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name = @"pos_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int pos_y
+        {
+            get { return _pos_y; }
+            set { _pos_y = value; }
+        }
+        [UnityEngine.SerializeField]private int _pos_z;
+        [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name = @"pos_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int pos_z
+        {
+            get { return _pos_z; }
+            set { _pos_z = value; }
+        }
+        [UnityEngine.SerializeField]private int _index;
+        [global::ProtoBuf.ProtoMember(4, IsRequired = true, Name = @"index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int index
+        {
+            get { return _index; }
+            set { _index = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"PlantList")]
+    public partial class PlantList : global::ProtoBuf.IExtensible
+    {
+        public PlantList() { }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.PlantDef> _plant_list = new global::System.Collections.Generic.List<RemoteFortressReader.PlantDef>();
+        [global::ProtoBuf.ProtoMember(1, Name = @"plant_list", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.PlantDef> plant_list
+        {
+            get { return _plant_list; }
+        }
+
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"ViewInfo")]
+    public partial class ViewInfo : global::ProtoBuf.IExtensible
+    {
+        public ViewInfo() { }
+
+        [UnityEngine.SerializeField]private int _view_pos_x = default(int);
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"view_pos_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int view_pos_x
+        {
+            get { return _view_pos_x; }
+            set { _view_pos_x = value; }
+        }
+        [UnityEngine.SerializeField]private int _view_pos_y = default(int);
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"view_pos_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int view_pos_y
+        {
+            get { return _view_pos_y; }
+            set { _view_pos_y = value; }
+        }
+        [UnityEngine.SerializeField]private int _view_pos_z = default(int);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"view_pos_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int view_pos_z
+        {
+            get { return _view_pos_z; }
+            set { _view_pos_z = value; }
+        }
+        [UnityEngine.SerializeField]private int _view_size_x = default(int);
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"view_size_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int view_size_x
+        {
+            get { return _view_size_x; }
+            set { _view_size_x = value; }
+        }
+        [UnityEngine.SerializeField]private int _view_size_y = default(int);
+        [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name = @"view_size_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int view_size_y
+        {
+            get { return _view_size_y; }
+            set { _view_size_y = value; }
+        }
+        [UnityEngine.SerializeField]private int _cursor_pos_x = default(int);
+        [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name = @"cursor_pos_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int cursor_pos_x
+        {
+            get { return _cursor_pos_x; }
+            set { _cursor_pos_x = value; }
+        }
+        [UnityEngine.SerializeField]private int _cursor_pos_y = default(int);
+        [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name = @"cursor_pos_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int cursor_pos_y
+        {
+            get { return _cursor_pos_y; }
+            set { _cursor_pos_y = value; }
+        }
+        [UnityEngine.SerializeField]private int _cursor_pos_z = default(int);
+        [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name = @"cursor_pos_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int cursor_pos_z
+        {
+            get { return _cursor_pos_z; }
+            set { _cursor_pos_z = value; }
+        }
+        [UnityEngine.SerializeField]private int _follow_unit_id = (int)-1;
+        [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name = @"follow_unit_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue((int)-1)]
+        public int follow_unit_id
+        {
+            get { return _follow_unit_id; }
+            set { _follow_unit_id = value; }
+        }
+        [UnityEngine.SerializeField]private int _follow_item_id = (int)-1;
+        [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name = @"follow_item_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue((int)-1)]
+        public int follow_item_id
+        {
+            get { return _follow_item_id; }
+            set { _follow_item_id = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"MapInfo")]
+    public partial class MapInfo : global::ProtoBuf.IExtensible
+    {
+        public MapInfo() { }
+
+        [UnityEngine.SerializeField]private int _block_size_x = default(int);
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"block_size_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int block_size_x
+        {
+            get { return _block_size_x; }
+            set { _block_size_x = value; }
+        }
+        [UnityEngine.SerializeField]private int _block_size_y = default(int);
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"block_size_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int block_size_y
+        {
+            get { return _block_size_y; }
+            set { _block_size_y = value; }
+        }
+        [UnityEngine.SerializeField]private int _block_size_z = default(int);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"block_size_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int block_size_z
+        {
+            get { return _block_size_z; }
+            set { _block_size_z = value; }
+        }
+        [UnityEngine.SerializeField]private int _block_pos_x = default(int);
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"block_pos_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int block_pos_x
+        {
+            get { return _block_pos_x; }
+            set { _block_pos_x = value; }
+        }
+        [UnityEngine.SerializeField]private int _block_pos_y = default(int);
+        [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name = @"block_pos_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int block_pos_y
+        {
+            get { return _block_pos_y; }
+            set { _block_pos_y = value; }
+        }
+        [UnityEngine.SerializeField]private int _block_pos_z = default(int);
+        [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name = @"block_pos_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int block_pos_z
+        {
+            get { return _block_pos_z; }
+            set { _block_pos_z = value; }
+        }
+        [UnityEngine.SerializeField]private string _world_name = "";
+        [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name = @"world_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string world_name
+        {
+            get { return _world_name; }
+            set { _world_name = value; }
+        }
+        [UnityEngine.SerializeField]private string _world_name_english = "";
+        [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name = @"world_name_english", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string world_name_english
+        {
+            get { return _world_name_english; }
+            set { _world_name_english = value; }
+        }
+        [UnityEngine.SerializeField]private string _save_name = "";
+        [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name = @"save_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string save_name
+        {
+            get { return _save_name; }
+            set { _save_name = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"Cloud")]
+    public partial class Cloud : global::ProtoBuf.IExtensible
+    {
+        public Cloud() { }
+
+        [UnityEngine.SerializeField]private RemoteFortressReader.FrontType _front = RemoteFortressReader.FrontType.FRONT_NONE;
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"front", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(RemoteFortressReader.FrontType.FRONT_NONE)]
+        public RemoteFortressReader.FrontType front
+        {
+            get { return _front; }
+            set { _front = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.CumulusType _cumulus = RemoteFortressReader.CumulusType.CUMULUS_NONE;
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"cumulus", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(RemoteFortressReader.CumulusType.CUMULUS_NONE)]
+        public RemoteFortressReader.CumulusType cumulus
+        {
+            get { return _cumulus; }
+            set { _cumulus = value; }
+        }
+        [UnityEngine.SerializeField]private bool _cirrus = default(bool);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"cirrus", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(default(bool))]
+        public bool cirrus
+        {
+            get { return _cirrus; }
+            set { _cirrus = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.StratusType _stratus = RemoteFortressReader.StratusType.STRATUS_NONE;
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"stratus", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(RemoteFortressReader.StratusType.STRATUS_NONE)]
+        public RemoteFortressReader.StratusType stratus
+        {
+            get { return _stratus; }
+            set { _stratus = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.FogType _fog = RemoteFortressReader.FogType.FOG_NONE;
+        [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name = @"fog", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(RemoteFortressReader.FogType.FOG_NONE)]
+        public RemoteFortressReader.FogType fog
+        {
+            get { return _fog; }
+            set { _fog = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"WorldMap")]
+    public partial class WorldMap : global::ProtoBuf.IExtensible
+    {
+        public WorldMap() { }
+
+        [UnityEngine.SerializeField]private int _world_width;
+        [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name = @"world_width", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int world_width
+        {
+            get { return _world_width; }
+            set { _world_width = value; }
+        }
+        [UnityEngine.SerializeField]private int _world_height;
+        [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name = @"world_height", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public int world_height
+        {
+            get { return _world_height; }
+            set { _world_height = value; }
+        }
+        [UnityEngine.SerializeField]private string _name = "";
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+        [UnityEngine.SerializeField]private string _name_english = "";
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"name_english", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string name_english
+        {
+            get { return _name_english; }
+            set { _name_english = value; }
+        }
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _elevation = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(5, Name = @"elevation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> elevation
+        {
+            get { return _elevation; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _rainfall = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(6, Name = @"rainfall", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> rainfall
+        {
+            get { return _rainfall; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _vegetation = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(7, Name = @"vegetation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> vegetation
+        {
+            get { return _vegetation; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _temperature = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(8, Name = @"temperature", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> temperature
+        {
+            get { return _temperature; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _evilness = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(9, Name = @"evilness", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> evilness
+        {
+            get { return _evilness; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _drainage = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(10, Name = @"drainage", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> drainage
+        {
+            get { return _drainage; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _volcanism = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(11, Name = @"volcanism", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> volcanism
+        {
+            get { return _volcanism; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _savagery = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(12, Name = @"savagery", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> savagery
+        {
+            get { return _savagery; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.Cloud> _clouds = new global::System.Collections.Generic.List<RemoteFortressReader.Cloud>();
+        [global::ProtoBuf.ProtoMember(13, Name = @"clouds", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.Cloud> clouds
+        {
+            get { return _clouds; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _salinity = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(14, Name = @"salinity", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> salinity
+        {
+            get { return _salinity; }
+        }
+
+        [UnityEngine.SerializeField]private int _map_x = default(int);
+        [global::ProtoBuf.ProtoMember(15, IsRequired = false, Name = @"map_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int map_x
+        {
+            get { return _map_x; }
+            set { _map_x = value; }
+        }
+        [UnityEngine.SerializeField]private int _map_y = default(int);
+        [global::ProtoBuf.ProtoMember(16, IsRequired = false, Name = @"map_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int map_y
+        {
+            get { return _map_y; }
+            set { _map_y = value; }
+        }
+        [UnityEngine.SerializeField]private int _center_x = default(int);
+        [global::ProtoBuf.ProtoMember(17, IsRequired = false, Name = @"center_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int center_x
+        {
+            get { return _center_x; }
+            set { _center_x = value; }
+        }
+        [UnityEngine.SerializeField]private int _center_y = default(int);
+        [global::ProtoBuf.ProtoMember(18, IsRequired = false, Name = @"center_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int center_y
+        {
+            get { return _center_y; }
+            set { _center_y = value; }
+        }
+        [UnityEngine.SerializeField]private int _center_z = default(int);
+        [global::ProtoBuf.ProtoMember(19, IsRequired = false, Name = @"center_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int center_z
+        {
+            get { return _center_z; }
+            set { _center_z = value; }
+        }
+        [UnityEngine.SerializeField]private int _cur_year = default(int);
+        [global::ProtoBuf.ProtoMember(20, IsRequired = false, Name = @"cur_year", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int cur_year
+        {
+            get { return _cur_year; }
+            set { _cur_year = value; }
+        }
+        [UnityEngine.SerializeField]private int _cur_year_tick = default(int);
+        [global::ProtoBuf.ProtoMember(21, IsRequired = false, Name = @"cur_year_tick", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int cur_year_tick
+        {
+            get { return _cur_year_tick; }
+            set { _cur_year_tick = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.WorldPoles _world_poles = RemoteFortressReader.WorldPoles.NO_POLES;
+        [global::ProtoBuf.ProtoMember(22, IsRequired = false, Name = @"world_poles", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(RemoteFortressReader.WorldPoles.NO_POLES)]
+        public RemoteFortressReader.WorldPoles world_poles
+        {
+            get { return _world_poles; }
+            set { _world_poles = value; }
+        }
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.RiverTile> _river_tiles = new global::System.Collections.Generic.List<RemoteFortressReader.RiverTile>();
+        [global::ProtoBuf.ProtoMember(23, Name = @"river_tiles", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.RiverTile> river_tiles
+        {
+            get { return _river_tiles; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _water_elevation = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(24, Name = @"water_elevation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> water_elevation
+        {
+            get { return _water_elevation; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.RegionTile> _region_tiles = new global::System.Collections.Generic.List<RemoteFortressReader.RegionTile>();
+        [global::ProtoBuf.ProtoMember(25, Name = @"region_tiles", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.RegionTile> region_tiles
+        {
+            get { return _region_tiles; }
+        }
+
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"SiteRealizationBuildingWall")]
+    public partial class SiteRealizationBuildingWall : global::ProtoBuf.IExtensible
+    {
+        public SiteRealizationBuildingWall() { }
+
+        [UnityEngine.SerializeField]private int _start_x = default(int);
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"start_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int start_x
+        {
+            get { return _start_x; }
+            set { _start_x = value; }
+        }
+        [UnityEngine.SerializeField]private int _start_y = default(int);
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"start_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int start_y
+        {
+            get { return _start_y; }
+            set { _start_y = value; }
+        }
+        [UnityEngine.SerializeField]private int _start_z = default(int);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"start_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int start_z
+        {
+            get { return _start_z; }
+            set { _start_z = value; }
+        }
+        [UnityEngine.SerializeField]private int _end_x = default(int);
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"end_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int end_x
+        {
+            get { return _end_x; }
+            set { _end_x = value; }
+        }
+        [UnityEngine.SerializeField]private int _end_y = default(int);
+        [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name = @"end_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int end_y
+        {
+            get { return _end_y; }
+            set { _end_y = value; }
+        }
+        [UnityEngine.SerializeField]private int _end_z = default(int);
+        [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name = @"end_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int end_z
+        {
+            get { return _end_z; }
+            set { _end_z = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"SiteRealizationBuildingTower")]
+    public partial class SiteRealizationBuildingTower : global::ProtoBuf.IExtensible
+    {
+        public SiteRealizationBuildingTower() { }
+
+        [UnityEngine.SerializeField]private int _roof_z = default(int);
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"roof_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int roof_z
+        {
+            get { return _roof_z; }
+            set { _roof_z = value; }
+        }
+        [UnityEngine.SerializeField]private bool _round = default(bool);
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"round", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(default(bool))]
+        public bool round
+        {
+            get { return _round; }
+            set { _round = value; }
+        }
+        [UnityEngine.SerializeField]private bool _goblin = default(bool);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"goblin", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(default(bool))]
+        public bool goblin
+        {
+            get { return _goblin; }
+            set { _goblin = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"TrenchSpoke")]
+    public partial class TrenchSpoke : global::ProtoBuf.IExtensible
+    {
+        public TrenchSpoke() { }
+
+        [UnityEngine.SerializeField]private int _mound_start = default(int);
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"mound_start", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int mound_start
+        {
+            get { return _mound_start; }
+            set { _mound_start = value; }
+        }
+        [UnityEngine.SerializeField]private int _trench_start = default(int);
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"trench_start", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int trench_start
+        {
+            get { return _trench_start; }
+            set { _trench_start = value; }
+        }
+        [UnityEngine.SerializeField]private int _trench_end = default(int);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"trench_end", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int trench_end
+        {
+            get { return _trench_end; }
+            set { _trench_end = value; }
+        }
+        [UnityEngine.SerializeField]private int _mound_end = default(int);
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"mound_end", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int mound_end
+        {
+            get { return _mound_end; }
+            set { _mound_end = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"SiteRealizationBuildingTrenches")]
+    public partial class SiteRealizationBuildingTrenches : global::ProtoBuf.IExtensible
+    {
+        public SiteRealizationBuildingTrenches() { }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.TrenchSpoke> _spokes = new global::System.Collections.Generic.List<RemoteFortressReader.TrenchSpoke>();
+        [global::ProtoBuf.ProtoMember(1, Name = @"spokes", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.TrenchSpoke> spokes
+        {
+            get { return _spokes; }
+        }
+
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"SiteRealizationBuilding")]
+    public partial class SiteRealizationBuilding : global::ProtoBuf.IExtensible
+    {
+        public SiteRealizationBuilding() { }
+
+        [UnityEngine.SerializeField]private int _id = default(int);
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.SiteRealizationBuildingType _type = RemoteFortressReader.SiteRealizationBuildingType.cottage_plot;
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(RemoteFortressReader.SiteRealizationBuildingType.cottage_plot)]
+        public RemoteFortressReader.SiteRealizationBuildingType type
+        {
+            get { return _type; }
+            set { _type = value; }
+        }
+        [UnityEngine.SerializeField]private int _min_x = default(int);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"min_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int min_x
+        {
+            get { return _min_x; }
+            set { _min_x = value; }
+        }
+        [UnityEngine.SerializeField]private int _min_y = default(int);
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"min_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int min_y
+        {
+            get { return _min_y; }
+            set { _min_y = value; }
+        }
+        [UnityEngine.SerializeField]private int _max_x = default(int);
+        [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name = @"max_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int max_x
+        {
+            get { return _max_x; }
+            set { _max_x = value; }
+        }
+        [UnityEngine.SerializeField]private int _max_y = default(int);
+        [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name = @"max_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int max_y
+        {
+            get { return _max_y; }
+            set { _max_y = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.MatPair _material = null;
+        [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name = @"material", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.MatPair material
+        {
+            get { return _material; }
+            set { _material = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.SiteRealizationBuildingWall _wall_info = null;
+        [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name = @"wall_info", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.SiteRealizationBuildingWall wall_info
+        {
+            get { return _wall_info; }
+            set { _wall_info = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.SiteRealizationBuildingTower _tower_info = null;
+        [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name = @"tower_info", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.SiteRealizationBuildingTower tower_info
+        {
+            get { return _tower_info; }
+            set { _tower_info = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.SiteRealizationBuildingTrenches _trench_info = null;
+        [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name = @"trench_info", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.SiteRealizationBuildingTrenches trench_info
+        {
+            get { return _trench_info; }
+            set { _trench_info = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"RegionTile")]
+    public partial class RegionTile : global::ProtoBuf.IExtensible
+    {
+        public RegionTile() { }
+
+        [UnityEngine.SerializeField]private int _elevation = default(int);
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"elevation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int elevation
+        {
+            get { return _elevation; }
+            set { _elevation = value; }
+        }
+        [UnityEngine.SerializeField]private int _rainfall = default(int);
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"rainfall", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int rainfall
+        {
+            get { return _rainfall; }
+            set { _rainfall = value; }
+        }
+        [UnityEngine.SerializeField]private int _vegetation = default(int);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"vegetation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int vegetation
+        {
+            get { return _vegetation; }
+            set { _vegetation = value; }
+        }
+        [UnityEngine.SerializeField]private int _temperature = default(int);
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"temperature", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int temperature
+        {
+            get { return _temperature; }
+            set { _temperature = value; }
+        }
+        [UnityEngine.SerializeField]private int _evilness = default(int);
+        [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name = @"evilness", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int evilness
+        {
+            get { return _evilness; }
+            set { _evilness = value; }
+        }
+        [UnityEngine.SerializeField]private int _drainage = default(int);
+        [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name = @"drainage", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int drainage
+        {
+            get { return _drainage; }
+            set { _drainage = value; }
+        }
+        [UnityEngine.SerializeField]private int _volcanism = default(int);
+        [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name = @"volcanism", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int volcanism
+        {
+            get { return _volcanism; }
+            set { _volcanism = value; }
+        }
+        [UnityEngine.SerializeField]private int _savagery = default(int);
+        [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name = @"savagery", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int savagery
+        {
+            get { return _savagery; }
+            set { _savagery = value; }
+        }
+        [UnityEngine.SerializeField]private int _salinity = default(int);
+        [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name = @"salinity", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int salinity
+        {
+            get { return _salinity; }
+            set { _salinity = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.RiverTile _river_tiles = null;
+        [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name = @"river_tiles", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.RiverTile river_tiles
+        {
+            get { return _river_tiles; }
+            set { _river_tiles = value; }
+        }
+        [UnityEngine.SerializeField]private int _water_elevation = default(int);
+        [global::ProtoBuf.ProtoMember(11, IsRequired = false, Name = @"water_elevation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int water_elevation
+        {
+            get { return _water_elevation; }
+            set { _water_elevation = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.MatPair _surface_material = null;
+        [global::ProtoBuf.ProtoMember(12, IsRequired = false, Name = @"surface_material", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.MatPair surface_material
+        {
+            get { return _surface_material; }
+            set { _surface_material = value; }
+        }
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _plant_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
+        [global::ProtoBuf.ProtoMember(13, Name = @"plant_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> plant_materials
+        {
+            get { return _plant_materials; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.SiteRealizationBuilding> _buildings = new global::System.Collections.Generic.List<RemoteFortressReader.SiteRealizationBuilding>();
+        [global::ProtoBuf.ProtoMember(14, Name = @"buildings", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.SiteRealizationBuilding> buildings
+        {
+            get { return _buildings; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _stone_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
+        [global::ProtoBuf.ProtoMember(15, Name = @"stone_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> stone_materials
+        {
+            get { return _stone_materials; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _tree_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
+        [global::ProtoBuf.ProtoMember(16, Name = @"tree_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> tree_materials
+        {
+            get { return _tree_materials; }
+        }
+
+        [UnityEngine.SerializeField]private int _snow = default(int);
+        [global::ProtoBuf.ProtoMember(17, IsRequired = false, Name = @"snow", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int snow
+        {
+            get { return _snow; }
+            set { _snow = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"RegionMap")]
+    public partial class RegionMap : global::ProtoBuf.IExtensible
+    {
+        public RegionMap() { }
+
+        [UnityEngine.SerializeField]private int _map_x = default(int);
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"map_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int map_x
+        {
+            get { return _map_x; }
+            set { _map_x = value; }
+        }
+        [UnityEngine.SerializeField]private int _map_y = default(int);
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"map_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int map_y
+        {
+            get { return _map_y; }
+            set { _map_y = value; }
+        }
+        [UnityEngine.SerializeField]private string _name = "";
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+        [UnityEngine.SerializeField]private string _name_english = "";
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"name_english", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string name_english
+        {
+            get { return _name_english; }
+            set { _name_english = value; }
+        }
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.RegionTile> _tiles = new global::System.Collections.Generic.List<RemoteFortressReader.RegionTile>();
+        [global::ProtoBuf.ProtoMember(5, Name = @"tiles", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.RegionTile> tiles
+        {
+            get { return _tiles; }
+        }
+
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"RegionMaps")]
+    public partial class RegionMaps : global::ProtoBuf.IExtensible
+    {
+        public RegionMaps() { }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.WorldMap> _world_maps = new global::System.Collections.Generic.List<RemoteFortressReader.WorldMap>();
+        [global::ProtoBuf.ProtoMember(1, Name = @"world_maps", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.WorldMap> world_maps
+        {
+            get { return _world_maps; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.RegionMap> _region_maps = new global::System.Collections.Generic.List<RemoteFortressReader.RegionMap>();
+        [global::ProtoBuf.ProtoMember(2, Name = @"region_maps", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.RegionMap> region_maps
+        {
+            get { return _region_maps; }
+        }
+
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"PatternDescriptor")]
+    public partial class PatternDescriptor : global::ProtoBuf.IExtensible
+    {
+        public PatternDescriptor() { }
+
+        [UnityEngine.SerializeField]private string _id = "";
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"id", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.ColorDefinition> _colors = new global::System.Collections.Generic.List<RemoteFortressReader.ColorDefinition>();
+        [global::ProtoBuf.ProtoMember(2, Name = @"colors", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.ColorDefinition> colors
+        {
+            get { return _colors; }
+        }
+
+        [UnityEngine.SerializeField]private RemoteFortressReader.PatternType _pattern = RemoteFortressReader.PatternType.MONOTONE;
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"pattern", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(RemoteFortressReader.PatternType.MONOTONE)]
+        public RemoteFortressReader.PatternType pattern
+        {
+            get { return _pattern; }
+            set { _pattern = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"ColorModifierRaw")]
+    public partial class ColorModifierRaw : global::ProtoBuf.IExtensible
+    {
+        public ColorModifierRaw() { }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.PatternDescriptor> _patterns = new global::System.Collections.Generic.List<RemoteFortressReader.PatternDescriptor>();
+        [global::ProtoBuf.ProtoMember(1, Name = @"patterns", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.PatternDescriptor> patterns
+        {
+            get { return _patterns; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _body_part_id = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(2, Name = @"body_part_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> body_part_id
+        {
+            get { return _body_part_id; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _tissue_layer_id = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(3, Name = @"tissue_layer_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> tissue_layer_id
+        {
+            get { return _tissue_layer_id; }
+        }
+
+        [UnityEngine.SerializeField]private int _start_date = default(int);
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"start_date", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int start_date
+        {
+            get { return _start_date; }
+            set { _start_date = value; }
+        }
+        [UnityEngine.SerializeField]private int _end_date = default(int);
+        [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name = @"end_date", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int end_date
+        {
+            get { return _end_date; }
+            set { _end_date = value; }
+        }
+        [UnityEngine.SerializeField]private string _part = "";
+        [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name = @"part", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string part
+        {
+            get { return _part; }
+            set { _part = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"BodyPartLayerRaw")]
+    public partial class BodyPartLayerRaw : global::ProtoBuf.IExtensible
+    {
+        public BodyPartLayerRaw() { }
+
+        [UnityEngine.SerializeField]private string _layer_name = "";
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"layer_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string layer_name
+        {
+            get { return _layer_name; }
+            set { _layer_name = value; }
+        }
+        [UnityEngine.SerializeField]private int _tissue_id = default(int);
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"tissue_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int tissue_id
+        {
+            get { return _tissue_id; }
+            set { _tissue_id = value; }
+        }
+        [UnityEngine.SerializeField]private int _layer_depth = default(int);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"layer_depth", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int layer_depth
+        {
+            get { return _layer_depth; }
+            set { _layer_depth = value; }
+        }
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _bp_modifiers = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(4, Name = @"bp_modifiers", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> bp_modifiers
+        {
+            get { return _bp_modifiers; }
+        }
+
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"BodyPartRaw")]
+    public partial class BodyPartRaw : global::ProtoBuf.IExtensible
+    {
+        public BodyPartRaw() { }
+
+        [UnityEngine.SerializeField]private string _token = "";
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"token", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string token
+        {
+            get { return _token; }
+            set { _token = value; }
+        }
+        [UnityEngine.SerializeField]private string _category = "";
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"category", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string category
+        {
+            get { return _category; }
+            set { _category = value; }
+        }
+        [UnityEngine.SerializeField]private int _parent = default(int);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"parent", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int parent
+        {
+            get { return _parent; }
+            set { _parent = value; }
+        }
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<bool> _flags = new global::System.Collections.Generic.List<bool>();
+        [global::ProtoBuf.ProtoMember(4, Name = @"flags", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<bool> flags
+        {
+            get { return _flags; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.BodyPartLayerRaw> _layers = new global::System.Collections.Generic.List<RemoteFortressReader.BodyPartLayerRaw>();
+        [global::ProtoBuf.ProtoMember(5, Name = @"layers", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.BodyPartLayerRaw> layers
+        {
+            get { return _layers; }
+        }
+
+        [UnityEngine.SerializeField]private int _relsize = default(int);
+        [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name = @"relsize", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int relsize
+        {
+            get { return _relsize; }
+            set { _relsize = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"BpAppearanceModifier")]
+    public partial class BpAppearanceModifier : global::ProtoBuf.IExtensible
+    {
+        public BpAppearanceModifier() { }
+
+        [UnityEngine.SerializeField]private string _type = "";
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"type", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string type
+        {
+            get { return _type; }
+            set { _type = value; }
+        }
+        [UnityEngine.SerializeField]private int _mod_min = default(int);
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"mod_min", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int mod_min
+        {
+            get { return _mod_min; }
+            set { _mod_min = value; }
+        }
+        [UnityEngine.SerializeField]private int _mod_max = default(int);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"mod_max", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int mod_max
+        {
+            get { return _mod_max; }
+            set { _mod_max = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"TissueRaw")]
+    public partial class TissueRaw : global::ProtoBuf.IExtensible
+    {
+        public TissueRaw() { }
+
+        [UnityEngine.SerializeField]private string _id = "";
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"id", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+        [UnityEngine.SerializeField]private string _name = "";
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.MatPair _material = null;
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"material", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.MatPair material
+        {
+            get { return _material; }
+            set { _material = value; }
+        }
+        [UnityEngine.SerializeField]private string _subordinate_to_tissue = "";
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"subordinate_to_tissue", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string subordinate_to_tissue
+        {
+            get { return _subordinate_to_tissue; }
+            set { _subordinate_to_tissue = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"CasteRaw")]
+    public partial class CasteRaw : global::ProtoBuf.IExtensible
+    {
+        public CasteRaw() { }
+
+        [UnityEngine.SerializeField]private int _index = default(int);
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int index
+        {
+            get { return _index; }
+            set { _index = value; }
+        }
+        [UnityEngine.SerializeField]private string _caste_id = "";
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"caste_id", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string caste_id
+        {
+            get { return _caste_id; }
+            set { _caste_id = value; }
+        }
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<string> _caste_name = new global::System.Collections.Generic.List<string>();
+        [global::ProtoBuf.ProtoMember(3, Name = @"caste_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<string> caste_name
+        {
+            get { return _caste_name; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<string> _baby_name = new global::System.Collections.Generic.List<string>();
+        [global::ProtoBuf.ProtoMember(4, Name = @"baby_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<string> baby_name
+        {
+            get { return _baby_name; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<string> _child_name = new global::System.Collections.Generic.List<string>();
+        [global::ProtoBuf.ProtoMember(5, Name = @"child_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<string> child_name
+        {
+            get { return _child_name; }
+        }
+
+        [UnityEngine.SerializeField]private int _gender = default(int);
+        [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name = @"gender", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int gender
+        {
+            get { return _gender; }
+            set { _gender = value; }
+        }
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.BodyPartRaw> _body_parts = new global::System.Collections.Generic.List<RemoteFortressReader.BodyPartRaw>();
+        [global::ProtoBuf.ProtoMember(7, Name = @"body_parts", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.BodyPartRaw> body_parts
+        {
+            get { return _body_parts; }
+        }
+
+        [UnityEngine.SerializeField]private int _total_relsize = default(int);
+        [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name = @"total_relsize", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int total_relsize
+        {
+            get { return _total_relsize; }
+            set { _total_relsize = value; }
+        }
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier> _modifiers = new global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier>();
+        [global::ProtoBuf.ProtoMember(9, Name = @"modifiers", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier> modifiers
+        {
+            get { return _modifiers; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _modifier_idx = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(10, Name = @"modifier_idx", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> modifier_idx
+        {
+            get { return _modifier_idx; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _part_idx = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(11, Name = @"part_idx", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> part_idx
+        {
+            get { return _part_idx; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<int> _layer_idx = new global::System.Collections.Generic.List<int>();
+        [global::ProtoBuf.ProtoMember(12, Name = @"layer_idx", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        public global::System.Collections.Generic.List<int> layer_idx
+        {
+            get { return _layer_idx; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier> _body_appearance_modifiers = new global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier>();
+        [global::ProtoBuf.ProtoMember(13, Name = @"body_appearance_modifiers", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier> body_appearance_modifiers
+        {
+            get { return _body_appearance_modifiers; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.ColorModifierRaw> _color_modifiers = new global::System.Collections.Generic.List<RemoteFortressReader.ColorModifierRaw>();
+        [global::ProtoBuf.ProtoMember(14, Name = @"color_modifiers", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.ColorModifierRaw> color_modifiers
+        {
+            get { return _color_modifiers; }
+        }
+
+        [UnityEngine.SerializeField]private string _description = "";
+        [global::ProtoBuf.ProtoMember(15, IsRequired = false, Name = @"description", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string description
+        {
+            get { return _description; }
+            set { _description = value; }
+        }
+        [UnityEngine.SerializeField]private int _adult_size = default(int);
+        [global::ProtoBuf.ProtoMember(16, IsRequired = false, Name = @"adult_size", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int adult_size
+        {
+            get { return _adult_size; }
+            set { _adult_size = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"CreatureRaw")]
+    public partial class CreatureRaw : global::ProtoBuf.IExtensible
+    {
+        public CreatureRaw() { }
+
+        [UnityEngine.SerializeField]private int _index = default(int);
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int index
+        {
+            get { return _index; }
+            set { _index = value; }
+        }
+        [UnityEngine.SerializeField]private string _creature_id = "";
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"creature_id", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string creature_id
+        {
+            get { return _creature_id; }
+            set { _creature_id = value; }
+        }
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<string> _name = new global::System.Collections.Generic.List<string>();
+        [global::ProtoBuf.ProtoMember(3, Name = @"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<string> name
+        {
+            get { return _name; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<string> _general_baby_name = new global::System.Collections.Generic.List<string>();
+        [global::ProtoBuf.ProtoMember(4, Name = @"general_baby_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<string> general_baby_name
+        {
+            get { return _general_baby_name; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<string> _general_child_name = new global::System.Collections.Generic.List<string>();
+        [global::ProtoBuf.ProtoMember(5, Name = @"general_child_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<string> general_child_name
+        {
+            get { return _general_child_name; }
+        }
+
+        [UnityEngine.SerializeField]private int _creature_tile = default(int);
+        [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name = @"creature_tile", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int creature_tile
+        {
+            get { return _creature_tile; }
+            set { _creature_tile = value; }
+        }
+        [UnityEngine.SerializeField]private int _creature_soldier_tile = default(int);
+        [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name = @"creature_soldier_tile", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int creature_soldier_tile
+        {
+            get { return _creature_soldier_tile; }
+            set { _creature_soldier_tile = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.ColorDefinition _color = null;
+        [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name = @"color", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.ColorDefinition color
+        {
+            get { return _color; }
+            set { _color = value; }
+        }
+        [UnityEngine.SerializeField]private int _adultsize = default(int);
+        [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name = @"adultsize", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int adultsize
+        {
+            get { return _adultsize; }
+            set { _adultsize = value; }
+        }
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.CasteRaw> _caste = new global::System.Collections.Generic.List<RemoteFortressReader.CasteRaw>();
+        [global::ProtoBuf.ProtoMember(10, Name = @"caste", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.CasteRaw> caste
+        {
+            get { return _caste; }
+        }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.TissueRaw> _tissues = new global::System.Collections.Generic.List<RemoteFortressReader.TissueRaw>();
+        [global::ProtoBuf.ProtoMember(11, Name = @"tissues", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.TissueRaw> tissues
+        {
+            get { return _tissues; }
+        }
+
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"CreatureRawList")]
+    public partial class CreatureRawList : global::ProtoBuf.IExtensible
+    {
+        public CreatureRawList() { }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.CreatureRaw> _creature_raws = new global::System.Collections.Generic.List<RemoteFortressReader.CreatureRaw>();
+        [global::ProtoBuf.ProtoMember(1, Name = @"creature_raws", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.CreatureRaw> creature_raws
+        {
+            get { return _creature_raws; }
+        }
+
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"Army")]
+    public partial class Army : global::ProtoBuf.IExtensible
+    {
+        public Army() { }
+
+        [UnityEngine.SerializeField]private int _id = default(int);
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+        [UnityEngine.SerializeField]private int _pos_x = default(int);
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"pos_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int pos_x
+        {
+            get { return _pos_x; }
+            set { _pos_x = value; }
+        }
+        [UnityEngine.SerializeField]private int _pos_y = default(int);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"pos_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int pos_y
+        {
+            get { return _pos_y; }
+            set { _pos_y = value; }
+        }
+        [UnityEngine.SerializeField]private int _pos_z = default(int);
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"pos_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int pos_z
+        {
+            get { return _pos_z; }
+            set { _pos_z = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.UnitDefinition _leader = null;
+        [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name = @"leader", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.UnitDefinition leader
+        {
+            get { return _leader; }
+            set { _leader = value; }
+        }
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition> _members = new global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition>();
+        [global::ProtoBuf.ProtoMember(6, Name = @"members", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition> members
+        {
+            get { return _members; }
+        }
+
+        [UnityEngine.SerializeField]private uint _flags = default(uint);
+        [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name = @"flags", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(uint))]
+        public uint flags
+        {
+            get { return _flags; }
+            set { _flags = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"ArmyList")]
+    public partial class ArmyList : global::ProtoBuf.IExtensible
+    {
+        public ArmyList() { }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.Army> _armies = new global::System.Collections.Generic.List<RemoteFortressReader.Army>();
+        [global::ProtoBuf.ProtoMember(1, Name = @"armies", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.Army> armies
+        {
+            get { return _armies; }
+        }
+
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"GrowthPrint")]
+    public partial class GrowthPrint : global::ProtoBuf.IExtensible
+    {
+        public GrowthPrint() { }
+
+        [UnityEngine.SerializeField]private int _priority = default(int);
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"priority", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int priority
+        {
+            get { return _priority; }
+            set { _priority = value; }
+        }
+        [UnityEngine.SerializeField]private int _color = default(int);
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"color", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int color
+        {
+            get { return _color; }
+            set { _color = value; }
+        }
+        [UnityEngine.SerializeField]private int _timing_start = default(int);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"timing_start", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int timing_start
+        {
+            get { return _timing_start; }
+            set { _timing_start = value; }
+        }
+        [UnityEngine.SerializeField]private int _timing_end = default(int);
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"timing_end", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int timing_end
+        {
+            get { return _timing_end; }
+            set { _timing_end = value; }
+        }
+        [UnityEngine.SerializeField]private int _tile = default(int);
+        [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name = @"tile", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int tile
+        {
+            get { return _tile; }
+            set { _tile = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"TreeGrowth")]
+    public partial class TreeGrowth : global::ProtoBuf.IExtensible
+    {
+        public TreeGrowth() { }
+
+        [UnityEngine.SerializeField]private int _index = default(int);
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int index
+        {
+            get { return _index; }
+            set { _index = value; }
+        }
+        [UnityEngine.SerializeField]private string _id = "";
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"id", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+        [UnityEngine.SerializeField]private string _name = "";
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+        [UnityEngine.SerializeField]private RemoteFortressReader.MatPair _mat = null;
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"mat", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(null)]
+        public RemoteFortressReader.MatPair mat
+        {
+            get { return _mat; }
+            set { _mat = value; }
+        }
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.GrowthPrint> _prints = new global::System.Collections.Generic.List<RemoteFortressReader.GrowthPrint>();
+        [global::ProtoBuf.ProtoMember(5, Name = @"prints", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.GrowthPrint> prints
+        {
+            get { return _prints; }
+        }
+
+        [UnityEngine.SerializeField]private int _timing_start = default(int);
+        [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name = @"timing_start", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int timing_start
+        {
+            get { return _timing_start; }
+            set { _timing_start = value; }
+        }
+        [UnityEngine.SerializeField]private int _timing_end = default(int);
+        [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name = @"timing_end", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int timing_end
+        {
+            get { return _timing_end; }
+            set { _timing_end = value; }
+        }
+        [UnityEngine.SerializeField]private bool _twigs = default(bool);
+        [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name = @"twigs", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(default(bool))]
+        public bool twigs
+        {
+            get { return _twigs; }
+            set { _twigs = value; }
+        }
+        [UnityEngine.SerializeField]private bool _light_branches = default(bool);
+        [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name = @"light_branches", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(default(bool))]
+        public bool light_branches
+        {
+            get { return _light_branches; }
+            set { _light_branches = value; }
+        }
+        [UnityEngine.SerializeField]private bool _heavy_branches = default(bool);
+        [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name = @"heavy_branches", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(default(bool))]
+        public bool heavy_branches
+        {
+            get { return _heavy_branches; }
+            set { _heavy_branches = value; }
+        }
+        [UnityEngine.SerializeField]private bool _trunk = default(bool);
+        [global::ProtoBuf.ProtoMember(11, IsRequired = false, Name = @"trunk", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(default(bool))]
+        public bool trunk
+        {
+            get { return _trunk; }
+            set { _trunk = value; }
+        }
+        [UnityEngine.SerializeField]private bool _roots = default(bool);
+        [global::ProtoBuf.ProtoMember(12, IsRequired = false, Name = @"roots", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(default(bool))]
+        public bool roots
+        {
+            get { return _roots; }
+            set { _roots = value; }
+        }
+        [UnityEngine.SerializeField]private bool _cap = default(bool);
+        [global::ProtoBuf.ProtoMember(13, IsRequired = false, Name = @"cap", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(default(bool))]
+        public bool cap
+        {
+            get { return _cap; }
+            set { _cap = value; }
+        }
+        [UnityEngine.SerializeField]private bool _sapling = default(bool);
+        [global::ProtoBuf.ProtoMember(14, IsRequired = false, Name = @"sapling", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(default(bool))]
+        public bool sapling
+        {
+            get { return _sapling; }
+            set { _sapling = value; }
+        }
+        [UnityEngine.SerializeField]private int _trunk_height_start = default(int);
+        [global::ProtoBuf.ProtoMember(15, IsRequired = false, Name = @"trunk_height_start", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int trunk_height_start
+        {
+            get { return _trunk_height_start; }
+            set { _trunk_height_start = value; }
+        }
+        [UnityEngine.SerializeField]private int _trunk_height_end = default(int);
+        [global::ProtoBuf.ProtoMember(16, IsRequired = false, Name = @"trunk_height_end", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int trunk_height_end
+        {
+            get { return _trunk_height_end; }
+            set { _trunk_height_end = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"PlantRaw")]
+    public partial class PlantRaw : global::ProtoBuf.IExtensible
+    {
+        public PlantRaw() { }
+
+        [UnityEngine.SerializeField]private int _index = default(int);
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int index
+        {
+            get { return _index; }
+            set { _index = value; }
+        }
+        [UnityEngine.SerializeField]private string _id = "";
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"id", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+        [UnityEngine.SerializeField]private string _name = "";
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.TreeGrowth> _growths = new global::System.Collections.Generic.List<RemoteFortressReader.TreeGrowth>();
+        [global::ProtoBuf.ProtoMember(4, Name = @"growths", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.TreeGrowth> growths
+        {
+            get { return _growths; }
+        }
+
+        [UnityEngine.SerializeField]private int _tile = default(int);
+        [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name = @"tile", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(int))]
+        public int tile
+        {
+            get { return _tile; }
+            set { _tile = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"PlantRawList")]
+    public partial class PlantRawList : global::ProtoBuf.IExtensible
+    {
+        public PlantRawList() { }
+
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.PlantRaw> _plant_raws = new global::System.Collections.Generic.List<RemoteFortressReader.PlantRaw>();
+        [global::ProtoBuf.ProtoMember(1, Name = @"plant_raws", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.PlantRaw> plant_raws
+        {
+            get { return _plant_raws; }
+        }
+
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"ScreenTile")]
+    public partial class ScreenTile : global::ProtoBuf.IExtensible
+    {
+        public ScreenTile() { }
+
+        [UnityEngine.SerializeField]private uint _character = default(uint);
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"character", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(uint))]
+        public uint character
+        {
+            get { return _character; }
+            set { _character = value; }
+        }
+        [UnityEngine.SerializeField]private uint _foreground = default(uint);
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"foreground", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(uint))]
+        public uint foreground
+        {
+            get { return _foreground; }
+            set { _foreground = value; }
+        }
+        [UnityEngine.SerializeField]private uint _background = default(uint);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"background", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(uint))]
+        public uint background
+        {
+            get { return _background; }
+            set { _background = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"ScreenCapture")]
+    public partial class ScreenCapture : global::ProtoBuf.IExtensible
+    {
+        public ScreenCapture() { }
+
+        [UnityEngine.SerializeField]private uint _width = default(uint);
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"width", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(uint))]
+        public uint width
+        {
+            get { return _width; }
+            set { _width = value; }
+        }
+        [UnityEngine.SerializeField]private uint _height = default(uint);
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"height", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(uint))]
+        public uint height
+        {
+            get { return _height; }
+            set { _height = value; }
+        }
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.ScreenTile> _tiles = new global::System.Collections.Generic.List<RemoteFortressReader.ScreenTile>();
+        [global::ProtoBuf.ProtoMember(3, Name = @"tiles", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.ScreenTile> tiles
+        {
+            get { return _tiles; }
+        }
+
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"KeyboardEvent")]
+    public partial class KeyboardEvent : global::ProtoBuf.IExtensible
+    {
+        public KeyboardEvent() { }
+
+        [UnityEngine.SerializeField]private uint _type = default(uint);
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(uint))]
+        public uint type
+        {
+            get { return _type; }
+            set { _type = value; }
+        }
+        [UnityEngine.SerializeField]private uint _which = default(uint);
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"which", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(uint))]
+        public uint which
+        {
+            get { return _which; }
+            set { _which = value; }
+        }
+        [UnityEngine.SerializeField]private uint _state = default(uint);
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"state", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(uint))]
+        public uint state
+        {
+            get { return _state; }
+            set { _state = value; }
+        }
+        [UnityEngine.SerializeField]private uint _scancode = default(uint);
+        [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"scancode", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(uint))]
+        public uint scancode
+        {
+            get { return _scancode; }
+            set { _scancode = value; }
+        }
+        [UnityEngine.SerializeField]private uint _sym = default(uint);
+        [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name = @"sym", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(uint))]
+        public uint sym
+        {
+            get { return _sym; }
+            set { _sym = value; }
+        }
+        [UnityEngine.SerializeField]private uint _mod = default(uint);
+        [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name = @"mod", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(uint))]
+        public uint mod
+        {
+            get { return _mod; }
+            set { _mod = value; }
+        }
+        [UnityEngine.SerializeField]private uint _unicode = default(uint);
+        [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name = @"unicode", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(default(uint))]
+        public uint unicode
+        {
+            get { return _unicode; }
+            set { _unicode = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"DigCommand")]
+    public partial class DigCommand : global::ProtoBuf.IExtensible
+    {
+        public DigCommand() { }
+
+        [UnityEngine.SerializeField]private RemoteFortressReader.TileDigDesignation _designation = RemoteFortressReader.TileDigDesignation.NO_DIG;
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"designation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+        [global::System.ComponentModel.DefaultValue(RemoteFortressReader.TileDigDesignation.NO_DIG)]
+        public RemoteFortressReader.TileDigDesignation designation
+        {
+            get { return _designation; }
+            set { _designation = value; }
+        }
+        [UnityEngine.SerializeField]private readonly global::System.Collections.Generic.List<RemoteFortressReader.Coord> _locations = new global::System.Collections.Generic.List<RemoteFortressReader.Coord>();
+        [global::ProtoBuf.ProtoMember(2, Name = @"locations", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        public global::System.Collections.Generic.List<RemoteFortressReader.Coord> locations
+        {
+            get { return _locations; }
+        }
+
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"SingleBool")]
+    public partial class SingleBool : global::ProtoBuf.IExtensible
+    {
+        public SingleBool() { }
+
+        [UnityEngine.SerializeField]private bool _Value = default(bool);
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"Value", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue(default(bool))]
+        public bool Value
+        {
+            get { return _Value; }
+            set { _Value = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name = @"VersionInfo")]
+    public partial class VersionInfo : global::ProtoBuf.IExtensible
+    {
+        public VersionInfo() { }
+
+        [UnityEngine.SerializeField]private string _dwarf_fortress_version = "";
+        [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name = @"dwarf_fortress_version", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string dwarf_fortress_version
+        {
+            get { return _dwarf_fortress_version; }
+            set { _dwarf_fortress_version = value; }
+        }
+        [UnityEngine.SerializeField]private string _dfhack_version = "";
+        [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name = @"dfhack_version", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string dfhack_version
+        {
+            get { return _dfhack_version; }
+            set { _dfhack_version = value; }
+        }
+        [UnityEngine.SerializeField]private string _remote_fortress_reader_version = "";
+        [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name = @"remote_fortress_reader_version", DataFormat = global::ProtoBuf.DataFormat.Default)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string remote_fortress_reader_version
+        {
+            get { return _remote_fortress_reader_version; }
+            set { _remote_fortress_reader_version = value; }
+        }
+        [UnityEngine.SerializeField]private global::ProtoBuf.IExtension extensionObject;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+        { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+    }
+
+    [global::ProtoBuf.ProtoContract(Name = @"TiletypeShape")]
     public enum TiletypeShape
     {
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"NO_SHAPE", Value=-1)]
-      NO_SHAPE = -1,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"EMPTY", Value=0)]
-      EMPTY = 0,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"FLOOR", Value=1)]
-      FLOOR = 1,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"BOULDER", Value=2)]
-      BOULDER = 2,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"PEBBLES", Value=3)]
-      PEBBLES = 3,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"WALL", Value=4)]
-      WALL = 4,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"FORTIFICATION", Value=5)]
-      FORTIFICATION = 5,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"STAIR_UP", Value=6)]
-      STAIR_UP = 6,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"STAIR_DOWN", Value=7)]
-      STAIR_DOWN = 7,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"STAIR_UPDOWN", Value=8)]
-      STAIR_UPDOWN = 8,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"RAMP", Value=9)]
-      RAMP = 9,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"RAMP_TOP", Value=10)]
-      RAMP_TOP = 10,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"BROOK_BED", Value=11)]
-      BROOK_BED = 11,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"BROOK_TOP", Value=12)]
-      BROOK_TOP = 12,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"TREE_SHAPE", Value=13)]
-      TREE_SHAPE = 13,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"SAPLING", Value=14)]
-      SAPLING = 14,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"SHRUB", Value=15)]
-      SHRUB = 15,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"ENDLESS_PIT", Value=16)]
-      ENDLESS_PIT = 16,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"BRANCH", Value=17)]
-      BRANCH = 17,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"TRUNK_BRANCH", Value=18)]
-      TRUNK_BRANCH = 18,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"TWIG", Value=19)]
-      TWIG = 19
+
+        [global::ProtoBuf.ProtoEnum(Name = @"NO_SHAPE", Value = -1)]
+        NO_SHAPE = -1,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"EMPTY", Value = 0)]
+        EMPTY = 0,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"FLOOR", Value = 1)]
+        FLOOR = 1,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"BOULDER", Value = 2)]
+        BOULDER = 2,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"PEBBLES", Value = 3)]
+        PEBBLES = 3,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"WALL", Value = 4)]
+        WALL = 4,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"FORTIFICATION", Value = 5)]
+        FORTIFICATION = 5,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"STAIR_UP", Value = 6)]
+        STAIR_UP = 6,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"STAIR_DOWN", Value = 7)]
+        STAIR_DOWN = 7,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"STAIR_UPDOWN", Value = 8)]
+        STAIR_UPDOWN = 8,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"RAMP", Value = 9)]
+        RAMP = 9,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"RAMP_TOP", Value = 10)]
+        RAMP_TOP = 10,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"BROOK_BED", Value = 11)]
+        BROOK_BED = 11,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"BROOK_TOP", Value = 12)]
+        BROOK_TOP = 12,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"TREE_SHAPE", Value = 13)]
+        TREE_SHAPE = 13,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"SAPLING", Value = 14)]
+        SAPLING = 14,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"SHRUB", Value = 15)]
+        SHRUB = 15,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"ENDLESS_PIT", Value = 16)]
+        ENDLESS_PIT = 16,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"BRANCH", Value = 17)]
+        BRANCH = 17,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"TRUNK_BRANCH", Value = 18)]
+        TRUNK_BRANCH = 18,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"TWIG", Value = 19)]
+        TWIG = 19
     }
-  
-    [global::ProtoBuf.ProtoContract(Name=@"TiletypeSpecial")]
+
+    [global::ProtoBuf.ProtoContract(Name = @"TiletypeSpecial")]
     public enum TiletypeSpecial
     {
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"NO_SPECIAL", Value=-1)]
-      NO_SPECIAL = -1,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"NORMAL", Value=0)]
-      NORMAL = 0,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"RIVER_SOURCE", Value=1)]
-      RIVER_SOURCE = 1,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"WATERFALL", Value=2)]
-      WATERFALL = 2,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"SMOOTH", Value=3)]
-      SMOOTH = 3,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"FURROWED", Value=4)]
-      FURROWED = 4,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"WET", Value=5)]
-      WET = 5,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"DEAD", Value=6)]
-      DEAD = 6,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"WORN_1", Value=7)]
-      WORN_1 = 7,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"WORN_2", Value=8)]
-      WORN_2 = 8,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"WORN_3", Value=9)]
-      WORN_3 = 9,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"TRACK", Value=10)]
-      TRACK = 10,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"SMOOTH_DEAD", Value=11)]
-      SMOOTH_DEAD = 11
+
+        [global::ProtoBuf.ProtoEnum(Name = @"NO_SPECIAL", Value = -1)]
+        NO_SPECIAL = -1,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"NORMAL", Value = 0)]
+        NORMAL = 0,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"RIVER_SOURCE", Value = 1)]
+        RIVER_SOURCE = 1,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"WATERFALL", Value = 2)]
+        WATERFALL = 2,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"SMOOTH", Value = 3)]
+        SMOOTH = 3,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"FURROWED", Value = 4)]
+        FURROWED = 4,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"WET", Value = 5)]
+        WET = 5,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"DEAD", Value = 6)]
+        DEAD = 6,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"WORN_1", Value = 7)]
+        WORN_1 = 7,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"WORN_2", Value = 8)]
+        WORN_2 = 8,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"WORN_3", Value = 9)]
+        WORN_3 = 9,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"TRACK", Value = 10)]
+        TRACK = 10,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"SMOOTH_DEAD", Value = 11)]
+        SMOOTH_DEAD = 11
     }
-  
-    [global::ProtoBuf.ProtoContract(Name=@"TiletypeMaterial")]
+
+    [global::ProtoBuf.ProtoContract(Name = @"TiletypeMaterial")]
     public enum TiletypeMaterial
     {
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"NO_MATERIAL", Value=-1)]
-      NO_MATERIAL = -1,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"AIR", Value=0)]
-      AIR = 0,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"SOIL", Value=1)]
-      SOIL = 1,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"STONE", Value=2)]
-      STONE = 2,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"FEATURE", Value=3)]
-      FEATURE = 3,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"LAVA_STONE", Value=4)]
-      LAVA_STONE = 4,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"MINERAL", Value=5)]
-      MINERAL = 5,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"FROZEN_LIQUID", Value=6)]
-      FROZEN_LIQUID = 6,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"CONSTRUCTION", Value=7)]
-      CONSTRUCTION = 7,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"GRASS_LIGHT", Value=8)]
-      GRASS_LIGHT = 8,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"GRASS_DARK", Value=9)]
-      GRASS_DARK = 9,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"GRASS_DRY", Value=10)]
-      GRASS_DRY = 10,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"GRASS_DEAD", Value=11)]
-      GRASS_DEAD = 11,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"PLANT", Value=12)]
-      PLANT = 12,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"HFS", Value=13)]
-      HFS = 13,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"CAMPFIRE", Value=14)]
-      CAMPFIRE = 14,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"FIRE", Value=15)]
-      FIRE = 15,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"ASHES", Value=16)]
-      ASHES = 16,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"MAGMA", Value=17)]
-      MAGMA = 17,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"DRIFTWOOD", Value=18)]
-      DRIFTWOOD = 18,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"POOL", Value=19)]
-      POOL = 19,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"BROOK", Value=20)]
-      BROOK = 20,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"RIVER", Value=21)]
-      RIVER = 21,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"ROOT", Value=22)]
-      ROOT = 22,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"TREE_MATERIAL", Value=23)]
-      TREE_MATERIAL = 23,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"MUSHROOM", Value=24)]
-      MUSHROOM = 24,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"UNDERWORLD_GATE", Value=25)]
-      UNDERWORLD_GATE = 25
+
+        [global::ProtoBuf.ProtoEnum(Name = @"NO_MATERIAL", Value = -1)]
+        NO_MATERIAL = -1,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"AIR", Value = 0)]
+        AIR = 0,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"SOIL", Value = 1)]
+        SOIL = 1,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"STONE", Value = 2)]
+        STONE = 2,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"FEATURE", Value = 3)]
+        FEATURE = 3,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"LAVA_STONE", Value = 4)]
+        LAVA_STONE = 4,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"MINERAL", Value = 5)]
+        MINERAL = 5,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"FROZEN_LIQUID", Value = 6)]
+        FROZEN_LIQUID = 6,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"CONSTRUCTION", Value = 7)]
+        CONSTRUCTION = 7,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"GRASS_LIGHT", Value = 8)]
+        GRASS_LIGHT = 8,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"GRASS_DARK", Value = 9)]
+        GRASS_DARK = 9,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"GRASS_DRY", Value = 10)]
+        GRASS_DRY = 10,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"GRASS_DEAD", Value = 11)]
+        GRASS_DEAD = 11,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"PLANT", Value = 12)]
+        PLANT = 12,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"HFS", Value = 13)]
+        HFS = 13,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"CAMPFIRE", Value = 14)]
+        CAMPFIRE = 14,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"FIRE", Value = 15)]
+        FIRE = 15,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"ASHES", Value = 16)]
+        ASHES = 16,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"MAGMA", Value = 17)]
+        MAGMA = 17,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"DRIFTWOOD", Value = 18)]
+        DRIFTWOOD = 18,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"POOL", Value = 19)]
+        POOL = 19,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"BROOK", Value = 20)]
+        BROOK = 20,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"RIVER", Value = 21)]
+        RIVER = 21,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"ROOT", Value = 22)]
+        ROOT = 22,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"TREE_MATERIAL", Value = 23)]
+        TREE_MATERIAL = 23,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"MUSHROOM", Value = 24)]
+        MUSHROOM = 24,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"UNDERWORLD_GATE", Value = 25)]
+        UNDERWORLD_GATE = 25
     }
-  
-    [global::ProtoBuf.ProtoContract(Name=@"TiletypeVariant")]
+
+    [global::ProtoBuf.ProtoContract(Name = @"TiletypeVariant")]
     public enum TiletypeVariant
     {
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"NO_VARIANT", Value=-1)]
-      NO_VARIANT = -1,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"VAR_1", Value=0)]
-      VAR_1 = 0,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"VAR_2", Value=1)]
-      VAR_2 = 1,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"VAR_3", Value=2)]
-      VAR_3 = 2,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"VAR_4", Value=3)]
-      VAR_4 = 3
+
+        [global::ProtoBuf.ProtoEnum(Name = @"NO_VARIANT", Value = -1)]
+        NO_VARIANT = -1,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"VAR_1", Value = 0)]
+        VAR_1 = 0,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"VAR_2", Value = 1)]
+        VAR_2 = 1,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"VAR_3", Value = 2)]
+        VAR_3 = 2,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"VAR_4", Value = 3)]
+        VAR_4 = 3
     }
-  
-    [global::ProtoBuf.ProtoContract(Name=@"WorldPoles")]
+
+    [global::ProtoBuf.ProtoContract(Name = @"WorldPoles")]
     public enum WorldPoles
     {
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"NO_POLES", Value=0)]
-      NO_POLES = 0,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"NORTH_POLE", Value=1)]
-      NORTH_POLE = 1,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"SOUTH_POLE", Value=2)]
-      SOUTH_POLE = 2,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"BOTH_POLES", Value=3)]
-      BOTH_POLES = 3
+
+        [global::ProtoBuf.ProtoEnum(Name = @"NO_POLES", Value = 0)]
+        NO_POLES = 0,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"NORTH_POLE", Value = 1)]
+        NORTH_POLE = 1,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"SOUTH_POLE", Value = 2)]
+        SOUTH_POLE = 2,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"BOTH_POLES", Value = 3)]
+        BOTH_POLES = 3
     }
-  
-    [global::ProtoBuf.ProtoContract(Name=@"BuildingDirection")]
+
+    [global::ProtoBuf.ProtoContract(Name = @"BuildingDirection")]
     public enum BuildingDirection
     {
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"NORTH", Value=0)]
-      NORTH = 0,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"EAST", Value=1)]
-      EAST = 1,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"SOUTH", Value=2)]
-      SOUTH = 2,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"WEST", Value=3)]
-      WEST = 3
+
+        [global::ProtoBuf.ProtoEnum(Name = @"NORTH", Value = 0)]
+        NORTH = 0,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"EAST", Value = 1)]
+        EAST = 1,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"SOUTH", Value = 2)]
+        SOUTH = 2,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"WEST", Value = 3)]
+        WEST = 3
     }
-  
-    [global::ProtoBuf.ProtoContract(Name=@"TileDigDesignation")]
+
+    [global::ProtoBuf.ProtoContract(Name = @"TileDigDesignation")]
     public enum TileDigDesignation
     {
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"NO_DIG", Value=0)]
-      NO_DIG = 0,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"DEFAULT_DIG", Value=1)]
-      DEFAULT_DIG = 1,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"UP_DOWN_STAIR_DIG", Value=2)]
-      UP_DOWN_STAIR_DIG = 2,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"CHANNEL_DIG", Value=3)]
-      CHANNEL_DIG = 3,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"RAMP_DIG", Value=4)]
-      RAMP_DIG = 4,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"DOWN_STAIR_DIG", Value=5)]
-      DOWN_STAIR_DIG = 5,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"UP_STAIR_DIG", Value=6)]
-      UP_STAIR_DIG = 6
+
+        [global::ProtoBuf.ProtoEnum(Name = @"NO_DIG", Value = 0)]
+        NO_DIG = 0,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"DEFAULT_DIG", Value = 1)]
+        DEFAULT_DIG = 1,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"UP_DOWN_STAIR_DIG", Value = 2)]
+        UP_DOWN_STAIR_DIG = 2,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"CHANNEL_DIG", Value = 3)]
+        CHANNEL_DIG = 3,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"RAMP_DIG", Value = 4)]
+        RAMP_DIG = 4,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"DOWN_STAIR_DIG", Value = 5)]
+        DOWN_STAIR_DIG = 5,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"UP_STAIR_DIG", Value = 6)]
+        UP_STAIR_DIG = 6
     }
-  
-    [global::ProtoBuf.ProtoContract(Name=@"MatterState")]
+
+    [global::ProtoBuf.ProtoContract(Name = @"MatterState")]
     public enum MatterState
     {
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"Solid", Value=0)]
-      Solid = 0,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"Liquid", Value=1)]
-      Liquid = 1,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"Gas", Value=2)]
-      Gas = 2,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"Powder", Value=3)]
-      Powder = 3,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"Paste", Value=4)]
-      Paste = 4,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"Pressed", Value=5)]
-      Pressed = 5
+
+        [global::ProtoBuf.ProtoEnum(Name = @"Solid", Value = 0)]
+        Solid = 0,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"Liquid", Value = 1)]
+        Liquid = 1,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"Gas", Value = 2)]
+        Gas = 2,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"Powder", Value = 3)]
+        Powder = 3,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"Paste", Value = 4)]
+        Paste = 4,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"Pressed", Value = 5)]
+        Pressed = 5
     }
-  
-    [global::ProtoBuf.ProtoContract(Name=@"FrontType")]
+
+    [global::ProtoBuf.ProtoContract(Name = @"FrontType")]
     public enum FrontType
     {
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"FRONT_NONE", Value=0)]
-      FRONT_NONE = 0,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"FRONT_WARM", Value=1)]
-      FRONT_WARM = 1,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"FRONT_COLD", Value=2)]
-      FRONT_COLD = 2,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"FRONT_OCCLUDED", Value=3)]
-      FRONT_OCCLUDED = 3
+
+        [global::ProtoBuf.ProtoEnum(Name = @"FRONT_NONE", Value = 0)]
+        FRONT_NONE = 0,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"FRONT_WARM", Value = 1)]
+        FRONT_WARM = 1,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"FRONT_COLD", Value = 2)]
+        FRONT_COLD = 2,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"FRONT_OCCLUDED", Value = 3)]
+        FRONT_OCCLUDED = 3
     }
-  
-    [global::ProtoBuf.ProtoContract(Name=@"CumulusType")]
+
+    [global::ProtoBuf.ProtoContract(Name = @"CumulusType")]
     public enum CumulusType
     {
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"CUMULUS_NONE", Value=0)]
-      CUMULUS_NONE = 0,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"CUMULUS_MEDIUM", Value=1)]
-      CUMULUS_MEDIUM = 1,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"CUMULUS_MULTI", Value=2)]
-      CUMULUS_MULTI = 2,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"CUMULUS_NIMBUS", Value=3)]
-      CUMULUS_NIMBUS = 3
+
+        [global::ProtoBuf.ProtoEnum(Name = @"CUMULUS_NONE", Value = 0)]
+        CUMULUS_NONE = 0,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"CUMULUS_MEDIUM", Value = 1)]
+        CUMULUS_MEDIUM = 1,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"CUMULUS_MULTI", Value = 2)]
+        CUMULUS_MULTI = 2,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"CUMULUS_NIMBUS", Value = 3)]
+        CUMULUS_NIMBUS = 3
     }
-  
-    [global::ProtoBuf.ProtoContract(Name=@"StratusType")]
+
+    [global::ProtoBuf.ProtoContract(Name = @"StratusType")]
     public enum StratusType
     {
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"STRATUS_NONE", Value=0)]
-      STRATUS_NONE = 0,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"STRATUS_ALTO", Value=1)]
-      STRATUS_ALTO = 1,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"STRATUS_PROPER", Value=2)]
-      STRATUS_PROPER = 2,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"STRATUS_NIMBUS", Value=3)]
-      STRATUS_NIMBUS = 3
+
+        [global::ProtoBuf.ProtoEnum(Name = @"STRATUS_NONE", Value = 0)]
+        STRATUS_NONE = 0,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"STRATUS_ALTO", Value = 1)]
+        STRATUS_ALTO = 1,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"STRATUS_PROPER", Value = 2)]
+        STRATUS_PROPER = 2,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"STRATUS_NIMBUS", Value = 3)]
+        STRATUS_NIMBUS = 3
     }
-  
-    [global::ProtoBuf.ProtoContract(Name=@"FogType")]
+
+    [global::ProtoBuf.ProtoContract(Name = @"FogType")]
     public enum FogType
     {
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"FOG_NONE", Value=0)]
-      FOG_NONE = 0,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"FOG_MIST", Value=1)]
-      FOG_MIST = 1,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"FOG_NORMAL", Value=2)]
-      FOG_NORMAL = 2,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"F0G_THICK", Value=3)]
-      F0G_THICK = 3
+
+        [global::ProtoBuf.ProtoEnum(Name = @"FOG_NONE", Value = 0)]
+        FOG_NONE = 0,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"FOG_MIST", Value = 1)]
+        FOG_MIST = 1,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"FOG_NORMAL", Value = 2)]
+        FOG_NORMAL = 2,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"F0G_THICK", Value = 3)]
+        F0G_THICK = 3
     }
-  
-    [global::ProtoBuf.ProtoContract(Name=@"SiteRealizationBuildingType")]
+
+    [global::ProtoBuf.ProtoContract(Name = @"SiteRealizationBuildingType")]
     public enum SiteRealizationBuildingType
     {
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"cottage_plot", Value=0)]
-      cottage_plot = 0,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"castle_wall", Value=1)]
-      castle_wall = 1,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"castle_tower", Value=2)]
-      castle_tower = 2,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"castle_courtyard", Value=3)]
-      castle_courtyard = 3,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"house", Value=4)]
-      house = 4,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"temple", Value=5)]
-      temple = 5,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"tomb", Value=6)]
-      tomb = 6,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"shop_house", Value=7)]
-      shop_house = 7,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"warehouse", Value=8)]
-      warehouse = 8,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"market_square", Value=9)]
-      market_square = 9,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"pasture", Value=10)]
-      pasture = 10,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"waste", Value=11)]
-      waste = 11,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"courtyard", Value=12)]
-      courtyard = 12,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"well", Value=13)]
-      well = 13,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"vault", Value=14)]
-      vault = 14,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"great_tower", Value=15)]
-      great_tower = 15,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"trenches", Value=16)]
-      trenches = 16,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"tree_house", Value=17)]
-      tree_house = 17,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"hillock_house", Value=18)]
-      hillock_house = 18,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"mead_hall", Value=19)]
-      mead_hall = 19,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"fortress_entrance", Value=20)]
-      fortress_entrance = 20,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"library", Value=21)]
-      library = 21,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"tavern", Value=22)]
-      tavern = 22
+
+        [global::ProtoBuf.ProtoEnum(Name = @"cottage_plot", Value = 0)]
+        cottage_plot = 0,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"castle_wall", Value = 1)]
+        castle_wall = 1,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"castle_tower", Value = 2)]
+        castle_tower = 2,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"castle_courtyard", Value = 3)]
+        castle_courtyard = 3,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"house", Value = 4)]
+        house = 4,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"temple", Value = 5)]
+        temple = 5,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"tomb", Value = 6)]
+        tomb = 6,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"shop_house", Value = 7)]
+        shop_house = 7,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"warehouse", Value = 8)]
+        warehouse = 8,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"market_square", Value = 9)]
+        market_square = 9,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"pasture", Value = 10)]
+        pasture = 10,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"waste", Value = 11)]
+        waste = 11,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"courtyard", Value = 12)]
+        courtyard = 12,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"well", Value = 13)]
+        well = 13,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"vault", Value = 14)]
+        vault = 14,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"great_tower", Value = 15)]
+        great_tower = 15,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"trenches", Value = 16)]
+        trenches = 16,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"tree_house", Value = 17)]
+        tree_house = 17,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"hillock_house", Value = 18)]
+        hillock_house = 18,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"mead_hall", Value = 19)]
+        mead_hall = 19,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"fortress_entrance", Value = 20)]
+        fortress_entrance = 20,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"library", Value = 21)]
+        library = 21,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"tavern", Value = 22)]
+        tavern = 22
     }
-  
-    [global::ProtoBuf.ProtoContract(Name=@"PatternType")]
+
+    [global::ProtoBuf.ProtoContract(Name = @"PatternType")]
     public enum PatternType
     {
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"MONOTONE", Value=0)]
-      MONOTONE = 0,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"STRIPES", Value=1)]
-      STRIPES = 1,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"IRIS_EYE", Value=2)]
-      IRIS_EYE = 2,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"SPOTS", Value=3)]
-      SPOTS = 3,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"PUPIL_EYE", Value=4)]
-      PUPIL_EYE = 4,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"MOTTLED", Value=5)]
-      MOTTLED = 5
+
+        [global::ProtoBuf.ProtoEnum(Name = @"MONOTONE", Value = 0)]
+        MONOTONE = 0,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"STRIPES", Value = 1)]
+        STRIPES = 1,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"IRIS_EYE", Value = 2)]
+        IRIS_EYE = 2,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"SPOTS", Value = 3)]
+        SPOTS = 3,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"PUPIL_EYE", Value = 4)]
+        PUPIL_EYE = 4,
+
+        [global::ProtoBuf.ProtoEnum(Name = @"MOTTLED", Value = 5)]
+        MOTTLED = 5
     }
-  
+
 }
