@@ -59,9 +59,19 @@ namespace Building
                     if (!buidlingPrefabs.ContainsKey(type))
                         type = new BuildingStruct(-1, -1, -1);
                     if (buidlingPrefabs.ContainsKey(type))
-                        builtBuilding = Instantiate(buidlingPrefabs[type], GameMap.DFtoUnityCoord(building.pos_x_min, building.pos_y_min, building.pos_z_max), Quaternion.identity, transform);
+                        builtBuilding = Instantiate(buidlingPrefabs[type],
+                            GameMap.DFtoUnityCoord(
+                                (building.pos_x_min + building.pos_x_max) / 2,
+                                (building.pos_y_min + building.pos_y_max) / 2,
+                                building.pos_z_max),
+                            Quaternion.identity, transform);
                     else
-                        builtBuilding = Instantiate(defaultBuilding, GameMap.DFtoUnityCoord(building.pos_x_min, building.pos_y_min, building.pos_z_max), Quaternion.identity, transform);
+                        builtBuilding = Instantiate(defaultBuilding,
+                            GameMap.DFtoUnityCoord(
+                                (building.pos_x_min + building.pos_x_max) / 2,
+                                (building.pos_y_min + building.pos_y_max) / 2,
+                                building.pos_z_max),
+                            Quaternion.identity, transform);
 
                     sceneBuildings[building.index] = builtBuilding;
                 }
