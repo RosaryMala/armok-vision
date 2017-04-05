@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 114925456320396390}
   - component: {fileID: 114536676444967816}
   m_Layer: 0
-  m_Name: Table 1
+  m_Name: Coffin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
