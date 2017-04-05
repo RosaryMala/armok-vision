@@ -11,9 +11,21 @@ namespace Building
         [SerializeField]
         RemoteFortressReader.BuildingInstance originalBuilding;
 
+        BuildingRoom filler;
+
+        private void Awake()
+        {
+            filler = GetComponent<BuildingRoom>();
+        }
+
         public void Initialize(RemoteFortressReader.BuildingInstance buildingInput)
         {
             originalBuilding = buildingInput;
+
+            if (filler != null)
+            {
+                filler.Initialize(buildingInput);
+            }
 
             var parts = GetComponentsInChildren<BuildingPart>();
             foreach (var part in parts)
@@ -27,6 +39,7 @@ namespace Building
                 buildingInput.pos_z_max);
 
             transform.localRotation = MeshContent.TranslateRotation(rotationType, MapDataStore.Main[pos]);
+
         }
     }
 }
