@@ -57,9 +57,9 @@ public class GameMap : MonoBehaviour
             return posYTile / 16;
         }
     }
-    public int posXTile = 0;
-    public int posYTile = 0;
-    public int posZ = 0;
+    int posXTile = 0;
+    int posYTile = 0;
+    int posZ = 0;
     public int PosZ
     { // Public accessor; used from MapSelection
         get
