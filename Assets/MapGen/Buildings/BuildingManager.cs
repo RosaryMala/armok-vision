@@ -42,6 +42,11 @@ namespace Building
             DFConnection.RegisterConnectionCallback(LoadBuildings);
         }
 
+        private void Update()
+        {
+            UpdateVisibility();
+        }
+
         Dictionary<int, BuildingModel> sceneBuildings = new Dictionary<int, BuildingModel>();
 
         internal void LoadBlock(RemoteFortressReader.MapBlock block)
@@ -78,6 +83,18 @@ namespace Building
                 }
                 else
                     builtBuilding = sceneBuildings[building.index];
+            }
+        }
+
+        void UpdateVisibility()
+        {
+            foreach (var item in sceneBuildings)
+            {
+                var building = item.Value.originalBuilding;
+                item.Value.gameObject.SetActive(
+                    (building.pos_z_min < GameMap.Instance.PosZ)
+                    && (building.pos_z_max >= (GameMap.Instance.PosZ - GameSettings.Instance.rendering.drawRangeDown))
+                    );
             }
         }
     }
