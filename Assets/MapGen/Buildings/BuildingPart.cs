@@ -24,12 +24,17 @@ namespace Building
         {
             ColorDefinition dye = null;
             MatPairStruct mat = new MatPairStruct(-1,-1);
-            if (string.IsNullOrEmpty(item) || ItemTokenList.ItemLookup == null || !ItemTokenList.ItemLookup.ContainsKey(item))
+            if (string.IsNullOrEmpty(item) || ItemTokenList.ItemLookup == null)
                 mat = buildingInput.material;
+            else if (!ItemTokenList.ItemLookup.ContainsKey(item))
+            {
+                gameObject.SetActive(false);
+                return;
+            }
             else
             {
                 MatPairStruct itemCode = ItemTokenList.ItemLookup[item].mat_pair;
-
+                bool set = false;
                 foreach (var item in buildingInput.items)
                 {
                     //skip items that are just stored in the building.
@@ -42,10 +47,17 @@ namespace Building
                     {
                         mat = item.item.material;
                         dye = item.item.dye;
+                        set = true;
                         break;
                     }
                 }
+                if(!set)
+                {
+                    gameObject.SetActive(false);
+                    return;
+                }
             }
+            gameObject.SetActive(true);
             Color partColor = Color.gray;
             ColorContent colorContent;
             if (ContentLoader.Instance.MaterialColors.TryGetValue(mat, out colorContent))

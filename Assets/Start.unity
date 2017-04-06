@@ -4060,7 +4060,7 @@ ParticleSystemRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedEditorRenderState: 3
+  m_SelectedEditorRenderState: 0
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -4140,7 +4140,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -1891033076
+  randomSeed: -1879914399
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -9965,9 +9965,6 @@ MonoBehaviour:
   cursZ: -30000
   worldMap: {fileID: 458878501}
   optionsPanel: {fileID: 1459889554}
-  posXTile: 0
-  posYTile: 0
-  posZ: 0
   collisionTemplate: {fileID: 64000010602839068, guid: b2b37d076222dfc418f57692b6563de6,
     type: 2}
   dfScreen: {fileID: 771652859}

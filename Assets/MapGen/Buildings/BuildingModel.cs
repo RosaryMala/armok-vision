@@ -8,8 +8,7 @@ namespace Building
     {
         public RotationType rotationType;
 
-        [SerializeField]
-        RemoteFortressReader.BuildingInstance originalBuilding;
+        public RemoteFortressReader.BuildingInstance originalBuilding;
 
         BuildingRoom filler;
 
