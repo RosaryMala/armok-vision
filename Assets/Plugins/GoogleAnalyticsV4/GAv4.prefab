@@ -40,9 +40,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 115515dbbaaea4a6aaf6cbda8b04cb45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  androidTrackingCode: UA-96132159-1
-  IOSTrackingCode: UA-96132159-1
-  otherTrackingCode: UA-96132159-1
+  androidTrackingCode: UA-96435297-1
+  IOSTrackingCode: UA-96435297-1
+  otherTrackingCode: UA-96435297-1
   productName: Armok-Vision
   bundleIdentifier: 
   bundleVersion: 1.0
