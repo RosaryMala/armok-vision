@@ -1,18 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Survey : MonoBehaviour {
+public class Survey : MonoBehaviour
+{
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
         if (PlayerPrefs.GetInt("Survey2", 0) == 1)
             gameObject.SetActive(false);
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
 
     public void OpenSurvey()
     {

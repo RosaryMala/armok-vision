@@ -14,6 +14,9 @@ public class GameSettings : MonoBehaviour
         Low,
         High
     }
+
+    public GoogleAnalyticsV4 analytics;
+
     [Serializable]
     public class Meshing
     {
@@ -106,10 +109,18 @@ public class GameSettings : MonoBehaviour
         public bool scaleUnits = true;
     }
 
+    public enum AnalyticsChoice
+    {
+        Unknown,
+        Yes,
+        No
+    }
+
     [Serializable]
     public class Game
     {
         public bool showDFScreen = false;
+        public AnalyticsChoice analytics = AnalyticsChoice.Unknown;
     }
     [Serializable]
     public class Debug
