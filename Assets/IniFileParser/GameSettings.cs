@@ -182,7 +182,8 @@ public class GameSettings : MonoBehaviour
         SetShadows(Instance.rendering.drawShadows);
         Application.targetFrameRate = Instance.rendering.targetFrameRate;
         QualitySettings.vSyncCount = Instance.rendering.vSyncCount;
-
+        if (Instance.game.analytics == AnalyticsChoice.Yes)
+            analytics.gameObject.SetActive(true);
         UpdatePostProcessing();
     }
 
