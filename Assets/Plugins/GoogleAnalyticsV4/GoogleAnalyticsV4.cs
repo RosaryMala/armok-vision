@@ -155,6 +155,8 @@ public class GoogleAnalyticsV4 : MonoBehaviour {
 
             BuildSettings buildSettings = Resources.Load<BuildSettings>("Build Settings");
 
+            productName = buildSettings.title;
+            bundleVersion = buildSettings.content_version;
 
 #if UNITY_ANDROID && !UNITY_EDITOR
       androidTracker.SetTrackingCode(androidTrackingCode);

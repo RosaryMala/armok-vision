@@ -393,7 +393,8 @@ public sealed class DFConnection : MonoBehaviour
             RemoteFortressReader.VersionInfo versionInfo;
             versionInfoCall.execute(null, out versionInfo);
             Debug.LogFormat("Connected to DF version {0}, running DFHack version {1}, and RemoteFortressReader version {2}", versionInfo.dwarf_fortress_version, versionInfo.dfhack_version, versionInfo.remote_fortress_reader_version);
-            GoogleAnalyticsV4.instance.SendDeviceData(versionInfo.dwarf_fortress_version, versionInfo.remote_fortress_reader_version);
+            if(GoogleAnalyticsV4.instance != null)
+                GoogleAnalyticsV4.instance.SendDeviceData(versionInfo.dwarf_fortress_version, versionInfo.remote_fortress_reader_version);
         }
         else
         {
