@@ -152,6 +152,10 @@ public class GoogleAnalyticsV4 : MonoBehaviour {
       DontDestroyOnLoad(instance);
 
       Debug.Log("Initializing Google Analytics 0.2.");
+
+            BuildSettings buildSettings = Resources.Load<BuildSettings>("Build Settings");
+
+
 #if UNITY_ANDROID && !UNITY_EDITOR
       androidTracker.SetTrackingCode(androidTrackingCode);
       androidTracker.SetAppName(productName);
@@ -177,7 +181,7 @@ public class GoogleAnalyticsV4 : MonoBehaviour {
       iosTracker.SetDryRun(dryRun);
       iosTracker.InitializeTracker();
 #else
-      mpTracker.SetTrackingCode(otherTrackingCode);
+            mpTracker.SetTrackingCode(otherTrackingCode);
       mpTracker.SetBundleIdentifier(bundleIdentifier);
       mpTracker.SetAppName(productName);
       mpTracker.SetAppVersion(bundleVersion);
