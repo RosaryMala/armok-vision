@@ -1,0 +1,35 @@
+1.3.6.3 (April 24, 2013):
+  MacOS support! A universal binary, libenet.dylib, is included.
+  
+  Linux support! Specifically...
+  libenet.so.1 (package libenet1a) is now searched for, in addition to the Windows DLLs.
+  The earlier ENet 1.3.3 should work with this version, except for Peer's SetPingInterval and SetTimeouts methods.
+  Implemented a workaround to ENet 1.3.6 EINTR (Unix signals) behavior.
+  Implemented a workaround to Mono P/Invoke bug 11899.
+  Special thanks to Random for testing this for me.
+  
+1.3.6.2 (February 27, 2013):
+  Added Packet.Freed event.
+  Added Packet.GetUserData/SetUserData methods.
+  Added another Packet.Initialize overload.
+  Added Packet.ReferenceCount property.
+  Added Peer.Host property.
+  Implemented IList on Packet. Mainly this is useful for the indexer.
+  
+1.3.6.1 (February 24, 2013):
+  64-bit support!
+  It is no longer necessary to call Library.Initialize.
+  
+1.3.6 (February 23, 2013):
+  Updated the binding to support ENet 1.3.6.
+  Added SetPingInterval and SetTimeouts methods to Peer.
+  Added locking around Library.Initialize/Deinitialize.
+  Miscellaneous minor improvements.
+  
+1.3.3 (May 14, 2012):
+  Updated the binding to support ENet 1.3.3.
+  Replaced the Address struct with native .NET IPEndPoint.
+  Documented most methods.
+  
+1.3.1 (February 20, 2011):
+  Initial release, supporting ENet 1.3.1.
