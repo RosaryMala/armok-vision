@@ -21,13 +21,15 @@ namespace Building
 
             foreach (var building in buildingList)
             {
-                var loadedBuilding = Resources.Load<BuildingModel>("Buildings/" + building.id);
+                string path = "Buildings/" + building.id;
+                path = path.Replace('_', '/');
+                var loadedBuilding = Resources.Load<BuildingModel>(path);
                 if (loadedBuilding == null)
                     continue;
 
                 buidlingPrefabs[building.building_type] = loadedBuilding;
 
-                Debug.Log("Loaded building: " + building.id);
+                Debug.Log("Loaded building: " + path);
 
             }
         }

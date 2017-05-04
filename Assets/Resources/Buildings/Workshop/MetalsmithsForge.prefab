@@ -202,7 +202,7 @@ GameObject:
   - component: {fileID: 4760555595650258}
   - component: {fileID: 114649388047729878}
   m_Layer: 0
-  m_Name: Workshop_MetalsmithsForge
+  m_Name: MetalsmithsForge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

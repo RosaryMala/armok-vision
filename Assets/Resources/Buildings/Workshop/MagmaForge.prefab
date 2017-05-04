@@ -166,7 +166,7 @@ GameObject:
   - component: {fileID: 4702396070260860}
   - component: {fileID: 114198850969808388}
   m_Layer: 0
-  m_Name: Workshop_MagmaForge
+  m_Name: MagmaForge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
