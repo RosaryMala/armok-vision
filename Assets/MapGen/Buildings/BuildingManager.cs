@@ -22,7 +22,6 @@ namespace Building
             foreach (var building in buildingList)
             {
                 string path = "Buildings/" + building.id;
-                path = path.Replace('_', '/');
                 var loadedBuilding = Resources.Load<BuildingModel>(path);
                 if (loadedBuilding == null)
                     continue;
