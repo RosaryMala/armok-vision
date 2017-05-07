@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: Build Settings
   m_EditorClassIdentifier: 
   author: Japa, Justin Partain, Kazimuth, Lethosor
-  content_version: v0.16.2_indev
+  content_version: v0.16.2.r
   df_min_version: 0.34.11
   df_max_version: 
   title: Armok Vision
