@@ -14,6 +14,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using System;
 using System.Collections;
+using Newtonsoft.Json;
 
 // The class responsible for talking to DF and meshing the data it gets.
 // Relevant vocabulary: A "map tile" is an individual square on the map.
@@ -192,8 +193,17 @@ public class GameMap : MonoBehaviour
     {
         enabled = false;
 
-        BuildSettings buildSettings = Resources.Load("Build Settings", typeof(BuildSettings)) as BuildSettings;
-        Debug.Log("Started Armok Vision version " + buildSettings.content_version);
+        Debug.Log("Started Armok Vision version " + BuildSettings.Instance.content_version);
+
+        Debug.Log("scmCommitId: " + BuildManifest.Instance.scmCommitId);
+        Debug.Log("scmBranch: " + BuildManifest.Instance.scmBranch);
+        Debug.Log("buildNumber: " + BuildManifest.Instance.buildNumber);
+        Debug.Log("buildStartTime: " + BuildManifest.Instance.buildStartTime);
+        Debug.Log("projectId: " + BuildManifest.Instance.projectId);
+        Debug.Log("bundleId: " + BuildManifest.Instance.bundleId);
+        Debug.Log("unityVersion: " + BuildManifest.Instance.unityVersion);
+        Debug.Log("xcodeVersion: " + BuildManifest.Instance.xcodeVersion);
+        Debug.Log("cloudBuildTargetName: " + BuildManifest.Instance.cloudBuildTargetName);
 
         DFConnection.RegisterConnectionCallback(OnConnectToDF);
 

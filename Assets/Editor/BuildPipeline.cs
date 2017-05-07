@@ -23,13 +23,7 @@ public class BuildFactory
 
     static void BuildRelease(BuildTarget target)
     {
-        BuildSettings buildSettings = Resources.Load("Build Settings", typeof(BuildSettings)) as BuildSettings;
 
-        if(buildSettings == null)
-        {
-            UnityEngine.Debug.LogError("Can't find build settings");
-            return;
-        }
 
         string targetString = "";
         string releaseName = "";
@@ -37,26 +31,26 @@ public class BuildFactory
         switch (target)
         {
             case BuildTarget.StandaloneOSXIntel64:
-                releaseName = buildSettings.osx_exe;
+                releaseName = BuildSettings.Instance.osx_exe;
                 targetString = "Mac";
                 break;
             case BuildTarget.StandaloneLinux64:
-                releaseName = buildSettings.linux_exe;
+                releaseName = BuildSettings.Instance.linux_exe;
                 targetString = "Linux";
                 break;
             case BuildTarget.StandaloneWindows:
-                releaseName = buildSettings.win_exe;
+                releaseName = BuildSettings.Instance.win_exe;
                 targetString = "Win";
                 break;
             case BuildTarget.StandaloneWindows64:
-                releaseName = buildSettings.win_exe;
+                releaseName = BuildSettings.Instance.win_exe;
                 targetString = "Win x64";
                 break;
             default:
                 break;
         }
 
-        string path = "Build/" + buildSettings.content_version + "/" + targetString + "/";
+        string path = "Build/" + BuildSettings.Instance.content_version + "/" + targetString + "/";
 
         if (Directory.Exists(path))
             Directory.Delete(path, true);
@@ -69,7 +63,7 @@ public class BuildFactory
         using (ZipFile zip = new ZipFile())
         {
             zip.AddDirectory(path);
-            zip.Save("Build/" + buildSettings.title + " " + buildSettings.content_version + " " + targetString + ".zip");
+            zip.Save("Build/" + BuildSettings.Instance.title + " " + BuildSettings.Instance.content_version + " " + targetString + ".zip");
         }
     }
 

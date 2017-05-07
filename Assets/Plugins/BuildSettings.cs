@@ -29,4 +29,31 @@ public class BuildSettings : ScriptableObject
     public string readme;
     [JsonProperty]
     public bool needs_dfhack;
+
+    private static BuildSettings _instance = null;
+    public static BuildSettings Instance
+    {
+        get
+        {
+            if (_instance == null)
+                _instance = Resources.Load<BuildSettings>("Build Settings");
+            if (_instance == null)
+            {
+                _instance = CreateInstance<BuildSettings>();
+                _instance.author = "MISSING_MANIFEST";
+                _instance.content_version = "MISSING_MANIFEST";
+                _instance.df_min_version = "MISSING_MANIFEST";
+                _instance.df_max_version = "MISSING_MANIFEST";
+                _instance.title = "MISSING_MANIFEST";
+                _instance.tooltip = "MISSING_MANIFEST";
+                _instance.win_exe = "MISSING_MANIFEST";
+                _instance.osx_exe = "MISSING_MANIFEST";
+                _instance.linux_exe = "MISSING_MANIFEST";
+                _instance.launch_with_terminal = false;
+                _instance.readme = "MISSING_MANIFEST";
+                _instance.needs_dfhack = true;
+            }
+            return _instance;
+        }
+    }
 }
