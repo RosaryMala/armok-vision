@@ -2,7 +2,7 @@
 # File Created: 24.07.2016 18:55:54
 
 #
-# object BuildingMaterial
+# object WorkshopAshery_Building
 #
 
 v  -2.8750 0.5000 -2.7500
@@ -459,7 +459,7 @@ vt 0.9648 0.6475 0.0000
 vt 0.9880 0.6475 0.0000
 # 334 texture coords
 
-g BuildingMaterial
+g WorkshopAshery_Building
 s 1
 f 1/1/1 2/2/1 3/3/1 
 f 4/4/1 2/2/1 1/1/1 
@@ -718,7 +718,7 @@ f 107/327/6 56/333/6 108/334/6
 # 198 faces
 
 #
-# object NoMaterialBuilding
+# object WorkshopAshery_Building_NoMat
 #
 
 v  -0.6250 1.0000 0.2500
@@ -1628,7 +1628,7 @@ vt 0.5660 0.6284 0.0000
 vt 0.5196 0.6284 0.0000
 # 682 texture coords
 
-g NoMaterialBuilding
+g WorkshopAshery_Building_NoMat
 s 1
 f 109/335/7 110/336/7 111/337/7 
 f 109/335/7 112/338/7 110/336/7 

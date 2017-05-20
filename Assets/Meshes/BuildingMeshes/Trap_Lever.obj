@@ -2,7 +2,7 @@
 # File Created: 27.02.2017 19:24:08
 
 #
-# object BuildingMaterial
+# object Trap_Lever_Building
 #
 
 v  -0.0354 0.4646 0.0500
@@ -143,7 +143,7 @@ vt -0.1273 0.2378 0.0000
 vt -0.2523 0.1469 0.0000
 # 80 texture coords
 
-g BuildingMaterial
+g Trap_Lever_Building
 s 2
 f 1/1/1 2/2/1 3/3/1 
 f 4/4/1 3/3/1 2/2/1 

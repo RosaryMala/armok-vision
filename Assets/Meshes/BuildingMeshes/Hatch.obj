@@ -4,7 +4,7 @@
 mtllib Hatch.mtl
 
 #
-# object BuildingMaterial
+# object Hatch_Building
 #
 
 v  -1.0000 0.5000 1.0000
@@ -91,7 +91,7 @@ vt 0.9762 0.7555 0.0000
 vt 0.9950 0.7554 0.0000
 # 44 texture coords
 
-g BuildingMaterial
+g Hatch_Building
 usemtl Material__67
 s 2
 f 1/1/1 2/2/1 3/3/1 4/4/1 
@@ -138,7 +138,7 @@ f 20/41/5 19/44/5 26/43/5 25/42/5
 # 26 polygons
 
 #
-# object NoMaterialBuildingCutout
+# object Hatch_Building_NoMatCutout
 #
 
 v  -1.0006 0.4994 1.0006
@@ -254,7 +254,7 @@ vt 0.9762 0.7555 0.0000
 vt 0.9950 0.7554 0.0000
 # 44 texture coords
 
-g NoMaterialBuildingCutout
+g Hatch_Building_NoMatCutout
 usemtl Material__67
 s 2
 f 29/45/7 30/46/7 31/47/8 32/48/9 

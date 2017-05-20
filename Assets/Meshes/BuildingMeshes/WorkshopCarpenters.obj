@@ -2,7 +2,7 @@
 # File Created: 08.08.2016 19:30:58
 
 #
-# object NoMaterialBuilding
+# object WorkshopCarpenters_Building_NoMat
 #
 
 v  -2.5000 1.2500 0.5000
@@ -402,7 +402,7 @@ vt 0.2000 0.0326 0.0000
 vt 0.1717 0.0326 0.0000
 # 279 texture coords
 
-g NoMaterialBuilding
+g WorkshopCarpenters_Building_NoMat
 s 1
 f 1/1/1 2/2/1 3/3/1 
 f 1/1/1 4/4/1 2/2/1 
@@ -601,7 +601,7 @@ f 53/277/6 10/278/6 54/279/6
 # 171 faces
 
 #
-# object BuildingMaterial
+# object WorkshopCarpenters_Building
 #
 
 v  -3.0000 0.5000 1.0000
@@ -713,7 +713,7 @@ vt 0.2386 0.5194 0.0000
 vt 0.0120 0.5194 0.0000
 # 61 texture coords
 
-g BuildingMaterial
+g WorkshopCarpenters_Building
 s 1
 f 107/280/7 108/281/7 109/282/7 
 f 107/280/7 110/283/7 108/281/7 

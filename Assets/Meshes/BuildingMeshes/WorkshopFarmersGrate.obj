@@ -2,7 +2,7 @@
 # File Created: 19.07.2016 19:13:20
 
 #
-# object NoMaterialBuilding
+# object WorkshopFarmersGrate_Building_NoMat
 #
 
 v  -1.0000 0.7500 0.7500
@@ -221,7 +221,7 @@ vt 0.5969 0.9531 0.0000
 vt 0.9781 0.9531 0.0000
 # 152 texture coords
 
-g NoMaterialBuilding
+g WorkshopFarmersGrate_Building_NoMat
 s 1
 f 1/1/1 2/2/1 3/3/1 
 f 4/4/1 5/5/1 6/6/1 

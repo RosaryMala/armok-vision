@@ -8,15 +8,25 @@ ModelImporter:
     100000: BuildingMaterial
     100002: NoMaterialBuilding
     100004: //RootNode
+    100006: WorkshopCarpenters_Building
+    100008: WorkshopCarpenters_Building_NoMat
     400000: BuildingMaterial
     400002: NoMaterialBuilding
     400004: //RootNode
+    400006: WorkshopCarpenters_Building
+    400008: WorkshopCarpenters_Building_NoMat
     2300000: BuildingMaterial
     2300002: NoMaterialBuilding
+    2300004: WorkshopCarpenters_Building
+    2300006: WorkshopCarpenters_Building_NoMat
     3300000: BuildingMaterial
     3300002: NoMaterialBuilding
+    3300004: WorkshopCarpenters_Building
+    3300006: WorkshopCarpenters_Building_NoMat
     4300000: BuildingMaterial
     4300002: NoMaterialBuilding
+    4300004: WorkshopCarpenters_Building
+    4300006: WorkshopCarpenters_Building_NoMat
   materials:
     importMaterials: 1
     materialName: 0
@@ -27,6 +37,8 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 

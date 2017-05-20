@@ -2,7 +2,7 @@
 # File Created: 10.10.2015 23:21:51
 
 #
-# object BuildingMaterial
+# object WorkshopCounter_Building
 #
 
 v  -1.0000 0.5000 1.0000
@@ -41,7 +41,7 @@ vt 0.9995 0.7250 0.9995
 vt 0.0005 0.7250 0.9995
 # 16 texture coords
 
-g BuildingMaterial
+g WorkshopCounter_Building
 f 1/1/1 2/2/1 3/3/1 
 f 3/3/1 4/4/1 1/1/1 
 f 5/5/2 6/6/2 7/7/2 

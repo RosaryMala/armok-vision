@@ -7,11 +7,16 @@ ModelImporter:
   fileIDToRecycleName:
     100000: //RootNode
     100002: NoMaterialBuilding
+    100004: Gem_Building_NoMat
     400000: //RootNode
     400002: NoMaterialBuilding
+    400004: Gem_Building_NoMat
     2300000: NoMaterialBuilding
+    2300002: Gem_Building_NoMat
     3300000: NoMaterialBuilding
+    3300002: Gem_Building_NoMat
     4300000: NoMaterialBuilding
+    4300002: Gem_Building_NoMat
   materials:
     importMaterials: 1
     materialName: 0
@@ -22,6 +27,8 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 

@@ -7,11 +7,16 @@ ModelImporter:
   fileIDToRecycleName:
     100000: BuildingMaterialCutout
     100002: //RootNode
+    100004: built_cabinet_0_BuildingCutout
     400000: BuildingMaterialCutout
     400002: //RootNode
+    400004: built_cabinet_0_BuildingCutout
     2300000: BuildingMaterialCutout
+    2300002: built_cabinet_0_BuildingCutout
     3300000: BuildingMaterialCutout
+    3300002: built_cabinet_0_BuildingCutout
     4300000: BuildingMaterialCutout
+    4300002: built_cabinet_0_BuildingCutout
   materials:
     importMaterials: 1
     materialName: 0
@@ -22,6 +27,8 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 

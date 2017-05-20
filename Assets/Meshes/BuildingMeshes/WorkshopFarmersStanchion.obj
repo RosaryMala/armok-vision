@@ -2,7 +2,7 @@
 # File Created: 19.07.2016 19:10:34
 
 #
-# object BuildingMaterial
+# object WorkshopFarmersStanchion_Building
 #
 
 v  -1.0000 1.5000 1.0000
@@ -493,7 +493,7 @@ vt 0.7709 0.0981 0.0000
 vt 0.7709 0.0627 0.0000
 # 368 texture coords
 
-g BuildingMaterial
+g WorkshopFarmersStanchion_Building
 s 1
 f 1/1/1 2/2/1 3/3/1 
 f 4/4/1 2/2/1 1/1/1 

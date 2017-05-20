@@ -2,7 +2,7 @@
 # File Created: 30.10.2016 16:45:26
 
 #
-# object NoMaterialBuildingCutout
+# object Stockpile_Building_NoMatCutout
 #
 
 v  1.0000 0.5200 1.0000
@@ -20,7 +20,7 @@ vt 0.0005 0.9995 0.5625
 vt 0.0005 0.0005 0.5625
 # 4 texture coords
 
-g NoMaterialBuildingCutout
+g Stockpile_Building_NoMatCutout
 s 1
 f 1/1/1 2/2/1 3/3/1 
 f 3/3/1 4/4/1 1/1/1 

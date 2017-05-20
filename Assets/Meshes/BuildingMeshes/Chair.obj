@@ -2,7 +2,7 @@
 # File Created: 28.09.2015 08:20:54
 
 #
-# object BuildingMaterial
+# object Chair_Building
 #
 
 v  -0.3000 1.0000 -0.3000
@@ -63,7 +63,7 @@ vt 0.4250 0.3750 0.5750
 vt 0.5750 0.3750 0.5750
 # 30 texture coords
 
-g BuildingMaterial
+g Chair_Building
 f 1/1/1 2/2/1 3/3/1 
 f 3/3/1 4/4/1 1/1/1 
 f 5/5/2 1/6/2 4/7/2 

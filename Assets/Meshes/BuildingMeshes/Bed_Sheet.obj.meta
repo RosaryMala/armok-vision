@@ -8,15 +8,25 @@ ModelImporter:
     100000: //RootNode
     100002: BuildingMaterial
     100004: NoMaterialBuilding
+    100006: Bed_Sheet_Building
+    100008: Bed_Sheet_Building_NoMat
     400000: //RootNode
     400002: BuildingMaterial
     400004: NoMaterialBuilding
+    400006: Bed_Sheet_Building
+    400008: Bed_Sheet_Building_NoMat
     2300000: BuildingMaterial
     2300002: NoMaterialBuilding
+    2300004: Bed_Sheet_Building
+    2300006: Bed_Sheet_Building_NoMat
     3300000: BuildingMaterial
     3300002: NoMaterialBuilding
+    3300004: Bed_Sheet_Building
+    3300006: Bed_Sheet_Building_NoMat
     4300000: BuildingMaterial
     4300002: NoMaterialBuilding
+    4300004: Bed_Sheet_Building
+    4300006: Bed_Sheet_Building_NoMat
   materials:
     importMaterials: 1
     materialName: 0
@@ -27,6 +37,8 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 

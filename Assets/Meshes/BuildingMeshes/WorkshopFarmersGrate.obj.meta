@@ -7,11 +7,16 @@ ModelImporter:
   fileIDToRecycleName:
     100000: NoMaterialBuilding
     100002: //RootNode
+    100004: WorkshopFarmersGrate_Building_NoMat
     400000: NoMaterialBuilding
     400002: //RootNode
+    400004: WorkshopFarmersGrate_Building_NoMat
     2300000: NoMaterialBuilding
+    2300002: WorkshopFarmersGrate_Building_NoMat
     3300000: NoMaterialBuilding
+    3300002: WorkshopFarmersGrate_Building_NoMat
     4300000: NoMaterialBuilding
+    4300002: WorkshopFarmersGrate_Building_NoMat
   materials:
     importMaterials: 1
     materialName: 0
@@ -22,6 +27,8 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 

@@ -2,7 +2,7 @@
 # File Created: 29.10.2015 23:35:33
 
 #
-# object BuildingMaterial
+# object Furnace_Catchment_Building
 #
 
 v  0.0000 1.0000 1.0000
@@ -81,7 +81,7 @@ vt 0.0731 0.3340 0.0000
 vt 0.0731 0.5474 0.0000
 # 48 texture coords
 
-g BuildingMaterial
+g Furnace_Catchment_Building
 f 1/1/1 2/2/1 3/3/1 
 f 3/3/1 4/4/1 1/1/1 
 f 5/5/2 1/6/2 4/7/2 

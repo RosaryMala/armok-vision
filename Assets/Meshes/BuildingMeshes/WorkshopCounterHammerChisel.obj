@@ -2,7 +2,7 @@
 # File Created: 13.07.2016 18:22:43
 
 #
-# object BuildingMaterial
+# object WorkshopCounterHammerChisel_Building
 #
 
 v  1.0000 1.4000 -1.0000
@@ -42,7 +42,7 @@ vt 0.0020 0.0020 0.5000
 vt 0.6889 0.0020 0.5000
 # 18 texture coords
 
-g BuildingMaterial
+g WorkshopCounterHammerChisel_Building
 s 1
 f 1/1/1 2/2/1 3/3/1 
 f 3/3/1 4/4/1 1/1/1 
@@ -61,7 +61,7 @@ f 8/17/5 5/18/5 3/15/5
 # 10 faces
 
 #
-# object NoMaterialBuilding
+# object WorkshopCounterHammerChisel_Building_NoMat
 #
 
 v  0.2273 1.4004 0.4428
@@ -157,7 +157,7 @@ vt 0.7861 0.0020 0.0000
 vt 0.8736 0.0020 0.0000
 # 42 texture coords
 
-g NoMaterialBuilding
+g WorkshopCounterHammerChisel_Building_NoMat
 s 1
 f 9/19/6 10/20/7 11/21/8 
 s 2

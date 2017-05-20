@@ -7,11 +7,16 @@ ModelImporter:
   fileIDToRecycleName:
     100000: BuildingMaterialTransparent
     100002: //RootNode
+    100004: Window_BuildingTransparent
     400000: BuildingMaterialTransparent
     400002: //RootNode
+    400004: Window_BuildingTransparent
     2300000: BuildingMaterialTransparent
+    2300002: Window_BuildingTransparent
     3300000: BuildingMaterialTransparent
+    3300002: Window_BuildingTransparent
     4300000: BuildingMaterialTransparent
+    4300002: Window_BuildingTransparent
   materials:
     importMaterials: 1
     materialName: 0
@@ -22,6 +27,8 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 

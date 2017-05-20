@@ -2,7 +2,7 @@
 # File Created: 06.01.2017 20:31:21
 
 #
-# object BuildingMaterial
+# object Unknown_Building
 #
 
 v  0.0380 0.8259 -0.0500
@@ -213,7 +213,7 @@ vt 0.2750 0.7015 0.5250
 vt 0.3470 0.7015 0.5250
 # 128 texture coords
 
-g BuildingMaterial
+g Unknown_Building
 s 1
 f 1/1/1 2/2/1 3/3/1 
 f 1/1/1 3/3/1 4/4/1 

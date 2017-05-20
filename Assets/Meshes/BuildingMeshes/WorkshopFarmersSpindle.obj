@@ -2,7 +2,7 @@
 # File Created: 19.07.2016 19:29:14
 
 #
-# object BuildingMaterial
+# object WorkshopFarmersSpindle_Building
 #
 
 v  -1.0000 0.7500 -0.0000
@@ -351,7 +351,7 @@ vt 0.3898 0.6940 0.0000
 vt 0.5672 0.6940 0.0000
 # 252 texture coords
 
-g BuildingMaterial
+g WorkshopFarmersSpindle_Building
 s 1
 f 1/1/1 2/2/1 3/3/1 
 f 1/1/1 3/3/1 4/4/1 
@@ -538,7 +538,7 @@ f 64/251/6 19/252/6 18/249/6
 # 154 faces
 
 #
-# object NoMaterialBuilding
+# object WorkshopFarmersSpindle_Building_NoMat
 #
 
 v  0.5000 1.2500 0.2500
@@ -580,7 +580,7 @@ vt 0.5080 0.7069 0.0000
 vt 0.5080 0.7660 0.0000
 # 20 texture coords
 
-g NoMaterialBuilding
+g WorkshopFarmersSpindle_Building_NoMat
 s 1
 f 83/253/7 84/254/7 85/255/7 
 f 85/255/7 86/256/7 83/253/7 

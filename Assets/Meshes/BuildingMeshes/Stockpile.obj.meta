@@ -7,11 +7,16 @@ ModelImporter:
   fileIDToRecycleName:
     100000: NoMaterialBuildingCutout
     100002: //RootNode
+    100004: Stockpile_Building_NoMatCutout
     400000: NoMaterialBuildingCutout
     400002: //RootNode
+    400004: Stockpile_Building_NoMatCutout
     2300000: NoMaterialBuildingCutout
+    2300002: Stockpile_Building_NoMatCutout
     3300000: NoMaterialBuildingCutout
+    3300002: Stockpile_Building_NoMatCutout
     4300000: NoMaterialBuildingCutout
+    4300002: Stockpile_Building_NoMatCutout
   materials:
     importMaterials: 1
     materialName: 0
@@ -22,6 +27,8 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 

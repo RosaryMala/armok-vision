@@ -2,7 +2,7 @@
 # File Created: 10.11.2015 18:56:21
 
 #
-# object BuildingMaterial
+# object WaterWheel_Building
 #
 
 v  -1.0000 1.5000 -0.0000
@@ -311,7 +311,7 @@ vt 0.5500 0.9000 0.7500
 vt 0.4500 0.9000 0.7500
 # 70 texture coords
 
-g BuildingMaterial
+g WaterWheel_Building
 f 1/1/1 2/2/1 3/3/1 
 f 1/1/1 3/3/1 4/4/1 
 f 1/1/1 4/4/1 5/5/1 

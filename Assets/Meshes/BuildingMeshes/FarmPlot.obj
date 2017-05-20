@@ -2,7 +2,7 @@
 # File Created: 24.02.2017 19:57:43
 
 #
-# object BuildingMaterial
+# object FarmPlot_Building
 #
 
 v  -1.0000 0.7500 1.0000
@@ -65,7 +65,7 @@ vt 0.0500 0.4375 0.0500
 vt 0.9500 0.4375 0.0500
 # 32 texture coords
 
-g BuildingMaterial
+g FarmPlot_Building
 s 1
 f 1/1/1 2/2/1 3/3/1 
 f 3/3/1 4/4/1 1/1/1 

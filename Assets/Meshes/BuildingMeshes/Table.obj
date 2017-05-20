@@ -2,7 +2,7 @@
 # File Created: 27.09.2015 20:00:15
 
 #
-# object BuildingMaterial
+# object Table_Building
 #
 
 v  -1.0000 1.4000 -1.0000
@@ -124,7 +124,7 @@ vt 0.6000 0.6750 0.4353
 vt 0.8090 0.2750 0.2263
 # 60 texture coords
 
-g BuildingMaterial
+g Table_Building
 f 1/1/1 2/2/1 3/3/1 
 f 3/3/1 4/4/1 1/1/1 
 f 5/5/2 1/6/2 4/7/2 

@@ -9,19 +9,34 @@ ModelImporter:
     100002: //RootNode
     100004: NoMaterialBuilding
     100006: NoMaterialBuildingCutout
+    100008: NestBox_Building
+    100010: NestBox_Building_NoMat
+    100012: NestBox_Building_NoMatCutout
     400000: BuildingMaterial
     400002: //RootNode
     400004: NoMaterialBuilding
     400006: NoMaterialBuildingCutout
+    400008: NestBox_Building
+    400010: NestBox_Building_NoMat
+    400012: NestBox_Building_NoMatCutout
     2300000: BuildingMaterial
     2300002: NoMaterialBuilding
     2300004: NoMaterialBuildingCutout
+    2300006: NestBox_Building
+    2300008: NestBox_Building_NoMat
+    2300010: NestBox_Building_NoMatCutout
     3300000: BuildingMaterial
     3300002: NoMaterialBuilding
     3300004: NoMaterialBuildingCutout
+    3300006: NestBox_Building
+    3300008: NestBox_Building_NoMat
+    3300010: NestBox_Building_NoMatCutout
     4300000: BuildingMaterial
     4300002: NoMaterialBuilding
     4300004: NoMaterialBuildingCutout
+    4300006: NestBox_Building
+    4300008: NestBox_Building_NoMat
+    4300010: NestBox_Building_NoMatCutout
   materials:
     importMaterials: 1
     materialName: 0
@@ -32,6 +47,8 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 

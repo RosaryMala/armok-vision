@@ -2,7 +2,7 @@
 # File Created: 28.09.2015 09:10:12
 
 #
-# object BuildingMaterial
+# object Statue_Building
 #
 
 v  0.2506 1.7884 0.0000
@@ -206,7 +206,7 @@ vt 0.6167 0.2979 0.5449
 vt 0.5626 0.3915 0.6441
 # 96 texture coords
 
-g BuildingMaterial
+g Statue_Building
 f 1/1/1 2/2/2 3/3/3 
 f 1/1/1 4/4/4 2/2/2 
 f 3/3/3 5/5/5 6/6/6 

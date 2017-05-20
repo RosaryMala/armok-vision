@@ -2,7 +2,7 @@
 # File Created: 08.11.2015 22:09:16
 
 #
-# object BuildingMaterial
+# object ScrewPump_b_Building
 #
 
 v  1.0000 0.5000 1.0000
@@ -79,7 +79,7 @@ vt 0.8750 1.0000 0.0000
 vt 0.8750 0.0000 0.0000
 # 18 texture coords
 
-g BuildingMaterial
+g ScrewPump_b_Building
 f 1/1/1 2/2/1 3/3/1 
 f 3/3/1 4/4/1 1/1/1 
 f 5/2/2 6/3/2 7/4/2 

@@ -2,7 +2,7 @@
 # File Created: 10.11.2015 19:02:32
 
 #
-# object BuildingMaterial
+# object AxleVertical_Building
 #
 
 v  0.0000 0.0000 -0.0000
@@ -49,7 +49,7 @@ vt 0.5833 1.0000 1.0000
 vt 0.5000 1.0000 0.0000
 # 16 texture coords
 
-g BuildingMaterial
+g AxleVertical_Building
 f 1/1/1 2/2/1 3/3/1 
 f 1/1/1 4/4/1 2/5/1 
 f 1/1/1 5/6/1 4/4/1 

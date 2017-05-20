@@ -2,7 +2,7 @@
 # File Created: 11.10.2015 13:23:31
 
 #
-# object NoMaterialBuilding
+# object Gem_Building_NoMat
 #
 
 v  -0.3536 1.3226 -0.3536
@@ -306,7 +306,7 @@ vt 0.7071 1.0000 0.0000
 vt 0.4142 0.9999 0.0000
 # 117 texture coords
 
-g NoMaterialBuilding
+g Gem_Building_NoMat
 f 1/1/1 2/2/1 3/3/1 
 f 1/1/1 3/3/1 4/4/1 
 f 5/1/2 6/2/2 2/3/2 
