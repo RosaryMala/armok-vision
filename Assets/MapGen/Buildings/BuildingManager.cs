@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using RemoteFortressReader;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace Building
 {
@@ -57,6 +58,7 @@ namespace Building
                 BuildingModel builtBuilding;
                 if (!sceneBuildings.ContainsKey(building.index))
                 {
+                    Profiler.BeginSample("Init Building " + building.index);
                     BuildingStruct type = building.building_type;
                     if (!buidlingPrefabs.ContainsKey(type))
                         type = new BuildingStruct(type.building_type, type.building_subtype, -1);
@@ -80,10 +82,13 @@ namespace Building
                             Quaternion.identity, transform);
 
                     sceneBuildings[building.index] = builtBuilding;
-                    builtBuilding.Initialize(building);
+                    Profiler.EndSample();
                 }
                 else
                     builtBuilding = sceneBuildings[building.index];
+                Profiler.BeginSample("BuildingModel.Initialize");
+                builtBuilding.Initialize(building);
+                Profiler.EndSample();
             }
         }
 

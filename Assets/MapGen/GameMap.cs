@@ -748,7 +748,7 @@ public class GameMap : MonoBehaviour
             {
                 itemInstances[item.id] = item;
             }
-            UnityEngine.Profiling.Profiler.BeginSample("LoadBuildings", this);
+            UnityEngine.Profiling.Profiler.BeginSample("BuildingManager.LoadBlock", this);
             Building.BuildingManager.Instance.LoadBlock(block);
             UnityEngine.Profiling.Profiler.EndSample();
         }
@@ -1971,6 +1971,7 @@ public class GameMap : MonoBehaviour
     OpenSimplexNoise noise = new OpenSimplexNoise();
     void DrawItems()
     {
+        return;
         if (ContentLoader.Instance == null)
             return;
         UnityEngine.Profiling.Profiler.BeginSample("DrawItems", this);

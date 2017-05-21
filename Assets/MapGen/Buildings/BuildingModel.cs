@@ -12,9 +12,13 @@ namespace Building
 
         BuildingRoom filler;
 
+        BuildingPart[] parts;
+        int items = -1;
+
         private void Awake()
         {
             filler = GetComponent<BuildingRoom>();
+            parts = GetComponentsInChildren<BuildingPart>();
         }
 
         public void Initialize(RemoteFortressReader.BuildingInstance buildingInput)
@@ -26,10 +30,13 @@ namespace Building
                 filler.Initialize(buildingInput);
             }
 
-            var parts = GetComponentsInChildren<BuildingPart>();
-            foreach (var part in parts)
+            if (buildingInput.items.Count != items)
             {
-                part.SetMaterial(buildingInput);
+                foreach (var part in parts)
+                {
+                    part.SetMaterial(buildingInput);
+                }
+                items = buildingInput.items.Count;
             }
 
             DFHack.DFCoord pos = new DFHack.DFCoord(
@@ -37,7 +44,8 @@ namespace Building
                 (buildingInput.pos_y_min + buildingInput.pos_y_max) / 2,
                 buildingInput.pos_z_max);
 
-            transform.localRotation = MeshContent.TranslateRotation(rotationType, MapDataStore.Main[pos]);
+            if(MapDataStore.Main[pos] != null)
+                transform.localRotation = MeshContent.TranslateRotation(rotationType, MapDataStore.Main[pos]);
 
         }
     }
