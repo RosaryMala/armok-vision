@@ -15,7 +15,7 @@
             <subtype value="SILVER" />
         </material>
     </color>
-    <color red="250" green="208" blue="192" metal="yes">
+    <color red="250" green="172" blue="143" metal="yes">
         <material value="Inorganic">
             <subtype value="COPPER" />
         </material>
