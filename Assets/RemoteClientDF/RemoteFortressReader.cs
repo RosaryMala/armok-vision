@@ -350,6 +350,15 @@ namespace RemoteFortressReader
       get { return _items; }
     }
   
+    [UnityEngine.SerializeField]
+    private int _active = default(int);
+    [global::ProtoBuf.ProtoMember(15, IsRequired = false, Name=@"active", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int active
+    {
+      get { return _active; }
+      set { _active = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
