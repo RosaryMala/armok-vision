@@ -59,6 +59,7 @@ GameObject:
   - component: {fileID: 33296661094510496}
   - component: {fileID: 23294256035131694}
   - component: {fileID: 114955824694546178}
+  - component: {fileID: 65320290140150146}
   m_Layer: 0
   m_Name: Workshop Basin
   m_TagString: Untagged
@@ -113,6 +114,7 @@ GameObject:
   - component: {fileID: 33065913637265754}
   - component: {fileID: 23191155042329314}
   - component: {fileID: 114834469889098668}
+  - component: {fileID: 65700501495048332}
   m_Layer: 0
   m_Name: Workshop Basin (1)
   m_TagString: Untagged
@@ -886,6 +888,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &65320290140150146
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1069079219803258}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 2.0000005, z: 0.9000002}
+  m_Center: {x: 0, y: 0, z: 0.9500002}
 --- !u!65 &65376175240445106
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -910,6 +924,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &65700501495048332
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1362208368755066}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 2.0000005, z: 0.9000002}
+  m_Center: {x: 0, y: 0, z: 0.9500002}
 --- !u!65 &65807766490208838
 BoxCollider:
   m_ObjectHideFlags: 1

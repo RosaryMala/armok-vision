@@ -56,7 +56,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4446955215056704}
   - component: {fileID: 33342696881926514}
-  - component: {fileID: 136590869289562204}
   - component: {fileID: 23442828642227848}
   - component: {fileID: 114694707176521334}
   m_Layer: 0
@@ -113,6 +112,7 @@ GameObject:
   - component: {fileID: 33718907460219936}
   - component: {fileID: 23675059928910666}
   - component: {fileID: 114245951335868442}
+  - component: {fileID: 65795433434354722}
   m_Layer: 0
   m_Name: Workshop Basin (1)
   m_TagString: Untagged
@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 33695013678192048}
   - component: {fileID: 23172184322983550}
   - component: {fileID: 114010160365772628}
+  - component: {fileID: 65844271977131128}
   m_Layer: 0
   m_Name: Workshop Basin
   m_TagString: Untagged
@@ -922,6 +923,30 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &65795433434354722
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1521395691985652}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 2.0000005, z: 0.9000002}
+  m_Center: {x: 0, y: 0, z: 0.9500002}
+--- !u!65 &65844271977131128
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1690219819218790}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 2.0000005, z: 0.9000002}
+  m_Center: {x: 0, y: 0, z: 0.9500002}
 --- !u!114 &114010160365772628
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -993,16 +1018,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: ANVIL
---- !u!136 &136590869289562204
-CapsuleCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1291275586369394}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
