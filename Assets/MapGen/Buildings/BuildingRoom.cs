@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace Building
 {
-    public class BuildingRoom : MonoBehaviour
+    public class BuildingRoom : MonoBehaviour, IBuildingPart
     {
         public GameObject part;
 
         List<GameObject> setParts = new List<GameObject>();
 
-        internal void Initialize(BuildingInstance buildingInput)
+        public void UpdatePart(BuildingInstance buildingInput)
         {
             if (setParts.Count > 0)
                 return;
