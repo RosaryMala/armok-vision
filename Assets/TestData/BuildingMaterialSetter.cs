@@ -10,7 +10,7 @@ public class BuildingMaterialSetter : MonoBehaviour
 
     public void SetMaterials()
     {
-        foreach (var part in FindObjectsOfType<Building.BuildingPart>())
+        foreach (var part in FindObjectsOfType<Building.MaterialPart>())
         {
             var renderer = part.GetComponent<MeshRenderer>();
             renderer.sharedMaterial.SetTexture("_MatTex", materialPattern);

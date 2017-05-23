@@ -9,7 +9,7 @@ namespace Building
 {
     [RequireComponent(typeof(MeshRenderer))]
     [RequireComponent(typeof(MeshFilter))]
-    public class BuildingPart : MonoBehaviour
+    public class MaterialPart : MonoBehaviour, IBuildingPart
     {
         MeshRenderer meshRenderer;
 
@@ -20,7 +20,7 @@ namespace Building
             meshRenderer = GetComponent<MeshRenderer>();
         }
 
-        internal void SetMaterial(BuildingInstance buildingInput)
+        public void UpdatePart(BuildingInstance buildingInput)
         {
             ColorDefinition dye = null;
             MatPairStruct mat = new MatPairStruct(-1,-1);

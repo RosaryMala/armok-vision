@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Building
 {
@@ -10,31 +8,24 @@ namespace Building
 
         public RemoteFortressReader.BuildingInstance originalBuilding;
 
-        BuildingRoom filler;
-
-        BuildingPart[] parts;
+        IBuildingPart[] parts;
         int items = -1;
 
         private void Awake()
         {
-            filler = GetComponent<BuildingRoom>();
-            parts = GetComponentsInChildren<BuildingPart>();
+            parts = gameObject.GetInterfacesInChildren<IBuildingPart>();
         }
 
         public void Initialize(RemoteFortressReader.BuildingInstance buildingInput)
         {
             originalBuilding = buildingInput;
 
-            if (filler != null)
-            {
-                filler.Initialize(buildingInput);
-            }
 
             if (buildingInput.items.Count != items)
             {
                 foreach (var part in parts)
                 {
-                    part.SetMaterial(buildingInput);
+                    part.UpdatePart(buildingInput);
                 }
                 items = buildingInput.items.Count;
             }
