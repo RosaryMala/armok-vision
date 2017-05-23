@@ -1,6 +1,9 @@
 ﻿using RemoteFortressReader;
 
-interface IBuildingPart
+namespace Building
 {
-    void UpdatePart(BuildingInstance buildingInstance);
+    interface IBuildingPart
+    {
+        void UpdatePart(BuildingInstance buildingInstance);
+    }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using RemoteFortressReader;
+﻿using RemoteFortressReader;
 using UnityEngine;
 using TokenLists;
 

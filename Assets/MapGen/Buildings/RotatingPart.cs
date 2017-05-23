@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Building
 {
-    public class RotatingPart : MonoBehaviour
+    public class RotatingPart : MonoBehaviour, IBuildingPart
     {
         public bool on;
         public float acceleration = 5;
@@ -34,7 +34,7 @@ namespace Building
             }
         }
 
-        internal void SetState(BuildingInstance buildingInput)
+        public void UpdatePart(BuildingInstance buildingInput)
         {
 
         }
