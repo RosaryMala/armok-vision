@@ -3773,7 +3773,10 @@ namespace RemoteFortressReader
       SOUTH = 2,
             
       [global::ProtoBuf.ProtoEnum(Name=@"WEST", Value=3)]
-      WEST = 3
+      WEST = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"NONE", Value=4)]
+      NONE = 4
     }
   
     [global::ProtoBuf.ProtoContract(Name=@"TileDigDesignation")]

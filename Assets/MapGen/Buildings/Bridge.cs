@@ -1,13 +1,15 @@
-﻿using UnityEngine;
+﻿using System;
+using RemoteFortressReader;
+using UnityEngine;
 
 namespace Building
 {
-    public class Bridge : MonoBehaviour
+    public class Bridge : MonoBehaviour, IBuildingPart
     {
         public bool shouldBeRaised;
 
-        public bool isRaised;
-        public bool isLowered;
+        public bool raising;
+        public bool lowering;
 
         new Rigidbody rigidbody;
         new HingeJoint hingeJoint;
@@ -22,13 +24,13 @@ namespace Building
         {
             if (shouldBeRaised)
             {
-                isLowered = false;
-                if (!isRaised && hingeJoint.angle >= hingeJoint.limits.max)
+                lowering = true;
+                if (raising && hingeJoint.angle >= hingeJoint.limits.max)
                 {
                     rigidbody.isKinematic = true;
-                    isRaised = true;
+                    raising = false;
                 }
-                if (!isRaised)
+                if (raising)
                 {
                     hingeJoint.useMotor = true;
                     rigidbody.isKinematic = false;
@@ -36,13 +38,13 @@ namespace Building
             }
             else
             {
-                isRaised = false;
-                if (!isLowered && Mathf.Approximately(hingeJoint.angle, 0) && hingeJoint.velocity < 0.001)
+                raising = true;
+                if (lowering && Mathf.Approximately(hingeJoint.angle, 0) && hingeJoint.velocity < 0.001)
                 {
                     rigidbody.isKinematic = true;
-                    isLowered = true;
+                    lowering = false;
                 }
-                if (!isLowered)
+                if (lowering)
                 {
                     hingeJoint.useMotor = false;
                     rigidbody.isKinematic = false;
@@ -52,11 +54,23 @@ namespace Building
 
         private void OnCollisionEnter(Collision collision)
         {
-            if(shouldBeRaised && !isRaised && collision.relativeVelocity.y < 0)
+            if(shouldBeRaised 
+                && raising 
+                && (collision.rigidbody == null || collision.rigidbody.isKinematic)
+                && ((collision.contacts[0].point - transform.position).y > 1)
+                )
             {
                 rigidbody.isKinematic = true;
-                isRaised = true;
+                raising = false;
             }
+        }
+
+        public void UpdatePart(BuildingInstance buildingInstance)
+        {
+            if (buildingInstance.direction == BuildingDirection.NONE)
+                gameObject.SetActive(buildingInstance.active == 0);
+            else
+                shouldBeRaised = buildingInstance.active == 1;
         }
     }
 }

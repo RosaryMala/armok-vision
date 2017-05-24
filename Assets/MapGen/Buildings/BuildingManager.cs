@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using RemoteFortressReader;
 using UnityEngine;
 using UnityEngine.Profiling;
+using DFHack;
 
 namespace Building
 {
@@ -60,6 +61,47 @@ namespace Building
                 {
                     Profiler.BeginSample("Init Building " + building.index);
                     BuildingStruct type = building.building_type;
+
+                    DFCoord origin = new DFCoord(
+                        (building.pos_x_min + building.pos_x_max) / 2,
+                        (building.pos_y_min + building.pos_y_max) / 2,
+                        building.pos_z_max);
+
+                    if(type.building_type == 19) //Bridge
+                    {
+                        switch (building.direction)
+                        {
+                            case BuildingDirection.NORTH:
+                                origin = new DFCoord(
+                                    (building.pos_x_min + building.pos_x_max) / 2,
+                                    building.pos_y_min,
+                                    building.pos_z_max);
+                                break;
+                            case BuildingDirection.EAST:
+                                origin = new DFCoord(
+                                    building.pos_x_max,
+                                    (building.pos_y_min + building.pos_y_max) / 2,
+                                    building.pos_z_max);
+                                break;
+                            case BuildingDirection.SOUTH:
+                                origin = new DFCoord(
+                                    (building.pos_x_min + building.pos_x_max) / 2,
+                                    building.pos_y_max,
+                                    building.pos_z_max);
+                                break;
+                            case BuildingDirection.WEST:
+                                origin = new DFCoord(
+                                    building.pos_x_min,
+                                    (building.pos_y_min + building.pos_y_max) / 2,
+                                    building.pos_z_max);
+                                break;
+                            case BuildingDirection.NONE:
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
                     if (!buidlingPrefabs.ContainsKey(type))
                         type = new BuildingStruct(type.building_type, type.building_subtype, -1);
                     if (!buidlingPrefabs.ContainsKey(type))
@@ -67,19 +109,9 @@ namespace Building
                     if (!buidlingPrefabs.ContainsKey(type))
                         type = new BuildingStruct(-1, -1, -1);
                     if (buidlingPrefabs.ContainsKey(type))
-                        builtBuilding = Instantiate(buidlingPrefabs[type],
-                            GameMap.DFtoUnityCoord(
-                                (building.pos_x_min + building.pos_x_max) / 2,
-                                (building.pos_y_min + building.pos_y_max) / 2,
-                                building.pos_z_max),
-                            Quaternion.identity, transform);
+                        builtBuilding = Instantiate(buidlingPrefabs[type], GameMap.DFtoUnityCoord(origin), TranslateDirection(building.direction), transform);
                     else
-                        builtBuilding = Instantiate(defaultBuilding,
-                            GameMap.DFtoUnityCoord(
-                                (building.pos_x_min + building.pos_x_max) / 2,
-                                (building.pos_y_min + building.pos_y_max) / 2,
-                                building.pos_z_max),
-                            Quaternion.identity, transform);
+                        builtBuilding = Instantiate(defaultBuilding, GameMap.DFtoUnityCoord(origin), TranslateDirection(building.direction), transform);
 
                     sceneBuildings[building.index] = builtBuilding;
                     Profiler.EndSample();
@@ -101,6 +133,23 @@ namespace Building
                     (building.pos_z_min < GameMap.Instance.PosZ)
                     && (building.pos_z_max >= (GameMap.Instance.PosZ - GameSettings.Instance.rendering.drawRangeDown))
                     );
+            }
+        }
+
+        public static Quaternion TranslateDirection(BuildingDirection direction)
+        {
+            switch (direction)
+            {
+                case BuildingDirection.NORTH:
+                    return Quaternion.Euler(0, 0, 0);
+                case BuildingDirection.EAST:
+                    return Quaternion.Euler(0, 90, 0);
+                case BuildingDirection.SOUTH:
+                    return Quaternion.Euler(0, 180, 0);
+                case BuildingDirection.WEST:
+                    return Quaternion.Euler(0, -90, 0);
+                default:
+                    return Quaternion.identity;
             }
         }
     }

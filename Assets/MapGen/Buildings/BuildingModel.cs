@@ -9,7 +9,6 @@ namespace Building
         public RemoteFortressReader.BuildingInstance originalBuilding;
 
         IBuildingPart[] parts;
-        int items = -1;
 
         private void Awake()
         {
@@ -20,14 +19,9 @@ namespace Building
         {
             originalBuilding = buildingInput;
 
-
-            if (buildingInput.items.Count != items)
+            foreach (var part in parts)
             {
-                foreach (var part in parts)
-                {
-                    part.UpdatePart(buildingInput);
-                }
-                items = buildingInput.items.Count;
+                part.UpdatePart(buildingInput);
             }
 
             DFHack.DFCoord pos = new DFHack.DFCoord(
@@ -35,7 +29,7 @@ namespace Building
                 (buildingInput.pos_y_min + buildingInput.pos_y_max) / 2,
                 buildingInput.pos_z_max);
 
-            if(MapDataStore.Main[pos] != null)
+            if (MapDataStore.Main[pos] != null && rotationType != RotationType.BuildingDirection)
                 transform.localRotation = MeshContent.TranslateRotation(rotationType, MapDataStore.Main[pos]);
 
         }
