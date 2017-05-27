@@ -586,7 +586,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 632c27802609cf448bef79fb5a172114, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  materialColor: {r: 0.86764705, g: 0.86764705, b: 0.86764705, a: 1}
+  materialColor: {r: 0.78676474, g: 0.78676474, b: 0.78676474, a: 1}
   materialPattern: {fileID: 18700000, guid: 507d82b7de2c9404cb0a71f3cdb0331f, type: 2}
   index: 5
 --- !u!4 &238614217
@@ -1424,7 +1424,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 815377050}
   m_LocalRotation: {x: 0.23911765, y: -0.3696438, z: 0.09904577, w: 0.89239913}
-  m_LocalPosition: {x: 7.72, y: 6.3, z: -7.72}
+  m_LocalPosition: {x: 3.07, y: 4.17, z: -3.07}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
