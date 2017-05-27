@@ -45,7 +45,7 @@ namespace Building
             DFConnection.RegisterConnectionCallback(LoadBuildings);
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             UpdateVisibility();
         }
@@ -130,7 +130,7 @@ namespace Building
             {
                 var building = item.Value.originalBuilding;
                 item.Value.gameObject.SetActive(
-                    (building.pos_z_min < GameMap.Instance.PosZ)
+                    (building.pos_z_min < (GameMap.Instance.firstPerson? GameMap.Instance.PosZ + GameSettings.Instance.rendering.drawRangeUp : GameMap.Instance.PosZ))
                     && (building.pos_z_max >= (GameMap.Instance.PosZ - GameSettings.Instance.rendering.drawRangeDown))
                     );
             }

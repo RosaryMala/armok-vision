@@ -2,12 +2,16 @@
 using System.Collections;
 
 [RequireComponent(typeof(Light))]
-public class TurnOffBelowHorizon : MonoBehaviour {
+public class TurnOffBelowHorizon : MonoBehaviour
+{
 
     public float angleRange = 1;
 
     float originalIntensity;
     Light lightComponent;
+
+    public Light flashlight;
+    float originalFlashlightIntensity;
 
     public bool setFog = false;
 
@@ -21,16 +25,18 @@ public class TurnOffBelowHorizon : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start () 
+    void Start()
     {
         originalIntensity = lightComponent.intensity;
+        if (flashlight != null)
+            originalFlashlightIntensity = flashlight.intensity;
     }
 
     float prevIntensity = float.NaN;
 
     // Update is called once per frame
-    void Update () {
-        
+    void Update()
+    {
         float x = -(90 - Vector3.Angle(transform.forward, Vector3.up));
 
         if (x > 180)
@@ -44,7 +50,9 @@ public class TurnOffBelowHorizon : MonoBehaviour {
         {
             //Debug.Log(this.name + " light=" + x + ", xrot=" + transform.rotation.eulerAngles.x);
             lightComponent.intensity = x * originalIntensity;
-            if(setFog)
+            if (flashlight != null)
+                flashlight.intensity = (1 - x) * originalFlashlightIntensity;
+            if (setFog)
             {
                 RenderSettings.fogColor = Color.Lerp(nightFog, dayFog, x);
             }
