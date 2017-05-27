@@ -1341,10 +1341,13 @@ public class GameMap : MonoBehaviour
         return false;
     }
 
+    Color[] textureColors;
+
     void GenerateSpatterTexture(int z)
     {
         UnityEngine.Profiling.Profiler.BeginSample("GenerateSpatterTexture", this);
-        Color[] textureColors = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
+        if(textureColors == null || textureColors.Length != MapDataStore.MapSize.x * MapDataStore.MapSize.y)
+            textureColors = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
 
         for (int x = 0; x < MapDataStore.MapSize.x; x++)
             for (int y = 0; y < MapDataStore.MapSize.y; y++)
