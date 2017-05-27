@@ -1149,14 +1149,21 @@ public class GameMap : MonoBehaviour
         UnityEngine.Profiling.Profiler.EndSample();
     }
 
+    Color[] grassColors;
+    Color[] grassIndices;
+
+
     void GenerateGrassTexture(int z)
     {
         if (ContentLoader.Instance == null)
             return;
         UnityEngine.Profiling.Profiler.BeginSample("GenerateGrassTexture", this);
 
-        Color[] grassColors = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
-        Color[] grassIndices = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
+        if (grassColors == null || grassIndices == null || grassColors.Length != MapDataStore.MapSize.x * MapDataStore.MapSize.y)
+        {
+            grassColors = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
+            grassIndices = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
+        }
 
         int grassTiles = 0;
 
@@ -1230,14 +1237,21 @@ public class GameMap : MonoBehaviour
         UnityEngine.Profiling.Profiler.EndSample();
     }
 
+    Color[] terrainColors;
+    Color[] terrainIndices;
+
+
     void GenerateTerrainTexture(int z)
     {
         if (ContentLoader.Instance == null)
             return;
         UnityEngine.Profiling.Profiler.BeginSample("GenerateSpatterTexture", this);
 
-        Color[] terrainColors = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
-        Color[] terrainIndices = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
+        if (terrainColors == null || terrainIndices == null || terrainColors.Length != MapDataStore.MapSize.x * MapDataStore.MapSize.y)
+        {
+            terrainColors = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
+            terrainIndices = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
+        }
 
         for (int x = 0; x < MapDataStore.MapSize.x; x++)
             for (int y = 0; y < MapDataStore.MapSize.y; y++)
