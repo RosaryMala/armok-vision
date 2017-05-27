@@ -1366,20 +1366,27 @@ public class GameMap : MonoBehaviour
         for (int x = 0; x < MapDataStore.MapSize.x; x++)
             for (int y = 0; y < MapDataStore.MapSize.y; y++)
             {
+                Color totalColor = new Color(0, 0, 0, 0);
+                int index = x + (y * MapDataStore.MapSize.x);
+
                 var tile = MapDataStore.Main[x, y, z];
                 if (tile == null)
+                {
+                    textureColors[index] = totalColor;
                     continue;
+                }
                 if (tile.spatters == null || tile.spatters.Count == 0)
+                {
+                    textureColors[index] = totalColor;
                     continue;
+                }
 
                 if (tile.Hidden)
+                {
+                    textureColors[index] = totalColor;
                     continue;
-
-                Color totalColor = new Color(0, 0, 0, 0);
-
+                }
                 float totalAmount = 0;
-
-                int index = x + (y * MapDataStore.MapSize.x);
 
                 foreach (var spatter in tile.spatters)
                 {
