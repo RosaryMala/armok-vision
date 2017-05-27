@@ -17,6 +17,13 @@ namespace Building
 
         public void Initialize(RemoteFortressReader.BuildingInstance buildingInput)
         {
+            if (originalBuilding != null
+                && originalBuilding.active == buildingInput.active
+                && originalBuilding.items.Count == buildingInput.items.Count
+                && originalBuilding.pos_x_min == buildingInput.pos_x_min
+                && originalBuilding.pos_y_min == buildingInput.pos_y_min)
+                return; //There's nothing changed.
+
             originalBuilding = buildingInput;
 
             foreach (var part in parts)
