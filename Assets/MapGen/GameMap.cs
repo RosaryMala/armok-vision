@@ -386,6 +386,55 @@ public class GameMap : MonoBehaviour
         UpdateSplatTextures();
         //DrawBlocks();
         DrawItems();
+        UpdateBlockVisibility();
+    }
+
+    int PrevZ = -1;
+    private void UpdateBlockVisibility()
+    {
+        if (PosZ != PrevZ)
+        {
+            for (int z = Mathf.Min(PosZ, PrevZ) - 1; z <= Mathf.Max(PosZ, PrevZ) + 1; z++)
+            {
+                UpdateBlockVisibility(z);
+                UpdateBlockVisibility(z + GameSettings.Instance.rendering.drawRangeUp);
+                UpdateBlockVisibility(z - GameSettings.Instance.rendering.drawRangeDown);
+            }
+            PrevZ = PosZ;
+        }
+    }
+
+    void UpdateBlockVisibility(int z)
+    {
+        if (z < 0 || z >= mapMeshes.GetLength(2))
+            return;
+        for(int x = 0; x < mapMeshes.GetLength(0); x++)
+            for(int y = 0; y < mapMeshes.GetLength(1); y++)
+            {
+                if (mapMeshes[x, y, z] == null)
+                    continue;
+                    mapMeshes[x, y, z].UpdateVisibility(GetVisibility(z));
+
+            }
+    }
+
+    BlockMeshSet.Visibility GetVisibility(int z)
+    {
+        if (z > PosZ + GameSettings.Instance.rendering.drawRangeUp)
+            return BlockMeshSet.Visibility.None;
+        else if (z >= PosZ)
+        {
+            if (firstPerson)
+                return BlockMeshSet.Visibility.All;
+            else
+                return BlockMeshSet.Visibility.Shadows;
+        }
+        else if (z >= PosZ - GameSettings.Instance.rendering.drawRangeDown)
+        {
+            return BlockMeshSet.Visibility.All;
+        }
+        else
+            return BlockMeshSet.Visibility.None;
     }
 
     public float helpFadeLength = 0.5f;
@@ -1133,7 +1182,7 @@ public class GameMap : MonoBehaviour
                 mapMeshes[block_x, block_y, block_z] = Instantiate(blockPrefab, DFtoUnityCoord(newMeshes.location), Quaternion.identity, transform);
                 mapMeshes[block_x, block_y, block_z].name = string.Format("Block_{0}_{1}_{2}", block_x, block_y, block_z);
                 mapMeshes[block_x, block_y, block_z].Init();
-
+                mapMeshes[block_x, block_y, block_z].UpdateVisibility(GetVisibility(block_z));
                 if (terrainSplatLayers[block_z] != null)
                     mapMeshes[block_x, block_y, block_z].SetTerrainMap(terrainSplatLayers[block_z], terrainTintLayers[block_z]);
             }

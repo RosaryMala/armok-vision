@@ -44,11 +44,6 @@ public class BlockMeshSet : MonoBehaviour
     public MeshFilter voxelBlocks;
     MeshRenderer voxelRenderer;
     /// <summary>
-    /// top face of procedurally generated terrain blocks.
-    /// </summary>
-    public MeshFilter topVoxelBlocks;
-    MeshRenderer topVoxelRenderer;
-    /// <summary>
     /// Procedurally generated grass.
     /// </summary>
     public Mesh grassBlocks;
@@ -60,7 +55,34 @@ public class BlockMeshSet : MonoBehaviour
     private void Awake()
     {
         voxelRenderer = voxelBlocks.GetComponent<MeshRenderer>();
-        topVoxelRenderer = topVoxelBlocks.GetComponent<MeshRenderer>();
+    }
+
+    public enum Visibility
+    {
+        None,
+        Shadows,
+        All
+    }
+
+    public void UpdateVisibility(Visibility vis)
+    {
+        switch (vis)
+        {
+            case Visibility.None:
+                gameObject.SetActive(false);
+                break;
+            case Visibility.Shadows:
+                gameObject.SetActive(true);
+                voxelRenderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+                voxelRenderer.enabled = true;
+                break;
+            case Visibility.All:
+                voxelRenderer.shadowCastingMode = ShadowCastingMode.On;
+                voxelRenderer.enabled = true;
+                break;
+            default:
+                break;
+        }
     }
 
     MaterialManager.MaterialFlags matFlags = MaterialManager.MaterialFlags.None;
@@ -87,7 +109,6 @@ public class BlockMeshSet : MonoBehaviour
     public void SetupMaterials()
     {
         voxelRenderer.sharedMaterial = MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.SplatMap, matFlags);
-        topVoxelRenderer.sharedMaterial = MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.SplatMap, matFlags);
     }
 
     public Texture2D terrainSplatLayer;
@@ -101,7 +122,6 @@ public class BlockMeshSet : MonoBehaviour
         matProperties.SetTexture(terrainTintID, terrainTintLayer);
 
         voxelRenderer.SetPropertyBlock(matProperties);
-        topVoxelRenderer.SetPropertyBlock(matProperties);
     }
 
     internal void LoadMeshes(BlockMesher.Result newMeshes, string suffix)
@@ -178,42 +198,30 @@ public class BlockMeshSet : MonoBehaviour
             voxelBlocks.mesh.RecalculateNormals();
             voxelBlocks.mesh.RecalculateTangents();
         }
-        if(newMeshes.topTerrainMesh != null)
-        {
-            if(topVoxelBlocks.mesh == null)
-            {
-                topVoxelBlocks.mesh = new Mesh();
-                topVoxelBlocks.mesh.name = string.Format("block_voxel_top_{0}", suffix);
-            }
-            topVoxelBlocks.mesh.Clear();
-            newMeshes.topTerrainMesh.CopyToMesh(topVoxelBlocks.mesh);
-            topVoxelBlocks.mesh.RecalculateNormals();
-            topVoxelBlocks.mesh.RecalculateTangents();
-        }
-        if (newMeshes.water != null)
-        {
-            if (liquidBlocks == null || liquidBlocks.Length == 0)
-                liquidBlocks = new Mesh[2];
-            if (liquidBlocks[MapDataStore.WATER_INDEX] == null)
-            {
-                liquidBlocks[MapDataStore.WATER_INDEX] = new Mesh();
-                liquidBlocks[MapDataStore.WATER_INDEX].name = string.Format("liquid_water_{0}", suffix);
-            }
-            liquidBlocks[MapDataStore.WATER_INDEX].Clear();
-            newMeshes.water.CopyToMesh(liquidBlocks[MapDataStore.WATER_INDEX]);
-        }
-        if (newMeshes.magma != null)
-        {
-            if (liquidBlocks == null)
-                liquidBlocks = new Mesh[2];
-            if (liquidBlocks[MapDataStore.MAGMA_INDEX] == null)
-            {
-                liquidBlocks[MapDataStore.MAGMA_INDEX] = new Mesh();
-                liquidBlocks[MapDataStore.MAGMA_INDEX].name = string.Format("liquid_magma_{0}", suffix);
-            }
-            liquidBlocks[MapDataStore.MAGMA_INDEX].Clear();
-            newMeshes.magma.CopyToMesh(liquidBlocks[MapDataStore.MAGMA_INDEX]);
-        }
+        //if (newMeshes.water != null)
+        //{
+        //    if (liquidBlocks == null || liquidBlocks.Length == 0)
+        //        liquidBlocks = new Mesh[2];
+        //    if (liquidBlocks[MapDataStore.WATER_INDEX] == null)
+        //    {
+        //        liquidBlocks[MapDataStore.WATER_INDEX] = new Mesh();
+        //        liquidBlocks[MapDataStore.WATER_INDEX].name = string.Format("liquid_water_{0}", suffix);
+        //    }
+        //    liquidBlocks[MapDataStore.WATER_INDEX].Clear();
+        //    newMeshes.water.CopyToMesh(liquidBlocks[MapDataStore.WATER_INDEX]);
+        //}
+        //if (newMeshes.magma != null)
+        //{
+        //    if (liquidBlocks == null)
+        //        liquidBlocks = new Mesh[2];
+        //    if (liquidBlocks[MapDataStore.MAGMA_INDEX] == null)
+        //    {
+        //        liquidBlocks[MapDataStore.MAGMA_INDEX] = new Mesh();
+        //        liquidBlocks[MapDataStore.MAGMA_INDEX].name = string.Format("liquid_magma_{0}", suffix);
+        //    }
+        //    liquidBlocks[MapDataStore.MAGMA_INDEX].Clear();
+        //    newMeshes.magma.CopyToMesh(liquidBlocks[MapDataStore.MAGMA_INDEX]);
+        //}
     }
 
     internal void Clear()
@@ -229,7 +237,6 @@ public class BlockMeshSet : MonoBehaviour
             ClearMesh(item);
         }
         ClearMesh(voxelBlocks.mesh);
-        ClearMesh(topVoxelBlocks.mesh);
         ClearMesh(grassBlocks);
         if (collisionBlocks != null)
         {
