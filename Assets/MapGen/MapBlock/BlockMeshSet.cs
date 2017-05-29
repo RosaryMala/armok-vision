@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityExtension;
 
-public class BlockMeshSet
+public class BlockMeshSet : MonoBehaviour
 {
     // The actual unity meshes used to draw things on screen.
     /// <summary>
@@ -37,14 +37,17 @@ public class BlockMeshSet
     /// W dimension is liquid type.
     /// </summary>
     public Mesh[] liquidBlocks;
+
     /// <summary>
     /// Procedurally generated terrain blocks.
     /// </summary>
-    public Mesh voxelBlocks;
+    public MeshFilter voxelBlocks;
+    MeshRenderer voxelRenderer;
     /// <summary>
     /// top face of procedurally generated terrain blocks.
     /// </summary>
-    public Mesh topVoxelBlocks;
+    public MeshFilter topVoxelBlocks;
+    MeshRenderer topVoxelRenderer;
     /// <summary>
     /// Procedurally generated grass.
     /// </summary>
@@ -53,6 +56,53 @@ public class BlockMeshSet
     /// Procedural grass blocks.
     /// </summary>
     public MeshCollider collisionBlocks;
+
+    private void Awake()
+    {
+        voxelRenderer = voxelBlocks.GetComponent<MeshRenderer>();
+        topVoxelRenderer = topVoxelBlocks.GetComponent<MeshRenderer>();
+    }
+
+    MaterialManager.MaterialFlags matFlags = MaterialManager.MaterialFlags.None;
+
+    MaterialPropertyBlock matProperties;
+
+    int spatterID;
+    int terrainSplatID;
+    int terrainTintID;
+    int grassSplatID;
+    int grassTintID;
+
+    public void Init()
+    {
+        SetupMaterials();
+        spatterID = Shader.PropertyToID("_SpatterTex");
+        terrainSplatID = Shader.PropertyToID("_Control");
+        terrainTintID = Shader.PropertyToID("_Tint");
+        grassSplatID = Shader.PropertyToID("_GrassControl");
+        grassTintID = Shader.PropertyToID("_GrassTint");
+        matProperties = new MaterialPropertyBlock();
+    }
+
+    public void SetupMaterials()
+    {
+        voxelRenderer.sharedMaterial = MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.SplatMap, matFlags);
+        topVoxelRenderer.sharedMaterial = MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.SplatMap, matFlags);
+    }
+
+    public Texture2D terrainSplatLayer;
+    public Texture2D terrainTintLayer;
+
+    public void SetTerrainMap(Texture2D terrainSplatLayer, Texture2D terrainTintLayer)
+    {
+        if (matProperties == null)
+            Debug.Log("What tyhe hell is wrong!");
+        matProperties.SetTexture(terrainSplatID, terrainSplatLayer);
+        matProperties.SetTexture(terrainTintID, terrainTintLayer);
+
+        voxelRenderer.SetPropertyBlock(matProperties);
+        topVoxelRenderer.SetPropertyBlock(matProperties);
+    }
 
     internal void LoadMeshes(BlockMesher.Result newMeshes, string suffix)
     {
@@ -118,31 +168,31 @@ public class BlockMeshSet
         }
         if (newMeshes.terrainMesh != null)
         {
-            if (voxelBlocks == null)
+            if (voxelBlocks.mesh == null)
             {
-                voxelBlocks = new Mesh();
-                voxelBlocks.name = string.Format("block_voxel_{0}", suffix);
+                voxelBlocks.mesh = new Mesh();
+                voxelBlocks.mesh.name = string.Format("block_voxel_{0}", suffix);
             }
-            voxelBlocks.Clear();
-            newMeshes.terrainMesh.CopyToMesh(voxelBlocks);
-            voxelBlocks.RecalculateNormals();
-            voxelBlocks.RecalculateTangents();
+            voxelBlocks.mesh.Clear();
+            newMeshes.terrainMesh.CopyToMesh(voxelBlocks.mesh);
+            voxelBlocks.mesh.RecalculateNormals();
+            voxelBlocks.mesh.RecalculateTangents();
         }
         if(newMeshes.topTerrainMesh != null)
         {
-            if(topVoxelBlocks == null)
+            if(topVoxelBlocks.mesh == null)
             {
-                topVoxelBlocks = new Mesh();
-                topVoxelBlocks.name = string.Format("block_voxel_top_{0}", suffix);
+                topVoxelBlocks.mesh = new Mesh();
+                topVoxelBlocks.mesh.name = string.Format("block_voxel_top_{0}", suffix);
             }
-            topVoxelBlocks.Clear();
-            newMeshes.topTerrainMesh.CopyToMesh(topVoxelBlocks);
-            topVoxelBlocks.RecalculateNormals();
-            topVoxelBlocks.RecalculateTangents();
+            topVoxelBlocks.mesh.Clear();
+            newMeshes.topTerrainMesh.CopyToMesh(topVoxelBlocks.mesh);
+            topVoxelBlocks.mesh.RecalculateNormals();
+            topVoxelBlocks.mesh.RecalculateTangents();
         }
         if (newMeshes.water != null)
         {
-            if (liquidBlocks == null)
+            if (liquidBlocks == null || liquidBlocks.Length == 0)
                 liquidBlocks = new Mesh[2];
             if (liquidBlocks[MapDataStore.WATER_INDEX] == null)
             {
@@ -178,8 +228,8 @@ public class BlockMeshSet
         {
             ClearMesh(item);
         }
-        ClearMesh(voxelBlocks);
-        ClearMesh(topVoxelBlocks);
+        ClearMesh(voxelBlocks.mesh);
+        ClearMesh(topVoxelBlocks.mesh);
         ClearMesh(grassBlocks);
         if (collisionBlocks != null)
         {
@@ -192,79 +242,5 @@ public class BlockMeshSet
     {
         if (mesh != null)
             mesh.Clear();
-    }
-
-    internal bool Render(bool phantom, Matrix4x4 LocalTransform, bool top,
-        Material basicTerrainMaterial,
-        Material stencilTerrainMaterial,
-        Material transparentTerrainMaterial, 
-        Material voxelTerrainMaterial, 
-        Material waterMaterial,
-        Material magmaMaterial,
-        MaterialPropertyBlock properties
-        )
-    {
-        UnityEngine.Profiling.Profiler.BeginSample("DrawSingleBlock");
-        bool drewBlock = false;
-        if (voxelBlocks != null && voxelBlocks.vertexCount > 0)
-        {
-            Graphics.DrawMesh(voxelBlocks, LocalTransform, voxelTerrainMaterial, 0, null, 0, properties, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
-            drewBlock = true;
-        }
-        if (topVoxelBlocks != null && topVoxelBlocks.vertexCount > 0 && top)
-        {
-            Graphics.DrawMesh(topVoxelBlocks, LocalTransform, voxelTerrainMaterial, 0, null, 0, properties, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
-            drewBlock = true;
-        }
-
-        if (blocks != null && blocks.vertexCount > 0)
-        {
-            Graphics.DrawMesh(blocks, LocalTransform, basicTerrainMaterial, 0, null, 0, properties, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
-            drewBlock = true;
-        }
-        if (topBlocks != null && topBlocks.vertexCount > 0 && top)
-        {
-            Graphics.DrawMesh(topBlocks, LocalTransform, basicTerrainMaterial, 0, null, 0, properties, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
-            drewBlock = true;
-        }
-
-        if (stencilBlocks != null && stencilBlocks.vertexCount > 0)
-        {
-            Graphics.DrawMesh(stencilBlocks, LocalTransform, stencilTerrainMaterial, 0, null, 0, properties, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
-            drewBlock = true;
-        }
-        if (topStencilBlocks != null && topStencilBlocks.vertexCount > 0 && top)
-        {
-            Graphics.DrawMesh(topStencilBlocks, LocalTransform, stencilTerrainMaterial, 0, null, 0, properties, phantom ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On);
-            drewBlock = true;
-        }
-
-        if (transparentBlocks != null && transparentBlocks.vertexCount > 0 && !phantom)
-        {
-            Graphics.DrawMesh(transparentBlocks, LocalTransform, transparentTerrainMaterial, 0, null, 0, properties);
-            drewBlock = true;
-        }
-        if (topTransparentBlocks != null && topTransparentBlocks.vertexCount > 0 && !phantom && top)
-        {
-            Graphics.DrawMesh(topTransparentBlocks, LocalTransform, transparentTerrainMaterial, 0, null, 0, properties);
-            drewBlock = true;
-        }
-        if (liquidBlocks != null)
-        {
-            if (liquidBlocks[MapDataStore.WATER_INDEX] != null && liquidBlocks[MapDataStore.WATER_INDEX].vertexCount > 0 && !phantom)
-            {
-                Graphics.DrawMesh(liquidBlocks[MapDataStore.WATER_INDEX], LocalTransform, waterMaterial, 4);
-                drewBlock = true;
-            }
-
-            if (liquidBlocks[MapDataStore.MAGMA_INDEX] != null && liquidBlocks[MapDataStore.MAGMA_INDEX].vertexCount > 0 && !phantom)
-            {
-                Graphics.DrawMesh(liquidBlocks[MapDataStore.MAGMA_INDEX], LocalTransform, magmaMaterial, 4);
-                drewBlock = true;
-            }
-        }
-        UnityEngine.Profiling.Profiler.EndSample();
-        return drewBlock;
-
     }
 }

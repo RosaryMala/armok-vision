@@ -9912,8 +9912,6 @@ MonoBehaviour:
   cursZ: -30000
   worldMap: {fileID: 458878501}
   optionsPanel: {fileID: 1459889554}
-  collisionTemplate: {fileID: 64000010602839068, guid: b2b37d076222dfc418f57692b6563de6,
-    type: 2}
   dfScreen: {fileID: 771652859}
   helpFadeLength: 0.25
   testMesh: {fileID: 0}

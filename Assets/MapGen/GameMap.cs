@@ -90,7 +90,6 @@ public class GameMap : MonoBehaviour
 
     BlockMeshSet[,,] mapMeshes;
 
-    public MeshCollider collisionTemplate;
     // Dirty flags for those meshes
     bool[,,] blockDirtyBits;
     bool[,,] blockContentBits;
@@ -385,7 +384,7 @@ public class GameMap : MonoBehaviour
         UpdateCreatures();
         UpdateBlocks();
         UpdateSplatTextures();
-        DrawBlocks();
+        //DrawBlocks();
         DrawItems();
     }
 
@@ -1046,7 +1045,7 @@ public class GameMap : MonoBehaviour
                 layerDirtyBits[z] = false;
                 break; //don't do more than one set per frame.
             }
-            if(grassLayerDirtyBits[z])
+            if (grassLayerDirtyBits[z])
             {
                 GenerateGrassTexture(z);
                 grassLayerDirtyBits[z] = false;
@@ -1114,18 +1113,30 @@ public class GameMap : MonoBehaviour
         }
     }
 
+    private BlockMeshSet blockPrefab;
+
     // Get new meshes from the mesher
     void FetchNewMeshes()
     {
+
         UnityEngine.Profiling.Profiler.BeginSample("FetchNewMeshes", this);
         if (mesher.HasNewMeshes)
         {
+            if (blockPrefab == null)
+                blockPrefab = Resources.Load<BlockMeshSet>("MapBlock");
             var newMeshes = mesher.Dequeue().Value;
             int block_x = newMeshes.location.x / blockSize;
             int block_y = newMeshes.location.y / blockSize;
             int block_z = newMeshes.location.z;
             if (mapMeshes[block_x, block_y, block_z] == null)
-                mapMeshes[block_x, block_y, block_z] = new BlockMeshSet();
+            {
+                mapMeshes[block_x, block_y, block_z] = Instantiate(blockPrefab, DFtoUnityCoord(newMeshes.location), Quaternion.identity, transform);
+                mapMeshes[block_x, block_y, block_z].name = string.Format("Block_{0}_{1}_{2}", block_x, block_y, block_z);
+                mapMeshes[block_x, block_y, block_z].Init();
+
+                if (terrainSplatLayers[block_z] != null)
+                    mapMeshes[block_x, block_y, block_z].SetTerrainMap(terrainSplatLayers[block_z], terrainTintLayers[block_z]);
+            }
 
             var meshSet = mapMeshes[block_x, block_y, block_z];
 
@@ -1133,13 +1144,7 @@ public class GameMap : MonoBehaviour
 
             if (newMeshes.collisionMesh != null)
             {
-                if (meshSet.collisionBlocks == null)
-                {
-                    meshSet.collisionBlocks = Instantiate(collisionTemplate);
-                    meshSet.collisionBlocks.name = string.Format("collisionBlock_{0}_{1}_{2}", block_x, block_y, block_z);
-                    meshSet.collisionBlocks.transform.position = DFtoUnityCoord(block_x * blockSize, block_y * blockSize, block_z);
-                    meshSet.collisionBlocks.transform.parent = transform;
-                }
+
                 Mesh collisionMesh = new Mesh();
                 collisionMesh.name = string.Format("block_collision_{0}_{1}_{2}", block_x, block_y, block_z);
                 newMeshes.collisionMesh.CopyToMesh(collisionMesh);
@@ -1176,7 +1181,7 @@ public class GameMap : MonoBehaviour
                 {
                     grassIndices[index].r = ContentLoader.Instance.DefaultMatTexIndex;
                     grassIndices[index].g = ContentLoader.Instance.DefaultShapeTexIndex;
-                    grassColors[index] = new Color(0,0,0,0);
+                    grassColors[index] = new Color(0, 0, 0, 0);
                     continue;
                 }
                 if (!(tile.tiletypeMaterial == TiletypeMaterial.GRASS_DARK
@@ -1317,7 +1322,7 @@ public class GameMap : MonoBehaviour
 
             }
 
-        if(terrainSplatLayers[z] == null)
+        if (terrainSplatLayers[z] == null)
         {
             terrainSplatLayers[z] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGHalf, false, true);
             terrainSplatLayers[z].filterMode = FilterMode.Point;
@@ -1334,6 +1339,14 @@ public class GameMap : MonoBehaviour
             terrainTintLayers[z] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGBA32, false, true);
             terrainTintLayers[z].filterMode = FilterMode.Point;
             terrainTintLayers[z].wrapMode = TextureWrapMode.Clamp;
+
+            for (int x = 0; x < mapMeshes.GetLength(0); x++)
+                for (int y = 0; y < mapMeshes.GetLength(1); y++)
+                {
+                    if (mapMeshes[x, y, z] != null)
+                        mapMeshes[x, y, z].SetTerrainMap(terrainSplatLayers[z], terrainTintLayers[z]);
+                }
+
         }
         if (terrainTintLayers[z].width != MapDataStore.MapSize.x || terrainTintLayers[z].height != MapDataStore.MapSize.y)
             terrainTintLayers[z].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
@@ -1360,7 +1373,7 @@ public class GameMap : MonoBehaviour
     void GenerateSpatterTexture(int z)
     {
         UnityEngine.Profiling.Profiler.BeginSample("GenerateSpatterTexture", this);
-        if(textureColors == null || textureColors.Length != MapDataStore.MapSize.x * MapDataStore.MapSize.y)
+        if (textureColors == null || textureColors.Length != MapDataStore.MapSize.x * MapDataStore.MapSize.y)
             textureColors = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
 
         for (int x = 0; x < MapDataStore.MapSize.x; x++)
@@ -1589,7 +1602,7 @@ public class GameMap : MonoBehaviour
                     statusText.Append("Building Direction: ").Append(tile.buildingDirection).AppendLine();
                     statusText.AppendLine();
 
-                    if(tile.buildingItems != null && tile.buildingItems.Count > 0)
+                    if (tile.buildingItems != null && tile.buildingItems.Count > 0)
                     {
                         statusText.Append("Building items:").AppendLine();
                         foreach (var item in tile.buildingItems)
@@ -1686,7 +1699,7 @@ public class GameMap : MonoBehaviour
 
             if (itemPositions.ContainsKey(new DFCoord(cursX, cursY, cursZ)))
             {
-                for(int itemIndex = 0; itemIndex < itemPositions[new DFCoord(cursX, cursY, cursZ)].Count && itemIndex < 5; itemIndex++)
+                for (int itemIndex = 0; itemIndex < itemPositions[new DFCoord(cursX, cursY, cursZ)].Count && itemIndex < 5; itemIndex++)
                 {
                     var item = itemPositions[new DFCoord(cursX, cursY, cursZ)][itemIndex];
                     statusText.Append("Item ").Append(item.id).Append(": ");
@@ -1700,7 +1713,7 @@ public class GameMap : MonoBehaviour
                     statusText.Append("(").Append(((MatPairStruct)item.type)).Append(")");
                     statusText.AppendLine();
                 }
-                if(itemPositions[new DFCoord(cursX, cursY, cursZ)].Count > 4)
+                if (itemPositions[new DFCoord(cursX, cursY, cursZ)].Count > 4)
                     statusText.Append(itemPositions[new DFCoord(cursX, cursY, cursZ)].Count - 4).Append(" items more.");
             }
         }
@@ -1874,10 +1887,10 @@ public class GameMap : MonoBehaviour
         }
     }
 
-    private bool DrawSingleBlock(int xx, int yy, int zz, bool phantom, Vector3 pos, bool top)
-    {
-        return DrawSingleBlock(xx, yy, zz, phantom, Matrix4x4.TRS(pos, Quaternion.identity, Vector3.one), top);
-    }
+    //private bool DrawSingleBlock(int xx, int yy, int zz, bool phantom, Vector3 pos, bool top)
+    //{
+    //    return DrawSingleBlock(xx, yy, zz, phantom, Matrix4x4.TRS(pos, Quaternion.identity, Vector3.one), top);
+    //}
 
     MaterialPropertyBlock sharedMatBlock;
     int spatterID;
@@ -1886,105 +1899,104 @@ public class GameMap : MonoBehaviour
     int grassSplatID;
     int grassTintID;
 
-    private bool DrawSingleBlock(int xx, int yy, int zz, bool phantom, Matrix4x4 LocalTransform, bool top)
-    {
-        if (mapMeshes[xx, yy, zz] == null)
-            return false;
-        MaterialPropertyBlock matBlock = null;
-        MaterialManager.MaterialFlags flags = MaterialManager.MaterialFlags.None;
-        if (spatterLayers[zz] != null)
-        {
-            matBlock = sharedMatBlock;
-            matBlock.SetTexture(spatterID, spatterLayers[zz]);
-            flags |= MaterialManager.MaterialFlags.Contaminants;
-        }
-        if(grassSplatLayers[zz] != null)
-        {
-            matBlock = sharedMatBlock;
-            matBlock.SetTexture(grassSplatID, grassSplatLayers[zz]);
-            matBlock.SetTexture(grassTintID, grassTintLayers[zz]);
-            flags |= MaterialManager.MaterialFlags.Grass;
-        }
-        if (terrainSplatLayers[zz] != null)
-        {
-            if (matBlock == null)
-                matBlock = sharedMatBlock;
-            matBlock.SetTexture(terrainSplatID, terrainSplatLayers[zz]);
-        }
-        if (terrainTintLayers[zz] != null)
-        {
-            if (matBlock == null)
-                matBlock = sharedMatBlock;
-            matBlock.SetTexture(terrainTintID, terrainTintLayers[zz]);
-        }
+    //private bool DrawSingleBlock(int xx, int yy, int zz, bool phantom, Matrix4x4 LocalTransform, bool top)
+    //{
+    //    if (mapMeshes[xx, yy, zz] == null)
+    //        return false;
+    //    MaterialPropertyBlock matBlock = null;
+    //    MaterialManager.MaterialFlags flags = MaterialManager.MaterialFlags.None;
+    //    if (spatterLayers[zz] != null)
+    //    {
+    //        matBlock = sharedMatBlock;
+    //        matBlock.SetTexture(spatterID, spatterLayers[zz]);
+    //        flags |= MaterialManager.MaterialFlags.Contaminants;
+    //    }
+    //    if (grassSplatLayers[zz] != null)
+    //    {
+    //        matBlock = sharedMatBlock;
+    //        matBlock.SetTexture(grassSplatID, grassSplatLayers[zz]);
+    //        matBlock.SetTexture(grassTintID, grassTintLayers[zz]);
+    //        flags |= MaterialManager.MaterialFlags.Grass;
+    //    }
+    //    if (terrainSplatLayers[zz] != null)
+    //    {
+    //        if (matBlock == null)
+    //            matBlock = sharedMatBlock;
+    //        matBlock.SetTexture(terrainSplatID, terrainSplatLayers[zz]);
+    //    }
+    //    if (terrainTintLayers[zz] != null)
+    //    {
+    //        if (matBlock == null)
+    //            matBlock = sharedMatBlock;
+    //        matBlock.SetTexture(terrainTintID, terrainTintLayers[zz]);
+    //    }
+    //    //return mapMeshes[xx, yy, zz].Render(phantom, LocalTransform, top,
+    //    //    MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.Opaque, flags),
+    //    //    MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.Stencil, flags),
+    //    //    MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.Transparent, flags),
+    //    //    MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.SplatMap, flags),
+    //    //    waterMaterial, magmaMaterial, matBlock
+    //    //    );
+    //    return true;
+    //}
 
+    //private void DrawBlocks()
+    //{
+    //    if (mapMeshes == null)
+    //        return;
+    //    UnityEngine.Profiling.Profiler.BeginSample("DrawBlocks", this);
+    //    int xmin = Mathf.Clamp(PosXBlock - GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(0));
+    //    int xmax = Mathf.Clamp(PosXBlock + GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(0));
+    //    int ymin = Mathf.Clamp(PosYBlock - GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(1));
+    //    int ymax = Mathf.Clamp(PosYBlock + GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(1));
+    //    int zmin = Mathf.Clamp(posZ - GameSettings.Instance.rendering.drawRangeDown, 0, mapMeshes.GetLength(2));
+    //    int zmax = Mathf.Clamp(posZ + GameSettings.Instance.rendering.drawRangeUp, 0, mapMeshes.GetLength(2));
 
-        return mapMeshes[xx, yy, zz].Render(phantom, LocalTransform, top,
-            MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.Opaque, flags),
-            MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.Stencil, flags),
-            MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.Transparent, flags),
-            MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.SplatMap, flags),
-            waterMaterial, magmaMaterial, matBlock
-            );
-    }
+    //    int drawnBlocks = 0;
 
-    private void DrawBlocks()
-    {
-        if (mapMeshes == null)
-            return;
-        UnityEngine.Profiling.Profiler.BeginSample("DrawBlocks", this);
-        int xmin = Mathf.Clamp(PosXBlock - GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(0));
-        int xmax = Mathf.Clamp(PosXBlock + GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(0));
-        int ymin = Mathf.Clamp(PosYBlock - GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(1));
-        int ymax = Mathf.Clamp(PosYBlock + GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(1));
-        int zmin = Mathf.Clamp(posZ - GameSettings.Instance.rendering.drawRangeDown, 0, mapMeshes.GetLength(2));
-        int zmax = Mathf.Clamp(posZ + GameSettings.Instance.rendering.drawRangeUp, 0, mapMeshes.GetLength(2));
+    //    for (int zz = posZ - 1; zz >= zmin; zz--)
+    //    {
+    //        if (zz >= mapMeshes.GetLength(2))
+    //            continue;
 
-        int drawnBlocks = 0;
+    //        for (int xx = xmin; xx < xmax; xx++)
+    //        {
+    //            if (drawnBlocks >= GameSettings.Instance.rendering.maxBlocksToDraw)
+    //                break;
+    //            for (int yy = ymin; yy < ymax; yy++)
+    //            {
+    //                Vector3 pos = DFtoUnityCoord(xx * blockSize, yy * blockSize, zz);
+    //                if (drawnBlocks >= GameSettings.Instance.rendering.maxBlocksToDraw)
+    //                    break;
+    //                if (DrawSingleBlock(xx, yy, zz, false, pos, zz == posZ - 1))
+    //                    drawnBlocks++;
+    //            }
+    //        }
+    //    }
+    //    if (firstPerson || (overheadShadows && GameSettings.Instance.rendering.drawShadows))
+    //        for (int zz = posZ; zz < zmax; zz++)
+    //        {
+    //            if (zz < 0)
+    //                continue;
 
-        for (int zz = posZ - 1; zz >= zmin; zz--)
-        {
-            if (zz >= mapMeshes.GetLength(2))
-                continue;
+    //            for (int xx = xmin; xx < xmax; xx++)
+    //            {
+    //                if (drawnBlocks >= GameSettings.Instance.rendering.maxBlocksToDraw)
+    //                    break;
+    //                for (int yy = ymin; yy < ymax; yy++)
+    //                {
+    //                    if (drawnBlocks >= GameSettings.Instance.rendering.maxBlocksToDraw)
+    //                        break;
+    //                    Vector3 pos = DFtoUnityCoord(xx * blockSize, yy * blockSize, zz);
 
-            for (int xx = xmin; xx < xmax; xx++)
-            {
-                if (drawnBlocks >= GameSettings.Instance.rendering.maxBlocksToDraw)
-                    break;
-                for (int yy = ymin; yy < ymax; yy++)
-                {
-                    Vector3 pos = DFtoUnityCoord(xx * blockSize, yy * blockSize, zz);
-                    if (drawnBlocks >= GameSettings.Instance.rendering.maxBlocksToDraw)
-                        break;
-                    if (DrawSingleBlock(xx, yy, zz, false, pos, zz == posZ - 1))
-                        drawnBlocks++;
-                }
-            }
-        }
-        if (firstPerson || (overheadShadows && GameSettings.Instance.rendering.drawShadows))
-            for (int zz = posZ; zz < zmax; zz++)
-            {
-                if (zz < 0)
-                    continue;
-
-                for (int xx = xmin; xx < xmax; xx++)
-                {
-                    if (drawnBlocks >= GameSettings.Instance.rendering.maxBlocksToDraw)
-                        break;
-                    for (int yy = ymin; yy < ymax; yy++)
-                    {
-                        if (drawnBlocks >= GameSettings.Instance.rendering.maxBlocksToDraw)
-                            break;
-                        Vector3 pos = DFtoUnityCoord(xx * blockSize, yy * blockSize, zz);
-
-                        if (DrawSingleBlock(xx, yy, zz, (!firstPerson), pos, zz == posZ || zz == zmax - 1))
-                            drawnBlocks++;
-                    }
-                }
-            }
-        StatsReadout.BlocksDrawn = drawnBlocks;
-        UnityEngine.Profiling.Profiler.EndSample();
-    }
+    //                    if (DrawSingleBlock(xx, yy, zz, (!firstPerson), pos, zz == posZ || zz == zmax - 1))
+    //                        drawnBlocks++;
+    //                }
+    //            }
+    //        }
+    //    StatsReadout.BlocksDrawn = drawnBlocks;
+    //    UnityEngine.Profiling.Profiler.EndSample();
+    //}
 
     public ParticleSystem itemParticleSystem;
     ParticleSystem.Particle[] itemParticles;
@@ -2015,7 +2027,7 @@ public class GameMap : MonoBehaviour
             if (!(pos.z < PosZ && pos.z >= (PosZ - GameSettings.Instance.rendering.drawRangeDown)))
                 continue;
 
-            for(int index = 0; index < item.Value.Count && index < 100; index++)
+            for (int index = 0; index < item.Value.Count && index < 100; index++)
             {
                 var currentItem = item.Value[index];
                 tempTile.material = currentItem.material;
