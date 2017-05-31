@@ -389,6 +389,7 @@ public class GameMap : MonoBehaviour
         UpdateBlockVisibility();
     }
 
+    bool prevFirstPerson = false;
     int PrevZ = -1;
     private void UpdateBlockVisibility()
     {
@@ -401,6 +402,14 @@ public class GameMap : MonoBehaviour
                 UpdateBlockVisibility(z - GameSettings.Instance.rendering.drawRangeDown);
             }
             PrevZ = PosZ;
+        }
+        if(firstPerson != prevFirstPerson)
+        {
+            for (int z = PosZ; z <= PosZ + GameSettings.Instance.rendering.drawRangeUp; z++)
+            {
+                UpdateBlockVisibility(z);
+            }
+            prevFirstPerson = firstPerson;
         }
     }
 
