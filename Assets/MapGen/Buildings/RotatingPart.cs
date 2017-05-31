@@ -36,7 +36,7 @@ namespace Building
 
         public void UpdatePart(BuildingInstance buildingInput)
         {
-
+            on = buildingInput.active > 0;
         }
     }
 }

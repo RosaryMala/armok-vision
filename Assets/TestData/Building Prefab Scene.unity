@@ -588,7 +588,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   materialColor: {r: 0.78676474, g: 0.78676474, b: 0.78676474, a: 1}
   materialPattern: {fileID: 18700000, guid: 507d82b7de2c9404cb0a71f3cdb0331f, type: 2}
-  index: 5
+  index: 4
 --- !u!4 &238614217
 Transform:
   m_ObjectHideFlags: 0
