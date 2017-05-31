@@ -1,0 +1,193 @@
+fileFormatVersion: 2
+guid: 93626d14c8967c04a8af90130d655cb8
+timeCreated: 1496221098
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: AxleRest002
+    100002: AxleRest01
+    100004: AxleRestPlank002
+    100006: AxleRestPlank01
+    100008: BevelGear002
+    100010: BevelGear003
+    100012: BevelGear004
+    100014: BevelGear005
+    100016: BevelGear006
+    100018: BevelGear01
+    100020: CylinderGearOuter002
+    100022: CylinderGearOuter003
+    100024: CylinderGearOuter004
+    100026: CylinderGearOuter005
+    100028: CylinderGearOuter01
+    100030: Dummy001
+    100032: //RootNode
+    100034: LooseShaft01
+    100036: Shaft003
+    100038: Shaft004
+    100040: Shaft005
+    100042: Shaft006
+    100044: Shaft007
+    100046: Shaft01
+    400000: AxleRest002
+    400002: AxleRest01
+    400004: AxleRestPlank002
+    400006: AxleRestPlank01
+    400008: BevelGear002
+    400010: BevelGear003
+    400012: BevelGear004
+    400014: BevelGear005
+    400016: BevelGear006
+    400018: BevelGear01
+    400020: CylinderGearOuter002
+    400022: CylinderGearOuter003
+    400024: CylinderGearOuter004
+    400026: CylinderGearOuter005
+    400028: CylinderGearOuter01
+    400030: Dummy001
+    400032: //RootNode
+    400034: LooseShaft01
+    400036: Shaft003
+    400038: Shaft004
+    400040: Shaft005
+    400042: Shaft006
+    400044: Shaft007
+    400046: Shaft01
+    2300000: AxleRest002
+    2300002: AxleRest01
+    2300004: AxleRestPlank002
+    2300006: AxleRestPlank01
+    2300008: BevelGear002
+    2300010: BevelGear003
+    2300012: BevelGear004
+    2300014: BevelGear005
+    2300016: BevelGear006
+    2300018: BevelGear01
+    2300020: CylinderGearOuter002
+    2300022: CylinderGearOuter003
+    2300024: CylinderGearOuter004
+    2300026: CylinderGearOuter005
+    2300028: CylinderGearOuter01
+    2300030: LooseShaft01
+    2300032: Shaft003
+    2300034: Shaft004
+    2300036: Shaft005
+    2300038: Shaft006
+    2300040: Shaft007
+    2300042: Shaft01
+    3300000: AxleRest002
+    3300002: AxleRest01
+    3300004: AxleRestPlank002
+    3300006: AxleRestPlank01
+    3300008: BevelGear002
+    3300010: BevelGear003
+    3300012: BevelGear004
+    3300014: BevelGear005
+    3300016: BevelGear006
+    3300018: BevelGear01
+    3300020: CylinderGearOuter002
+    3300022: CylinderGearOuter003
+    3300024: CylinderGearOuter004
+    3300026: CylinderGearOuter005
+    3300028: CylinderGearOuter01
+    3300030: LooseShaft01
+    3300032: Shaft003
+    3300034: Shaft004
+    3300036: Shaft005
+    3300038: Shaft006
+    3300040: Shaft007
+    3300042: Shaft01
+    4300000: Shaft01
+    4300002: BevelGear01
+    4300004: LooseShaft01
+    4300006: CylinderGearOuter01
+    4300008: BevelGear002
+    4300010: CylinderGearOuter003
+    4300012: Shaft003
+    4300014: CylinderGearOuter002
+    4300016: Shaft004
+    4300018: CylinderGearOuter004
+    4300020: Shaft005
+    4300022: BevelGear003
+    4300024: BevelGear005
+    4300026: Shaft006
+    4300028: BevelGear006
+    4300030: Shaft007
+    4300032: BevelGear004
+    4300034: CylinderGearOuter005
+    4300036: AxleRestPlank01
+    4300038: AxleRest01
+    4300040: AxleRest002
+    4300042: AxleRestPlank002
+    7400000: Take 001
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
