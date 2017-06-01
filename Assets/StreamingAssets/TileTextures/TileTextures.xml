@@ -1,21 +1,251 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <shapeTextures>
     <shapeTexture normal="Bars_N.png" occlusion="Bars_O.png" alpha="Opaque_A.png">
+        <subObject normal="../TerrainShape/TracksN-------_N.png" occlusion="../TerrainShape/TracksN-------_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-------"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks--S-----_N.png" occlusion="../TerrainShape/Tracks--S-----_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:--S-----"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks------E-_N.png" occlusion="../TerrainShape/Tracks------E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:------E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks----W---_N.png" occlusion="../TerrainShape/Tracks----W---_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:----W---"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-S-----_N.png" occlusion="../TerrainShape/TracksN-S-----_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-S-----"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-----E-_N.png" occlusion="../TerrainShape/TracksN-----E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-----E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN---W---_N.png" occlusion="../TerrainShape/TracksN---W---_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N---W---"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks--S---E-_N.png" occlusion="../TerrainShape/Tracks--S---E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:--S---E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks--S-W---_N.png" occlusion="../TerrainShape/Tracks--S-W---_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:--S-W---"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks----W-E-_N.png" occlusion="../TerrainShape/Tracks----W-E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:----W-E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-S---E-_N.png" occlusion="../TerrainShape/TracksN-S---E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-S---E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-S-W---_N.png" occlusion="../TerrainShape/TracksN-S-W---_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-S-W---"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN---W-E-_N.png" occlusion="../TerrainShape/TracksN---W-E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N---W-E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks--S-W-E-_N.png" occlusion="../TerrainShape/Tracks--S-W-E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:--S-W-E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-S-W-E-_N.png" occlusion="../TerrainShape/TracksN-S-W-E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-S-W-E-"/>
+            <tiletype token="*:TRACK:*:*:*"/>
+        </subObject>
         <item token="BAR"/>
         <subObject normal="Bars_N.png" occlusion="Bars_O.png" alpha="Opaque_A.png">
             <material token="COAL:*"/>
         </subObject>
     </shapeTexture>
     <shapeTexture normal="Tiles_N.png" occlusion="Tiles_O.png" alpha="Opaque_A.png">
+        <subObject normal="../TerrainShape/TracksN-------_N.png" occlusion="../TerrainShape/TracksN-------_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-------"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks--S-----_N.png" occlusion="../TerrainShape/Tracks--S-----_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:--S-----"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks------E-_N.png" occlusion="../TerrainShape/Tracks------E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:------E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks----W---_N.png" occlusion="../TerrainShape/Tracks----W---_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:----W---"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-S-----_N.png" occlusion="../TerrainShape/TracksN-S-----_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-S-----"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-----E-_N.png" occlusion="../TerrainShape/TracksN-----E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-----E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN---W---_N.png" occlusion="../TerrainShape/TracksN---W---_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N---W---"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks--S---E-_N.png" occlusion="../TerrainShape/Tracks--S---E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:--S---E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks--S-W---_N.png" occlusion="../TerrainShape/Tracks--S-W---_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:--S-W---"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks----W-E-_N.png" occlusion="../TerrainShape/Tracks----W-E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:----W-E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-S---E-_N.png" occlusion="../TerrainShape/TracksN-S---E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-S---E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-S-W---_N.png" occlusion="../TerrainShape/TracksN-S-W---_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-S-W---"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN---W-E-_N.png" occlusion="../TerrainShape/TracksN---W-E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N---W-E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks--S-W-E-_N.png" occlusion="../TerrainShape/Tracks--S-W-E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:--S-W-E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-S-W-E-_N.png" occlusion="../TerrainShape/TracksN-S-W-E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-S-W-E-"/>
+            <tiletype token="*:TRACK:*:*:*"/>
+        </subObject>
         <item token="BLOCKS"/>
     </shapeTexture>
     <shapeTexture normal="Logs_N.png" occlusion="Logs_O.png" alpha="Opaque_A.png">
+        <subObject normal="../TerrainShape/TracksN-------_N.png" occlusion="../TerrainShape/TracksN-------_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-------"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks--S-----_N.png" occlusion="../TerrainShape/Tracks--S-----_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:--S-----"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks------E-_N.png" occlusion="../TerrainShape/Tracks------E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:------E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks----W---_N.png" occlusion="../TerrainShape/Tracks----W---_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:----W---"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-S-----_N.png" occlusion="../TerrainShape/TracksN-S-----_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-S-----"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-----E-_N.png" occlusion="../TerrainShape/TracksN-----E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-----E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN---W---_N.png" occlusion="../TerrainShape/TracksN---W---_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N---W---"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks--S---E-_N.png" occlusion="../TerrainShape/Tracks--S---E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:--S---E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks--S-W---_N.png" occlusion="../TerrainShape/Tracks--S-W---_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:--S-W---"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks----W-E-_N.png" occlusion="../TerrainShape/Tracks----W-E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:----W-E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-S---E-_N.png" occlusion="../TerrainShape/TracksN-S---E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-S---E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-S-W---_N.png" occlusion="../TerrainShape/TracksN-S-W---_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-S-W---"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN---W-E-_N.png" occlusion="../TerrainShape/TracksN---W-E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N---W-E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks--S-W-E-_N.png" occlusion="../TerrainShape/Tracks--S-W-E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:--S-W-E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-S-W-E-_N.png" occlusion="../TerrainShape/TracksN-S-W-E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-S-W-E-"/>
+            <tiletype token="*:TRACK:*:*:*"/>
+        </subObject>
         <item token="WOOD"/>
     </shapeTexture>
     <shapeTexture normal="Boulders_N.png" occlusion="Boulders_O.png" alpha="Opaque_A.png">
+        <subObject normal="../TerrainShape/TracksN-------_N.png" occlusion="../TerrainShape/TracksN-------_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-------"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks--S-----_N.png" occlusion="../TerrainShape/Tracks--S-----_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:--S-----"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks------E-_N.png" occlusion="../TerrainShape/Tracks------E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:------E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks----W---_N.png" occlusion="../TerrainShape/Tracks----W---_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:----W---"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-S-----_N.png" occlusion="../TerrainShape/TracksN-S-----_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-S-----"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-----E-_N.png" occlusion="../TerrainShape/TracksN-----E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-----E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN---W---_N.png" occlusion="../TerrainShape/TracksN---W---_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N---W---"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks--S---E-_N.png" occlusion="../TerrainShape/Tracks--S---E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:--S---E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks--S-W---_N.png" occlusion="../TerrainShape/Tracks--S-W---_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:--S-W---"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks----W-E-_N.png" occlusion="../TerrainShape/Tracks----W-E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:----W-E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-S---E-_N.png" occlusion="../TerrainShape/TracksN-S---E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-S---E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-S-W---_N.png" occlusion="../TerrainShape/TracksN-S-W---_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-S-W---"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN---W-E-_N.png" occlusion="../TerrainShape/TracksN---W-E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N---W-E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks--S-W-E-_N.png" occlusion="../TerrainShape/Tracks--S-W-E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:--S-W-E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-S-W-E-_N.png" occlusion="../TerrainShape/TracksN-S-W-E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-S-W-E-"/>
+            <tiletype token="*:TRACK:*:*:*"/>
+        </subObject>
         <item token="BOULDER"/>
     </shapeTexture>
     <shapeTexture normal="Rough_N.png" occlusion="Rough_O.png" alpha="Opaque_A.png">
+        <subObject normal="../TerrainShape/TracksN-------_N.png" occlusion="../TerrainShape/TracksN-------_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-------"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks--S-----_N.png" occlusion="../TerrainShape/Tracks--S-----_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:--S-----"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks------E-_N.png" occlusion="../TerrainShape/Tracks------E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:------E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks----W---_N.png" occlusion="../TerrainShape/Tracks----W---_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:----W---"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-S-----_N.png" occlusion="../TerrainShape/TracksN-S-----_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-S-----"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-----E-_N.png" occlusion="../TerrainShape/TracksN-----E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-----E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN---W---_N.png" occlusion="../TerrainShape/TracksN---W---_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N---W---"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks--S---E-_N.png" occlusion="../TerrainShape/Tracks--S---E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:--S---E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks--S-W---_N.png" occlusion="../TerrainShape/Tracks--S-W---_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:--S-W---"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks----W-E-_N.png" occlusion="../TerrainShape/Tracks----W-E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:----W-E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-S---E-_N.png" occlusion="../TerrainShape/TracksN-S---E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-S---E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-S-W---_N.png" occlusion="../TerrainShape/TracksN-S-W---_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-S-W---"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN---W-E-_N.png" occlusion="../TerrainShape/TracksN---W-E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N---W-E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/Tracks--S-W-E-_N.png" occlusion="../TerrainShape/Tracks--S-W-E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:--S-W-E-"/>
+        </subObject>
+        <subObject normal="../TerrainShape/TracksN-S-W-E-_N.png" occlusion="../TerrainShape/TracksN-S-W-E-_O.png" alpha="Opaque_A.png">
+            <tiletype token="*:TRACK:*:*:N-S-W-E-"/>
+            <tiletype token="*:TRACK:*:*:*"/>
+        </subObject>
         <item token="NONE"/>
         <subObject normal="Flat_N.png" occlusion="Flat_O.png" alpha="Opaque_A.png">
             <material token="NONE"/>
