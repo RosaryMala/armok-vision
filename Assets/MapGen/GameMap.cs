@@ -404,14 +404,14 @@ public class GameMap : MonoBehaviour
             }
             PrevZ = PosZ;
         }
-        if(firstPerson != prevFirstPerson || GameSettings.Instance.rendering.drawShadows != prevShadows)
+        if(firstPerson != prevFirstPerson || overheadShadows != prevShadows)
         {
             for (int z = PosZ; z <= PosZ + GameSettings.Instance.rendering.drawRangeUp; z++)
             {
                 UpdateBlockVisibility(z);
             }
             prevFirstPerson = firstPerson;
-            prevShadows = GameSettings.Instance.rendering.drawShadows;
+            prevShadows = overheadShadows;
         }
     }
 
@@ -437,7 +437,7 @@ public class GameMap : MonoBehaviour
         {
             if (firstPerson)
                 return BlockMeshSet.Visibility.All;
-            else if(GameSettings.Instance.rendering.drawShadows)
+            else if(overheadShadows)
                 return BlockMeshSet.Visibility.Shadows;
             else
                 return BlockMeshSet.Visibility.None;
