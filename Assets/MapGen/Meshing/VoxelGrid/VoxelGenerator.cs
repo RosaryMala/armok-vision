@@ -1093,7 +1093,7 @@ public class VoxelGenerator
                         index = vertices.Count;
                         pointIndices[point] = index;
                         vertices.Add(new Vector3(point.Xf, height, point.Yf));
-                        uvs.Add(new Vector2(point.Xf / GameMap.tileWidth, point.Yf / GameMap.tileWidth));
+                        uvs.Add(new Vector2(point.Xf / GameMap.tileWidth + 0.5f, point.Yf / GameMap.tileWidth + 0.5f));
                     }
                     else
                         index = pointIndices[point];
