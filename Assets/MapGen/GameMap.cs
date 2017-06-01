@@ -390,6 +390,7 @@ public class GameMap : MonoBehaviour
     }
 
     bool prevFirstPerson = false;
+    bool prevShadows = false;
     int PrevZ = -1;
     private void UpdateBlockVisibility()
     {
@@ -403,13 +404,14 @@ public class GameMap : MonoBehaviour
             }
             PrevZ = PosZ;
         }
-        if(firstPerson != prevFirstPerson)
+        if(firstPerson != prevFirstPerson || GameSettings.Instance.rendering.drawShadows != prevShadows)
         {
             for (int z = PosZ; z <= PosZ + GameSettings.Instance.rendering.drawRangeUp; z++)
             {
                 UpdateBlockVisibility(z);
             }
             prevFirstPerson = firstPerson;
+            prevShadows = GameSettings.Instance.rendering.drawShadows;
         }
     }
 
@@ -435,8 +437,10 @@ public class GameMap : MonoBehaviour
         {
             if (firstPerson)
                 return BlockMeshSet.Visibility.All;
-            else
+            else if(GameSettings.Instance.rendering.drawShadows)
                 return BlockMeshSet.Visibility.Shadows;
+            else
+                return BlockMeshSet.Visibility.None;
         }
         else if (z >= PosZ - GameSettings.Instance.rendering.drawRangeDown)
         {
