@@ -35,9 +35,11 @@ namespace Building
             }
         }
 
+        Camera mainCam;
         private void Awake()
         {
             Instance = this;
+            mainCam = Camera.main;
         }
 
         private void Start()
@@ -124,15 +126,22 @@ namespace Building
             }
         }
 
+        public float maxDistance = 100;
+
         void UpdateVisibility()
         {
             foreach (var item in sceneBuildings)
             {
-                var building = item.Value.originalBuilding;
-                item.Value.gameObject.SetActive(
-                    (building.pos_z_min < (GameMap.Instance.firstPerson? GameMap.Instance.PosZ + GameSettings.Instance.rendering.drawRangeUp : GameMap.Instance.PosZ))
-                    && (building.pos_z_max >= (GameMap.Instance.PosZ - GameSettings.Instance.rendering.drawRangeDown))
-                    );
+                if ((item.Value.transform.position - mainCam.transform.position).sqrMagnitude > maxDistance * maxDistance)
+                    item.Value.gameObject.SetActive(false);
+                else
+                {
+                    var building = item.Value.originalBuilding;
+                    item.Value.gameObject.SetActive(
+                        (building.pos_z_min < (GameMap.Instance.firstPerson ? GameMap.Instance.PosZ + GameSettings.Instance.rendering.drawRangeUp : GameMap.Instance.PosZ))
+                        && (building.pos_z_max >= (GameMap.Instance.PosZ - GameSettings.Instance.rendering.drawRangeDown))
+                        );
+                }
             }
         }
 
