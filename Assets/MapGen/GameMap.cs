@@ -115,10 +115,6 @@ public class GameMap : MonoBehaviour
     public static Dictionary<BuildingStruct, BuildingDefinition> buildings;
     public static Dictionary<MatPairStruct, MaterialDefinition> creatures;
 
-    //Items list. Pretty simple right now.
-    Dictionary<int, Item> itemInstances = new Dictionary<int, Item>();
-    Dictionary<DFCoord, List<Item>> itemPositions = new Dictionary<DFCoord, List<Item>>();
-
     // Coordinate system stuff.
     public const float tileHeight = 3.0f;
     public const float floorHeight = 0.5f;
@@ -222,6 +218,7 @@ public class GameMap : MonoBehaviour
     public void Awake()
     {
         Instance = this;
+        cameraMovement = FindObjectOfType<CameraMovement>();
     }
 
     void OnConnectToDF()
@@ -303,6 +300,7 @@ public class GameMap : MonoBehaviour
 
 
     GameObject selected;
+    CameraMovement cameraMovement;
 
     // Run once per frame.
     void Update()
@@ -314,9 +312,7 @@ public class GameMap : MonoBehaviour
             dfScreen.SetActive(GameSettings.Instance.game.showDFScreen);
         }
 
-        var camera = FindObjectOfType<CameraMovement>();
-
-        if ((camera != null && camera.following) || GameSettings.Instance.game.showDFScreen)
+        if ((cameraMovement != null && cameraMovement.following) || GameSettings.Instance.game.showDFScreen)
             UpdateView();
 
 
@@ -336,7 +332,7 @@ public class GameMap : MonoBehaviour
             }
             if (Input.GetButtonDown("FollowDF"))
             {
-                camera.following = true;
+                cameraMovement.following = true;
             }
 
             // take screenshot on up->down transition of F9 key
@@ -385,7 +381,6 @@ public class GameMap : MonoBehaviour
         UpdateBlocks();
         UpdateSplatTextures();
         //DrawBlocks();
-        DrawItems();
         UpdateBlockVisibility();
     }
 
@@ -741,7 +736,6 @@ public class GameMap : MonoBehaviour
         posZ = view.view_pos_z + 1;
         UnityEngine.Profiling.Profiler.EndSample();
     }
-
     // Update the region we're requesting
     void UpdateRequestRegion()
     {
@@ -778,12 +772,9 @@ public class GameMap : MonoBehaviour
         if (MapDataStore.MapSize.x < 48)
             return;
         UnityEngine.Profiling.Profiler.BeginSample("UpdateBlocks", this);
-        while (true)
+        MapBlock block;
+        while((block = DFConnection.Instance.PopMapBlockUpdate()) != null)
         {
-            UnityEngine.Profiling.Profiler.BeginSample("PopMapBlockUpdate", this);
-            RemoteFortressReader.MapBlock block = DFConnection.Instance.PopMapBlockUpdate();
-            UnityEngine.Profiling.Profiler.EndSample();
-            if (block == null) break;
             bool setTiles;
             bool setLiquids;
             bool setSpatters;
@@ -807,18 +798,11 @@ public class GameMap : MonoBehaviour
             }
             foreach (var item in block.items)
             {
-                itemInstances[item.id] = item;
+                ///Send it to item manager later.
             }
             UnityEngine.Profiling.Profiler.BeginSample("BuildingManager.LoadBlock", this);
             Building.BuildingManager.Instance.LoadBlock(block);
             UnityEngine.Profiling.Profiler.EndSample();
-        }
-        itemPositions.Clear();
-        foreach (var item in itemInstances)
-        {
-            if (!itemPositions.ContainsKey(item.Value.pos) || itemPositions[item.Value.pos] == null)
-                itemPositions[item.Value.pos] = new List<Item>();
-            itemPositions[item.Value.pos].Add(item.Value);
         }
         DirtySeasonalBlocks();
         UnityEngine.Profiling.Profiler.BeginSample("EnqueueMeshUpdates", this);
@@ -866,7 +850,7 @@ public class GameMap : MonoBehaviour
         SetMaterialBounds(new Vector4(min.x, min.z, max.x, max.z));
     }
 
-    void addSeasonalUpdates(RemoteFortressReader.MapBlock block, int mapBlockX, int mapBlockY, int mapBlockZ)
+    void addSeasonalUpdates(MapBlock block, int mapBlockX, int mapBlockY, int mapBlockZ)
     {
         if (DFConnection.Instance.NetPlantRawList == null)
             return;
@@ -1312,14 +1296,14 @@ public class GameMap : MonoBehaviour
     {
         if (ContentLoader.Instance == null)
             return;
-        UnityEngine.Profiling.Profiler.BeginSample("GenerateSpatterTexture", this);
+        UnityEngine.Profiling.Profiler.BeginSample("GenerateTerrainTexture", this);
 
         if (terrainColors == null || terrainIndices == null || terrainColors.Length != MapDataStore.MapSize.x * MapDataStore.MapSize.y)
         {
             terrainColors = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
             terrainIndices = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
         }
-
+        UnityEngine.Profiling.Profiler.BeginSample("Update Terrain Color Array", this);
         for (int x = 0; x < MapDataStore.MapSize.x; x++)
             for (int y = 0; y < MapDataStore.MapSize.y; y++)
             {
@@ -1383,6 +1367,8 @@ public class GameMap : MonoBehaviour
                     terrainColors[index] = Color.gray;
 
             }
+        UnityEngine.Profiling.Profiler.EndSample();
+        UnityEngine.Profiling.Profiler.BeginSample("Apply terrain textures.", this);
 
         if (terrainSplatLayers[z] == null)
         {
@@ -1415,6 +1401,7 @@ public class GameMap : MonoBehaviour
 
         terrainTintLayers[z].SetPixels(terrainColors);
         terrainTintLayers[z].Apply();
+        UnityEngine.Profiling.Profiler.EndSample();
 
         UnityEngine.Profiling.Profiler.EndSample();
     }
@@ -1438,6 +1425,7 @@ public class GameMap : MonoBehaviour
         if (textureColors == null || textureColors.Length != MapDataStore.MapSize.x * MapDataStore.MapSize.y)
             textureColors = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
 
+        UnityEngine.Profiling.Profiler.BeginSample("UpdateSpatterArray", this);
         for (int x = 0; x < MapDataStore.MapSize.x; x++)
             for (int y = 0; y < MapDataStore.MapSize.y; y++)
             {
@@ -1509,10 +1497,12 @@ public class GameMap : MonoBehaviour
                 }
                 textureColors[index] = totalColor;
             }
+        UnityEngine.Profiling.Profiler.EndSample();
 
+        UnityEngine.Profiling.Profiler.BeginSample("Apply Image", this);
         if (spatterLayers[z] == null)
         {
-            spatterLayers[z] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
+            spatterLayers[z] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.ARGB32, false);
             spatterLayers[z].wrapMode = TextureWrapMode.Clamp;
         }
         if (spatterLayers[z].width != MapDataStore.MapSize.x || spatterLayers[z].height != MapDataStore.MapSize.y)
@@ -1520,6 +1510,7 @@ public class GameMap : MonoBehaviour
 
         spatterLayers[z].SetPixels(textureColors);
         spatterLayers[z].Apply();
+        UnityEngine.Profiling.Profiler.EndSample();
         UnityEngine.Profiling.Profiler.EndSample();
     }
 
@@ -1759,25 +1750,25 @@ public class GameMap : MonoBehaviour
             }
 
 
-            if (itemPositions.ContainsKey(new DFCoord(cursX, cursY, cursZ)))
-            {
-                for (int itemIndex = 0; itemIndex < itemPositions[new DFCoord(cursX, cursY, cursZ)].Count && itemIndex < 5; itemIndex++)
-                {
-                    var item = itemPositions[new DFCoord(cursX, cursY, cursZ)][itemIndex];
-                    statusText.Append("Item ").Append(item.id).Append(": ");
-                    if (materials.ContainsKey(item.material))
-                        statusText.Append(materials[item.material].id);
-                    else
-                        statusText.Append(((MatPairStruct)item.material).ToString());
-                    statusText.Append(" ");
-                    if (items.ContainsKey(item.type))
-                        statusText.Append(items[item.type].id);
-                    statusText.Append("(").Append(((MatPairStruct)item.type)).Append(")");
-                    statusText.AppendLine();
-                }
-                if (itemPositions[new DFCoord(cursX, cursY, cursZ)].Count > 4)
-                    statusText.Append(itemPositions[new DFCoord(cursX, cursY, cursZ)].Count - 4).Append(" items more.");
-            }
+            //if (itemPositions.ContainsKey(new DFCoord(cursX, cursY, cursZ)))
+            //{
+            //    for (int itemIndex = 0; itemIndex < itemPositions[new DFCoord(cursX, cursY, cursZ)].Count && itemIndex < 5; itemIndex++)
+            //    {
+            //        var item = itemPositions[new DFCoord(cursX, cursY, cursZ)][itemIndex];
+            //        statusText.Append("Item ").Append(item.id).Append(": ");
+            //        if (materials.ContainsKey(item.material))
+            //            statusText.Append(materials[item.material].id);
+            //        else
+            //            statusText.Append(((MatPairStruct)item.material).ToString());
+            //        statusText.Append(" ");
+            //        if (items.ContainsKey(item.type))
+            //            statusText.Append(items[item.type].id);
+            //        statusText.Append("(").Append(((MatPairStruct)item.type)).Append(")");
+            //        statusText.AppendLine();
+            //    }
+            //    if (itemPositions[new DFCoord(cursX, cursY, cursZ)].Count > 4)
+            //        statusText.Append(itemPositions[new DFCoord(cursX, cursY, cursZ)].Count - 4).Append(" items more.");
+            //}
         }
         cursorProperties.text = statusText.ToString();
         UnityEngine.Profiling.Profiler.EndSample();
@@ -2067,130 +2058,130 @@ public class GameMap : MonoBehaviour
     Dictionary<int, int> customItemParticleCount = new Dictionary<int, int>();
     Dictionary<int, bool> noCustomParticleColor = new Dictionary<int, bool>();
     OpenSimplexNoise noise = new OpenSimplexNoise();
-    void DrawItems()
-    {
-        return;
-        if (ContentLoader.Instance == null)
-            return;
-        UnityEngine.Profiling.Profiler.BeginSample("DrawItems", this);
-        if (itemParticles == null)
-        {
-            itemParticles = new ParticleSystem.Particle[itemParticleSystem.main.maxParticles];
-        }
-        MapDataStore.Tile tempTile = new MapDataStore.Tile(null, new DFCoord(0, 0, 0));
-        int i = 0;
-        foreach (var count in customItemParticleSystems)
-        {
-            customItemParticleCount[count.Key] = 0;
-        }
-        foreach (var item in itemPositions)
-        {
-            var pos = item.Key;
-            if (!(pos.z < PosZ && pos.z >= (PosZ - GameSettings.Instance.rendering.drawRangeDown)))
-                continue;
+    //void DrawItems()
+    //{
+    //    return;
+    //    if (ContentLoader.Instance == null)
+    //        return;
+    //    UnityEngine.Profiling.Profiler.BeginSample("DrawItems", this);
+    //    if (itemParticles == null)
+    //    {
+    //        itemParticles = new ParticleSystem.Particle[itemParticleSystem.main.maxParticles];
+    //    }
+    //    MapDataStore.Tile tempTile = new MapDataStore.Tile(null, new DFCoord(0, 0, 0));
+    //    int i = 0;
+    //    foreach (var count in customItemParticleSystems)
+    //    {
+    //        customItemParticleCount[count.Key] = 0;
+    //    }
+    //    foreach (var item in itemPositions)
+    //    {
+    //        var pos = item.Key;
+    //        if (!(pos.z < PosZ && pos.z >= (PosZ - GameSettings.Instance.rendering.drawRangeDown)))
+    //            continue;
 
-            for (int index = 0; index < item.Value.Count && index < 100; index++)
-            {
-                var currentItem = item.Value[index];
-                tempTile.material = currentItem.material;
-                tempTile.construction_item = currentItem.type;
-                ColorContent colorContent;
-                MeshContent meshContent;
+    //        for (int index = 0; index < item.Value.Count && index < 100; index++)
+    //        {
+    //            var currentItem = item.Value[index];
+    //            tempTile.material = currentItem.material;
+    //            tempTile.construction_item = currentItem.type;
+    //            ColorContent colorContent;
+    //            MeshContent meshContent;
 
-                var part = new ParticleSystem.Particle();
-                part.startSize = 1;
-                part.position = DFtoUnityCoord(currentItem.pos) + new Vector3(0, floorHeight + 0.1f, 0) + Stacker.SpiralHemisphere(index);
-                if (ContentLoader.Instance.ColorConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out colorContent))
-                    part.startColor = colorContent.color;
-                else if (materials.ContainsKey(currentItem.material) && materials[currentItem.material].state_color != null)
-                {
-                    var stateColor = materials[currentItem.material].state_color;
-                    part.startColor = new Color32((byte)stateColor.red, (byte)stateColor.green, (byte)stateColor.blue, 255);
-                }
-                else
-                    part.startColor = Color.gray;
+    //            var part = new ParticleSystem.Particle();
+    //            part.startSize = 1;
+    //            part.position = DFtoUnityCoord(currentItem.pos) + new Vector3(0, floorHeight + 0.1f, 0) + Stacker.SpiralHemisphere(index);
+    //            if (ContentLoader.Instance.ColorConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out colorContent))
+    //                part.startColor = colorContent.color;
+    //            else if (materials.ContainsKey(currentItem.material) && materials[currentItem.material].state_color != null)
+    //            {
+    //                var stateColor = materials[currentItem.material].state_color;
+    //                part.startColor = new Color32((byte)stateColor.red, (byte)stateColor.green, (byte)stateColor.blue, 255);
+    //            }
+    //            else
+    //                part.startColor = Color.gray;
 
-                if (currentItem.dye != null)
-                {
-                    part.startColor *= (Color)(new Color32((byte)currentItem.dye.red, (byte)currentItem.dye.green, (byte)currentItem.dye.blue, 255));
-                }
+    //            if (currentItem.dye != null)
+    //            {
+    //                part.startColor *= (Color)(new Color32((byte)currentItem.dye.red, (byte)currentItem.dye.green, (byte)currentItem.dye.blue, 255));
+    //            }
 
-                if (ContentLoader.Instance.ItemMeshConfiguration != null && ContentLoader.Instance.ItemMeshConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out meshContent))
-                {
-                    ParticleSystem partSys;
-                    if (!customItemParticleSystems.ContainsKey(meshContent.UniqueIndex))
-                    {
-                        partSys = Instantiate(itemParticleSystem);
-                        partSys.transform.parent = transform;
-                        var renderer = partSys.GetComponent<ParticleSystemRenderer>();
-                        Mesh mesh = new Mesh();
-                        if (meshContent.MeshData.ContainsKey(MeshLayer.StaticCutout))
-                        {
-                            meshContent.MeshData[MeshLayer.StaticCutout].CopyToMesh(mesh);
-                            noCustomParticleColor[meshContent.UniqueIndex] = false;
-                        }
-                        else if (meshContent.MeshData.ContainsKey(MeshLayer.NoMaterialCutout))
-                        {
-                            meshContent.MeshData[MeshLayer.NoMaterialCutout].CopyToMesh(mesh);
-                            noCustomParticleColor[meshContent.UniqueIndex] = true;
-                        }
-                        else
-                        {
-                            bool copied = false;
-                            foreach (var backup in meshContent.MeshData)
-                            {
-                                backup.Value.CopyToMesh(mesh);
-                                noCustomParticleColor[meshContent.UniqueIndex] = false;
-                                copied = true;
-                                break;
-                            }
-                            if (!copied)
-                                continue;
-                        }
-                        renderer.mesh = mesh;
-                        if (meshContent.MaterialTexture != null)
-                            renderer.material.SetTexture("_MainTex", meshContent.MaterialTexture.Texture);
-                        else
-                        {
-                            TextureContent texCon;
-                            if (ContentLoader.Instance.MaterialTextureConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out texCon))
-                                renderer.material.SetTexture("_MainTex", texCon.Texture);
-                        }
-                        if (meshContent.ShapeTexture != null)
-                            renderer.material.SetTexture("_BumpMap", meshContent.ShapeTexture.Texture);
-                        else
-                        {
-                            NormalContent normalCon;
-                            if (ContentLoader.Instance.ShapeTextureConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out normalCon))
-                                renderer.material.SetTexture("_BumpMap", normalCon.Texture);
-                        }
-                        if (meshContent.SpecialTexture != null)
-                            renderer.material.SetTexture("_SpecialTex", meshContent.SpecialTexture.Texture);
-                        customItemParticleSystems[meshContent.UniqueIndex] = partSys;
-                        customItemParticles[meshContent.UniqueIndex] = new ParticleSystem.Particle[partSys.main.maxParticles];
-                        customItemParticleCount[meshContent.UniqueIndex] = 0;
-                    }
-                    if (meshContent.Rotation == RotationType.Random)
-                        part.rotation = (float)noise.eval(pos.x, pos.y, pos.z) * 360;
-                    part.rotation += index * 254.558f;
-                    if (noCustomParticleColor[meshContent.UniqueIndex])
-                        part.startColor = Color.gray;
-                    customItemParticles[meshContent.UniqueIndex][customItemParticleCount[meshContent.UniqueIndex]] = part;
-                    customItemParticleCount[meshContent.UniqueIndex]++;
-                }
-                else
-                {
-                    itemParticles[i] = part;
-                    i++;
-                }
-            }
-        }
-        itemParticleSystem.SetParticles(itemParticles, i);
-        foreach (var sys in customItemParticleSystems)
-        {
-            sys.Value.SetParticles(customItemParticles[sys.Key], customItemParticleCount[sys.Key]);
-        }
-        UnityEngine.Profiling.Profiler.EndSample();
-    }
+    //            if (ContentLoader.Instance.ItemMeshConfiguration != null && ContentLoader.Instance.ItemMeshConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out meshContent))
+    //            {
+    //                ParticleSystem partSys;
+    //                if (!customItemParticleSystems.ContainsKey(meshContent.UniqueIndex))
+    //                {
+    //                    partSys = Instantiate(itemParticleSystem);
+    //                    partSys.transform.parent = transform;
+    //                    var renderer = partSys.GetComponent<ParticleSystemRenderer>();
+    //                    Mesh mesh = new Mesh();
+    //                    if (meshContent.MeshData.ContainsKey(MeshLayer.StaticCutout))
+    //                    {
+    //                        meshContent.MeshData[MeshLayer.StaticCutout].CopyToMesh(mesh);
+    //                        noCustomParticleColor[meshContent.UniqueIndex] = false;
+    //                    }
+    //                    else if (meshContent.MeshData.ContainsKey(MeshLayer.NoMaterialCutout))
+    //                    {
+    //                        meshContent.MeshData[MeshLayer.NoMaterialCutout].CopyToMesh(mesh);
+    //                        noCustomParticleColor[meshContent.UniqueIndex] = true;
+    //                    }
+    //                    else
+    //                    {
+    //                        bool copied = false;
+    //                        foreach (var backup in meshContent.MeshData)
+    //                        {
+    //                            backup.Value.CopyToMesh(mesh);
+    //                            noCustomParticleColor[meshContent.UniqueIndex] = false;
+    //                            copied = true;
+    //                            break;
+    //                        }
+    //                        if (!copied)
+    //                            continue;
+    //                    }
+    //                    renderer.mesh = mesh;
+    //                    if (meshContent.MaterialTexture != null)
+    //                        renderer.material.SetTexture("_MainTex", meshContent.MaterialTexture.Texture);
+    //                    else
+    //                    {
+    //                        TextureContent texCon;
+    //                        if (ContentLoader.Instance.MaterialTextureConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out texCon))
+    //                            renderer.material.SetTexture("_MainTex", texCon.Texture);
+    //                    }
+    //                    if (meshContent.ShapeTexture != null)
+    //                        renderer.material.SetTexture("_BumpMap", meshContent.ShapeTexture.Texture);
+    //                    else
+    //                    {
+    //                        NormalContent normalCon;
+    //                        if (ContentLoader.Instance.ShapeTextureConfiguration.GetValue(tempTile, MeshLayer.StaticMaterial, out normalCon))
+    //                            renderer.material.SetTexture("_BumpMap", normalCon.Texture);
+    //                    }
+    //                    if (meshContent.SpecialTexture != null)
+    //                        renderer.material.SetTexture("_SpecialTex", meshContent.SpecialTexture.Texture);
+    //                    customItemParticleSystems[meshContent.UniqueIndex] = partSys;
+    //                    customItemParticles[meshContent.UniqueIndex] = new ParticleSystem.Particle[partSys.main.maxParticles];
+    //                    customItemParticleCount[meshContent.UniqueIndex] = 0;
+    //                }
+    //                if (meshContent.Rotation == RotationType.Random)
+    //                    part.rotation = (float)noise.eval(pos.x, pos.y, pos.z) * 360;
+    //                part.rotation += index * 254.558f;
+    //                if (noCustomParticleColor[meshContent.UniqueIndex])
+    //                    part.startColor = Color.gray;
+    //                customItemParticles[meshContent.UniqueIndex][customItemParticleCount[meshContent.UniqueIndex]] = part;
+    //                customItemParticleCount[meshContent.UniqueIndex]++;
+    //            }
+    //            else
+    //            {
+    //                itemParticles[i] = part;
+    //                i++;
+    //            }
+    //        }
+    //    }
+    //    itemParticleSystem.SetParticles(itemParticles, i);
+    //    foreach (var sys in customItemParticleSystems)
+    //    {
+    //        sys.Value.SetParticles(customItemParticles[sys.Key], customItemParticleCount[sys.Key]);
+    //    }
+    //    UnityEngine.Profiling.Profiler.EndSample();
+    //}
 
 }
