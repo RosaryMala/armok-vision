@@ -22639,6 +22639,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultBuilding: {fileID: 114614645816580460, guid: cbf968a1862b11c4e88a9042e3f6968b,
     type: 2}
+  maxDistance: 100
 --- !u!4 &2090294053
 Transform:
   m_ObjectHideFlags: 0

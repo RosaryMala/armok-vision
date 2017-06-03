@@ -44,27 +44,29 @@ public class OnscreenConsole : MonoBehaviour
             }
             if (string.IsNullOrEmpty(log.logString))
                 continue;
-            var item = Instantiate(logItem);
+            var item = Instantiate(logItem, logParent);
             item.text = log.logString;
-            item.rectTransform.SetParent(logParent);
-            item.rectTransform.localScale = logItem.rectTransform.localScale;
             item.rectTransform.SetAsLastSibling();
             switch (log.type)
             {
                 case LogType.Error:
                     item.color = Color.red;
+                    item.GetComponent<FadeAndDie>().startfade = 20;
                     break;
                 case LogType.Assert:
                     item.color = Color.magenta;
+                    item.GetComponent<FadeAndDie>().startfade = 20;
                     break;
                 case LogType.Warning:
                     item.color = Color.yellow;
+                    item.GetComponent<FadeAndDie>().startfade = 10;
                     break;
                 case LogType.Log:
                     item.color = Color.white;
                     break;
                 case LogType.Exception:
                     item.color = new Color(1, 0.5f, 0);
+                    item.GetComponent<FadeAndDie>().startfade = 20;
                     break;
                 default:
                     break;
