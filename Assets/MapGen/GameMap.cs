@@ -1182,8 +1182,10 @@ public class GameMap : MonoBehaviour
                 mapMeshes[block_x, block_y, block_z].UpdateVisibility(GetVisibility(block_z));
                 if (terrainSplatLayers[block_z] != null)
                     mapMeshes[block_x, block_y, block_z].SetTerrainMap(terrainSplatLayers[block_z], terrainTintLayers[block_z]);
-                if(grassSplatLayers[block_z] != null)
+                if (grassSplatLayers[block_z] != null)
                     mapMeshes[block_x, block_y, block_z].SetGrassMap(grassSplatLayers[block_z], grassTintLayers[block_z]);
+                if (spatterLayers[block_z] != null)
+                    mapMeshes[block_x, block_y, block_z].SetSpatterMap(spatterLayers[block_z]);
 
             }
 
@@ -1527,6 +1529,14 @@ public class GameMap : MonoBehaviour
 
         spatterLayers[z].SetPixels(textureColors);
         spatterLayers[z].Apply();
+
+        for (int x = 0; x < mapMeshes.GetLength(0); x++)
+            for (int y = 0; y < mapMeshes.GetLength(1); y++)
+            {
+                if (mapMeshes[x, y, z] != null)
+                    mapMeshes[x, y, z].SetSpatterMap(spatterLayers[z]);
+            }
+
         UnityEngine.Profiling.Profiler.EndSample();
         UnityEngine.Profiling.Profiler.EndSample();
     }

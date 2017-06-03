@@ -148,6 +148,14 @@ public class BlockMeshSet : MonoBehaviour
     {
         matProperties.SetTexture(spatterID, splatterLayer);
 
+        blocksRenderer.SetPropertyBlock(matProperties);
+        stencilRenderer.SetPropertyBlock(matProperties);
+        transparentRenderer.SetPropertyBlock(matProperties);
+        voxelRenderer.SetPropertyBlock(matProperties);
+
+        matFlags |= MaterialManager.MaterialFlags.Contaminants;
+
+        SetupMaterials();
     }
 
     internal void LoadMeshes(BlockMesher.Result newMeshes, string suffix)
