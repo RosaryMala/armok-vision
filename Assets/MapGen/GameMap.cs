@@ -1182,6 +1182,9 @@ public class GameMap : MonoBehaviour
                 mapMeshes[block_x, block_y, block_z].UpdateVisibility(GetVisibility(block_z));
                 if (terrainSplatLayers[block_z] != null)
                     mapMeshes[block_x, block_y, block_z].SetTerrainMap(terrainSplatLayers[block_z], terrainTintLayers[block_z]);
+                if(grassSplatLayers[block_z] != null)
+                    mapMeshes[block_x, block_y, block_z].SetGrassMap(grassSplatLayers[block_z], grassTintLayers[block_z]);
+
             }
 
             var meshSet = mapMeshes[block_x, block_y, block_z];
@@ -1285,6 +1288,13 @@ public class GameMap : MonoBehaviour
         grassTintLayers[z].SetPixels(grassColors);
         grassTintLayers[z].Apply();
 
+        for (int x = 0; x < mapMeshes.GetLength(0); x++)
+            for (int y = 0; y < mapMeshes.GetLength(1); y++)
+            {
+                if (mapMeshes[x, y, z] != null)
+                    mapMeshes[x, y, z].SetGrassMap(grassSplatLayers[z], grassTintLayers[z]);
+            }
+
         UnityEngine.Profiling.Profiler.EndSample();
     }
 
@@ -1304,11 +1314,12 @@ public class GameMap : MonoBehaviour
             terrainIndices = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
         }
         UnityEngine.Profiling.Profiler.BeginSample("Update Terrain Color Array", this);
-        for (int x = 0; x < MapDataStore.MapSize.x; x++)
-            for (int y = 0; y < MapDataStore.MapSize.y; y++)
+        for (int y = 0; y < MapDataStore.MapSize.y; y++)
+            for (int x = 0; x < MapDataStore.MapSize.x; x++)
             {
                 int index = x + (y * MapDataStore.MapSize.x);
                 var tile = MapDataStore.Main[x, y, z];
+                UnityEngine.Profiling.Profiler.BeginSample("Find nearest tile", this);
                 if (IsNullOrEmpty(tile))
                 {
                     if (!IsNullOrEmpty(MapDataStore.Main[x - 1, y, z]))
@@ -1346,25 +1357,31 @@ public class GameMap : MonoBehaviour
                 || tile.tiletypeMaterial == TiletypeMaterial.PLANT
                 )
                     layer = MeshLayer.LayerMaterial;
+                UnityEngine.Profiling.Profiler.EndSample();
 
-
+                UnityEngine.Profiling.Profiler.BeginSample("Normal texture lookup", this);
                 NormalContent normalContent;
                 if (ContentLoader.Instance.TerrainShapeTextureConfiguration.GetValue(tile, layer, out normalContent))
                     terrainIndices[index].g = normalContent.StorageIndex;
                 else
                     terrainIndices[index].g = ContentLoader.Instance.DefaultShapeTexIndex;
+                UnityEngine.Profiling.Profiler.EndSample();
 
+                UnityEngine.Profiling.Profiler.BeginSample("Diffuse texture lookup", this);
                 TextureContent materialContent;
                 if (ContentLoader.Instance.MaterialTextureConfiguration.GetValue(tile, layer, out materialContent))
                     terrainIndices[index].r = materialContent.StorageIndex;
                 else
                     terrainIndices[index].r = ContentLoader.Instance.DefaultMatTexIndex;
+                UnityEngine.Profiling.Profiler.EndSample();
 
+                UnityEngine.Profiling.Profiler.BeginSample("Diffuse color lookup", this);
                 ColorContent colorContent;
                 if (ContentLoader.Instance.ColorConfiguration.GetValue(tile, layer, out colorContent))
                     terrainColors[index] = colorContent.color;
                 else
                     terrainColors[index] = Color.gray;
+                UnityEngine.Profiling.Profiler.EndSample();
 
             }
         UnityEngine.Profiling.Profiler.EndSample();

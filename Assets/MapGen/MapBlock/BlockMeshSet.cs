@@ -120,8 +120,6 @@ public class BlockMeshSet : MonoBehaviour
 
     public void SetTerrainMap(Texture2D terrainSplatLayer, Texture2D terrainTintLayer)
     {
-        if (matProperties == null)
-            Debug.Log("What tyhe hell is wrong!");
         matProperties.SetTexture(terrainSplatID, terrainSplatLayer);
         matProperties.SetTexture(terrainTintID, terrainTintLayer);
 
@@ -129,6 +127,27 @@ public class BlockMeshSet : MonoBehaviour
         stencilRenderer.SetPropertyBlock(matProperties);
         transparentRenderer.SetPropertyBlock(matProperties);
         voxelRenderer.SetPropertyBlock(matProperties);
+    }
+
+    public void SetGrassMap(Texture2D grassSplatLayer, Texture2D grassTintLayer)
+    {
+        matProperties.SetTexture(grassSplatID, grassSplatLayer);
+        matProperties.SetTexture(grassTintID, grassTintLayer);
+
+        blocksRenderer.SetPropertyBlock(matProperties);
+        stencilRenderer.SetPropertyBlock(matProperties);
+        transparentRenderer.SetPropertyBlock(matProperties);
+        voxelRenderer.SetPropertyBlock(matProperties);
+
+        matFlags |= MaterialManager.MaterialFlags.Grass;
+
+        SetupMaterials();
+    }
+
+    public void SetSpatterMap(Texture2D splatterLayer)
+    {
+        matProperties.SetTexture(spatterID, splatterLayer);
+
     }
 
     internal void LoadMeshes(BlockMesher.Result newMeshes, string suffix)
