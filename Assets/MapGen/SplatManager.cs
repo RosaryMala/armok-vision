@@ -128,6 +128,12 @@ public class SplatManager : MonoBehaviour
         {
             terrainSplatColor[blockZ] = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
             terrainTintColor[blockZ] = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
+            for (int i = 0; i < terrainTintColor[blockZ].Length; i++)
+            {
+                terrainSplatColor[blockZ][i].r = ContentLoader.Instance.DefaultMatTexIndex;
+                terrainSplatColor[blockZ][i].g = ContentLoader.Instance.DefaultShapeTexIndex;
+                terrainTintColor[blockZ][i] = Color.gray;
+            }
         }
 
         var terrainIndices = terrainSplatColor[blockZ];
@@ -160,9 +166,6 @@ public class SplatManager : MonoBehaviour
                         tile = MapDataStore.Main[x + 1, y + 1, blockZ];
                     else
                     {
-                        terrainIndices[index].r = ContentLoader.Instance.DefaultMatTexIndex;
-                        terrainIndices[index].g = ContentLoader.Instance.DefaultShapeTexIndex;
-                        terrainColors[index] = Color.gray;
                         continue;
                     }
                 }
@@ -267,9 +270,6 @@ public class SplatManager : MonoBehaviour
                 var tile = MapDataStore.Main[x, y, blockZ];
                 if (tile == null)
                 {
-                    grassIndices[index].r = ContentLoader.Instance.DefaultMatTexIndex;
-                    grassIndices[index].g = ContentLoader.Instance.DefaultShapeTexIndex;
-                    grassColors[index] = new Color(0, 0, 0, 0);
                     continue;
                 }
                 if (!(tile.tiletypeMaterial == TiletypeMaterial.GRASS_DARK
