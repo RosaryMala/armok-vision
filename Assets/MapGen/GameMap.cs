@@ -88,21 +88,13 @@ public class GameMap : MonoBehaviour
 
     BlockMesher mesher;
 
-    BlockMeshSet[,,] mapMeshes;
+    public BlockMeshSet[,,] mapMeshes;
 
     // Dirty flags for those meshes
     bool[,,] blockDirtyBits;
     bool[,,] blockContentBits;
-    bool[] layerDirtyBits;
-    bool[] grassLayerDirtyBits;
     UpdateSchedule[,,] blockUpdateSchedules;
     bool[,,] liquidBlockDirtyBits;
-    bool[] spatterBlockDirtyBits;
-    Texture2D[] spatterLayers;
-    Texture2D[] terrainSplatLayers;
-    Texture2D[] terrainTintLayers;
-    Texture2D[] grassSplatLayers;
-    Texture2D[] grassTintLayers;
     // Lights from magma.
     Light[,,] magmaGlow;
 
@@ -379,7 +371,6 @@ public class GameMap : MonoBehaviour
         UpdateRequestRegion();
         UpdateCreatures();
         UpdateBlocks();
-        UpdateSplatTextures();
         //DrawBlocks();
         UpdateBlockVisibility();
     }
@@ -505,9 +496,9 @@ public class GameMap : MonoBehaviour
                 {
                     if (blockContentBits[x, y, z])
                     {
-                        layerDirtyBits[z] = true;
-                        grassLayerDirtyBits[z] = true;
-                        spatterBlockDirtyBits[z] = true;
+                        SplatManager.Instance.DirtyLayer(x, y, z);
+                        SplatManager.Instance.DirtyGrass(x, y, z);
+                        SplatManager.Instance.DirtySpatter(x, y, z);
                     }
                     blockDirtyBits[x, y, z] = blockContentBits[x, y, z];
                     liquidBlockDirtyBits[x, y, z] = blockContentBits[x, y, z];
@@ -834,15 +825,7 @@ public class GameMap : MonoBehaviour
         blockUpdateSchedules = new UpdateSchedule[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         liquidBlockDirtyBits = new bool[blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ];
         magmaGlow = new Light[blockSizeX * 16, blockSizeY * 16, blockSizeZ];
-        spatterBlockDirtyBits = new bool[blockSizeZ];
-        layerDirtyBits = new bool[blockSizeZ];
-        grassLayerDirtyBits = new bool[blockSizeZ];
-        spatterLayers = new Texture2D[blockSizeZ];
-        terrainSplatLayers = new Texture2D[blockSizeZ];
-        terrainTintLayers = new Texture2D[blockSizeZ];
-        grassSplatLayers = new Texture2D[blockSizeZ];
-        grassTintLayers = new Texture2D[blockSizeZ];
-
+        SplatManager.Instance.Init(blockSizeX * 16 / blockSize, blockSizeY * 16 / blockSize, blockSizeZ);
 
         Vector3 min = DFtoUnityCoord(0, 0, 0) - new Vector3(tileWidth / 2, 0, -tileWidth / 2);
         Vector3 max = DFtoUnityCoord((blockSizeX * 16) - 1, (blockSizeY * 16) - 1, 0) + new Vector3(tileWidth / 2, 0, -tileWidth / 2);
@@ -887,12 +870,12 @@ public class GameMap : MonoBehaviour
         mapBlockX /= blockSize;
         mapBlockY /= blockSize;
         blockDirtyBits[mapBlockX, mapBlockY, mapBlockZ] = true;
-        grassLayerDirtyBits[mapBlockZ] = true;
-        layerDirtyBits[mapBlockZ] = true;
-        if (mapBlockZ < layerDirtyBits.Length - 1)
+        SplatManager.Instance.DirtyGrass(mapBlockX, mapBlockY, mapBlockZ);
+        SplatManager.Instance.DirtyLayer(mapBlockX, mapBlockY, mapBlockZ);
+        if (mapBlockZ < SplatManager.Instance.SizeZ - 1)
         {
-            layerDirtyBits[mapBlockZ + 1] = true; //For ramp edges.
-            grassLayerDirtyBits[mapBlockZ + 1] = true;
+            SplatManager.Instance.DirtyGrass(mapBlockX, mapBlockY, mapBlockZ + 1);
+            SplatManager.Instance.DirtyLayer(mapBlockX, mapBlockY, mapBlockZ + 1);
         }
 
     }
@@ -910,7 +893,10 @@ public class GameMap : MonoBehaviour
     }
     private void SetDirtySpatterBlock(int map_x, int map_y, int map_z)
     {
-        spatterBlockDirtyBits[map_z] = true;
+        map_x /= blockSize;
+        map_y /= blockSize;
+        SplatManager.Instance.DirtySpatter(map_x, map_y, map_z);
+
     }
 
 
@@ -1078,34 +1064,6 @@ public class GameMap : MonoBehaviour
 
     }
 
-    void UpdateSplatTextures()
-    {
-        if (ContentLoader.Instance == null)
-            return;
-        UnityEngine.Profiling.Profiler.BeginSample("UpdateTerrainTextures", this);
-        for (int z = layerDirtyBits.Length - 1; z >= 0; z--)
-        {
-            if (layerDirtyBits[z])
-            {
-                GenerateTerrainTexture(z);
-                layerDirtyBits[z] = false;
-                break; //don't do more than one set per frame.
-            }
-            if (grassLayerDirtyBits[z])
-            {
-                GenerateGrassTexture(z);
-                grassLayerDirtyBits[z] = false;
-                break;
-            }
-            if (spatterBlockDirtyBits[z])
-            {
-                GenerateSpatterTexture(z);
-                spatterBlockDirtyBits[z] = false;
-                break;
-            }
-        }
-        UnityEngine.Profiling.Profiler.EndSample();
-    }
 
     // Have the mesher mesh all dirty tiles in the region
     void EnqueueMeshUpdates()
@@ -1180,13 +1138,10 @@ public class GameMap : MonoBehaviour
                 mapMeshes[block_x, block_y, block_z].name = string.Format("Block_{0}_{1}_{2}", block_x, block_y, block_z);
                 mapMeshes[block_x, block_y, block_z].Init();
                 mapMeshes[block_x, block_y, block_z].UpdateVisibility(GetVisibility(block_z));
-                if (terrainSplatLayers[block_z] != null)
-                    mapMeshes[block_x, block_y, block_z].SetTerrainMap(terrainSplatLayers[block_z], terrainTintLayers[block_z]);
-                if (grassSplatLayers[block_z] != null)
-                    mapMeshes[block_x, block_y, block_z].SetGrassMap(grassSplatLayers[block_z], grassTintLayers[block_z]);
-                if (spatterLayers[block_z] != null)
-                    mapMeshes[block_x, block_y, block_z].SetSpatterMap(spatterLayers[block_z]);
 
+                SplatManager.Instance.ApplyTerrain(mapMeshes[block_x, block_y, block_z], block_z);
+                SplatManager.Instance.ApplyGrass(mapMeshes[block_x, block_y, block_z], block_z);
+                SplatManager.Instance.ApplySpatter(mapMeshes[block_x, block_y, block_z], block_z);
             }
 
             var meshSet = mapMeshes[block_x, block_y, block_z];
@@ -1209,337 +1164,14 @@ public class GameMap : MonoBehaviour
     Color[] grassIndices;
 
 
-    void GenerateGrassTexture(int z)
-    {
-        if (ContentLoader.Instance == null)
-            return;
-        UnityEngine.Profiling.Profiler.BeginSample("GenerateGrassTexture", this);
-
-        if (grassColors == null || grassIndices == null || grassColors.Length != MapDataStore.MapSize.x * MapDataStore.MapSize.y)
-        {
-            grassColors = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
-            grassIndices = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
-        }
-
-        int grassTiles = 0;
-
-        for (int x = 0; x < MapDataStore.MapSize.x; x++)
-            for (int y = 0; y < MapDataStore.MapSize.y; y++)
-            {
-                int index = x + (y * MapDataStore.MapSize.x);
-                var tile = MapDataStore.Main[x, y, z];
-                if (tile == null)
-                {
-                    grassIndices[index].r = ContentLoader.Instance.DefaultMatTexIndex;
-                    grassIndices[index].g = ContentLoader.Instance.DefaultShapeTexIndex;
-                    grassColors[index] = new Color(0, 0, 0, 0);
-                    continue;
-                }
-                if (!(tile.tiletypeMaterial == TiletypeMaterial.GRASS_DARK
-                    || tile.tiletypeMaterial == TiletypeMaterial.GRASS_LIGHT
-                    || tile.tiletypeMaterial == TiletypeMaterial.GRASS_DEAD
-                    || tile.tiletypeMaterial == TiletypeMaterial.GRASS_DRY
-                    ))
-                    continue;
-
-                grassTiles++;
-
-                GrassContent grassTexture;
-                if (ContentLoader.Instance.GrassTextureConfiguration.GetValue(tile, MeshLayer.StaticMaterial, out grassTexture))
-                {
-                    grassIndices[index].r = grassTexture.MaterialTexture.StorageIndex;
-                    grassIndices[index].g = grassTexture.ShapeTexture.StorageIndex;
-                }
-                else
-                {
-                    grassIndices[index].r = ContentLoader.Instance.DefaultMatTexIndex;
-                    grassIndices[index].g = ContentLoader.Instance.DefaultShapeTexIndex;
-                }
-
-                ColorContent colorContent;
-                if (ContentLoader.Instance.ColorConfiguration.GetValue(tile, MeshLayer.StaticMaterial, out colorContent))
-                    grassColors[index] = colorContent.color;
-                else
-                    grassColors[index] = Color.gray;
-
-            }
-        if (grassTiles == 0)
-            return;
-
-        if (grassSplatLayers[z] == null)
-        {
-            grassSplatLayers[z] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGHalf, false, true);
-            grassSplatLayers[z].filterMode = FilterMode.Point;
-            grassSplatLayers[z].wrapMode = TextureWrapMode.Clamp;
-        }
-        if (grassSplatLayers[z].width != MapDataStore.MapSize.x || terrainSplatLayers[z].height != MapDataStore.MapSize.y)
-            grassSplatLayers[z].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
-
-        grassSplatLayers[z].SetPixels(grassIndices);
-        grassSplatLayers[z].Apply();
-
-        if (grassTintLayers[z] == null)
-        {
-            grassTintLayers[z] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGBA32, false, true);
-            grassTintLayers[z].filterMode = FilterMode.Point;
-            grassTintLayers[z].wrapMode = TextureWrapMode.Clamp;
-        }
-        if (grassTintLayers[z].width != MapDataStore.MapSize.x || terrainTintLayers[z].height != MapDataStore.MapSize.y)
-            grassTintLayers[z].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
-
-        grassTintLayers[z].SetPixels(grassColors);
-        grassTintLayers[z].Apply();
-
-        for (int x = 0; x < mapMeshes.GetLength(0); x++)
-            for (int y = 0; y < mapMeshes.GetLength(1); y++)
-            {
-                if (mapMeshes[x, y, z] != null)
-                    mapMeshes[x, y, z].SetGrassMap(grassSplatLayers[z], grassTintLayers[z]);
-            }
-
-        UnityEngine.Profiling.Profiler.EndSample();
-    }
 
     Color[] terrainColors;
     Color[] terrainIndices;
 
 
-    void GenerateTerrainTexture(int z)
-    {
-        if (ContentLoader.Instance == null)
-            return;
-        UnityEngine.Profiling.Profiler.BeginSample("GenerateTerrainTexture", this);
 
-        if (terrainColors == null || terrainIndices == null || terrainColors.Length != MapDataStore.MapSize.x * MapDataStore.MapSize.y)
-        {
-            terrainColors = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
-            terrainIndices = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
-        }
-        UnityEngine.Profiling.Profiler.BeginSample("Update Terrain Color Array", this);
-        for (int y = 0; y < MapDataStore.MapSize.y; y++)
-            for (int x = 0; x < MapDataStore.MapSize.x; x++)
-            {
-                int index = x + (y * MapDataStore.MapSize.x);
-                var tile = MapDataStore.Main[x, y, z];
-                UnityEngine.Profiling.Profiler.BeginSample("Find nearest tile", this);
-                if (IsNullOrEmpty(tile))
-                {
-                    if (!IsNullOrEmpty(MapDataStore.Main[x - 1, y, z]))
-                        tile = MapDataStore.Main[x - 1, y, z];
-                    else if (!IsNullOrEmpty(MapDataStore.Main[x, y - 1, z]))
-                        tile = MapDataStore.Main[x, y - 1, z];
-                    else if (!IsNullOrEmpty(MapDataStore.Main[x + 1, y, z]))
-                        tile = MapDataStore.Main[x + 1, y, z];
-                    else if (!IsNullOrEmpty(MapDataStore.Main[x, y + 1, z]))
-                        tile = MapDataStore.Main[x, y + 1, z];
-                    else if (!IsNullOrEmpty(MapDataStore.Main[x - 1, y - 1, z]))
-                        tile = MapDataStore.Main[x - 1, y - 1, z];
-                    else if (!IsNullOrEmpty(MapDataStore.Main[x - 1, y + 1, z]))
-                        tile = MapDataStore.Main[x - 1, y + 1, z];
-                    else if (!IsNullOrEmpty(MapDataStore.Main[x + 1, y - 1, z]))
-                        tile = MapDataStore.Main[x + 1, y - 1, z];
-                    else if (!IsNullOrEmpty(MapDataStore.Main[x + 1, y + 1, z]))
-                        tile = MapDataStore.Main[x + 1, y + 1, z];
-                    else
-                    {
-                        terrainIndices[index].r = ContentLoader.Instance.DefaultMatTexIndex;
-                        terrainIndices[index].g = ContentLoader.Instance.DefaultShapeTexIndex;
-                        terrainColors[index] = Color.gray;
-                        continue;
-                    }
-                }
-                if (tile.shape == TiletypeShape.RAMP_TOP && tile.Down != null)
-                    tile = tile.Down;
-
-                var layer = MeshLayer.BaseMaterial;
-                if (tile.tiletypeMaterial == TiletypeMaterial.GRASS_DARK
-                || tile.tiletypeMaterial == TiletypeMaterial.GRASS_DEAD
-                || tile.tiletypeMaterial == TiletypeMaterial.GRASS_DRY
-                || tile.tiletypeMaterial == TiletypeMaterial.GRASS_LIGHT
-                || tile.tiletypeMaterial == TiletypeMaterial.PLANT
-                )
-                    layer = MeshLayer.LayerMaterial;
-                UnityEngine.Profiling.Profiler.EndSample();
-
-                UnityEngine.Profiling.Profiler.BeginSample("Normal texture lookup", this);
-                NormalContent normalContent;
-                if (ContentLoader.Instance.TerrainShapeTextureConfiguration.GetValue(tile, layer, out normalContent))
-                    terrainIndices[index].g = normalContent.StorageIndex;
-                else
-                    terrainIndices[index].g = ContentLoader.Instance.DefaultShapeTexIndex;
-                UnityEngine.Profiling.Profiler.EndSample();
-
-                UnityEngine.Profiling.Profiler.BeginSample("Diffuse texture lookup", this);
-                TextureContent materialContent;
-                if (ContentLoader.Instance.MaterialTextureConfiguration.GetValue(tile, layer, out materialContent))
-                    terrainIndices[index].r = materialContent.StorageIndex;
-                else
-                    terrainIndices[index].r = ContentLoader.Instance.DefaultMatTexIndex;
-                UnityEngine.Profiling.Profiler.EndSample();
-
-                UnityEngine.Profiling.Profiler.BeginSample("Diffuse color lookup", this);
-                ColorContent colorContent;
-                if (ContentLoader.Instance.ColorConfiguration.GetValue(tile, layer, out colorContent))
-                    terrainColors[index] = colorContent.color;
-                else
-                    terrainColors[index] = Color.gray;
-                UnityEngine.Profiling.Profiler.EndSample();
-
-            }
-        UnityEngine.Profiling.Profiler.EndSample();
-        UnityEngine.Profiling.Profiler.BeginSample("Apply terrain textures.", this);
-
-        if (terrainSplatLayers[z] == null)
-        {
-            terrainSplatLayers[z] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGHalf, false, true);
-            terrainSplatLayers[z].filterMode = FilterMode.Point;
-            terrainSplatLayers[z].wrapMode = TextureWrapMode.Clamp;
-        }
-        if (terrainSplatLayers[z].width != MapDataStore.MapSize.x || terrainSplatLayers[z].height != MapDataStore.MapSize.y)
-            terrainSplatLayers[z].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
-
-        terrainSplatLayers[z].SetPixels(terrainIndices);
-        terrainSplatLayers[z].Apply();
-
-        if (terrainTintLayers[z] == null)
-        {
-            terrainTintLayers[z] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGBA32, false, true);
-            terrainTintLayers[z].filterMode = FilterMode.Point;
-            terrainTintLayers[z].wrapMode = TextureWrapMode.Clamp;
-
-            for (int x = 0; x < mapMeshes.GetLength(0); x++)
-                for (int y = 0; y < mapMeshes.GetLength(1); y++)
-                {
-                    if (mapMeshes[x, y, z] != null)
-                        mapMeshes[x, y, z].SetTerrainMap(terrainSplatLayers[z], terrainTintLayers[z]);
-                }
-
-        }
-        if (terrainTintLayers[z].width != MapDataStore.MapSize.x || terrainTintLayers[z].height != MapDataStore.MapSize.y)
-            terrainTintLayers[z].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
-
-        terrainTintLayers[z].SetPixels(terrainColors);
-        terrainTintLayers[z].Apply();
-        UnityEngine.Profiling.Profiler.EndSample();
-
-        UnityEngine.Profiling.Profiler.EndSample();
-    }
-
-    private bool IsNullOrEmpty(MapDataStore.Tile tile)
-    {
-        if (tile == null)
-            return true;
-        if (tile.shape == TiletypeShape.EMPTY)
-            return true;
-        if (tile.shape == TiletypeShape.ENDLESS_PIT)
-            return true;
-        return false;
-    }
 
     Color[] textureColors;
-
-    void GenerateSpatterTexture(int z)
-    {
-        UnityEngine.Profiling.Profiler.BeginSample("GenerateSpatterTexture", this);
-        if (textureColors == null || textureColors.Length != MapDataStore.MapSize.x * MapDataStore.MapSize.y)
-            textureColors = new Color[MapDataStore.MapSize.x * MapDataStore.MapSize.y];
-
-        UnityEngine.Profiling.Profiler.BeginSample("UpdateSpatterArray", this);
-        for (int x = 0; x < MapDataStore.MapSize.x; x++)
-            for (int y = 0; y < MapDataStore.MapSize.y; y++)
-            {
-                Color totalColor = new Color(0, 0, 0, 0);
-                int index = x + (y * MapDataStore.MapSize.x);
-
-                var tile = MapDataStore.Main[x, y, z];
-                if (tile == null)
-                {
-                    textureColors[index] = totalColor;
-                    continue;
-                }
-                if (tile.spatters == null || tile.spatters.Count == 0)
-                {
-                    textureColors[index] = totalColor;
-                    continue;
-                }
-
-                if (tile.Hidden)
-                {
-                    textureColors[index] = totalColor;
-                    continue;
-                }
-                float totalAmount = 0;
-
-                foreach (var spatter in tile.spatters)
-                {
-                    if (spatter.amount == 0)
-                        continue;
-
-                    MapDataStore.Tile fakeTile = new MapDataStore.Tile(null, new DFCoord(0, 0, 0));
-
-                    fakeTile.material = spatter.material;
-
-                    Color color = Color.white;
-
-                    ColorContent cont;
-
-                    if (spatter.material.mat_type == (int)MatBasic.ICE && spatter.state == MatterState.Powder)
-                    {
-                        color = Color.white;
-                    }
-                    else if (ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out cont))
-                    {
-                        color = cont.color;
-                    }
-                    else if (materials.ContainsKey(spatter.material))
-                    {
-                        var colorDef = materials[spatter.material].state_color;
-                        color = new Color32((byte)colorDef.red, (byte)colorDef.green, (byte)colorDef.blue, 255);
-                    }
-                    float amount = spatter.amount;
-                    if (spatter.item != null)
-                        amount /= 3000;
-                    else
-                        amount /= 100;
-                    //amount = Mathf.Clamp01(amount);
-
-                    color *= amount;
-
-                    color.a = amount;
-
-                    totalColor += color;
-                    totalAmount += amount;
-                }
-                if (totalAmount > 1)
-                {
-                    totalColor /= totalAmount;
-                }
-                textureColors[index] = totalColor;
-            }
-        UnityEngine.Profiling.Profiler.EndSample();
-
-        UnityEngine.Profiling.Profiler.BeginSample("Apply Image", this);
-        if (spatterLayers[z] == null)
-        {
-            spatterLayers[z] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.ARGB32, false);
-            spatterLayers[z].wrapMode = TextureWrapMode.Clamp;
-        }
-        if (spatterLayers[z].width != MapDataStore.MapSize.x || spatterLayers[z].height != MapDataStore.MapSize.y)
-            spatterLayers[z].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
-
-        spatterLayers[z].SetPixels(textureColors);
-        spatterLayers[z].Apply();
-
-        for (int x = 0; x < mapMeshes.GetLength(0); x++)
-            for (int y = 0; y < mapMeshes.GetLength(1); y++)
-            {
-                if (mapMeshes[x, y, z] != null)
-                    mapMeshes[x, y, z].SetSpatterMap(spatterLayers[z]);
-            }
-
-        UnityEngine.Profiling.Profiler.EndSample();
-        UnityEngine.Profiling.Profiler.EndSample();
-    }
 
     void ClearMap()
     {

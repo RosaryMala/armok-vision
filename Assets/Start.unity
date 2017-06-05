@@ -9869,6 +9869,7 @@ GameObject:
   - component: {fileID: 861361736}
   - component: {fileID: 861361738}
   - component: {fileID: 861361739}
+  - component: {fileID: 861361737}
   m_Layer: 0
   m_Name: '[GameMapObject]'
   m_TagString: Untagged
@@ -10028,6 +10029,17 @@ MonoBehaviour:
     type: 2}
   cursorMesh: {fileID: 4300000, guid: 4bd277bd94c5c0f4c93e139ab2b6ae76, type: 3}
   diggingTool: {fileID: 861361734}
+--- !u!114 &861361737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 861361727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a4ca19e1eb73d7449496c005b13f2eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &861361738
 MonoBehaviour:
   m_ObjectHideFlags: 0
