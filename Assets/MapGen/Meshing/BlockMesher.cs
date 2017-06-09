@@ -357,7 +357,17 @@ abstract class BlockMesher {
         }
     }
 
-    bool GenerateTiles(MapDataStore data, out CPUMesh tiles, out CPUMesh stencilTiles, out CPUMesh transparentTiles, out CPUMesh topTiles, out CPUMesh topStencilTiles, out CPUMesh topTransparentTiles, out CPUMesh collisionTiles, out CPUMesh terrainTiles, out CPUMesh topTerrainTiles)
+    bool GenerateTiles(
+        MapDataStore data,
+        out CPUMesh tiles,
+        out CPUMesh stencilTiles,
+        out CPUMesh transparentTiles,
+        out CPUMesh topTiles,
+        out CPUMesh topStencilTiles,
+        out CPUMesh topTransparentTiles,
+        out CPUMesh collisionTiles,
+        out CPUMesh terrainTiles,
+        out CPUMesh topTerrainTiles)
     {
         int block_x = data.SliceOrigin.x / GameMap.blockSize;
         int block_y = data.SliceOrigin.y / GameMap.blockSize;
