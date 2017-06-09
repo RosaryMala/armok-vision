@@ -11,7 +11,7 @@ public class Spammer : MonoBehaviour
 
     public float spacing = 1;
 
-    Color[] colors = { Color.black, Color.blue, Color.cyan, Color.gray, Color.green, Color.magenta, Color.red, Color.white, Color.yellow };
+    //Color[] colors = { Color.black, Color.blue, Color.cyan, Color.gray, Color.green, Color.magenta, Color.red, Color.white, Color.yellow };
 
     IEnumerator Spam()
     {
