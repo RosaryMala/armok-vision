@@ -37,9 +37,9 @@ public class BlockMeshSet : MonoBehaviour
     /// </summary>
     public MeshFilter voxelBlocks;
     MeshRenderer voxelRenderer;
-    /// <summary>
-    /// Procedural grass blocks.
-    /// </summary>
+    public MeshFilter topVoxelBlocks;
+    MeshRenderer topVoxelRenderer;
+
     public MeshCollider collisionBlocks;
 
     private void Awake()
@@ -50,6 +50,7 @@ public class BlockMeshSet : MonoBehaviour
         waterRenderer = waterBlocks.GetComponent<MeshRenderer>();
         lavaRenderer = lavaBlocks.GetComponent<MeshRenderer>();
         voxelRenderer = voxelBlocks.GetComponent<MeshRenderer>();
+        topVoxelRenderer = topVoxelBlocks.GetComponent<MeshRenderer>();
     }
 
     public enum Visibility

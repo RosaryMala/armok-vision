@@ -195,13 +195,6 @@ public class GameMap : MonoBehaviour
         DFConnection.RegisterConnectionCallback(OnConnectToDF);
 
         dfScreen.SetActive(GameSettings.Instance.game.showDFScreen);
-
-        spatterID = Shader.PropertyToID("_SpatterTex");
-        terrainSplatID = Shader.PropertyToID("_Control");
-        terrainTintID = Shader.PropertyToID("_Tint");
-        grassSplatID = Shader.PropertyToID("_GrassControl");
-        grassTintID = Shader.PropertyToID("_GrassTint");
-        sharedMatBlock = new MaterialPropertyBlock();
     }
 
     public static GameMap Instance { get; private set; }
@@ -1604,13 +1597,6 @@ public class GameMap : MonoBehaviour
     //    return DrawSingleBlock(xx, yy, zz, phantom, Matrix4x4.TRS(pos, Quaternion.identity, Vector3.one), top);
     //}
 
-    MaterialPropertyBlock sharedMatBlock;
-    int spatterID;
-    int terrainSplatID;
-    int terrainTintID;
-    int grassSplatID;
-    int grassTintID;
-
     //private bool DrawSingleBlock(int xx, int yy, int zz, bool phantom, Matrix4x4 LocalTransform, bool top)
     //{
     //    if (mapMeshes[xx, yy, zz] == null)
@@ -1711,12 +1697,12 @@ public class GameMap : MonoBehaviour
     //}
 
     public ParticleSystem itemParticleSystem;
-    ParticleSystem.Particle[] itemParticles;
-    Dictionary<int, ParticleSystem> customItemParticleSystems = new Dictionary<int, ParticleSystem>();
-    Dictionary<int, ParticleSystem.Particle[]> customItemParticles = new Dictionary<int, ParticleSystem.Particle[]>();
-    Dictionary<int, int> customItemParticleCount = new Dictionary<int, int>();
-    Dictionary<int, bool> noCustomParticleColor = new Dictionary<int, bool>();
-    OpenSimplexNoise noise = new OpenSimplexNoise();
+    //ParticleSystem.Particle[] itemParticles;
+    //Dictionary<int, ParticleSystem> customItemParticleSystems = new Dictionary<int, ParticleSystem>();
+    //Dictionary<int, ParticleSystem.Particle[]> customItemParticles = new Dictionary<int, ParticleSystem.Particle[]>();
+    //Dictionary<int, int> customItemParticleCount = new Dictionary<int, int>();
+    //Dictionary<int, bool> noCustomParticleColor = new Dictionary<int, bool>();
+    //OpenSimplexNoise noise = new OpenSimplexNoise();
     //void DrawItems()
     //{
     //    return;
