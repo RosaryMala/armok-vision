@@ -153,9 +153,11 @@ public class BuildingMaterialEditor : ShaderGUI
             // Primary properties
             GUILayout.Label(Styles.primaryMapsText, EditorStyles.boldLabel);
             m_MaterialEditor.TexturePropertySingleLine(Styles.detailMaskText, detailMask);
-            if(detailMask.textureValue != null)
+            if (detailMask.textureValue != null)
+            {
                 DoAlbedoArea(material);
-            DoSpecularMetallicArea();
+                DoSpecularMetallicArea();
+            }
             m_MaterialEditor.TexturePropertySingleLine(Styles.normalMapText, bumpMap, bumpMap.textureValue != null ? bumpScale : null);
             m_MaterialEditor.TexturePropertySingleLine(Styles.occlusionText, occlusionMap, occlusionMap.textureValue != null ? occlusionStrength : null);
             DoEmissionArea(material);
@@ -170,6 +172,7 @@ public class BuildingMaterialEditor : ShaderGUI
             GUILayout.Label(Styles.secondaryMapsText, EditorStyles.boldLabel);
             m_MaterialEditor.TexturePropertySingleLine(Styles.materialTextureText, materialTextureMap);
             m_MaterialEditor.ShaderProperty(uvSetSecondary, Styles.uvSetLabel.text);
+            m_MaterialEditor.TextureScaleOffsetProperty(materialTextureMap);
 
             // Third properties
             GUILayout.Label(Styles.forwardText, EditorStyles.boldLabel);
@@ -388,6 +391,13 @@ public class BuildingMaterialEditor : ShaderGUI
         {
             SetKeyword(material, "_SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A", GetSmoothnessMapChannel(material) == SmoothnessMapChannel.AlbedoAlpha);
         }
+
+        if(material.HasProperty("_UVSec"))
+        {
+            SetKeyword(material, "_SECOND_UV", material.GetFloat("_UVSec") > 0.5f);
+        }
+        SetKeyword(material, "_TEXTURE_MASK", material.GetTexture("_DFMask"));
+
 
         // Setup lightmap emissive flags
         MaterialGlobalIlluminationFlags flags = material.globalIlluminationFlags;

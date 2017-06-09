@@ -21,7 +21,7 @@
         _EmissionColor("Color", Color) = (0,0,0)
         _EmissionMap("Emission", 2D) = "white" {}
 
-        _DFMask("DF Material Splat", 2D) = "white" {}
+        _DFMask("DF Material Splat", 2D) = "black" {}
   
         [Enum(UV0,0,UV1,1)] _UVSec("UV Set for secondary textures", Float) = 0
 
@@ -48,6 +48,9 @@
 
         #pragma shader_feature _NORMALMAP
         #pragma shader_feature _TEXTURE_MASK
+        #pragma shader_feature _SECOND_UV
+        #pragma shader_feature _EMISSION
+        #pragma shader_feature _METALLICGLOSSMAP
 
         half4       _Color;
         half        _Cutoff;
@@ -60,14 +63,27 @@
         sampler2D _DFMask;
         UNITY_DECLARE_TEX2DARRAY(_MatTex);
 
+        sampler2D   _SpecGlossMap;
+        sampler2D   _MetallicGlossMap;
+        half        _Metallic;
+        half        _Glossiness;
+        half        _GlossMapScale;
+
+        sampler2D   _OcclusionMap;
+        half        _OcclusionStrength;
+
+        half4       _EmissionColor;
+        sampler2D   _EmissionMap;
+
 		struct Input {
             float2 uv_MainTex;
-            float2 uv_BumpMap;
-            float2 uv_DFMask;
+#ifdef _SECOND_UV
+            float2 uv2_MatTex;
+#else
+            float2 uv_MatTex;
+#endif
         };
 
-		half _Glossiness;
-		half _Metallic;
         UNITY_INSTANCING_CBUFFER_START(MyProperties)
         UNITY_DEFINE_INSTANCED_PROP(fixed4, _MatColor)
         UNITY_DEFINE_INSTANCED_PROP(int, _MatIndex)
@@ -75,21 +91,58 @@
 
 #include "blend.cginc"
 
-		void surf (Input IN, inout SurfaceOutputStandard o) {
-			// Albedo comes from a texture tinted by color
-			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-            fixed4 dfTex = UNITY_SAMPLE_TEX2DARRAY(_MatTex, float3(IN.uv_DFMask.xy, UNITY_ACCESS_INSTANCED_PROP(_MatIndex)));
-            fixed3 df = overlay(dfTex.rgb, UNITY_ACCESS_INSTANCED_PROP(_MatColor).rgb);
-            fixed4 splat = tex2D(_DFMask, IN.uv_DFMask);
-            o.Albedo = lerp(c.rgb, df.rgb, splat.r);
-			// Metallic and smoothness come from slider variables
-            o.Metallic = lerp(_Metallic, 1 - UNITY_ACCESS_INSTANCED_PROP(_MatColor).a, splat.r);
-			o.Smoothness = lerp(_Glossiness, dfTex.a, splat.r);
-			o.Alpha = c.a;
-
-#ifdef _NORMALMAP
-            o.Normal = UnpackScaleNormal(tex2D(_BumpMap, IN.uv_BumpMap), _BumpScale);
+        float4 TexCoords(Input IN)
+        {
+            float4 texcoord;
+            texcoord.xy = IN.uv_MainTex; // Always source from uv0
+#ifdef _SECOND_UV
+            texcoord.zw = IN.uv2_MatTex;
+#else
+            texcoord.zw = IN.uv_MatTex;
 #endif
+            return texcoord;
+        }
+
+		void surf (Input IN, inout SurfaceOutputStandard o)
+        {
+            float4 texcoords = TexCoords(IN);
+            //get the mask 
+            fixed4 dfTex = UNITY_SAMPLE_TEX2DARRAY(_MatTex, float3(texcoords.zw, UNITY_ACCESS_INSTANCED_PROP(_MatIndex)));
+            fixed4 matColor = UNITY_ACCESS_INSTANCED_PROP(_MatColor);
+            fixed3 albedo = dfTex.rgb;
+            half smoothness = dfTex.a;
+            half metallic = 1 - matColor.a;
+            albedo = overlay(albedo, matColor.rgb);
+            fixed alpha = 1;
+
+#ifdef _TEXTURE_MASK
+            fixed4 mask = tex2D(_DFMask, texcoords.xy);
+            fixed4 c = tex2D(_MainTex, texcoords.xy) * _Color;
+            fixed4 m = tex2D(_MetallicGlossMap, texcoords.xy);
+            albedo = lerp(albedo, overlay(c.rgb, matColor.rgb), mask.g - mask.r);
+            albedo = lerp(albedo, c.rgb, mask.r);
+            alpha = c.a;
+#ifdef _METALLICGLOSSMAP
+            metallic = lerp(metallic, m.r, mask.r);
+            smoothness = lerp(smoothness, m.a * _GlossMapScale, mask.b);
+#else
+            metallic = lerp(metallic, _Metallic, mask.r);
+            smoothness = lerp(smoothness, _Glossiness, mask.b);
+#endif
+#endif
+
+            //Actual output definitions
+            o.Albedo = albedo;
+#ifdef _NORMALMAP
+            o.Normal = UnpackScaleNormal(tex2D(_BumpMap, texcoords.xy), _BumpScale);
+#endif
+#ifdef _EMISSION
+            o.Emission = tex2D(_EmissionMap, texcoords.xy) * _EmissionColor;
+#endif
+            o.Metallic = metallic;
+            o.Smoothness = smoothness;
+            o.Occlusion = tex2D(_OcclusionMap, texcoords.xy) * _OcclusionStrength;
+			o.Alpha = alpha;
         }
 		ENDCG
 	}
