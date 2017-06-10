@@ -46,7 +46,7 @@ public class BuildingMaterialEditor : ShaderGUI
         public static GUIContent normalMapText = new GUIContent("Normal Map", "Normal Map");
         public static GUIContent occlusionText = new GUIContent("Occlusion", "Occlusion (G)");
         public static GUIContent emissionText = new GUIContent("Emission", "Emission (RGB)");
-        public static GUIContent detailMaskText = new GUIContent("Material Mask", "Mask for DF-set materials");
+        public static GUIContent detailMaskText = new GUIContent("Texture Mask", "Mask for custom materials");
         public static GUIContent materialTextureText = new GUIContent("Material Texture Array", "Texture array for DF-set materials");
         public static GUIContent detailNormalMapText = new GUIContent("Normal Map", "Normal Map");
 
@@ -174,12 +174,12 @@ public class BuildingMaterialEditor : ShaderGUI
             m_MaterialEditor.ShaderProperty(uvSetSecondary, Styles.uvSetLabel.text);
             m_MaterialEditor.TextureScaleOffsetProperty(materialTextureMap);
 
-            // Third properties
-            GUILayout.Label(Styles.forwardText, EditorStyles.boldLabel);
-            if (highlights != null)
-                m_MaterialEditor.ShaderProperty(highlights, Styles.highlightsText);
-            if (reflections != null)
-                m_MaterialEditor.ShaderProperty(reflections, Styles.reflectionsText);
+            //// Third properties
+            //GUILayout.Label(Styles.forwardText, EditorStyles.boldLabel);
+            //if (highlights != null)
+            //    m_MaterialEditor.ShaderProperty(highlights, Styles.highlightsText);
+            //if (reflections != null)
+            //    m_MaterialEditor.ShaderProperty(reflections, Styles.reflectionsText);
         }
         if (EditorGUI.EndChangeCheck())
         {

@@ -112,15 +112,14 @@
             fixed3 albedo = dfTex.rgb;
             half smoothness = dfTex.a;
             half metallic = 1 - matColor.a;
-            albedo = overlay(albedo, matColor.rgb);
             fixed alpha = 1;
 
 #ifdef _TEXTURE_MASK
             fixed4 mask = tex2D(_DFMask, texcoords.xy);
             fixed4 c = tex2D(_MainTex, texcoords.xy) * _Color;
             fixed4 m = tex2D(_MetallicGlossMap, texcoords.xy);
-            albedo = lerp(albedo, overlay(c.rgb, matColor.rgb), mask.g - mask.r);
             albedo = lerp(albedo, c.rgb, mask.r);
+            albedo = lerp(albedo, overlay(albedo, matColor.rgb), mask.g);
             alpha = c.a;
 #ifdef _METALLICGLOSSMAP
             metallic = lerp(metallic, m.r, mask.r);
@@ -129,7 +128,10 @@
             metallic = lerp(metallic, _Metallic, mask.r);
             smoothness = lerp(smoothness, _Glossiness, mask.b);
 #endif
+#else
+            albedo = overlay(albedo, matColor.rgb);
 #endif
+
 
             //Actual output definitions
             o.Albedo = albedo;
