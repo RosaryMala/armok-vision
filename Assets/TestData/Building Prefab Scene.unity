@@ -586,8 +586,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 632c27802609cf448bef79fb5a172114, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  materialColor: {r: 0.78676474, g: 0.78676474, b: 0.78676474, a: 1}
-  materialPattern: {fileID: 18700000, guid: 507d82b7de2c9404cb0a71f3cdb0331f, type: 2}
+  materialColor: {r: 0.78676474, g: 0.22561638, b: 0.22561638, a: 1}
+  materialPattern: {fileID: 18700000, guid: 90371d721a62f5642b53ad88ea1f83f0, type: 2}
   index: 4
 --- !u!4 &238614217
 Transform:

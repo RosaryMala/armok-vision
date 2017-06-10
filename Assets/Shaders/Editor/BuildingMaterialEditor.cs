@@ -92,10 +92,10 @@ public class BuildingMaterialEditor : ShaderGUI
 
     public void FindProperties(MaterialProperty[] props)
     {
-        blendMode = FindProperty("_Mode", props);
+        blendMode = FindProperty("_Mode", props, false);
         albedoMap = FindProperty("_MainTex", props);
         albedoColor = FindProperty("_Color", props);
-        alphaCutoff = FindProperty("_Cutoff", props);
+        alphaCutoff = FindProperty("_Cutoff", props, false);
         specularMap = FindProperty("_SpecGlossMap", props, false);
         specularColor = FindProperty("_SpecColor", props, false);
         metallicMap = FindProperty("_MetallicGlossMap", props, false);
@@ -148,7 +148,7 @@ public class BuildingMaterialEditor : ShaderGUI
         // Detect any changes to the material
         EditorGUI.BeginChangeCheck();
         {
-            BlendModePopup();
+            //BlendModePopup();
 
             // Primary properties
             GUILayout.Label(Styles.primaryMapsText, EditorStyles.boldLabel);
@@ -251,7 +251,7 @@ public class BuildingMaterialEditor : ShaderGUI
     void DoAlbedoArea(Material material)
     {
         m_MaterialEditor.TexturePropertySingleLine(Styles.albedoText, albedoMap, albedoColor);
-        if (((BlendMode)material.GetFloat("_Mode") == BlendMode.Cutout))
+        if (alphaCutoff != null)
         {
             m_MaterialEditor.ShaderProperty(alphaCutoff, Styles.alphaCutoffText.text, MaterialEditor.kMiniTextureFieldLabelIndentLevel + 1);
         }

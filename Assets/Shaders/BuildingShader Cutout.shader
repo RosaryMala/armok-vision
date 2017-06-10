@@ -1,9 +1,9 @@
-﻿Shader "Building/Opaque" {
+﻿Shader "Building/Cutout" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 
-        //_Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
+        _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
 
         _Glossiness("Smoothness", Range(0.0, 1.0)) = 0.5
         _GlossMapScale("Smoothness Scale", Range(0.0, 1.0)) = 1.0
@@ -32,12 +32,12 @@
         [HideInInspector] _Mode("__mode", Float) = 0.0
     }
 	SubShader {
-		Tags { "RenderType"="Opaque" }
+		Tags { "Queue" = "AlphaTest" "RenderType"="TransparentCutout" }
 		LOD 200
 		
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf Standard fullforwardshadows
+		#pragma surface surf Standard fullforwardshadows alphatest:_Cutoff
 
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 4.0
@@ -49,7 +49,6 @@
         #pragma shader_feature _METALLICGLOSSMAP
 
         half4       _Color;
-        half        _Cutoff;
 
         sampler2D   _MainTex;
 
