@@ -1,58 +1,43 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityExtension;
 
 public class BlockMeshSet : MonoBehaviour
 {
-    // The actual unity meshes used to draw things on screen.
-    /// <summary>
-    /// Opaque terrain built from prefab meshes
-    /// </summary>
-    public MeshFilter blocks;
-    MeshRenderer blocksRenderer;
-    /// <summary>
-    /// Cout-out terrain built from prefab meshes
-    /// Includes foliage, and things like floor grates.
-    /// </summary>
-    public MeshFilter stencilBlocks;
-    MeshRenderer stencilRenderer;
-    /// <summary>
-    /// Semitransparent terrain built from prefab meshes.
-    /// </summary>
-    public MeshFilter transparentBlocks;
-    MeshRenderer transparentRenderer;
-    /// <summary>
-    /// Water and magma meshes.
-    /// W dimension is liquid type.
-    /// </summary>
-    public MeshFilter waterBlocks;
-    MeshRenderer waterRenderer;
+    enum MeshType
+    {
+        Tiles,
+        TopTiles,
+        StencilTiles,
+        TopStencilTiles,
+        TransparentTiles,
+        TopTransparentTiles,
+        Water,
+        Magma,
+        Terrain,
+        TopTerrain
+    }
 
-    public MeshFilter lavaBlocks;
-    MeshRenderer lavaRenderer;
+    bool IsTop(MeshType type)
+    {
+        switch (type)
+        {
+            case MeshType.TopTiles:
+            case MeshType.TopStencilTiles:
+            case MeshType.TopTransparentTiles:
+            case MeshType.TopTerrain:
+                return true;
+            default:
+                return false;
+        }
+    }
 
-    /// <summary>
-    /// Procedurally generated terrain blocks.
-    /// </summary>
-    public MeshFilter voxelBlocks;
-    MeshRenderer voxelRenderer;
-
-    public MeshFilter topVoxelBlocks;
-    MeshRenderer topVoxelRenderer;
+    Dictionary<MeshType, MeshFilter> meshFilters = new Dictionary<MeshType, MeshFilter>();
+    Dictionary<MeshType, MeshRenderer> meshRenderers = new Dictionary<MeshType, MeshRenderer>();
 
     public MeshCollider collisionBlocks;
-
-    private void Awake()
-    {
-        blocksRenderer = blocks.GetComponent<MeshRenderer>();
-        stencilRenderer = stencilBlocks.GetComponent<MeshRenderer>();
-        transparentRenderer = transparentBlocks.GetComponent<MeshRenderer>();
-        waterRenderer = waterBlocks.GetComponent<MeshRenderer>();
-        lavaRenderer = lavaBlocks.GetComponent<MeshRenderer>();
-        voxelRenderer = voxelBlocks.GetComponent<MeshRenderer>();
-        topVoxelRenderer = topVoxelBlocks.GetComponent<MeshRenderer>();
-    }
 
     public enum Visibility
     {
@@ -71,33 +56,26 @@ public class BlockMeshSet : MonoBehaviour
                 break;
             case Visibility.Shadows:
                 gameObject.SetActive(true);
-                blocksRenderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
-                stencilRenderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
-                transparentRenderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
-                waterRenderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
-                lavaRenderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
-                voxelRenderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
-                topVoxelRenderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+                foreach (var renderer in meshRenderers)
+                {
+                    renderer.Value.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+                }
                 break;
             case Visibility.Walls:
                 gameObject.SetActive(true);
-                blocksRenderer.shadowCastingMode = ShadowCastingMode.On;
-                stencilRenderer.shadowCastingMode = ShadowCastingMode.On;
-                transparentRenderer.shadowCastingMode = ShadowCastingMode.On;
-                waterRenderer.shadowCastingMode = ShadowCastingMode.On;
-                lavaRenderer.shadowCastingMode = ShadowCastingMode.On;
-                voxelRenderer.shadowCastingMode = ShadowCastingMode.On;
-                topVoxelRenderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+                foreach (var renderer in meshRenderers)
+                {
+                    if (IsTop(renderer.Key))
+                        renderer.Value.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+                    else renderer.Value.shadowCastingMode = ShadowCastingMode.On;
+                }
                 break;
             case Visibility.All:
                 gameObject.SetActive(true);
-                blocksRenderer.shadowCastingMode = ShadowCastingMode.On;
-                stencilRenderer.shadowCastingMode = ShadowCastingMode.On;
-                transparentRenderer.shadowCastingMode = ShadowCastingMode.On;
-                waterRenderer.shadowCastingMode = ShadowCastingMode.On;
-                lavaRenderer.shadowCastingMode = ShadowCastingMode.On;
-                voxelRenderer.shadowCastingMode = ShadowCastingMode.On;
-                topVoxelRenderer.shadowCastingMode = ShadowCastingMode.On;
+                foreach (var renderer in meshRenderers)
+                {
+                    renderer.Value.shadowCastingMode = ShadowCastingMode.On;
+                }
                 break;
             default:
                 break;
@@ -127,20 +105,44 @@ public class BlockMeshSet : MonoBehaviour
 
     public void SetupMaterials()
     {
-        blocksRenderer.sharedMaterial = MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.Opaque, matFlags);
-        stencilRenderer.sharedMaterial = MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.Stencil, matFlags);
-        transparentRenderer.sharedMaterial = MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.Transparent, matFlags);
-        voxelRenderer.sharedMaterial = MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.SplatMap, matFlags);
-        topVoxelRenderer.sharedMaterial = MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.SplatMap, matFlags);
+        foreach (var item in meshRenderers)
+        {
+            switch (item.Key)
+            {
+                case MeshType.Tiles:
+                case MeshType.TopTiles:
+                    item.Value.sharedMaterial = MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.Opaque, matFlags);
+                    break;
+                case MeshType.StencilTiles:
+                case MeshType.TopStencilTiles:
+                    item.Value.sharedMaterial = MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.Stencil, matFlags);
+                    break;
+                case MeshType.TransparentTiles:
+                case MeshType.TopTransparentTiles:
+                    item.Value.sharedMaterial = MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.Transparent, matFlags);
+                    break;
+                case MeshType.Water:
+                    item.Value.sharedMaterial = GameMap.Instance.waterMaterial;
+                    break;
+                case MeshType.Magma:
+                    item.Value.sharedMaterial = GameMap.Instance.magmaMaterial;
+                    break;
+                case MeshType.Terrain:
+                case MeshType.TopTerrain:
+                    item.Value.sharedMaterial = MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.SplatMap, matFlags);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     void UpdatePropertyBlock()
     {
-        blocksRenderer.SetPropertyBlock(matProperties);
-        stencilRenderer.SetPropertyBlock(matProperties);
-        transparentRenderer.SetPropertyBlock(matProperties);
-        voxelRenderer.SetPropertyBlock(matProperties);
-        topVoxelRenderer.SetPropertyBlock(matProperties);
+        foreach (var item in meshRenderers)
+        {
+            item.Value.SetPropertyBlock(matProperties);
+        }
     }
 
     public void SetTerrainMap(Texture2D terrainSplatLayer, Texture2D terrainTintLayer)
@@ -174,92 +176,85 @@ public class BlockMeshSet : MonoBehaviour
         SetupMaterials();
     }
 
+
+
     internal void LoadMeshes(BlockMesher.Result newMeshes, string suffix)
     {
+        bool madeNew = false;
         if (newMeshes.tiles != null)
         {
-            if (blocks == null)
-            {
-                blocks.mesh = new Mesh();
-                blocks.mesh.name = string.Format("block_solid_{0}", suffix);
-            }
-            blocks.mesh.Clear();
-            newMeshes.tiles.CopyToMesh(blocks.mesh);
+            madeNew |= CopyMesh(MeshType.Tiles, newMeshes.tiles);
+        }
+        if(newMeshes.topTiles != null)
+        {
+            madeNew |= CopyMesh(MeshType.TopTiles, newMeshes.topTiles);
         }
         if (newMeshes.stencilTiles != null)
         {
-            if (stencilBlocks.mesh == null)
-            {
-                stencilBlocks.mesh = new Mesh();
-                stencilBlocks.mesh.name = string.Format("block_stencil_{0}", suffix);
-            }
-            stencilBlocks.mesh.Clear();
-            newMeshes.stencilTiles.CopyToMesh(stencilBlocks.mesh);
+            madeNew |= CopyMesh(MeshType.StencilTiles, newMeshes.stencilTiles);
+        }
+        if (newMeshes.topStencilTiles != null)
+        {
+            madeNew |= CopyMesh(MeshType.TopStencilTiles, newMeshes.topStencilTiles);
         }
         if (newMeshes.transparentTiles != null)
         {
-            if (transparentBlocks.mesh == null)
-            {
-                transparentBlocks.mesh = new Mesh();
-                transparentBlocks.mesh.name = string.Format("block_transparent_{0}", suffix);
-            }
-            transparentBlocks.mesh.Clear();
-            newMeshes.transparentTiles.CopyToMesh(transparentBlocks.mesh);
+            madeNew |= CopyMesh(MeshType.TransparentTiles, newMeshes.transparentTiles);
+        }
+        if (newMeshes.topTransparentTiles != null)
+        {
+            madeNew |= CopyMesh(MeshType.TopTransparentTiles, newMeshes.topTransparentTiles);
         }
         if (newMeshes.terrainMesh != null)
         {
-            if (voxelBlocks.mesh == null)
-            {
-                voxelBlocks.mesh = new Mesh();
-                voxelBlocks.mesh.name = string.Format("block_voxel_{0}", suffix);
-            }
-            voxelBlocks.mesh.Clear();
-            newMeshes.terrainMesh.CopyToMesh(voxelBlocks.mesh);
-            voxelBlocks.mesh.RecalculateNormals();
-            voxelBlocks.mesh.RecalculateTangents();
+            madeNew |= CopyMesh(MeshType.Terrain, newMeshes.terrainMesh);
+            meshFilters[MeshType.Terrain].mesh.RecalculateNormals();
+            meshFilters[MeshType.Terrain].mesh.RecalculateTangents();
         }
-        if(newMeshes.topTerrainMesh != null)
+        if (newMeshes.topTerrainMesh != null)
         {
-            if(topVoxelBlocks.mesh == null)
-            {
-                topVoxelBlocks.mesh = new Mesh();
-                topVoxelBlocks.mesh.name = string.Format("block_voxel_top_{0}", suffix);
-            }
-            topVoxelBlocks.mesh.Clear();
-            newMeshes.topTerrainMesh.CopyToMesh(topVoxelBlocks.mesh);
-            topVoxelBlocks.mesh.RecalculateNormals();
-            topVoxelBlocks.mesh.RecalculateTangents();
+            madeNew |= CopyMesh(MeshType.TopTerrain, newMeshes.topTerrainMesh);
+            meshFilters[MeshType.TopTerrain].mesh.RecalculateNormals();
+            meshFilters[MeshType.TopTerrain].mesh.RecalculateTangents();
         }
         if (newMeshes.water != null)
         {
-            if (waterBlocks.mesh == null)
-            {
-                waterBlocks.mesh = new Mesh();
-                waterBlocks.mesh.name = string.Format("liquid_water_{0}", suffix);
-            }
-            waterBlocks.mesh.Clear();
-            newMeshes.water.CopyToMesh(waterBlocks.mesh);
+            madeNew |= CopyMesh(MeshType.Water, newMeshes.water);
         }
         if (newMeshes.magma != null)
         {
-            if (lavaBlocks.mesh == null)
-            {
-                lavaBlocks.mesh = new Mesh();
-                lavaBlocks.mesh.name = string.Format("liquid_magma_{0}", suffix);
-            }
-            lavaBlocks.mesh.Clear();
-            newMeshes.magma.CopyToMesh(lavaBlocks.mesh);
+            madeNew |= CopyMesh(MeshType.Magma, newMeshes.magma);
         }
+        if (madeNew)
+            SetupMaterials();
+    }
+
+    private bool CopyMesh(MeshType type, CPUMesh mesh)
+    {
+        bool madeNew = false;
+        if(!meshFilters.ContainsKey(type))
+        {
+            var newGameObject = new GameObject();
+            newGameObject.transform.parent = transform;
+            newGameObject.transform.LocalReset();
+            newGameObject.name = type.ToString();
+            meshFilters[type] = newGameObject.AddComponent<MeshFilter>();
+            meshRenderers[type] = newGameObject.AddComponent<MeshRenderer>();
+            meshFilters[type].mesh = new Mesh();
+            meshFilters[type].mesh.name = type.ToString() + "_Mesh";
+            madeNew = true;
+        }
+        meshFilters[type].mesh.Clear();
+        mesh.CopyToMesh(meshFilters[type].mesh);
+        return madeNew;
     }
 
     internal void Clear()
     {
-        ClearMesh(blocks.mesh);
-        ClearMesh(stencilBlocks.mesh);
-        ClearMesh(transparentBlocks.mesh);
-        ClearMesh(voxelBlocks.mesh);
-        ClearMesh(waterBlocks.mesh);
-        ClearMesh(lavaBlocks.mesh);
+        foreach (var item in meshFilters)
+        {
+            ClearMesh(item.Value.mesh);
+        }
         if (collisionBlocks != null)
         {
             Destroy(collisionBlocks);
