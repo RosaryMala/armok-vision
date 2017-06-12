@@ -6,6 +6,7 @@ public class BuildingMaterialSetter : MonoBehaviour
 {
     public Color materialColor;
     public Texture2DArray materialPattern;
+    [Range(0,7)]
     public int index;
 
     public void SetMaterials()
