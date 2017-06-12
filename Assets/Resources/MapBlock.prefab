@@ -199,8 +199,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4619065350847752}
-  - {fileID: 4551893624175308}
   - {fileID: 4777652705557432}
+  - {fileID: 4551893624175308}
   - {fileID: 4095555210903904}
   - {fileID: 4031237079298782}
   - {fileID: 4633471072657178}
@@ -233,7 +233,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4172176013992220}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4619065350847752
 Transform:
@@ -272,7 +272,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4172176013992220}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4886492318476858
 Transform:
@@ -591,4 +591,5 @@ MonoBehaviour:
   waterBlocks: {fileID: 33994700877521058}
   lavaBlocks: {fileID: 33143691861816956}
   voxelBlocks: {fileID: 33882562173277030}
+  topVoxelBlocks: {fileID: 33424375801515326}
   collisionBlocks: {fileID: 64364892737566130}

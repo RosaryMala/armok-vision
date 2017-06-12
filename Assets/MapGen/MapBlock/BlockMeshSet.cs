@@ -37,6 +37,7 @@ public class BlockMeshSet : MonoBehaviour
     /// </summary>
     public MeshFilter voxelBlocks;
     MeshRenderer voxelRenderer;
+
     public MeshFilter topVoxelBlocks;
     MeshRenderer topVoxelRenderer;
 
@@ -57,6 +58,7 @@ public class BlockMeshSet : MonoBehaviour
     {
         None,
         Shadows,
+        Walls,
         All
     }
 
@@ -75,6 +77,17 @@ public class BlockMeshSet : MonoBehaviour
                 waterRenderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
                 lavaRenderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
                 voxelRenderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+                topVoxelRenderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+                break;
+            case Visibility.Walls:
+                gameObject.SetActive(true);
+                blocksRenderer.shadowCastingMode = ShadowCastingMode.On;
+                stencilRenderer.shadowCastingMode = ShadowCastingMode.On;
+                transparentRenderer.shadowCastingMode = ShadowCastingMode.On;
+                waterRenderer.shadowCastingMode = ShadowCastingMode.On;
+                lavaRenderer.shadowCastingMode = ShadowCastingMode.On;
+                voxelRenderer.shadowCastingMode = ShadowCastingMode.On;
+                topVoxelRenderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
                 break;
             case Visibility.All:
                 gameObject.SetActive(true);
@@ -84,6 +97,7 @@ public class BlockMeshSet : MonoBehaviour
                 waterRenderer.shadowCastingMode = ShadowCastingMode.On;
                 lavaRenderer.shadowCastingMode = ShadowCastingMode.On;
                 voxelRenderer.shadowCastingMode = ShadowCastingMode.On;
+                topVoxelRenderer.shadowCastingMode = ShadowCastingMode.On;
                 break;
             default:
                 break;
@@ -117,6 +131,16 @@ public class BlockMeshSet : MonoBehaviour
         stencilRenderer.sharedMaterial = MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.Stencil, matFlags);
         transparentRenderer.sharedMaterial = MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.Transparent, matFlags);
         voxelRenderer.sharedMaterial = MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.SplatMap, matFlags);
+        topVoxelRenderer.sharedMaterial = MaterialManager.Instance.GetMaterial(MaterialManager.MaterialType.SplatMap, matFlags);
+    }
+
+    void UpdatePropertyBlock()
+    {
+        blocksRenderer.SetPropertyBlock(matProperties);
+        stencilRenderer.SetPropertyBlock(matProperties);
+        transparentRenderer.SetPropertyBlock(matProperties);
+        voxelRenderer.SetPropertyBlock(matProperties);
+        topVoxelRenderer.SetPropertyBlock(matProperties);
     }
 
     public void SetTerrainMap(Texture2D terrainSplatLayer, Texture2D terrainTintLayer)
@@ -124,10 +148,7 @@ public class BlockMeshSet : MonoBehaviour
         matProperties.SetTexture(terrainSplatID, terrainSplatLayer);
         matProperties.SetTexture(terrainTintID, terrainTintLayer);
 
-        blocksRenderer.SetPropertyBlock(matProperties);
-        stencilRenderer.SetPropertyBlock(matProperties);
-        transparentRenderer.SetPropertyBlock(matProperties);
-        voxelRenderer.SetPropertyBlock(matProperties);
+        UpdatePropertyBlock();
     }
 
     public void SetGrassMap(Texture2D grassSplatLayer, Texture2D grassTintLayer)
@@ -135,10 +156,7 @@ public class BlockMeshSet : MonoBehaviour
         matProperties.SetTexture(grassSplatID, grassSplatLayer);
         matProperties.SetTexture(grassTintID, grassTintLayer);
 
-        blocksRenderer.SetPropertyBlock(matProperties);
-        stencilRenderer.SetPropertyBlock(matProperties);
-        transparentRenderer.SetPropertyBlock(matProperties);
-        voxelRenderer.SetPropertyBlock(matProperties);
+        UpdatePropertyBlock();
 
         matFlags |= MaterialManager.MaterialFlags.Grass;
 
@@ -149,10 +167,7 @@ public class BlockMeshSet : MonoBehaviour
     {
         matProperties.SetTexture(spatterID, splatterLayer);
 
-        blocksRenderer.SetPropertyBlock(matProperties);
-        stencilRenderer.SetPropertyBlock(matProperties);
-        transparentRenderer.SetPropertyBlock(matProperties);
-        voxelRenderer.SetPropertyBlock(matProperties);
+        UpdatePropertyBlock();
 
         matFlags |= MaterialManager.MaterialFlags.Contaminants;
 
@@ -202,6 +217,18 @@ public class BlockMeshSet : MonoBehaviour
             newMeshes.terrainMesh.CopyToMesh(voxelBlocks.mesh);
             voxelBlocks.mesh.RecalculateNormals();
             voxelBlocks.mesh.RecalculateTangents();
+        }
+        if(newMeshes.topTerrainMesh != null)
+        {
+            if(topVoxelBlocks.mesh == null)
+            {
+                topVoxelBlocks.mesh = new Mesh();
+                topVoxelBlocks.mesh.name = string.Format("block_voxel_top_{0}", suffix);
+            }
+            topVoxelBlocks.mesh.Clear();
+            newMeshes.topTerrainMesh.CopyToMesh(topVoxelBlocks.mesh);
+            topVoxelBlocks.mesh.RecalculateNormals();
+            topVoxelBlocks.mesh.RecalculateTangents();
         }
         if (newMeshes.water != null)
         {
