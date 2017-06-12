@@ -22,7 +22,7 @@ public class SplatManager : MonoBehaviour
 
 
     static SplatManager _instance;
-    const int timeout = 100;
+    const int timeout = 10;
 
     public static SplatManager Instance
     {
@@ -91,32 +91,57 @@ public class SplatManager : MonoBehaviour
         UnityEngine.Profiling.Profiler.BeginSample("UpdateTerrainTextures", this);
         var timer = System.Diagnostics.Stopwatch.StartNew();
         for (int z = terrainDirtyBits.GetLength(2) - 1; z >= 0; z--)
+        {
+            bool setTerrain = false;
+            bool setGrass = false;
+            bool setSplat = false;
             for (int y = 0; y < terrainDirtyBits.GetLength(1); y++)
                 for (int x = 0; x < terrainDirtyBits.GetLength(0); x++)
                 {
                     if (terrainDirtyBits[x, y, z])
                     {
                         GenerateTerrainTexture(x, y, z);
+                        setTerrain = true;
                         terrainDirtyBits[x, y, z] = false;
-                        if(timer.ElapsedMilliseconds > timeout)
-                            goto exit;
+                        if (timer.ElapsedMilliseconds > timeout)
+                            break;
                     }
                     if (grassDirtyBits[x, y, z])
                     {
-                        GenerateGrassTexture(x, y, z);
+                        setGrass |= GenerateGrassTexture(x, y, z);
                         grassDirtyBits[x, y, z] = false;
                         if (timer.ElapsedMilliseconds > timeout)
-                            goto exit;
+                            break;
                     }
                     if (spatterDirtyBits[x, y, z])
                     {
                         GenerateSpatterTexture(x, y, z);
+                        setSplat = true;
                         spatterDirtyBits[x, y, z] = false;
                         if (timer.ElapsedMilliseconds > timeout)
-                            goto exit;
+                            break;
                     }
+                    if (timer.ElapsedMilliseconds > timeout)
+                        break;
                 }
-        exit:
+            if (setTerrain || setGrass || setSplat)
+            {
+                UnityEngine.Profiling.Profiler.BeginSample("Apply terrain textures.", this);
+                if (setTerrain)
+                {
+                    UpdateTerrainSplatTexture(z);
+                    UpdateTerrainTintTexture(z);
+                }
+                if (setGrass)
+                    UpdateGrassTexture(z);
+                if (setSplat)
+                {
+                    UpdateSplatterTexture(z);
+                }
+                UnityEngine.Profiling.Profiler.EndSample();
+            }
+
+        }
         UnityEngine.Profiling.Profiler.EndSample();
     }
 
@@ -140,7 +165,6 @@ public class SplatManager : MonoBehaviour
             {
                 int index = x + (y * MapDataStore.MapSize.x);
                 var tile = MapDataStore.Main[x, y, blockZ];
-                UnityEngine.Profiling.Profiler.BeginSample("Find nearest tile", this);
                 if (IsNullOrEmpty(tile))
                 {
                     if (!IsNullOrEmpty(MapDataStore.Main[x - 1, y, blockZ]))
@@ -175,39 +199,26 @@ public class SplatManager : MonoBehaviour
                 || tile.tiletypeMaterial == TiletypeMaterial.PLANT
                 )
                     layer = MeshLayer.LayerMaterial;
-                UnityEngine.Profiling.Profiler.EndSample();
 
-                UnityEngine.Profiling.Profiler.BeginSample("Normal texture lookup", this);
                 NormalContent normalContent;
                 if (ContentLoader.Instance.TerrainShapeTextureConfiguration.GetValue(tile, layer, out normalContent))
                     terrainIndices[index].g = normalContent.StorageIndex;
                 else
                     terrainIndices[index].g = ContentLoader.Instance.DefaultShapeTexIndex;
-                UnityEngine.Profiling.Profiler.EndSample();
 
-                UnityEngine.Profiling.Profiler.BeginSample("Diffuse texture lookup", this);
                 TextureContent materialContent;
                 if (ContentLoader.Instance.MaterialTextureConfiguration.GetValue(tile, layer, out materialContent))
                     terrainIndices[index].r = materialContent.StorageIndex;
                 else
                     terrainIndices[index].r = ContentLoader.Instance.DefaultMatTexIndex;
-                UnityEngine.Profiling.Profiler.EndSample();
 
-                UnityEngine.Profiling.Profiler.BeginSample("Diffuse color lookup", this);
                 ColorContent colorContent;
                 if (ContentLoader.Instance.ColorConfiguration.GetValue(tile, layer, out colorContent))
                     terrainColors[index] = colorContent.color;
                 else
                     terrainColors[index] = Color.gray;
-                UnityEngine.Profiling.Profiler.EndSample();
-
             }
         UnityEngine.Profiling.Profiler.EndSample();
-        UnityEngine.Profiling.Profiler.BeginSample("Apply terrain textures.", this);
-        UpdateTerrainSplatTexture(blockZ);
-        UpdateTerrainTintTexture(blockZ);
-        UnityEngine.Profiling.Profiler.EndSample();
-
         UnityEngine.Profiling.Profiler.EndSample();
     }
     private void CreateBlankTerrainTextures(int blockZ)
@@ -261,10 +272,10 @@ public class SplatManager : MonoBehaviour
         terrainSplatLayers[blockZ].Apply();
     }
 
-    void GenerateGrassTexture(int blockX, int blockY, int blockZ)
+    bool GenerateGrassTexture(int blockX, int blockY, int blockZ)
     {
         if (ContentLoader.Instance == null)
-            return;
+            return false;
         UnityEngine.Profiling.Profiler.BeginSample("GenerateGrassTexture", this);
 
         if (grassTintColor[blockZ] == null || grassSplatColor[blockZ] == null || grassTintColor[blockZ].Length != MapDataStore.MapSize.x * MapDataStore.MapSize.y)
@@ -316,8 +327,16 @@ public class SplatManager : MonoBehaviour
 
             }
         if (grassTiles == 0)
-            return;
+        {
+            UnityEngine.Profiling.Profiler.EndSample();
+            return false;
+        }
+        UnityEngine.Profiling.Profiler.EndSample();
+        return true;
+    }
 
+    void UpdateGrassTexture(int blockZ)
+    {
         if (grassSplatLayers[blockZ] == null)
         {
             grassSplatLayers[blockZ] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGHalf, false, true);
@@ -327,7 +346,7 @@ public class SplatManager : MonoBehaviour
         if (grassSplatLayers[blockZ].width != MapDataStore.MapSize.x || terrainSplatLayers[blockZ].height != MapDataStore.MapSize.y)
             grassSplatLayers[blockZ].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
 
-        grassSplatLayers[blockZ].SetPixels(grassIndices);
+        grassSplatLayers[blockZ].SetPixels(grassSplatColor[blockZ]);
         grassSplatLayers[blockZ].Apply();
 
         if (grassTintLayers[blockZ] == null)
@@ -346,10 +365,8 @@ public class SplatManager : MonoBehaviour
         if (grassTintLayers[blockZ].width != MapDataStore.MapSize.x || terrainTintLayers[blockZ].height != MapDataStore.MapSize.y)
             grassTintLayers[blockZ].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
 
-        grassTintLayers[blockZ].SetPixels(grassColors);
+        grassTintLayers[blockZ].SetPixels(grassTintColor[blockZ]);
         grassTintLayers[blockZ].Apply();
-
-        UnityEngine.Profiling.Profiler.EndSample();
     }
 
     void GenerateSpatterTexture(int blockX, int blockY, int blockZ)
@@ -428,6 +445,11 @@ public class SplatManager : MonoBehaviour
                 textureColors[index] = totalColor;
             }
 
+        UnityEngine.Profiling.Profiler.EndSample();
+    }
+
+    private void UpdateSplatterTexture(int blockZ)
+    {
         if (spatterLayers[blockZ] == null)
         {
             spatterLayers[blockZ] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.ARGB32, false);
@@ -443,10 +465,8 @@ public class SplatManager : MonoBehaviour
         if (spatterLayers[blockZ].width != MapDataStore.MapSize.x || spatterLayers[blockZ].height != MapDataStore.MapSize.y)
             spatterLayers[blockZ].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
 
-        spatterLayers[blockZ].SetPixels(textureColors);
+        spatterLayers[blockZ].SetPixels(spatterColor[blockZ]);
         spatterLayers[blockZ].Apply();
-
-        UnityEngine.Profiling.Profiler.EndSample();
     }
 
     private bool IsNullOrEmpty(MapDataStore.Tile tile)

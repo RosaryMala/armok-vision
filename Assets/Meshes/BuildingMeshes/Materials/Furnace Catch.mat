@@ -21,6 +21,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: ec518c57aedcfc248a07e969df4e82a6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _DFMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _DFMat:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}

@@ -1117,7 +1117,8 @@ public class GameMap : MonoBehaviour
     {
 
         UnityEngine.Profiling.Profiler.BeginSample("FetchNewMeshes", this);
-        if (mesher.HasNewMeshes)
+        var timer = System.Diagnostics.Stopwatch.StartNew();
+        while (mesher.HasNewMeshes)
         {
             if (blockPrefab == null)
                 blockPrefab = Resources.Load<BlockMeshSet>("MapBlock");
@@ -1149,6 +1150,8 @@ public class GameMap : MonoBehaviour
                 newMeshes.collisionMesh.CopyToMesh(collisionMesh);
                 meshSet.collisionBlocks.sharedMesh = collisionMesh;
             }
+            if (timer.ElapsedMilliseconds > timeout)
+                break;
         }
         UnityEngine.Profiling.Profiler.EndSample();
     }
@@ -1697,6 +1700,7 @@ public class GameMap : MonoBehaviour
     //}
 
     public ParticleSystem itemParticleSystem;
+    private const int timeout = 100;
     //ParticleSystem.Particle[] itemParticles;
     //Dictionary<int, ParticleSystem> customItemParticleSystems = new Dictionary<int, ParticleSystem>();
     //Dictionary<int, ParticleSystem.Particle[]> customItemParticles = new Dictionary<int, ParticleSystem.Particle[]>();

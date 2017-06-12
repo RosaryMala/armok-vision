@@ -71,8 +71,6 @@ public class BuildingMaterialEditor : ShaderGUI
     MaterialProperty smoothness = null;
     MaterialProperty smoothnessScale = null;
     MaterialProperty smoothnessMapChannel = null;
-    MaterialProperty highlights = null;
-    MaterialProperty reflections = null;
     MaterialProperty bumpScale = null;
     MaterialProperty bumpMap = null;
     MaterialProperty occlusionStrength = null;
@@ -109,8 +107,6 @@ public class BuildingMaterialEditor : ShaderGUI
         smoothness = FindProperty("_Glossiness", props);
         smoothnessScale = FindProperty("_GlossMapScale", props, false);
         smoothnessMapChannel = FindProperty("_SmoothnessTextureChannel", props, false);
-        highlights = FindProperty("_SpecularHighlights", props, false);
-        reflections = FindProperty("_GlossyReflections", props, false);
         bumpScale = FindProperty("_BumpScale", props);
         bumpMap = FindProperty("_BumpMap", props);
         occlusionStrength = FindProperty("_OcclusionStrength", props);
