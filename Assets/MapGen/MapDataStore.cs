@@ -414,7 +414,7 @@ public class MapDataStore {
         return CopySlice(block.ToDFCoord(), BLOCK_SIZE);
     }
 
-    public void StoreTiles(RemoteFortressReader.MapBlock block, out bool setTiles, out bool setLiquids, out bool setSpatters) {
+    public void StoreTiles(MapBlock block, out bool setTiles, out bool setLiquids, out bool setSpatters) {
         setTiles = block.tiles.Count > 0;
         setLiquids = block.water.Count > 0 || block.magma.Count > 0;
         setSpatters = block.spatterPile.Count > 0;
@@ -504,15 +504,15 @@ public class MapDataStore {
                     }
                     if (this[worldCoord] == null)
                         this[worldCoord] = new Tile(this, worldCoord);
-                    this[worldCoord].buildingType = building.building_type;
-                    this[worldCoord].buildingMaterial = building.material;
-                    this[worldCoord].buildingLocalPos = buildingLocalCoord;
-                    this[worldCoord].buildingDirection = building.direction;
-                    this[worldCoord].buildingItems = building.items;
+                    var tile = this[worldCoord];
+                    tile.buildingType = building.building_type;
+                    tile.buildingMaterial = building.material;
+                    tile.buildingLocalPos = buildingLocalCoord;
+                    tile.buildingDirection = building.direction;
+                    tile.buildingItems = building.items;
                 }
         }
     }
-
     private DFCoord2d GetRotatedLocalCoord(DFCoord worldCoord, BuildingInstance building)
     {
         switch (building.direction)
@@ -624,18 +624,7 @@ public class MapDataStore {
                            MatPairStruct? layer_material = null,
                            MatPairStruct? vein_material = null,
                            int? waterLevel = null,
-                           int? magmaLevel = null,
-                           MatPairStruct? construction_item = null,
-                           int? rampType = null,
-                           BuildingStruct? buildingType = null,
-                           MatPairStruct? buildingMaterial = null,
-                           DFCoord2d? buildingLocalPos = null,
-                           BuildingDirection? buildingDirection = null,
-                           bool? hidden = null,
-                           byte? trunkPercent = null,
-                           DFCoord? positionOnTree = null,
-                           TileDigDesignation? digDesignation = null,
-                           List<Spatter> spatters = null)
+                           int? magmaLevel = null)
     {
         if (!InSliceBounds(coord)) {
             throw new UnityException("Can't modify tile outside of slice");
@@ -649,18 +638,7 @@ public class MapDataStore {
             layer_material,
             vein_material,
             waterLevel,
-            magmaLevel,
-            construction_item,
-            rampType,
-            buildingType,
-            buildingMaterial,
-            buildingLocalPos,
-            buildingDirection,
-            hidden,
-            trunkPercent,
-            positionOnTree,
-            digDesignation,
-            spatters
+            magmaLevel
             );
     }
 
@@ -916,18 +894,7 @@ public class MapDataStore {
                            MatPairStruct? layer_material = null,
                            MatPairStruct? vein_material = null,
                            int? waterLevel = null,
-                           int? magmaLevel = null,
-                           MatPairStruct? construction_item = null,
-                           int? rampType = null,
-                           BuildingStruct? buildingType = null,
-                           MatPairStruct? buildingMaterial = null,
-                           DFCoord2d? buildingLocalPos = null,
-                           BuildingDirection? buildingDirection = null,
-                           bool? hidden = null,
-                           byte? trunkPercent = null,
-                           DFCoord? positionOnTree = null,
-                           TileDigDesignation? digDesignation = null,
-                           List<Spatter> spatters = null)
+                           int? magmaLevel = null)
         {
             if (tileType != null) {
                 this.tileType = tileType.Value;
@@ -950,36 +917,6 @@ public class MapDataStore {
             if (magmaLevel != null) {
                 this.magmaLevel = magmaLevel.Value;
             }
-            if (construction_item != null)
-            {
-                this.construction_item = construction_item.Value;
-            }
-            if(rampType != null)
-            {
-                this.rampType = rampType.Value;
-            }
-            if(buildingType != null)
-            {
-                this.buildingType = buildingType.Value;
-            }
-            if(buildingMaterial != null)
-            {
-                this.buildingMaterial = buildingMaterial.Value;
-            }
-            if (buildingLocalPos != null)
-                this.buildingLocalPos = buildingLocalPos.Value;
-            if (buildingDirection != null)
-                this.buildingDirection = buildingDirection.Value;
-            if (hidden != null)
-                Hidden = hidden.Value;
-            if (trunkPercent != null)
-                this.trunkPercent = trunkPercent.Value;
-            if (positionOnTree != null)
-                this.positionOnTree = positionOnTree.Value;
-            if (digDesignation != null)
-                this.digDesignation = digDesignation.Value;
-            if (spatters != null)
-                this.spatters = spatters;
         }
         public bool isWall {
             get {
