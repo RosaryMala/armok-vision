@@ -260,20 +260,16 @@ public class RegionMaker : MonoBehaviour
                 if (x > 0 && !IsInCoords(fortMin, fortMax, x - 1, y))
                     west = tiles[x - 1, y].elevation;
 
-                MapDataStore.Tile fakeTile = new MapDataStore.Tile(null, new DFCoord(0, 0, 0));
-
-                fakeTile.material = tile.surfaceMaterial;
                 Color terrainColor = Color.green;
                 ColorContent colorDef;
-                if (ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
+                if (ContentLoader.Instance.MaterialColors.TryGetValue(tile.surfaceMaterial, out colorDef))
                     terrainColor = colorDef.color;
 
                 Color plantColor = Color.black;
                 Color stoneColor = Color.grey;
                 foreach (var item in tile.plantMaterials)
                 {
-                    fakeTile.material = item;
-                    if (ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
+                    if (ContentLoader.Instance.MaterialColors.TryGetValue(item, out colorDef))
                         plantColor += colorDef.color;
                 }
                 float plantBlend = Mathf.Pow(tile.vegetation / 100.0f, 0.25f);
@@ -284,8 +280,7 @@ public class RegionMaker : MonoBehaviour
 
                 if (tile.stoneMaterials.Count > 0)
                 {
-                    fakeTile.material = tile.stoneMaterials[0];
-                    if (ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
+                    if (ContentLoader.Instance.MaterialColors.TryGetValue(tile.stoneMaterials[0],  out colorDef))
                         stoneColor = colorDef.color;
                 }
 
@@ -321,9 +316,8 @@ public class RegionMaker : MonoBehaviour
                             case SiteRealizationBuildingType.library:
                             case SiteRealizationBuildingType.tavern:
                                 {
-                                    fakeTile.material = building.material;
                                     Color buildingColor;
-                                    ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef);
+                                    ContentLoader.Instance.MaterialColors.TryGetValue(building.material, out colorDef);
                                     if (colorDef != null)
                                         buildingColor = colorDef.color;
                                     else
@@ -366,9 +360,8 @@ public class RegionMaker : MonoBehaviour
                                 }
                             case SiteRealizationBuildingType.great_tower:
                                 {
-                                    fakeTile.material = building.material;
                                     Color buildingColor;
-                                    if(ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
+                                    if (ContentLoader.Instance.MaterialColors.TryGetValue(building.material, out colorDef))
                                         buildingColor = colorDef.color;
                                     else
                                     {
@@ -382,10 +375,9 @@ public class RegionMaker : MonoBehaviour
                                 }
                             case SiteRealizationBuildingType.castle_tower:
                                 {
-                                    fakeTile.material = building.material;
                                     Color buildingColor;
                                     Color roofColor;
-                                    if(ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
+                                    if (ContentLoader.Instance.MaterialColors.TryGetValue(building.material, out colorDef))
                                     {
                                         buildingColor = colorDef.color;
                                         roofColor = colorDef.color;
@@ -418,9 +410,8 @@ public class RegionMaker : MonoBehaviour
                                 }
                             case SiteRealizationBuildingType.castle_wall:
                                 {
-                                    fakeTile.material = building.material;
                                     Color buildingColor;
-                                    if(ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
+                                    if (ContentLoader.Instance.MaterialColors.TryGetValue(building.material, out colorDef))
                                         buildingColor = colorDef.color;
                                     else
                                     {
@@ -442,11 +433,11 @@ public class RegionMaker : MonoBehaviour
                                 }
                             case SiteRealizationBuildingType.tomb:
                                 {
-                                    fakeTile.material = building.material;
-                                    if (fakeTile.material.mat_type < 0)
-                                        fakeTile.material = new MatPairStruct(0, fakeTile.material.mat_index);
+                                    var mat = building.material;
+                                    if (mat.mat_type < 0)
+                                        mat = new MatPairStruct(0, mat.mat_index);
                                     Color buildingColor;
-                                    if(ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
+                                    if (ContentLoader.Instance.MaterialColors.TryGetValue(mat, out colorDef))
                                         buildingColor = colorDef.color;
                                     else
                                         buildingColor = Color.grey;
@@ -472,9 +463,8 @@ public class RegionMaker : MonoBehaviour
                                             break;
                                         }
 
-                                    fakeTile.material = tree;
                                     Color buildingColor;
-                                    if(ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
+                                    if (ContentLoader.Instance.MaterialColors.TryGetValue(tree, out colorDef))
                                         buildingColor = colorDef.color;
                                     else
                                     {
@@ -529,8 +519,7 @@ public class RegionMaker : MonoBehaviour
                             }
                             Color treeColor = Color.green;
 
-                            fakeTile.material = tree;
-                            if (ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorDef))
+                            if (ContentLoader.Instance.MaterialColors.TryGetValue(tree, out colorDef))
                                 treeColor = colorDef.color;
 
                             if (tree.mat_type == 419) // bare tree
