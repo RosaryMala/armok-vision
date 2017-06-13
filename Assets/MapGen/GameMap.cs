@@ -756,12 +756,14 @@ public class GameMap : MonoBehaviour
             bool setLiquids;
             bool setSpatters;
             UnityEngine.Profiling.Profiler.BeginSample("StoreTiles", this);
-            MapDataStore.Main.StoreTiles(block, out setTiles, out setLiquids, out setSpatters);
+            MapDataStore.StoreTiles(block, out setTiles, out setLiquids, out setSpatters);
             UnityEngine.Profiling.Profiler.EndSample();
-            UnityEngine.Profiling.Profiler.BeginSample("StoreBuildings", this);
-            if(block.buildings.Count > 0)
-                MapDataStore.Main.StoreBuildings(block);
-            UnityEngine.Profiling.Profiler.EndSample();
+            if (block.buildings.Count > 0)
+            {
+                UnityEngine.Profiling.Profiler.BeginSample("StoreBuildings", this);
+                MapDataStore.StoreBuildings(block);
+                UnityEngine.Profiling.Profiler.EndSample();
+            }
             if (setTiles)
             {
                 addSeasonalUpdates(block, block.map_x, block.map_y, block.map_z);
@@ -777,10 +779,10 @@ public class GameMap : MonoBehaviour
             {
                 SetDirtySpatterBlock(block.map_x, block.map_y, block.map_z);
             }
-            foreach (var item in block.items)
-            {
-                ///Send it to item manager later.
-            }
+            //foreach (var item in block.items)
+            //{
+            //    ///Send it to item manager later.
+            //}
             UnityEngine.Profiling.Profiler.BeginSample("BuildingManager.LoadBlock", this);
             Building.BuildingManager.Instance.LoadBlock(block);
             UnityEngine.Profiling.Profiler.EndSample();

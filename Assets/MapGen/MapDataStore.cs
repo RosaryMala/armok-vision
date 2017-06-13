@@ -414,7 +414,18 @@ public class MapDataStore {
         return CopySlice(block.ToDFCoord(), BLOCK_SIZE);
     }
 
-    public void StoreTiles(MapBlock block, out bool setTiles, out bool setLiquids, out bool setSpatters) {
+    private static Tile GetTileForWriting(DFCoord pos)
+    {
+        if (!Main.InSliceBounds(pos))
+            return null;
+        if(Main[pos] == null)
+        {
+            Main[pos] = new Tile(Main, pos);
+        }
+        return Main[pos];
+    }
+
+    public static void StoreTiles(MapBlock block, out bool setTiles, out bool setLiquids, out bool setSpatters) {
         setTiles = block.tiles.Count > 0;
         setLiquids = block.water.Count > 0 || block.magma.Count > 0;
         setSpatters = block.spatterPile.Count > 0;
@@ -426,15 +437,10 @@ public class MapDataStore {
             for (int xx = 0; xx < 16; xx++)
             {
                 DFCoord worldCoord = new DFCoord(block.map_x + xx, block.map_y + yy, block.map_z);
-                if (!InSliceBounds(worldCoord))
-                {
-                    Debug.LogError(worldCoord + " is out of bounds for " + MapSize);
+                var tile = GetTileForWriting(worldCoord);
+                if (tile == null)
                     return;
-                }
                 int netIndex = xx + (yy * 16);
-                if (this[worldCoord] == null)
-                    this[worldCoord] = new Tile(this, worldCoord);
-                var tile = this[worldCoord];
                 if (setTiles)
                 {
                     tile.tileType = block.tiles[netIndex];
@@ -482,7 +488,7 @@ public class MapDataStore {
             }
     }
 
-    public void StoreBuildings(MapBlock block)
+    public static void StoreBuildings(MapBlock block)
     {
         foreach (var building in block.buildings)
         {
@@ -504,14 +510,9 @@ public class MapDataStore {
 
                     DFCoord worldCoord = new DFCoord(xx, yy, block.map_z);
                     DFCoord2d buildingLocalCoord = GetRotatedLocalCoord(worldCoord, building);// = new DFCoord2d(xx - building.pos_x_min, yy - building.pos_y_min);
-                    if (!InSliceBounds(worldCoord))
-                    {
-                        Debug.LogError(worldCoord + " is out of bounds for " + MapSize);
+                    var tile = GetTileForWriting(worldCoord);
+                    if (tile == null)
                         continue;
-                    }
-                    if (this[worldCoord] == null)
-                        this[worldCoord] = new Tile(this, worldCoord);
-                    var tile = this[worldCoord];
                     tile.buildingType = building.building_type;
                     tile.buildingMaterial = building.material;
                     tile.buildingLocalPos = buildingLocalCoord;
@@ -521,7 +522,7 @@ public class MapDataStore {
         }
     }
 
-    private DFCoord2d GetRotatedLocalCoord(DFCoord worldCoord, BuildingInstance building)
+    private static DFCoord2d GetRotatedLocalCoord(DFCoord worldCoord, BuildingInstance building)
     {
         switch (building.direction)
         {
