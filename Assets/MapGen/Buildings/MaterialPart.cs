@@ -11,6 +11,7 @@ namespace Building
         MeshRenderer meshRenderer;
 
         public string item;
+        public int index = -1;
 
         private void Awake()
         {
@@ -22,7 +23,28 @@ namespace Building
             ColorDefinition dye = null;
             MatPairStruct mat = new MatPairStruct(-1,-1);
             if (string.IsNullOrEmpty(item) || ItemTokenList.ItemLookup == null)
-                mat = buildingInput.material;
+            {
+                if (index < 0)
+                    mat = buildingInput.material;
+                else if (index >= buildingInput.items.Count)
+                {
+                    gameObject.SetActive(false);
+                    return;
+                }
+                else
+                {
+                    var buildingItem = buildingInput.items[index];
+                    //skip items that are just stored in the building.
+                    //though they should be later in the list anyway.
+                    if (buildingItem.mode == 0)
+                    {
+                        gameObject.SetActive(false);
+                        return;
+                    }
+                    mat = buildingItem.item.material;
+                    dye = buildingItem.item.dye;
+                }
+            }
             else if (!ItemTokenList.ItemLookup.ContainsKey(item))
             {
                 gameObject.SetActive(false);
@@ -48,7 +70,7 @@ namespace Building
                         break;
                     }
                 }
-                if(!set)
+                if (!set)
                 {
                     gameObject.SetActive(false);
                     return;
