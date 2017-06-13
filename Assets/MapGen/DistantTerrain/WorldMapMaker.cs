@@ -299,12 +299,8 @@ public class WorldMapMaker : MonoBehaviour
                 }
 
 
-                MapDataStore.Tile fakeTile = new MapDataStore.Tile(null, new DFCoord(0, 0, 0));
-
-                fakeTile.material = regionTiles[x, y].surface_material;
-
                 ColorContent colorContent;
-                ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorContent);
+                ContentLoader.Instance.MaterialColors.TryGetValue(regionTiles[x, y].surface_material, out colorContent);
                 Color terrainColor = colorContent.color;
 
                 Color plantColor = Color.black;
@@ -313,8 +309,7 @@ public class WorldMapMaker : MonoBehaviour
 
                 foreach (var item in regionTiles[x, y].plant_materials)
                 {
-                    fakeTile.material = item;
-                    ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorContent);
+                    ContentLoader.Instance.MaterialColors.TryGetValue(item, out colorContent);
                     plantColor += colorContent.color;
                 }
                 if (regionTiles[x, y].plant_materials.Count == 0)
@@ -340,8 +335,7 @@ public class WorldMapMaker : MonoBehaviour
                         treeMat = growth.mat;
                         break;
                     }
-                    fakeTile.material = treeMat;
-                    if (ContentLoader.Instance.ColorConfiguration.GetValue(fakeTile, MeshLayer.StaticMaterial, out colorContent))
+                    if (ContentLoader.Instance.MaterialColors.TryGetValue(treeMat, out colorContent))
                     {
                         treeColor += colorContent.color;
                         treeCount++;
