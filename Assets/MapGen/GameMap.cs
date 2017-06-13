@@ -406,8 +406,8 @@ public class GameMap : MonoBehaviour
         else if (z >= PosZ)
         {
             if (firstPerson)
-            else if(overheadShadows)
                 return BlockMeshSet.Visibility.Walls;
+            else if (overheadShadows)
                 return BlockMeshSet.Visibility.Shadows;
             else
                 return BlockMeshSet.Visibility.None;
@@ -1060,6 +1060,22 @@ public class GameMap : MonoBehaviour
         int ymax = Mathf.Clamp(PosYBlock + GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(1));
         int zmin = Mathf.Clamp(posZ - GameSettings.Instance.rendering.drawRangeDown, 0, mapMeshes.GetLength(2));
         int zmax = Mathf.Clamp(posZ + GameSettings.Instance.rendering.drawRangeUp, 0, mapMeshes.GetLength(2));
+        for (int zz = posZ - 1; zz >= zmin; zz--)
+        {
+            if (zz >= mapMeshes.GetLength(2))
+                continue;
+            if (!blockDirtyBits[PosXBlock, PosYBlock, zz] && !liquidBlockDirtyBits[PosXBlock, PosYBlock, zz])
+            {
+                continue;
+            }
+
+            //If we were not able to add it to the queue, don't try any more till next fame.
+            if (!mesher.Enqueue(new DFCoord(PosXBlock * 16, PosYBlock * 16, zz), blockDirtyBits[PosXBlock, PosYBlock, zz], liquidBlockDirtyBits[PosXBlock, PosYBlock, zz]))
+                return;
+            blockDirtyBits[PosXBlock, PosYBlock, zz] = false;
+            liquidBlockDirtyBits[PosXBlock, PosYBlock, zz] = false;
+            return;
+        }
         for (int zz = posZ - 1; zz >= zmin; zz--)
         {
             if (zz >= mapMeshes.GetLength(2))
