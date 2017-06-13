@@ -758,12 +758,6 @@ public class GameMap : MonoBehaviour
             UnityEngine.Profiling.Profiler.BeginSample("StoreTiles", this);
             MapDataStore.StoreTiles(block, out setTiles, out setLiquids, out setSpatters);
             UnityEngine.Profiling.Profiler.EndSample();
-            if (block.buildings.Count > 0)
-            {
-                UnityEngine.Profiling.Profiler.BeginSample("StoreBuildings", this);
-                MapDataStore.StoreBuildings(block);
-                UnityEngine.Profiling.Profiler.EndSample();
-            }
             if (setTiles)
             {
                 addSeasonalUpdates(block, block.map_x, block.map_y, block.map_z);
@@ -778,6 +772,13 @@ public class GameMap : MonoBehaviour
             if (setSpatters)
             {
                 SetDirtySpatterBlock(block.map_x, block.map_y, block.map_z);
+            }
+
+            if (block.buildings.Count > 0)
+            {
+                UnityEngine.Profiling.Profiler.BeginSample("StoreBuildings", this);
+                MapDataStore.StoreBuildings(block);
+                UnityEngine.Profiling.Profiler.EndSample();
             }
             //foreach (var item in block.items)
             //{
@@ -1306,7 +1307,7 @@ public class GameMap : MonoBehaviour
 
                 statusText.AppendLine();
 
-                if (tile.buildingType != default(BuildingStruct))
+                if (tile.buildingType.building_type >= 0)
                 {
                     if (buildings.ContainsKey(tile.buildingType))
                         statusText.Append("Building: ");
