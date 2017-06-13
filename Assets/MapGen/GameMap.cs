@@ -758,6 +758,10 @@ public class GameMap : MonoBehaviour
             UnityEngine.Profiling.Profiler.BeginSample("StoreTiles", this);
             MapDataStore.Main.StoreTiles(block, out setTiles, out setLiquids, out setSpatters);
             UnityEngine.Profiling.Profiler.EndSample();
+            UnityEngine.Profiling.Profiler.BeginSample("StoreBuildings", this);
+            if(block.buildings.Count > 0)
+                MapDataStore.Main.StoreBuildings(block);
+            UnityEngine.Profiling.Profiler.EndSample();
             if (setTiles)
             {
                 addSeasonalUpdates(block, block.map_x, block.map_y, block.map_z);

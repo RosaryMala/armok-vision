@@ -418,10 +418,12 @@ public class MapDataStore {
         setTiles = block.tiles.Count > 0;
         setLiquids = block.water.Count > 0 || block.magma.Count > 0;
         setSpatters = block.spatterPile.Count > 0;
-        if (!setTiles && !setLiquids) return;
 
-        for (int xx = 0; xx < 16; xx++)
-            for (int yy = 0; yy < 16; yy++)
+        if (!(setTiles || setLiquids || setSpatters))
+            return;
+
+        for (int yy = 0; yy < 16; yy++)
+            for (int xx = 0; xx < 16; xx++)
             {
                 DFCoord worldCoord = new DFCoord(block.map_x + xx, block.map_y + yy, block.map_z);
                 if (!InSliceBounds(worldCoord))
@@ -432,51 +434,56 @@ public class MapDataStore {
                 int netIndex = xx + (yy * 16);
                 if (this[worldCoord] == null)
                     this[worldCoord] = new Tile(this, worldCoord);
-                if (block.tiles.Count > 0)
+                var tile = this[worldCoord];
+                if (setTiles)
                 {
-                    this[worldCoord].tileType = block.tiles[netIndex];
-                    this[worldCoord].material = block.materials[netIndex];
-                    this[worldCoord].base_material = block.base_materials[netIndex];
-                    this[worldCoord].layer_material = block.layer_materials[netIndex];
-                    this[worldCoord].vein_material = block.vein_materials[netIndex];
+                    tile.tileType = block.tiles[netIndex];
+                    tile.material = block.materials[netIndex];
+                    tile.base_material = block.base_materials[netIndex];
+                    tile.layer_material = block.layer_materials[netIndex];
+                    tile.vein_material = block.vein_materials[netIndex];
                     if (block.construction_items != null && block.construction_items.Count > netIndex)
-                        this[worldCoord].construction_item = block.construction_items[netIndex];
+                        tile.construction_item = block.construction_items[netIndex];
                     else
-                        this[worldCoord].construction_item = new MatPairStruct(-1, -1);
+                        tile.construction_item = new MatPairStruct(-1, -1);
                     if (block.tree_percent != null && block.tree_percent.Count > netIndex)
                     {
-                        this[worldCoord].trunkPercent = (byte)block.tree_percent[netIndex];
-                        this[worldCoord].positionOnTree = new DFCoord(block.tree_x[netIndex], block.tree_y[netIndex], block.tree_z[netIndex]);
+                        tile.trunkPercent = (byte)block.tree_percent[netIndex];
+                        tile.positionOnTree = new DFCoord(block.tree_x[netIndex], block.tree_y[netIndex], block.tree_z[netIndex]);
                     }
                     else
                     {
-                        this[worldCoord].trunkPercent = 0;
-                        this[worldCoord].positionOnTree = new DFCoord(0,0,0);
+                        tile.trunkPercent = 0;
+                        tile.positionOnTree = new DFCoord(0,0,0);
                     }
                 }
                 if (setLiquids)
                 {
-                    this[worldCoord].waterLevel = block.water[netIndex];
-                    this[worldCoord].magmaLevel = block.magma[netIndex];
-                    if (this[worldCoord].Hidden != block.hidden[netIndex])
+                    tile.waterLevel = block.water[netIndex];
+                    tile.magmaLevel = block.magma[netIndex];
+                    if (tile.Hidden != block.hidden[netIndex])
                     {
-                        this[worldCoord].Hidden  = block.hidden[netIndex];
+                        tile.Hidden  = block.hidden[netIndex];
                         setTiles = true;
                     }
                     if (block.tile_dig_designation != null && block.tile_dig_designation.Count > netIndex)
                     {
-                        if (this[worldCoord].digDesignation != block.tile_dig_designation[netIndex])
+                        if (tile.digDesignation != block.tile_dig_designation[netIndex])
                         {
-                            this[worldCoord].digDesignation = block.tile_dig_designation[netIndex];
+                            tile.digDesignation = block.tile_dig_designation[netIndex];
                             setTiles = true;
                         }
                     }
                 }
                 if(setSpatters)
                 {
-                    this[worldCoord].spatters = block.spatterPile[netIndex].spatters;
+                    tile.spatters = block.spatterPile[netIndex].spatters;
                 }
             }
+    }
+
+    public void StoreBuildings(MapBlock block)
+    {
         foreach (var building in block.buildings)
         {
             if (building.building_type.building_type == 30)
@@ -485,7 +492,7 @@ public class MapDataStore {
                 for (int yy = building.pos_y_min; yy <= building.pos_y_max; yy++)
                 {
 
-                    if((building.building_type.building_type == 29)
+                    if ((building.building_type.building_type == 29)
                         && building.room != null && building.room.extents.Count > 0)
                     {
                         int buildingLocalX = xx - building.room.pos_x;
@@ -495,7 +502,7 @@ public class MapDataStore {
                             continue;
                     }
 
-                    DFCoord worldCoord = new DFCoord(xx,yy, block.map_z);
+                    DFCoord worldCoord = new DFCoord(xx, yy, block.map_z);
                     DFCoord2d buildingLocalCoord = GetRotatedLocalCoord(worldCoord, building);// = new DFCoord2d(xx - building.pos_x_min, yy - building.pos_y_min);
                     if (!InSliceBounds(worldCoord))
                     {
@@ -513,6 +520,7 @@ public class MapDataStore {
                 }
         }
     }
+
     private DFCoord2d GetRotatedLocalCoord(DFCoord worldCoord, BuildingInstance building)
     {
         switch (building.direction)
@@ -789,7 +797,7 @@ public class MapDataStore {
             magmaLevel = default(int);
             rampType = 0;
             buildingMaterial = default(MatPairStruct);
-            buildingType = default(BuildingStruct);
+            buildingType = new BuildingStruct(-1,-1,-1);
             buildingLocalPos = default(DFCoord2d);
             buildingDirection = 0;
             buildingItems = new List<BuildingItem>();
