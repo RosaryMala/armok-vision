@@ -158,9 +158,10 @@ public class BlockMeshSet : MonoBehaviour
         matProperties.SetTexture(grassSplatID, grassSplatLayer);
         matProperties.SetTexture(grassTintID, grassTintLayer);
 
+        matFlags |= MaterialManager.MaterialFlags.Grass;
+
         UpdatePropertyBlock();
 
-        matFlags |= MaterialManager.MaterialFlags.Grass;
 
         SetupMaterials();
     }
@@ -169,9 +170,9 @@ public class BlockMeshSet : MonoBehaviour
     {
         matProperties.SetTexture(spatterID, splatterLayer);
 
-        UpdatePropertyBlock();
-
         matFlags |= MaterialManager.MaterialFlags.Contaminants;
+
+        UpdatePropertyBlock();
 
         SetupMaterials();
     }
@@ -226,7 +227,10 @@ public class BlockMeshSet : MonoBehaviour
             madeNew |= CopyMesh(MeshType.Magma, newMeshes.magma);
         }
         if (madeNew)
+        {
+            UpdatePropertyBlock();
             SetupMaterials();
+        }
     }
 
     private bool CopyMesh(MeshType type, CPUMesh mesh)
