@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Flags]
+[Flags]
 public enum Directions
 {
     None = 0,
@@ -613,44 +613,6 @@ public class MapDataStore {
         }
     }
 
-    public void SetLiquidLevel(DFCoord coord, int liquidIndex, int liquidLevel) {
-        switch (liquidIndex) {
-        case WATER_INDEX:
-            InitOrModifyTile(coord, waterLevel: liquidLevel);
-            return;
-        case MAGMA_INDEX:
-            InitOrModifyTile(coord, magmaLevel: liquidLevel);
-            return;
-        default:
-            throw new UnityException("No liquid with index "+liquidIndex);
-        }
-    }
-
-    public void InitOrModifyTile(DFCoord coord,
-                           int? tileType = null,
-                           MatPairStruct? material = null,
-                           MatPairStruct? base_material = null,
-                           MatPairStruct? layer_material = null,
-                           MatPairStruct? vein_material = null,
-                           int? waterLevel = null,
-                           int? magmaLevel = null)
-    {
-        if (!InSliceBounds(coord)) {
-            throw new UnityException("Can't modify tile outside of slice");
-        }
-        if (this[coord] == null)
-            this[coord] = new Tile(this, coord);
-        this[coord].Modify(
-            tileType,
-            material,
-            base_material,
-            layer_material,
-            vein_material,
-            waterLevel,
-            magmaLevel
-            );
-    }
-
     public void Reset() {
         for (int x = 0; x < _tiles.GetLength(0); x++) {
             for (int y = 0; y < _tiles.GetLength(1); y++) {
@@ -897,36 +859,6 @@ public class MapDataStore {
             }
         }
 
-        public void Modify (int? tileType = null,
-                           MatPairStruct? material = null,
-                           MatPairStruct? base_material = null,
-                           MatPairStruct? layer_material = null,
-                           MatPairStruct? vein_material = null,
-                           int? waterLevel = null,
-                           int? magmaLevel = null)
-        {
-            if (tileType != null) {
-                this.tileType = tileType.Value;
-            }
-            if (material != null) {
-                this.material = material.Value;
-            }
-            if (base_material != null) {
-                this.base_material = base_material.Value;
-            }
-            if (layer_material != null) {
-                this.layer_material = layer_material.Value;
-            }
-            if (vein_material != null) {
-                this.vein_material = vein_material.Value;
-            }
-            if (waterLevel != null) {
-                this.waterLevel = waterLevel.Value;
-            }
-            if (magmaLevel != null) {
-                this.magmaLevel = magmaLevel.Value;
-            }
-        }
         public bool isWall {
             get {
                 switch (shape) {
