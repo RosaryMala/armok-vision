@@ -373,24 +373,15 @@ public class GameMap : MonoBehaviour
     int PrevZ = -1;
     private void UpdateBlockVisibility()
     {
-        if (PosZ != PrevZ)
+        if (PosZ != PrevZ || firstPerson != prevFirstPerson || overheadShadows != prevShadows)
         {
-            for (int z = Mathf.Min(PosZ, PrevZ) - 1; z <= Mathf.Max(PosZ, PrevZ) + 1; z++)
-            {
-                UpdateBlockVisibility(z);
-                UpdateBlockVisibility(z + GameSettings.Instance.rendering.drawRangeUp);
-                UpdateBlockVisibility(z - GameSettings.Instance.rendering.drawRangeDown);
-            }
-            PrevZ = PosZ;
-        }
-        if(firstPerson != prevFirstPerson || overheadShadows != prevShadows)
-        {
-            for (int z = PosZ; z <= PosZ + GameSettings.Instance.rendering.drawRangeUp; z++)
+            for (int z = 0; z < mapMeshes.GetLength(2); z++)
             {
                 UpdateBlockVisibility(z);
             }
             prevFirstPerson = firstPerson;
             prevShadows = overheadShadows;
+            PrevZ = PosZ;
         }
     }
 
@@ -415,15 +406,17 @@ public class GameMap : MonoBehaviour
         else if (z >= PosZ)
         {
             if (firstPerson)
-                return BlockMeshSet.Visibility.All;
             else if(overheadShadows)
+                return BlockMeshSet.Visibility.Walls;
                 return BlockMeshSet.Visibility.Shadows;
             else
                 return BlockMeshSet.Visibility.None;
         }
+        else if (z == PosZ - 1)
+            return BlockMeshSet.Visibility.All;
         else if (z >= PosZ - GameSettings.Instance.rendering.drawRangeDown)
         {
-            return BlockMeshSet.Visibility.All;
+            return BlockMeshSet.Visibility.Walls;
         }
         else
             return BlockMeshSet.Visibility.None;
@@ -1131,7 +1124,6 @@ public class GameMap : MonoBehaviour
                 mapMeshes[block_x, block_y, block_z] = Instantiate(blockPrefab, DFtoUnityCoord(newMeshes.location), Quaternion.identity, transform);
                 mapMeshes[block_x, block_y, block_z].name = string.Format("Block_{0}_{1}_{2}", block_x, block_y, block_z);
                 mapMeshes[block_x, block_y, block_z].Init();
-                mapMeshes[block_x, block_y, block_z].UpdateVisibility(GetVisibility(block_z));
 
                 SplatManager.Instance.ApplyTerrain(mapMeshes[block_x, block_y, block_z], block_z);
                 SplatManager.Instance.ApplyGrass(mapMeshes[block_x, block_y, block_z], block_z);
@@ -1141,6 +1133,7 @@ public class GameMap : MonoBehaviour
             var meshSet = mapMeshes[block_x, block_y, block_z];
 
             meshSet.LoadMeshes(newMeshes, string.Format("{0}_{1}_{2}", block_x, block_y, block_z));
+            meshSet.UpdateVisibility(GetVisibility(block_z));
 
             if (newMeshes.collisionMesh != null)
             {
