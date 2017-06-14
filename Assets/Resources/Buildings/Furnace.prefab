@@ -336,6 +336,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: 
+  index: -1
 --- !u!114 &114180168607955472
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -348,6 +349,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: 
+  index: -1
 --- !u!114 &114667106848062288
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -396,6 +398,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: 
+  index: -1
 --- !u!114 &114927259364843588
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -408,3 +411,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: 
+  index: -1
