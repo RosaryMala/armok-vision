@@ -343,7 +343,17 @@ public class GameMap : MonoBehaviour
                 } while (File.Exists(screenshotFilename));
 
                 if (Input.GetButton("Mod"))
-                    Application.CaptureScreenshot(screenshotFilename, 8);
+                {
+                    RenderTexture.active = Minimap.Instance.texture;
+                    Texture2D virtualPhoto =
+                        new Texture2D(Minimap.Instance.texture.width, Minimap.Instance.texture.height, TextureFormat.RGB24, false);
+                    // false, meaning no need for mipmaps
+                    virtualPhoto.ReadPixels(new Rect(0, 0, Minimap.Instance.texture.width, Minimap.Instance.texture.height), 0, 0);
+
+                    RenderTexture.active = null; //can help avoid errors 
+
+                    File.WriteAllBytes(screenshotFilename, virtualPhoto.EncodeToPNG());
+                }
                 else
                     Application.CaptureScreenshot(screenshotFilename);
             }
