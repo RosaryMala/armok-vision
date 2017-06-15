@@ -16,6 +16,9 @@ public class Minimap : MonoBehaviour
     public int multiSample = 8;
 
     Camera cam;
+    private FogMode fogMode;
+    private float fogStartDistance;
+    private float fogEndDistance;
 
     private void Awake()
     {
@@ -32,10 +35,38 @@ public class Minimap : MonoBehaviour
         PositionCamera();
     }
 
+    //private void OnPreRender()
+    //{
+    //    ApplyFog();
+    //}
+
+    //private void OnPostRender()
+    //{
+    //    RestoreFog();
+    //}
+
+    private void RestoreFog()
+    {
+        RenderSettings.fogMode = fogMode;
+        RenderSettings.fogStartDistance = fogStartDistance;
+        RenderSettings.fogEndDistance = fogEndDistance;
+    }
+
+    private void ApplyFog()
+    {
+        fogMode = RenderSettings.fogMode;
+        fogStartDistance = RenderSettings.fogStartDistance;
+        fogEndDistance = RenderSettings.fogEndDistance;
+
+        RenderSettings.fogMode = FogMode.Linear;
+        RenderSettings.fogStartDistance = cam.nearClipPlane + GameMap.tileHeight;
+        RenderSettings.fogEndDistance = cam.farClipPlane;
+    }
+
     private void PositionCamera()
     {
         Vector3 verticalPos = GameMap.DFtoUnityCoord(GameMap.Instance.PosXTile, GameMap.Instance.PosYTile, GameMap.Instance.PosZ);
-        transform.position = new Vector3(transform.position.x, verticalPos.y + 3, transform.position.z);
+        transform.position = new Vector3(transform.position.x, verticalPos.y + cam.nearClipPlane + 3, transform.position.z);
     }
 
     private void InitMap()
@@ -51,5 +82,6 @@ public class Minimap : MonoBehaviour
         cam.targetTexture = texture;
         transform.position = GameMap.DFtoUnityCoord(mapSize.x * 8, mapSize.y * 8, mapSize.z) + new Vector3(1,0,1);
         cam.orthographicSize = mapSize.y * 8 * GameMap.tileWidth;
+        cam.farClipPlane = cam.nearClipPlane + ((GameSettings.Instance.rendering.drawRangeDown + 1) * GameMap.tileHeight);
     }
 }
