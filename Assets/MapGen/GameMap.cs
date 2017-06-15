@@ -58,8 +58,11 @@ public class GameMap : MonoBehaviour
             return posYTile / 16;
         }
     }
+    [SerializeField]
     int posXTile = 0;
+    [SerializeField]
     int posYTile = 0;
+    [SerializeField]
     int posZ = 0;
     public int PosZ
     { // Public accessor; used from MapSelection

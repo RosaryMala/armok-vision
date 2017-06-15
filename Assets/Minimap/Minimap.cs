@@ -16,9 +16,11 @@ public class Minimap : MonoBehaviour
     public int multiSample = 8;
 
     Camera cam;
-    private FogMode fogMode;
+    //private FogMode fogMode;
     private float fogStartDistance;
     private float fogEndDistance;
+
+    private int drawRangeDown;
 
     private void Awake()
     {
@@ -33,34 +35,38 @@ public class Minimap : MonoBehaviour
         if (DFConnection.Instance.EmbarkMapSize != mapSize)
             InitMap();
         PositionCamera();
+        if (GameSettings.Instance.rendering.drawRangeDown != drawRangeDown)
+            SetDrawDistance();
     }
 
-    //private void OnPreRender()
-    //{
-    //    ApplyFog();
-    //}
+    private void OnPreRender()
+    {
+        ApplyFog();
+    }
 
-    //private void OnPostRender()
-    //{
-    //    RestoreFog();
-    //}
+    private void OnPostRender()
+    {
+        RestoreFog();
+    }
 
     private void RestoreFog()
     {
-        RenderSettings.fogMode = fogMode;
-        RenderSettings.fogStartDistance = fogStartDistance;
-        RenderSettings.fogEndDistance = fogEndDistance;
+        RenderSettings.fog = true;
+        ////RenderSettings.fogMode = fogMode;
+        //RenderSettings.fogStartDistance = fogStartDistance;
+        //RenderSettings.fogEndDistance = fogEndDistance;
     }
 
     private void ApplyFog()
     {
-        fogMode = RenderSettings.fogMode;
-        fogStartDistance = RenderSettings.fogStartDistance;
-        fogEndDistance = RenderSettings.fogEndDistance;
+        RenderSettings.fog = false;
+        ////fogMode = RenderSettings.fogMode;
+        //fogStartDistance = RenderSettings.fogStartDistance;
+        //fogEndDistance = RenderSettings.fogEndDistance;
 
-        RenderSettings.fogMode = FogMode.Linear;
-        RenderSettings.fogStartDistance = cam.nearClipPlane + GameMap.tileHeight;
-        RenderSettings.fogEndDistance = cam.farClipPlane;
+        ////RenderSettings.fogMode = FogMode.Linear;
+        //RenderSettings.fogStartDistance = cam.nearClipPlane + (GameMap.tileHeight * 3);
+        //RenderSettings.fogEndDistance = cam.farClipPlane;
     }
 
     private void PositionCamera()
@@ -75,13 +81,19 @@ public class Minimap : MonoBehaviour
         if (texture != null)
             texture.Release();
         texture = new RenderTexture(mapSize.x * 16 * multiSample, mapSize.y * 16 * multiSample, 24);
+        texture.useMipMap = true;
         texture.autoGenerateMips = true;
         rawImage.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, mapSize.x * 16);
         rawImage.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, mapSize.y * 16);
         rawImage.texture = texture;
         cam.targetTexture = texture;
-        transform.position = GameMap.DFtoUnityCoord(mapSize.x * 8, mapSize.y * 8, mapSize.z) + new Vector3(1,0,1);
         cam.orthographicSize = mapSize.y * 8 * GameMap.tileWidth;
+    }
+
+    private void SetDrawDistance()
+    {
+        drawRangeDown = GameSettings.Instance.rendering.drawRangeDown;
+        transform.position = GameMap.DFtoUnityCoord(mapSize.x * 8, mapSize.y * 8, mapSize.z) + new Vector3(1, 0, 1);
         cam.farClipPlane = cam.nearClipPlane + ((GameSettings.Instance.rendering.drawRangeDown + 1) * GameMap.tileHeight);
     }
 }

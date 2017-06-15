@@ -12,7 +12,7 @@
 
 	}
 	SubShader {
-		Tags { "RenderType"="Opaque" }
+        Tags { "RenderType" = "Transparent" "Queue" = "Transparent" }
 		LOD 200
 		
 		CGPROGRAM
