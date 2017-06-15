@@ -16,9 +16,11 @@ public class Minimap : MonoBehaviour
     public int multiSample = 8;
 
     Camera cam;
-    //private FogMode fogMode;
+    private FogMode fogMode;
     private float fogStartDistance;
     private float fogEndDistance;
+
+    private float shadowDistance;
 
     private int drawRangeDown;
 
@@ -39,40 +41,41 @@ public class Minimap : MonoBehaviour
             SetDrawDistance();
     }
 
-    private void OnPreRender()
-    {
-        ApplyFog();
-    }
+    //private void OnPreRender()
+    //{
+    //    shadowDistance = QualitySettings.shadowDistance;
+    //    QualitySettings.shadowDistance = cam.farClipPlane;
+    //    ApplyFog();
+    //}
 
-    private void OnPostRender()
+    //private void OnPostRender()
+    //{
+    //    QualitySettings.shadowDistance = shadowDistance;
+    //    RestoreFog();
+    //}
+
+    private void ApplyFog()
     {
-        RestoreFog();
+        //fogMode = RenderSettings.fogMode;
+        fogStartDistance = RenderSettings.fogStartDistance;
+        fogEndDistance = RenderSettings.fogEndDistance;
+
+        //RenderSettings.fogMode = FogMode.Linear;
+        RenderSettings.fogStartDistance = cam.nearClipPlane + (GameMap.tileHeight * 3);
+        RenderSettings.fogEndDistance = cam.farClipPlane;
     }
 
     private void RestoreFog()
     {
-        RenderSettings.fog = true;
-        ////RenderSettings.fogMode = fogMode;
-        //RenderSettings.fogStartDistance = fogStartDistance;
-        //RenderSettings.fogEndDistance = fogEndDistance;
-    }
-
-    private void ApplyFog()
-    {
-        RenderSettings.fog = false;
-        ////fogMode = RenderSettings.fogMode;
-        //fogStartDistance = RenderSettings.fogStartDistance;
-        //fogEndDistance = RenderSettings.fogEndDistance;
-
-        ////RenderSettings.fogMode = FogMode.Linear;
-        //RenderSettings.fogStartDistance = cam.nearClipPlane + (GameMap.tileHeight * 3);
-        //RenderSettings.fogEndDistance = cam.farClipPlane;
+        //RenderSettings.fogMode = fogMode;
+        RenderSettings.fogStartDistance = fogStartDistance;
+        RenderSettings.fogEndDistance = fogEndDistance;
     }
 
     private void PositionCamera()
     {
         Vector3 verticalPos = GameMap.DFtoUnityCoord(GameMap.Instance.PosXTile, GameMap.Instance.PosYTile, GameMap.Instance.PosZ);
-        transform.position = new Vector3(transform.position.x, verticalPos.y + cam.nearClipPlane + 3, transform.position.z);
+        transform.position = new Vector3(transform.position.x, verticalPos.y + cam.nearClipPlane, transform.position.z);
     }
 
     private void InitMap()
@@ -87,13 +90,15 @@ public class Minimap : MonoBehaviour
         rawImage.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, mapSize.y * 16);
         rawImage.texture = texture;
         cam.targetTexture = texture;
-        cam.orthographicSize = mapSize.y * 8 * GameMap.tileWidth;
+        float nearPlane = (mapSize.y * 8 * GameMap.tileWidth) / Mathf.Tan(cam.fieldOfView * 0.5f * Mathf.Deg2Rad);
+        cam.farClipPlane = nearPlane + ((GameSettings.Instance.rendering.drawRangeDown + 1) * GameMap.tileHeight);
+        cam.nearClipPlane = nearPlane;
     }
 
     private void SetDrawDistance()
     {
         drawRangeDown = GameSettings.Instance.rendering.drawRangeDown;
-        transform.position = GameMap.DFtoUnityCoord(mapSize.x * 8, mapSize.y * 8, mapSize.z) + new Vector3(1, 0, 1);
+        transform.position = GameMap.DFtoUnityCoord(mapSize.x * 8, mapSize.y * 8, mapSize.z) + new Vector3(-1, 0, 1);
         cam.farClipPlane = cam.nearClipPlane + ((GameSettings.Instance.rendering.drawRangeDown + 1) * GameMap.tileHeight);
     }
 }

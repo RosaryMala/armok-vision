@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 22318202}
   - component: {fileID: 11438182}
   - component: {fileID: 11446302}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,7 +27,7 @@ GameObject:
   m_Component:
   - component: {fileID: 455242}
   - component: {fileID: 10821562}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Point light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 422910}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: UnitHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60,7 +60,7 @@ GameObject:
   - component: {fileID: 22231344}
   - component: {fileID: 11493514}
   - component: {fileID: 11454360}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: UnitName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78,7 +78,7 @@ GameObject:
   - component: {fileID: 3349260}
   - component: {fileID: 2315868}
   - component: {fileID: 11431700}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Dorf
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -157,6 +157,7 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
 --- !u!33 &3349260
 MeshFilter:
@@ -172,7 +173,7 @@ Light:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 154036}
   m_Enabled: 0
-  serializedVersion: 7
+  serializedVersion: 8
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
@@ -197,6 +198,8 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
 --- !u!114 &11431700
@@ -310,7 +313,7 @@ Canvas:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 106536}
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_RenderMode: 2
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
@@ -319,6 +322,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
