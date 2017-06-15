@@ -1,0 +1,192 @@
+fileFormatVersion: 2
+guid: 8bc97db51efb5924d9f7284052829597
+timeCreated: 1497533781
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Anvil
+    100002: Bellows
+    100004: Furnace
+    100006: Ingot
+    100008: Ingot001
+    100010: Ingot002
+    100012: Ingot003
+    100014: Ingot004
+    100016: Ingot005
+    100018: Ingot006
+    100020: Ingot007
+    100022: //RootNode
+    100024: MetalSupportBar
+    100026: MetalSupportBar001
+    100028: Plane001
+    100030: Quenching Trough
+    100032: Shape001
+    100034: Stump
+    100036: WoodSupport
+    100038: WoodSupport001
+    100040: WoodSupport002
+    100042: WoodSupport003
+    100044: WoodSupport004
+    100046: WoodSupport005
+    400000: Anvil
+    400002: Bellows
+    400004: Furnace
+    400006: Ingot
+    400008: Ingot001
+    400010: Ingot002
+    400012: Ingot003
+    400014: Ingot004
+    400016: Ingot005
+    400018: Ingot006
+    400020: Ingot007
+    400022: //RootNode
+    400024: MetalSupportBar
+    400026: MetalSupportBar001
+    400028: Plane001
+    400030: Quenching Trough
+    400032: Shape001
+    400034: Stump
+    400036: WoodSupport
+    400038: WoodSupport001
+    400040: WoodSupport002
+    400042: WoodSupport003
+    400044: WoodSupport004
+    400046: WoodSupport005
+    2300000: Anvil
+    2300002: Bellows
+    2300004: Furnace
+    2300006: Ingot
+    2300008: Ingot001
+    2300010: Ingot002
+    2300012: Ingot003
+    2300014: Ingot004
+    2300016: Ingot005
+    2300018: Ingot006
+    2300020: Ingot007
+    2300022: MetalSupportBar
+    2300024: MetalSupportBar001
+    2300026: Plane001
+    2300028: Quenching Trough
+    2300030: Stump
+    2300032: WoodSupport
+    2300034: WoodSupport001
+    2300036: WoodSupport002
+    2300038: WoodSupport003
+    2300040: WoodSupport004
+    2300042: WoodSupport005
+    3300000: Anvil
+    3300002: Bellows
+    3300004: Furnace
+    3300006: Ingot
+    3300008: Ingot001
+    3300010: Ingot002
+    3300012: Ingot003
+    3300014: Ingot004
+    3300016: Ingot005
+    3300018: Ingot006
+    3300020: Ingot007
+    3300022: MetalSupportBar
+    3300024: MetalSupportBar001
+    3300026: Plane001
+    3300028: Quenching Trough
+    3300030: Stump
+    3300032: WoodSupport
+    3300034: WoodSupport001
+    3300036: WoodSupport002
+    3300038: WoodSupport003
+    3300040: WoodSupport004
+    3300042: WoodSupport005
+    4300000: Stump
+    4300002: Anvil
+    4300004: Furnace
+    4300006: Bellows
+    4300008: WoodSupport
+    4300010: WoodSupport001
+    4300012: WoodSupport002
+    4300014: WoodSupport003
+    4300016: MetalSupportBar
+    4300018: WoodSupport004
+    4300020: WoodSupport005
+    4300022: MetalSupportBar001
+    4300024: Quenching Trough
+    4300026: Ingot
+    4300028: Plane001
+    4300030: Ingot001
+    4300032: Ingot002
+    4300034: Ingot003
+    4300036: Ingot004
+    4300038: Ingot005
+    4300040: Ingot006
+    4300042: Ingot007
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
