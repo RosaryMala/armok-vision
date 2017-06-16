@@ -8,16 +8,16 @@ namespace Building
     {
         public GameObject part;
 
-        List<GameObject> setParts = new List<GameObject>();
-        List<IBuildingPart> activeParts = new List<IBuildingPart>();
+        public List<GameObject> setParts = new List<GameObject>();
+        public List<IBuildingPart> activeParts = new List<IBuildingPart>();
 
         public void UpdatePart(BuildingInstance buildingInput)
         {
             if (setParts.Count > 0)
             {
-                foreach (var part in activeParts)
+                foreach (var activePart in activeParts)
                 {
-                    part.UpdatePart(buildingInput);
+                    activePart.UpdatePart(buildingInput);
                 }
                 return;
             }
@@ -47,9 +47,13 @@ namespace Building
                         setParts.Add(newPart);
                     }
 
-            foreach (var part in setParts)
+            foreach (var setPart in setParts)
             {
-                activeParts.AddRange(part.GetInterfacesInChildren<IBuildingPart>());
+                activeParts.AddRange(setPart.GetInterfacesInChildren<IBuildingPart>());
+            }
+            foreach (var activePart in activeParts)
+            {
+                activePart.UpdatePart(buildingInput);
             }
         }
     }
