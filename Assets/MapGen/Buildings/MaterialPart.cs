@@ -11,7 +11,9 @@ namespace Building
         MeshRenderer meshRenderer;
 
         public string item;
+        public bool excludeItem = false;
         public int index = -1;
+        public bool allowStored = false;
 
         private void Awake()
         {
@@ -22,7 +24,7 @@ namespace Building
         {
             ColorDefinition dye = null;
             MatPairStruct mat = new MatPairStruct(-1,-1);
-            if (string.IsNullOrEmpty(item) || ItemTokenList.ItemLookup == null)
+            if (string.IsNullOrEmpty(item) || ItemTokenList.ItemLookup == null || excludeItem)
             {
                 if (index < 0)
                     mat = buildingInput.material;
@@ -36,10 +38,18 @@ namespace Building
                     var buildingItem = buildingInput.items[index];
                     //skip items that are just stored in the building.
                     //though they should be later in the list anyway.
-                    if (buildingItem.mode == 0)
+                    if (buildingItem.mode == 0 && !allowStored)
                     {
                         gameObject.SetActive(false);
                         return;
+                    }
+                    if(excludeItem && ItemTokenList.ItemLookup != null)
+                    {
+                        if(buildingItem.item.type == ItemTokenList.ItemLookup[item].mat_pair)
+                        {
+                            gameObject.SetActive(false);
+                            return;
+                        }
                     }
                     mat = buildingItem.item.material;
                     dye = buildingItem.item.dye;
@@ -58,7 +68,7 @@ namespace Building
                 {
                     //skip items that are just stored in the building.
                     //though they should be later in the list anyway.
-                    if (item.mode == 0)
+                    if (item.mode == 0 && !allowStored)
                         continue;
                     //if our setting is a generic item, like any weapon, then any subtype can match.
                     if ((itemCode.mat_index == -1 && itemCode.mat_type == item.item.type.mat_type)

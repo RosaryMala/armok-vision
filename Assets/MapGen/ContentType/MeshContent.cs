@@ -160,22 +160,6 @@ public class MeshContent : IContent
 
                     return Quaternion.identity;
                 }
-            case RotationType.BuildingDirection:
-                {
-                    switch (tile.buildingDirection)
-                    {
-                        case RemoteFortressReader.BuildingDirection.NORTH:
-                            return Quaternion.Euler(0, 0, 0);
-                        case RemoteFortressReader.BuildingDirection.EAST:
-                            return Quaternion.Euler(0, 90, 0);
-                        case RemoteFortressReader.BuildingDirection.SOUTH:
-                            return Quaternion.Euler(0, 180, 0);
-                        case RemoteFortressReader.BuildingDirection.WEST:
-                            return Quaternion.Euler(0, -90, 0);
-                        default:
-                            return Quaternion.Euler(0, 0, 0);
-                    }
-                }
             case RotationType.Random:
                 {
                     if (noise == null)
