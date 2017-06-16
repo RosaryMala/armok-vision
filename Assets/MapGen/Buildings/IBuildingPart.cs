@@ -2,7 +2,7 @@
 
 namespace Building
 {
-    interface IBuildingPart
+    public interface IBuildingPart
     {
         void UpdatePart(BuildingInstance buildingInstance);
     }
