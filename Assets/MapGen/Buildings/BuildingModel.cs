@@ -39,6 +39,15 @@ namespace Building
             if (MapDataStore.Main[pos] != null && rotationType != RotationType.BuildingDirection)
                 transform.localRotation = MeshContent.TranslateRotation(rotationType, MapDataStore.Main[pos]);
 
+            var group = GetComponent<LODGroup>();
+            if (group == null)
+            {
+                group = gameObject.AddComponent<LODGroup>();
+                var lods = new LOD[1];
+                lods[0] = new LOD(0.05f, GetComponentsInChildren<MeshRenderer>());
+                group.SetLODs(lods);
+                group.RecalculateBounds();
+            }
         }
     }
 }
