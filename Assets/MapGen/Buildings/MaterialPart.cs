@@ -11,9 +11,10 @@ namespace Building
         MeshRenderer meshRenderer;
 
         public string item;
-        public bool excludeItem = false;
         public int index = -1;
         public bool allowStored = false;
+        [Tooltip("Used to disallow the last item in a building from being used, such as with traps.")]
+        public int endOffset = 0;
 
         private void Awake()
         {
@@ -24,11 +25,11 @@ namespace Building
         {
             ColorDefinition dye = null;
             MatPairStruct mat = new MatPairStruct(-1,-1);
-            if (string.IsNullOrEmpty(item) || ItemTokenList.ItemLookup == null || excludeItem)
+            if (string.IsNullOrEmpty(item) || ItemTokenList.ItemLookup == null)
             {
                 if (index < 0)
                     mat = buildingInput.material;
-                else if (index >= buildingInput.items.Count)
+                else if (index >= buildingInput.items.Count - endOffset)
                 {
                     gameObject.SetActive(false);
                     return;
@@ -42,14 +43,6 @@ namespace Building
                     {
                         gameObject.SetActive(false);
                         return;
-                    }
-                    if(excludeItem && ItemTokenList.ItemLookup != null)
-                    {
-                        if(buildingItem.item.type == ItemTokenList.ItemLookup[item].mat_pair)
-                        {
-                            gameObject.SetActive(false);
-                            return;
-                        }
                     }
                     mat = buildingItem.item.material;
                     dye = buildingItem.item.dye;

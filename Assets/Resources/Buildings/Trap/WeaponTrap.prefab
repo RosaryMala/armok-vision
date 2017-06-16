@@ -1132,10 +1132,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b086b02903ca51e479499efe5af7778a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: TRAPPARTS
-  excludeItem: 1
+  item: 
   index: 7
   allowStored: 0
+  endOffset: 1
 --- !u!114 &114154110874536756
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1147,10 +1147,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b086b02903ca51e479499efe5af7778a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: TRAPPARTS
-  excludeItem: 1
+  item: 
   index: 1
   allowStored: 0
+  endOffset: 1
 --- !u!114 &114158415609839314
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1162,10 +1162,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b086b02903ca51e479499efe5af7778a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: TRAPPARTS
-  excludeItem: 1
+  item: 
   index: 9
   allowStored: 0
+  endOffset: 1
 --- !u!114 &114185903297764042
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1177,10 +1177,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b086b02903ca51e479499efe5af7778a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: TRAPPARTS
-  excludeItem: 1
+  item: 
   index: 4
   allowStored: 0
+  endOffset: 1
 --- !u!114 &114192365378358568
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1192,10 +1192,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b086b02903ca51e479499efe5af7778a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: TRAPPARTS
-  excludeItem: 1
+  item: 
   index: 0
   allowStored: 0
+  endOffset: 1
 --- !u!114 &114266725937602708
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1223,10 +1223,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b086b02903ca51e479499efe5af7778a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: TRAPPARTS
-  excludeItem: 1
+  item: 
   index: 5
   allowStored: 0
+  endOffset: 1
 --- !u!114 &114360940864468356
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1254,10 +1254,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b086b02903ca51e479499efe5af7778a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: TRAPPARTS
-  excludeItem: 1
+  item: 
   index: 2
   allowStored: 0
+  endOffset: 1
 --- !u!114 &114414680636589074
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1285,10 +1285,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b086b02903ca51e479499efe5af7778a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: TRAPPARTS
-  excludeItem: 1
+  item: 
   index: 3
   allowStored: 0
+  endOffset: 1
 --- !u!114 &114480792284776746
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1416,10 +1416,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b086b02903ca51e479499efe5af7778a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: TRAPPARTS
-  excludeItem: 1
+  item: 
   index: 8
   allowStored: 0
+  endOffset: 1
 --- !u!114 &114688365985187212
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1432,9 +1432,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: TRAPPARTS
-  excludeItem: 0
   index: -1
   allowStored: 0
+  endOffset: 0
 --- !u!114 &114747197238917462
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1478,7 +1478,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b086b02903ca51e479499efe5af7778a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: TRAPPARTS
-  excludeItem: 1
+  item: 
   index: 6
   allowStored: 0
+  endOffset: 1
