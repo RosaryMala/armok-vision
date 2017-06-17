@@ -488,40 +488,6 @@ public class MapDataStore {
             }
     }
 
-    public static void StoreBuildings(MapBlock block)
-    {
-        foreach (var building in block.buildings)
-        {
-            if (building.building_type.building_type == 30)
-                continue; // We won't do civzones right now.
-            for (int xx = building.pos_x_min; xx <= building.pos_x_max; xx++)
-                for (int yy = building.pos_y_min; yy <= building.pos_y_max; yy++)
-                {
-
-                    if ((building.building_type.building_type == 29)
-                        && building.room != null && building.room.extents.Count > 0)
-                    {
-                        int buildingLocalX = xx - building.room.pos_x;
-                        int buildingLocalY = yy - building.room.pos_y;
-
-                        if (building.room.extents[buildingLocalY * building.room.width + buildingLocalX] == 0)
-                            continue;
-                    }
-
-                    DFCoord worldCoord = new DFCoord(xx, yy, block.map_z);
-                    DFCoord2d buildingLocalCoord = GetRotatedLocalCoord(worldCoord, building);// = new DFCoord2d(xx - building.pos_x_min, yy - building.pos_y_min);
-                    var tile = GetTileForWriting(worldCoord);
-                    if (tile == null)
-                        continue;
-                    tile.buildingType = building.building_type;
-                    tile.buildingMaterial = building.material;
-                    tile.buildingLocalPos = buildingLocalCoord;
-                    tile.buildingDirection = building.direction;
-                    tile.buildingItems = building.items;
-                }
-        }
-    }
-
     private static DFCoord2d GetRotatedLocalCoord(DFCoord worldCoord, BuildingInstance building)
     {
         switch (building.direction)
@@ -759,11 +725,6 @@ public class MapDataStore {
             waterLevel = default(int);
             magmaLevel = default(int);
             rampType = 0;
-            buildingMaterial = default(MatPairStruct);
-            buildingType = new BuildingStruct(-1,-1,-1);
-            buildingLocalPos = default(DFCoord2d);
-            buildingDirection = 0;
-            buildingItems = new List<BuildingItem>();
             Hidden = false;
             trunkPercent = 0;
             positionOnTree = default(DFCoord);
@@ -789,11 +750,6 @@ public class MapDataStore {
             waterLevel = orig.waterLevel;
             magmaLevel = orig.magmaLevel;
             RampType = orig.RampType;
-            buildingType = orig.buildingType;
-            buildingMaterial = orig.buildingMaterial;
-            buildingLocalPos = orig.buildingLocalPos;
-            buildingDirection = orig.buildingDirection;
-            buildingItems = orig.buildingItems;
             Hidden = orig.Hidden;
             trunkPercent = orig.trunkPercent;
             positionOnTree = orig.positionOnTree;
@@ -812,11 +768,6 @@ public class MapDataStore {
         public int waterLevel;
         public int magmaLevel;
         int rampType;
-        public BuildingStruct buildingType;
-        public MatPairStruct buildingMaterial;
-        public DFCoord2d buildingLocalPos;
-        public BuildingDirection buildingDirection;
-        public List<BuildingItem> buildingItems;
         private bool _hidden;
         public bool Hidden
         {
@@ -877,10 +828,10 @@ public class MapDataStore {
             get
             {
                 return isWall
-                    || buildingType.building_type == 8 //Door
-                    || buildingType.building_type == 9 //Floodgate
-                    || buildingType.building_type == 16 //WindowGlass
-                    || buildingType.building_type == 17 //WindowGem
+                    //|| buildingType.building_type == 8 //Door
+                    //|| buildingType.building_type == 9 //Floodgate
+                    //|| buildingType.building_type == 16 //WindowGlass
+                    //|| buildingType.building_type == 17 //WindowGem
                     || shape == TiletypeShape.FORTIFICATION //since isWall doesn't handle this.
                     ;
             }

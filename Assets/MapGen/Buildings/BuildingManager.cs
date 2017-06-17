@@ -5,6 +5,7 @@ using RemoteFortressReader;
 using UnityEngine;
 using UnityEngine.Profiling;
 using DFHack;
+using System.Text;
 
 namespace Building
 {
@@ -14,7 +15,10 @@ namespace Building
 
         public BuildingModel defaultBuilding;
 
-        Dictionary<BuildingStruct, BuildingModel> buidlingPrefabs = new Dictionary<BuildingStruct, BuildingModel>();
+        Dictionary<BuildingStruct, BuildingModel> buildingPrefabs = new Dictionary<BuildingStruct, BuildingModel>();
+
+        Dictionary<DFCoord, BuildingInstance> buildingInfoMap = new Dictionary<DFCoord, BuildingInstance>();
+
         void LoadBuildings()
         {
             if (DFConnection.Instance.NetBuildingList == null)
@@ -28,7 +32,7 @@ namespace Building
                 if (loadedBuilding == null)
                     continue;
 
-                buidlingPrefabs[building.building_type] = loadedBuilding;
+                buildingPrefabs[building.building_type] = loadedBuilding;
 
                 Debug.Log("Loaded building: " + path);
 
@@ -69,7 +73,7 @@ namespace Building
                         (building.pos_y_min + building.pos_y_max) / 2,
                         building.pos_z_max);
 
-                    if(type.building_type == 19) //Bridge
+                    if (type.building_type == 19) //Bridge
                     {
                         switch (building.direction)
                         {
@@ -104,14 +108,14 @@ namespace Building
                         }
                     }
 
-                    if (!buidlingPrefabs.ContainsKey(type))
+                    if (!buildingPrefabs.ContainsKey(type))
                         type = new BuildingStruct(type.building_type, type.building_subtype, -1);
-                    if (!buidlingPrefabs.ContainsKey(type))
+                    if (!buildingPrefabs.ContainsKey(type))
                         type = new BuildingStruct(type.building_type, -1, -1);
-                    if (!buidlingPrefabs.ContainsKey(type))
+                    if (!buildingPrefabs.ContainsKey(type))
                         type = new BuildingStruct(-1, -1, -1);
-                    if (buidlingPrefabs.ContainsKey(type))
-                        builtBuilding = Instantiate(buidlingPrefabs[type], GameMap.DFtoUnityCoord(origin), TranslateDirection(building.direction), transform);
+                    if (buildingPrefabs.ContainsKey(type))
+                        builtBuilding = Instantiate(buildingPrefabs[type], GameMap.DFtoUnityCoord(origin), TranslateDirection(building.direction), transform);
                     else
                         builtBuilding = Instantiate(defaultBuilding, GameMap.DFtoUnityCoord(origin), TranslateDirection(building.direction), transform);
 
@@ -123,6 +127,8 @@ namespace Building
                 Profiler.BeginSample("BuildingModel.Initialize");
                 builtBuilding.Initialize(building);
                 Profiler.EndSample();
+
+                StoreBuildingInfo(building);
             }
         }
 
@@ -153,6 +159,76 @@ namespace Building
                 default:
                     return Quaternion.identity;
             }
+        }
+
+        void StoreBuildingInfo(BuildingInstance building)
+        {
+            if (building.building_type.building_type == 30)
+                return; // We won't do civzones right now.
+            for (int zz = building.pos_z_min; zz <= building.pos_z_max; zz++)
+                for (int yy = building.pos_y_min; yy <= building.pos_y_max; yy++)
+                    for (int xx = building.pos_x_min; xx <= building.pos_x_max; xx++)
+                    {
+
+                        if ((building.building_type.building_type == 29)
+                        && building.room != null && building.room.extents.Count > 0)
+                        {
+                            int buildingLocalX = xx - building.room.pos_x;
+                            int buildingLocalY = yy - building.room.pos_y;
+
+                            if (building.room.extents[buildingLocalY * building.room.width + buildingLocalX] == 0)
+                                continue;
+                        }
+                        buildingInfoMap[new DFCoord(xx, yy, zz)] = building;
+                    }
+
+        }
+
+        public string GetBuildingInfo(DFCoord pos)
+        {
+            if (!buildingInfoMap.ContainsKey(pos))
+                return "";
+            if (buildingInfoMap[pos] == null)
+                return "";
+
+            var building = buildingInfoMap[pos];
+
+            StringBuilder statusText = new StringBuilder();
+
+            statusText.Append("Building: ");
+            if (GameMap.buildings.ContainsKey(building.building_type))
+                statusText.Append(GameMap.buildings[building.building_type].id).AppendLine();
+            else
+                statusText.Append(building.building_type).AppendLine();
+
+            if (GameMap.materials.ContainsKey(building.material))
+            {
+                statusText.Append("Building Material: ");
+                statusText.Append(GameMap.materials[building.material].id).AppendLine();
+            }
+            else
+                statusText.Append("Unknown Building Material\n");
+
+            if (building.items != null && building.items.Count > 0)
+            {
+                statusText.Append("Building items:").AppendLine();
+                for(int i = 0; i < building.items.Count && i < 10; i++)
+                {
+                    var item = building.items[i];
+                    if (GameMap.materials.ContainsKey(item.item.material))
+                        statusText.Append(GameMap.materials[item.item.material].id).Append(" ");
+                    if (GameMap.items.ContainsKey(item.item.type))
+                        statusText.Append(GameMap.items[item.item.type].id);
+                    else
+                        statusText.Append(item.item.type);
+                    statusText.Append(" [").Append(item.mode).Append("]").AppendLine();
+                }
+                if (building.items.Count > 10)
+                    statusText.Append("+ ").Append(building.items.Count - 10).Append(" more...");
+                statusText.AppendLine();
+            }
+            statusText.AppendLine();
+            return statusText.ToString();
         }
     }
 }

@@ -786,13 +786,6 @@ public class GameMap : MonoBehaviour
             {
                 SetDirtySpatterBlock(block.map_x, block.map_y, block.map_z);
             }
-
-            if (block.buildings.Count > 0)
-            {
-                UnityEngine.Profiling.Profiler.BeginSample("StoreBuildings", this);
-                MapDataStore.StoreBuildings(block);
-                UnityEngine.Profiling.Profiler.EndSample();
-            }
             //foreach (var item in block.items)
             //{
             //    ///Send it to item manager later.
@@ -1321,40 +1314,7 @@ public class GameMap : MonoBehaviour
 
                 statusText.AppendLine();
 
-                if (tile.buildingType.building_type >= 0)
-                {
-                    if (buildings.ContainsKey(tile.buildingType))
-                        statusText.Append("Building: ");
-                    statusText.Append(buildings[tile.buildingType].id).AppendLine();
-
-                    if (materials.ContainsKey(tile.buildingMaterial))
-                    {
-                        statusText.Append("Building Material: ");
-                        statusText.Append(materials[tile.buildingMaterial].id).AppendLine();
-                    }
-                    else
-                        statusText.Append("Unknown Building Material\n");
-
-                    statusText.Append("Building Coord: ");
-                    statusText.Append(tile.buildingLocalPos).AppendLine();
-                    statusText.Append("Building Direction: ").Append(tile.buildingDirection).AppendLine();
-                    statusText.AppendLine();
-
-                    if (tile.buildingItems != null && tile.buildingItems.Count > 0)
-                    {
-                        statusText.Append("Building items:").AppendLine();
-                        foreach (var item in tile.buildingItems)
-                        {
-                            if (items.ContainsKey(item.item.type))
-                                statusText.Append(items[item.item.type].id);
-                            else
-                                statusText.Append(item.item.type);
-                            statusText.Append(" [").Append(item.mode).Append("]");
-                            statusText.Append((DFCoord)item.item.pos).AppendLine();
-                        }
-                        statusText.AppendLine();
-                    }
-                }
+                statusText.Append(Building.BuildingManager.Instance.GetBuildingInfo(new DFCoord(cursX, cursY, cursZ)));
 
                 if (tile.spatters != null)
                     foreach (var spatter in tile.spatters)

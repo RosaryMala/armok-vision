@@ -107,12 +107,6 @@ abstract public class TileConfiguration<T> where T : IContent, new()
                     output = new TileMaterialConfiguration<T>();
                 }
                 break;
-            case "buildingType":
-                output = new BuildingConfiguration<T>();
-                break;
-            case "buildingPosition":
-                output = new BuildingPosConfiguration<T>();
-                break;
             case "growth":
                 output = new PlantGrowthConfiguration<T>();
                 break;

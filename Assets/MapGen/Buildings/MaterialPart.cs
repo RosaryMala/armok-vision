@@ -12,6 +12,9 @@ namespace Building
 
         public string item;
         public int index = -1;
+        public bool allowStored = false;
+        [Tooltip("Used to disallow the last item in a building from being used, such as with traps.")]
+        public int endOffset = 0;
 
         private void Awake()
         {
@@ -26,7 +29,7 @@ namespace Building
             {
                 if (index < 0)
                     mat = buildingInput.material;
-                else if (index >= buildingInput.items.Count)
+                else if (index >= buildingInput.items.Count - endOffset)
                 {
                     gameObject.SetActive(false);
                     return;
@@ -36,7 +39,7 @@ namespace Building
                     var buildingItem = buildingInput.items[index];
                     //skip items that are just stored in the building.
                     //though they should be later in the list anyway.
-                    if (buildingItem.mode == 0)
+                    if (buildingItem.mode == 0 && !allowStored)
                     {
                         gameObject.SetActive(false);
                         return;
@@ -58,7 +61,7 @@ namespace Building
                 {
                     //skip items that are just stored in the building.
                     //though they should be later in the list anyway.
-                    if (item.mode == 0)
+                    if (item.mode == 0 && !allowStored)
                         continue;
                     //if our setting is a generic item, like any weapon, then any subtype can match.
                     if ((itemCode.mat_index == -1 && itemCode.mat_type == item.item.type.mat_type)
