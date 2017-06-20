@@ -384,6 +384,7 @@ public sealed class DFConnection : MonoBehaviour
         {
             networkClient.disconnect();
             networkClient = null;
+            Debug.LogError("Dwarf Fortress does not seem to be running with DFHack installed!");
             throw new UnityException("DF Connection Failure");
         }
         BindMethods();
@@ -585,7 +586,7 @@ public sealed class DFConnection : MonoBehaviour
     // OnGUI is called for rendering and handling GUI events
     public void OnGUI()
     {
-        if (GameSettings.Instance.game.showDFScreen && !Stomt.StomtPopup.Instance.Visible)
+        if (GameSettings.Instance.game.showDFScreen)
         {
             Event e = Event.current;
             if (e.isKey)

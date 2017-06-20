@@ -226,6 +226,7 @@ namespace Stomt
 
 			return request;
 		}
+		
 		IEnumerator LoadTarget(string target)
 		{
 			HttpWebRequest request = WebRequest("GET", string.Format("{0}/targets/{1}", restServerURL, target));
@@ -288,6 +289,7 @@ namespace Stomt
 			TargetName = (string)responseData["displayname"];
             TargetImageURL = (string)responseData["images"]["profile"][0];
 		}
+		
 		IEnumerator LoadFeedAsync(string target, FeedCallback callback, int offset, int limit)
 		{
 			HttpWebRequest request = WebRequest("GET", string.Format("{0}/targets/{1}/stomts/received?offset={2}&limit={3}", restServerURL, target, offset, limit));
@@ -370,6 +372,7 @@ namespace Stomt
 
 			callback(feed);
 		}
+		
 		IEnumerator CreateStomtAsync(string json)
 		{
 			var data = Encoding.UTF8.GetBytes(json);
@@ -421,6 +424,7 @@ namespace Stomt
 			// Store access token
 			_accessToken = response.Headers["accesstoken"];
 		}
+		
 		IEnumerator CreateStomtWithImageAsync(string jsonImage, string jsonStomt)
 		{
 			var data = Encoding.UTF8.GetBytes(jsonImage);
