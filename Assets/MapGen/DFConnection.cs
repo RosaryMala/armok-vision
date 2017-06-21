@@ -53,7 +53,13 @@ public sealed class DFConnection : MonoBehaviour
 
     #region RPC Bindings
 
-    // Remote bindings
+    //Static bindings
+    private RemoteFunction<dfproto.EmptyMessage, dfproto.StringMessage> dfhackVersionCall;
+    private RemoteFunction<dfproto.EmptyMessage, dfproto.StringMessage> dfVersionCall;
+    private RemoteFunction<dfproto.EmptyMessage, dfproto.GetWorldInfoOut> worldInfoCall;
+    private RemoteFunction<dfproto.CoreRunCommandRequest> commandCall;
+
+    // Plugin bindings
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MaterialList> materialListCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MaterialList> itemListCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.TiletypeList> tiletypeListCall;
@@ -112,6 +118,16 @@ public sealed class DFConnection : MonoBehaviour
             return output;
         else
             return null;
+    }
+
+    /// <summary>
+    /// Bind methods that aren't dependent on the RFR plugin.
+    /// </summary>
+    void BindStaticMethods()
+    {
+        dfhackVersionCall = CreateAndBind<dfproto.EmptyMessage, dfproto.StringMessage>(networkClient, "GetVersion");
+        dfVersionCall = CreateAndBind<dfproto.EmptyMessage, dfproto.StringMessage>(networkClient, "GetDFVersion");
+        worldInfoCall = CreateAndBind<dfproto.EmptyMessage, dfproto.GetWorldInfoOut>(networkClient, "GetWorldInfo");
     }
 
     /// <summary>
@@ -386,9 +402,47 @@ public sealed class DFConnection : MonoBehaviour
             networkClient = null;
             throw new UnityException("DF Connection Failure");
         }
+
+        BindStaticMethods();
+
+        if (dfhackVersionCall != null)
+        {
+            dfproto.StringMessage dfHackVersion;
+            dfhackVersionCall.execute(null, out dfHackVersion);
+            Debug.LogFormat("DFHack Version {0}", dfHackVersion.value);
+        }
+        if (dfVersionCall != null)
+        {
+            dfproto.StringMessage dfVersion;
+            dfVersionCall.execute(null, out dfVersion);
+            Debug.LogFormat("DF Version {0}", dfVersion.value);
+        }
+        if(worldInfoCall != null)
+        {
+            dfproto.GetWorldInfoOut worldInfo;
+            worldInfoCall.execute(null, out worldInfo);
+            if (worldInfo == null)
+                Debug.Log("No world loaded");
+            else
+                Debug.LogFormat("Save Dir {0}", worldInfo.save_dir);
+        }
+
+        var processes = System.Diagnostics.Process.GetProcessesByName("Dwarf Fortress");
+        foreach (var process in processes)
+        {
+            Debug.LogFormat("DF path {0}", process.MainModule.FileName);
+        }
+
+        //networkClient.run_command("unload", new List<string>(new string[] { "RemoteFortressReader" }));
+
+        DFStringStream tempStream = new DFStringStream();
+        networkClient.run_command(tempStream,"ls", new List<string>(new string[] { "RemoteFortressReader" }));
+
+        Debug.Log(tempStream.Value);
+
         BindMethods();
 
-        if(versionInfoCall != null)
+        if (versionInfoCall != null)
         {
             RemoteFortressReader.VersionInfo versionInfo;
             versionInfoCall.execute(null, out versionInfo);

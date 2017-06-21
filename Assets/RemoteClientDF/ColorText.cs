@@ -27,7 +27,7 @@ namespace  DFHack
         COLOR_MAX = COLOR_WHITE
     };
 
-    public class color_ostream
+    public class color_ostream : IDFStream
     {
         string buffer;
         public void printerr(string Format, params object[] Parameters)
@@ -84,16 +84,16 @@ namespace  DFHack
     }
     public class color_ostream_proxy : buffered_color_ostream
     {
-        protected color_ostream target;
+        protected IDFStream target;
 
         //virtual void flush_proxy();
 
-        public color_ostream_proxy(color_ostream targetIn)
+        public color_ostream_proxy(IDFStream targetIn)
         {
             target = targetIn;
         }
 
-        public virtual color_ostream proxy_target() { return target; }
+        public virtual IDFStream proxy_target() { return target; }
 
         public void decode(dfproto.CoreTextNotification data)
         {

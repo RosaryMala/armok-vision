@@ -474,7 +474,7 @@ namespace DFHack
         {
             return bind(client.default_output(), client, name, proto);
         }
-        public bool bind(color_ostream output,
+        public bool bind(IDFStream output,
                   RemoteClient client, string name,
                   string proto = "")
         {
@@ -504,7 +504,7 @@ namespace DFHack
             id = -1;
         }
 
-        protected color_ostream default_ostream()
+        protected IDFStream default_ostream()
         {
             return p_client.default_output();
         }
@@ -545,7 +545,7 @@ namespace DFHack
             return (got == fullsz);
         }
 
-        protected command_result execute<Input, Output>(color_ostream outString, Input input, out Output output)
+        protected command_result execute<Input, Output>(IDFStream outString, Input input, out Output output)
             where Input : class, message_type, new()
             where Output : class, message_type, new()
         {
@@ -730,7 +730,7 @@ namespace DFHack
                 return result;
             }
         }
-        public command_result execute(color_ostream stream)
+        public command_result execute(IDFStream stream)
         {
             Output tempOut;
             command_result result = base.execute<Input, Output>(stream, input, out tempOut);
@@ -749,7 +749,7 @@ namespace DFHack
                 return base.execute<Input, Output>(default_ostream(), input, out output);
             }
         }
-        public command_result execute(color_ostream stream, Input input, out Output output)
+        public command_result execute(IDFStream stream, Input input, out Output output)
         {
             return base.execute<Input, Output>(stream, input, out output);
         }
@@ -783,7 +783,7 @@ namespace DFHack
                 return base.execute<Input, EmptyMessage>(default_ostream(), input, out empty);
             }
         }
-        public command_result execute(color_ostream stream)
+        public command_result execute(IDFStream stream)
         {
             EmptyMessage empty;
             return base.execute<Input, EmptyMessage>(stream, input, out empty);
@@ -798,7 +798,7 @@ namespace DFHack
                 return base.execute<Input, EmptyMessage>(default_ostream(), input, out empty);
             }
         }
-        public command_result execute(color_ostream stream, Input input)
+        public command_result execute(IDFStream stream, Input input)
         {
             EmptyMessage empty;
             return base.execute<Input, EmptyMessage>(stream, input, out empty);
@@ -825,7 +825,7 @@ namespace DFHack
             return true;
         }
 
-        public bool bind(color_ostream outStream, RemoteFunctionBase function,
+        public bool bind(IDFStream outStream, RemoteFunctionBase function,
                   string name, string proto)
         {
             if (!active || socket == null)
@@ -851,7 +851,7 @@ namespace DFHack
             return true;
         }
 
-        public RemoteClient(color_ostream default_output = null)
+        public RemoteClient(IDFStream default_output = null)
         {
             p_default_output = default_output;
             active = false;
@@ -887,7 +887,7 @@ namespace DFHack
                 return portval;
         }
 
-        public color_ostream default_output()
+        public IDFStream default_output()
         {
             return p_default_output;
         }
@@ -1024,7 +1024,7 @@ namespace DFHack
         {
             return run_command(default_output(), cmd, args);
         }
-        public command_result run_command(color_ostream output, string cmd, List<string> args)
+        public command_result run_command(IDFStream output, string cmd, List<string> args)
         {
             if (!active || socket == null)
             {
@@ -1074,7 +1074,7 @@ namespace DFHack
         //private:
         bool active, delete_output;
         public Socket socket;
-        color_ostream p_default_output;
+        IDFStream p_default_output;
 
         RemoteFunction<dfproto.CoreBindRequest, dfproto.CoreBindReply> bind_call;
         RemoteFunction<dfproto.CoreRunCommandRequest> runcmd_call;

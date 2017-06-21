@@ -683,7 +683,7 @@ PlayerSettings:
   facebookSdkVersion: 7.9.1
   apiCompatibilityLevel: 1
   cloudProjectId: 85ea5092-a154-4053-9946-8344a2db8dba
-  projectName: Armok Vision 64 bit Windows
+  projectName: Armok Vision
   organizationId: japa
   cloudEnabled: 0
   enableNewInputSystem: 0
