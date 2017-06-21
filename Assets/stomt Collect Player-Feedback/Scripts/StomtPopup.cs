@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Stomt
@@ -72,14 +71,15 @@ namespace Stomt
         public bool ShowCloseButton = true;
         public bool WouldBecauseText = true; // activates the would/because text
         public bool AutoImageDownload = true; // will automatically download the targetImage after %DelayTime Seconds;
-        public int AutoImageDownloadDelay = 5; // DelayTime in seconds
+        public float AutoImageDownloadDelay = 5; // DelayTime in seconds
         public int CharLimit = 120;
 
-        public static StomtPopup Instance { get; private set; }
+        public delegate void StomtAction();
+        public static event StomtAction OnStomtSend;
+        public static event StomtAction OnWidgetClosed;
 
 		void Awake()
 		{
-
             TargetImageApplied = false;
 
             if(placeholderText == null)
@@ -87,31 +87,63 @@ namespace Stomt
                 Debug.Log("PlaceholderText not found: Find(\"/Message/PlaceholderText\")");
             }
 
-            Instance = this;
-
 			_api = GetComponent<StomtAPI>();
 			_screenshot = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
 
 			Reset();
             StartCoroutine(this.refreshTargetIcon(AutoImageDownloadDelay));
 		}
+
 		void Start()
 		{
             StartedTyping = false;
 			Hide();
 		}
+
 		void Update()
 		{
-			if (Input.GetKeyDown(_toggleKey))
-			{
-                ToggleUI();
-			}
-
             if( (_ui.activeSelf && _api.NetworkError) && !_errorMessage.activeSelf)
             {
                 ShowError();
             }
 		}
+
+        /**
+         *   Enables the Widget/Popup when hidden
+         */
+        public void ShowWidget()
+        {
+            if (!_ui.activeSelf)
+            {
+                StartCoroutine(Show());
+            }
+        }
+
+        /**
+         *  Disables the Widget/Popup when active
+         */
+        public void HideWidget()
+        {
+            if (_ui.activeSelf)
+            {
+                Hide();
+            }
+        }
+
+        void OnGUI()
+        {
+            if (Event.current.Equals(Event.KeyboardEvent(_toggleKey.ToString())) && _toggleKey != KeyCode.None)
+            {
+                if (_ui.activeSelf)
+                {
+                    Hide();
+                }
+                else
+                {
+                    StartCoroutine(Show());
+                }
+            }
+        }
 
 		IEnumerator Show()
 		{
@@ -124,8 +156,6 @@ namespace Stomt
 			Reset();
             _ui.SetActive(true);
             _closeButton.SetActive(ShowCloseButton);
-
-
 
             ShowError();	
 		}
@@ -159,9 +189,13 @@ namespace Stomt
 		{
 			// Hide UI
 			_ui.SetActive(false);
-            EventSystem.current.SetSelectedGameObject(null);
-        }
-        void Reset()
+
+            if (OnWidgetClosed != null)
+            {
+                OnWidgetClosed();
+            }
+		}
+		void Reset()
 		{
 			_targetText.text = _api.TargetName;
 
@@ -261,8 +295,9 @@ namespace Stomt
 
 		public void OnPostButtonPressed()
 		{
-			if (_message.text.Length == 0)
+			if (_message.text.Length == 0 || _message.text.Length <= 8 )
 			{
+				Debug.Log("_message to short!");
 				return;
 			}
 
@@ -276,6 +311,13 @@ namespace Stomt
 			}
 
 			Hide();
+
+
+            if ( OnStomtSend != null)
+            {
+                OnStomtSend();
+            }
+
 		}
 
         private void refreshTargetIcon()
@@ -323,25 +365,5 @@ namespace Stomt
 
             this.RefreshStartText();
         }
-
-        public void ToggleUI()
-        {
-            if (_ui.activeSelf)
-            {
-                Hide();
-            }
-            else
-            {
-                StartCoroutine(Show());
-            }
-        }
-
-        public bool Visible
-        {
-            get
-            {
-                return _ui.activeSelf;
-            }
-        }
-    }
+	}
 }
