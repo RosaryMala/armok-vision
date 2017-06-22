@@ -2,6 +2,7 @@ using DFHack;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using TokenLists;
 using UnityEngine;
@@ -57,7 +58,6 @@ public sealed class DFConnection : MonoBehaviour
     private RemoteFunction<dfproto.EmptyMessage, dfproto.StringMessage> dfhackVersionCall;
     private RemoteFunction<dfproto.EmptyMessage, dfproto.StringMessage> dfVersionCall;
     private RemoteFunction<dfproto.EmptyMessage, dfproto.GetWorldInfoOut> worldInfoCall;
-    private RemoteFunction<dfproto.CoreRunCommandRequest> commandCall;
 
     // Plugin bindings
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MaterialList> materialListCall;
@@ -406,40 +406,7 @@ public sealed class DFConnection : MonoBehaviour
 
         BindStaticMethods();
 
-        if (dfhackVersionCall != null)
-        {
-            dfproto.StringMessage dfHackVersion;
-            dfhackVersionCall.execute(null, out dfHackVersion);
-            Debug.LogFormat("DFHack Version {0}", dfHackVersion.value);
-        }
-        if (dfVersionCall != null)
-        {
-            dfproto.StringMessage dfVersion;
-            dfVersionCall.execute(null, out dfVersion);
-            Debug.LogFormat("DF Version {0}", dfVersion.value);
-        }
-        if(worldInfoCall != null)
-        {
-            dfproto.GetWorldInfoOut worldInfo;
-            worldInfoCall.execute(null, out worldInfo);
-            if (worldInfo == null)
-                Debug.Log("No world loaded");
-            else
-                Debug.LogFormat("Save Dir {0}", worldInfo.save_dir);
-        }
-
-        var processes = System.Diagnostics.Process.GetProcessesByName("Dwarf Fortress");
-        foreach (var process in processes)
-        {
-            Debug.LogFormat("DF path {0}", process.MainModule.FileName);
-        }
-
-        //networkClient.run_command("unload", new List<string>(new string[] { "RemoteFortressReader" }));
-
-        DFStringStream tempStream = new DFStringStream();
-        networkClient.run_command(tempStream,"ls", new List<string>(new string[] { "RemoteFortressReader" }));
-
-        Debug.Log(tempStream.Value);
+        CheckAndUpdatePlugin();
 
         BindMethods();
 
@@ -510,6 +477,39 @@ public sealed class DFConnection : MonoBehaviour
         }
         else {
             connectionManager = new ConnectionManager.UnityThread(this);
+        }
+    }
+
+    private void CheckAndUpdatePlugin()
+    {
+        if (dfhackVersionCall == null || dfVersionCall == null)
+            return;
+        dfproto.StringMessage dfHackVersion = new dfproto.StringMessage();
+        dfproto.StringMessage dfVersion = new dfproto.StringMessage();
+
+        dfhackVersionCall.execute(null, out dfHackVersion);
+        dfVersionCall.execute(null, out dfVersion);
+
+        string pluginDirectory = "Plugins/" + dfVersion.value + "/" + dfHackVersion.value;
+
+#if UNITY_EDITOR
+        pluginDirectory = "ReleaseFiles/" + pluginDirectory;
+#endif
+
+        Directory.CreateDirectory(pluginDirectory);
+
+        //networkClient.run_command("unload", new List<string>(new string[] { "RemoteFortressReader" }));
+        {
+            DFStringStream tempStream = new DFStringStream();
+            networkClient.run_command(tempStream, "lua", new List<string>(new string[] { "!dfhack.getHackPath()" }));
+
+            Debug.Log(tempStream.Value);
+        }
+        {
+            DFStringStream tempStream = new DFStringStream();
+            networkClient.run_command(tempStream, "RemoteFortressReader_version", new List<string>());
+
+            Debug.Log(tempStream.Value);
         }
     }
 
