@@ -6,7 +6,6 @@ using System.IO;
 using System.Threading;
 using TokenLists;
 using UnityEngine;
-
 using Util;
 
 // Class for async communication with DF.
@@ -490,26 +489,48 @@ public sealed class DFConnection : MonoBehaviour
         dfhackVersionCall.execute(null, out dfHackVersion);
         dfVersionCall.execute(null, out dfVersion);
 
-        string pluginDirectory = "Plugins/" + dfVersion.value + "/" + dfHackVersion.value;
-
+        string pluginDirectory = "Plugins/" + dfVersion.value + "/" + dfHackVersion.value + "/";
+        string hackPluginDirectory = "";
 #if UNITY_EDITOR
         pluginDirectory = "ReleaseFiles/" + pluginDirectory;
-#endif
-
         Directory.CreateDirectory(pluginDirectory);
+#endif
+        if (!File.Exists(pluginDirectory + "RemoteFortressReader.plug.dll"))
+            return; //We don't have a compatible plugin
+
+        Version pluginVersion = new Version(0,0,0);
+        Version avVersion = new Version(BuildSettings.Instance.content_version);
 
         //networkClient.run_command("unload", new List<string>(new string[] { "RemoteFortressReader" }));
         {
             DFStringStream tempStream = new DFStringStream();
             networkClient.run_command(tempStream, "lua", new List<string>(new string[] { "!dfhack.getHackPath()" }));
 
-            Debug.Log(tempStream.Value);
+            hackPluginDirectory = tempStream.Value.Trim() + "/plugins/";
         }
         {
             DFStringStream tempStream = new DFStringStream();
             networkClient.run_command(tempStream, "RemoteFortressReader_version", new List<string>());
 
-            Debug.Log(tempStream.Value);
+            var results = tempStream.Value.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+
+            string versionString = results[0].Trim();
+            try
+            {
+                pluginVersion = new Version(versionString);
+            }
+            catch (Exception)
+            {
+            }
+            Debug.Log(pluginVersion);
+        }
+        if (avVersion > pluginVersion)
+        {
+            Debug.Log("Plugin is outdated, updating from " + pluginVersion + " to " + avVersion);
+
+            networkClient.run_command("unload", new List<string>(new string[] { "RemoteFortressReader" }));
+            File.Copy(pluginDirectory + "RemoteFortressReader.plug.dll", hackPluginDirectory + "RemoteFortressReader.plug.dll", true);
+            networkClient.run_command("load", new List<string>(new string[] { "RemoteFortressReader" }));
         }
     }
 

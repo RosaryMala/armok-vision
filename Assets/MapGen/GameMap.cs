@@ -10,11 +10,8 @@ using System.Threading;
 using UnitFlags;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using System;
 using System.Collections;
-using Newtonsoft.Json;
 
 // The class responsible for talking to DF and meshing the data it gets.
 // Relevant vocabulary: A "map tile" is an individual square on the map.
