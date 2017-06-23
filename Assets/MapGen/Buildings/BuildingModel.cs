@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using RemoteFortressReader;
+using UnityEngine;
+using System.Collections.Generic;
 
 namespace Building
 {
@@ -9,6 +12,8 @@ namespace Building
         public RemoteFortressReader.BuildingInstance originalBuilding;
 
         IBuildingPart[] parts;
+        private Matrix4x4[] tilePositions;
+        private List<Collider> selectionColliders = new List<Collider>();
 
         private void Awake()
         {
@@ -48,6 +53,56 @@ namespace Building
                 group.SetLODs(lods);
                 group.RecalculateBounds();
             }
+
+            UpdateTilePositions(buildingInput);
+        }
+
+        private void UpdateTilePositions(BuildingInstance buildingInput)
+        {
+            ClearSelectionColliders();
+            List<Vector3> transformList = new List<Vector3>();
+
+            var room = buildingInput.room;
+            if (room == null || room.extents.Count == 0)
+            {
+                for (int x = buildingInput.pos_x_min; x <= buildingInput.pos_x_max; x++)
+                    for (int y = buildingInput.pos_y_min; y <= buildingInput.pos_y_max; y++)
+                    {
+                        transformList.Add(GameMap.DFtoUnityCoord(x,y,buildingInput.pos_z_max));
+                    }
+            }
+            else
+            {
+                for (int y = 0; y < room.height; y++)
+                    for (int x = 0; x < room.width; x++)
+                    {
+                        var set = room.extents[x + y * room.width];
+                        if (set == 0)
+                            continue;
+                        transformList.Add(GameMap.DFtoUnityCoord(room.pos_x + x, room.pos_y + y, buildingInput.pos_z_max));
+                    }
+            }
+            tilePositions = new Matrix4x4[transformList.Count];
+            for (int i = 0; i < transformList.Count; i++)
+            {
+                Instantiate(BuildingManager.Instance.selectionFloor, transformList[i], Quaternion.identity, transform);
+                tilePositions[i] = Matrix4x4.Translate(transformList[i]);
+            }
+        }
+
+        private void OnMouseOver()
+        {
+            if(tilePositions != null)
+                Graphics.DrawMeshInstanced(BuildingManager.Instance.selectionMesh, 0, BuildingManager.Instance.selectionMaterial, tilePositions);
+        }
+
+        private void ClearSelectionColliders()
+        {
+            foreach (var item in selectionColliders)
+            {
+                Destroy(item);
+            }
+            selectionColliders.Clear();
         }
     }
 }

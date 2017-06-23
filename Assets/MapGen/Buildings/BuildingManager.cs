@@ -15,6 +15,10 @@ namespace Building
 
         public BuildingModel defaultBuilding;
 
+        public Mesh selectionMesh;
+        public Material selectionMaterial;
+        public Collider selectionFloor;
+
         Dictionary<BuildingStruct, BuildingModel> buildingPrefabs = new Dictionary<BuildingStruct, BuildingModel>();
 
         Dictionary<DFCoord, BuildingInstance> buildingInfoMap = new Dictionary<DFCoord, BuildingInstance>();
@@ -39,11 +43,9 @@ namespace Building
             }
         }
 
-        Camera mainCam;
         private void Awake()
         {
             Instance = this;
-            mainCam = Camera.main;
         }
 
         private void Start()
