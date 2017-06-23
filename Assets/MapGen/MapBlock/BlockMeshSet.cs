@@ -60,6 +60,7 @@ public class BlockMeshSet : MonoBehaviour
                 {
                     renderer.Value.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
                 }
+                collisionBlocks.gameObject.layer = 2;
                 break;
             case Visibility.Walls:
                 gameObject.SetActive(true);
@@ -69,6 +70,7 @@ public class BlockMeshSet : MonoBehaviour
                         renderer.Value.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
                     else renderer.Value.shadowCastingMode = ShadowCastingMode.On;
                 }
+                collisionBlocks.gameObject.layer = 0;
                 break;
             case Visibility.All:
                 gameObject.SetActive(true);
@@ -76,6 +78,7 @@ public class BlockMeshSet : MonoBehaviour
                 {
                     renderer.Value.shadowCastingMode = ShadowCastingMode.On;
                 }
+                collisionBlocks.gameObject.layer = 0;
                 break;
             default:
                 break;

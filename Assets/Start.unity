@@ -22815,6 +22815,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultBuilding: {fileID: 114614645816580460, guid: cbf968a1862b11c4e88a9042e3f6968b,
     type: 2}
+  selectionMesh: {fileID: 4300000, guid: 10e01b4acdb136940b8155e8e339420a, type: 3}
+  selectionMaterial: {fileID: 2100000, guid: f33f3e4ce95d3af4ba4c970ad50eece6, type: 2}
+  selectionFloor: {fileID: 65579892388729170, guid: d6c8adb59330c234ea2dece7df83244d,
+    type: 2}
 --- !u!4 &2090294053
 Transform:
   m_ObjectHideFlags: 0

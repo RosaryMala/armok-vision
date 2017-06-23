@@ -55,6 +55,14 @@ namespace Building
             }
 
             UpdateTilePositions(buildingInput);
+
+            foreach (var item in GetComponentsInChildren<Collider>())
+            {
+                if (item.GetComponent<BuildingSelect>() == null)
+                {
+                    item.gameObject.AddComponent<BuildingSelect>().root = this;
+                }
+            }
         }
 
         private void UpdateTilePositions(BuildingInstance buildingInput)
@@ -63,7 +71,7 @@ namespace Building
             List<Vector3> transformList = new List<Vector3>();
 
             var room = buildingInput.room;
-            if (room == null || room.extents.Count == 0)
+            if (room == null || room.extents.Count == 0 || buildingInput.is_room)
             {
                 for (int x = buildingInput.pos_x_min; x <= buildingInput.pos_x_max; x++)
                     for (int y = buildingInput.pos_y_min; y <= buildingInput.pos_y_max; y++)
@@ -90,7 +98,7 @@ namespace Building
             }
         }
 
-        private void OnMouseOver()
+        internal void DrawSelection()
         {
             if(tilePositions != null)
                 Graphics.DrawMeshInstanced(BuildingManager.Instance.selectionMesh, 0, BuildingManager.Instance.selectionMaterial, tilePositions);
