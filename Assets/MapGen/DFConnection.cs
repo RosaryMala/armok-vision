@@ -56,7 +56,6 @@ public sealed class DFConnection : MonoBehaviour
     //Static bindings
     private RemoteFunction<dfproto.EmptyMessage, dfproto.StringMessage> dfhackVersionCall;
     private RemoteFunction<dfproto.EmptyMessage, dfproto.StringMessage> dfVersionCall;
-    private RemoteFunction<dfproto.EmptyMessage, dfproto.GetWorldInfoOut> worldInfoCall;
 
     // Plugin bindings
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MaterialList> materialListCall;
@@ -72,6 +71,7 @@ public sealed class DFConnection : MonoBehaviour
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.WorldMap> worldMapCenterCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.RegionMaps> regionMapCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.CreatureRawList> creatureRawListCall;
+    private RemoteFunction<RemoteFortressReader.ListRequest, RemoteFortressReader.CreatureRawList> partialCreatureRawListCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.PlantRawList> plantRawListCall;
     private RemoteFunction<RemoteFortressReader.KeyboardEvent> keyboardEventCall;
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.ScreenCapture> copyScreenCall;
@@ -126,7 +126,6 @@ public sealed class DFConnection : MonoBehaviour
     {
         dfhackVersionCall = CreateAndBind<dfproto.EmptyMessage, dfproto.StringMessage>(networkClient, "GetVersion");
         dfVersionCall = CreateAndBind<dfproto.EmptyMessage, dfproto.StringMessage>(networkClient, "GetDFVersion");
-        worldInfoCall = CreateAndBind<dfproto.EmptyMessage, dfproto.GetWorldInfoOut>(networkClient, "GetWorldInfo");
     }
 
     /// <summary>
@@ -147,6 +146,7 @@ public sealed class DFConnection : MonoBehaviour
         worldMapCenterCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.WorldMap>(networkClient, "GetWorldMapCenter", "RemoteFortressReader");
         regionMapCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.RegionMaps>(networkClient, "GetRegionMapsNew", "RemoteFortressReader");
         creatureRawListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.CreatureRawList>(networkClient, "GetCreatureRaws", "RemoteFortressReader");
+        partialCreatureRawListCall = CreateAndBind<RemoteFortressReader.ListRequest, RemoteFortressReader.CreatureRawList>(networkClient, "GetPartialCreatureRaws", "RemoteFortressReader");
         plantRawListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.PlantRawList>(networkClient, "GetPlantRaws", "RemoteFortressReader");
         keyboardEventCall = CreateAndBind<RemoteFortressReader.KeyboardEvent>(networkClient, "PassKeyboardEvent", "RemoteFortressReader");
         copyScreenCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.ScreenCapture>(networkClient, "CopyScreen", "RemoteFortressReader");
@@ -165,7 +165,7 @@ public sealed class DFConnection : MonoBehaviour
     private RemoteFortressReader.MaterialList netItemList;
     private RemoteFortressReader.TiletypeList netTiletypeList;
     private RemoteFortressReader.BuildingList netBuildingList;
-    private RemoteFortressReader.CreatureRawList netCreatureRawList;
+    private List<RemoteFortressReader.CreatureRaw> creatureRaws;
     private RemoteFortressReader.PlantRawList netPlantRawList;
 
     // Output queues
@@ -261,9 +261,9 @@ public sealed class DFConnection : MonoBehaviour
         get { return netBuildingList; }
     }
 
-    public RemoteFortressReader.CreatureRawList NetCreatureRawList
+    public List<RemoteFortressReader.CreatureRaw> CreatureRaws
     {
-        get { return netCreatureRawList; }
+        get { return creatureRaws; }
     }
 
     public RemoteFortressReader.PlantRawList NetPlantRawList
@@ -387,10 +387,22 @@ public sealed class DFConnection : MonoBehaviour
         mapResetRequested.Set();
     }
 
+    public void QuitGame()
+    {
+        // save any game data here
+#if UNITY_EDITOR
+        // Application.Quit() does not work in the editor so
+        // UnityEditor.EditorApplication.isPlaying need to be set to false to end the game
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+         Application.Quit();
+#endif
+    }
+
     /// <summary>
-    /// Connect to DF, fetch initial data, start things running
+    /// Connect to DF, and register basic RPC functions.
     /// </summary>
-    void ConnectAndInit()
+    void Connect()
     {
         blockRequest.blocks_needed = BlocksToFetch;
         networkClient = new DFHack.RemoteClient(dfNetworkOut);
@@ -399,14 +411,35 @@ public sealed class DFConnection : MonoBehaviour
         {
             networkClient.disconnect();
             networkClient = null;
-            Debug.LogError("Dwarf Fortress does not seem to be running with DFHack installed!");
+            ModalPanel.Instance.Choice(
+                "Armok Vision could not find a running instance of Dwarf Fortress!\n\n" +
+                "Please make sure you have Dwarf Fortress running, with the latest version of DFHack installed.", Connect, QuitGame, "Retry", "Quit");
             throw new UnityException("DF Connection Failure");
         }
 
         BindStaticMethods();
 
-        CheckAndUpdatePlugin();
+        if (GameSettings.Instance.game.askToUpdatePlugin)
+        {
+            CheckPlugin();
+        }
+        else
+        {
+            Init();
+        }
 
+    }
+
+
+    bool inited = false;
+    /// <summary>
+    /// Register AV-specific functions, and get things rolling.
+    /// </summary>
+    void Init()
+    {
+        if (inited)
+            return;
+        inited = true;
         BindMethods();
 
         if (versionInfoCall != null)
@@ -414,7 +447,7 @@ public sealed class DFConnection : MonoBehaviour
             RemoteFortressReader.VersionInfo versionInfo;
             versionInfoCall.execute(null, out versionInfo);
             Debug.LogFormat("Connected to DF version {0}, running DFHack version {1}, and RemoteFortressReader version {2}", versionInfo.dwarf_fortress_version, versionInfo.dfhack_version, versionInfo.remote_fortress_reader_version);
-            if(GoogleAnalyticsV4.instance != null)
+            if (GoogleAnalyticsV4.instance != null)
                 GoogleAnalyticsV4.instance.SendDeviceData(versionInfo.dwarf_fortress_version, versionInfo.remote_fortress_reader_version);
         }
         else
@@ -433,7 +466,7 @@ public sealed class DFConnection : MonoBehaviour
             viewInfoCall.execute(null, out viewInfo);
             netViewInfo.Set(viewInfo);
         }
-        if(copyScreenCall != null)
+        if (copyScreenCall != null)
         {
             RemoteFortressReader.ScreenCapture screenCapture;
             copyScreenCall.execute(null, out screenCapture);
@@ -474,44 +507,54 @@ public sealed class DFConnection : MonoBehaviour
         {
             connectionManager = new ConnectionManager.AltThread(this);
         }
-        else {
+        else
+        {
             connectionManager = new ConnectionManager.UnityThread(this);
         }
     }
 
-    private void CheckAndUpdatePlugin()
+    string DFHackPluginDirectory
     {
-        if (dfhackVersionCall == null || dfVersionCall == null)
-            return;
-        dfproto.StringMessage dfHackVersion = new dfproto.StringMessage();
-        dfproto.StringMessage dfVersion = new dfproto.StringMessage();
+        get
+        {
+            DFStringStream tempStream = new DFStringStream();
+            networkClient.run_command(tempStream, "lua", new List<string>(new string[] { "!dfhack.getHackPath()" }));
 
-        dfhackVersionCall.execute(null, out dfHackVersion);
-        dfVersionCall.execute(null, out dfVersion);
+            return tempStream.Value.Trim() + "/plugins/";
+        }
+    }
 
-        string pluginDirectory = "Plugins/" + dfVersion.value + "/" + dfHackVersion.value + "/";
-        string hackPluginDirectory = "";
+    string AVPluginDirectory
+    {
+        get
+        {
+            if (dfhackVersionCall == null || dfVersionCall == null)
+                return "";
+            dfproto.StringMessage dfHackVersion = new dfproto.StringMessage();
+            dfproto.StringMessage dfVersion = new dfproto.StringMessage();
+
+            dfhackVersionCall.execute(null, out dfHackVersion);
+            dfVersionCall.execute(null, out dfVersion);
+
+            string pluginDirectory = "Plugins/" + dfVersion.value + "/" + dfHackVersion.value + "/";
 #if UNITY_EDITOR
-        pluginDirectory = "ReleaseFiles/" + pluginDirectory;
-        Directory.CreateDirectory(pluginDirectory);
+            pluginDirectory = "ReleaseFiles/" + pluginDirectory;
+            Directory.CreateDirectory(pluginDirectory);
 #endif
-        if (!File.Exists(pluginDirectory + "RemoteFortressReader.plug.dll"))
-            return; //We don't have a compatible plugin
+            return pluginDirectory;
+        }
+    }
 
+    private void CheckPlugin()
+    {
         Version pluginVersion = new Version(0,0,0);
         Version avVersion = new Version(BuildSettings.Instance.content_version);
 
         //networkClient.run_command("unload", new List<string>(new string[] { "RemoteFortressReader" }));
         {
             DFStringStream tempStream = new DFStringStream();
-            networkClient.run_command(tempStream, "lua", new List<string>(new string[] { "!dfhack.getHackPath()" }));
-
-            hackPluginDirectory = tempStream.Value.Trim() + "/plugins/";
-        }
-        {
-            DFStringStream tempStream = new DFStringStream();
             networkClient.run_command(tempStream, "RemoteFortressReader_version", new List<string>());
-
+            Debug.Log(tempStream.Value);
             var results = tempStream.Value.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
             string versionString = results[0].Trim();
@@ -522,16 +565,41 @@ public sealed class DFConnection : MonoBehaviour
             catch (Exception)
             {
             }
-            Debug.Log(pluginVersion);
         }
         if (avVersion > pluginVersion)
         {
-            Debug.Log("Plugin is outdated, updating from " + pluginVersion + " to " + avVersion);
+            if (!File.Exists(AVPluginDirectory + "RemoteFortressReader.plug.dll"))
+            {
+                ModalPanel.Instance.Choice(string.Format(
+                    "You appear to be running on an out-dated version of the RemoteFortressReader plugin.\n\n"+
+                    "You're running version {0} of the plugin, while Armok Vision expects a plugin versioned {1} or above.\n\n"+
+                    "A compatible version of the plugin has not been found. Please let the developers know which version of DFHack and DF you are running, so they can make one.", pluginVersion, avVersion), Init, DisableUpdate, "Okay.", "Don't ask again");
+                return; //We don't have a compatible plugin
+            }
+            else
+            {
+                ModalPanel.Instance.Choice(string.Format(
+                    "You appear to be running on an out-dated version of the RemoteFortressReader plugin.\n\n" +
+                    "You're running version {0} of the plugin, while Armok Vision expects a plugin versioned {1} or above.\n\n" +
+                    "A compatible version of the plugin has been found. Would you like to update it?", pluginVersion, avVersion), UpdatePlugin, Init, DisableUpdate,"Yes", "No.", "Don't ask again");
+                return; //We don't have a compatible plugin
 
-            networkClient.run_command("unload", new List<string>(new string[] { "RemoteFortressReader" }));
-            File.Copy(pluginDirectory + "RemoteFortressReader.plug.dll", hackPluginDirectory + "RemoteFortressReader.plug.dll", true);
-            networkClient.run_command("load", new List<string>(new string[] { "RemoteFortressReader" }));
+            }
         }
+    }
+
+    void DisableUpdate()
+    {
+        GameSettings.Instance.game.askToUpdatePlugin = false;
+        Init();
+    }
+
+    void UpdatePlugin()
+    {
+        networkClient.run_command("unload", new List<string>(new string[] { "RemoteFortressReader" }));
+        File.Copy(AVPluginDirectory + "RemoteFortressReader.plug.dll", DFHackPluginDirectory + "RemoteFortressReader.plug.dll", true);
+        networkClient.run_command("load", new List<string>(new string[] { "RemoteFortressReader" }));
+        Init();
     }
 
     void Disconnect()
@@ -557,8 +625,30 @@ public sealed class DFConnection : MonoBehaviour
             tiletypeListCall.execute(null, out netTiletypeList);
         if (buildingListCall != null)
             buildingListCall.execute(null, out netBuildingList);
-        if (creatureRawListCall != null)
+        if (partialCreatureRawListCall != null)
+        {
+            creatureRaws = new List<RemoteFortressReader.CreatureRaw>();
+            int returnedItems = int.MaxValue;
+            RemoteFortressReader.CreatureRawList netCreatureRawList;
+            int count = 0;
+            for (int start = 0; returnedItems != 0; start += 50)
+            {
+                RemoteFortressReader.ListRequest request = new RemoteFortressReader.ListRequest();
+                request.list_start = start;
+                request.list_end = start + 50;
+                partialCreatureRawListCall.execute(request, out netCreatureRawList);
+                returnedItems = netCreatureRawList.creature_raws.Count;
+                creatureRaws.AddRange(netCreatureRawList.creature_raws);
+                count++;
+            }
+            Debug.LogFormat("Got {0} creatures raws in {1} batches", creatureRaws.Count, count);
+        }
+        else if (creatureRawListCall != null)
+        {
+            RemoteFortressReader.CreatureRawList netCreatureRawList;
             creatureRawListCall.execute(null, out netCreatureRawList);
+            creatureRaws = netCreatureRawList.creature_raws;
+        }
         if (plantRawListCall != null)
             plantRawListCall.execute(null, out netPlantRawList);
     }
@@ -614,10 +704,10 @@ public sealed class DFConnection : MonoBehaviour
             Debug.Log("Plant Raws fetched: " + netPlantRawList.plant_raws.Count);
         }
 
-        if(netCreatureRawList != null)
+        if(creatureRaws != null)
         {
-            CreatureTokenList.CreatureRawList = netCreatureRawList.creature_raws;
-            Debug.Log("Creature Raws fetched: " + netCreatureRawList.creature_raws.Count);
+            CreatureTokenList.CreatureRawList = creatureRaws;
+            Debug.Log("Creature Raws fetched: " + creatureRaws.Count);
         }
 
         //Debug.Log("Buildingtypes fetched: " + netBuildingList.building_list.Count);
@@ -634,12 +724,11 @@ public sealed class DFConnection : MonoBehaviour
 
         try
         {
-            ConnectAndInit();
+            Connect();
         }
         catch (UnityException e)
         {
-
-            Debug.LogError(e.Message);
+            Debug.LogException(e);
         }
 
     }

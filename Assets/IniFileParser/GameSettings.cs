@@ -121,6 +121,7 @@ public class GameSettings : MonoBehaviour
     {
         public bool showDFScreen = false;
         public AnalyticsChoice analytics = AnalyticsChoice.Unknown;
+        public bool askToUpdatePlugin = true;
     }
     [Serializable]
     public class Debug

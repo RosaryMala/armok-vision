@@ -32,11 +32,11 @@ namespace  DFHack
         string buffer;
         public void printerr(string Format, params object[] Parameters)
         {
-            Debug.LogError(Tools.sprintf(Format, Parameters));
+            Debug.LogError(Tools.sprintf(Format, Parameters).TrimEnd('\r', '\n'));
         }
         public void print(string Format, params object[] Parameters)
         {
-            Debug.Log(Tools.sprintf(Format, Parameters));
+            Debug.Log(Tools.sprintf(Format, Parameters).TrimEnd('\r', '\n'));
         }
         public void begin_batch()
         {

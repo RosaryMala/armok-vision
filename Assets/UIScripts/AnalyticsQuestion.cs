@@ -9,8 +9,19 @@ public class AnalyticsQuestion : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        if (GameSettings.Instance.game.analytics != GameSettings.AnalyticsChoice.Unknown)
-            gameObject.SetActive(false);
+        if (GameSettings.Instance.game.analytics == GameSettings.AnalyticsChoice.Unknown)
+            ModalPanel.Instance.Choice(
+                "Allow Armok Vision to collect anonymous usage data to help development?\n"+
+"\n" +
+"Data collected includes:\n" +
+" *Armok Vision Version\n" +
+" * Dwarf Fortress Verrsion\n" +
+" * DFHack Plugin Version\n" +
+" * CPU ID\n" +
+" * Graphics Card Model\n" +
+" * Operating System.\n" +
+"\n" +
+"If you chose no, no data will be sent.\n", PushYes, PushNo);
     }
     
     public void PushYes()

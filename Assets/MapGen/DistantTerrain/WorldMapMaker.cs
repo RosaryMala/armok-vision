@@ -54,6 +54,17 @@ public class WorldMapMaker : MonoBehaviour
         return x + y * width;
     }
 
+    const float EarthRadius = 6371000;
+
+    public static Vector3 ConvertToSphere(Vector3 value)
+    {
+        float distSquare = (EarthRadius * EarthRadius) - (value.x * value.x) - (value.z * value.z);
+        distSquare = Mathf.Max(distSquare, 0);
+        var y = Mathf.Sqrt(distSquare);
+        y = y - EarthRadius + value.y;
+        return new Vector3(value.x, y, value.z);
+    }
+
     void CopyFromRemote(WorldMap remoteMap)
     {
         if (remoteMap == null)

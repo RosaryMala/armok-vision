@@ -8,6 +8,7 @@
         _Metallic("Metallic", Range(0,1)) = 0.0
         _SeaLevel("Sea Level (Unscaled)", Float) = 100
         _Scale("Terrain Scale", Float) = 1.0
+            _Curvature("Curvature", Float) = 0.0001
     }
         SubShader
         {
@@ -36,7 +37,7 @@
             Cull Back
             CGPROGRAM
             // Physically based Standard lighting model, and enable shadows on all light types
-            #pragma surface surf Standard fullforwardshadows
+            #pragma surface surf Standard fullforwardshadows vertex:vert
 
             // Use shader model 3.0 target, to get nicer looking lighting
             #pragma target 3.0
@@ -57,6 +58,25 @@
             half _Metallic;
             half _Scale;
             half _SeaLevel;
+
+            float _Curvature;
+            // This is where the curvature is applied
+            void vert(inout appdata_full v)
+            {
+                // Transform the vertex coordinates from model space into world space
+                float4 vv = mul(unity_ObjectToWorld, v.vertex);
+
+                // Now adjust the coordinates to be relative to the camera position
+                vv.xyz -= _WorldSpaceCameraPos.xyz;
+
+                // Reduce the y coordinate (i.e. lower the "height") of each vertex based
+                // on the square of the distance from the camera in the z axis, multiplied
+                // by the chosen curvature factor
+                vv = float4(0.0f, ((vv.z * vv.z) + (vv.x * vv.x)) * -_Curvature, 0.0f, 0.0f);
+
+                // Now apply the offset back to the vertices in model space
+                v.vertex += mul(unity_WorldToObject, vv);
+            }
 
             void surf(Input IN, inout SurfaceOutputStandard o)
             {
