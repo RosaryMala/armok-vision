@@ -57,6 +57,7 @@ public sealed class DFConnection : MonoBehaviour
     //Static bindings
     private RemoteFunction<dfproto.EmptyMessage, dfproto.StringMessage> dfhackVersionCall;
     private RemoteFunction<dfproto.EmptyMessage, dfproto.StringMessage> dfVersionCall;
+    private RemoteFunction<dfproto.EmptyMessage, dfproto.GetWorldInfoOut> dfWorldInfoCall;
 
     // Plugin bindings
     private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.MaterialList> materialListCall;
@@ -127,6 +128,7 @@ public sealed class DFConnection : MonoBehaviour
     {
         dfhackVersionCall = CreateAndBind<dfproto.EmptyMessage, dfproto.StringMessage>(networkClient, "GetVersion");
         dfVersionCall = CreateAndBind<dfproto.EmptyMessage, dfproto.StringMessage>(networkClient, "GetDFVersion");
+        dfWorldInfoCall = CreateAndBind<dfproto.EmptyMessage, dfproto.GetWorldInfoOut>(networkClient, "GetWorldInfo");
     }
 
     /// <summary>
@@ -160,6 +162,7 @@ public sealed class DFConnection : MonoBehaviour
     #endregion
 
     // Things we read from DF
+    dfproto.GetWorldInfoOut netWorldInfo;
 
     // Unchanging
     private RemoteFortressReader.MaterialList netMaterialList;
@@ -420,6 +423,17 @@ public sealed class DFConnection : MonoBehaviour
 
         BindStaticMethods();
 
+        if (dfWorldInfoCall != null)
+        {
+            dfWorldInfoCall.execute(null, out netWorldInfo);
+            if (netWorldInfo == null)
+                Debug.Log("World not loaded.");
+            else
+                Debug.Log("World Mode: " + netWorldInfo.mode);
+        }
+
+
+
         if (GameSettings.Instance.game.askToUpdatePlugin)
         {
             CheckPlugin();
@@ -440,6 +454,8 @@ public sealed class DFConnection : MonoBehaviour
     {
         if (inited)
             return;
+        if (netWorldInfo == null)
+            return; //world isn't loaded
         inited = true;
         BindMethods();
 
