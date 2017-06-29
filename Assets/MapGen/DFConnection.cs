@@ -27,12 +27,13 @@ public sealed class DFConnection : MonoBehaviour
         }
     }
 
+    static bool _actuallyConnected = false;
     // Can always be called
     public static bool Connected
     {
         get
         {
-            return instance != null && instance.networkClient != null;
+            return instance != null && instance.networkClient != null && _actuallyConnected;
         }
     }
 
@@ -511,6 +512,7 @@ public sealed class DFConnection : MonoBehaviour
         {
             connectionManager = new ConnectionManager.UnityThread(this);
         }
+        _actuallyConnected = true;
     }
 
     string DFHackPluginDirectory
