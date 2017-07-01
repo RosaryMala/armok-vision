@@ -194,16 +194,44 @@ public class GameMap : MonoBehaviour
 
         DFConnection.RegisterConnectionCallback(OnConnectToDF);
 
+#if DEVELOPMENT_BUILD
+        Debug.Log("Dev build")
+#endif
+
         dfScreen.SetActive(GameSettings.Instance.game.showDFScreen);
     }
 
     public static GameMap Instance { get; private set; }
 
+    static Thread mainThread;
     // Awake is called when the script instance is being loaded
     public void Awake()
     {
         Instance = this;
         cameraMovement = FindObjectOfType<CameraMovement>();
+        mainThread = Thread.CurrentThread;
+    }
+
+    public static bool IsMainThread
+    {
+        get
+        {
+            return Thread.CurrentThread == mainThread;
+        }
+    }
+
+    [System.Diagnostics.Conditional("DEVELOPMENT_BUILD"), System.Diagnostics.Conditional("UNITY_EDITOR")]
+    public static void BeginSample(string name)
+    {
+        if (IsMainThread)
+            UnityEngine.Profiling.Profiler.BeginSample(name);
+    }
+
+    [System.Diagnostics.Conditional("DEVELOPMENT_BUILD"), System.Diagnostics.Conditional("UNITY_EDITOR")]
+    public static void EndSample()
+    {
+        if (IsMainThread)
+            UnityEngine.Profiling.Profiler.EndSample();
     }
 
     void OnConnectToDF()
@@ -896,7 +924,7 @@ public class GameMap : MonoBehaviour
     }
 
 
-    #region Debug Data Saving
+#region Debug Data Saving
 
     void PrintFullMaterialList()
     {
@@ -1040,7 +1068,7 @@ public class GameMap : MonoBehaviour
             }
         }
     }
-    #endregion
+#endregion
 
     void DirtySeasonalBlocks()
     {

@@ -10384,6 +10384,7 @@ GameObject:
   - component: {fileID: 861361739}
   - component: {fileID: 861361737}
   - component: {fileID: 861361740}
+  - component: {fileID: 861361741}
   m_Layer: 0
   m_Name: '[GameMapObject]'
   m_TagString: Untagged
@@ -10483,6 +10484,46 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   analytics: {fileID: 2123946972}
+  editorSettings:
+    meshing:
+      meshingThreads: 0
+      queueLimit: 8
+      cornerType: 2
+    rendering:
+      drawRangeSide: 4
+      drawRangeUp: 1
+      drawRangeDown: 5
+      maxBlocksToDraw: 460800
+      maxTextureSize: 256
+      textureAtlasSize: 2048
+      debugTextureAtlas: 0
+      drawClouds: 1
+      distantTerrainDetail: 2
+      drawShadows: 1
+      vSyncCount: 0
+      targetFrameRate: 60
+      showHiddenTiles: 0
+      fog: 1
+    units:
+      drawUnits: 1
+      scaleUnits: 1
+    camera:
+      fieldOfView: 70
+      deferredRendering: 1
+      SSAO: 1
+      postProcessing: 1
+    game:
+      showDFScreen: 0
+      analytics: 2
+      askToUpdatePlugin: 0
+    debug:
+      drawDebugInfo: 1
+      saveBuildingList: 0
+      saveCreatureList: 0
+      saveItemList: 0
+      saveMaterialList: 0
+      savePlantList: 0
+      saveTiletypeList: 0
   mainCameras:
   - {fileID: 1485797796}
   - {fileID: 1637166495}
@@ -10600,6 +10641,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   analytics: {fileID: 2123946972}
+--- !u!114 &861361741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 861361727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7e17f28ce5a79c4b9397a28b752d575, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  question: {fileID: 722622309}
+  iconImage: {fileID: 663598997}
+  yesButton: {fileID: 1782145412}
+  noButton: {fileID: 1614054415}
+  cancelButton: {fileID: 259774362}
+  modalPanelObject: {fileID: 1312584658}
 --- !u!1 &874450143
 GameObject:
   m_ObjectHideFlags: 0
@@ -15625,7 +15683,6 @@ GameObject:
   - component: {fileID: 1312584659}
   - component: {fileID: 1312584662}
   - component: {fileID: 1312584661}
-  - component: {fileID: 1312584660}
   m_Layer: 5
   m_Name: ModalPanel
   m_TagString: Untagged
@@ -15652,23 +15709,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1312584660
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1312584658}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7e17f28ce5a79c4b9397a28b752d575, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  question: {fileID: 722622309}
-  iconImage: {fileID: 663598997}
-  yesButton: {fileID: 1782145412}
-  noButton: {fileID: 1614054415}
-  cancelButton: {fileID: 259774362}
-  modalPanelObject: {fileID: 1312584658}
 --- !u!114 &1312584661
 MonoBehaviour:
   m_ObjectHideFlags: 0

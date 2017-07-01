@@ -572,7 +572,6 @@ public sealed class DFConnection : MonoBehaviour
         {
             DFStringStream tempStream = new DFStringStream();
             networkClient.run_command(tempStream, "RemoteFortressReader_version", new List<string>());
-            Debug.Log(tempStream.Value);
             var results = tempStream.Value.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
             string versionString = results[0].Trim();

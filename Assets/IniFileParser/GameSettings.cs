@@ -148,6 +148,8 @@ public class GameSettings : MonoBehaviour
 
     public static Settings Instance = new Settings();
 
+    public Settings editorSettings;
+
     public List<Camera> mainCameras;
 
     public Light[] LightList;
@@ -168,14 +170,21 @@ public class GameSettings : MonoBehaviour
     // This function is called when the MonoBehaviour will be destroyed
     public void OnDestroy()
     {
+#if !UNITY_EDITOR
         SerializeIni("Config.json");
+#endif
     }
 
     // Awake is called when the script instance is being loaded
     public void Awake()
     {
         Instance.camera.fieldOfView = mainCameras[0].fieldOfView;
+#if UNITY_EDITOR
+        Instance = editorSettings;
+#else
         DeserializeIni("Config.json");
+#endif
+
         foreach (Camera camera in mainCameras)
         {
             camera.fieldOfView = Instance.camera.fieldOfView;
@@ -216,9 +225,9 @@ public class GameSettings : MonoBehaviour
         slider.value = value;
     }
 
-    #region Variable change events
+#region Variable change events
 
-    #region Deferred
+#region Deferred
     Slider deferredSlider;
     public void InitDeferredRendering(GameObject go)
     {
@@ -244,9 +253,9 @@ public class GameSettings : MonoBehaviour
         if (postprocessSlider != null)
             postprocessSlider.gameObject.SetActive(Instance.camera.deferredRendering);
     }
-    #endregion
+#endregion
 
-    #region PostProcessing
+#region PostProcessing
     Slider postprocessSlider;
     public void InitPostProcessing(GameObject go)
     {
@@ -273,8 +282,8 @@ public class GameSettings : MonoBehaviour
             }
         }
     }
-    #endregion
+#endregion
 
-    #endregion
+#endregion
 
 }
