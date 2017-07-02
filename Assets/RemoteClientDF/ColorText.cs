@@ -44,7 +44,7 @@ namespace  DFHack
         }
         public void end_batch()
         {
-            Debug.Log(buffer);
+            Debug.Log(buffer.TrimEnd('\r', '\n'));
             buffer = null;
         }
 

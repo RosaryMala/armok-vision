@@ -10621,6 +10621,46 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   analytics: {fileID: 2123946972}
+  editorSettings:
+    meshing:
+      meshingThreads: 0
+      queueLimit: 8
+      cornerType: 2
+    rendering:
+      drawRangeSide: 4
+      drawRangeUp: 1
+      drawRangeDown: 5
+      maxBlocksToDraw: 460800
+      maxTextureSize: 256
+      textureAtlasSize: 2048
+      debugTextureAtlas: 0
+      drawClouds: 1
+      distantTerrainDetail: 2
+      drawShadows: 1
+      vSyncCount: 0
+      targetFrameRate: 60
+      showHiddenTiles: 0
+      fog: 1
+    units:
+      drawUnits: 1
+      scaleUnits: 1
+    camera:
+      fieldOfView: 70
+      deferredRendering: 1
+      SSAO: 1
+      postProcessing: 1
+    game:
+      showDFScreen: 0
+      analytics: 2
+      askToUpdatePlugin: 0
+    debug:
+      drawDebugInfo: 1
+      saveBuildingList: 0
+      saveCreatureList: 0
+      saveItemList: 0
+      saveMaterialList: 0
+      savePlantList: 0
+      saveTiletypeList: 0
   mainCameras:
   - {fileID: 1485797796}
   - {fileID: 1637166495}

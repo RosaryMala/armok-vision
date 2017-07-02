@@ -148,6 +148,8 @@ public class GameSettings : MonoBehaviour
 
     public static Settings Instance = new Settings();
 
+    public Settings editorSettings;
+
     public List<Camera> mainCameras;
 
     public Light[] LightList;
@@ -222,9 +224,9 @@ public class GameSettings : MonoBehaviour
         slider.value = value;
     }
 
-    #region Variable change events
+#region Variable change events
 
-    #region Deferred
+#region Deferred
     Slider deferredSlider;
     public void InitDeferredRendering(GameObject go)
     {
@@ -250,9 +252,9 @@ public class GameSettings : MonoBehaviour
         if (postprocessSlider != null)
             postprocessSlider.gameObject.SetActive(Instance.camera.deferredRendering);
     }
-    #endregion
+#endregion
 
-    #region PostProcessing
+#region PostProcessing
     Slider postprocessSlider;
     public void InitPostProcessing(GameObject go)
     {
@@ -279,8 +281,8 @@ public class GameSettings : MonoBehaviour
             }
         }
     }
-    #endregion
+#endregion
 
-    #endregion
+#endregion
 
 }

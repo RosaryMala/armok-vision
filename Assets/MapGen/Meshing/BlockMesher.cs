@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 // Two implementations: single and multithreaded.
 // All of the actual meshing code is exactly the same;
@@ -226,12 +227,16 @@ abstract class BlockMesher {
         result.location = request.data.SliceOrigin;
         if (request.liquids)
         {
+            GameMap.BeginSample("Liquid Generation");
             result.water = GenerateLiquidSurface(request.data, MapDataStore.WATER_INDEX);
             result.magma = GenerateLiquidSurface(request.data, MapDataStore.MAGMA_INDEX);
+            GameMap.EndSample();
         }
         if (request.tiles)
         {
+            GameMap.BeginSample("Tile Generation");
             GenerateTiles(request.data, out result.tiles, out result.stencilTiles, out result.transparentTiles, out result.topTiles, out result.topStencilTiles, out result.topTransparentTiles, out result.collisionMesh, out result.terrainMesh, out result.topTerrainMesh);
+            GameMap.EndSample();
         }
         return result;
     }
@@ -377,14 +382,15 @@ abstract class BlockMesher {
         int transparentBufferIndex = 0;
         int collisionIndex = 0;
         int terrainIndex = 0;
-        for (int xx = (block_x * GameMap.blockSize); xx < (block_x + 1) * GameMap.blockSize; xx++)
-            for (int yy = (block_y * GameMap.blockSize); yy < (block_y + 1) * GameMap.blockSize; yy++)
-            {
-                if (!data.InSliceBounds(new DFCoord(xx, yy, block_z))) throw new UnityException("OOB");
-                if (data[xx, yy, block_z] == null) continue;
-
-                for (int i = 0; i < (int)MeshLayer.Count; i++)
+        GameMap.BeginSample("Fill Mesh Buffer");
+        for (int i = 0; i < (int)MeshLayer.Count; i++)
+        {
+            for (int xx = (block_x * GameMap.blockSize); xx < (block_x + 1) * GameMap.blockSize; xx++)
+                for (int yy = (block_y * GameMap.blockSize); yy < (block_y + 1) * GameMap.blockSize; yy++)
                 {
+                    if (!data.InSliceBounds(new DFCoord(xx, yy, block_z))) throw new UnityException("OOB");
+                    if (data[xx, yy, block_z] == null) continue;
+
                     if (i < (int)MeshLayer.StaticCutout)
                     {
                         FillMeshBuffer(
@@ -429,10 +435,10 @@ abstract class BlockMesher {
                             -GameMap.MapZOffset));
                         collisionIndex++;
                     }
-                    else if(i == (int)MeshLayer.NaturalTerrain)
+                    else if (i == (int)MeshLayer.NaturalTerrain)
                     {
                         FillMeshBuffer(out terrainMeshBuffer[terrainIndex],
-                            (MeshLayer)i, 
+                            (MeshLayer)i,
                             data[xx, yy, block_z],
                             GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize),
                             yy - (block_y * GameMap.blockSize),
@@ -440,12 +446,16 @@ abstract class BlockMesher {
                         terrainIndex++;
                     }
                 }
-            }
+        }
+        GameMap.EndSample();
         bool dontCare, success;
+        GameMap.BeginSample("Generate Voxels");
         VoxelGenerator voxelGen = new VoxelGenerator();
         if (block_z == 0)
             voxelGen.bottomless = true;
          var naturalTerrain = voxelGen.Triangulate(data);
+        GameMap.EndSample();
+        GameMap.BeginSample("Combine Meshes");
         terrainTiles = MeshCombineUtility.ColorCombine(terrainMeshBuffer, out dontCare, false, naturalTerrain);
         topTerrainTiles = MeshCombineUtility.ColorCombine(terrainMeshBuffer, out dontCare, true);
         stencilTiles = MeshCombineUtility.ColorCombine(stencilMeshBuffer, out dontCare, false);
@@ -455,6 +465,7 @@ abstract class BlockMesher {
         topTiles = MeshCombineUtility.ColorCombine(meshBuffer, out dontCare, true);
         tiles = MeshCombineUtility.ColorCombine(meshBuffer, out success, false);
         collisionTiles = MeshCombineUtility.ColorCombine(collisionMeshBuffer, out dontCare, false, naturalTerrain);
+        GameMap.EndSample();
 
         return success;
     }
@@ -492,31 +503,6 @@ abstract class BlockMesher {
             buffer.hiddenFaces = CalculateHiddenFaces(tile, meshContent.Rotation);
             return;
         }
-
-        //if (layer == MeshLayer.BuildingCollision)
-        //{
-        //    if (tile.buildingType == default(BuildingStruct) || !ContentLoader.Instance.BuildingCollisionMeshConfiguration.GetValue(tile, layer, out meshContent))
-        //    {
-        //        buffer.meshData = null;
-        //        return;
-        //    }
-        //    if (meshContent.MeshData.ContainsKey(MeshLayer.Collision))
-        //        buffer.meshData = meshContent.MeshData[MeshLayer.Collision];
-        //    else if (meshContent.MeshData.ContainsKey(MeshLayer.BuildingMaterial))
-        //        buffer.meshData = meshContent.MeshData[MeshLayer.BuildingMaterial];
-        //    else if (meshContent.MeshData.ContainsKey(MeshLayer.BuildingMaterialCutout))
-        //        buffer.meshData = meshContent.MeshData[MeshLayer.BuildingMaterialCutout];
-        //    else if (meshContent.MeshData.ContainsKey(MeshLayer.BuildingMaterialTransparent))
-        //        buffer.meshData = meshContent.MeshData[MeshLayer.BuildingMaterialTransparent];
-        //    else
-        //    {
-        //        buffer.meshData = null;
-        //        return;
-        //    }
-        //    buffer.transform = Matrix4x4.TRS(pos, meshContent.GetRotation(tile), Vector3.one);
-        //    buffer.hiddenFaces = CalculateHiddenFaces(tile, meshContent.Rotation);
-        //    return;
-        //}
         if (ContentLoader.Instance.DesignationMeshConfiguration.GetValue(tile, layer, out meshContent))
         {
             if (!meshContent.MeshData.ContainsKey(layer))
@@ -597,25 +583,6 @@ abstract class BlockMesher {
                     }
                 }
                 break;
-            //case MeshLayer.BuildingMaterial:
-            //case MeshLayer.NoMaterialBuilding:
-            //case MeshLayer.BuildingMaterialCutout:
-            //case MeshLayer.NoMaterialBuildingCutout:
-            //case MeshLayer.BuildingMaterialTransparent:
-            //case MeshLayer.NoMaterialBuildingTransparent:
-            //    {
-            //        if (tile.buildingType == default(BuildingStruct))
-            //        {
-            //            buffer.meshData = null;
-            //            return;
-            //        }
-            //        if (!ContentLoader.Instance.BuildingMeshConfiguration.GetValue(tile, layer, out meshContent))
-            //        {
-            //            buffer.meshData = null;
-            //            return;
-            //        }
-            //    }
-            //    break;
             default:
                 {
                     if (layer == MeshLayer.NaturalTerrain)
@@ -636,6 +603,7 @@ abstract class BlockMesher {
                     if (!ContentLoader.Instance.TileMeshConfiguration.GetValue(tile, layer, out meshContent))
                     {
                         buffer.meshData = null;
+                        GameMap.EndSample();
                         return;
                     }
                 }
@@ -656,27 +624,10 @@ abstract class BlockMesher {
         NormalContent tileTexContent;
         if (meshContent.ShapeTexture == null)
         {
-            //if (layer == MeshLayer.BuildingMaterial
-            //    || layer == MeshLayer.BuildingMaterialCutout
-            //    || layer == MeshLayer.NoMaterialBuilding
-            //    || layer == MeshLayer.NoMaterialBuildingCutout
-            //    || layer == MeshLayer.BuildingMaterialTransparent
-            //    || layer == MeshLayer.NoMaterialBuildingTransparent
-            //    )
-            //{
-            //    if (ContentLoader.Instance.BuildingShapeTextureConfiguration.GetValue(tile, layer, out tileTexContent))
-            //    {
-            //        shapeTextTransform = tileTexContent.UVTransform;
-            //        index1.y = tileTexContent.ArrayIndex;
-            //    }
-            //}
-            //else
+            if (ContentLoader.Instance.ShapeTextureConfiguration.GetValue(tile, layer, out tileTexContent))
             {
-                if (ContentLoader.Instance.ShapeTextureConfiguration.GetValue(tile, layer, out tileTexContent))
-                {
-                    shapeTextTransform = tileTexContent.UVTransform;
-                    index1.y = tileTexContent.ArrayIndex;
-                }
+                shapeTextTransform = tileTexContent.UVTransform;
+                index1.y = tileTexContent.ArrayIndex;
             }
         }
         else
@@ -829,14 +780,17 @@ sealed class SingleThreadedMesher : BlockMesher {
         InitBuffers();
     }
 
-    public override void Poll() {
+    public override void Poll()
+    {
         if (ContentLoader.Instance == null)
             return;
         StatsReadout.QueueLength = requestQueue.Count;
         if (requestQueue.Count == 0) return;
         Request req = requestQueue.Dequeue();
+        GameMap.BeginSample("Generate Meshes");
         resultQueue.Enqueue(CreateMeshes(req));
         recycledBlocks.Push(req.data);
+        GameMap.EndSample();
     }
 
     public override string Status()
