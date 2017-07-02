@@ -165,17 +165,23 @@ public class GameSettings : MonoBehaviour
         File.WriteAllText(filename, JsonConvert.SerializeObject(Instance, Formatting.Indented));
     }
 
+    string filename = "Config.json";
+
     // This function is called when the MonoBehaviour will be destroyed
     public void OnDestroy()
     {
-        SerializeIni("Config.json");
+        SerializeIni(filename);
     }
 
     // Awake is called when the script instance is being loaded
     public void Awake()
     {
         Instance.camera.fieldOfView = mainCameras[0].fieldOfView;
-        DeserializeIni("Config.json");
+        string configDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Application.productName);
+        if (!Directory.Exists(configDir))
+            Directory.CreateDirectory(configDir);
+        filename = Path.Combine(configDir, filename);
+        DeserializeIni(filename);
         foreach (Camera camera in mainCameras)
         {
             camera.fieldOfView = Instance.camera.fieldOfView;

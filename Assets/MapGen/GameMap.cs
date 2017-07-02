@@ -180,6 +180,7 @@ public class GameMap : MonoBehaviour
     {
         enabled = false;
 
+
         Debug.Log("Started Armok Vision version " + BuildSettings.Instance.content_version + BuildManifest.Instance.buildNumber);
 
         Debug.Log("scmCommitId: " + BuildManifest.Instance.scmCommitId);
@@ -323,22 +324,14 @@ public class GameMap : MonoBehaviour
             // take screenshot on up->down transition of F9 key
             if (Input.GetButtonDown("TakeScreenshot"))
             {
-                string path = Application.dataPath;
-                if (Application.platform == RuntimePlatform.OSXPlayer)
-                {
-                    path += "/../../";
-                }
-                else if (Application.platform == RuntimePlatform.WindowsPlayer
-                    || Application.platform == RuntimePlatform.LinuxPlayer)
-                {
-                    path += "/../";
-                }
-
+                string path = Path.Combine(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), Application.productName), "Screenshots");
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
                 string screenshotFilename;
                 do
                 {
                     screenshotCount++;
-                    screenshotFilename = path + "screenshot" + screenshotCount + ".png";
+                    screenshotFilename = Path.Combine(path, "screenshot" + screenshotCount + ".png");
 
                 } while (File.Exists(screenshotFilename));
 
