@@ -2,10 +2,24 @@
 using UnityEngine.UI;
 using UnityEngine.Events;
 using System.Collections;
+using System.Collections.Generic;
 
 //  This script will be updated in Part 2 of this 2 part series.
 public class ModalPanel : MonoBehaviour
 {
+    class QuestionContents
+    {
+        internal string question;
+        internal UnityAction yesEvent;
+        internal UnityAction noEvent;
+        internal UnityAction cancelEvent;
+        internal string yesText;
+        internal string noText;
+        internal string cancelText;
+        internal Sprite sprite;
+    }
+
+    Queue<QuestionContents> pendingQuestions = new Queue<QuestionContents>();
 
     public Text question;
     public Image iconImage;
@@ -31,78 +45,72 @@ public class ModalPanel : MonoBehaviour
         }
     }
 
+    void DequeueQuestion()
+    {
+        if (pendingQuestions.Count == 0)
+            return;
+        var question = pendingQuestions.Dequeue();
+
+        modalPanelObject.SetActive(true);
+
+        iconImage.sprite = question.sprite;
+
+        yesButton.onClick.RemoveAllListeners();
+        yesButton.onClick.AddListener(question.yesEvent);
+        yesButton.onClick.AddListener(ClosePanel);
+        yesButton.GetComponentInChildren<Text>().text = question.yesText;
+
+        noButton.onClick.RemoveAllListeners();
+        noButton.onClick.AddListener(question.noEvent);
+        noButton.onClick.AddListener(ClosePanel);
+        noButton.GetComponentInChildren<Text>().text = question.noText;
+
+        cancelButton.onClick.RemoveAllListeners();
+        cancelButton.onClick.AddListener(question.cancelEvent);
+        cancelButton.onClick.AddListener(ClosePanel);
+        cancelButton.GetComponentInChildren<Text>().text = question.cancelText;
+
+        this.question.text = question.question;
+
+        iconImage.gameObject.SetActive(question.sprite != null);
+        yesButton.gameObject.SetActive(question.yesEvent != null);
+        noButton.gameObject.SetActive(question.noEvent != null);
+        cancelButton.gameObject.SetActive(question.cancelEvent != null);
+    }
+
+
     // Yes/No/Cancel: A string, a Yes event, a No event and Cancel event
     public void Choice(string question, UnityAction yesEvent, UnityAction noEvent, UnityAction cancelEvent, string yesText = "Yes", string noText = "No", string cancelText = "Cancel")
     {
-        modalPanelObject.SetActive(true);
-
-        yesButton.onClick.RemoveAllListeners();
-        yesButton.onClick.AddListener(yesEvent);
-        yesButton.onClick.AddListener(ClosePanel);
-        yesButton.GetComponentInChildren<Text>().text = yesText;
-
-        noButton.onClick.RemoveAllListeners();
-        noButton.onClick.AddListener(noEvent);
-        noButton.onClick.AddListener(ClosePanel);
-        noButton.GetComponentInChildren<Text>().text = noText;
-
-        cancelButton.onClick.RemoveAllListeners();
-        cancelButton.onClick.AddListener(cancelEvent);
-        cancelButton.onClick.AddListener(ClosePanel);
-        cancelButton.GetComponentInChildren<Text>().text = cancelText;
-
-        this.question.text = question;
-
-        iconImage.gameObject.SetActive(false);
-        yesButton.gameObject.SetActive(true);
-        noButton.gameObject.SetActive(true);
-        cancelButton.gameObject.SetActive(true);
+        var contents = new QuestionContents();
+        contents.question = question;
+        contents.yesEvent = yesEvent;
+        contents.noEvent = noEvent;
+        contents.cancelEvent = cancelEvent;
+        contents.yesText = yesText;
+        contents.noText = noText;
+        contents.cancelText = cancelText;
+        contents.sprite = null;
+        pendingQuestions.Enqueue(contents);
+        if (!modalPanelObject.activeSelf)
+            DequeueQuestion();
     }
 
     // Yes/No/Cancel: A string, a Yes event, a No event and Cancel event
     public void Choice(string question, UnityAction yesEvent, UnityAction noEvent, string yesText = "Yes", string noText = "No")
     {
-        modalPanelObject.SetActive(true);
-
-        yesButton.onClick.RemoveAllListeners();
-        yesButton.onClick.AddListener(yesEvent);
-        yesButton.onClick.AddListener(ClosePanel);
-        yesButton.GetComponentInChildren<Text>().text = yesText;
-
-        noButton.onClick.RemoveAllListeners();
-        noButton.onClick.AddListener(noEvent);
-        noButton.onClick.AddListener(ClosePanel);
-        noButton.GetComponentInChildren<Text>().text = noText;
-
-        this.question.text = question;
-
-        this.iconImage.gameObject.SetActive(false);
-        yesButton.gameObject.SetActive(true);
-        noButton.gameObject.SetActive(true);
-        cancelButton.gameObject.SetActive(false);
+        Choice(question, yesEvent, noEvent, null, yesText, noText, null);
     }
 
     // Yes/No/Cancel: A string, a Yes event, a No event and Cancel event
     public void Choice(string question, UnityAction yesEvent, string yesText = "Yes")
     {
-        modalPanelObject.SetActive(true);
-
-        yesButton.onClick.RemoveAllListeners();
-        yesButton.onClick.AddListener(yesEvent);
-        yesButton.onClick.AddListener(ClosePanel);
-        yesButton.GetComponentInChildren<Text>().text = yesText;
-
-
-        this.question.text = question;
-
-        this.iconImage.gameObject.SetActive(false);
-        yesButton.gameObject.SetActive(true);
-        noButton.gameObject.SetActive(false);
-        cancelButton.gameObject.SetActive(false);
+        Choice(question, yesEvent, null, null, yesText, null, null);
     }
 
     void ClosePanel()
     {
         modalPanelObject.SetActive(false);
+        DequeueQuestion();
     }
 }
