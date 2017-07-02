@@ -53,7 +53,7 @@ public class ModalPanel : MonoBehaviour
 
         this.question.text = question;
 
-        this.iconImage.gameObject.SetActive(false);
+        iconImage.gameObject.SetActive(false);
         yesButton.gameObject.SetActive(true);
         noButton.gameObject.SetActive(true);
         cancelButton.gameObject.SetActive(true);

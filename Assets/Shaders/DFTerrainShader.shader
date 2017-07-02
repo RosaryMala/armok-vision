@@ -8,7 +8,6 @@
         _Metallic("Metallic", Range(0,1)) = 0.0
         _SeaLevel("Sea Level (Unscaled)", Float) = 100
         _Scale("Terrain Scale", Float) = 1.0
-            _Curvature("Curvature", Float) = 0.0001
     }
         SubShader
         {
@@ -59,11 +58,11 @@
             half _Scale;
             half _SeaLevel;
 
-            float _Curvature;
             // This is where the curvature is applied
             void vert(inout appdata_full v)
             {
-                // Transform the vertex coordinates from model space into world space
+                float radius = 635680; //earth
+                                       // Transform the vertex coordinates from model space into world space
                 float4 vv = mul(unity_ObjectToWorld, v.vertex);
 
                 // Now adjust the coordinates to be relative to the camera position
@@ -72,7 +71,7 @@
                 // Reduce the y coordinate (i.e. lower the "height") of each vertex based
                 // on the square of the distance from the camera in the z axis, multiplied
                 // by the chosen curvature factor
-                vv = float4(0.0f, ((vv.z * vv.z) + (vv.x * vv.x)) * -_Curvature, 0.0f, 0.0f);
+                vv = float4(0, sqrt(max((radius * radius) - ((vv.z * vv.z) + (vv.x * vv.x)), 0)) - radius, 0, 0);
 
                 // Now apply the offset back to the vertices in model space
                 v.vertex += mul(unity_WorldToObject, vv);

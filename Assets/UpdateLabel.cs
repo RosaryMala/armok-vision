@@ -22,7 +22,7 @@ public class UpdateLabel : MonoBehaviour
 
     void Awake()
     {
-        valueLabel = transform.FindChild("Value").GetComponent<Text>();
+        valueLabel = transform.Find("Value").GetComponent<Text>();
         slider = GetComponent<Slider>();
         slider.onValueChanged.AddListener(SetLabel);
     }

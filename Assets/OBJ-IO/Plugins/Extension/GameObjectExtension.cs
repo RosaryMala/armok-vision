@@ -25,7 +25,7 @@ namespace UnityExtension
         public static T GetComponentOfChild<T>(this GameObject lGo, string lName) where T : Component
         {
             T lComponent = null;
-            Transform lTransform = lGo.transform.FindChild(lName);
+            Transform lTransform = lGo.transform.Find(lName);
             if (lTransform != null)
             {
                 lComponent = lTransform.GetComponent<T>();
@@ -37,7 +37,7 @@ namespace UnityExtension
         public static T[] GetComponentsOfChild<T>(this GameObject lGo, string lName) where T : Component
         {
             T[] lComponent = null;
-            Transform lTransform = lGo.transform.FindChild(lName);
+            Transform lTransform = lGo.transform.Find(lName);
             if (lTransform != null)
             {
                 lComponent = lTransform.GetComponents<T>();
@@ -59,7 +59,7 @@ namespace UnityExtension
         //------------------------------------------------------------------------------------------------------------
         public static bool DestroyChildIfExists(this GameObject lGo, string lName)
         {
-            Transform lTransform = lGo.transform.FindChild(lName);
+            Transform lTransform = lGo.transform.Find(lName);
             if (lTransform != null)
             {
                 GameObject.Destroy(lTransform.gameObject);
@@ -76,7 +76,7 @@ namespace UnityExtension
         {
             for (int lCount = 0; lCount < lPaths.Length; ++lCount)
             {
-                if (lGo.transform.FindChild(lPaths[lCount]) == null)
+                if (lGo.transform.Find(lPaths[lCount]) == null)
                 {
                     return false;
                 }

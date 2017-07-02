@@ -568,29 +568,25 @@ public sealed class DFConnection : MonoBehaviour
         Version pluginVersion = new Version(0,0,0);
         Version avVersion = new Version(BuildSettings.Instance.content_version);
 
-        //networkClient.run_command("unload", new List<string>(new string[] { "RemoteFortressReader" }));
+        DFStringStream tempStream = new DFStringStream();
+        networkClient.run_command(tempStream, "RemoteFortressReader_version", new List<string>());
+        var results = tempStream.Value.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+        string versionString = results[0].Trim();
+        try
         {
-            DFStringStream tempStream = new DFStringStream();
-            networkClient.run_command(tempStream, "RemoteFortressReader_version", new List<string>());
-            Debug.Log(tempStream.Value);
-            var results = tempStream.Value.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-
-            string versionString = results[0].Trim();
-            try
-            {
-                pluginVersion = new Version(versionString);
-            }
-            catch (Exception)
-            {
-            }
+            pluginVersion = new Version(versionString);
         }
+        catch (Exception e)
+        {
+        }
+
         if (avVersion > pluginVersion)
         {
             if (!File.Exists(AVPluginDirectory + "RemoteFortressReader.plug.dll"))
             {
                 ModalPanel.Instance.Choice(string.Format(
-                    "You appear to be running on an out-dated version of the RemoteFortressReader plugin.\n\n"+
-                    "You're running version {0} of the plugin, while Armok Vision expects a plugin versioned {1} or above.\n\n"+
+                    "You appear to be running on an out-dated version of the RemoteFortressReader plugin.\n\n" +
+                    "You're running version {0} of the plugin, while Armok Vision expects a plugin versioned {1} or above.\n\n" +
                     "A compatible version of the plugin has not been found. Please let the developers know which version of DFHack and DF you are running, so they can make one.", pluginVersion, avVersion), Init, DisableUpdate, "Okay.", "Don't ask again");
                 return; //We don't have a compatible plugin
             }
@@ -599,11 +595,13 @@ public sealed class DFConnection : MonoBehaviour
                 ModalPanel.Instance.Choice(string.Format(
                     "You appear to be running on an out-dated version of the RemoteFortressReader plugin.\n\n" +
                     "You're running version {0} of the plugin, while Armok Vision expects a plugin versioned {1} or above.\n\n" +
-                    "A compatible version of the plugin has been found. Would you like to update it?", pluginVersion, avVersion), UpdatePlugin, Init, DisableUpdate,"Yes", "No.", "Don't ask again");
+                    "A compatible version of the plugin has been found. Would you like to update it?", pluginVersion, avVersion), UpdatePlugin, Init, DisableUpdate, "Yes", "No.", "Don't ask again");
                 return; //We don't have a compatible plugin
 
             }
         }
+        else
+            Init();
     }
 
     void DisableUpdate()

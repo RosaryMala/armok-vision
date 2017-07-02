@@ -23,7 +23,7 @@ namespace UserSettings
         public void Awake()
         {
             slider = GetComponent<Slider>();
-            valueLabel = transform.FindChild("Value").GetComponent<Text>();
+            valueLabel = transform.Find("Value").GetComponent<Text>();
             gameMap = FindObjectOfType<GameMap>();
             cam = Camera.main;
         }
