@@ -175,11 +175,12 @@ public class GameSettings : MonoBehaviour
         SerializeIni(filename);
     }
 
-    // Awake is called when the script instance is being loaded
+    // Awake is called when the script instance is being ßloaded
     public void Awake()
     {
         Instance.camera.fieldOfView = mainCameras[0].fieldOfView;
         string configDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Application.productName);
+		UnityEngine.Debug.Log ("Loading config from " + configDir);
         if (!Directory.Exists(configDir))
             Directory.CreateDirectory(configDir);
         filename = Path.Combine(configDir, filename);

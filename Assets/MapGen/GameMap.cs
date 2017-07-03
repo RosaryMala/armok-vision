@@ -363,6 +363,8 @@ public class GameMap : MonoBehaviour
 
                 } while (File.Exists(screenshotFilename));
 
+				Debug.Log ("Saving screenshot to: " + screenshotFilename);
+
                 if (Input.GetButton("Mod"))
                 {
                     RenderTexture.active = Minimap.Instance.texture;
