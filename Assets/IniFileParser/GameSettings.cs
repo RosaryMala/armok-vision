@@ -148,8 +148,6 @@ public class GameSettings : MonoBehaviour
 
     public static Settings Instance = new Settings();
 
-    public Settings editorSettings;
-
     public List<Camera> mainCameras;
 
     public Light[] LightList;
