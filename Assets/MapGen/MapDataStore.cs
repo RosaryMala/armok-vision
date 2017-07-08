@@ -441,7 +441,7 @@ public class MapDataStore {
                 if (tile == null)
                     return;
                 int netIndex = xx + (yy * 16);
-                if (setTiles)
+                if (block.tiles.Count > 0)
                 {
                     tile.tileType = block.tiles[netIndex];
                     tile.material = block.materials[netIndex];
