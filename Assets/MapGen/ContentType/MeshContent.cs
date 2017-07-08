@@ -264,7 +264,7 @@ public class MeshContent : IContent
             //	Load the OBJ in
             if (!File.Exists(filePath))
                 return false;
-            var lStream = new FileStream(filePath, FileMode.Open);
+            var lStream = File.OpenRead(filePath);
             var lOBJData = OBJLoader.LoadOBJ(lStream);
             lStream.Close();
             MeshData = new Dictionary<MeshLayer, CPUMesh>();
