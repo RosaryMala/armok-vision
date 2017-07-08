@@ -21,6 +21,12 @@ public class BuildFactory
         BuildRelease(BuildTarget.StandaloneWindows64);
     }
 
+    [MenuItem("Mytools/Build OSX Release")]
+    public static void BuildOsx()
+    {
+        BuildRelease(BuildTarget.StandaloneOSXIntel64);
+    }
+
     static void BuildRelease(BuildTarget target)
     {
 
