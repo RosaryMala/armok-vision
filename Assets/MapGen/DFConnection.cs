@@ -594,11 +594,22 @@ public sealed class DFConnection : MonoBehaviour
         catch (Exception)
         {
         }
+           
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+        string pluginName = "RemoteFortressReader.plug.dll";
+#elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+        string pluginName = "RemoteFortressReader.plug.dylib";
+#elif UNITY_STANDALONE_LINUX
+        string pluginName = "RemoteFortressReader.plug.so";
+#else
+        string pluginName = "INVALID";
+#endif
 
         if (avVersion > pluginVersion)
         {
-            if (!File.Exists(AVPluginDirectory + "RemoteFortressReader.plug.dll"))
+            if (!File.Exists(AVPluginDirectory + pluginName))
             {
+                Debug.Log ("Cannot find " + AVPluginDirectory + pluginName);
                 ModalPanel.Instance.Choice(string.Format(
                     "You appear to be running on an out-dated version of the RemoteFortressReader plugin.\n\n" +
                     "You're running version {0} of the plugin, while Armok Vision expects a plugin versioned {1} or above.\n\n" +
