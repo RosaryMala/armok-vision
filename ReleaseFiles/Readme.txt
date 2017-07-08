@@ -7,7 +7,9 @@
     L: Toggle scaling of creatures based on their size.
     `: Toggle showing the Dwarf Fortress screen.
     F: Toggle following the center of the dwarf fortress screen.
-    Ctrl+M: Exports the map as a Collada file.
+    Esc: Open options menu.
+    F9: Save Screenshot.
+    Ctrl+F9: Save minimap.
     Mouse wheel zooms in and out.
     Right click drag rotates the view.
 

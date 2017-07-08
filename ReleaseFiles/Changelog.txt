@@ -1,3 +1,22 @@
+v0.17.0
+ * Fixed some creature-related bugs
+ * Save Armok Vision, DFHack, and DF versions to the log file, for debugging.
+ * Disable Item rendering, temporarily, due to performance issues. To be brought back in a later version.
+ * Add in optional analytics, if users so desire.
+ * Completely overhauled the building rendering code, enabling better control over buildings, and more customization options. Also slightly faster loading.
+ * Added many new building types, to go with the new rendering mode, including some from artist @mana
+ * Added a yellow hilight to buildings when you hover over them.
+ * Made mechanics mostly respond to active state
+ * Fixed copper being too lightly colored.
+ * Made bridges raise properly according to their state in DF.
+ * Made all buildings not render when too small on screen.
+ * Made many performance optimizations here and there.
+ * Added a minimap, showing an overhead view of the current level.
+ * Added a button to save an enlarged version of the Minimap.
+ * Changed config and screenshots to both go to Documents/Armok Vision.
+ * Added ability to automatically update the DFHack RemoteFortressReader plugin, if the user allows.
+ * Added some friendly messages if Armok Vision can't run for whatever reason.
+
 v0.16.2
  * Fixed fog.
  * Made the help menu automatically show only when loading.
