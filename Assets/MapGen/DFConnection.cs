@@ -578,6 +578,16 @@ public sealed class DFConnection : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+    string pluginName = "RemoteFortressReader.plug.dll";
+#elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+    string pluginName = "RemoteFortressReader.plug.dylib";
+#elif UNITY_STANDALONE_LINUX
+    string pluginName = "RemoteFortressReader.plug.so";
+#else
+    string pluginName = "INVALID";
+#endif
+
     private void CheckPlugin()
     {
         Version pluginVersion = new Version(0,0,0);
@@ -594,16 +604,6 @@ public sealed class DFConnection : MonoBehaviour
         catch (Exception)
         {
         }
-           
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
-        string pluginName = "RemoteFortressReader.plug.dll";
-#elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
-        string pluginName = "RemoteFortressReader.plug.dylib";
-#elif UNITY_STANDALONE_LINUX
-        string pluginName = "RemoteFortressReader.plug.so";
-#else
-        string pluginName = "INVALID";
-#endif
 
         if (avVersion > pluginVersion)
         {
@@ -618,6 +618,7 @@ public sealed class DFConnection : MonoBehaviour
             }
             else
             {
+            Debug.Log ("Found " + AVPluginDirectory + pluginName);
                 ModalPanel.Instance.Choice(string.Format(
                     "You appear to be running on an out-dated version of the RemoteFortressReader plugin.\n\n" +
                     "You're running version {0} of the plugin, while Armok Vision expects a plugin versioned {1} or above.\n\n" +
@@ -638,8 +639,9 @@ public sealed class DFConnection : MonoBehaviour
 
     void UpdatePlugin()
     {
+
         networkClient.run_command("unload", new List<string>(new string[] { "RemoteFortressReader" }));
-        File.Copy(AVPluginDirectory + "RemoteFortressReader.plug.dll", DFHackPluginDirectory + "RemoteFortressReader.plug.dll", true);
+    File.Copy(AVPluginDirectory + pluginName, DFHackPluginDirectory + pluginName, true);
         networkClient.run_command("load", new List<string>(new string[] { "RemoteFortressReader" }));
         Init();
     }
