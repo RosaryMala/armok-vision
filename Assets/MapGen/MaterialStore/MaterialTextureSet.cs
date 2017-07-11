@@ -12,5 +12,6 @@ namespace MaterialStore
         public Texture2D texture;
         public Texture2D normal;
         public Texture2D heightMap;
+        public Texture2D aoMap;
     }
 }

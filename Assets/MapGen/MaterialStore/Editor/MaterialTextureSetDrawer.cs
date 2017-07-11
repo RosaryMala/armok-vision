@@ -26,7 +26,7 @@ namespace MaterialStore
                 // Don't make child fields be indented
                 var indent = EditorGUI.indentLevel;
                 EditorGUI.indentLevel = 1;
-                Rect runningPosition = new Rect(position.x, position.y, position.width - (EditorGUIUtility.singleLineHeight * 4), EditorGUIUtility.singleLineHeight);
+                Rect runningPosition = new Rect(position.x, position.y, position.width - (EditorGUIUtility.singleLineHeight * 5), EditorGUIUtility.singleLineHeight);
                 runningPosition.y += EditorGUIUtility.singleLineHeight;
                 EditorGUI.PropertyField(runningPosition, property.FindPropertyRelative("color"));
                 runningPosition.y += EditorGUIUtility.singleLineHeight;
@@ -35,9 +35,11 @@ namespace MaterialStore
                 EditorGUI.PropertyField(runningPosition, property.FindPropertyRelative("normal"));
                 runningPosition.y += EditorGUIUtility.singleLineHeight;
                 EditorGUI.PropertyField(runningPosition, property.FindPropertyRelative("heightMap"));
+                runningPosition.y += EditorGUIUtility.singleLineHeight;
+                EditorGUI.PropertyField(runningPosition, property.FindPropertyRelative("aoMap"));
 
                 //draw the preview texture.
-                if(mat == null)
+                if (mat == null)
                 {
                     mat = new Material(Shader.Find("Hidden/ColorOverlay"));
                 }
@@ -46,10 +48,10 @@ namespace MaterialStore
                 var texture = (Texture2D)property.FindPropertyRelative("texture").objectReferenceValue;
 
                 var previewRect = new Rect(
-                            position.x + position.width - (EditorGUIUtility.singleLineHeight * 4),
+                            position.x + position.width - (EditorGUIUtility.singleLineHeight * 5),
                         position.y + EditorGUIUtility.singleLineHeight,
-                        EditorGUIUtility.singleLineHeight * 4,
-                        EditorGUIUtility.singleLineHeight * 4);
+                        EditorGUIUtility.singleLineHeight * 5,
+                        EditorGUIUtility.singleLineHeight * 5);
 
                 if (texture == null)
                     EditorGUI.DrawRect(previewRect, mat.color);
@@ -64,7 +66,7 @@ namespace MaterialStore
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            return unfolded ? EditorGUIUtility.singleLineHeight * 5 : EditorGUIUtility.singleLineHeight;
+            return unfolded ? EditorGUIUtility.singleLineHeight * 6 : EditorGUIUtility.singleLineHeight;
         }
     }
 }
