@@ -6,4 +6,5 @@ using UnityEngine;
 public class TagTest : MonoBehaviour
 {
     public MaterialTag[] testTag;
+    public MaterialTextureSet set;
 }
