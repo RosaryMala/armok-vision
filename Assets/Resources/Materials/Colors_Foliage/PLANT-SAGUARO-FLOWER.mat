@@ -19,7 +19,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _Height:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 515d7b0b56f97234985fd60595bb5158, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -27,18 +27,18 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 99d5880d34132f74b91f676f20e3b1a4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Occlusion:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: dca773fee63cf754f993023849f3c76d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Specular:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: a357c31d779574845a2acd5634723741, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _HeightPreview: 0
+    - _HeightPreview: 0.5
     m_Colors:
     - _Color: {r: 0.972549, g: 0.96862745, b: 0.83137256, a: 0.5019608}

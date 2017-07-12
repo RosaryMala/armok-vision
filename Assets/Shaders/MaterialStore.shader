@@ -14,7 +14,7 @@
 		
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable transparency
-		#pragma surface surf Standard alpha
+		#pragma surface surf Standard alpha addshadow
 
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 3.0
