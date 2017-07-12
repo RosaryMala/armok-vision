@@ -1,0 +1,1841 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3eb79f8a19db6f4fb47247069cb969c, type: 3}
+  m_Name: Colors_Foliage
+  m_EditorClassIdentifier: 
+  textures:
+  - tag:
+      type: 21
+      tag1: 
+      tag2: LEAF
+    color: {r: 0.3137255, g: 0.8627451, b: 0.3137255, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: 
+      tag2: BUDS
+    color: {r: 0.3137255, g: 0.8627451, b: 0.3137255, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: 
+      tag2: FLOWER
+    color: {r: 0.9529412, g: 0.68235296, b: 0.8392157, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: 
+      tag2: POLLEN_CATKINS
+    color: {r: 0.68235296, g: 0.9529412, b: 0.77254903, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: 
+      tag2: SEED_CATKINS
+    color: {r: 0.7882353, g: 0.65882355, b: 0.5921569, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: 
+      tag2: POLLEN_CONE
+    color: {r: 1, g: 0.9843137, b: 0.7529412, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: 
+      tag2: SPATHES
+    color: {r: 0.64705884, g: 0.45490196, b: 0.34509805, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: 
+      tag2: FRUIT
+    color: {r: 1, g: 0, b: 0, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: 
+      tag2: PODS
+    color: {r: 0.3137255, g: 0.8627451, b: 0.3137255, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: 
+      tag2: SEED
+    color: {r: 0.2901961, g: 0.18039216, b: 0.12156863, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: 
+      tag2: SEED_CONE
+    color: {r: 0.38039216, g: 0.23529412, b: 0.16078432, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: 
+      tag2: NUT
+    color: {r: 0.8745098, g: 0.6901961, b: 0.5019608, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: MANGROVE
+      tag2: LEAF
+    color: {r: 0.20784314, g: 0.67058825, b: 0.27058825, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: MANGROVE
+      tag2: FLOWER
+    color: {r: 0.9882353, g: 1, b: 0.7882353, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: MANGROVE
+      tag2: FRUIT
+    color: {r: 1, g: 0.33333334, b: 0.33333334, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: SAGUARO
+      tag2: FLOWER
+    color: {r: 0.972549, g: 0.96862745, b: 0.83137256, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: SAGUARO
+      tag2: FRUIT
+    color: {r: 0.92156863, g: 0.12941177, b: 0.02745098, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PINE
+      tag2: NEEDLE
+    color: {r: 0.050980393, g: 0.3529412, b: 0.2, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PINE
+      tag2: POLLEN_CONE
+    color: {r: 0.9529412, g: 0.85490197, b: 0.49803922, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PINE
+      tag2: SEED_CONE
+    color: {r: 0.41568628, g: 0.27450982, b: 0.18431373, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CEDAR
+      tag2: LEAF
+    color: {r: 0.3137255, g: 0.8627451, b: 0.3137255, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CEDAR
+      tag2: POLLEN_CONE
+    color: {r: 0.9529412, g: 0.75686276, b: 0.67058825, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CEDAR
+      tag2: SEED_CONE
+    color: {r: 0.30980393, g: 0.16470589, b: 0.16078432, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: OAK
+      tag2: LEAF
+    color: {r: 0.28235295, g: 0.6745098, b: 0.16078432, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: OAK
+      tag2: FLOWER
+    color: {r: 0.627451, g: 0.92156863, b: 0.23529412, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: OAK
+      tag2: NUT
+    color: {r: 0.54509807, g: 0.45882353, b: 0.30588236, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: MAHOGANY
+      tag2: LEAF
+    color: {r: 0.46666667, g: 0.7058824, b: 0.32156864, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: MAHOGANY
+      tag2: FLOWER
+    color: {r: 0.93333334, g: 1, b: 0.70980394, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: MAHOGANY
+      tag2: FRUIT
+    color: {r: 0.57254905, g: 0.34509805, b: 0.2784314, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: ACACIA
+      tag2: LEAF
+    color: {r: 0.6, g: 0.78039217, b: 0.42745098, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: ACACIA
+      tag2: FLOWER
+    color: {r: 0.9764706, g: 0.9607843, b: 0.7411765, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: ACACIA
+      tag2: POD
+    color: {r: 0.6156863, g: 0.47843137, b: 0.41960785, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: KAPOK
+      tag2: LEAF
+    color: {r: 0.44705883, g: 0.8, b: 0.28235295, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: KAPOK
+      tag2: FLOWER
+    color: {r: 0.972549, g: 0.96862745, b: 0.9607843, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: KAPOK
+      tag2: FRUIT
+    color: {r: 0.8352941, g: 0.827451, b: 0.7372549, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: MAPLE
+      tag2: LEAF
+    color: {r: 0.3137255, g: 0.8627451, b: 0.3137255, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: MAPLE
+      tag2: FLOWER
+    color: {r: 0.42352942, g: 0.7764706, b: 0.30588236, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: MAPLE
+      tag2: FRUIT
+    color: {r: 0.84313726, g: 0.8, b: 0.69803923, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: WILLOW
+      tag2: LEAF
+    color: {r: 0.26666668, g: 0.5803922, b: 0.28627452, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: WILLOW
+      tag2: POLLEN_CATKINS
+    color: {r: 0.91764706, g: 0.7372549, b: 0.627451, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: WILLOW
+      tag2: SEED_CATKINS
+    color: {r: 0.7764706, g: 0.6862745, b: 0.46666667, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: WILLOW
+      tag2: FRUIT
+    color: {r: 0.7764706, g: 0.6862745, b: 0.46666667, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: FEATHER
+      tag2: FEATHER
+    color: {r: 0.7137255, g: 0.9137255, b: 0.78431374, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: FEATHER
+      tag2: EGG
+    color: {r: 0.9137255, g: 0.8352941, b: 0.7254902, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: HIGHWOOD
+      tag2: LEAF
+    color: {r: 0.050980393, g: 0.44705883, b: 0.1764706, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: HIGHWOOD
+      tag2: FLOWER
+    color: {r: 0.68235296, g: 0.92941177, b: 0.92941177, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: LARCH
+      tag2: NEEDLE
+    color: {r: 0.14901961, g: 0.69803923, b: 0.32156864, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: LARCH
+      tag2: SEED_CONE
+    color: {r: 0.9137255, g: 0.69411767, b: 0.47843137, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: LARCH
+      tag2: POLLEN_CONE
+    color: {r: 0.5529412, g: 0.42352942, b: 0.2901961, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CHESTNUT
+      tag2: LEAF
+    color: {r: 0.20784314, g: 0.6901961, b: 0.22745098, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CHESTNUT
+      tag2: POLLEN_CATKINS
+    color: {r: 0.9019608, g: 0.9019608, b: 0.4745098, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CHESTNUT
+      tag2: SEED_CATKINS
+    color: {r: 0.9019608, g: 0.9019608, b: 0.4745098, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CHESTNUT
+      tag2: NUT
+    color: {r: 0.38039216, g: 0.7294118, b: 0.39607844, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: ALDER
+      tag2: LEAF
+    color: {r: 0.15686275, g: 0.5254902, b: 0.19607843, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: ALDER
+      tag2: POLLEN_CATKINS
+    color: {r: 0.7921569, g: 0.9019608, b: 0.5764706, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: ALDER
+      tag2: SEED_CATKINS
+    color: {r: 0.7921569, g: 0.9019608, b: 0.5764706, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: ALDER
+      tag2: CONE
+    color: {r: 0.32941177, g: 0.28627452, b: 0.19607843, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: BIRCH
+      tag2: LEAF
+    color: {r: 0.14117648, g: 0.4, b: 0.16862746, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: BIRCH
+      tag2: POLLEN_CATKINS
+    color: {r: 0.3764706, g: 0.7176471, b: 0.2627451, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: BIRCH
+      tag2: SEED_CATKINS
+    color: {r: 0.38039216, g: 0.34117648, b: 0.26666668, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: ASH
+      tag2: LEAF
+    color: {r: 0.19607843, g: 0.61960787, b: 0.16862746, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: ASH
+      tag2: FLOWER
+    color: {r: 0.9137255, g: 0.8862745, b: 0.83137256, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: ASH
+      tag2: FRUIT
+    color: {r: 0.7882353, g: 0.7176471, b: 0.6156863, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CANDLENUT
+      tag2: LEAF
+    color: {r: 0.3764706, g: 0.7058824, b: 0.23921569, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CANDLENUT
+      tag2: FLOWER
+    color: {r: 0.93333334, g: 0.9254902, b: 0.87058824, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CANDLENUT
+      tag2: NUT
+    color: {r: 0.43137255, g: 0.6392157, b: 0.34117648, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: MANGO
+      tag2: LEAF
+    color: {r: 0.30588236, g: 0.58431375, b: 0.1764706, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: MANGO
+      tag2: FLOWER
+    color: {r: 0.89411765, g: 0.27450982, b: 0.16470589, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: MANGO
+      tag2: FRUIT
+    color: {r: 0.89411765, g: 0.54509807, b: 0.16470589, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: RUBBER
+      tag2: LEAF
+    color: {r: 0.39607844, g: 0.75686276, b: 0.3019608, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CACAO
+      tag2: LEAF
+    color: {r: 0.28235295, g: 0.5137255, b: 0.105882354, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CACAO
+      tag2: FLOWER
+    color: {r: 0.93333334, g: 0.9254902, b: 0.87058824, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CACAO
+      tag2: FRUIT
+    color: {r: 0.43529412, g: 0.17254902, b: 0.1254902, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PALM
+      tag2: LEAF
+    color: {r: 0.5764706, g: 0.9137255, b: 0.42352942, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PALM
+      tag2: SPATHES
+    color: {r: 0.85490197, g: 0.6784314, b: 0.5803922, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PALM
+      tag2: FRUIT
+    color: {r: 0.4, g: 0.31764707, b: 0.27058825, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: ABACA
+      tag2: LEAF
+    color: {r: 0.52156866, g: 0.8627451, b: 0.38431373, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: ABACA
+      tag2: FLOWER
+    color: {r: 0.8, g: 0.35686275, b: 0.35686275, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: ABACA
+      tag2: FRUIT
+    color: {r: 0.99607843, g: 0.8509804, b: 0.72156864, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: BANANA
+      tag2: LEAF
+    color: {r: 0.42745098, g: 0.8039216, b: 0.36078432, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: BANANA
+      tag2: FLOWER
+    color: {r: 0.69803923, g: 0.25882354, b: 0.39607844, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: BANANA
+      tag2: FRUIT
+    color: {r: 0.8509804, g: 0.6431373, b: 0.12156863, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CARAMBOLA
+      tag2: LEAF
+    color: {r: 0.33333334, g: 0.65882355, b: 0.27450982, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CARAMBOLA
+      tag2: FLOWER
+    color: {r: 0.9529412, g: 0.23137255, b: 0.7058824, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CARAMBOLA
+      tag2: FRUIT
+    color: {r: 0.9137255, g: 0.84313726, b: 0.34509805, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CASHEW
+      tag2: LEAF
+    color: {r: 0.33333334, g: 0.65882355, b: 0.38039216, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CASHEW
+      tag2: FLOWER
+    color: {r: 0.9019608, g: 0.25490198, b: 0.14509805, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CASHEW
+      tag2: FRUIT
+    color: {r: 0.75686276, g: 0.25490198, b: 0.14509805, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CASHEW
+      tag2: SEED
+    color: {r: 0.6313726, g: 0.2509804, b: 0.18039216, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: COFFEE
+      tag2: LEAF
+    color: {r: 0.43529412, g: 0.6901961, b: 0.27450982, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: COFFEE
+      tag2: FLOWER
+    color: {r: 0.99607843, g: 0.99607843, b: 0.99607843, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: COFFEE
+      tag2: FRUIT
+    color: {r: 0.9019608, g: 0.22745098, b: 0.11372549, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: COFFEE
+      tag2: SEED
+    color: {r: 0.67058825, g: 0.6784314, b: 0.5411765, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: DURIAN
+      tag2: LEAF
+    color: {r: 0.29411766, g: 0.58431375, b: 0.3372549, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: DURIAN
+      tag2: FLOWER
+    color: {r: 1, g: 0.9607843, b: 0.9411765, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: DURIAN
+      tag2: FRUIT
+    color: {r: 0.58431375, g: 0.6117647, b: 0.19215687, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: GUAVA
+      tag2: LEAF
+    color: {r: 0.34509805, g: 0.6901961, b: 0.39607844, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: GUAVA
+      tag2: FLOWER
+    color: {r: 0.9372549, g: 0.9137255, b: 0.8352941, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: GUAVA
+      tag2: FRUIT
+    color: {r: 0.627451, g: 0.8, b: 0.27058825, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PAPAYA
+      tag2: LEAF
+    color: {r: 0.5176471, g: 0.76862746, b: 0.44313726, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PAPAYA
+      tag2: FLOWER
+    color: {r: 0.99607843, g: 0.9372549, b: 0.95686275, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PAPAYA
+      tag2: FRUIT
+    color: {r: 0.9137255, g: 0.85490197, b: 0.44313726, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PARADISE_NUT
+      tag2: LEAF
+    color: {r: 0.46666667, g: 0.08627451, b: 0.44313726, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PARADISE_NUT
+      tag2: FLOWER
+    color: {r: 0.9372549, g: 0.9529412, b: 0.9607843, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PARADISE_NUT
+      tag2: FRUIT
+    color: {r: 0.6313726, g: 0.4117647, b: 0.28627452, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PARADISE_NUT
+      tag2: SEED
+    color: {r: 0.6313726, g: 0.4117647, b: 0.28627452, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: RAMBUTAN
+      tag2: LEAF
+    color: {r: 0.54509807, g: 0.8039216, b: 0.36078432, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: RAMBUTAN
+      tag2: FLOWER
+    color: {r: 0.78039217, g: 1, b: 0.44705883, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: RAMBUTAN
+      tag2: FRUIT
+    color: {r: 0.75686276, g: 0.25490198, b: 0.34117648, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: TEA
+      tag2: LEAF
+    color: {r: 0.17254902, g: 0.5058824, b: 0.19215687, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: TEA
+      tag2: FLOWER
+    color: {r: 0.99607843, g: 0.9411765, b: 0.9372549, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: TEA
+      tag2: FRUIT
+    color: {r: 0.70980394, g: 0.29411766, b: 0, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: AVOCADO
+      tag2: LEAF
+    color: {r: 0.31764707, g: 0.7490196, b: 0.33333334, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: AVOCADO
+      tag2: FLOWER
+    color: {r: 0.8980392, g: 0.9411765, b: 0.6666667, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: AVOCADO
+      tag2: FRUIT
+    color: {r: 0.17254902, g: 0.4, b: 0.19215687, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: AVOCADO
+      tag2: SEED
+    color: {r: 0.7058824, g: 0.6627451, b: 0.3647059, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: LIME
+      tag2: LEAF
+    color: {r: 0.2901961, g: 0.58431375, b: 0.35686275, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: LIME
+      tag2: FLOWER
+    color: {r: 0.85882354, g: 0.92156863, b: 0.84313726, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: LIME
+      tag2: FRUIT
+    color: {r: 0.44313726, g: 0.85490197, b: 0.33333334, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: POMELO
+      tag2: LEAF
+    color: {r: 0.2901961, g: 0.75686276, b: 0.35686275, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: POMELO
+      tag2: FLOWER
+    color: {r: 1, g: 0.99215686, b: 0.9607843, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: POMELO
+      tag2: FRUIT
+    color: {r: 0.9019608, g: 0.8980392, b: 0.35686275, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CITRON
+      tag2: LEAF
+    color: {r: 0.18039216, g: 0.4862745, b: 0.24705882, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CITRON
+      tag2: FLOWER
+    color: {r: 1, g: 1, b: 0.8745098, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CITRON
+      tag2: FRUIT
+    color: {r: 1, g: 1, b: 0.35686275, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: ORANGE
+      tag2: LEAF
+    color: {r: 0.13333334, g: 0.43529412, b: 0.1882353, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: ORANGE
+      tag2: FLOWER
+    color: {r: 0.99607843, g: 0.9607843, b: 0.8980392, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: ORANGE
+      tag2: FRUIT
+    color: {r: 0.99607843, g: 0.45490196, b: 0.09019608, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: BITTER_ORANGE
+      tag2: LEAF
+    color: {r: 0.18039216, g: 0.5921569, b: 0.25490198, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: BITTER_ORANGE
+      tag2: FLOWER
+    color: {r: 0.9607843, g: 0.99607843, b: 0.8980392, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: BITTER_ORANGE
+      tag2: FRUIT
+    color: {r: 0.99607843, g: 0.6431373, b: 0, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: FINGER_LIME
+      tag2: LEAF
+    color: {r: 0.31764707, g: 0.69803923, b: 0.38039216, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: FINGER_LIME
+      tag2: FLOWER
+    color: {r: 0.91764706, g: 0.9607843, b: 0.89411765, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: FINGER_LIME
+      tag2: FRUIT
+    color: {r: 0.44313726, g: 0.6509804, b: 0.33333334, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: ROUND_LIME
+      tag2: LEAF
+    color: {r: 0.25490198, g: 0.5137255, b: 0.3137255, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: ROUND_LIME
+      tag2: FLOWER
+    color: {r: 0.88235295, g: 1, b: 0.8862745, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: ROUND_LIME
+      tag2: FRUIT
+    color: {r: 0.2901961, g: 0.7490196, b: 0.30980393, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: DESER_LIME
+      tag2: LEAF
+    color: {r: 0.25490198, g: 0.6, b: 0.24313726, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: DESERT_LIME
+      tag2: FLOWER
+    color: {r: 0.8901961, g: 1, b: 0.8039216, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: DESERT_LIME
+      tag2: FRUIT
+    color: {r: 0.53333336, g: 0.8235294, b: 0.30980393, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: KUMQUAT
+      tag2: LEAF
+    color: {r: 0.34117648, g: 0.6, b: 0.33333334, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: KUMQUAT
+      tag2: FLOWER
+    color: {r: 0.99607843, g: 0.9411765, b: 0.85882354, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: KUMQUAT
+      tag2: FRUIT
+    color: {r: 0.99607843, g: 0.69411767, b: 0.27058825, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CUSTARD_APPLE
+      tag2: LEAF
+    color: {r: 0.2509804, g: 0.69803923, b: 0.26666668, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CUSTARD_APPLE
+      tag2: FLOWER
+    color: {r: 0.9019608, g: 0.9019608, b: 0.64705884, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CUSTARD_APPLE
+      tag2: FRUIT
+    color: {r: 0.5686275, g: 0.8627451, b: 0.5803922, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: DATE_PALM
+      tag2: LEAF
+    color: {r: 0.4627451, g: 0.7764706, b: 0.36078432, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: DATE_PALM
+      tag2: FLOWER
+    color: {r: 0.98039216, g: 0.8666667, b: 0.6862745, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: DATE_PALM
+      tag2: FRUIT
+    color: {r: 0.6117647, g: 0.30588236, b: 0.2784314, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: LYCHEE
+      tag2: LEAF
+    color: {r: 0.42745098, g: 0.7294118, b: 0.3019608, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: LYCHEE
+      tag2: FLOWER
+    color: {r: 0.77254903, g: 0.93333334, b: 0.7058824, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: LYCHEE
+      tag2: FRUIT
+    color: {r: 0.85490197, g: 0.22352941, b: 0.34509805, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: MACADAMIA
+      tag2: LEAF
+    color: {r: 0.23137255, g: 0.6784314, b: 0.33333334, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: MACADAMIA
+      tag2: FLOWER
+    color: {r: 0.77254903, g: 1, b: 0.69803923, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: MACADAMIA
+      tag2: FRUIT
+    color: {r: 0.28627452, g: 0.8352941, b: 0.36078432, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: MACADAMIA
+      tag2: NUT
+    color: {r: 0.40784314, g: 0.30588236, b: 0.21176471, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: OLIVE
+      tag2: LEAF
+    color: {r: 0.32941177, g: 0.42745098, b: 0.2784314, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: OLIVE
+      tag2: FLOWER
+    color: {r: 0.9647059, g: 1, b: 0.8745098, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: OLIVE
+      tag2: FRUIT
+    color: {r: 0.3764706, g: 0.5254902, b: 0.3019608, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: POMEGRANATE
+      tag2: LEAF
+    color: {r: 0.30980393, g: 0.7294118, b: 0.3019608, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: POMEGRANATE
+      tag2: FLOWER
+    color: {r: 1, g: 0.34117648, b: 0.20392157, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: POMEGRANATE
+      tag2: FRUIT
+    color: {r: 0.8156863, g: 0.20392157, b: 0.20392157, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: ALMOND
+      tag2: LEAF
+    color: {r: 0.2509804, g: 0.69803923, b: 0.26666668, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: ALMOND
+      tag2: FLOWER
+    color: {r: 1, g: 0.48235294, b: 0.85490197, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: ALMOND
+      tag2: FRUIT
+    color: {r: 0.4745098, g: 0.8352941, b: 0.38431373, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: APPLE
+      tag2: LEAF
+    color: {r: 0.22745098, g: 0.654902, b: 0.18431373, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: APPLE
+      tag2: FLOWER
+    color: {r: 1, g: 0.8352941, b: 0.81960785, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: APPLE
+      tag2: FRUIT
+    color: {r: 0.6627451, g: 0.11764706, b: 0.043137256, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: APRICOT
+      tag2: LEAF
+    color: {r: 0.32156864, g: 0.7372549, b: 0.2784314, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: APRICOT
+      tag2: FLOWER
+    color: {r: 0.972549, g: 0.89411765, b: 0.83137256, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: APRICOT
+      tag2: FRUIT
+    color: {r: 0.972549, g: 0.6784314, b: 0.2784314, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: BAYBERRY
+      tag2: LEAF
+    color: {r: 0.14117648, g: 0.40784314, b: 0.1764706, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: BAYBERRY
+      tag2: FRUIT
+    color: {r: 0.8156863, g: 0.20392157, b: 0.30980393, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CHERRY
+      tag2: LEAF
+    color: {r: 0.1764706, g: 0.34117648, b: 0.14509805, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CHERRY
+      tag2: FLOWER
+    color: {r: 1, g: 0.9019608, b: 0.9490196, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CHERRY
+      tag2: FRUIT
+    color: {r: 0.5254902, g: 0.14117648, b: 0.1254902, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: GINKGO
+      tag2: LEAF
+    color: {r: 0.17254902, g: 0.85490197, b: 0.20392157, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: GINKGO
+      tag2: POLLEN_CATKINS
+    color: {r: 0.5254902, g: 0.89411765, b: 0.5411765, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: GINKGO
+      tag2: FRUIT
+    color: {r: 0.89411765, g: 0.84705883, b: 0.5254902, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: HAZEL
+      tag2: LEAF
+    color: {r: 0.2901961, g: 0.69803923, b: 0.30980393, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: HAZEL
+      tag2: POLLEN_CATKINS
+    color: {r: 0.93333334, g: 0.9019608, b: 0.7607843, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: HAZEL
+      tag2: NUT
+    color: {r: 0.5254902, g: 0.40392157, b: 0.21960784, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PEACH
+      tag2: LEAF
+    color: {r: 0.16862746, g: 0.6117647, b: 0.38039216, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PEACH
+      tag2: FLOWER
+    color: {r: 1, g: 0.6901961, b: 0.7607843, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PEACH
+      tag2: FRUIT
+    color: {r: 0.98039216, g: 0.6117647, b: 0.38039216, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PEAR
+      tag2: LEAF
+    color: {r: 0.18431373, g: 0.54509807, b: 0.14901961, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PEAR
+      tag2: FLOWER
+    color: {r: 1, g: 1, b: 0.9137255, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PEAR
+      tag2: FRUIT
+    color: {r: 0.5921569, g: 0.84313726, b: 0.5647059, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PECAN
+      tag2: LEAF
+    color: {r: 0.16078432, g: 0.36862746, b: 0.2509804, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PECAN
+      tag2: NUT
+    color: {r: 0.49411765, g: 0.28627452, b: 0.19607843, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PERSIMMON
+      tag2: LEAF
+    color: {r: 0.019607844, g: 0.41568628, b: 0.16470589, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PERSIMMON
+      tag2: FLOWER
+    color: {r: 0.8156863, g: 0.93333334, b: 0.6509804, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PERSIMMON
+      tag2: FRUIT
+    color: {r: 1, g: 0.41568628, b: 0.16470589, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PLUM
+      tag2: LEAF
+    color: {r: 0.16862746, g: 0.49411765, b: 0.2509804, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PLUM
+      tag2: FLOWER
+    color: {r: 1, g: 0.8039216, b: 0.8509804, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PLUM
+      tag2: FRUIT
+    color: {r: 0.57254905, g: 0.2784314, b: 0.5686275, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: SAND_PEAR
+      tag2: LEAF
+    color: {r: 0.3019608, g: 0.53333336, b: 0.14901961, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: SAND_PEAR
+      tag2: FLOWER
+    color: {r: 1, g: 1, b: 0.9137255, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: SAND_PEAR
+      tag2: FRUIT
+    color: {r: 0.40784314, g: 0.67058825, b: 0.14901961, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: WALNUT
+      tag2: LEAF
+    color: {r: 0.34509805, g: 0.7294118, b: 0.20392157, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: WALNUT
+      tag2: FLOWER
+    color: {r: 1, g: 1, b: 0.5254902, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: WALNUT
+      tag2: POLLEN_CATKINS
+    color: {r: 0.64705884, g: 0.8156863, b: 0.4745098, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: WALNUT
+      tag2: NUT
+    color: {r: 0.70980394, g: 0.5764706, b: 0.42745098, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}

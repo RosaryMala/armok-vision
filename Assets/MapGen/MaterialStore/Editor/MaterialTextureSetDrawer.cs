@@ -8,7 +8,6 @@ namespace MaterialStore
     [CustomPropertyDrawer(typeof(MaterialTextureSet))]
     public class MaterialTextureSetDrawer : PropertyDrawer
     {
-        private bool unfolded;
         Material mat;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -18,14 +17,14 @@ namespace MaterialStore
             EditorGUI.BeginProperty(position, label, property);
 
             // Draw label
-            unfolded = EditorGUI.Foldout(new Rect(position.x, position.y, EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight), unfolded, label);
+            property.isExpanded = EditorGUI.Foldout(new Rect(position.x, position.y, EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight), property.isExpanded, label);
             EditorGUI.PropertyField(new Rect(position.x + EditorGUIUtility.labelWidth, position.y, position.width - EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight), property.FindPropertyRelative("tag"), GUIContent.none);
 
-            if (unfolded)
+            if (property.isExpanded)
             {
                 // Don't make child fields be indented
                 var indent = EditorGUI.indentLevel;
-                EditorGUI.indentLevel = 1;
+                EditorGUI.indentLevel++;
                 Rect runningPosition = new Rect(position.x, position.y, position.width - (EditorGUIUtility.singleLineHeight * 5), EditorGUIUtility.singleLineHeight);
                 runningPosition.y += EditorGUIUtility.singleLineHeight;
                 EditorGUI.PropertyField(runningPosition, property.FindPropertyRelative("color"));
@@ -54,7 +53,7 @@ namespace MaterialStore
                         EditorGUIUtility.singleLineHeight * 5);
 
                 if (texture == null)
-                    EditorGUI.DrawRect(previewRect, mat.color);
+                    EditorGUI.DrawRect(previewRect, new Color(mat.color.r, mat.color.g, mat.color.b));
                 else
                     EditorGUI.DrawPreviewTexture(previewRect, texture, mat);
 
@@ -66,7 +65,7 @@ namespace MaterialStore
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            return unfolded ? EditorGUIUtility.singleLineHeight * 6 : EditorGUIUtility.singleLineHeight;
+            return property.isExpanded ? EditorGUIUtility.singleLineHeight * 6 : EditorGUIUtility.singleLineHeight;
         }
     }
 }
