@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+
 
 namespace MaterialStore
 {
-    [System.Serializable]
+    [Serializable]
     public class MaterialTag
     {
-        public MaterialType type;
+        public MaterialType type = MaterialType.NONE;
         public string tag1;
         public string tag2;
 
@@ -48,6 +46,138 @@ namespace MaterialStore
                     result.tag2 = values[2];
             }
             return true;
+        }
+        public void SetBasic(MatBasic basic)
+        {
+            switch (basic)
+            {
+                case MatBasic.INVALID:
+                    type = MaterialType.NONE;
+                    break;
+                case MatBasic.INORGANIC:
+                    type = MaterialType.INORGANIC;
+                    break;
+                case MatBasic.AMBER:
+                    type = MaterialType.AMBER;
+                    break;
+                case MatBasic.CORAL:
+                    type = MaterialType.CORAL;
+                    break;
+                case MatBasic.GREEN_GLASS:
+                    type = MaterialType.GLASS_GREEN;
+                    break;
+                case MatBasic.CLEAR_GLASS:
+                    type = MaterialType.GLASS_CLEAR;
+                    break;
+                case MatBasic.CRYSTAL_GLASS:
+                    type = MaterialType.GLASS_CRYSTAL;
+                    break;
+                case MatBasic.ICE:
+                    type = MaterialType.WATER;
+                    break;
+                case MatBasic.COAL:
+                    type = MaterialType.COAL;
+                    break;
+                case MatBasic.POTASH:
+                    type = MaterialType.POTASH;
+                    break;
+                case MatBasic.ASH:
+                    type = MaterialType.ASH;
+                    break;
+                case MatBasic.PEARLASH:
+                    type = MaterialType.PEARLASH;
+                    break;
+                case MatBasic.LYE:
+                    type = MaterialType.LYE;
+                    break;
+                case MatBasic.MUD:
+                    type = MaterialType.MUD;
+                    break;
+                case MatBasic.VOMIT:
+                    type = MaterialType.VOMIT;
+                    break;
+                case MatBasic.SALT:
+                    type = MaterialType.SALT;
+                    break;
+                case MatBasic.FILTH:
+                    type = MaterialType.FILTH_B;
+                    break;
+                case MatBasic.FILTH_FROZEN:
+                    type = MaterialType.FILTH_Y;
+                    break;
+                case MatBasic.UNKOWN_FROZEN:
+                    type = MaterialType.UNKNOWN_SUBSTANCE;
+                    break;
+                case MatBasic.GRIME:
+                    type = MaterialType.GRIME;
+                    break;
+                case MatBasic.ICHOR:
+                    type = MaterialType.CREATURE;
+                    tag2 = "ICHOR";
+                    break;
+                case MatBasic.LEATHER:
+                    type = MaterialType.CREATURE;
+                    tag2 = "LEATHER";
+                    break;
+                case MatBasic.BLOOD_1:
+                case MatBasic.BLOOD_2:
+                case MatBasic.BLOOD_3:
+                case MatBasic.BLOOD_4:
+                case MatBasic.BLOOD_5:
+                case MatBasic.BLOOD_6:
+                case MatBasic.BLOOD_NAMED:
+                    type = MaterialType.CREATURE;
+                    tag2 = "BLOOD";
+                    break;
+                case MatBasic.PLANT:
+                    type = MaterialType.PLANT;
+                    break;
+                case MatBasic.WOOD:
+                    type = MaterialType.PLANT;
+                    tag2 = "WOOD";
+                    break;
+                case MatBasic.PLANTCLOTH:
+                    type = MaterialType.PLANT;
+                    tag2 = "THREAD";
+                    break;
+                case MatBasic.DESIGNATION:
+                    type = MaterialType.NONE;
+                    break;
+                case MatBasic.CONSTRUCTION:
+                    type = MaterialType.NONE;
+                    break;
+                default:
+                    type = MaterialType.NONE;
+                    break;
+            }
+        }
+
+        public override string ToString()
+        {
+            string value = type.ToString();
+            if (NumTags > 1)
+                value += ":" + (string.IsNullOrEmpty(tag1) ? "*" : tag1);
+            if (NumTags > 2)
+                value += ":" + (string.IsNullOrEmpty(tag2) ? "*" : tag2);
+            return value;
+        }
+
+        public int NumTags
+        {
+            get
+            {
+                switch (type)
+                {
+                    case MaterialType.INORGANIC:
+                    case MaterialType.COAL:
+                        return 2;
+                    case MaterialType.CREATURE:
+                    case MaterialType.PLANT:
+                        return 3;
+                    default:
+                        return 1;
+                }
+            }
         }
     }
 }

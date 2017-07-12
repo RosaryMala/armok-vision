@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3eb79f8a19db6f4fb47247069cb969c, type: 3}
+  m_Name: Colors
+  m_EditorClassIdentifier: 
+  textures:
+  - tag:
+      type: 0
+      tag1: 
+      tag2: 
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 4
+      tag1: 
+      tag2: 
+    color: {r: 0.30980393, g: 0.8039216, b: 0.34509805, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 5
+      tag1: 
+      tag2: 
+    color: {r: 0.6666667, g: 0.8039216, b: 0.8039216, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 6
+      tag1: 
+      tag2: 
+    color: {r: 0.7647059, g: 0.8039216, b: 0.8235294, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 8
+      tag1: 
+      tag2: 
+    color: {r: 0.1254902, g: 0.1254902, b: 0.1254902, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 14
+      tag1: 
+      tag2: 
+    color: {r: 0.49803922, g: 0.76862746, b: 0.10980392, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 7
+      tag1: 
+      tag2: 
+    color: {r: 0.7176471, g: 0.89411765, b: 1, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}

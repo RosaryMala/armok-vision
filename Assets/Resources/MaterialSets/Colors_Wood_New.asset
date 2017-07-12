@@ -1,0 +1,131 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3eb79f8a19db6f4fb47247069cb969c, type: 3}
+  m_Name: Colors_Wood_New
+  m_EditorClassIdentifier: 
+  textures:
+  - tag:
+      type: 21
+      tag1: CARAMBOLA
+      tag2: WOOD
+    color: {r: 0.8784314, g: 0.7058824, b: 0.4117647, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: CASHEW
+      tag2: WOOD
+    color: {r: 0.5803922, g: 0.50980395, b: 0.38039216, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: COFFEE
+      tag2: WOOD
+    color: {r: 0.7764706, g: 0.6666667, b: 0.5921569, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: DURIAN
+      tag2: WOOD
+    color: {r: 0.70980394, g: 0.654902, b: 0.5803922, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: GUAVA
+      tag2: WOOD
+    color: {r: 0.8, g: 0.6, b: 0.4862745, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PAPAYA
+      tag2: WOOD
+    color: {r: 0.68235296, g: 0.6117647, b: 0.47843137, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PARADISE_NUT
+      tag2: WOOD
+    color: {r: 0.7764706, g: 0.45490196, b: 0.27450982, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: RAMBUTAN
+      tag2: WOOD
+    color: {r: 0.8235294, g: 0.43529412, b: 0.18431373, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: TEA
+      tag2: WOOD
+    color: {r: 0.68235296, g: 0.6, b: 0.46666667, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: APRICOT
+      tag2: WOOD
+    color: {r: 0.77254903, g: 0.5529412, b: 0.2784314, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: ALMOND
+      tag2: WOOD
+    color: {r: 0.64705884, g: 0.43137255, b: 0.1882353, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: HAZEL
+      tag2: WOOD
+    color: {r: 0.6666667, g: 0.5568628, b: 0.4392157, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 21
+      tag1: PEACH
+      tag2: WOOD
+    color: {r: 0.47843137, g: 0.34901962, b: 0.2509804, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}

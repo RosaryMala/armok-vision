@@ -1,0 +1,203 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3eb79f8a19db6f4fb47247069cb969c, type: 3}
+  m_Name: Colors_Stone_Soil
+  m_EditorClassIdentifier: 
+  textures:
+  - tag:
+      type: 1
+      tag1: FIRE_CLAY
+      tag2: 
+    color: {r: 0.92156863, g: 0.83137256, b: 0.627451, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 1
+      tag1: CLAY
+      tag2: 
+    color: {r: 0.77254903, g: 0.49019608, b: 0.27450982, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 1
+      tag1: SILTY_CLAY
+      tag2: 
+    color: {r: 0.9254902, g: 0.6666667, b: 0.5411765, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 1
+      tag1: SANDY_CLAY
+      tag2: 
+    color: {r: 0.64705884, g: 0.45490196, b: 0.1882353, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 1
+      tag1: CLAY_LOAM
+      tag2: 
+    color: {r: 0.61960787, g: 0.44705883, b: 0.3529412, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 1
+      tag1: SANDY_CLAY_LOAM
+      tag2: 
+    color: {r: 0.6862745, g: 0.6156863, b: 0.49411765, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 1
+      tag1: SILTY_CLAY_LOAM
+      tag2: 
+    color: {r: 0.46666667, g: 0.32941177, b: 0.28627452, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 1
+      tag1: LOAM
+      tag2: 
+    color: {r: 0.40784314, g: 0.3882353, b: 0.3764706, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 1
+      tag1: SANDY_LOAM
+      tag2: 
+    color: {r: 0.6666667, g: 0.5294118, b: 0.4, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 1
+      tag1: SILT_LOAM
+      tag2: 
+    color: {r: 0.5803922, g: 0.40392157, b: 0.34117648, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 1
+      tag1: LOAMY_SAND
+      tag2: 
+    color: {r: 0.7764706, g: 0.6509804, b: 0.60784316, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 1
+      tag1: SILT
+      tag2: 
+    color: {r: 0.4745098, g: 0.44705883, b: 0.42745098, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 1
+      tag1: SAND_TAN
+      tag2: 
+    color: {r: 0.85490197, g: 0.8, b: 0.74509805, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 1
+      tag1: SAND_YELLOW
+      tag2: 
+    color: {r: 0.8627451, g: 0.7490196, b: 0.47058824, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 1
+      tag1: SAND_WHITE
+      tag2: 
+    color: {r: 0.9529412, g: 0.9098039, b: 1, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 1
+      tag1: SAND_BLACK
+      tag2: 
+    color: {r: 0.46666667, g: 0.47058824, b: 0.5019608, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 1
+      tag1: SAND_RED
+      tag2: 
+    color: {r: 0.8745098, g: 0.32941177, b: 0.13333334, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 1
+      tag1: PEAT
+      tag2: 
+    color: {r: 0.43529412, g: 0.3529412, b: 0.33333334, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 1
+      tag1: PELAGIC_CLAY
+      tag2: 
+    color: {r: 0.6392157, g: 0.61960787, b: 0.5882353, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 1
+      tag1: CALCAREOUS_OOZE
+      tag2: 
+    color: {r: 0.8392157, g: 0.72156864, b: 0.4862745, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}
+  - tag:
+      type: 1
+      tag1: SILICEOUS_OOZE
+      tag2: 
+    color: {r: 1, g: 0.8509804, b: 0.7607843, a: 0.5019608}
+    texture: {fileID: 0}
+    normal: {fileID: 0}
+    heightMap: {fileID: 0}
+    aoMap: {fileID: 0}

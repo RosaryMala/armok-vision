@@ -280,7 +280,7 @@
       <subtype value="ALUNITE" />
     </material>
   </color>
-  <color red="101" green="335" blue="436">
+  <color red="101" green="255" blue="255">
     <material value="Inorganic">
       <subtype value="RAW_ADAMANTINE" />
     </material>
