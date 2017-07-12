@@ -20,7 +20,6 @@ public class MaterialXMLConverter
             Debug.Log("Only colors available currently, quitting.");
         }
 
-        var materialCollection = ScriptableObject.CreateInstance<MaterialCollection>();
         foreach (var item in doc.Elements())
         {
             Color32 color32 = new Color32();
@@ -51,103 +50,108 @@ public class MaterialXMLConverter
             foreach (var elemMaterial in item.Elements("material"))
             {
                 MaterialTag tag = new MaterialTag();
-                MaterialTextureSet set = new MaterialTextureSet();
-                set.color = color32;
                 XAttribute elemToken = elemMaterial.Attribute("token");
                 if (elemToken != null)
                 {
                     if (!MaterialTag.TryParse(elemMaterial.Attribute("token").Value, out tag))
                         continue;
-                    Debug.Log(tag);
-                    set.tag = tag;
-                    materialCollection.textures.Add(set);
-                    continue;
-                }
-
-                //if there's no material token, fall back to the out-dated system.
-                XAttribute elemValue = elemMaterial.Attribute("value");
-                MatBasic elemType = MatBasic.INVALID;
-                if (elemValue != null)
-                {
-                    elemType = ContentLoader.lookupMaterialType(elemValue.Value);
-                }
-                if (elemType == MatBasic.INVALID)
-                {
-                    //throw error here
-                    continue;
-                }
-
-                //parse subtype elements
-                if (elemMaterial.Element("subtype") == null)
-                {
-                    tag.SetBasic(elemType);
                 }
                 else
                 {
-                    var elemSubtypes = elemMaterial.Elements("subtype");
-                    foreach (XElement elemSubtype in elemSubtypes)
+                    //if there's no material token, fall back to the out-dated system.
+                    XAttribute elemValue = elemMaterial.Attribute("value");
+                    MatBasic elemType = MatBasic.INVALID;
+                    if (elemValue != null)
                     {
-                        XAttribute subtypeValue = elemSubtype.Attribute("value");
-                        if (subtypeValue == null)
+                        elemType = ContentLoader.lookupMaterialType(elemValue.Value);
+                    }
+                    if (elemType == MatBasic.INVALID)
+                    {
+                        //throw error here
+                        continue;
+                    }
+
+                    //parse subtype elements
+                    if (elemMaterial.Element("subtype") == null)
+                    {
+                        tag.SetBasic(elemType);
+                    }
+                    else
+                    {
+                        var elemSubtypes = elemMaterial.Elements("subtype");
+                        foreach (XElement elemSubtype in elemSubtypes)
                         {
-                            //Oh no!
-                            continue;
-                        }
-                        string subtype = subtypeValue.Value;
-                        string token = "";
-                        switch (elemType)
-                        {
-                            case MatBasic.INORGANIC:
-                                token = "INORGANIC:" + subtype;
-                                break;
-                            case MatBasic.ICHOR:
-                                token = "CREATURE:" + subtype + ":ICHOR";
-                                break;
-                            case MatBasic.LEATHER:
-                                token = "CREATURE:" + subtype + ":LEATHER";
-                                break;
-                            case MatBasic.BLOOD_1:
-                                token = "CREATURE:" + subtype + ":BLOOD";
-                                break;
-                            case MatBasic.BLOOD_2:
-                                token = "CREATURE:" + subtype + ":BLOOD";
-                                break;
-                            case MatBasic.BLOOD_3:
-                                token = "CREATURE:" + subtype + ":BLOOD";
-                                break;
-                            case MatBasic.BLOOD_4:
-                                token = "CREATURE:" + subtype + ":BLOOD";
-                                break;
-                            case MatBasic.BLOOD_5:
-                                token = "CREATURE:" + subtype + ":BLOOD";
-                                break;
-                            case MatBasic.BLOOD_6:
-                                token = "CREATURE:" + subtype + ":BLOOD";
-                                break;
-                            case MatBasic.PLANT:
-                                token = "PLANT:" + subtype + ":STRUCTURAL";
-                                break;
-                            case MatBasic.WOOD:
-                                token = "PLANT:" + subtype + ":WOOD";
-                                break;
-                            case MatBasic.PLANTCLOTH:
-                                token = "PLANT:" + subtype + ":THREAD";
-                                break;
-                            default:
-                                //make some kind of error here
+                            XAttribute subtypeValue = elemSubtype.Attribute("value");
+                            if (subtypeValue == null)
+                            {
+                                //Oh no!
                                 continue;
+                            }
+                            string subtype = subtypeValue.Value;
+                            string token = "";
+                            switch (elemType)
+                            {
+                                case MatBasic.INORGANIC:
+                                    token = "INORGANIC:" + subtype;
+                                    break;
+                                case MatBasic.ICHOR:
+                                    token = "CREATURE:" + subtype + ":ICHOR";
+                                    break;
+                                case MatBasic.LEATHER:
+                                    token = "CREATURE:" + subtype + ":LEATHER";
+                                    break;
+                                case MatBasic.BLOOD_1:
+                                    token = "CREATURE:" + subtype + ":BLOOD";
+                                    break;
+                                case MatBasic.BLOOD_2:
+                                    token = "CREATURE:" + subtype + ":BLOOD";
+                                    break;
+                                case MatBasic.BLOOD_3:
+                                    token = "CREATURE:" + subtype + ":BLOOD";
+                                    break;
+                                case MatBasic.BLOOD_4:
+                                    token = "CREATURE:" + subtype + ":BLOOD";
+                                    break;
+                                case MatBasic.BLOOD_5:
+                                    token = "CREATURE:" + subtype + ":BLOOD";
+                                    break;
+                                case MatBasic.BLOOD_6:
+                                    token = "CREATURE:" + subtype + ":BLOOD";
+                                    break;
+                                case MatBasic.PLANT:
+                                    token = "PLANT:" + subtype + ":STRUCTURAL";
+                                    break;
+                                case MatBasic.WOOD:
+                                    token = "PLANT:" + subtype + ":WOOD";
+                                    break;
+                                case MatBasic.PLANTCLOTH:
+                                    token = "PLANT:" + subtype + ":THREAD";
+                                    break;
+                                default:
+                                    //make some kind of error here
+                                    continue;
+                            }
+                            MaterialTag.TryParse(token, out tag);
                         }
-                        MaterialTag.TryParse(token, out tag);
                     }
                 }
                 Debug.Log(tag);
-                set.tag = tag;
-                materialCollection.textures.Add(set);
+
+                string subFolder = Path.GetFileNameWithoutExtension(xmlFilePath) + "/";
+                string assetPath = "Assets/Resources/Materials/" + subFolder + tag.ToFileName() + ".mat";
+                var saveMat = AssetDatabase.LoadAssetAtPath<Material>(assetPath);
+                if (saveMat == null)
+                {
+                    if (!Directory.Exists(Path.GetDirectoryName(assetPath)))
+                        Directory.CreateDirectory(Path.GetDirectoryName(assetPath));
+                    saveMat = new Material(Shader.Find("Custom/MaterialStore"));
+                    AssetDatabase.CreateAsset(saveMat, assetPath);
+                }
+                saveMat.SetColor("_Color", color32);
+
+                Debug.Log(assetPath);
             }
         }
-        string assetPath = @"Assets\Resources\MaterialSets\" + Path.GetFileNameWithoutExtension(xmlFilePath) + ".asset";
-        Debug.Log(assetPath);
-        AssetDatabase.CreateAsset(materialCollection, assetPath);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
     }

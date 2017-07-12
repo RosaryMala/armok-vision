@@ -162,6 +162,16 @@ namespace MaterialStore
             return value;
         }
 
+        public string ToFileName()
+        {
+            string value = type.ToString();
+            if (NumTags > 1)
+                value += "-" + (string.IsNullOrEmpty(tag1) ? "_" : tag1);
+            if (NumTags > 2)
+                value += "-" + (string.IsNullOrEmpty(tag2) ? "_" : tag2);
+            return value;
+        }
+
         public int NumTags
         {
             get
