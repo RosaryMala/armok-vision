@@ -19,23 +19,23 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _Height:
-        m_Texture: {fileID: 2800000, guid: 22f2ba6400d7937489c3f190ac706dcd, type: 3}
+        m_Texture: {fileID: 2800000, guid: 3069540380876ff45bdfad7dd82fa755, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: a67240f60c6775a4388dcc0c547487d5, type: 3}
+        m_Texture: {fileID: 2800000, guid: 57c9bf5aee5986c409432f85c898a9ad, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal:
-        m_Texture: {fileID: 2800000, guid: 9b7646480743f0f4888c44fe401a8d72, type: 3}
+        m_Texture: {fileID: 2800000, guid: ab8aa3cc473ebe14788990e8d5df880a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Occlusion:
-        m_Texture: {fileID: 2800000, guid: 78317aeb4e93897448747ea86632ef47, type: 3}
+        m_Texture: {fileID: 2800000, guid: 993e9c6bb57133f4c9ed1bb31f62bfe7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Specular:
-        m_Texture: {fileID: 2800000, guid: fd2122af240204046a2f238a86c6d9ca, type: 3}
+        m_Texture: {fileID: 2800000, guid: 55b501c3e6aea514199cc70ebe024b46, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
