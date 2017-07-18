@@ -59,25 +59,32 @@ namespace Building
 
         Dictionary<int, BuildingModel> sceneBuildings = new Dictionary<int, BuildingModel>();
         HashSet<int> removedBuildings = new HashSet<int>();
+        bool loadedAnyBuildngs = false;
+        internal void BeginExistenceCheck()
+        {
+            removedBuildings.Clear();
+            removedBuildings.UnionWith(sceneBuildings.Keys);
+        }
+
+        internal void EndExistenceCheck()
+        {
+            if (!loadedAnyBuildngs)
+                return;
+            foreach (var index in removedBuildings)
+            {
+                Destroy(sceneBuildings[index].gameObject);
+                sceneBuildings.Remove(index);
+            }
+            loadedAnyBuildngs = false;
+        }
 
         internal void LoadBlock(MapBlock block)
         {
-            GameMap.BeginSample("Remove unused buildings");
-            removedBuildings.Clear();
-            removedBuildings.UnionWith(sceneBuildings.Keys);
+            if (block.buildings.Count > 0)
+                loadedAnyBuildngs = true;
             foreach (var building in block.buildings)
             {
                 removedBuildings.Remove(building.index);
-            }
-            foreach (var index in removedBuildings)
-            {
-                Destroy(sceneBuildings[index]);
-                sceneBuildings.Remove(index);
-            }
-            GameMap.EndSample();
-
-            foreach (var building in block.buildings)
-            {
                 if (building.pos_x_max == default(int)
                     && building.pos_x_min == default(int)
                     && building.pos_y_max == default(int)

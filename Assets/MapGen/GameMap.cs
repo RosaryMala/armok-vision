@@ -12,6 +12,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
+using Building;
 
 // The class responsible for talking to DF and meshing the data it gets.
 // Relevant vocabulary: A "map tile" is an individual square on the map.
@@ -226,6 +227,12 @@ public class GameMap : MonoBehaviour
     {
         if (IsMainThread)
             UnityEngine.Profiling.Profiler.BeginSample(name);
+    }
+    [System.Diagnostics.Conditional("DEVELOPMENT_BUILD"), System.Diagnostics.Conditional("UNITY_EDITOR")]
+    public static void BeginSample(string name, Object targetObject)
+    {
+        if (IsMainThread)
+            UnityEngine.Profiling.Profiler.BeginSample(name, targetObject);
     }
 
     [System.Diagnostics.Conditional("DEVELOPMENT_BUILD"), System.Diagnostics.Conditional("UNITY_EDITOR")]
@@ -781,6 +788,8 @@ public class GameMap : MonoBehaviour
         }
         if (MapDataStore.MapSize.x < 48)
             return;
+
+        BuildingManager.Instance.BeginExistenceCheck();
         UnityEngine.Profiling.Profiler.BeginSample("UpdateBlocks", this);
         MapBlock block;
         while((block = DFConnection.Instance.PopMapBlockUpdate()) != null)
@@ -811,9 +820,10 @@ public class GameMap : MonoBehaviour
             //    ///Send it to item manager later.
             //}
             UnityEngine.Profiling.Profiler.BeginSample("BuildingManager.LoadBlock", this);
-            Building.BuildingManager.Instance.LoadBlock(block);
+            BuildingManager.Instance.LoadBlock(block);
             UnityEngine.Profiling.Profiler.EndSample();
         }
+        BuildingManager.Instance.EndExistenceCheck();
         DirtySeasonalBlocks();
         UnityEngine.Profiling.Profiler.BeginSample("EnqueueMeshUpdates", this);
         EnqueueMeshUpdates();
