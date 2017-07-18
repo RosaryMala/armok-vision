@@ -2,6 +2,7 @@
 using RemoteFortressReader;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Building
 {
@@ -100,8 +101,18 @@ namespace Building
 
         internal void DrawSelection()
         {
-            if(tilePositions != null)
-                Graphics.DrawMeshInstanced(BuildingManager.Instance.selectionMesh, 0, BuildingManager.Instance.selectionMaterial, tilePositions);
+            if (tilePositions != null)
+            {
+                if(tilePositions.Length > 1023)
+                    Graphics.DrawMeshInstanced(BuildingManager.Instance.selectionMesh, 0, BuildingManager.Instance.selectionMaterial, tilePositions.Take(1023).ToArray());
+                else
+                    Graphics.DrawMeshInstanced(BuildingManager.Instance.selectionMesh, 0, BuildingManager.Instance.selectionMaterial, tilePositions);
+            }
+        }
+
+        internal void PrintInfo()
+        {
+            Debug.Log(GameMap.buildings[originalBuilding.building_type].id);
         }
 
         private void ClearSelectionColliders()

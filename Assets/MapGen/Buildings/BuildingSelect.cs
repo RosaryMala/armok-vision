@@ -12,5 +12,10 @@ namespace Building
         {
             root.DrawSelection();
         }
+
+        private void OnMouseDown()
+        {
+            root.PrintInfo();
+        }
     }
 }
