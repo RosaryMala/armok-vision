@@ -1,23 +1,19 @@
 fileFormatVersion: 2
-guid: ad082742ca8249146a7bc0f32c5e0202
+guid: c0ec03877aedd8a46adb6ede69269b24
+timeCreated: 1500373493
+licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: STAIR_DOWN
-    100002: //RootNode
-    100004: StaticMaterial
-    400000: STAIR_DOWN
-    400002: //RootNode
-    400004: StaticMaterial
-    2300000: STAIR_DOWN
-    2300002: StaticMaterial
-    3300000: STAIR_DOWN
-    3300002: StaticMaterial
-    4300000: STAIR_DOWN
-    4300002: StaticMaterial
-    9500000: //RootNode
+    100000: //RootNode
+    100002: StaticMaterial
+    400000: //RootNode
+    400002: StaticMaterial
+    2300000: StaticMaterial
+    3300000: StaticMaterial
+    4300000: StaticMaterial
   materials:
-    importMaterials: 0
+    importMaterials: 1
     materialName: 0
     materialSearch: 1
   animations:
@@ -56,11 +52,11 @@ ModelImporter:
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 0
+    useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
-    tangentImportMode: 4
+    tangentImportMode: 3
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
@@ -78,7 +74,7 @@ ModelImporter:
     rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
-    skeletonHasParents: 0
+    skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 0
   humanoidOversampling: 1
