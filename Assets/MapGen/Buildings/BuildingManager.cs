@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using DFHack;
 using RemoteFortressReader;
+using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.Profiling;
-using DFHack;
-using System.Text;
 
 namespace Building
 {
@@ -22,6 +20,7 @@ namespace Building
         Dictionary<BuildingStruct, BuildingModel> buildingPrefabs = new Dictionary<BuildingStruct, BuildingModel>();
 
         Dictionary<DFCoord, BuildingInstance> buildingInfoMap = new Dictionary<DFCoord, BuildingInstance>();
+
 
         void LoadBuildings()
         {
@@ -59,11 +58,33 @@ namespace Building
         }
 
         Dictionary<int, BuildingModel> sceneBuildings = new Dictionary<int, BuildingModel>();
+        HashSet<int> removedBuildings = new HashSet<int>();
 
-        internal void LoadBlock(RemoteFortressReader.MapBlock block)
+        internal void LoadBlock(MapBlock block)
         {
+            GameMap.BeginSample("Remove unused buildings");
+            removedBuildings.Clear();
+            removedBuildings.UnionWith(sceneBuildings.Keys);
             foreach (var building in block.buildings)
             {
+                removedBuildings.Remove(building.index);
+            }
+            foreach (var index in removedBuildings)
+            {
+                Destroy(sceneBuildings[index]);
+                sceneBuildings.Remove(index);
+            }
+            GameMap.EndSample();
+
+            foreach (var building in block.buildings)
+            {
+                if (building.pos_x_max == default(int)
+                    && building.pos_x_min == default(int)
+                    && building.pos_y_max == default(int)
+                    && building.pos_y_min == default(int)
+                    && building.pos_z_max == default(int)
+                    && building.pos_z_min == default(int))
+                    continue;
                 BuildingModel builtBuilding;
                 if (!sceneBuildings.ContainsKey(building.index))
                 {
