@@ -92,6 +92,8 @@ namespace Building
                     && building.pos_z_max == default(int)
                     && building.pos_z_min == default(int))
                     continue;
+                if (building.building_type.building_type == 30)//Civzone
+                    continue;
                 BuildingModel builtBuilding;
                 if (!sceneBuildings.ContainsKey(building.index))
                 {
