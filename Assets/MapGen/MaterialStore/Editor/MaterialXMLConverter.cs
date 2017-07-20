@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class MaterialXMLConverter
 {
-    [MenuItem("Mytools/Build Material Collection")]
+    [MenuItem("Mytools/Convert XML colors to materials")]
     public static void BuildMaterialCollection()
     {
         var xmlFilePath = EditorUtility.OpenFilePanel("Pick an XML file to load", "Assets/StreamingAssets", "xml");

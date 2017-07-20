@@ -21,31 +21,62 @@ namespace MaterialStore
         public static bool TryParse(string value, out MaterialTag result)
         {
             result = new MaterialTag();
-            var values = value.Split(':');
-            if (values[0] == "*")
-                result.type = MaterialType.NONE;
+            if (value.Contains(":"))
+            {
+                var values = value.Split(':');
+                if (values[0] == "*")
+                    result.type = MaterialType.NONE;
+                else
+                {
+                    try
+                    {
+                        result.type = (MaterialType)Enum.Parse(typeof(MaterialType), values[0]);
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
+                }
+                if (values.Length > 1)
+                {
+                    if (values[1] != "*")
+                        result.tag1 = values[1];
+                }
+                if (values.Length > 2)
+                {
+                    if (values[2] != "*")
+                        result.tag2 = values[2];
+                }
+                return true;
+            }
             else
             {
-                try
+                var values = value.Split('-');
+                if (values[0] == "_")
+                    result.type = MaterialType.NONE;
+                else
                 {
-                    result.type = (MaterialType)Enum.Parse(typeof(MaterialType), values[0]);
+                    try
+                    {
+                        result.type = (MaterialType)Enum.Parse(typeof(MaterialType), values[0]);
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
                 }
-                catch (Exception)
+                if (values.Length > 1)
                 {
-                    return false;
+                    if (values[1] != "_")
+                        result.tag1 = values[1];
                 }
+                if (values.Length > 2)
+                {
+                    if (values[2] != "_")
+                        result.tag2 = values[2];
+                }
+                return true;
             }
-            if(values.Length > 1)
-            {
-                if (values[1] != "*")
-                    result.tag1 = values[1];
-            }
-            if (values.Length > 2)
-            {
-                if (values[2] != "*")
-                    result.tag2 = values[2];
-            }
-            return true;
         }
         public void SetBasic(MatBasic basic)
         {
