@@ -1,4 +1,5 @@
 ﻿using hqx;
+using MaterialStore;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -95,6 +96,9 @@ public class ContentLoader : MonoBehaviour
                 return MatBasic.INVALID;
         }
     }
+
+    public Texture2DArray PatternTextureArray { get; private set; }
+
     public TextureStorage materialTextureStorage { get; private set; }
     public TextureStorage shapeTextureStorage { get; private set; }
     public TextureStorage specialTextureStorage { get; private set; }
@@ -242,6 +246,8 @@ public class ContentLoader : MonoBehaviour
         System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         watch.Start();
         GameMap.Instance.ShowHelp();
+        PatternTextureArray = Resources.Load<Texture2DArray>("patternTextures");
+        PopulateMatDefinitions();
         yield return StartCoroutine(ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt"));
         yield return StartCoroutine(FinalizeTextureAtlases());
         Instance = this;
@@ -254,6 +260,10 @@ public class ContentLoader : MonoBehaviour
         yield return null;
     }
 
+    private void PopulateMatDefinitions()
+    {
+        MaterialCollection matCollection = Resources.Load<MaterialCollection>("materialDefinitions");
+    }
 
     IEnumerator ParseContentIndexFile(string path)
     {
