@@ -19,7 +19,7 @@ namespace MaterialStore
             int occlusionID = Shader.PropertyToID("_Occlusion");
             int heightID = Shader.PropertyToID("_Height");
 
-            List<MaterialTextureSet> materialList = new List<MaterialTextureSet>();
+            MaterialCollection matCollection = ScriptableObject.CreateInstance<MaterialCollection>();
 
             Dictionary<string, int> patternIndex = new Dictionary<string, int>();
             List<Texture2D> albedoList = new List<Texture2D>();
@@ -35,6 +35,8 @@ namespace MaterialStore
                 MaterialTextureSet set = new MaterialTextureSet();
 
                 set.tag = MaterialTag.Parse(mat.name);
+
+                set.color = mat.color;
 
                 Texture2D albedo = (Texture2D)mat.GetTexture(albedoID);
                 Texture2D specular = (Texture2D)mat.GetTexture(specularID);
@@ -58,11 +60,12 @@ namespace MaterialStore
                     albedoList.Add(albedo);
                     specularList.Add(specular);
                 }
+
+                matCollection.textures.Add(set);
             }
 
             Texture2DArray patternArray = new Texture2DArray(256, 256, albedoList.Count, TextureFormat.ARGB32, true, false);
             Texture2D tempTex = new Texture2D(256, 256, TextureFormat.ARGB32, false);
-            var patternColors = patternArray.GetPixels(0);
             Material patternMat = new Material(Shader.Find("Hidden/PatternTextureMaker"));
 
             for (int i = 0; i < albedoList.Count; i++)
@@ -83,6 +86,7 @@ namespace MaterialStore
             patternArray.Apply(true);
 
             AssetDatabase.CreateAsset(patternArray, "Assets/Resources/patternTextures.asset");
+            AssetDatabase.CreateAsset(matCollection, "Assets/Resources/materialDefinitions.asset");
             AssetDatabase.SaveAssets();
         }
     }
