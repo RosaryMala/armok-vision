@@ -10,6 +10,19 @@ namespace MaterialStore
         public string tag1;
         public string tag2;
 
+        public MaterialTag()
+        {
+            type = MaterialType.NONE;
+            tag1 = null;
+            tag2 = null;
+        }
+        public MaterialTag(MaterialType type = MaterialType.NONE, string tag1 = null, string tag2 = null)
+        {
+            this.type = type;
+            this.tag1 = tag1;
+            this.tag2 = tag2;
+        }
+
         public static MaterialTag Parse(string value)
         {
             MaterialTag result;

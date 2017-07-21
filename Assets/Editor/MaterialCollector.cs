@@ -28,6 +28,31 @@ namespace MaterialStore
             var defaultAlbedo = Resources.Load<Texture2D>("Grey");
             var defaultSpecular = Resources.Load<Texture2D>("Low_S");
 
+            {
+                MaterialTextureSet set = new MaterialTextureSet();
+
+                set.tag = new MaterialTag();
+
+                set.color = Color.gray;
+
+                string id = defaultAlbedo.GetInstanceID().ToString() + "," + defaultSpecular.GetInstanceID().ToString();
+
+                if (patternIndex.ContainsKey(id))
+                {
+                    set.patternIndex = patternIndex[id];
+                }
+                else
+                {
+                    set.patternIndex = albedoList.Count;
+                    patternIndex[id] = albedoList.Count;
+                    albedoList.Add(defaultAlbedo);
+                    specularList.Add(defaultSpecular);
+                }
+
+                matCollection.textures.Add(set);
+
+            }
+
             foreach (var item in guids)
             {
                 var mat = AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath(item));
