@@ -13,6 +13,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textures:
   - tag:
+      type: 0
+      tag1: 
+      tag2: 
+    color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    patternIndex: 0
+    shapeIndex: 0
+  - tag:
       type: 8
       tag1: 
       tag2: 
