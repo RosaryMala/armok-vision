@@ -1,4 +1,5 @@
-﻿using RemoteFortressReader;
+﻿using MaterialStore;
+using RemoteFortressReader;
 using System;
 using UnityEngine;
 
@@ -206,17 +207,17 @@ public class SplatManager : MonoBehaviour
                 else
                     terrainIndices[index].g = ContentLoader.Instance.DefaultShapeTexIndex;
 
-                TextureContent materialContent;
-                if (ContentLoader.Instance.MaterialTextureConfiguration.GetValue(tile, layer, out materialContent))
-                    terrainIndices[index].r = materialContent.StorageIndex;
+                MaterialTextureSet materialContent;
+                if (ContentLoader.Instance.MaterialTextures.TryGetValue(tile.GetMaterial(layer), out materialContent))
+                {
+                    terrainIndices[index].r = materialContent.patternIndex;
+                    terrainColors[index] = materialContent.color;
+                }
                 else
+                {
                     terrainIndices[index].r = ContentLoader.Instance.DefaultMatTexIndex;
-
-                ColorContent colorContent;
-                if (ContentLoader.Instance.ColorConfiguration.GetValue(tile, layer, out colorContent))
-                    terrainColors[index] = colorContent.color;
-                else
                     terrainColors[index] = Color.gray;
+                }
             }
         UnityEngine.Profiling.Profiler.EndSample();
         UnityEngine.Profiling.Profiler.EndSample();
@@ -307,24 +308,19 @@ public class SplatManager : MonoBehaviour
 
                 grassTiles++;
 
-                GrassContent grassTexture;
-                if (ContentLoader.Instance.GrassTextureConfiguration.GetValue(tile, MeshLayer.StaticMaterial, out grassTexture))
+                MaterialTextureSet grassTexture;
+                if (ContentLoader.Instance.MaterialTextures.TryGetValue(tile.material, out grassTexture))
                 {
-                    grassIndices[index].r = grassTexture.MaterialTexture.StorageIndex;
-                    grassIndices[index].g = grassTexture.ShapeTexture.StorageIndex;
+                    grassIndices[index].r = grassTexture.patternIndex;
+                    grassIndices[index].g = grassTexture.shapeIndex;
+                    grassColors[index] = grassTexture.color;
                 }
                 else
                 {
                     grassIndices[index].r = ContentLoader.Instance.DefaultMatTexIndex;
                     grassIndices[index].g = ContentLoader.Instance.DefaultShapeTexIndex;
-                }
-
-                ColorContent colorContent;
-                if (ContentLoader.Instance.ColorConfiguration.GetValue(tile, MeshLayer.StaticMaterial, out colorContent))
-                    grassColors[index] = colorContent.color;
-                else
                     grassColors[index] = Color.gray;
-
+                }
             }
         if (grassTiles == 0)
         {
@@ -409,13 +405,13 @@ public class SplatManager : MonoBehaviour
 
                     Color color = Color.white;
 
-                    ColorContent cont;
+                    MaterialTextureSet cont;
 
                     if (spatter.material.mat_type == (int)MatBasic.ICE && spatter.state == MatterState.Powder)
                     {
                         color = Color.white;
                     }
-                    else if (ContentLoader.Instance.MaterialColors.TryGetValue(spatter.material, out cont))
+                    else if (ContentLoader.Instance.MaterialTextures.TryGetValue(spatter.material, out cont))
                     {
                         color = cont.color;
                     }

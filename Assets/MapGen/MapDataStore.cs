@@ -1235,5 +1235,79 @@ public class MapDataStore {
             return true;
 
         }
+
+        internal MatPairStruct GetMaterial(MeshLayer layer)
+        {
+            switch (layer)
+            {
+                case MeshLayer.StaticMaterial:
+                case MeshLayer.StaticCutout:
+                case MeshLayer.StaticTransparent:
+                case MeshLayer.NaturalTerrain:
+                    return material;
+                case MeshLayer.BaseMaterial:
+                case MeshLayer.BaseCutout:
+                case MeshLayer.BaseTransparent:
+                    return base_material;
+                case MeshLayer.LayerMaterial:
+                case MeshLayer.LayerCutout:
+                case MeshLayer.LayerTransparent:
+                    return layer_material;
+                case MeshLayer.VeinMaterial:
+                case MeshLayer.VeinCutout:
+                case MeshLayer.VeinTransparent:
+                    return vein_material;
+                case MeshLayer.GrowthMaterial:
+                case MeshLayer.GrowthCutout:
+                case MeshLayer.GrowthTransparent:
+                    if ((material.mat_type != 419)
+                        || DFConnection.Instance.NetPlantRawList == null
+                        || DFConnection.Instance.NetPlantRawList.plant_raws.Count <= material.mat_index
+                        || DFConnection.Instance.NetPlantRawList.plant_raws[material.mat_index].growths.Count <= 0
+                        || DFConnection.Instance.NetPlantRawList.plant_raws[material.mat_index].growths[0].mat == null)
+                    {
+                        return default(MatPairStruct);
+                    }
+                    return DFConnection.Instance.NetPlantRawList.plant_raws[material.mat_index].growths[0].mat;
+                case MeshLayer.GrowthMaterial1:
+                case MeshLayer.GrowthCutout1:
+                case MeshLayer.GrowthTransparent1:
+                    if ((material.mat_type != 419)
+                        || DFConnection.Instance.NetPlantRawList == null
+                        || DFConnection.Instance.NetPlantRawList.plant_raws.Count <= material.mat_index
+                        || DFConnection.Instance.NetPlantRawList.plant_raws[material.mat_index].growths.Count <= 1
+                        || DFConnection.Instance.NetPlantRawList.plant_raws[material.mat_index].growths[1].mat == null)
+                    {
+                        return default(MatPairStruct);
+                    }
+                    return DFConnection.Instance.NetPlantRawList.plant_raws[material.mat_index].growths[1].mat;
+                case MeshLayer.GrowthMaterial2:
+                case MeshLayer.GrowthCutout2:
+                case MeshLayer.GrowthTransparent2:
+                    if ((material.mat_type != 419)
+                        || DFConnection.Instance.NetPlantRawList == null
+                        || DFConnection.Instance.NetPlantRawList.plant_raws.Count <= material.mat_index
+                        || DFConnection.Instance.NetPlantRawList.plant_raws[material.mat_index].growths.Count <= 2
+                        || DFConnection.Instance.NetPlantRawList.plant_raws[material.mat_index].growths[2].mat == null)
+                    {
+                        return default(MatPairStruct);
+                    }
+                    return DFConnection.Instance.NetPlantRawList.plant_raws[material.mat_index].growths[2].mat;
+                case MeshLayer.GrowthMaterial3:
+                case MeshLayer.GrowthCutout3:
+                case MeshLayer.GrowthTransparent3:
+                    if ((material.mat_type != 419)
+                        || DFConnection.Instance.NetPlantRawList == null
+                        || DFConnection.Instance.NetPlantRawList.plant_raws.Count <= material.mat_index
+                        || DFConnection.Instance.NetPlantRawList.plant_raws[material.mat_index].growths.Count <= 3
+                        || DFConnection.Instance.NetPlantRawList.plant_raws[material.mat_index].growths[3].mat == null)
+                    {
+                        return default(MatPairStruct);
+                    }
+                    return DFConnection.Instance.NetPlantRawList.plant_raws[material.mat_index].growths[3].mat;
+                default:
+                    return default(MatPairStruct);
+            }
+        }
     }
 }

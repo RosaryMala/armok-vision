@@ -1,6 +1,7 @@
 ﻿using RemoteFortressReader;
 using UnityEngine;
 using TokenLists;
+using MaterialStore;
 
 namespace Building
 {
@@ -81,19 +82,20 @@ namespace Building
             }
             gameObject.SetActive(true);
             Color partColor = Color.gray;
-            ColorContent colorContent;
-            if (ContentLoader.Instance.MaterialColors.TryGetValue(mat, out colorContent))
-                partColor = colorContent.color;
+            int textureIndex = 0;
+            MaterialTextureSet textureContent;
+            if (ContentLoader.Instance.MaterialTextures.TryGetValue(mat, out textureContent))
+            {
+                textureIndex = textureContent.patternIndex;
+                partColor = textureContent.color;
+            }
 
             if (dye != null)
                 partColor *= (Color)new Color32((byte)dye.red, (byte)dye.green, (byte)dye.blue, 255);
 
-            int textureIndex = 0;
-            TextureContent textureContent;
-            if (ContentLoader.Instance.MaterialTextures.TryGetValue(mat, out textureContent))
-                textureIndex = textureContent.StorageIndex;
 
-            meshRenderer.sharedMaterial.SetTexture("_MatTex", ContentLoader.Instance.materialTextureStorage.AtlasTexture);
+
+            meshRenderer.sharedMaterial.SetTexture("_MatTex", ContentLoader.Instance.PatternTextureArray);
             MaterialPropertyBlock prop = new MaterialPropertyBlock();
             prop.SetColor("_MatColor", partColor);
             prop.SetFloat("_MatIndex", textureIndex);

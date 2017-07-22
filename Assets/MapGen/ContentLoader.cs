@@ -99,28 +99,21 @@ public class ContentLoader : MonoBehaviour
 
     public Texture2DArray PatternTextureArray { get; private set; }
 
-    public TextureStorage materialTextureStorage { get; private set; }
     public TextureStorage shapeTextureStorage { get; private set; }
     public TextureStorage specialTextureStorage { get; private set; }
-    public MaterialMatcher<ColorContent> MaterialColors { get; private set; }
-    public MaterialMatcher<TextureContent> MaterialTextures { get; private set; }
+    public MaterialMatcher<MaterialTextureSet> MaterialTextures { get; private set; }
 
     public int DefaultMatTexIndex { get; private set; }
 
-    public Matrix4x4 DefaultMatTexTransform
-    {
-        get
-        {
-            return materialTextureStorage.getUVTransform(DefaultMatTexIndex);
-        }
-    }
     public float DefaultMatTexArrayIndex
     {
         get
         {
-            return (float)DefaultMatTexIndex / materialTextureStorage.Count;
+            return 0;
         }
     }
+
+
 
     public int DefaultShapeTexIndex { get; private set; }
 
@@ -156,8 +149,6 @@ public class ContentLoader : MonoBehaviour
         }
     }
 
-    public TileConfiguration<ColorContent> ColorConfiguration { get; private set; }
-    public TileConfiguration<TextureContent> MaterialTextureConfiguration { get; private set; }
     public TileConfiguration<NormalContent> ShapeTextureConfiguration { get; private set; }
     public TileConfiguration<NormalContent> TerrainShapeTextureConfiguration { get; private set; }
     public TileConfiguration<MeshContent> TileMeshConfiguration { get; private set; }
@@ -169,7 +160,6 @@ public class ContentLoader : MonoBehaviour
     public TileConfiguration<MeshContent> CollisionMeshConfiguration { get; private set; }
     //public TileConfiguration<MeshContent> BuildingCollisionMeshConfiguration { get; private set; }
     public TileConfiguration<MeshContent> ItemMeshConfiguration { get; private set; }
-    public TileConfiguration<GrassContent> GrassTextureConfiguration { get; private set; }
 
     [SerializeField]
     private CreatureSpriteManager _spriteManager = new CreatureSpriteManager();
@@ -177,15 +167,10 @@ public class ContentLoader : MonoBehaviour
 
     public void Awake()
     {
-        materialTextureStorage = new TextureStorage();
         shapeTextureStorage = new TextureStorage();
         specialTextureStorage = new TextureStorage();
-        MaterialColors = new MaterialMatcher<ColorContent>();
-        MaterialTextures = new MaterialMatcher<TextureContent>();
+        MaterialTextures = new MaterialMatcher<MaterialTextureSet>();
 
-
-
-        DefaultMatTexIndex = materialTextureStorage.AddTexture(CreateFlatTexture(new Color(0.5f, 0.5f, 0.5f, 0)));
         DefaultShapeTexIndex = shapeTextureStorage.AddTexture(CreateFlatTexture(new Color(1f, 0.5f, 1f, 0.5f)));
         defaultSpecialTexIndex = specialTextureStorage.AddTexture(Texture2D.blackTexture);
     }
@@ -253,7 +238,7 @@ public class ContentLoader : MonoBehaviour
         Instance = this;
         watch.Stop();
         Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
-        Debug.Log(string.Format("loaded {0} meshes, {1} pattern textures, {2} colors, and {3} shape textures.", MeshContent.NumCreated, TextureContent.NumCreated, ColorContent.NumCreated, NormalContent.NumCreated));
+        Debug.Log(string.Format("loaded {0} meshes, and {1} shape textures.", MeshContent.NumCreated, NormalContent.NumCreated));
         Debug.Log("Loading Complete. Press ESC to change settings or leave feedback. Have a nice day!");
         GameMap.Instance.HideHelp();
         DFConnection.Instance.NeedNewBlocks = true;
@@ -263,6 +248,11 @@ public class ContentLoader : MonoBehaviour
     private void PopulateMatDefinitions()
     {
         MaterialCollection matCollection = Resources.Load<MaterialCollection>("materialDefinitions");
+
+        foreach (var item in matCollection.textures)
+        {
+            MaterialTextures[item.tag.ToString()] = item;
+        }
     }
 
     IEnumerator ParseContentIndexFile(string path)
@@ -329,16 +319,6 @@ public class ContentLoader : MonoBehaviour
         {
             switch (doc.Name.LocalName)
             {
-                case "colors":
-                    if (ColorConfiguration == null)
-                        ColorConfiguration = TileConfiguration<ColorContent>.GetFromRootElement(doc, "color");
-                    ColorConfiguration.AddSingleContentConfig(doc, null, MaterialColors);
-                    break;
-                case "materialTextures":
-                    if (MaterialTextureConfiguration == null)
-                        MaterialTextureConfiguration = TileConfiguration<TextureContent>.GetFromRootElement(doc, "materialTexture");
-                    MaterialTextureConfiguration.AddSingleContentConfig(doc, materialTextureStorage, MaterialTextures);
-                    break;
                 case "shapeTextures":
                     if (ShapeTextureConfiguration == null)
                         ShapeTextureConfiguration = TileConfiguration<NormalContent>.GetFromRootElement(doc, "shapeTexture");
@@ -352,52 +332,32 @@ public class ContentLoader : MonoBehaviour
                 case "tileMeshes":
                     if (TileMeshConfiguration == null)
                         TileMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "tileMesh");
-                    TileMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage, specialTextureStorage));
+                    TileMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(null, shapeTextureStorage, specialTextureStorage));
                     break;
                 case "materialLayers":
                     if (MaterialLayerConfiguration == null)
                         MaterialLayerConfiguration = TileConfiguration<LayerContent>.GetFromRootElement(doc, "materialLayer");
                     MaterialLayerConfiguration.AddSingleContentConfig(doc);
                     break;
-                //case "buildingMeshes":
-                //    if (BuildingMeshConfiguration == null)
-                //        BuildingMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "buildingMesh");
-                //    BuildingMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage, specialTextureStorage));
-                //    break;
-                //case "buildingShapeTextures":
-                //    if (BuildingShapeTextureConfiguration == null)
-                //        BuildingShapeTextureConfiguration = TileConfiguration<NormalContent>.GetFromRootElement(doc, "buildingShapeTexture");
-                //    BuildingShapeTextureConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
-                //    break;
                 case "growthMeshes":
                     if (GrowthMeshConfiguration == null)
                         GrowthMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "growthMesh");
-                    GrowthMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage, specialTextureStorage));
+                    GrowthMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(null, shapeTextureStorage, specialTextureStorage));
                     break;
                 case "designationMeshes":
                     if (DesignationMeshConfiguration == null)
                         DesignationMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "designationMesh");
-                    DesignationMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage, specialTextureStorage));
+                    DesignationMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(null, shapeTextureStorage, specialTextureStorage));
                     break;
                 case "collisionMeshes":
                     if (CollisionMeshConfiguration == null)
                         CollisionMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "collisionMesh");
-                    CollisionMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage, specialTextureStorage));
+                    CollisionMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(null, shapeTextureStorage, specialTextureStorage));
                     break;
-                //case "buildingCollisionMeshes":
-                //    if (BuildingCollisionMeshConfiguration == null)
-                //        BuildingCollisionMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "buildingCollisionMesh");
-                //    BuildingCollisionMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage, specialTextureStorage));
-                //    break;
                 case "itemMeshes":
                     if (ItemMeshConfiguration == null)
                         ItemMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "itemMesh");
                     ItemMeshConfiguration.AddSingleContentConfig(doc, null);
-                    break;
-                case "grassTextures":
-                    if (GrassTextureConfiguration == null)
-                        GrassTextureConfiguration = TileConfiguration<GrassContent>.GetFromRootElement(doc, "grassTexture");
-                    GrassTextureConfiguration.AddSingleContentConfig(doc, new GrassContent.TextureStorageContainer(materialTextureStorage, shapeTextureStorage));
                     break;
                 default:
                     break;
@@ -454,9 +414,6 @@ public class ContentLoader : MonoBehaviour
 
     IEnumerator FinalizeTextureAtlases()
     {
-        Debug.Log("Building material textures...");
-        yield return null;
-        materialTextureStorage.CompileTextures("MaterialTexture");
         Debug.Log("Building shape textures...");
         yield return null;
         shapeTextureStorage.CompileTextures("ShapeTexture", TextureFormat.RGBA32, new Color(1.0f, 0.5f, 0.0f, 0.5f), true);
@@ -467,9 +424,9 @@ public class ContentLoader : MonoBehaviour
         Debug.Log("Updating Material Manager...");
         yield return null;
 
-        Vector4 arrayCount = new Vector4(materialTextureStorage.Count, shapeTextureStorage.Count, specialTextureStorage.Count);
+        Vector4 arrayCount = new Vector4(PatternTextureArray.depth, shapeTextureStorage.Count, specialTextureStorage.Count);
 
-        MaterialManager.Instance.SetTexture("_MainTex", materialTextureStorage.AtlasTexture);
+        MaterialManager.Instance.SetTexture("_MainTex", PatternTextureArray);
         MaterialManager.Instance.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
         MaterialManager.Instance.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
         MaterialManager.Instance.SetVector("_TexArrayCount", arrayCount);

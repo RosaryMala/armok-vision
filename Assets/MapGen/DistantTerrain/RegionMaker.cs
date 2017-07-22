@@ -1,4 +1,5 @@
 ﻿using DFHack;
+using MaterialStore;
 using RemoteFortressReader;
 using System.Collections.Generic;
 using UnityEngine;
@@ -261,15 +262,15 @@ public class RegionMaker : MonoBehaviour
                     west = tiles[x - 1, y].elevation;
 
                 Color terrainColor = Color.green;
-                ColorContent colorDef;
-                if (ContentLoader.Instance.MaterialColors.TryGetValue(tile.surfaceMaterial, out colorDef))
+                MaterialTextureSet colorDef;
+                if (ContentLoader.Instance.MaterialTextures.TryGetValue(tile.surfaceMaterial, out colorDef))
                     terrainColor = colorDef.color;
 
                 Color plantColor = Color.black;
                 Color stoneColor = Color.grey;
                 foreach (var item in tile.plantMaterials)
                 {
-                    if (ContentLoader.Instance.MaterialColors.TryGetValue(item, out colorDef))
+                    if (ContentLoader.Instance.MaterialTextures.TryGetValue(item, out colorDef))
                         plantColor += colorDef.color;
                 }
                 float plantBlend = Mathf.Pow(tile.vegetation / 100.0f, 0.25f);
@@ -280,7 +281,7 @@ public class RegionMaker : MonoBehaviour
 
                 if (tile.stoneMaterials.Count > 0)
                 {
-                    if (ContentLoader.Instance.MaterialColors.TryGetValue(tile.stoneMaterials[0],  out colorDef))
+                    if (ContentLoader.Instance.MaterialTextures.TryGetValue(tile.stoneMaterials[0],  out colorDef))
                         stoneColor = colorDef.color;
                 }
 
@@ -317,7 +318,7 @@ public class RegionMaker : MonoBehaviour
                             case SiteRealizationBuildingType.tavern:
                                 {
                                     Color buildingColor;
-                                    ContentLoader.Instance.MaterialColors.TryGetValue(building.material, out colorDef);
+                                    ContentLoader.Instance.MaterialTextures.TryGetValue(building.material, out colorDef);
                                     if (colorDef != null)
                                         buildingColor = colorDef.color;
                                     else
@@ -361,7 +362,7 @@ public class RegionMaker : MonoBehaviour
                             case SiteRealizationBuildingType.great_tower:
                                 {
                                     Color buildingColor;
-                                    if (ContentLoader.Instance.MaterialColors.TryGetValue(building.material, out colorDef))
+                                    if (ContentLoader.Instance.MaterialTextures.TryGetValue(building.material, out colorDef))
                                         buildingColor = colorDef.color;
                                     else
                                     {
@@ -377,7 +378,7 @@ public class RegionMaker : MonoBehaviour
                                 {
                                     Color buildingColor;
                                     Color roofColor;
-                                    if (ContentLoader.Instance.MaterialColors.TryGetValue(building.material, out colorDef))
+                                    if (ContentLoader.Instance.MaterialTextures.TryGetValue(building.material, out colorDef))
                                     {
                                         buildingColor = colorDef.color;
                                         roofColor = colorDef.color;
@@ -411,7 +412,7 @@ public class RegionMaker : MonoBehaviour
                             case SiteRealizationBuildingType.castle_wall:
                                 {
                                     Color buildingColor;
-                                    if (ContentLoader.Instance.MaterialColors.TryGetValue(building.material, out colorDef))
+                                    if (ContentLoader.Instance.MaterialTextures.TryGetValue(building.material, out colorDef))
                                         buildingColor = colorDef.color;
                                     else
                                     {
@@ -437,7 +438,7 @@ public class RegionMaker : MonoBehaviour
                                     if (mat.mat_type < 0)
                                         mat = new MatPairStruct(0, mat.mat_index);
                                     Color buildingColor;
-                                    if (ContentLoader.Instance.MaterialColors.TryGetValue(mat, out colorDef))
+                                    if (ContentLoader.Instance.MaterialTextures.TryGetValue(mat, out colorDef))
                                         buildingColor = colorDef.color;
                                     else
                                         buildingColor = Color.grey;
@@ -464,7 +465,7 @@ public class RegionMaker : MonoBehaviour
                                         }
 
                                     Color buildingColor;
-                                    if (ContentLoader.Instance.MaterialColors.TryGetValue(tree, out colorDef))
+                                    if (ContentLoader.Instance.MaterialTextures.TryGetValue(tree, out colorDef))
                                         buildingColor = colorDef.color;
                                     else
                                     {
@@ -519,7 +520,7 @@ public class RegionMaker : MonoBehaviour
                             }
                             Color treeColor = Color.green;
 
-                            if (ContentLoader.Instance.MaterialColors.TryGetValue(tree, out colorDef))
+                            if (ContentLoader.Instance.MaterialTextures.TryGetValue(tree, out colorDef))
                                 treeColor = colorDef.color;
 
                             if (tree.mat_type == 419) // bare tree

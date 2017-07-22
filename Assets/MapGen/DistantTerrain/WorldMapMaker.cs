@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityExtension;
 using DFHack;
 using System;
+using MaterialStore;
 
 public class WorldMapMaker : MonoBehaviour
 {
@@ -310,8 +311,8 @@ public class WorldMapMaker : MonoBehaviour
                 }
 
 
-                ColorContent colorContent;
-                ContentLoader.Instance.MaterialColors.TryGetValue(regionTiles[x, y].surface_material, out colorContent);
+                MaterialTextureSet colorContent;
+                ContentLoader.Instance.MaterialTextures.TryGetValue(regionTiles[x, y].surface_material, out colorContent);
                 Color terrainColor = colorContent.color;
 
                 Color plantColor = Color.black;
@@ -320,7 +321,7 @@ public class WorldMapMaker : MonoBehaviour
 
                 foreach (var item in regionTiles[x, y].plant_materials)
                 {
-                    ContentLoader.Instance.MaterialColors.TryGetValue(item, out colorContent);
+                    ContentLoader.Instance.MaterialTextures.TryGetValue(item, out colorContent);
                     plantColor += colorContent.color;
                 }
                 if (regionTiles[x, y].plant_materials.Count == 0)
@@ -346,7 +347,7 @@ public class WorldMapMaker : MonoBehaviour
                         treeMat = growth.mat;
                         break;
                     }
-                    if (ContentLoader.Instance.MaterialColors.TryGetValue(treeMat, out colorContent))
+                    if (ContentLoader.Instance.MaterialTextures.TryGetValue(treeMat, out colorContent))
                     {
                         treeColor += colorContent.color;
                         treeCount++;

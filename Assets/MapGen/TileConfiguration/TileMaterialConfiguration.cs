@@ -97,7 +97,7 @@ public class TileMaterialConfiguration<T> : TileConfiguration<T> where T : ICont
                     || DFConnection.Instance.NetPlantRawList == null
                     || DFConnection.Instance.NetPlantRawList.plant_raws.Count <= plantIndex
                     || DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths.Count <= 1
-                    || DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths[0].mat == null)
+                    || DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths[1].mat == null)
                 {
                     value = default(T);
                     return false;
@@ -110,7 +110,7 @@ public class TileMaterialConfiguration<T> : TileConfiguration<T> where T : ICont
                     || DFConnection.Instance.NetPlantRawList == null
                     || DFConnection.Instance.NetPlantRawList.plant_raws.Count <= plantIndex
                     || DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths.Count <= 2
-                    || DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths[0].mat == null)
+                    || DFConnection.Instance.NetPlantRawList.plant_raws[plantIndex].growths[2].mat == null)
                 {
                     value = default(T);
                     return false;

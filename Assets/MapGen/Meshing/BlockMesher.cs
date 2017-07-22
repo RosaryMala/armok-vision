@@ -1,4 +1,5 @@
 ﻿using DFHack;
+using MaterialStore;
 using RemoteFortressReader;
 using System;
 using System.Collections.Generic;
@@ -513,40 +514,19 @@ abstract class BlockMesher {
             buffer.meshData = meshContent.MeshData[layer];
             buffer.transform = Matrix4x4.TRS(pos, meshContent.GetRotation(tile), Vector3.one);
 
-            if (TextureStorage.UsingArray)
-            {
-                if (meshContent.MaterialTexture != null)
-                    index1.x = meshContent.MaterialTexture.ArrayIndex;
-                else
-                    index1.x = ContentLoader.Instance.DefaultMatTexArrayIndex;
-                if (meshContent.ShapeTexture != null)
-                    index1.y = meshContent.ShapeTexture.ArrayIndex;
-                else
-                    index1.y = ContentLoader.Instance.DefaultShapeTexArrayIndex;
-                if (meshContent.SpecialTexture != null)
-                    index2.x = meshContent.SpecialTexture.ArrayIndex;
-                else
-                    index2.x = ContentLoader.Instance.DefaultSpecialTexArrayIndex;
-
-                buffer.uv1Transform = Matrix4x4.identity;
-                buffer.uv2Force = index1;
-                buffer.uv3Force = index2;
-            }
+            index1.x = ContentLoader.Instance.DefaultMatTexArrayIndex;
+            if (meshContent.ShapeTexture != null)
+                index1.y = meshContent.ShapeTexture.ArrayIndex;
             else
-            {
-                if (meshContent.MaterialTexture != null)
-                    buffer.uv1Transform = meshContent.MaterialTexture.UVTransform;
-                else
-                    buffer.uv1Transform = ContentLoader.Instance.DefaultMatTexTransform;
-                if (meshContent.ShapeTexture != null)
-                    buffer.uv2Transform = meshContent.ShapeTexture.UVTransform;
-                else
-                    buffer.uv2Transform = ContentLoader.Instance.DefaultShapeTexTransform;
-                if (meshContent.SpecialTexture != null)
-                    buffer.uv3Transform = meshContent.SpecialTexture.UVTransform;
-                else
-                    buffer.uv3Transform = ContentLoader.Instance.DefaultSpecialTexTransform;
-            }
+                index1.y = ContentLoader.Instance.DefaultShapeTexArrayIndex;
+            if (meshContent.SpecialTexture != null)
+                index2.x = meshContent.SpecialTexture.ArrayIndex;
+            else
+                index2.x = ContentLoader.Instance.DefaultSpecialTexArrayIndex;
+
+            buffer.uv1Transform = Matrix4x4.identity;
+            buffer.uv2Force = index1;
+            buffer.uv3Force = index2;
             buffer.hiddenFaces = CalculateHiddenFaces(tile, meshContent.Rotation);
             return;
         }
@@ -617,7 +597,6 @@ abstract class BlockMesher {
         }
         buffer.meshData = meshContent.MeshData[layer];
         buffer.transform = Matrix4x4.TRS(pos, meshContent.GetRotation(tile), Vector3.one);
-        Matrix4x4 matTexTransform = ContentLoader.Instance.DefaultMatTexTransform;
         Matrix4x4 shapeTextTransform = ContentLoader.Instance.DefaultShapeTexTransform;
         Matrix4x4 specialTexTransform = Matrix4x4.identity;
 
@@ -636,27 +615,15 @@ abstract class BlockMesher {
             index1.y = meshContent.ShapeTexture.ArrayIndex;
         }
 
-        if (meshContent.MaterialTexture != null
-            && (layer == MeshLayer.NoMaterial
-            //|| layer == MeshLayer.NoMaterialBuilding
-            //|| layer == MeshLayer.NoMaterialBuildingCutout
-            //|| layer == MeshLayer.NoMaterialBuildingTransparent
-            || layer == MeshLayer.NoMaterialCutout
-            || layer == MeshLayer.NoMaterialTransparent))
-        {
-            matTexTransform = meshContent.MaterialTexture.UVTransform;
-            index1.x = meshContent.MaterialTexture.ArrayIndex;
-        }
-        else
-        {
-            TextureContent matTexContent;
+        MaterialTextureSet matTexContent;
+        if (!ContentLoader.Instance.MaterialTextures.TryGetValue(tile.GetMaterial(layer), out matTexContent))
+            matTexContent = null;
 
-            if (ContentLoader.Instance.MaterialTextureConfiguration.GetValue(tile, layer, out matTexContent))
-            {
-                matTexTransform = matTexContent.UVTransform;
-                index1.x = matTexContent.ArrayIndex;
-            }
+        if (matTexContent != null)
+        {
+            index1.x = matTexContent.patternIndex;
         }
+
 
 
         if (meshContent.SpecialTexture != null)
@@ -670,11 +637,10 @@ abstract class BlockMesher {
             index2.x = ContentLoader.Instance.DefaultSpecialTexArrayIndex;
         }
 
-        ColorContent newColorContent;
         Color newColor;
-        if (ContentLoader.Instance.ColorConfiguration.GetValue(tile, layer, out newColorContent))
+        if (matTexContent != null)
         {
-            newColor = newColorContent.color;
+            newColor = matTexContent.color;
         }
         else
         {
@@ -703,16 +669,8 @@ abstract class BlockMesher {
                     break;
                 case MeshLayer.NoMaterial:
                 case MeshLayer.NoMaterialCutout:
-                //case MeshLayer.NoMaterialBuildingCutout:
-                //case MeshLayer.NoMaterialBuilding:
-                //case MeshLayer.NoMaterialBuildingTransparent:
                 case MeshLayer.NoMaterialTransparent:
                     break;
-                //case MeshLayer.BuildingMaterial:
-                //case MeshLayer.BuildingMaterialCutout:
-                //case MeshLayer.BuildingMaterialTransparent:
-                //    mat = tile.buildingMaterial;
-                //    break;
                 default:
                     break;
             }
@@ -732,18 +690,10 @@ abstract class BlockMesher {
         }
         buffer.color = newColor;
 
-        if (TextureStorage.UsingArray)
-        {
-            buffer.uv1Transform = Matrix4x4.identity;
-            buffer.uv2Force = index1;
-            buffer.uv3Force = index2;
-        }
-        else
-        {
-            buffer.uv1Transform = matTexTransform;
-            buffer.uv2Transform = shapeTextTransform;
-            buffer.uv3Transform = specialTexTransform;
-        }
+        buffer.uv1Transform = Matrix4x4.identity;
+        buffer.uv2Force = index1;
+        buffer.uv3Force = index2;
+
         buffer.hiddenFaces = CalculateHiddenFaces(tile, meshContent.Rotation);
     }
 
@@ -916,7 +866,7 @@ sealed class MultiThreadedMesher : BlockMesher {
             }
             catch(Exception e)
             {
-                Debug.LogError(e);
+                Debug.LogException(e);
             }
         }
     }

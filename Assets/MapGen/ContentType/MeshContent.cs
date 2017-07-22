@@ -85,9 +85,6 @@ public class MeshContent : IContent
     NormalContent _normalTexture = null;
     public NormalContent ShapeTexture { get { return _normalTexture; } }
 
-    TextureContent _matTexture = null;
-    public TextureContent MaterialTexture { get { return _matTexture; } }
-
     SpecialMapContent _specialTexture = null;
     public SpecialMapContent SpecialTexture { get { return _specialTexture; } }
 
@@ -239,15 +236,6 @@ public class MeshContent : IContent
                 _specialTexture = null;
         }
 
-        if ((elemtype.Attribute("pattern") != null
-            || elemtype.Attribute("specular") != null
-            ))
-        {
-            _matTexture = new TextureContent();
-            _matTexture.ExternalStorage = storeContainer.materialStore;
-            if (!_matTexture.AddTypeElement(elemtype))
-                _matTexture = null;
-        }
 
 
         if (fileAtt.Value == "NONE")
