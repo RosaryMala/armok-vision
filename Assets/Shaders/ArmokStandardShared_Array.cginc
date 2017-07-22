@@ -1,7 +1,7 @@
 #ifndef ARMOK_STANDARD_SHARED_ARRAY
 #define ARMOK_STANDARD_SHARED_ARRAY
 
-UNITY_DECLARE_TEX2DARRAY(_MainTex);
+UNITY_DECLARE_TEX2DARRAY(_MatTex);
 UNITY_DECLARE_TEX2DARRAY(_BumpMap);
 UNITY_DECLARE_TEX2DARRAY(_SpecialTex);
 sampler2D _SpatterTex;
@@ -13,7 +13,7 @@ float4 _SpatterNoise_ST;
 float4 _TexArrayCount;
 
 struct Input {
-	float2 uv_MainTex;
+	float2 uv_MatTex;
 	float2 uv2_BumpMap;
 	float2 uv3_SpecialTex;
 	float4 color: Color; // Vertex color
@@ -30,9 +30,9 @@ fixed4 _Color;
 
 void surf(Input IN, inout SurfaceOutputStandard o) {
 	// Albedo comes from a texture tinted by color
-	fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex.xy, IN.uv2_BumpMap.x * _TexArrayCount.x)) * _Color;
-	fixed4 bump = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex.xy, IN.uv2_BumpMap.y * _TexArrayCount.y));
-	fixed4 special = UNITY_SAMPLE_TEX2DARRAY(_SpecialTex, float3(IN.uv_MainTex.xy, IN.uv3_SpecialTex.x * _TexArrayCount.z));
+	fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_MatTex, float3(IN.uv_MatTex.xy, IN.uv2_BumpMap.x * _TexArrayCount.x)) * _Color;
+	fixed4 bump = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MatTex.xy, IN.uv2_BumpMap.y * _TexArrayCount.y));
+	fixed4 special = UNITY_SAMPLE_TEX2DARRAY(_SpecialTex, float3(IN.uv_MatTex.xy, IN.uv3_SpecialTex.x * _TexArrayCount.z));
 	fixed4 spatter = tex2D(_SpatterTex, (IN.worldPos.xz - _WorldBounds.xy) / (_WorldBounds.zw - _WorldBounds.xy));
 	fixed4 noise = tex2D(_SpatterNoise, TRANSFORM_TEX(IN.worldPos.xz, _SpatterNoise));
 	//o.Albedo = c.rgb * IN.color.rgb;

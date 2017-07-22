@@ -44,8 +44,8 @@ public enum MatBasic
     PLANTCLOTH = 421,
 
     // filthy hacks to get interface stuff
-    DESIGNATION = 422,
-    CONSTRUCTION = 423,
+    DESIGNATION = -2,
+    CONSTRUCTION = -3,
 
 }
 
@@ -98,6 +98,7 @@ public class ContentLoader : MonoBehaviour
     }
 
     public Texture2DArray PatternTextureArray { get; private set; }
+    public float PatternTextureDepth { get; private set; }
 
     public TextureStorage shapeTextureStorage { get; private set; }
     public TextureStorage specialTextureStorage { get; private set; }
@@ -232,6 +233,7 @@ public class ContentLoader : MonoBehaviour
         watch.Start();
         GameMap.Instance.ShowHelp();
         PatternTextureArray = Resources.Load<Texture2DArray>("patternTextures");
+        PatternTextureDepth = PatternTextureArray.depth;
         PopulateMatDefinitions();
         yield return StartCoroutine(ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt"));
         yield return StartCoroutine(FinalizeTextureAtlases());
@@ -426,7 +428,7 @@ public class ContentLoader : MonoBehaviour
 
         Vector4 arrayCount = new Vector4(PatternTextureArray.depth, shapeTextureStorage.Count, specialTextureStorage.Count);
 
-        MaterialManager.Instance.SetTexture("_MainTex", PatternTextureArray);
+        MaterialManager.Instance.SetTexture("_MatTex", PatternTextureArray);
         MaterialManager.Instance.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
         MaterialManager.Instance.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
         MaterialManager.Instance.SetVector("_TexArrayCount", arrayCount);

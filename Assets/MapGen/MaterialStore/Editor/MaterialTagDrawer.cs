@@ -28,6 +28,7 @@ public class MaterialTagDrawer : PropertyDrawer
         {
             case MaterialType.INORGANIC:
             case MaterialType.COAL:
+            case MaterialType.DESIGNATION:
                 typeRect = new Rect(position.x, position.y, (position.width / 2) - 2.5f, position.height);
                 tag1Rect = new Rect(position.x + (position.width / 2) + 2.5f, position.y, (position.width / 2) - 2.5f, position.height);
                 tag1Enabled = true;

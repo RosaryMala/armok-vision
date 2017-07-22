@@ -7,6 +7,7 @@ using System.Threading;
 using TokenLists;
 using UnityEngine;
 using Util;
+using RemoteFortressReader;
 
 // Class for async communication with DF.
 // Will eventually run actual communication on a separate thread.
@@ -704,6 +705,7 @@ public sealed class DFConnection : MonoBehaviour
     {
         if (netMaterialList != null)
         {
+            AddFakeMaterials(netMaterialList);
             MaterialTokenList.MaterialTokens = netMaterialList.material_list;
             Debug.Log("Materials fetched: " + netMaterialList.material_list.Count);
         }
@@ -756,6 +758,18 @@ public sealed class DFConnection : MonoBehaviour
 
         //Debug.Log("Buildingtypes fetched: " + netBuildingList.building_list.Count);
         //Debug.Log("Creature Raws fetched: " + netCreatureRawList.creature_raws.Count);
+    }
+
+    private void AddFakeMaterials(MaterialList netMaterialList)
+    {
+        for (int i = 0; i <= (int)DesignationType.UpStairs; i++)
+        {
+            MaterialDefinition item = new MaterialDefinition();
+            item.id = "DESIGNATION:" + ((DesignationType)i).ToString();
+            item.name = ((DesignationType)i).ToString() + " Designation";
+            item.mat_pair = new MatPairStruct((int)MatBasic.DESIGNATION, i);
+            netMaterialList.material_list.Add(item);
+        }
     }
 
     void Start()

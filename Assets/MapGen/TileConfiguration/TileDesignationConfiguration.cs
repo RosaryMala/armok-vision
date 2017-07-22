@@ -4,18 +4,8 @@ using System.Xml.Linq;
 
 public class TileDesignationConfiguration<T> : TileConfiguration<T> where T : IContent, new()
 {
-    enum DesignationTypes
-    {
-        Hidden,
-        Default,
-        UpDownStairs,
-        Channel,
-        Ramp,
-        DownStairs,
-        UpStairs
-    }
 
-    Dictionary<DesignationTypes, Content> designationBlocks = new Dictionary<DesignationTypes, Content>();
+    Dictionary<DesignationType, Content> designationBlocks = new Dictionary<DesignationType, Content>();
 
     public override object SecondaryDictionary
     {
@@ -31,44 +21,44 @@ public class TileDesignationConfiguration<T> : TileConfiguration<T> where T : IC
             case RemoteFortressReader.TileDigDesignation.NO_DIG:
                 break;
             case RemoteFortressReader.TileDigDesignation.DEFAULT_DIG:
-                if (designationBlocks.ContainsKey(DesignationTypes.Default))
+                if (designationBlocks.ContainsKey(DesignationType.Default))
                 {
-                    value = designationBlocks[DesignationTypes.Default].GetValue(tile, layer);
+                    value = designationBlocks[DesignationType.Default].GetValue(tile, layer);
                     return true;
                 }
                 break;
             case RemoteFortressReader.TileDigDesignation.UP_DOWN_STAIR_DIG:
-                if (designationBlocks.ContainsKey(DesignationTypes.UpDownStairs))
+                if (designationBlocks.ContainsKey(DesignationType.UpDownStairs))
                 {
-                    value = designationBlocks[DesignationTypes.UpDownStairs].GetValue(tile, layer);
+                    value = designationBlocks[DesignationType.UpDownStairs].GetValue(tile, layer);
                     return true;
                 }
                 break;
             case RemoteFortressReader.TileDigDesignation.CHANNEL_DIG:
-                if (designationBlocks.ContainsKey(DesignationTypes.Channel))
+                if (designationBlocks.ContainsKey(DesignationType.Channel))
                 {
-                    value = designationBlocks[DesignationTypes.Channel].GetValue(tile, layer);
+                    value = designationBlocks[DesignationType.Channel].GetValue(tile, layer);
                     return true;
                 }
                 break;
             case RemoteFortressReader.TileDigDesignation.RAMP_DIG:
-                if (designationBlocks.ContainsKey(DesignationTypes.Ramp))
+                if (designationBlocks.ContainsKey(DesignationType.Ramp))
                 {
-                    value = designationBlocks[DesignationTypes.Ramp].GetValue(tile, layer);
+                    value = designationBlocks[DesignationType.Ramp].GetValue(tile, layer);
                     return true;
                 }
                 break;
             case RemoteFortressReader.TileDigDesignation.DOWN_STAIR_DIG:
-                if (designationBlocks.ContainsKey(DesignationTypes.DownStairs))
+                if (designationBlocks.ContainsKey(DesignationType.DownStairs))
                 {
-                    value = designationBlocks[DesignationTypes.DownStairs].GetValue(tile, layer);
+                    value = designationBlocks[DesignationType.DownStairs].GetValue(tile, layer);
                     return true;
                 }
                 break;
             case RemoteFortressReader.TileDigDesignation.UP_STAIR_DIG:
-                if (designationBlocks.ContainsKey(DesignationTypes.UpStairs))
+                if (designationBlocks.ContainsKey(DesignationType.UpStairs))
                 {
-                    value = designationBlocks[DesignationTypes.UpStairs].GetValue(tile, layer);
+                    value = designationBlocks[DesignationType.UpStairs].GetValue(tile, layer);
                     return true;
                 }
                 break;
@@ -77,9 +67,9 @@ public class TileDesignationConfiguration<T> : TileConfiguration<T> where T : IC
         }
         if(tile.Hidden)
         {
-            if(designationBlocks.ContainsKey(DesignationTypes.Hidden))
+            if(designationBlocks.ContainsKey(DesignationType.Hidden))
             {
-                value = designationBlocks[DesignationTypes.Hidden].GetValue(tile, layer);
+                value = designationBlocks[DesignationType.Hidden].GetValue(tile, layer);
                 return true;
             }
         }
@@ -95,10 +85,10 @@ public class TileDesignationConfiguration<T> : TileConfiguration<T> where T : IC
             XAttribute elemToken = elemDesignation.Attribute("type");
             if(elemToken != null)
             {
-                DesignationTypes desig;
+                DesignationType desig;
                 try
                 {
-                    desig = (DesignationTypes)Enum.Parse(typeof(DesignationTypes), elemToken.Value);
+                    desig = (DesignationType)Enum.Parse(typeof(DesignationType), elemToken.Value);
                 }
                 catch(Exception)
                 {

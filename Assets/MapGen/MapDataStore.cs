@@ -1154,6 +1154,53 @@ public class MapDataStore {
             }
         }
 
+        public MatPairStruct DesignationMat {
+            get
+            {
+                MatPairStruct mat;
+                switch (digDesignation)
+                {
+                    case TileDigDesignation.DEFAULT_DIG:
+                        switch (tiletypeMaterial)
+                        {
+                            case TiletypeMaterial.PLANT:
+                                mat = new MatPairStruct((int)MatBasic.DESIGNATION, (int)DesignationType.PlantGather);
+                                break;
+                            case TiletypeMaterial.TREE_MATERIAL:
+                            case TiletypeMaterial.MUSHROOM:
+                                mat = new MatPairStruct((int)MatBasic.DESIGNATION, (int)DesignationType.TreeCut);
+                                break;
+                            default:
+                                mat = new MatPairStruct((int)MatBasic.DESIGNATION, (int)DesignationType.Default);
+                                break;
+                        }
+                        break;
+                    case TileDigDesignation.UP_DOWN_STAIR_DIG:
+                        mat = new MatPairStruct((int)MatBasic.DESIGNATION, (int)DesignationType.UpDownStairs);
+                        break;
+                    case TileDigDesignation.CHANNEL_DIG:
+                        mat = new MatPairStruct((int)MatBasic.DESIGNATION, (int)DesignationType.Channel);
+                        break;
+                    case TileDigDesignation.RAMP_DIG:
+                        mat = new MatPairStruct((int)MatBasic.DESIGNATION, (int)DesignationType.Ramp);
+                        break;
+                    case TileDigDesignation.DOWN_STAIR_DIG:
+                        mat = new MatPairStruct((int)MatBasic.DESIGNATION, (int)DesignationType.DownStairs);
+                        break;
+                    case TileDigDesignation.UP_STAIR_DIG:
+                        mat = new MatPairStruct((int)MatBasic.DESIGNATION, (int)DesignationType.UpStairs);
+                        break;
+                    default:
+                        if(Hidden)
+                            mat = new MatPairStruct((int)MatBasic.DESIGNATION, (int)DesignationType.Hidden);
+                        else
+                            mat = new MatPairStruct(-1, -1);
+                        break;
+                }
+                return mat;
+            }
+        }
+
         public bool GrowthAppliesEver(TreeGrowth growth)
         {
             if (special == TiletypeSpecial.DEAD

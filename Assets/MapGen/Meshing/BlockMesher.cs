@@ -514,7 +514,14 @@ abstract class BlockMesher {
             buffer.meshData = meshContent.MeshData[layer];
             buffer.transform = Matrix4x4.TRS(pos, meshContent.GetRotation(tile), Vector3.one);
 
-            index1.x = ContentLoader.Instance.DefaultMatTexArrayIndex;
+            MaterialTextureSet matTex;
+            if(ContentLoader.Instance.MaterialTextures.TryGetValue(tile.DesignationMat, out matTex))
+            {
+                index1.x = matTex.patternIndex / ContentLoader.Instance.PatternTextureDepth;
+                buffer.color = matTex.color;
+            }
+            else
+                index1.x = ContentLoader.Instance.DefaultMatTexArrayIndex;
             if (meshContent.ShapeTexture != null)
                 index1.y = meshContent.ShapeTexture.ArrayIndex;
             else
@@ -621,7 +628,7 @@ abstract class BlockMesher {
 
         if (matTexContent != null)
         {
-            index1.x = matTexContent.patternIndex;
+            index1.x = matTexContent.patternIndex / ContentLoader.InstancePatternTextureDepth;
         }
 
 

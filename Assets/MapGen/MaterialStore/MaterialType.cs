@@ -23,6 +23,7 @@
         UNKNOWN_SUBSTANCE,
         GRIME,
         CREATURE,
-        PLANT
+        PLANT,
+        DESIGNATION
     }
 }

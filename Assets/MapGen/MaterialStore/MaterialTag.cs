@@ -185,7 +185,7 @@ namespace MaterialStore
                     tag2 = "THREAD";
                     break;
                 case MatBasic.DESIGNATION:
-                    type = MaterialType.NONE;
+                    type = MaterialType.DESIGNATION;
                     break;
                 case MatBasic.CONSTRUCTION:
                     type = MaterialType.NONE;
@@ -224,6 +224,7 @@ namespace MaterialStore
                 {
                     case MaterialType.INORGANIC:
                     case MaterialType.COAL:
+                    case MaterialType.DESIGNATION:
                         return 2;
                     case MaterialType.CREATURE:
                     case MaterialType.PLANT:
