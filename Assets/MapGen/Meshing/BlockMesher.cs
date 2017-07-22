@@ -628,7 +628,7 @@ abstract class BlockMesher {
 
         if (matTexContent != null)
         {
-            index1.x = matTexContent.patternIndex / ContentLoader.InstancePatternTextureDepth;
+            index1.x = matTexContent.patternIndex / ContentLoader.Instance.PatternTextureDepth;
         }
 
 
