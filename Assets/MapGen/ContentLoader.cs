@@ -99,6 +99,9 @@ public class ContentLoader : MonoBehaviour
 
     public Texture2DArray PatternTextureArray { get; private set; }
     public float PatternTextureDepth { get; private set; }
+    public Texture2DArray ShapeTextureArray { get; private set; }
+    public float ShapeTextureDepth { get; private set; }
+
 
     public TextureStorage shapeTextureStorage { get; private set; }
     public TextureStorage specialTextureStorage { get; private set; }
@@ -234,6 +237,8 @@ public class ContentLoader : MonoBehaviour
         GameMap.Instance.ShowHelp();
         PatternTextureArray = Resources.Load<Texture2DArray>("patternTextures");
         PatternTextureDepth = PatternTextureArray.depth;
+        ShapeTextureArray = Resources.Load<Texture2DArray>("shapeTextures");
+        ShapeTextureDepth = ShapeTextureArray.depth;
         PopulateMatDefinitions();
         yield return StartCoroutine(ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt"));
         yield return StartCoroutine(FinalizeTextureAtlases());
@@ -426,7 +431,7 @@ public class ContentLoader : MonoBehaviour
         Debug.Log("Updating Material Manager...");
         yield return null;
 
-        Vector4 arrayCount = new Vector4(PatternTextureArray.depth, shapeTextureStorage.Count, specialTextureStorage.Count);
+        Vector4 arrayCount = new Vector4(PatternTextureDepth, shapeTextureStorage.Count, specialTextureStorage.Count, ShapeTextureDepth);
 
         MaterialManager.Instance.SetTexture("_MatTex", PatternTextureArray);
         MaterialManager.Instance.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);

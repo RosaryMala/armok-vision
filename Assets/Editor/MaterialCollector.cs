@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -7,6 +8,19 @@ namespace MaterialStore
 {
     public class MaterialCollector
     {
+        private static List<Texture2D> albedoList;
+        private static List<Texture2D> alphaList;
+        private static Texture2D defaultAlbedo;
+        private static Texture2D defaultAlpha;
+        private static Texture2D defaultNormal;
+        private static Texture2D defaultOcclusion;
+        private static Texture2D defaultSpecular;
+        private static List<Texture2D> normalList;
+        private static List<Texture2D> occlusionList;
+        private static Dictionary<string, int> patternIndex;
+        private static Dictionary<string, int> shapeIndex;
+        private static List<Texture2D> specularList;
+
         [MenuItem("Mytools/Build Material Collection")]
         public static void BuildMaterialCollection()
         {
@@ -21,76 +35,40 @@ namespace MaterialStore
 
             MaterialCollection matCollection = ScriptableObject.CreateInstance<MaterialCollection>();
 
-            Dictionary<string, int> patternIndex = new Dictionary<string, int>();
-            List<Texture2D> albedoList = new List<Texture2D>();
-            List<Texture2D> specularList = new List<Texture2D>();
+            patternIndex = new Dictionary<string, int>();
+            albedoList = new List<Texture2D>();
+            specularList = new List<Texture2D>();
 
-            var defaultAlbedo = Resources.Load<Texture2D>("Grey");
-            var defaultSpecular = Resources.Load<Texture2D>("Low_S");
+            shapeIndex = new Dictionary<string, int>();
+            normalList = new List<Texture2D>();
+            occlusionList = new List<Texture2D>();
+            alphaList = new List<Texture2D>();
 
-            {
-                MaterialTextureSet set = new MaterialTextureSet();
+            defaultAlbedo = Resources.Load<Texture2D>("Grey");
+            defaultSpecular = Resources.Load<Texture2D>("Low_S");
 
-                set.tag = new MaterialTag();
+            defaultNormal = Resources.Load<Texture2D>("Flat_N");
+            defaultOcclusion = Resources.Load<Texture2D>("Flat_O");
+            defaultAlpha = Resources.Load<Texture2D>("Opaque_A");
 
-                set.color = Color.gray;
-
-                string id = defaultAlbedo.GetInstanceID().ToString() + "," + defaultSpecular.GetInstanceID().ToString();
-
-                if (patternIndex.ContainsKey(id))
-                {
-                    set.patternIndex = patternIndex[id];
-                }
-                else
-                {
-                    set.patternIndex = albedoList.Count;
-                    patternIndex[id] = albedoList.Count;
-                    albedoList.Add(defaultAlbedo);
-                    specularList.Add(defaultSpecular);
-                }
-
-                matCollection.textures.Add(set);
-
-            }
+            matCollection.textures.Add(CreateTextureSet(new MaterialTag(), new Color(0.5f, 0.5f, 0.5f, 0.5f), null, null, null, null, null));
 
             foreach (var item in guids)
             {
                 var mat = AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath(item));
 
-                MaterialTextureSet set = new MaterialTextureSet();
-
-                set.tag = MaterialTag.Parse(mat.name);
-
-                set.color = mat.color;
-
-                Texture2D albedo = (Texture2D)mat.GetTexture(albedoID);
-                Texture2D specular = (Texture2D)mat.GetTexture(specularID);
-
-                if (albedo == null)
-                    albedo = defaultAlbedo;
-
-                if (specular == null)
-                    specular = defaultSpecular;
-
-                string id = albedo.GetInstanceID().ToString() + "," + specular.GetInstanceID().ToString();
-
-                if(patternIndex.ContainsKey(id))
-                {
-                    set.patternIndex = patternIndex[id];
-                }
-                else
-                {
-                    set.patternIndex = albedoList.Count;
-                    patternIndex[id] = albedoList.Count;
-                    albedoList.Add(albedo);
-                    specularList.Add(specular);
-                }
-
-                matCollection.textures.Add(set);
+                matCollection.textures.Add(
+                    CreateTextureSet(MaterialTag.Parse(mat.name),
+                    mat.GetColor(colorID),
+                    (Texture2D)mat.GetTexture(albedoID),
+                    (Texture2D)mat.GetTexture(specularID),
+                    (Texture2D)mat.GetTexture(normalID),
+                    (Texture2D)mat.GetTexture(occlusionID),
+                    (Texture2D)mat.GetTexture(heightID)));
             }
 
             Texture2DArray patternArray = new Texture2DArray(256, 256, albedoList.Count, TextureFormat.ARGB32, true, false);
-            Texture2D tempTex = new Texture2D(256, 256, TextureFormat.ARGB32, false);
+            Texture2D tempTex = new Texture2D(256, 256, TextureFormat.ARGB32, false, false);
             Material patternMat = new Material(Shader.Find("Hidden/PatternTextureMaker"));
 
             for (int i = 0; i < albedoList.Count; i++)
@@ -110,9 +88,82 @@ namespace MaterialStore
 
             patternArray.Apply(true);
 
+            Texture2DArray shapeArray = new Texture2DArray(256, 256, normalList.Count, TextureFormat.ARGB32, true, true);
+            tempTex = new Texture2D(256, 256, TextureFormat.ARGB32, false, true);
+            Material shapeMat = new Material(Shader.Find("Hidden/ShapeTextureMaker"));
+
+            for (int i = 0; i < normalList.Count; i++)
+            {
+                Debug.Log(normalList[i].name + "," + occlusionList[i].name + "," + alphaList[i].name);
+                var shapeTarget = RenderTexture.GetTemporary(256, 256, 0, RenderTextureFormat.ARGB32);
+                shapeMat.SetTexture(occlusionID, occlusionList[i]);
+                shapeMat.SetTexture(heightID, alphaList[i]);
+                Graphics.Blit(normalList[i], shapeTarget, shapeMat);
+
+                var backup = RenderTexture.active;
+                RenderTexture.active = shapeTarget;
+                tempTex.ReadPixels(new Rect(0, 0, 256, 256), 0, 0);
+                shapeArray.SetPixels(tempTex.GetPixels(), i);
+                RenderTexture.active = backup;
+                RenderTexture.ReleaseTemporary(shapeTarget);
+            }
+
+            shapeArray.Apply(true);
+
             AssetDatabase.CreateAsset(patternArray, "Assets/Resources/patternTextures.asset");
+            AssetDatabase.CreateAsset(shapeArray, "Assets/Resources/shapeTextures.asset");
             AssetDatabase.CreateAsset(matCollection, "Assets/Resources/materialDefinitions.asset");
             AssetDatabase.SaveAssets();
+        }
+
+        private static MaterialTextureSet CreateTextureSet(MaterialTag materialTag, Color color, Texture2D albedo = null, Texture2D specular = null, Texture2D normal = null, Texture2D occlusion = null, Texture2D alpha = null)
+        {
+            if (albedo == null)
+                albedo = defaultAlbedo;
+            if (specular == null)
+                specular = defaultSpecular;
+            if (normal == null)
+                normal = defaultNormal;
+            if (occlusion == null)
+                occlusion = defaultOcclusion;
+            if (alpha == null)
+                alpha = defaultAlpha;
+
+            MaterialTextureSet set = new MaterialTextureSet();
+
+            set.tag = materialTag;
+            set.color = color;
+
+            string patternID = albedo.GetInstanceID().ToString() + "," + specular.GetInstanceID().ToString();
+
+            if (patternIndex.ContainsKey(patternID))
+            {
+                set.patternIndex = patternIndex[patternID];
+            }
+            else
+            {
+                set.patternIndex = albedoList.Count;
+                patternIndex[patternID] = albedoList.Count;
+                albedoList.Add(albedo);
+                specularList.Add(specular);
+            }
+
+            string shapeID = normal.GetInstanceID().ToString() + "," + occlusion.GetInstanceID().ToString() + "," + alpha.GetInstanceID().ToString();
+
+            if(shapeIndex.ContainsKey(shapeID))
+            {
+                set.shapeIndex = shapeIndex[shapeID];
+            }
+            else
+            {
+                set.shapeIndex = normalList.Count;
+                shapeIndex[shapeID] = normalList.Count;
+                normalList.Add(normal);
+                occlusionList.Add(occlusion);
+                alphaList.Add(alpha);
+            }
+
+            return set;
         }
     }
 }

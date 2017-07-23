@@ -1209,19 +1209,6 @@ public class GameMap : MonoBehaviour
         UnityEngine.Profiling.Profiler.EndSample();
     }
 
-    Color[] grassColors;
-    Color[] grassIndices;
-
-
-
-    Color[] terrainColors;
-    Color[] terrainIndices;
-
-
-
-
-    Color[] textureColors;
-
     void ClearMap()
     {
         foreach (var item in mapMeshes)

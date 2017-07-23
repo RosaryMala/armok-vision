@@ -312,7 +312,7 @@ public class SplatManager : MonoBehaviour
                 if (ContentLoader.Instance.MaterialTextures.TryGetValue(tile.material, out grassTexture))
                 {
                     grassIndices[index].r = grassTexture.patternIndex / ContentLoader.Instance.PatternTextureDepth;
-                    grassIndices[index].g = grassTexture.shapeIndex;
+                    grassIndices[index].g = grassTexture.shapeIndex / ContentLoader.Instance.ShapeTextureDepth;
                     grassColors[index] = grassTexture.color;
                 }
                 else

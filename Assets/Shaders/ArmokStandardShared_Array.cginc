@@ -37,7 +37,7 @@ void surf(Input IN, inout SurfaceOutputStandard o) {
 	fixed4 noise = tex2D(_SpatterNoise, TRANSFORM_TEX(IN.worldPos.xz, _SpatterNoise));
 	//o.Albedo = c.rgb * IN.color.rgb;
 	o.Normal = UnpackNormal(bump.ggga);
-	o.Alpha = bump.b;
+	o.Alpha = min((IN.color.a * 2), 1) *bump.b;
 #ifdef CONTAMINANTS
     if (dot(WorldNormalVector(IN, o.Normal), _SpatterDirection.xyz) >= lerp(1, -1, (spatter.a - noise.r)))
 	{
@@ -52,7 +52,7 @@ void surf(Input IN, inout SurfaceOutputStandard o) {
     {
 		fixed3 albedo = overlay(c.rgb, IN.color.rgb);
         o.Albedo = albedo *(1 - special.g);
-		o.Metallic = (1.0 - IN.color.a) + special.r;
+		o.Metallic = max((IN.color.a * 2) - 1, 0) + special.r;
 		o.Smoothness = c.a;
 		o.Emission = albedo * special.g;
 	}
