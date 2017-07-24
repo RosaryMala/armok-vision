@@ -258,7 +258,7 @@ public class GameMap : MonoBehaviour
                 materials[material.mat_pair] = material;
             }
             if (GameSettings.Instance.debug.saveMaterialList)
-                SaveMaterialList(materials, "MaterialList.csv");
+                SaveMaterialList(materials, Path.Combine(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), Application.productName), "MaterialList.csv"));
         }
         // Initialize items, if available
         if (DFConnection.Instance.NetItemList != null)
@@ -271,7 +271,7 @@ public class GameMap : MonoBehaviour
                 items[material.mat_pair] = material;
             }
             if (GameSettings.Instance.debug.saveItemList)
-                SaveMaterialList(items, "ItemList.csv");
+                SaveMaterialList(items, Path.Combine(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), Application.productName), "ItemList.csv"));
         }
         if (DFConnection.Instance.NetBuildingList != null)
         {
@@ -303,7 +303,7 @@ public class GameMap : MonoBehaviour
                 }
             }
             if (GameSettings.Instance.debug.saveCreatureList)
-                SaveMaterialList(creatures, "CreatureList.csv");
+                SaveMaterialList(creatures, Path.Combine(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), Application.productName), "CreatureList.csv"));
         }
 
         if (GameSettings.Instance.debug.saveTiletypeList)
@@ -977,15 +977,18 @@ public class GameMap : MonoBehaviour
     {
         if (DFConnection.Instance.NetBuildingList == null)
             return;
+
+        string fileName = Path.Combine(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), Application.productName), "BuildingList.csv");
+
         try
         {
-            File.Delete("BuildingList.csv");
+            File.Delete(fileName);
         }
         catch (IOException)
         {
             return;
         }
-        using (StreamWriter writer = new StreamWriter("BuildingList.csv"))
+        using (StreamWriter writer = new StreamWriter(fileName))
         {
             foreach (var item in DFConnection.Instance.NetBuildingList.building_list)
             {
@@ -1029,15 +1032,16 @@ public class GameMap : MonoBehaviour
     {
         if (DFConnection.Instance.NetPlantRawList == null)
             return;
+        string fileName = Path.Combine(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), Application.productName), "PlantList.csv");
         try
         {
-            File.Delete("PlantList.csv");
+            File.Delete(fileName);
         }
         catch (IOException)
         {
             return;
         }
-        using (StreamWriter writer = new StreamWriter("PlantList.csv"))
+        using (StreamWriter writer = new StreamWriter(fileName))
         {
             foreach (var plant in TokenLists.PlantTokenList.GrowthIDs)
             {
