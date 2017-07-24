@@ -1,11 +1,10 @@
-﻿Shader "Hidden/ShapeTextureMaker"
+﻿Shader "Hidden/TexArrayBlitBlue"
 {
 	Properties
 	{
-		_MainTex ("Texture", 2D) = "bump" {}
-        _Occlusion("Texture", 2D) = "white" {}
-        _Height("Texture", 2D) = "white" {}
-    }
+		_MainTex ("Texture", 2DArray) = "white" {}
+        _Index("array index", float) = 0
+	}
 	SubShader
 	{
 		// No culling or depth
@@ -39,16 +38,14 @@
 				return o;
 			}
 			
-            sampler2D _MainTex;
-            sampler2D _Occlusion;
-            sampler2D _Height;
+            UNITY_DECLARE_TEX2DARRAY(_MainTex);
+            float _Index;
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-                fixed4 col = tex2D(_MainTex, i.uv);
-                col.r = tex2D(_Occlusion, i.uv).r;
-                col.b = tex2D(_MainTex, i.uv).r;
-            return col;
+			   	fixed4 col = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(i.uv, _Index));
+                col = fixed4(col.bbb, 1);
+				return col;
 			}
 			ENDCG
 		}

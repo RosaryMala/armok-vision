@@ -24,7 +24,7 @@ namespace MaterialStore
         [MenuItem("Mytools/Build Material Collection")]
         public static void BuildMaterialCollection()
         {
-            var guids = AssetDatabase.FindAssets("t:Material", new[] { "Assets/MaterialTypes" });
+            var materialGUIDs = AssetDatabase.FindAssets("t:Material", new[] { "Assets/Materials/MaterialTypes" });
 
             int colorID = Shader.PropertyToID("_Color");
             int albedoID = Shader.PropertyToID("_MainTex");
@@ -53,7 +53,7 @@ namespace MaterialStore
 
             matCollection.textures.Add(CreateTextureSet(new MaterialTag(), new Color(0.5f, 0.5f, 0.5f, 0.5f), null, null, null, null, null));
 
-            foreach (var item in guids)
+            foreach (var item in materialGUIDs)
             {
                 var mat = AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath(item));
 
