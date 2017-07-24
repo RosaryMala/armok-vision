@@ -94,7 +94,8 @@ namespace Building
                 partColor *= (Color)new Color32((byte)dye.red, (byte)dye.green, (byte)dye.blue, 255);
 
 
-
+            if (meshRenderer == null)
+                meshRenderer = GetComponent<MeshRenderer>();
             meshRenderer.sharedMaterial.SetTexture("_MatTex", ContentLoader.Instance.PatternTextureArray);
             MaterialPropertyBlock prop = new MaterialPropertyBlock();
             prop.SetColor("_MatColor", partColor);
