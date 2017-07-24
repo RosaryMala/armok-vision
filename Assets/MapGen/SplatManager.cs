@@ -201,20 +201,16 @@ public class SplatManager : MonoBehaviour
                 )
                     layer = MeshLayer.LayerMaterial;
 
-                NormalContent normalContent;
-                if (ContentLoader.Instance.TerrainShapeTextureConfiguration.GetValue(tile, layer, out normalContent))
-                    terrainIndices[index].g = normalContent.StorageIndex;
-                else
-                    terrainIndices[index].g = ContentLoader.Instance.DefaultShapeTexIndex;
-
                 MaterialTextureSet materialContent;
                 if (ContentLoader.Instance.MaterialTextures.TryGetValue(tile.GetMaterial(layer), out materialContent))
                 {
-                    terrainIndices[index].r = materialContent.patternIndex / ContentLoader.Instance.PatternTextureDepth;
+                    terrainIndices[index].g = materialContent.shapeIndex / 255f;
+                    terrainIndices[index].r = materialContent.patternIndex / 255f;
                     terrainColors[index] = materialContent.color;
                 }
                 else
                 {
+                    terrainIndices[index].g = ContentLoader.Instance.DefaultShapeTexIndex;
                     terrainIndices[index].r = ContentLoader.Instance.DefaultMatTexIndex;
                     terrainColors[index] = Color.gray;
                 }
@@ -262,7 +258,7 @@ public class SplatManager : MonoBehaviour
     {
         if (terrainSplatLayers[blockZ] == null)
         {
-            terrainSplatLayers[blockZ] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGHalf, false, true);
+            terrainSplatLayers[blockZ] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGB24, false, true);
             terrainSplatLayers[blockZ].filterMode = FilterMode.Point;
             terrainSplatLayers[blockZ].wrapMode = TextureWrapMode.Clamp;
         }
@@ -311,9 +307,10 @@ public class SplatManager : MonoBehaviour
                 MaterialTextureSet grassTexture;
                 if (ContentLoader.Instance.MaterialTextures.TryGetValue(tile.material, out grassTexture))
                 {
-                    grassIndices[index].r = grassTexture.patternIndex / ContentLoader.Instance.PatternTextureDepth;
-                    grassIndices[index].g = grassTexture.shapeIndex / ContentLoader.Instance.ShapeTextureDepth;
+                    grassIndices[index].r = grassTexture.patternIndex / 255f;
+                    grassIndices[index].g = grassTexture.shapeIndex / 255f;
                     grassColors[index] = grassTexture.color;
+                    grassColors[index].a = 1;
                 }
                 else
                 {
@@ -335,7 +332,7 @@ public class SplatManager : MonoBehaviour
     {
         if (grassSplatLayers[blockZ] == null)
         {
-            grassSplatLayers[blockZ] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGHalf, false, true);
+            grassSplatLayers[blockZ] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGB24, false, true);
             grassSplatLayers[blockZ].filterMode = FilterMode.Point;
             grassSplatLayers[blockZ].wrapMode = TextureWrapMode.Clamp;
         }

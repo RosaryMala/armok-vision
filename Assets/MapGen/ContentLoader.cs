@@ -154,7 +154,6 @@ public class ContentLoader : MonoBehaviour
     }
 
     public TileConfiguration<NormalContent> ShapeTextureConfiguration { get; private set; }
-    public TileConfiguration<NormalContent> TerrainShapeTextureConfiguration { get; private set; }
     public TileConfiguration<MeshContent> TileMeshConfiguration { get; private set; }
     public TileConfiguration<MeshContent> GrowthMeshConfiguration { get; private set; }
     public TileConfiguration<LayerContent> MaterialLayerConfiguration { get; private set; }
@@ -331,11 +330,6 @@ public class ContentLoader : MonoBehaviour
                         ShapeTextureConfiguration = TileConfiguration<NormalContent>.GetFromRootElement(doc, "shapeTexture");
                     ShapeTextureConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
                     break;
-                case "terrainTextures":
-                    if (TerrainShapeTextureConfiguration == null)
-                        TerrainShapeTextureConfiguration = TileConfiguration<NormalContent>.GetFromRootElement(doc, "terrainTexture");
-                    TerrainShapeTextureConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
-                    break;
                 case "tileMeshes":
                     if (TileMeshConfiguration == null)
                         TileMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "tileMesh");
@@ -434,6 +428,7 @@ public class ContentLoader : MonoBehaviour
         Vector4 arrayCount = new Vector4(PatternTextureDepth, shapeTextureStorage.Count, specialTextureStorage.Count, ShapeTextureDepth);
 
         MaterialManager.Instance.SetTexture("_MatTex", PatternTextureArray);
+        MaterialManager.Instance.SetTexture("_ShapeMap", ShapeTextureArray);
         MaterialManager.Instance.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
         MaterialManager.Instance.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
         MaterialManager.Instance.SetVector("_TexArrayCount", arrayCount);

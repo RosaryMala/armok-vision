@@ -1,7 +1,7 @@
 ﻿Shader "Custom/Ground Splat" {
 	Properties {
-        _MainTex("Albedo (RGB)", 2DArray) = "grey" {}
-        _BumpMap("Shape Texture Splat", 2DArray) = "bump" {}
+        _MatTex("Albedo (RGB)", 2DArray) = "grey" {}
+        _ShapeMap("Shape Texture Splat", 2DArray) = "bump" {}
         [PerRendererData]_Tint("Tint (RGBA)", 2D) = "black" {}
         [PerRendererData]_Control("Control (RG)", 2D) = "black" {}
  
@@ -33,8 +33,8 @@
         float4 _Control_TexelSize;
         sampler2D _Tint;
         sampler2D _GrassTint;
-        UNITY_DECLARE_TEX2DARRAY(_MainTex);
-        UNITY_DECLARE_TEX2DARRAY(_BumpMap);
+        UNITY_DECLARE_TEX2DARRAY(_MatTex);
+        UNITY_DECLARE_TEX2DARRAY(_ShapeMap);
 
 #ifdef CONTAMINANTS
         sampler2D _SpatterTex;
@@ -46,7 +46,7 @@
         float4 _WorldBounds;
 
 		struct Input {
-			float2 uv_MainTex;
+			float2 uv_MatTex;
             float4 color: Color; // Vertex color
             float3 worldNormal;
             float3 worldPos;
@@ -93,15 +93,15 @@
             float4 c_tint = tex2D(_Tint, (controlCoordsBase + float2(0, 1)) * _Control_TexelSize.xy);
             float4 d_tint = tex2D(_Tint, (controlCoordsBase + float2(1, 1)) * _Control_TexelSize.xy);
 
-            float4 a_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, a_cont.x));
-            float4 b_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, b_cont.x));
-            float4 c_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, c_cont.x));
-            float4 d_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, d_cont.x));
+            float4 a_c = UNITY_SAMPLE_TEX2DARRAY(_MatTex, float3(IN.uv_MatTex, a_cont.x * 255));
+            float4 b_c = UNITY_SAMPLE_TEX2DARRAY(_MatTex, float3(IN.uv_MatTex, b_cont.x * 255));
+            float4 c_c = UNITY_SAMPLE_TEX2DARRAY(_MatTex, float3(IN.uv_MatTex, c_cont.x * 255));
+            float4 d_c = UNITY_SAMPLE_TEX2DARRAY(_MatTex, float3(IN.uv_MatTex, d_cont.x * 255));
 
-            float4 a_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, a_cont.y));
-            float4 b_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, b_cont.y));
-            float4 c_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, c_cont.y));
-            float4 d_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, d_cont.y));
+            float4 a_n = UNITY_SAMPLE_TEX2DARRAY(_ShapeMap, float3(IN.uv_MatTex, a_cont.y * 255));
+            float4 b_n = UNITY_SAMPLE_TEX2DARRAY(_ShapeMap, float3(IN.uv_MatTex, b_cont.y * 255));
+            float4 c_n = UNITY_SAMPLE_TEX2DARRAY(_ShapeMap, float3(IN.uv_MatTex, c_cont.y * 255));
+            float4 d_n = UNITY_SAMPLE_TEX2DARRAY(_ShapeMap, float3(IN.uv_MatTex, d_cont.y * 255));
 
 #ifdef GRASS
             float up = WorldNormalVector(IN, float3(0, 0, 1)).y > 0 ? 0.8 : 0;
@@ -110,8 +110,8 @@
             if (a_grass_tint.a > 0)
             {
                 float2 a_grass_cont = tex2D(_GrassControl, (controlCoordsBase + float2(0, 0)) * _Control_TexelSize.xy);
-                float4 a_grass_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, a_grass_cont.x));
-                float4 a_grass_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, a_grass_cont.y));
+                float4 a_grass_c = UNITY_SAMPLE_TEX2DARRAY(_MatTex, float3(IN.uv_MatTex, a_grass_cont.x * 255));
+                float4 a_grass_n = UNITY_SAMPLE_TEX2DARRAY(_ShapeMap, float3(IN.uv_MatTex, a_grass_cont.y * 255));
                 a_c = MixColor(a_grass_c, a_grass_n.b, a_grass_tint.a, a_c, a_n.b, 1 - a_grass_tint.a);
                 a_tint = MixColor(a_grass_tint, a_grass_n.b, a_grass_tint.a, a_tint, a_n.b, 1 - a_grass_tint.a);
                 a_n = MixColor(a_grass_n, a_grass_n.b, a_grass_tint.a, a_n, a_n.b, 1 - a_grass_tint.a);
@@ -121,8 +121,8 @@
             if (b_grass_tint.a > 0)
             {
                 float2 b_grass_cont = tex2D(_GrassControl, (controlCoordsBase + float2(1, 0)) * _Control_TexelSize.xy);
-                float4 b_grass_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, b_grass_cont.x));
-                float4 b_grass_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, b_grass_cont.y));
+                float4 b_grass_c = UNITY_SAMPLE_TEX2DARRAY(_MatTex, float3(IN.uv_MatTex, b_grass_cont.x * 255));
+                float4 b_grass_n = UNITY_SAMPLE_TEX2DARRAY(_ShapeMap, float3(IN.uv_MatTex, b_grass_cont.y * 255));
                 b_c = MixColor(b_grass_c, b_grass_n.b, b_grass_tint.a, b_c, b_n.b, 1 - b_grass_tint.a);
                 b_tint = MixColor(b_grass_tint, b_grass_n.b, b_grass_tint.a, b_tint, b_n.b, 1 - b_grass_tint.a);
                 b_n = MixColor(b_grass_n, b_grass_n.b, b_grass_tint.a, b_n, b_n.b, 1 - b_grass_tint.a);
@@ -132,8 +132,8 @@
             if (c_grass_tint.a > 0)
             {
                 float2 c_grass_cont = tex2D(_GrassControl, (controlCoordsBase + float2(0, 1)) * _Control_TexelSize.xy);
-                float4 c_grass_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, c_grass_cont.x));
-                float4 c_grass_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, c_grass_cont.y));
+                float4 c_grass_c = UNITY_SAMPLE_TEX2DARRAY(_MatTex, float3(IN.uv_MatTex, c_grass_cont.x * 255));
+                float4 c_grass_n = UNITY_SAMPLE_TEX2DARRAY(_ShapeMap, float3(IN.uv_MatTex, c_grass_cont.y * 255));
                 c_c = MixColor(c_grass_c, c_grass_n.b, c_grass_tint.a, c_c, c_n.b, 1 - c_grass_tint.a);
                 c_tint = MixColor(c_grass_tint, c_grass_n.b, c_grass_tint.a, c_tint, c_n.b, 1 - c_grass_tint.a);
                 c_n = MixColor(c_grass_n, c_grass_n.b, c_grass_tint.a, c_n, c_n.b, 1 - c_grass_tint.a);
@@ -143,8 +143,8 @@
             if (d_grass_tint.a > 0)
             {
                 float2 d_grass_cont = tex2D(_GrassControl, (controlCoordsBase + float2(1, 1)) * _Control_TexelSize.xy);
-                float4 d_grass_c = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(IN.uv_MainTex, d_grass_cont.x));
-                float4 d_grass_n = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MainTex, d_grass_cont.y));
+                float4 d_grass_c = UNITY_SAMPLE_TEX2DARRAY(_MatTex, float3(IN.uv_MatTex, d_grass_cont.x * 255));
+                float4 d_grass_n = UNITY_SAMPLE_TEX2DARRAY(_ShapeMap, float3(IN.uv_MatTex, d_grass_cont.y * 255));
                 d_c = MixColor(d_grass_c, d_grass_n.b, d_grass_tint.a, d_c, d_n.b, 1 - d_grass_tint.a);
                 d_tint = MixColor(d_grass_tint, d_grass_n.b, d_grass_tint.a, d_tint, d_n.b, 1 - d_grass_tint.a);
                 d_n = MixColor(d_grass_n, d_grass_n.b, d_grass_tint.a, d_n, d_n.b, 1 - d_grass_tint.a);
