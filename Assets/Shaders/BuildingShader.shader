@@ -107,7 +107,7 @@
             fixed4 matColor = UNITY_ACCESS_INSTANCED_PROP(_MatColor);
             fixed3 albedo = overlay(dfTex.rgb, matColor.rgb);
             half smoothness = dfTex.a;
-            half metallic = 1 - matColor.a;
+            half metallic = max((matColor.a * 2) - 1, 0);
             fixed alpha = 1;
 
 #ifdef _TEXTURE_MASK

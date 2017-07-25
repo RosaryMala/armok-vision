@@ -73,6 +73,8 @@ Shader "Custom/DFTerrainShaderRealMats"
             float _SpatterSmoothness;
             float4 _SpatterNoise_ST;
 
+#include "blend.cginc"
+
             void surf(Input IN, inout SurfaceOutputStandard o)
             {
                 fixed4 noise = tex2D(_SpatterNoise, TRANSFORM_TEX(IN.worldPos.xz, _SpatterNoise));
@@ -86,7 +88,7 @@ Shader "Custom/DFTerrainShaderRealMats"
                     half correctedElevation = ((IN.worldPos.y / _Scale) - _SeaLevel) / 3;
                     // Albedo comes from a texture tinted by color
                     fixed4 gray = tex2D(_GraySample, float2(0.5, 0.5));
-                    fixed3 terrainColor = gray.rgb < 0.5 ? (2.0 * gray.rgb * IN.color.rgb) : (1.0 - 2.0 * (1.0 - gray.rgb) * (1.0 - IN.color.rgb));
+                    fixed3 terrainColor = overlay(gray.rgb, IN.color.rgb);
                     fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
                     fixed4 g = tex2D(_ElevationGradient, ((((IN.worldPos / _Scale) - _SeaLevel) / 3) + 100) / 280);
                     fixed4 b = tex2D(_BiomeMap, IN.uv2_BiomeMap);

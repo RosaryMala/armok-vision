@@ -6,7 +6,7 @@ public class BuildingMaterialSetter : MonoBehaviour
 {
     public Color materialColor;
     public Texture2DArray materialPattern;
-    [Range(0,7)]
+
     public int index;
 
     public void SetMaterials()
@@ -16,7 +16,7 @@ public class BuildingMaterialSetter : MonoBehaviour
             var renderer = part.GetComponent<MeshRenderer>();
             renderer.sharedMaterial.SetTexture("_MatTex", materialPattern);
             MaterialPropertyBlock prop = new MaterialPropertyBlock();
-            prop.SetColor("_MatColor", materialColor.gamma);
+            prop.SetColor("_MatColor", materialColor);
             prop.SetFloat("_MatIndex", index);
             renderer.SetPropertyBlock(prop);
         }

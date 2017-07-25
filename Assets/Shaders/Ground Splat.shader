@@ -176,7 +176,7 @@
             {
                 o.Albedo = overlay(abcd_c.rgb, abcd_tint.rgb);
                 o.Smoothness = abcd_c.a;
-                o.Metallic = 1 - abcd_tint.a;
+                o.Metallic = max((abcd_tint.a * 2) - 1, 0);
             }
             o.Occlusion = abcd_n.r;
         }
