@@ -45,7 +45,7 @@
 			{
 				fixed4 col = tex2D(_MainTex, i.uv);
 				// just invert the colors
-				col.a = tex2D(_MainTex, i.uv).r;
+				col.a = tex2D(_Specular, i.uv).r;
 				return col;
 			}
 			ENDCG
