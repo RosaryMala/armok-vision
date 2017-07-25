@@ -4482,21 +4482,21 @@ MonoBehaviour:
       type: 22
       tag1: Channel
       tag2: 
-    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    color: {r: 0.875, g: 0.6935899, b: 0.19301465, a: 0.5019608}
     patternIndex: 19
     shapeIndex: 0
   - tag:
       type: 22
       tag1: Default
       tag2: 
-    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    color: {r: 0.875, g: 0.6935899, b: 0.19301465, a: 0.5019608}
     patternIndex: 20
     shapeIndex: 0
   - tag:
       type: 22
       tag1: DownStairs
       tag2: 
-    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    color: {r: 0.875, g: 0.6935899, b: 0.19301465, a: 0.5019608}
     patternIndex: 21
     shapeIndex: 0
   - tag:
@@ -4510,34 +4510,34 @@ MonoBehaviour:
       type: 22
       tag1: PlantGather
       tag2: 
-    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    color: {r: 0.875, g: 0.6935899, b: 0.19301465, a: 0.5019608}
     patternIndex: 23
     shapeIndex: 0
   - tag:
       type: 22
       tag1: Ramp
       tag2: 
-    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    color: {r: 0.875, g: 0.6935899, b: 0.19301465, a: 0.5019608}
     patternIndex: 24
     shapeIndex: 0
   - tag:
       type: 22
       tag1: TreeCut
       tag2: 
-    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    color: {r: 0.875, g: 0.6935899, b: 0.19301465, a: 0.5019608}
     patternIndex: 25
     shapeIndex: 0
   - tag:
       type: 22
       tag1: UpDownStairs
       tag2: 
-    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    color: {r: 0.875, g: 0.6935899, b: 0.19301465, a: 0.5019608}
     patternIndex: 26
     shapeIndex: 0
   - tag:
       type: 22
       tag1: UpStairs
       tag2: 
-    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    color: {r: 0.875, g: 0.6935899, b: 0.19301465, a: 0.5019608}
     patternIndex: 27
     shapeIndex: 0
