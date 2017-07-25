@@ -1,5 +1,4 @@
 TileTextures/index.txt
 TileMeshes/index.txt
 ItemMeshes/index.txt
-TerrainShape/index.txt
 graphics/

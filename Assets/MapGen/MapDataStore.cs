@@ -428,7 +428,7 @@ public class MapDataStore {
     public static void StoreTiles(MapBlock block, out bool setTiles, out bool setLiquids, out bool setSpatters) {
         setTiles = block.tiles.Count > 0;
         setLiquids = block.water.Count > 0 || block.magma.Count > 0;
-        setSpatters = block.spatterPile.Count > 0;
+        setSpatters = block.spatterPile.Count > 0 || block.grass_percent.Count > 0;
 
         if (!(setTiles || setLiquids || setSpatters))
             return;
@@ -483,7 +483,10 @@ public class MapDataStore {
                 }
                 if(setSpatters)
                 {
-                    tile.spatters = block.spatterPile[netIndex].spatters;
+                    if(block.spatterPile.Count > 0)
+                        tile.spatters = block.spatterPile[netIndex].spatters;
+                    if (block.grass_percent.Count > 0)
+                        tile.grassPercent = block.grass_percent[netIndex];
                 }
             }
     }
@@ -730,6 +733,7 @@ public class MapDataStore {
             positionOnTree = default(DFCoord);
             digDesignation = TileDigDesignation.NO_DIG;
             spatters = null;
+            grassPercent = 100;
         }
 
         public Tile(Tile orig)
@@ -793,6 +797,8 @@ public class MapDataStore {
         public TiletypeSpecial special { get { return tiletypeTokenList [tileType].special; } }
         public TiletypeVariant variant { get { return tiletypeTokenList [tileType].variant; } }
         public string direction { get { return tiletypeTokenList [tileType].direction; } }
+
+        public int grassPercent;
 
         public int RampType
         {
