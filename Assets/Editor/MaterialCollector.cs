@@ -67,14 +67,14 @@ namespace MaterialStore
                     (Texture2D)mat.GetTexture(heightID)));
             }
 
-            Texture2DArray patternArray = new Texture2DArray(256, 256, albedoList.Count, TextureFormat.ARGB32, true, false);
+            Texture2DArray patternArray = new Texture2DArray(256, 256, albedoList.Count, TextureFormat.ARGB32, true, true);
             Texture2D tempTex = new Texture2D(256, 256, TextureFormat.ARGB32, false, false);
             Material patternMat = new Material(Shader.Find("Hidden/PatternTextureMaker"));
 
             for (int i = 0; i < albedoList.Count; i++)
             {
-                Debug.Log(albedoList[i].name + "," + specularList[i].name);
-                var albedoTarget = RenderTexture.GetTemporary(256, 256, 0, RenderTextureFormat.ARGB32);
+                Debug.Log(i + ": " + albedoList[i].name + "," + specularList[i].name);
+                var albedoTarget = RenderTexture.GetTemporary(256, 256, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
                 patternMat.SetTexture(specularID, specularList[i]);
                 Graphics.Blit(albedoList[i], albedoTarget, patternMat);
 
@@ -94,8 +94,8 @@ namespace MaterialStore
 
             for (int i = 0; i < normalList.Count; i++)
             {
-                Debug.Log(normalList[i].name + "," + occlusionList[i].name + "," + alphaList[i].name);
-                var shapeTarget = RenderTexture.GetTemporary(256, 256, 0, RenderTextureFormat.ARGB32);
+                Debug.Log(i + ": " + normalList[i].name + "," + occlusionList[i].name + "," + alphaList[i].name);
+                var shapeTarget = RenderTexture.GetTemporary(256, 256, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
                 shapeMat.SetTexture(occlusionID, occlusionList[i]);
                 shapeMat.SetTexture(heightID, alphaList[i]);
                 Graphics.Blit(normalList[i], shapeTarget, shapeMat);

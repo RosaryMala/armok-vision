@@ -21,7 +21,7 @@ public class TextureArrayInspector : Editor
     {
         TextureType previewType = TextureType.Albedo;
         Material previewMat;
-        float index = 0;
+        int index = 0;
         public override bool HasPreviewGUI()
         {
             return true;
@@ -29,7 +29,7 @@ public class TextureArrayInspector : Editor
 
         public override void OnPreviewSettings()
         {
-            index = GUILayout.HorizontalSlider(index, 0, (target as Texture2DArray).depth - 1, new GUILayoutOption[] { GUILayout.MaxWidth(64f) });
+            index = EditorGUILayout.IntSlider(index, 0, (target as Texture2DArray).depth - 1, new GUILayoutOption[] { GUILayout.MaxWidth(128f) });
             var type = (TextureType)EditorGUILayout.EnumPopup(previewType, new GUILayoutOption[] { GUILayout.MaxWidth(64f) });
             if (previewMat == null)
                 previewMat = new Material(Shader.Find("Hidden/TexArrayBlitAlbedo"));

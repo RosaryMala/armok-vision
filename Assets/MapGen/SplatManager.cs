@@ -236,7 +236,7 @@ public class SplatManager : MonoBehaviour
     {
         if (terrainTintLayers[blockZ] == null)
         {
-            terrainTintLayers[blockZ] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGBA32, false, true);
+            terrainTintLayers[blockZ] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGBA32, false, false);
             terrainTintLayers[blockZ].filterMode = FilterMode.Point;
             terrainTintLayers[blockZ].wrapMode = TextureWrapMode.Clamp;
 
