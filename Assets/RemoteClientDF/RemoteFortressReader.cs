@@ -796,6 +796,13 @@ namespace RemoteFortressReader
       get { return _tile_dig_designation_auto; }
     }
   
+    private readonly global::System.Collections.Generic.List<int> _grass_percent = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(29, Name=@"grass_percent", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> grass_percent
+    {
+      get { return _grass_percent; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

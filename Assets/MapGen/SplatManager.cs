@@ -310,7 +310,7 @@ public class SplatManager : MonoBehaviour
                     grassIndices[index].r = grassTexture.patternIndex / 255f;
                     grassIndices[index].g = grassTexture.shapeIndex / 255f;
                     grassColors[index] = grassTexture.color;
-                    grassColors[index].a = 1;
+                    grassColors[index].a = tile.grassPercent / 100f;
                 }
                 else
                 {
