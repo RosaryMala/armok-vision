@@ -68,44 +68,58 @@ namespace MaterialStore
             }
 
             Texture2DArray patternArray = new Texture2DArray(256, 256, albedoList.Count, TextureFormat.ARGB32, true, true);
-            Texture2D tempTex = new Texture2D(256, 256, TextureFormat.ARGB32, false, false);
-            Material patternMat = new Material(Shader.Find("Hidden/PatternTextureMaker"));
 
             for (int i = 0; i < albedoList.Count; i++)
             {
                 Debug.Log(i + ": " + albedoList[i].name + "," + specularList[i].name);
-                var albedoTarget = RenderTexture.GetTemporary(256, 256, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
-                patternMat.SetTexture(specularID, specularList[i]);
-                Graphics.Blit(albedoList[i], albedoTarget, patternMat);
+                MakeUsable(albedoList[i]);
+                MakeUsable(specularList[i]);
 
-                var backup = RenderTexture.active;
-                RenderTexture.active = albedoTarget;
-                tempTex.ReadPixels(new Rect(0, 0, 256, 256), 0, 0);
-                patternArray.SetPixels(tempTex.GetPixels(), i);
-                RenderTexture.active = backup;
-                RenderTexture.ReleaseTemporary(albedoTarget);
+                if (albedoList[i].width != 256 || albedoList[i].height != 256)
+                    TextureScale.Bilinear(albedoList[i], 256, 256);
+                if (specularList[i].width != 256 || specularList[i].height != 256)
+                    TextureScale.Bilinear(specularList[i], 256, 256);
+
+                var albedoArray = albedoList[i].GetPixels();
+                var specularArray = specularList[i].GetPixels();
+
+                for (int j = 0; j < albedoArray.Length; j++)
+                {
+                    albedoArray[j].a = specularArray[j].r;
+                }
+
+                patternArray.SetPixels(albedoArray, i);
             }
 
             patternArray.Apply(true);
 
             Texture2DArray shapeArray = new Texture2DArray(256, 256, normalList.Count, TextureFormat.ARGB32, true, true);
-            tempTex = new Texture2D(256, 256, TextureFormat.ARGB32, false, true);
-            Material shapeMat = new Material(Shader.Find("Hidden/ShapeTextureMaker"));
 
             for (int i = 0; i < normalList.Count; i++)
             {
                 Debug.Log(i + ": " + normalList[i].name + "," + occlusionList[i].name + "," + alphaList[i].name);
-                var shapeTarget = RenderTexture.GetTemporary(256, 256, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
-                shapeMat.SetTexture(occlusionID, occlusionList[i]);
-                shapeMat.SetTexture(heightID, alphaList[i]);
-                Graphics.Blit(normalList[i], shapeTarget, shapeMat);
+                MakeUsable(normalList[i]);
+                MakeUsable(occlusionList[i]);
+                MakeUsable(alphaList[i]);
 
-                var backup = RenderTexture.active;
-                RenderTexture.active = shapeTarget;
-                tempTex.ReadPixels(new Rect(0, 0, 256, 256), 0, 0);
-                shapeArray.SetPixels(tempTex.GetPixels(), i);
-                RenderTexture.active = backup;
-                RenderTexture.ReleaseTemporary(shapeTarget);
+                if (normalList[i].width != 256 || normalList[i].height != 256)
+                    TextureScale.Bilinear(normalList[i], 256, 256);
+                if (occlusionList[i].width != 256 || occlusionList[i].height != 256)
+                    TextureScale.Bilinear(occlusionList[i], 256, 256);
+                if (alphaList[i].width != 256 || alphaList[i].height != 256)
+                    TextureScale.Bilinear(alphaList[i], 256, 256);
+
+                var normalArray = normalList[i].GetPixels();
+                var occlusionArray = occlusionList[i].GetPixels();
+                var alphaArray = alphaList[i].GetPixels();
+
+
+                for (int j = 0; j < normalArray.Length; j++)
+                {
+                    normalArray[j] = new Color(occlusionArray[j].r, normalArray[j].b, alphaArray[j].r, normalArray[j].a);
+                }
+
+                shapeArray.SetPixels(normalArray, i);
             }
 
             shapeArray.Apply(true);
@@ -164,6 +178,22 @@ namespace MaterialStore
             }
 
             return set;
+        }
+
+        public static void MakeUsable(Texture texture)
+        {
+            var path = AssetDatabase.GetAssetPath(texture);
+
+            if (string.IsNullOrEmpty(path))
+                return; //Not a valid file.
+
+            var importer = (TextureImporter)AssetImporter.GetAtPath(path);
+
+            importer.isReadable = true;
+            importer.maxTextureSize = 256;
+            importer.textureCompression = TextureImporterCompression.Uncompressed;
+
+            importer.SaveAndReimport();
         }
     }
 }

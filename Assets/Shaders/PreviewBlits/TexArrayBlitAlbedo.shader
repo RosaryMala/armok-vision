@@ -44,7 +44,7 @@
 			fixed4 frag (v2f i) : SV_Target
 			{
 				fixed4 col = UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(i.uv, _Index));
-				return fixed4(LinearToGammaSpace(col), 1);
+                return col;
 			}
 			ENDCG
 		}
