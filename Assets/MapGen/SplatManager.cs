@@ -344,7 +344,7 @@ public class SplatManager : MonoBehaviour
 
         if (grassTintLayers[blockZ] == null)
         {
-            grassTintLayers[blockZ] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGBA32, false, true);
+            grassTintLayers[blockZ] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGBA32, false, false);
             grassTintLayers[blockZ].filterMode = FilterMode.Point;
             grassTintLayers[blockZ].wrapMode = TextureWrapMode.Clamp;
 
