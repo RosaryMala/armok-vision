@@ -41,4 +41,4 @@ Material:
     m_Floats:
     - _HeightPreview: 0
     m_Colors:
-    - _Color: {r: 0.95686275, g: 0, b: 0.6313726, a: 0.5019608}
+    - _Color: {r: 1, g: 0.25, b: 0.7448772, a: 0.222}
