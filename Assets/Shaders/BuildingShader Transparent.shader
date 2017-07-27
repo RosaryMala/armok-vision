@@ -107,8 +107,8 @@
             fixed4 matColor = UNITY_ACCESS_INSTANCED_PROP(_MatColor);
             fixed3 albedo = overlay(dfTex.rgb, matColor.rgb);
             half smoothness = dfTex.a;
-            half metallic = 1 - matColor.a;
-            fixed alpha = 1;
+            half metallic = max((matColor.a * 2) - 1, 0);
+            fixed alpha = min((matColor.a * 2), 1);
 
 #ifdef _TEXTURE_MASK
             fixed4 mask = tex2D(_DFMask, texcoords.xy);
@@ -116,7 +116,7 @@
             fixed4 m = tex2D(_MetallicGlossMap, texcoords.xy);
             albedo = lerp(albedo, c.rgb, mask.r);
             albedo = lerp(albedo, overlay(c.rgb, matColor.rgb), max(mask.g - mask.r, 0));
-            alpha = c.a;
+            alpha = lerp(alpha, c.a, mask.r);
 #ifdef _METALLICGLOSSMAP
             metallic = lerp(metallic, m.r, mask.r);
             smoothness = lerp(smoothness, m.a * _GlossMapScale, mask.b);
