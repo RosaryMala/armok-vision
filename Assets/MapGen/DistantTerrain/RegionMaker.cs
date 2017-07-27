@@ -538,6 +538,7 @@ public class RegionMaker : MonoBehaviour
         }
         terrainMesh = new Mesh();
         terrainMesh.vertices = vertices.ToArray();
+        WorldMapMaker.Linearize(colors);
         terrainMesh.colors = colors.ToArray();
         terrainMesh.uv = uvCoords.ToArray();
         terrainMesh.uv2 = uvCoords2.ToArray();
