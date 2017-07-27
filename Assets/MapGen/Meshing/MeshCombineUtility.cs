@@ -237,9 +237,9 @@ public class MeshCombineUtility
             else
                 uv3s.Add(uv3Force.Value);
             if (inputColors.Length > 0)
-                colors.Add(meshInstance.color * inputColors[inputVert]);
+                colors.Add(meshInstance.color.linear * inputColors[inputVert]);
             else
-                colors.Add(meshInstance.color);
+                colors.Add(meshInstance.color.linear);
         }
         return newVert;
     }
