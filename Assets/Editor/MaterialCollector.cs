@@ -66,8 +66,8 @@ namespace MaterialStore
                     (Texture2D)mat.GetTexture(occlusionID),
                     (Texture2D)mat.GetTexture(heightID)));
             }
-
-            Texture2DArray patternArray = new Texture2DArray(256, 256, albedoList.Count, TextureFormat.ARGB32, true, true);
+            GL.sRGBWrite = false;
+            Texture2DArray patternArray = new Texture2DArray(256, 256, albedoList.Count, TextureFormat.ARGB32, true, false);
             Texture2D tempTex = new Texture2D(256, 256, TextureFormat.ARGB32, false, false);
             Material patternMat = new Material(Shader.Find("Hidden/PatternTextureMaker"));
 
