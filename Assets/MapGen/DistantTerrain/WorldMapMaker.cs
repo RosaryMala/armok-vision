@@ -478,6 +478,7 @@ public class WorldMapMaker : MonoBehaviour
         Mesh terrainMesh = mf.mesh;
 
         terrainMesh.vertices = vertices.ToArray();
+        Linearize(colors);
         terrainMesh.colors = colors.ToArray();
         terrainMesh.uv = uvs.ToArray();
         terrainMesh.uv2 = uv2s.ToArray();
@@ -496,6 +497,14 @@ public class WorldMapMaker : MonoBehaviour
         uv3s.Clear();
         triangles.Clear();
         chunkIndex++;
+    }
+
+    public static void Linearize(List<Color> colors)
+    {
+        for (int i = 0; i < colors.Count; i++)
+        {
+            colors[i] = colors[i].linear;
+        }
     }
 
     void GenerateClouds()

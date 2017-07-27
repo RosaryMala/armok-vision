@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using UnityEngine;
-using UnityEngine.Profiling;
 
 // Two implementations: single and multithreaded.
 // All of the actual meshing code is exactly the same;
@@ -537,6 +536,12 @@ abstract class BlockMesher {
             buffer.hiddenFaces = CalculateHiddenFaces(tile, meshContent.Rotation);
             return;
         }
+
+        MaterialTextureSet matTexContent;
+        if (!ContentLoader.Instance.MaterialTextures.TryGetValue(tile.GetMaterial(layer), out matTexContent))
+            matTexContent = null;
+
+
         switch (layer)
         {
             case MeshLayer.GrowthMaterial:
@@ -597,8 +602,37 @@ abstract class BlockMesher {
                 break;
         }
 
+        //Use the transparent shader instead of the opaque shader if the material is transparent.
+        if(matTexContent != null && matTexContent.color.a < 0.5f)
+        {
+            switch (layer)
+            {
+                case MeshLayer.StaticMaterial:
+                case MeshLayer.BaseMaterial:
+                case MeshLayer.LayerMaterial:
+                case MeshLayer.VeinMaterial:
+                    buffer.meshData = null;
+                    return;
+                case MeshLayer.StaticTransparent:
+                    layer = MeshLayer.StaticMaterial;
+                    break;
+                case MeshLayer.BaseTransparent:
+                    layer = MeshLayer.BaseMaterial;
+                    break;
+                case MeshLayer.LayerTransparent:
+                    layer = MeshLayer.LayerMaterial;
+                    break;
+                case MeshLayer.VeinTransparent:
+                    layer = MeshLayer.VeinMaterial;
+                    break;
+                default:
+                    break;
+            }
+        }
+
         if (!meshContent.MeshData.ContainsKey(layer))
         {
+
             buffer.meshData = null;
             return;
         }
@@ -621,10 +655,6 @@ abstract class BlockMesher {
             shapeTextTransform = meshContent.ShapeTexture.UVTransform;
             index1.y = meshContent.ShapeTexture.ArrayIndex;
         }
-
-        MaterialTextureSet matTexContent;
-        if (!ContentLoader.Instance.MaterialTextures.TryGetValue(tile.GetMaterial(layer), out matTexContent))
-            matTexContent = null;
 
         if (matTexContent != null)
         {

@@ -1285,6 +1285,15 @@ namespace RemoteFortressReader
       get { return _noble_positions; }
     }
   
+    [UnityEngine.SerializeField]
+    private int _rider_id = default(int);
+    [global::ProtoBuf.ProtoMember(19, IsRequired = false, Name=@"rider_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int rider_id
+    {
+      get { return _rider_id; }
+      set { _rider_id = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

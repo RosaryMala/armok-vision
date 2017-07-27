@@ -1530,6 +1530,10 @@ public class GameMap : MonoBehaviour
                 {
                     Vector3 position = DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z);
                     creatureList[unit.id].transform.position = position + new Vector3(0, 0.51f, 0);
+                    if(unit.rider_id >= 0 && creatureList.ContainsKey(unit.rider_id))
+                    {
+                        creatureList[unit.id].transform.position += new Vector3(0, creatureList[unit.rider_id].localScale.y, 0);
+                    }
                     float scale;
                     if (GameSettings.Instance.units.scaleUnits)
                         scale = unit.size_info.length_cur / 391.0f;

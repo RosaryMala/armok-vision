@@ -4,6 +4,8 @@ using Ionic.Zip;
 using Newtonsoft.Json;
 using System.IO;
 using System.Diagnostics;
+using UnityEngine.CloudBuild;
+using MaterialStore;
 
 public class BuildFactory
 {
@@ -29,7 +31,7 @@ public class BuildFactory
 
     static void BuildRelease(BuildTarget target)
     {
-
+        MaterialCollector.BuildMaterialCollection();
 
         string targetString = "";
         string releaseName = "";
@@ -112,5 +114,11 @@ public class BuildFactory
         protogen.WaitForExit();
 
         UnityEngine.Debug.Log("Finished compiling protos");
+    }
+
+    public static void PreBuild(BuildManifestObject manifest)
+    {
+        MaterialCollector.BuildMaterialCollection();
+        RenderTexture.active = null; //Attempt at cloud build error fixing.
     }
 }
