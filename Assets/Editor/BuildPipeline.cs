@@ -119,5 +119,6 @@ public class BuildFactory
     public static void PreBuild(BuildManifestObject manifest)
     {
         MaterialCollector.BuildMaterialCollection();
+        RenderTexture.active = null; //Attempt at cloud build error fixing.
     }
 }
