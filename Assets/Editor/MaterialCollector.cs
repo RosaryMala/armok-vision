@@ -87,7 +87,10 @@ namespace MaterialStore
                 {
                     albedoArray[j].a = specularArray[j].r;
                 }
-
+                
+                //No idea why this happens, but it does.
+                if(patternArray == null)
+                    patternArray = new Texture2DArray(256, 256, albedoList.Count, TextureFormat.ARGB32, true, true);
                 patternArray.SetPixels(albedoArray, i);
             }
 
