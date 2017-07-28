@@ -35,7 +35,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Specular:
-        m_Texture: {fileID: 2800000, guid: 2a8e46d1be12bf543ab58e9b8f890973, type: 3}
+        m_Texture: {fileID: 2800000, guid: deb51c68f90ddb84fb841e4ea0f9cb9a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:

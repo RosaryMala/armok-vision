@@ -40,7 +40,7 @@ namespace Building
                     var buildingItem = buildingInput.items[index];
                     //skip items that are just stored in the building.
                     //though they should be later in the list anyway.
-                    if (buildingItem.mode == 0 != !storedItem)
+                    if ((buildingItem.mode == 0) != storedItem)
                     {
                         gameObject.SetActive(false);
                         return;

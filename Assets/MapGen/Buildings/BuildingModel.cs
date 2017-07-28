@@ -113,6 +113,10 @@ namespace Building
         internal void PrintInfo()
         {
             Debug.Log(GameMap.buildings[originalBuilding.building_type].id);
+            foreach (var item in originalBuilding.items)
+            {
+                Debug.Log(GameMap.items[item.item.type].id + ": " + item.mode);
+            }
         }
 
         private void ClearSelectionColliders()

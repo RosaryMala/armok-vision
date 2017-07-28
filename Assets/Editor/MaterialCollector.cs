@@ -185,6 +185,7 @@ namespace MaterialStore
 
         public static void MakeUsable(Texture texture)
         {
+            bool changed = false;
             var path = AssetDatabase.GetAssetPath(texture);
 
             if (string.IsNullOrEmpty(path))
@@ -192,11 +193,24 @@ namespace MaterialStore
 
             var importer = (TextureImporter)AssetImporter.GetAtPath(path);
 
-            importer.isReadable = true;
-            importer.maxTextureSize = 256;
-            importer.textureCompression = TextureImporterCompression.Uncompressed;
+            if (importer.isReadable == false)
+            {
+                importer.isReadable = true;
+                changed = true;
+            }
+            if (importer.maxTextureSize != 256)
+            {
+                importer.maxTextureSize = 256;
+                changed = true;
+            }
+            if (importer.textureCompression != TextureImporterCompression.Uncompressed)
+            {
+                importer.textureCompression = TextureImporterCompression.Uncompressed;
+                changed = true;
+            }
 
-            importer.SaveAndReimport();
+            if(changed)
+                importer.SaveAndReimport();
         }
     }
 }
