@@ -10667,6 +10667,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BlocksToFetch: 80
   RunOnAlternateThread: 1
+  refreshDelay: 1
 --- !u!114 &861361736
 MonoBehaviour:
   m_ObjectHideFlags: 0

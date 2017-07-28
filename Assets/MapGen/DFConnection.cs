@@ -49,6 +49,7 @@ public sealed class DFConnection : MonoBehaviour
     // Assignable values
     public int BlocksToFetch = 4;
     public bool RunOnAlternateThread = false;
+    public float refreshDelay = 100;
 
     // Thread management
     private ConnectionManager connectionManager;
@@ -1123,11 +1124,16 @@ public sealed class DFConnection : MonoBehaviour
         /// </summary>
         public sealed class UnityThread : ConnectionManager
         {
+            private float prevTime;
+
             public UnityThread(DFConnection connection) : base(connection)
             { }
 
             public override void Poll()
             {
+                if (Time.time - prevTime < Instance.refreshDelay)
+                    return;
+                prevTime = Time.time;
                 try
                 {
                     connection.PerformSingleUpdate();
@@ -1150,8 +1156,6 @@ public sealed class DFConnection : MonoBehaviour
         /// </summary>
         public sealed class AltThread : ConnectionManager
         {
-            private static readonly System.TimeSpan SLEEP_TIME = System.TimeSpan.FromMilliseconds(16);
-
             /// Use to terminate computation thread
             private volatile bool finished;
             /// Said thread
@@ -1197,7 +1201,7 @@ public sealed class DFConnection : MonoBehaviour
                         connection.ResumeGame();
                             return;
                     }
-                    Thread.Sleep(SLEEP_TIME);
+                    Thread.Sleep((int)(Instance.refreshDelay * 1000));
                 }
                 // finished
                 connection.networkClient.disconnect();
