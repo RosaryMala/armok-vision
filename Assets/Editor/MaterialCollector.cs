@@ -67,7 +67,7 @@ namespace MaterialStore
                     (Texture2D)mat.GetTexture(heightID)));
             }
 
-            Texture2DArray patternArray = new Texture2DArray(256, 256, albedoList.Count, TextureFormat.ARGB32, true, true);
+            Texture2DArray patternArray = new Texture2DArray(256, 256, albedoList.Count, TextureFormat.ARGB32, true, false);
 
             for (int i = 0; i < albedoList.Count; i++)
             {
@@ -90,7 +90,7 @@ namespace MaterialStore
                 
                 //No idea why this happens, but it does.
                 if(patternArray == null)
-                    patternArray = new Texture2DArray(256, 256, albedoList.Count, TextureFormat.ARGB32, true, true);
+                    patternArray = new Texture2DArray(256, 256, albedoList.Count, TextureFormat.ARGB32, true, false);
                 patternArray.SetPixels(albedoArray, i);
             }
 
