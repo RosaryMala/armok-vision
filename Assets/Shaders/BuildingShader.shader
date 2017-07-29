@@ -124,8 +124,8 @@
             metallic = lerp(metallic, _Metallic, mask.r);
             smoothness = lerp(smoothness, _Glossiness, mask.b);
 #endif
-#else
-            albedo = overlay(albedo, matColor.rgb);
+//#else
+//            albedo = overlay(albedo, matColor.rgb);
 #endif
 
 
@@ -139,7 +139,7 @@
 #endif
             o.Metallic = metallic;
             o.Smoothness = smoothness;
-            o.Occlusion = tex2D(_OcclusionMap, texcoords.xy) * _OcclusionStrength;
+            o.Occlusion = lerp(1, tex2D(_OcclusionMap, texcoords.xy), _OcclusionStrength);
 			o.Alpha = alpha;
         }
 		ENDCG
