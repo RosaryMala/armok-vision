@@ -14201,7 +14201,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff26db721962cdf4a8edcdfa9a767d2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  profile: {fileID: 11400000, guid: 69c347a1e6c41d945a26ccd69063a9b4, type: 2}
+  profile: {fileID: 11400000, guid: e67882799a0bb8647887973a9ed50403, type: 2}
 --- !u!20 &1147257834
 Camera:
   m_ObjectHideFlags: 0
