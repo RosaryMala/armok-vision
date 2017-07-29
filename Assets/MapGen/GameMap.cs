@@ -197,7 +197,7 @@ public class GameMap : MonoBehaviour
         DFConnection.RegisterConnectionCallback(OnConnectToDF);
 
 #if DEVELOPMENT_BUILD
-        Debug.Log("Dev build")
+        Debug.Log("Dev build");
 #endif
 
         dfScreen.SetActive(GameSettings.Instance.game.showDFScreen);
