@@ -11,8 +11,8 @@ namespace Building
         public bool raising;
         public bool lowering;
 
-        Rigidbody rigidbody;
-        HingeJoint hingeJoint;
+        new Rigidbody rigidbody;
+        new HingeJoint hingeJoint;
 
         private void Awake()
         {
