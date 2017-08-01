@@ -57,10 +57,16 @@
             fixed3 c = fixed3(0, 0, 0);
             fixed m = 0;
             fixed a = 0;
+            fixed3 n = fixed3(0.5, 0.5, 1);
+#if defined(layer_1)
+            int i = 0;
+#else
             for (int i = 0; i < layer_count; i++)
+#endif
             {
                 float layerIndex = UNITY_ACCESS_INSTANCED_PROP(_LayerIndex)[i];
                 fixed4 layerPixel = UNITY_SAMPLE_TEX2DARRAY(_MatTex, float3(IN.uv_MatTex.xy, layerIndex));
+                fixed4 normalPixel = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MatTex.xy, layerIndex));
                 fixed4 layerColor = UNITY_ACCESS_INSTANCED_PROP(_LayerColor)[i];
                 if (layerIndex >= 0 && layerPixel.a >= 0.5)
                 {
@@ -68,12 +74,14 @@
                     c = layerPixel.rgb * layerColor.rgb;
                     a = layerPixel.a;
                     m = max((layerColor.a * 2) - 1, 0);
+                    n = UnpackNormal(normalPixel);
                 }
             }
 
             o.Albedo = c;
             o.Metallic = m;
             o.Alpha = a;
+            o.Normal = n;
 		}
 		ENDCG
 	}
