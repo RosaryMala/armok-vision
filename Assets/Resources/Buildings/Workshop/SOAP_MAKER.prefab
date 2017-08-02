@@ -956,6 +956,7 @@ MonoBehaviour:
       _width: 0
       _height: 0
     _direction: 0
+    _active: 0
 --- !u!114 &114513569811021926
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -968,6 +969,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: 
+  index: 0
+  storedItem: 0
+  endOffset: 0
 --- !u!114 &114564938007008016
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -980,6 +984,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: BUCKET
+  index: -1
+  storedItem: 0
+  endOffset: 0
 --- !u!114 &114983436259892762
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -992,3 +999,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: 
+  index: 0
+  storedItem: 0
+  endOffset: 0
