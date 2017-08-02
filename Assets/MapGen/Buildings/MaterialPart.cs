@@ -2,6 +2,8 @@
 using UnityEngine;
 using TokenLists;
 using MaterialStore;
+using System.Collections.Generic;
+using System;
 
 namespace Building
 {
@@ -17,9 +19,58 @@ namespace Building
         [Tooltip("Used to disallow the last item in a building from being used, such as with traps.")]
         public int endOffset = 0;
 
+
         private void Awake()
         {
             meshRenderer = GetComponent<MeshRenderer>();
+        }
+
+        private void UpdateMaterialVersions()
+        {
+            if (setMaterials)
+                return;
+            setMaterials = true;
+            var originalMat = meshRenderer.sharedMaterial;
+            originalMaterialID = originalMat.GetInstanceID();
+            if (!opaqueMaterialVersions.ContainsKey(originalMaterialID))
+            {
+                if (originalMat.shader.name == "Standard")
+                {
+                    Debug.LogWarning(gameObject.name + " Has a standard shader!");
+                    opaqueMaterialVersions[originalMaterialID] = originalMat;
+                    transparentMaterialVersions[originalMaterialID] = originalMat;
+                }
+                else
+                {
+                    opaqueMaterialVersions[originalMaterialID] = originalMat;
+                    transparentMaterialVersions[originalMaterialID] = new Material(originalMat);
+                    transparentMaterialVersions[originalMaterialID].shader = Shader.Find("Building/Transparent");
+                }
+            }
+        }
+
+        bool setMaterials = false;
+        int originalMaterialID;
+        static Dictionary<int, Material> opaqueMaterialVersions = new Dictionary<int, Material>();
+        static Dictionary<int, Material> transparentMaterialVersions = new Dictionary<int, Material>();
+
+        Material OriginalMaterial
+        {
+            get
+            {
+                if (!setMaterials)
+                    UpdateMaterialVersions();
+                return opaqueMaterialVersions[originalMaterialID];
+            }
+        }
+        Material TransparentMaterial
+        {
+            get
+            {
+                if (!setMaterials)
+                    UpdateMaterialVersions();
+                return transparentMaterialVersions[originalMaterialID];
+            }
         }
 
         public void UpdatePart(BuildingInstance buildingInput)
@@ -82,7 +133,7 @@ namespace Building
             }
             gameObject.SetActive(true);
             Color partColor = Color.gray;
-            int textureIndex = 0;
+            float textureIndex = 0;
             MaterialTextureSet textureContent;
             if (ContentLoader.Instance.MaterialTextures.TryGetValue(mat, out textureContent))
             {
@@ -96,6 +147,10 @@ namespace Building
 
             if (meshRenderer == null)
                 meshRenderer = GetComponent<MeshRenderer>();
+            if (partColor.a < 0.5f)
+                meshRenderer.sharedMaterial = TransparentMaterial;
+            else
+                meshRenderer.sharedMaterial = OriginalMaterial;
             meshRenderer.sharedMaterial.SetTexture("_MatTex", ContentLoader.Instance.PatternTextureArray);
             MaterialPropertyBlock prop = new MaterialPropertyBlock();
             prop.SetColor("_MatColor", partColor);
