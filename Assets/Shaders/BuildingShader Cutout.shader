@@ -48,27 +48,7 @@
         #pragma shader_feature _EMISSION
         #pragma shader_feature _METALLICGLOSSMAP
 
-        half4       _Color;
-
-        sampler2D   _MainTex;
-
-        sampler2D   _BumpMap;
-        half        _BumpScale;
-
-        sampler2D _DFMask;
-        UNITY_DECLARE_TEX2DARRAY(_MatTex);
-
-        sampler2D   _SpecGlossMap;
-        sampler2D   _MetallicGlossMap;
-        half        _Metallic;
-        half        _Glossiness;
-        half        _GlossMapScale;
-
-        sampler2D   _OcclusionMap;
-        half        _OcclusionStrength;
-
-        half4       _EmissionColor;
-        sampler2D   _EmissionMap;
+#include "buildingInputs.cginc"
 
 		struct Input {
             float2 uv_MainTex;
@@ -78,11 +58,6 @@
             float2 uv_MatTex;
 #endif
         };
-
-        UNITY_INSTANCING_CBUFFER_START(MyProperties)
-        UNITY_DEFINE_INSTANCED_PROP(fixed4, _MatColor)
-        UNITY_DEFINE_INSTANCED_PROP(int, _MatIndex)
-        UNITY_INSTANCING_CBUFFER_END
 
 #include "blend.cginc"
 
@@ -106,7 +81,7 @@
             fixed4 matColor = UNITY_ACCESS_INSTANCED_PROP(_MatColor);
             fixed3 albedo = overlay(dfTex.rgb, matColor.rgb);
             half smoothness = dfTex.a;
-            half metallic = 1 - matColor.a;
+            half metallic = max((matColor.a * 2) - 1, 0);
             fixed alpha = 1;
 
 #ifdef _TEXTURE_MASK

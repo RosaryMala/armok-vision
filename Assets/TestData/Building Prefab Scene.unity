@@ -139,7 +139,7 @@ Light:
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 1
+    m_Type: 2
     m_Resolution: 3
     m_CustomResolution: -1
     m_Strength: 1
@@ -586,7 +586,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 632c27802609cf448bef79fb5a172114, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  materialColor: {r: 0.9338235, g: 0.9338235, b: 0.9338235, a: 0}
+  materialColor: {r: 0.9338235, g: 0.9338235, b: 0.9338235, a: 0.159}
   materialPattern: {fileID: 18700000, guid: 90371d721a62f5642b53ad88ea1f83f0, type: 2}
   index: 4
 --- !u!4 &238614217

@@ -31,11 +31,11 @@
         // Blending state
         [HideInInspector] _Mode("__mode", Float) = 0.0
     }
-	SubShader {
-		Tags { "Queue" = "Transparent" "RenderType"="Opaque" }
-		LOD 200
-		
-		CGPROGRAM
+    SubShader{
+        Tags { "Queue" = "Transparent" "RenderType" = "Opaque" }
+        LOD 200
+
+        CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
 		#pragma surface surf Standard alpha
 
@@ -48,30 +48,9 @@
         #pragma shader_feature _EMISSION
         #pragma shader_feature _METALLICGLOSSMAP
 
-        half4       _Color;
-        half        _Cutoff;
-
-        sampler2D   _MainTex;
-
-        sampler2D   _BumpMap;
-        half        _BumpScale;
-
-        sampler2D _DFMask;
-        UNITY_DECLARE_TEX2DARRAY(_MatTex);
-
-        sampler2D   _SpecGlossMap;
-        sampler2D   _MetallicGlossMap;
-        half        _Metallic;
-        half        _Glossiness;
-        half        _GlossMapScale;
-
-        sampler2D   _OcclusionMap;
-        half        _OcclusionStrength;
-
-        half4       _EmissionColor;
-        sampler2D   _EmissionMap;
-
-		struct Input {
+#include "buildingInputs.cginc"
+            
+        struct Input {
             float2 uv_MainTex;
 #ifdef _SECOND_UV
             float2 uv2_MatTex;
@@ -80,10 +59,6 @@
 #endif
         };
 
-        UNITY_INSTANCING_CBUFFER_START(MyProperties)
-        UNITY_DEFINE_INSTANCED_PROP(fixed4, _MatColor)
-        UNITY_DEFINE_INSTANCED_PROP(int, _MatIndex)
-        UNITY_INSTANCING_CBUFFER_END
 
 #include "blend.cginc"
 
@@ -144,7 +119,7 @@
         }
 		ENDCG
 	}
-	FallBack "Transparent/Diffuse"
+	FallBack "Unlit/BuildingShadowFallback"
     CustomEditor "BuildingMaterialEditor"
 
 }
