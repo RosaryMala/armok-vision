@@ -26,7 +26,7 @@
 
         _MatTex("DF Material Texture", 2DArray) = "grey" {}
         [PerRendererData] _MatColor("DF Material Color", Color) = (0.5,0.5,0.5,1)
-        [PerRendererData] _MatIndex("DF Material Array Index", int) = 0
+        [PerRendererData] _MatIndex("DF Material Array Index", float) = 0
 
         // Blending state
         [HideInInspector] _Mode("__mode", Float) = 0.0
@@ -82,7 +82,7 @@
 
         UNITY_INSTANCING_CBUFFER_START(MyProperties)
         UNITY_DEFINE_INSTANCED_PROP(fixed4, _MatColor)
-        UNITY_DEFINE_INSTANCED_PROP(int, _MatIndex)
+        UNITY_DEFINE_INSTANCED_PROP(float, _MatIndex)
         UNITY_INSTANCING_CBUFFER_END
 
 #include "blend.cginc"
