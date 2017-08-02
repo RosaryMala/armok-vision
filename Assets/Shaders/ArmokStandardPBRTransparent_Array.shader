@@ -1,6 +1,5 @@
 ﻿Shader "Custom/ArmokStandardPBRTransparent_Array" {
 	Properties {
-		_Color ("Color", Color) = (1,1,1,1)
         _MatTex ("Albedo (RGB)", 2DArray) = "grey" {}
 		_BumpMap ("Normalmap (RGB) Occlusion (A)", 2DArray) = "bump" {}
         _SpecialTex("Metallic (R)", 2DArray) = "black" {}
@@ -32,6 +31,6 @@
 
 		ENDCG
 	} 
-	FallBack "Custom/ArmokStandardPBRTransparentNoSpatter"
-            CustomEditor "GroundSplatEditor"
+	FallBack "Unlit/TerrainSplatShadowFallback"
+    CustomEditor "GroundSplatEditor"
 }
