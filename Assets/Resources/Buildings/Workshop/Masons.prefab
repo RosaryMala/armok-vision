@@ -281,7 +281,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 7c88ab13653a59d4aaa214c053d69ffc, type: 2}
+  - {fileID: 2100000, guid: ad26ea8897946ee469d51dd19b68fcfb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -470,6 +470,7 @@ MonoBehaviour:
       _width: 0
       _height: 0
     _direction: 0
+    _active: 0
 --- !u!114 &114101208792750334
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -482,6 +483,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: 
+  index: -1
+  storedItem: 0
+  endOffset: 0
 --- !u!114 &114223789788216276
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -494,6 +498,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: 
+  index: -1
+  storedItem: 0
+  endOffset: 0
 --- !u!114 &114308975048727838
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -506,6 +513,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: 
+  index: -1
+  storedItem: 0
+  endOffset: 0
 --- !u!114 &114534543946036996
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -518,6 +528,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: 
+  index: -1
+  storedItem: 0
+  endOffset: 0
 --- !u!114 &114545423195156558
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -530,6 +543,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: 
+  index: -1
+  storedItem: 0
+  endOffset: 0
 --- !u!114 &114776932180019504
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -542,3 +558,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: 
+  index: -1
+  storedItem: 0
+  endOffset: 0
