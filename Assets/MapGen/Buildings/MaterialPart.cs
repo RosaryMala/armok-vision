@@ -49,6 +49,16 @@ namespace Building
             }
         }
 
+        private static string GetTreeName(GameObject go)
+        {
+            string name = go.name;
+            for(Transform parent = go.transform.parent; parent != null; parent = parent.transform.parent)
+            {
+                name = parent.gameObject.name + "/" + name;
+            }
+            return name;
+        }
+
         bool setMaterials = false;
         int originalMaterialID;
         static Dictionary<int, Material> opaqueMaterialVersions = new Dictionary<int, Material>();
