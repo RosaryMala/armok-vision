@@ -36,7 +36,7 @@ namespace Building
             {
                 if (originalMat.shader.name == "Standard")
                 {
-                    Debug.LogWarning(gameObject.name + " Has a standard shader!");
+                    Debug.LogWarning(GetTreeName(gameObject) + " Has a standard shader!");
                     opaqueMaterialVersions[originalMaterialID] = originalMat;
                     transparentMaterialVersions[originalMaterialID] = originalMat;
                 }
