@@ -21,8 +21,17 @@ namespace Building
             parts = gameObject.GetInterfacesInChildren<IBuildingPart>();
         }
 
-        public void Initialize(RemoteFortressReader.BuildingInstance buildingInput)
+        public void Initialize(BuildingInstance buildingInput)
         {
+            DFHack.DFCoord pos = new DFHack.DFCoord(
+              (buildingInput.pos_x_min + buildingInput.pos_x_max) / 2,
+              (buildingInput.pos_y_min + buildingInput.pos_y_max) / 2,
+              buildingInput.pos_z_max);
+
+            //always update building rotation because that depends on outside stuff
+            if (MapDataStore.Main[pos] != null && rotationType != RotationType.BuildingDirection)
+                transform.localRotation = MeshContent.TranslateRotation(rotationType, MapDataStore.Main[pos]);
+
             if (originalBuilding != null
                 && originalBuilding.active == buildingInput.active
                 && originalBuilding.items.Count == buildingInput.items.Count
@@ -37,13 +46,6 @@ namespace Building
                 part.UpdatePart(buildingInput);
             }
 
-            DFHack.DFCoord pos = new DFHack.DFCoord(
-                (buildingInput.pos_x_min + buildingInput.pos_x_max) / 2,
-                (buildingInput.pos_y_min + buildingInput.pos_y_max) / 2,
-                buildingInput.pos_z_max);
-
-            if (MapDataStore.Main[pos] != null && rotationType != RotationType.BuildingDirection)
-                transform.localRotation = MeshContent.TranslateRotation(rotationType, MapDataStore.Main[pos]);
 
             var group = GetComponent<LODGroup>();
             if (group == null)

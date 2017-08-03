@@ -21,6 +21,14 @@ namespace Building
 
         Dictionary<DFCoord, BuildingInstance> buildingInfoMap = new Dictionary<DFCoord, BuildingInstance>();
 
+        public static BuildingInstance GetBuildingInfo(DFCoord pos)
+        {
+            if (Instance == null)
+                return null;
+            if (!Instance.buildingInfoMap.ContainsKey(pos))
+                return null;
+            return Instance.buildingInfoMap[pos];
+        }
 
         void LoadBuildings()
         {
@@ -216,7 +224,7 @@ namespace Building
 
         }
 
-        public string GetBuildingInfo(DFCoord pos)
+        public string GetBuildingInfoText(DFCoord pos)
         {
             if (!buildingInfoMap.ContainsKey(pos))
                 return "";

@@ -1,4 +1,5 @@
-﻿using DFHack;
+﻿using Building;
+using DFHack;
 using RemoteFortressReader;
 using System;
 using System.Collections.Generic;
@@ -834,12 +835,12 @@ public class MapDataStore {
             get
             {
                 return isWall
-                    //|| buildingType.building_type == 8 //Door
-                    //|| buildingType.building_type == 9 //Floodgate
-                    //|| buildingType.building_type == 16 //WindowGlass
-                    //|| buildingType.building_type == 17 //WindowGem
-                    || shape == TiletypeShape.FORTIFICATION //since isWall doesn't handle this.
-                    ;
+                    || (BuildingManager.GetBuildingInfo(position) != null &&
+                          (BuildingManager.GetBuildingInfo(position).building_type.building_type == 8 //Door
+                        || BuildingManager.GetBuildingInfo(position).building_type.building_type == 9 //Floodgate
+                        || BuildingManager.GetBuildingInfo(position).building_type.building_type == 16 //WindowGlass
+                        || BuildingManager.GetBuildingInfo(position).building_type.building_type == 17)) //WindowGem
+                    || shape == TiletypeShape.FORTIFICATION; //since isWall doesn't handle this.
             }
         }
         public bool isFloor {

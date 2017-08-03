@@ -1327,7 +1327,7 @@ public class GameMap : MonoBehaviour
 
                 statusText.AppendLine();
 
-                statusText.Append(Building.BuildingManager.Instance.GetBuildingInfo(new DFCoord(cursX, cursY, cursZ)));
+                statusText.Append(Building.BuildingManager.Instance.GetBuildingInfoText(new DFCoord(cursX, cursY, cursZ)));
 
                 if (tile.spatters != null)
                     foreach (var spatter in tile.spatters)
