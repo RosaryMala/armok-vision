@@ -24,6 +24,7 @@ public class TextureArrayMaker : EditorWindow
     int previewIndex = 0;
     Texture2D previewTexture;
     Texture2D normalPreviewTexture;
+    bool skipEmpty = false;
 
     [MenuItem("Mytools/Texture Array Builder")]
     public static void BuildTextureArray()
@@ -45,6 +46,7 @@ public class TextureArrayMaker : EditorWindow
         if (tiles_y <= 0) tiles_y = 1;
 
         mipmaps = EditorGUILayout.Toggle("Enable Mipmaps", mipmaps);
+        skipEmpty = EditorGUILayout.Toggle("Skip Empty", skipEmpty);
 
         scaleMode = (ScaleMode)EditorGUILayout.EnumPopup("Scale mode", scaleMode);
         int scale = 1;
@@ -84,14 +86,20 @@ public class TextureArrayMaker : EditorWindow
 
             if (GUILayout.Button("Build Array"))
             {
-                texArray = new Texture2DArray(potWidth, potHeight, tiles_x * tiles_y, TextureFormat.ARGB32, mipmaps);
-                var tempTex = new Texture2D(sourceWidth, sourceHeight, TextureFormat.ARGB32, false);
-                int i = 0;
+                var tempList = new List<Texture2D>();
                 for (int y = tiles_y-1; y >= 0 ; y--)
                     for (int x = 0; x < tiles_x; x++)
                     {
-                        tempTex.Resize(sourceWidth, sourceHeight);
-                        tempTex.SetPixels(baseTexture.GetPixels(sourceWidth * x, sourceHeight * y, sourceWidth, sourceHeight));
+                        var pixels = baseTexture.GetPixels(sourceWidth * x, sourceHeight * y, sourceWidth, sourceHeight);
+                        float totalAlpha = 0;
+                        foreach (var pixel in pixels)
+                        {
+                            totalAlpha += pixel.a;
+                        }
+                        if (totalAlpha < 1) //it's empty, bro.
+                            continue;
+                        var tempTex = new Texture2D(sourceWidth, sourceHeight, TextureFormat.ARGB32, false);
+                        tempTex.SetPixels(pixels);
                         switch (scaleMode)
                         {
                             case ScaleMode.HQ2x:
@@ -107,11 +115,17 @@ public class TextureArrayMaker : EditorWindow
                                 break;
                         }
                         TextureScale.Bilinear(tempTex, potWidth, potHeight);
-                        texArray.SetPixels(tempTex.GetPixels(), i);
-                        i++;
+                        tempList.Add(tempTex);
                     }
+                texArray = new Texture2DArray(potWidth, potHeight, tempList.Count, TextureFormat.ARGB32, mipmaps);
+                for(int i = 0; i < tempList.Count; i++)
+                {
+                    texArray.SetPixels(tempList[i].GetPixels(), i);
+                }
                 texArray.Apply();
                 texArray.name = baseTexture.name + "Array";
+                tempList.Clear();
+                Resources.UnloadUnusedAssets();
             }
         }
 
