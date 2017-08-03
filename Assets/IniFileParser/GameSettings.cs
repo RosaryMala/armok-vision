@@ -37,7 +37,6 @@ public class GameSettings : MonoBehaviour
         public bool debugTextureAtlas = false;
         public bool drawClouds = true;
         public LandscapeDetail distantTerrainDetail = LandscapeDetail.High;
-        public bool drawShadows = true;
         public int vSyncCount = 0;
         public int targetFrameRate = 60;
         public bool showHiddenTiles = false;
@@ -187,7 +186,6 @@ public class GameSettings : MonoBehaviour
         {
             camera.fieldOfView = Instance.camera.fieldOfView;
         }
-        SetShadows(Instance.rendering.drawShadows);
         Application.targetFrameRate = Instance.rendering.targetFrameRate;
         QualitySettings.vSyncCount = Instance.rendering.vSyncCount;
         if (Instance.game.analytics == AnalyticsChoice.Yes)
