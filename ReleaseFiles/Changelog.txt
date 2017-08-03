@@ -1,3 +1,15 @@
+v0.17.1
+ * Fixed buildings not removing themselved when they're removed from DF. This made Adventure mode unusable.
+ * Changed how material textures and colors are stored, leading to more ease of material creation. Now they are stored inside the unity archive itself, rather than separately.
+ * Added shadows to transparent geometry.
+ * Made all objects built from transparent materials actually appear transparent.
+ * Improved textures for many materials, most notably gems.
+ * Made units riding other units appear on top of the units they're riding.
+ * Improved gem windows
+ * Added hatch cover model back.
+ * Made buildings rotate properly again.
+ * Some performance improvements.
+
 v0.17.0
  * Fixed some creature-related bugs
  * Save Armok Vision, DFHack, and DF versions to the log file, for debugging.
