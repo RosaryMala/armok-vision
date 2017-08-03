@@ -1,29 +1,30 @@
-﻿using System.Collections;
+﻿using MaterialStore;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BuildingMaterialSetter : MonoBehaviour
 {
-    public Color materialColor;
-    public Texture2DArray materialPattern;
-
-    public int index;
+    public int materialChosen;
+    public MaterialCollection materialStore;
 
     public void SetMaterials()
     {
+        var materialPattern = Resources.Load<Texture2DArray>("patternTextures");
         foreach (var part in FindObjectsOfType<Building.MaterialPart>())
         {
             var renderer = part.GetComponent<MeshRenderer>();
             renderer.sharedMaterial.SetTexture("_MatTex", materialPattern);
             MaterialPropertyBlock prop = new MaterialPropertyBlock();
-            prop.SetColor("_MatColor", materialColor);
-            prop.SetFloat("_MatIndex", index);
+            prop.SetColor("_MatColor", materialStore.textures[materialChosen].color);
+            prop.SetFloat("_MatIndex", materialStore.textures[materialChosen].patternIndex);
             renderer.SetPropertyBlock(prop);
         }
     }
 
     private void OnValidate()
     {
+        materialChosen = Mathf.Clamp(materialChosen, 0, materialStore.textures.Count - 1);
         SetMaterials();
     }
 }
