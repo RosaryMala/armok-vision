@@ -27,7 +27,7 @@ Shader "Unlit/TerrainSplatShadowFallback"
         CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            #pragma target 2.0
+            #pragma target 3.5
             #pragma multi_compile_shadowcaster
             #pragma multi_compile_instancing // allow instanced shadow pass for most of the shaders
             #pragma multi_compile __ CONTAMINANTS
@@ -49,12 +49,11 @@ Shader "Unlit/TerrainSplatShadowFallback"
 
             struct v2f {
                 V2F_SHADOW_CASTER_NOPOS
-                float3 worldPos : TEXCOORD0;
                 // these three vectors will hold a 3x3 rotation matrix
                 // that transforms from tangent to world space
-                half3 tspace0 : TEXCOORD1; // tangent.x, bitangent.x, normal.x
-                half3 tspace1 : TEXCOORD2; // tangent.y, bitangent.y, normal.y
-                half3 tspace2 : TEXCOORD3; // tangent.z, bitangent.z, normal.z
+                float4 tspace0 : TEXCOORD1; // tangent.x, bitangent.x, normal.x
+                float4 tspace1 : TEXCOORD2; // tangent.y, bitangent.y, normal.y
+                float4 tspace2 : TEXCOORD3; // tangent.z, bitangent.z, normal.z
                 // texture coordinate for the normal map
                 float2 uv : TEXCOORD4;
                 float2 uv2 : TEXCOORD5;
@@ -78,19 +77,19 @@ Shader "Unlit/TerrainSplatShadowFallback"
                 half tangentSign = v.tangent.w * unity_WorldTransformParams.w;
                 half3 wBitangent = cross(wNormal, wTangent) * tangentSign;
                 // output the tangent space matrix
-                o.tspace0 = half3(wTangent.x, wBitangent.x, wNormal.x);
-                o.tspace1 = half3(wTangent.y, wBitangent.y, wNormal.y);
-                o.tspace2 = half3(wTangent.z, wBitangent.z, wNormal.z); 
+                float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+                o.tspace0 = float4(wTangent.x, wBitangent.x, wNormal.x, worldPos.x);
+                o.tspace1 = float4(wTangent.y, wBitangent.y, wNormal.y, worldPos.y);
+                o.tspace2 = float4(wTangent.z, wBitangent.z, wNormal.z, worldPos.z);
                 o.color = v.color;
-                o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
                 return o;
             }
 
             float4 frag(v2f i, UNITY_VPOS_TYPE vpos : VPOS) : SV_Target
             {
                 fixed4 bump = UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(i.uv.xy, i.uv2.y * _TexArrayCount.y));
-                fixed4 spatter = tex2D(_SpatterTex, (i.worldPos.xz - _WorldBounds.xy) / (_WorldBounds.zw - _WorldBounds.xy));
-                fixed4 noise = tex2D(_SpatterNoise, TRANSFORM_TEX(i.worldPos.xz, _SpatterNoise));
+                fixed4 spatter = tex2D(_SpatterTex, (float2(i.tspace0.w, i.tspace1.w) - _WorldBounds.xy) / (_WorldBounds.zw - _WorldBounds.xy));
+                fixed4 noise = tex2D(_SpatterNoise, TRANSFORM_TEX(float2(i.tspace0.w, i.tspace1.w), _SpatterNoise));
                 
                 // sample the normal map, and decode from the Unity encoding
                 half3 tnormal = UnpackNormal(bump.ggga);
