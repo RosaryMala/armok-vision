@@ -21,10 +21,4 @@ public class BuildingMaterialSetter : MonoBehaviour
             renderer.SetPropertyBlock(prop);
         }
     }
-
-    private void OnValidate()
-    {
-        materialChosen = Mathf.Clamp(materialChosen, 0, materialStore.textures.Count - 1);
-        SetMaterials();
-    }
 }
