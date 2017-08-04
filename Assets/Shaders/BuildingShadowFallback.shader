@@ -58,7 +58,7 @@
 
         struct v2f {
                 V2F_SHADOW_CASTER_NOPOS
-                float2  uv : TEXCOORD0;
+                float2  uv : TEXCOORD1;
                 UNITY_VERTEX_OUTPUT_STEREO
                 };
 
