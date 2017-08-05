@@ -46,7 +46,7 @@
                 CGPROGRAM
                 #pragma vertex vert
                 #pragma fragment frag
-                #pragma target 2.0
+                #pragma target 3.5
                 #pragma multi_compile_shadowcaster
                 #pragma multi_compile_instancing // allow instanced shadow pass for most of the shaders
                 #pragma shader_feature _TEXTURE_MASK
