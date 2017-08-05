@@ -12,29 +12,10 @@
 		// Physically based Standard lighting model, and enable shadows on all light types
 		#pragma surface surf Standard addshadow alphatest:_Cutoff
 
-		#pragma target 4.0
+		#pragma target 3.5
 
-        #pragma multi_compile layer_1 layer_2 layer_4 layer_8 layer_16 layer_32
-
-#if defined(layer_1)
-    #pragma instancing_options maxcount:512
-    #define layer_count 1
-#elif defined(layer_2)
-    #pragma instancing_options maxcount:512
-    #define layer_count 2
-#elif defined(layer_4)
-    #pragma instancing_options maxcount:512
-    #define layer_count 4
-#elif defined(layer_8)
-    #pragma instancing_options maxcount:256
-    #define layer_count 8
-#elif defined(layer_16)
-    #pragma instancing_options maxcount:128
-    #define layer_count 16
-#elif defined(layer_32)
-    #pragma instancing_options maxcount:64
-    #define layer_count 32
-#endif
+        #pragma instancing_options maxcount:512
+        #define layer_count 1
 
         UNITY_DECLARE_TEX2DARRAY(_MatTex);
         UNITY_DECLARE_TEX2DARRAY(_BumpMap);
@@ -58,11 +39,11 @@
             fixed m = 0;
             fixed a = 0;
             fixed3 n = fixed3(0.5, 0.5, 1);
-#if defined(layer_1)
+//#if defined(layer_1)
             int i = 0;
-#else
-            for (int i = 0; i < layer_count; i++)
-#endif
+//#else
+//            for (int i = 0; i < layer_count; i++)
+//#endif
             {
                 float layerIndex = UNITY_ACCESS_INSTANCED_PROP(_LayerIndex)[i];
                 fixed4 layerPixel = UNITY_SAMPLE_TEX2DARRAY(_MatTex, float3(IN.uv_MatTex.xy, layerIndex));
@@ -86,6 +67,6 @@
 		ENDCG
 	}
 	FallBack "Diffuse"
-    CustomEditor "CreatureSpriteEditor"
+    //CustomEditor "CreatureSpriteEditor"
 
 }
