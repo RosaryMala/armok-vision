@@ -37,12 +37,6 @@ public class CreatureManager : MonoBehaviour
         UpdateCreatures();
     }
 
-    float[] layerIndices = new float[8] {-1,-1,-1,-1,-1,-1 ,-1,-1};
-
-
-    Vector4[] layerColors = new Vector4[8];
-
-
     void UpdateCreatures()
     {
         if (!GameSettings.Instance.units.drawUnits)
@@ -98,10 +92,8 @@ public class CreatureManager : MonoBehaviour
 
                     if (creatureRaw != null)
                     {
-                        layerIndices[0] = creatureRaw.creature_tile;
-                        creatureMaterialProperties.SetFloatArray(layerIndexID, layerIndices);
-                        layerColors[0] = new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 0.5f);
-                        creatureMaterialProperties.SetVectorArray(layerColorID, layerColors);
+                        creatureMaterialProperties.SetFloat(layerIndexID, creatureRaw.creature_tile);
+                        creatureMaterialProperties.SetColor(layerColorID, new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 0.5f));
                         creatureList[unit.id].GetComponentInChildren<MeshRenderer>().SetPropertyBlock(creatureMaterialProperties);
                     }
 
@@ -146,8 +138,7 @@ public class CreatureManager : MonoBehaviour
                     if (ContentLoader.Instance.SpriteManager.getCreatureSprite(unit, out mat, out index, out colored))
                     {
                         creatureList[unit.id].GetComponentInChildren<MeshRenderer>().material = mat;
-                        layerIndices[0] = index;
-                        creatureMaterialProperties.SetFloatArray(layerIndexID, layerIndices);
+                        creatureMaterialProperties.SetFloat(layerIndexID, index);
                     }
                     else
                     {
@@ -156,20 +147,18 @@ public class CreatureManager : MonoBehaviour
                         {
                             if (unit.is_soldier && creatureRaw.creature_soldier_tile != 0)
                             {
-                                layerIndices[0] = creatureRaw.creature_soldier_tile;
+                                creatureMaterialProperties.SetFloat(layerIndexID, creatureRaw.creature_soldier_tile);
                             }
                             else
                             {
-                                layerIndices[0] = creatureRaw.creature_tile;
+                                creatureMaterialProperties.SetFloat(layerIndexID, creatureRaw.creature_tile);
                             }
-                            creatureMaterialProperties.SetFloatArray(layerIndexID, layerIndices);
                         }
                     }
                     if (colored && unit.profession_color != null)
-                        layerColors[0] = new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 0.5f);
+                        creatureMaterialProperties.SetColor(layerColorID, new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 0.5f));
                     else
-                        layerColors[0] = Color.white;
-                    creatureMaterialProperties.SetVectorArray(layerColorID, layerColors);
+                        creatureMaterialProperties.SetColor(layerColorID, Color.white);
 
 
                     creatureList[unit.id].GetComponentInChildren<MeshRenderer>().SetPropertyBlock(creatureMaterialProperties);
