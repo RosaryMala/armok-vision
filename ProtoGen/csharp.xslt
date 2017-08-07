@@ -447,7 +447,8 @@ namespace <xsl:value-of select="translate($namespace,':-/\','__..')"/>
     <xsl:variable name="type"><xsl:apply-templates select="." mode="type"/></xsl:variable>
     <xsl:variable name="format"><xsl:apply-templates select="." mode="format"/></xsl:variable>
     <xsl:variable name="field"><xsl:apply-templates select="." mode="field"/></xsl:variable>
-    private <xsl:if test="not($optionXml)">readonly</xsl:if> global::System.Collections.Generic.List&lt;<xsl:value-of select="$type" />&gt; <xsl:value-of select="$field"/> = new global::System.Collections.Generic.List&lt;<xsl:value-of select="$type"/>&gt;();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List&lt;<xsl:value-of select="$type" />&gt; <xsl:value-of select="$field"/> = new global::System.Collections.Generic.List&lt;<xsl:value-of select="$type"/>&gt;();
     [<xsl:apply-templates select="." mode="checkDeprecated"/>global::ProtoBuf.ProtoMember(<xsl:value-of select="number"/>, Name=@"<xsl:value-of select="name"/>", DataFormat = global::ProtoBuf.DataFormat.<xsl:value-of select="$format"/><xsl:if test="options/packed='true'">, Options = global::ProtoBuf.MemberSerializationOptions.Packed</xsl:if>)]<!--
     --><xsl:if test="$optionDataContract">
     [global::System.Runtime.Serialization.DataMember(Name=@"<xsl:value-of select="name"/>", Order = <xsl:value-of select="number"/>, IsRequired = false)]
