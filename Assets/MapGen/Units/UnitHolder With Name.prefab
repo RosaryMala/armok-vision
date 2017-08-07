@@ -26,6 +26,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 422910}
+  - component: {fileID: 114155779885462090}
   m_Layer: 12
   m_Name: UnitHolder With Name
   m_TagString: Untagged
@@ -328,3 +329,81 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 156160}
   m_IsPrefabParent: 1
+--- !u!114 &114155779885462090
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 156160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ef7bcd473f404243a1afd73af1feed9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  creatureRaw:
+    _index: 0
+    _creature_id: 
+    _name: []
+    _general_baby_name: []
+    _general_child_name: []
+    _creature_tile: 0
+    _creature_soldier_tile: 0
+    _color:
+      _red: 0
+      _green: 0
+      _blue: 0
+    _adultsize: 0
+    _caste: []
+    _tissues: []
+  casteRaw:
+    _index: 0
+    _caste_id: 
+    _caste_name: []
+    _baby_name: []
+    _child_name: []
+    _gender: 0
+    _body_parts: []
+    _total_relsize: 0
+    _modifiers: []
+    _modifier_idx: 
+    _part_idx: 
+    _layer_idx: 
+    _body_appearance_modifiers: []
+    _color_modifiers: []
+    _description: 
+    _adult_size: 0
+  unitDef:
+    _id: 0
+    _isValid: 0
+    _pos_x: 0
+    _pos_y: 0
+    _pos_z: 0
+    _race:
+      _mat_type: 0
+      _mat_index: 0
+    _profession_color:
+      _red: 0
+      _green: 0
+      _blue: 0
+    _flags1: 0
+    _flags2: 0
+    _flags3: 0
+    _is_soldier: 0
+    _size_info:
+      _size_cur: 0
+      _size_base: 0
+      _area_cur: 0
+      _area_base: 0
+      _length_cur: 0
+      _length_base: 0
+    _name: 
+    _blood_max: 0
+    _blood_count: 0
+    _appearance:
+      _body_modifiers: 
+      _bp_modifiers: 
+      _size_modifier: 0
+      _colors: 
+    _profession_id: 0
+    _noble_positions: []
+    _rider_id: 0

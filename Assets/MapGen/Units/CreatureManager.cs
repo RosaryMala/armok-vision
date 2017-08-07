@@ -89,6 +89,10 @@ public class CreatureManager : MonoBehaviour
                     creatureList[unit.id] = Instantiate(creatureTemplate);
                     creatureList[unit.id].transform.parent = gameObject.transform;
                     creatureList[unit.id].name = "Unit_" + unit.id;
+                    creatureList[unit.id].GetComponent<Creature>().creatureRaw = creatureRaw;
+                    creatureList[unit.id].GetComponent<Creature>().casteRaw = creatureRaw.caste[unit.race.mat_index];
+                    creatureList[unit.id].GetComponent<Creature>().unitDef = unit;
+
 
                     Color color = Color.white;
                     if (unit.profession_color != null)

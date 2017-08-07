@@ -136,8 +136,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   creatureTemplate: {fileID: 422910, guid: a6d20dd66d696d34cb6b52d22f394397, type: 2}
+  lastUnitList:
+    _creature_list: []
+  unitList:
+    _creature_list: []
   singleRow: 1
-  spacing: 2
+  spacing: 5
 --- !u!4 &343048499
 Transform:
   m_ObjectHideFlags: 0

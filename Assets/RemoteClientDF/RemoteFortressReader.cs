@@ -133,7 +133,8 @@ namespace RemoteFortressReader
   {
     public TiletypeList() {}
     
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.Tiletype> _tiletype_list = new global::System.Collections.Generic.List<RemoteFortressReader.Tiletype>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.Tiletype> _tiletype_list = new global::System.Collections.Generic.List<RemoteFortressReader.Tiletype>();
     [global::ProtoBuf.ProtoMember(1, Name=@"tiletype_list", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.Tiletype> tiletype_list
     {
@@ -182,7 +183,8 @@ namespace RemoteFortressReader
       get { return _height; }
       set { _height = value; }
     }
-    private readonly global::System.Collections.Generic.List<int> _extents = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _extents = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(5, Name=@"extents", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> extents
     {
@@ -343,7 +345,8 @@ namespace RemoteFortressReader
       get { return _direction; }
       set { _direction = value; }
     }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.BuildingItem> _items = new global::System.Collections.Generic.List<RemoteFortressReader.BuildingItem>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.BuildingItem> _items = new global::System.Collections.Generic.List<RemoteFortressReader.BuildingItem>();
     [global::ProtoBuf.ProtoMember(14, Name=@"items", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.BuildingItem> items
     {
@@ -507,7 +510,8 @@ namespace RemoteFortressReader
   {
     public SpatterPile() {}
     
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.Spatter> _spatters = new global::System.Collections.Generic.List<RemoteFortressReader.Spatter>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.Spatter> _spatters = new global::System.Collections.Generic.List<RemoteFortressReader.Spatter>();
     [global::ProtoBuf.ProtoMember(1, Name=@"spatters", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.Spatter> spatters
     {
@@ -621,182 +625,208 @@ namespace RemoteFortressReader
       get { return _map_z; }
       set { _map_z = value; }
     }
-    private readonly global::System.Collections.Generic.List<int> _tiles = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _tiles = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(4, Name=@"tiles", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> tiles
     {
       get { return _tiles; }
     }
   
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
     [global::ProtoBuf.ProtoMember(5, Name=@"materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> materials
     {
       get { return _materials; }
     }
   
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _layer_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _layer_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
     [global::ProtoBuf.ProtoMember(6, Name=@"layer_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> layer_materials
     {
       get { return _layer_materials; }
     }
   
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _vein_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _vein_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
     [global::ProtoBuf.ProtoMember(7, Name=@"vein_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> vein_materials
     {
       get { return _vein_materials; }
     }
   
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _base_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _base_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
     [global::ProtoBuf.ProtoMember(8, Name=@"base_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> base_materials
     {
       get { return _base_materials; }
     }
   
-    private readonly global::System.Collections.Generic.List<int> _magma = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _magma = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(9, Name=@"magma", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> magma
     {
       get { return _magma; }
     }
   
-    private readonly global::System.Collections.Generic.List<int> _water = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _water = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(10, Name=@"water", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> water
     {
       get { return _water; }
     }
   
-    private readonly global::System.Collections.Generic.List<bool> _hidden = new global::System.Collections.Generic.List<bool>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<bool> _hidden = new global::System.Collections.Generic.List<bool>();
     [global::ProtoBuf.ProtoMember(11, Name=@"hidden", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<bool> hidden
     {
       get { return _hidden; }
     }
   
-    private readonly global::System.Collections.Generic.List<bool> _light = new global::System.Collections.Generic.List<bool>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<bool> _light = new global::System.Collections.Generic.List<bool>();
     [global::ProtoBuf.ProtoMember(12, Name=@"light", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<bool> light
     {
       get { return _light; }
     }
   
-    private readonly global::System.Collections.Generic.List<bool> _subterranean = new global::System.Collections.Generic.List<bool>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<bool> _subterranean = new global::System.Collections.Generic.List<bool>();
     [global::ProtoBuf.ProtoMember(13, Name=@"subterranean", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<bool> subterranean
     {
       get { return _subterranean; }
     }
   
-    private readonly global::System.Collections.Generic.List<bool> _outside = new global::System.Collections.Generic.List<bool>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<bool> _outside = new global::System.Collections.Generic.List<bool>();
     [global::ProtoBuf.ProtoMember(14, Name=@"outside", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<bool> outside
     {
       get { return _outside; }
     }
   
-    private readonly global::System.Collections.Generic.List<bool> _aquifer = new global::System.Collections.Generic.List<bool>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<bool> _aquifer = new global::System.Collections.Generic.List<bool>();
     [global::ProtoBuf.ProtoMember(15, Name=@"aquifer", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<bool> aquifer
     {
       get { return _aquifer; }
     }
   
-    private readonly global::System.Collections.Generic.List<bool> _water_stagnant = new global::System.Collections.Generic.List<bool>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<bool> _water_stagnant = new global::System.Collections.Generic.List<bool>();
     [global::ProtoBuf.ProtoMember(16, Name=@"water_stagnant", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<bool> water_stagnant
     {
       get { return _water_stagnant; }
     }
   
-    private readonly global::System.Collections.Generic.List<bool> _water_salt = new global::System.Collections.Generic.List<bool>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<bool> _water_salt = new global::System.Collections.Generic.List<bool>();
     [global::ProtoBuf.ProtoMember(17, Name=@"water_salt", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<bool> water_salt
     {
       get { return _water_salt; }
     }
   
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _construction_items = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _construction_items = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
     [global::ProtoBuf.ProtoMember(18, Name=@"construction_items", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> construction_items
     {
       get { return _construction_items; }
     }
   
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.BuildingInstance> _buildings = new global::System.Collections.Generic.List<RemoteFortressReader.BuildingInstance>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.BuildingInstance> _buildings = new global::System.Collections.Generic.List<RemoteFortressReader.BuildingInstance>();
     [global::ProtoBuf.ProtoMember(19, Name=@"buildings", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.BuildingInstance> buildings
     {
       get { return _buildings; }
     }
   
-    private readonly global::System.Collections.Generic.List<int> _tree_percent = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _tree_percent = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(20, Name=@"tree_percent", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> tree_percent
     {
       get { return _tree_percent; }
     }
   
-    private readonly global::System.Collections.Generic.List<int> _tree_x = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _tree_x = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(21, Name=@"tree_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> tree_x
     {
       get { return _tree_x; }
     }
   
-    private readonly global::System.Collections.Generic.List<int> _tree_y = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _tree_y = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(22, Name=@"tree_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> tree_y
     {
       get { return _tree_y; }
     }
   
-    private readonly global::System.Collections.Generic.List<int> _tree_z = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _tree_z = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(23, Name=@"tree_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> tree_z
     {
       get { return _tree_z; }
     }
   
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.TileDigDesignation> _tile_dig_designation = new global::System.Collections.Generic.List<RemoteFortressReader.TileDigDesignation>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.TileDigDesignation> _tile_dig_designation = new global::System.Collections.Generic.List<RemoteFortressReader.TileDigDesignation>();
     [global::ProtoBuf.ProtoMember(24, Name=@"tile_dig_designation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<RemoteFortressReader.TileDigDesignation> tile_dig_designation
     {
       get { return _tile_dig_designation; }
     }
   
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.SpatterPile> _spatterPile = new global::System.Collections.Generic.List<RemoteFortressReader.SpatterPile>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.SpatterPile> _spatterPile = new global::System.Collections.Generic.List<RemoteFortressReader.SpatterPile>();
     [global::ProtoBuf.ProtoMember(25, Name=@"spatterPile", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.SpatterPile> spatterPile
     {
       get { return _spatterPile; }
     }
   
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.Item> _items = new global::System.Collections.Generic.List<RemoteFortressReader.Item>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.Item> _items = new global::System.Collections.Generic.List<RemoteFortressReader.Item>();
     [global::ProtoBuf.ProtoMember(26, Name=@"items", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.Item> items
     {
       get { return _items; }
     }
   
-    private readonly global::System.Collections.Generic.List<bool> _tile_dig_designation_marker = new global::System.Collections.Generic.List<bool>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<bool> _tile_dig_designation_marker = new global::System.Collections.Generic.List<bool>();
     [global::ProtoBuf.ProtoMember(27, Name=@"tile_dig_designation_marker", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<bool> tile_dig_designation_marker
     {
       get { return _tile_dig_designation_marker; }
     }
   
-    private readonly global::System.Collections.Generic.List<bool> _tile_dig_designation_auto = new global::System.Collections.Generic.List<bool>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<bool> _tile_dig_designation_auto = new global::System.Collections.Generic.List<bool>();
     [global::ProtoBuf.ProtoMember(28, Name=@"tile_dig_designation_auto", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<bool> tile_dig_designation_auto
     {
       get { return _tile_dig_designation_auto; }
     }
   
-    private readonly global::System.Collections.Generic.List<int> _grass_percent = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _grass_percent = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(29, Name=@"grass_percent", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> grass_percent
     {
@@ -988,7 +1018,8 @@ namespace RemoteFortressReader
   {
     public BuildingList() {}
     
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.BuildingDefinition> _building_list = new global::System.Collections.Generic.List<RemoteFortressReader.BuildingDefinition>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.BuildingDefinition> _building_list = new global::System.Collections.Generic.List<RemoteFortressReader.BuildingDefinition>();
     [global::ProtoBuf.ProtoMember(1, Name=@"building_list", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.BuildingDefinition> building_list
     {
@@ -1005,7 +1036,8 @@ namespace RemoteFortressReader
   {
     public MaterialList() {}
     
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MaterialDefinition> _material_list = new global::System.Collections.Generic.List<RemoteFortressReader.MaterialDefinition>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.MaterialDefinition> _material_list = new global::System.Collections.Generic.List<RemoteFortressReader.MaterialDefinition>();
     [global::ProtoBuf.ProtoMember(1, Name=@"material_list", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.MaterialDefinition> material_list
     {
@@ -1086,14 +1118,16 @@ namespace RemoteFortressReader
   {
     public UnitAppearance() {}
     
-    private readonly global::System.Collections.Generic.List<int> _body_modifiers = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _body_modifiers = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(1, Name=@"body_modifiers", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> body_modifiers
     {
       get { return _body_modifiers; }
     }
   
-    private readonly global::System.Collections.Generic.List<int> _bp_modifiers = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _bp_modifiers = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(2, Name=@"bp_modifiers", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> bp_modifiers
     {
@@ -1109,7 +1143,8 @@ namespace RemoteFortressReader
       get { return _size_modifier; }
       set { _size_modifier = value; }
     }
-    private readonly global::System.Collections.Generic.List<int> _colors = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _colors = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(4, Name=@"colors", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> colors
     {
@@ -1278,7 +1313,8 @@ namespace RemoteFortressReader
       get { return _profession_id; }
       set { _profession_id = value; }
     }
-    private readonly global::System.Collections.Generic.List<string> _noble_positions = new global::System.Collections.Generic.List<string>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<string> _noble_positions = new global::System.Collections.Generic.List<string>();
     [global::ProtoBuf.ProtoMember(18, Name=@"noble_positions", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<string> noble_positions
     {
@@ -1304,7 +1340,8 @@ namespace RemoteFortressReader
   {
     public UnitList() {}
     
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition> _creature_list = new global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition> _creature_list = new global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition>();
     [global::ProtoBuf.ProtoMember(1, Name=@"creature_list", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition> creature_list
     {
@@ -1394,7 +1431,8 @@ namespace RemoteFortressReader
   {
     public BlockList() {}
     
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MapBlock> _map_blocks = new global::System.Collections.Generic.List<RemoteFortressReader.MapBlock>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.MapBlock> _map_blocks = new global::System.Collections.Generic.List<RemoteFortressReader.MapBlock>();
     [global::ProtoBuf.ProtoMember(1, Name=@"map_blocks", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.MapBlock> map_blocks
     {
@@ -1471,7 +1509,8 @@ namespace RemoteFortressReader
   {
     public PlantList() {}
     
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.PlantDef> _plant_list = new global::System.Collections.Generic.List<RemoteFortressReader.PlantDef>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.PlantDef> _plant_list = new global::System.Collections.Generic.List<RemoteFortressReader.PlantDef>();
     [global::ProtoBuf.ProtoMember(1, Name=@"plant_list", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.PlantDef> plant_list
     {
@@ -1768,70 +1807,80 @@ namespace RemoteFortressReader
       get { return _name_english; }
       set { _name_english = value; }
     }
-    private readonly global::System.Collections.Generic.List<int> _elevation = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _elevation = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(5, Name=@"elevation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> elevation
     {
       get { return _elevation; }
     }
   
-    private readonly global::System.Collections.Generic.List<int> _rainfall = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _rainfall = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(6, Name=@"rainfall", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> rainfall
     {
       get { return _rainfall; }
     }
   
-    private readonly global::System.Collections.Generic.List<int> _vegetation = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _vegetation = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(7, Name=@"vegetation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> vegetation
     {
       get { return _vegetation; }
     }
   
-    private readonly global::System.Collections.Generic.List<int> _temperature = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _temperature = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(8, Name=@"temperature", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> temperature
     {
       get { return _temperature; }
     }
   
-    private readonly global::System.Collections.Generic.List<int> _evilness = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _evilness = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(9, Name=@"evilness", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> evilness
     {
       get { return _evilness; }
     }
   
-    private readonly global::System.Collections.Generic.List<int> _drainage = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _drainage = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(10, Name=@"drainage", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> drainage
     {
       get { return _drainage; }
     }
   
-    private readonly global::System.Collections.Generic.List<int> _volcanism = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _volcanism = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(11, Name=@"volcanism", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> volcanism
     {
       get { return _volcanism; }
     }
   
-    private readonly global::System.Collections.Generic.List<int> _savagery = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _savagery = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(12, Name=@"savagery", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> savagery
     {
       get { return _savagery; }
     }
   
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.Cloud> _clouds = new global::System.Collections.Generic.List<RemoteFortressReader.Cloud>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.Cloud> _clouds = new global::System.Collections.Generic.List<RemoteFortressReader.Cloud>();
     [global::ProtoBuf.ProtoMember(13, Name=@"clouds", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.Cloud> clouds
     {
       get { return _clouds; }
     }
   
-    private readonly global::System.Collections.Generic.List<int> _salinity = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _salinity = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(14, Name=@"salinity", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> salinity
     {
@@ -1910,21 +1959,24 @@ namespace RemoteFortressReader
       get { return _world_poles; }
       set { _world_poles = value; }
     }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.RiverTile> _river_tiles = new global::System.Collections.Generic.List<RemoteFortressReader.RiverTile>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.RiverTile> _river_tiles = new global::System.Collections.Generic.List<RemoteFortressReader.RiverTile>();
     [global::ProtoBuf.ProtoMember(23, Name=@"river_tiles", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.RiverTile> river_tiles
     {
       get { return _river_tiles; }
     }
   
-    private readonly global::System.Collections.Generic.List<int> _water_elevation = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _water_elevation = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(24, Name=@"water_elevation", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> water_elevation
     {
       get { return _water_elevation; }
     }
   
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.RegionTile> _region_tiles = new global::System.Collections.Generic.List<RemoteFortressReader.RegionTile>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.RegionTile> _region_tiles = new global::System.Collections.Generic.List<RemoteFortressReader.RegionTile>();
     [global::ProtoBuf.ProtoMember(25, Name=@"region_tiles", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.RegionTile> region_tiles
     {
@@ -2088,7 +2140,8 @@ namespace RemoteFortressReader
   {
     public SiteRealizationBuildingTrenches() {}
     
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.TrenchSpoke> _spokes = new global::System.Collections.Generic.List<RemoteFortressReader.TrenchSpoke>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.TrenchSpoke> _spokes = new global::System.Collections.Generic.List<RemoteFortressReader.TrenchSpoke>();
     [global::ProtoBuf.ProtoMember(1, Name=@"spokes", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.TrenchSpoke> spokes
     {
@@ -2313,28 +2366,32 @@ namespace RemoteFortressReader
       get { return _surface_material; }
       set { _surface_material = value; }
     }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _plant_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _plant_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
     [global::ProtoBuf.ProtoMember(13, Name=@"plant_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> plant_materials
     {
       get { return _plant_materials; }
     }
   
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.SiteRealizationBuilding> _buildings = new global::System.Collections.Generic.List<RemoteFortressReader.SiteRealizationBuilding>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.SiteRealizationBuilding> _buildings = new global::System.Collections.Generic.List<RemoteFortressReader.SiteRealizationBuilding>();
     [global::ProtoBuf.ProtoMember(14, Name=@"buildings", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.SiteRealizationBuilding> buildings
     {
       get { return _buildings; }
     }
   
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _stone_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _stone_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
     [global::ProtoBuf.ProtoMember(15, Name=@"stone_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> stone_materials
     {
       get { return _stone_materials; }
     }
   
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _tree_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.MatPair> _tree_materials = new global::System.Collections.Generic.List<RemoteFortressReader.MatPair>();
     [global::ProtoBuf.ProtoMember(16, Name=@"tree_materials", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.MatPair> tree_materials
     {
@@ -2396,7 +2453,8 @@ namespace RemoteFortressReader
       get { return _name_english; }
       set { _name_english = value; }
     }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.RegionTile> _tiles = new global::System.Collections.Generic.List<RemoteFortressReader.RegionTile>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.RegionTile> _tiles = new global::System.Collections.Generic.List<RemoteFortressReader.RegionTile>();
     [global::ProtoBuf.ProtoMember(5, Name=@"tiles", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.RegionTile> tiles
     {
@@ -2413,14 +2471,16 @@ namespace RemoteFortressReader
   {
     public RegionMaps() {}
     
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.WorldMap> _world_maps = new global::System.Collections.Generic.List<RemoteFortressReader.WorldMap>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.WorldMap> _world_maps = new global::System.Collections.Generic.List<RemoteFortressReader.WorldMap>();
     [global::ProtoBuf.ProtoMember(1, Name=@"world_maps", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.WorldMap> world_maps
     {
       get { return _world_maps; }
     }
   
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.RegionMap> _region_maps = new global::System.Collections.Generic.List<RemoteFortressReader.RegionMap>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.RegionMap> _region_maps = new global::System.Collections.Generic.List<RemoteFortressReader.RegionMap>();
     [global::ProtoBuf.ProtoMember(2, Name=@"region_maps", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.RegionMap> region_maps
     {
@@ -2446,7 +2506,8 @@ namespace RemoteFortressReader
       get { return _id; }
       set { _id = value; }
     }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.ColorDefinition> _colors = new global::System.Collections.Generic.List<RemoteFortressReader.ColorDefinition>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.ColorDefinition> _colors = new global::System.Collections.Generic.List<RemoteFortressReader.ColorDefinition>();
     [global::ProtoBuf.ProtoMember(2, Name=@"colors", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.ColorDefinition> colors
     {
@@ -2472,21 +2533,24 @@ namespace RemoteFortressReader
   {
     public ColorModifierRaw() {}
     
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.PatternDescriptor> _patterns = new global::System.Collections.Generic.List<RemoteFortressReader.PatternDescriptor>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.PatternDescriptor> _patterns = new global::System.Collections.Generic.List<RemoteFortressReader.PatternDescriptor>();
     [global::ProtoBuf.ProtoMember(1, Name=@"patterns", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.PatternDescriptor> patterns
     {
       get { return _patterns; }
     }
   
-    private readonly global::System.Collections.Generic.List<int> _body_part_id = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _body_part_id = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(2, Name=@"body_part_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> body_part_id
     {
       get { return _body_part_id; }
     }
   
-    private readonly global::System.Collections.Generic.List<int> _tissue_layer_id = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _tissue_layer_id = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(3, Name=@"tissue_layer_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> tissue_layer_id
     {
@@ -2557,7 +2621,8 @@ namespace RemoteFortressReader
       get { return _layer_depth; }
       set { _layer_depth = value; }
     }
-    private readonly global::System.Collections.Generic.List<int> _bp_modifiers = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _bp_modifiers = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(4, Name=@"bp_modifiers", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> bp_modifiers
     {
@@ -2601,14 +2666,16 @@ namespace RemoteFortressReader
       get { return _parent; }
       set { _parent = value; }
     }
-    private readonly global::System.Collections.Generic.List<bool> _flags = new global::System.Collections.Generic.List<bool>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<bool> _flags = new global::System.Collections.Generic.List<bool>();
     [global::ProtoBuf.ProtoMember(4, Name=@"flags", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<bool> flags
     {
       get { return _flags; }
     }
   
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.BodyPartLayerRaw> _layers = new global::System.Collections.Generic.List<RemoteFortressReader.BodyPartLayerRaw>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.BodyPartLayerRaw> _layers = new global::System.Collections.Generic.List<RemoteFortressReader.BodyPartLayerRaw>();
     [global::ProtoBuf.ProtoMember(5, Name=@"layers", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.BodyPartLayerRaw> layers
     {
@@ -2735,21 +2802,24 @@ namespace RemoteFortressReader
       get { return _caste_id; }
       set { _caste_id = value; }
     }
-    private readonly global::System.Collections.Generic.List<string> _caste_name = new global::System.Collections.Generic.List<string>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<string> _caste_name = new global::System.Collections.Generic.List<string>();
     [global::ProtoBuf.ProtoMember(3, Name=@"caste_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<string> caste_name
     {
       get { return _caste_name; }
     }
   
-    private readonly global::System.Collections.Generic.List<string> _baby_name = new global::System.Collections.Generic.List<string>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<string> _baby_name = new global::System.Collections.Generic.List<string>();
     [global::ProtoBuf.ProtoMember(4, Name=@"baby_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<string> baby_name
     {
       get { return _baby_name; }
     }
   
-    private readonly global::System.Collections.Generic.List<string> _child_name = new global::System.Collections.Generic.List<string>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<string> _child_name = new global::System.Collections.Generic.List<string>();
     [global::ProtoBuf.ProtoMember(5, Name=@"child_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<string> child_name
     {
@@ -2765,7 +2835,8 @@ namespace RemoteFortressReader
       get { return _gender; }
       set { _gender = value; }
     }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.BodyPartRaw> _body_parts = new global::System.Collections.Generic.List<RemoteFortressReader.BodyPartRaw>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.BodyPartRaw> _body_parts = new global::System.Collections.Generic.List<RemoteFortressReader.BodyPartRaw>();
     [global::ProtoBuf.ProtoMember(7, Name=@"body_parts", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.BodyPartRaw> body_parts
     {
@@ -2781,42 +2852,48 @@ namespace RemoteFortressReader
       get { return _total_relsize; }
       set { _total_relsize = value; }
     }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier> _modifiers = new global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier> _modifiers = new global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier>();
     [global::ProtoBuf.ProtoMember(9, Name=@"modifiers", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier> modifiers
     {
       get { return _modifiers; }
     }
   
-    private readonly global::System.Collections.Generic.List<int> _modifier_idx = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _modifier_idx = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(10, Name=@"modifier_idx", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> modifier_idx
     {
       get { return _modifier_idx; }
     }
   
-    private readonly global::System.Collections.Generic.List<int> _part_idx = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _part_idx = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(11, Name=@"part_idx", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> part_idx
     {
       get { return _part_idx; }
     }
   
-    private readonly global::System.Collections.Generic.List<int> _layer_idx = new global::System.Collections.Generic.List<int>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _layer_idx = new global::System.Collections.Generic.List<int>();
     [global::ProtoBuf.ProtoMember(12, Name=@"layer_idx", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public global::System.Collections.Generic.List<int> layer_idx
     {
       get { return _layer_idx; }
     }
   
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier> _body_appearance_modifiers = new global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier> _body_appearance_modifiers = new global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier>();
     [global::ProtoBuf.ProtoMember(13, Name=@"body_appearance_modifiers", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier> body_appearance_modifiers
     {
       get { return _body_appearance_modifiers; }
     }
   
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.ColorModifierRaw> _color_modifiers = new global::System.Collections.Generic.List<RemoteFortressReader.ColorModifierRaw>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.ColorModifierRaw> _color_modifiers = new global::System.Collections.Generic.List<RemoteFortressReader.ColorModifierRaw>();
     [global::ProtoBuf.ProtoMember(14, Name=@"color_modifiers", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.ColorModifierRaw> color_modifiers
     {
@@ -2869,21 +2946,24 @@ namespace RemoteFortressReader
       get { return _creature_id; }
       set { _creature_id = value; }
     }
-    private readonly global::System.Collections.Generic.List<string> _name = new global::System.Collections.Generic.List<string>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<string> _name = new global::System.Collections.Generic.List<string>();
     [global::ProtoBuf.ProtoMember(3, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<string> name
     {
       get { return _name; }
     }
   
-    private readonly global::System.Collections.Generic.List<string> _general_baby_name = new global::System.Collections.Generic.List<string>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<string> _general_baby_name = new global::System.Collections.Generic.List<string>();
     [global::ProtoBuf.ProtoMember(4, Name=@"general_baby_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<string> general_baby_name
     {
       get { return _general_baby_name; }
     }
   
-    private readonly global::System.Collections.Generic.List<string> _general_child_name = new global::System.Collections.Generic.List<string>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<string> _general_child_name = new global::System.Collections.Generic.List<string>();
     [global::ProtoBuf.ProtoMember(5, Name=@"general_child_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<string> general_child_name
     {
@@ -2926,14 +3006,16 @@ namespace RemoteFortressReader
       get { return _adultsize; }
       set { _adultsize = value; }
     }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.CasteRaw> _caste = new global::System.Collections.Generic.List<RemoteFortressReader.CasteRaw>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.CasteRaw> _caste = new global::System.Collections.Generic.List<RemoteFortressReader.CasteRaw>();
     [global::ProtoBuf.ProtoMember(10, Name=@"caste", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.CasteRaw> caste
     {
       get { return _caste; }
     }
   
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.TissueRaw> _tissues = new global::System.Collections.Generic.List<RemoteFortressReader.TissueRaw>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.TissueRaw> _tissues = new global::System.Collections.Generic.List<RemoteFortressReader.TissueRaw>();
     [global::ProtoBuf.ProtoMember(11, Name=@"tissues", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.TissueRaw> tissues
     {
@@ -2950,7 +3032,8 @@ namespace RemoteFortressReader
   {
     public CreatureRawList() {}
     
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.CreatureRaw> _creature_raws = new global::System.Collections.Generic.List<RemoteFortressReader.CreatureRaw>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.CreatureRaw> _creature_raws = new global::System.Collections.Generic.List<RemoteFortressReader.CreatureRaw>();
     [global::ProtoBuf.ProtoMember(1, Name=@"creature_raws", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.CreatureRaw> creature_raws
     {
@@ -3012,7 +3095,8 @@ namespace RemoteFortressReader
       get { return _leader; }
       set { _leader = value; }
     }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition> _members = new global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition> _members = new global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition>();
     [global::ProtoBuf.ProtoMember(6, Name=@"members", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.UnitDefinition> members
     {
@@ -3038,7 +3122,8 @@ namespace RemoteFortressReader
   {
     public ArmyList() {}
     
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.Army> _armies = new global::System.Collections.Generic.List<RemoteFortressReader.Army>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.Army> _armies = new global::System.Collections.Generic.List<RemoteFortressReader.Army>();
     [global::ProtoBuf.ProtoMember(1, Name=@"armies", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.Army> armies
     {
@@ -3146,7 +3231,8 @@ namespace RemoteFortressReader
       get { return _mat; }
       set { _mat = value; }
     }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.GrowthPrint> _prints = new global::System.Collections.Generic.List<RemoteFortressReader.GrowthPrint>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.GrowthPrint> _prints = new global::System.Collections.Generic.List<RemoteFortressReader.GrowthPrint>();
     [global::ProtoBuf.ProtoMember(5, Name=@"prints", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.GrowthPrint> prints
     {
@@ -3289,7 +3375,8 @@ namespace RemoteFortressReader
       get { return _name; }
       set { _name = value; }
     }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.TreeGrowth> _growths = new global::System.Collections.Generic.List<RemoteFortressReader.TreeGrowth>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.TreeGrowth> _growths = new global::System.Collections.Generic.List<RemoteFortressReader.TreeGrowth>();
     [global::ProtoBuf.ProtoMember(4, Name=@"growths", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.TreeGrowth> growths
     {
@@ -3315,7 +3402,8 @@ namespace RemoteFortressReader
   {
     public PlantRawList() {}
     
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.PlantRaw> _plant_raws = new global::System.Collections.Generic.List<RemoteFortressReader.PlantRaw>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.PlantRaw> _plant_raws = new global::System.Collections.Generic.List<RemoteFortressReader.PlantRaw>();
     [global::ProtoBuf.ProtoMember(1, Name=@"plant_raws", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.PlantRaw> plant_raws
     {
@@ -3387,7 +3475,8 @@ namespace RemoteFortressReader
       get { return _height; }
       set { _height = value; }
     }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.ScreenTile> _tiles = new global::System.Collections.Generic.List<RemoteFortressReader.ScreenTile>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.ScreenTile> _tiles = new global::System.Collections.Generic.List<RemoteFortressReader.ScreenTile>();
     [global::ProtoBuf.ProtoMember(3, Name=@"tiles", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.ScreenTile> tiles
     {
@@ -3486,7 +3575,8 @@ namespace RemoteFortressReader
       get { return _designation; }
       set { _designation = value; }
     }
-    private readonly global::System.Collections.Generic.List<RemoteFortressReader.Coord> _locations = new global::System.Collections.Generic.List<RemoteFortressReader.Coord>();
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.Coord> _locations = new global::System.Collections.Generic.List<RemoteFortressReader.Coord>();
     [global::ProtoBuf.ProtoMember(2, Name=@"locations", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<RemoteFortressReader.Coord> locations
     {
