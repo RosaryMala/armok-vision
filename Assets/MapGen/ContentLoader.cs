@@ -233,7 +233,8 @@ public class ContentLoader : MonoBehaviour
     {
         System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         watch.Start();
-        GameMap.Instance.ShowHelp();
+        if(GameMap.Instance != null)
+            GameMap.Instance.ShowHelp();
         PatternTextureArray = Resources.Load<Texture2DArray>("patternTextures");
         PatternTextureDepth = PatternTextureArray.depth;
         ShapeTextureArray = Resources.Load<Texture2DArray>("shapeTextures");
@@ -246,7 +247,8 @@ public class ContentLoader : MonoBehaviour
         Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
         Debug.Log(string.Format("loaded {0} meshes, and {1} shape textures.", MeshContent.NumCreated, NormalContent.NumCreated));
         Debug.Log("Loading Complete. Press ESC to change settings or leave feedback. Have a nice day!");
-        GameMap.Instance.HideHelp();
+        if (GameMap.Instance != null)
+            GameMap.Instance.HideHelp();
         DFConnection.Instance.NeedNewBlocks = true;
         yield return null;
     }
@@ -427,11 +429,14 @@ public class ContentLoader : MonoBehaviour
 
         Vector4 arrayCount = new Vector4(PatternTextureDepth, shapeTextureStorage.Count, specialTextureStorage.Count, ShapeTextureDepth);
 
-        MaterialManager.Instance.SetTexture("_MatTex", PatternTextureArray);
-        MaterialManager.Instance.SetTexture("_ShapeMap", ShapeTextureArray);
-        MaterialManager.Instance.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
-        MaterialManager.Instance.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
-        MaterialManager.Instance.SetVector("_TexArrayCount", arrayCount);
+        if (MaterialManager.Instance)
+        {
+            MaterialManager.Instance.SetTexture("_MatTex", PatternTextureArray);
+            MaterialManager.Instance.SetTexture("_ShapeMap", ShapeTextureArray);
+            MaterialManager.Instance.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
+            MaterialManager.Instance.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
+            MaterialManager.Instance.SetVector("_TexArrayCount", arrayCount);
+        }
 
         Debug.Log("Finalizing creature sprites");
         yield return null;

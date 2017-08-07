@@ -15,9 +15,12 @@ public class CreatureManager : MonoBehaviour
     public UnitList lastUnitList = null;
     public UnitList unitList = null;
 
+    public bool singleRow;
+
     MaterialPropertyBlock creatureMaterialProperties = null;
     int layerIndexID;
     int layerColorID;
+    public float spacing;
 
     public static CreatureManager Instance { get; private set; }
 
@@ -55,6 +58,7 @@ public class CreatureManager : MonoBehaviour
             unitList = tempUnitList;
         UnityEngine.Profiling.Profiler.BeginSample("UpdateCreatures", this);
         lastUnitList = unitList;
+        int creatureCount = 0;
         foreach (var unit in unitList.creature_list)
         {
             if (creatureList == null)
@@ -85,6 +89,10 @@ public class CreatureManager : MonoBehaviour
                     creatureList[unit.id] = Instantiate(creatureTemplate);
                     creatureList[unit.id].transform.parent = gameObject.transform;
                     creatureList[unit.id].name = "Unit_" + unit.id;
+                    creatureList[unit.id].GetComponent<Creature>().creatureRaw = creatureRaw;
+                    creatureList[unit.id].GetComponent<Creature>().casteRaw = creatureRaw.caste[unit.race.mat_index];
+                    creatureList[unit.id].GetComponent<Creature>().unitDef = unit;
+
 
                     Color color = Color.white;
                     if (unit.profession_color != null)
@@ -98,18 +106,28 @@ public class CreatureManager : MonoBehaviour
                     }
 
                 }
-                MapDataStore.Tile tile = null;
-                if (MapDataStore.Main != null)
-                    tile = MapDataStore.Main[unit.pos_x, unit.pos_y, unit.pos_z];
-                creatureList[unit.id].gameObject.SetActive(
-                    unit.pos_z < GameMap.Instance.PosZ && unit.pos_z >= (GameMap.Instance.PosZ - GameSettings.Instance.rendering.drawRangeDown)
-                    && (tile != null ? !tile.Hidden : false)
-                    );
+                if (!singleRow)
+                {
+                    MapDataStore.Tile tile = null;
+                    if (MapDataStore.Main != null)
+                        tile = MapDataStore.Main[unit.pos_x, unit.pos_y, unit.pos_z];
+                    creatureList[unit.id].gameObject.SetActive(
+                        unit.pos_z < GameMap.Instance.PosZ && unit.pos_z >= (GameMap.Instance.PosZ - GameSettings.Instance.rendering.drawRangeDown)
+                        && (tile != null ? !tile.Hidden : false)
+                        );
+                }
 
                 if (creatureList[unit.id].gameObject.activeSelf) //Only update stuff if it's actually visible.
                 {
-                    Vector3 position = GameMap.DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z);
-                    creatureList[unit.id].transform.position = position + new Vector3(0, 0.51f, 0);
+                    if (singleRow)
+                    {
+                        creatureList[unit.id].transform.position = new Vector3(creatureCount * spacing, 0, 0);
+                    }
+                    else
+                    {
+                        Vector3 position = GameMap.DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z);
+                        creatureList[unit.id].transform.position = position + new Vector3(0, 0.51f, 0);
+                    }
                     if (unit.rider_id >= 0 && creatureList.ContainsKey(unit.rider_id))
                     {
                         creatureList[unit.id].transform.position += new Vector3(0, creatureList[unit.rider_id].localScale.y, 0);
@@ -177,7 +195,7 @@ public class CreatureManager : MonoBehaviour
                         }
                     }
                 }
-
+                creatureCount++;
             }
         }
         UnityEngine.Profiling.Profiler.EndSample();
