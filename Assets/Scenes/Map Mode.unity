@@ -10617,6 +10617,10 @@ MonoBehaviour:
   BlocksToFetch: 80
   RunOnAlternateThread: 1
   refreshDelay: 1
+  fetchMap: 1
+  fetchScreen: 1
+  fetchUnits: 1
+  fetchWorldMap: 1
 --- !u!114 &861361736
 MonoBehaviour:
   m_ObjectHideFlags: 0
