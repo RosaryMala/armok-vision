@@ -21,7 +21,7 @@ public class CreatureSpriteLayer
     public SpriteSource spriteSource;
     public ColorSource colorSource;
     public string token;
-    public Texture2D spriteTexture;
+    public Sprite spriteTexture;
     public bool preview;
     public Color color = new Color(0.5f,0.5f,0.5f,0.5f);
 }

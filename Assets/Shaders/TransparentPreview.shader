@@ -4,6 +4,7 @@
 	{
 		_MainTex ("Texture", 2D) = "white" {}
         _Color("Sprite Color", Color) = (0.5,0.5,0.5,0.5)
+        _Rect("Sprite Rect", Vector) = (0,0,1,1)
 	}
 	SubShader
 	{
@@ -39,12 +40,13 @@
 			
 			sampler2D _MainTex;
             fixed4 _Color;
+            fixed4 _Rect;
 
 #include "blend.cginc"
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-				fixed4 col = tex2D(_MainTex, i.uv);
+				fixed4 col = tex2D(_MainTex, (i.uv* _Rect.zw) + _Rect.xy);
                 clip(col.a - 0.5);
 				return overlay(col, _Color);
 			}
