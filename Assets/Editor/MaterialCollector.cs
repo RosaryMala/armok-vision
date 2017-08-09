@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -211,6 +212,35 @@ namespace MaterialStore
 
             if(changed)
                 importer.SaveAndReimport();
+        }
+
+        [MenuItem("Mytools/Split Stonesense Sprite Sheet")]
+        public static void SplitTextures()
+        {
+            string path = EditorUtility.OpenFilePanel("Open image file", "", "png");
+            if (!File.Exists(path))
+                return;
+            Texture2D tex = new Texture2D(4, 4, TextureFormat.ARGB32, false);
+            tex.LoadImage(File.ReadAllBytes(path));
+            Texture2D outTex = new Texture2D(256, 256, TextureFormat.ARGB32, false);
+            string outPath = Path.GetDirectoryName(path) + "/" + Path.GetFileNameWithoutExtension(path) + "/";
+            Directory.CreateDirectory(outPath);
+            for (int y = 0; y < tex.height; y += 256)
+                for (int x = 0; x < tex.width; x += 256)
+                {
+                    var pixels = tex.GetPixels(x, y, 256, 256);
+                    float a = 0;
+                    foreach (var pixel in pixels)
+                    {
+                        a += pixel.a;
+                    }
+                    if (a < 1)
+                        continue;
+                    outTex.SetPixels(pixels);
+                    outTex.Apply();
+                    File.WriteAllBytes(outPath + Path.GetFileNameWithoutExtension(path) + "-" + (((tex.height - y - 256) / 256) * 20 + (x / 256)).ToString() + ".png", outTex.EncodeToPNG());
+                }
+            AssetDatabase.Refresh();
         }
     }
 }

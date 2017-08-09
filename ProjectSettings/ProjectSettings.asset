@@ -560,7 +560,7 @@ PlayerSettings:
   psmSplashimage: {fileID: 0}
   splashScreenBackgroundSourceLandscape: {fileID: 0}
   splashScreenBackgroundSourcePortrait: {fileID: 0}
-  spritePackerPolicy: 
+  spritePackerPolicy: TightRotateEnabledSpritePackerPolicy
   webGLMemorySize: 256
   webGLExceptionSupport: 0
   webGLNameFilesAsHashes: 0
