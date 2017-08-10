@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: PLANT-CUSTARD_APPLE-LEAF
+  m_Name: PLANT-CUSTARD-APPLE-LEAF
   m_Shader: {fileID: 4800000, guid: 0d849fe31a0566441aadf5b3171b7ad4, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
