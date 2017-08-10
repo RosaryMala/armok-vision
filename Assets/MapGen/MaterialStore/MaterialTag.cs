@@ -78,15 +78,25 @@ namespace MaterialStore
                         return false;
                     }
                 }
-                if (values.Length > 1)
+                if (value.Length == 4)
                 {
-                    if (values[1] != "_")
-                        result.tag1 = values[1];
+                    string tag1 = values[1] + "-" + values[2];
+                        result.tag1 = tag1;
+                    if (values[3] != "_")
+                        result.tag2 = values[3];
                 }
-                if (values.Length > 2)
+                else
                 {
-                    if (values[2] != "_")
-                        result.tag2 = values[2];
+                    if (values.Length > 1)
+                    {
+                        if (values[1] != "_")
+                            result.tag1 = values[1];
+                    }
+                    if (values.Length > 2)
+                    {
+                        if (values[2] != "_")
+                            result.tag2 = values[2];
+                    }
                 }
                 return true;
             }
