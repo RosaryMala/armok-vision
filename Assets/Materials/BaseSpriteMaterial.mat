@@ -8,7 +8,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: BaseSpriteMaterial
   m_Shader: {fileID: 4800000, guid: fae4592dd1b303b43ad5176e2cdb142b, type: 3}
-  m_ShaderKeywords: _ALPHATEST_ON layer_1
+  m_ShaderKeywords: ETC1_EXTERNAL_ALPHA _ALPHATEST_ON layer_1
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0

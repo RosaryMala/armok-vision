@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -241,6 +242,18 @@ namespace MaterialStore
                     File.WriteAllBytes(outPath + Path.GetFileNameWithoutExtension(path) + "-" + (((tex.height - y - 256) / 256) * 20 + (x / 256)).ToString() + ".png", outTex.EncodeToPNG());
                 }
             AssetDatabase.Refresh();
+        }
+
+        [MenuItem("Mytools/Save color token list")]
+        public static void SaveColorTokenList()
+        {
+            MaterialCollection matCollection = Resources.Load<MaterialCollection>("materialDefinitions");
+            StringBuilder sb = new StringBuilder();
+            foreach (var item in matCollection.textures)
+            {
+                sb.Append("\"").Append(item.tag).Append("\",\"").Append(DFColorList.FindNearestColor(item.color)).Append("\"").AppendLine();
+            }
+            File.WriteAllText("colorTokens.csv", sb.ToString());
         }
     }
 }
