@@ -1049,6 +1049,34 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Hair")]
+  public partial class Hair : global::ProtoBuf.IExtensible
+  {
+    public Hair() {}
+    
+    [UnityEngine.SerializeField]
+    private int _length = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"length", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int length
+    {
+      get { return _length; }
+      set { _length = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.HairStyle _style = RemoteFortressReader.HairStyle.NEATLY_COMBED;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"style", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.HairStyle.NEATLY_COMBED)]
+    public RemoteFortressReader.HairStyle style
+    {
+      get { return _style; }
+      set { _style = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BodySizeInfo")]
   public partial class BodySizeInfo : global::ProtoBuf.IExtensible
   {
@@ -1151,6 +1179,42 @@ namespace RemoteFortressReader
       get { return _colors; }
     }
   
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.Hair _hair = null;
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"hair", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Hair hair
+    {
+      get { return _hair; }
+      set { _hair = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.Hair _beard = null;
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"beard", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Hair beard
+    {
+      get { return _beard; }
+      set { _beard = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.Hair _moustache = null;
+    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"moustache", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Hair moustache
+    {
+      get { return _moustache; }
+      set { _moustache = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.Hair _sideburns = null;
+    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"sideburns", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Hair sideburns
+    {
+      get { return _sideburns; }
+      set { _sideburns = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
