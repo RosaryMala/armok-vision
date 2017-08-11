@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 453bc2fe70c290b42ae697fd9728aaf0, type: 3}
-  m_Name: DWARF-MALE
+  m_Name: Dwarf Male Normal
   m_EditorClassIdentifier: 
   race: DWARF
   caste: MALE
@@ -22,6 +22,8 @@ MonoBehaviour:
     color: {r: 0.5588235, g: 0.3334238, b: 0.16025086, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_CAPE
@@ -30,6 +32,8 @@ MonoBehaviour:
     color: {r: 0.5588235, g: 0.3334238, b: 0.16025086, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 1
     colorSource: 2
     token: skin
@@ -38,6 +42,8 @@ MonoBehaviour:
     color: {r: 0.9117647, g: 0.82456446, b: 0.7575692, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_PANTS_THONG
@@ -46,6 +52,8 @@ MonoBehaviour:
     color: {r: 0.9411765, g: 0.006920422, b: 0.5674744, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_PANTS_LEGGINGS
@@ -54,6 +62,8 @@ MonoBehaviour:
     color: {r: 0.9411765, g: 0.006920422, b: 0.5674744, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 0
     colorSource: 1
     token: ITEM_PANTS_LEGGINGS
@@ -62,6 +72,8 @@ MonoBehaviour:
     color: {r: 0.28941393, g: 0.57385683, b: 0.74264705, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_SOCKS
@@ -70,6 +82,8 @@ MonoBehaviour:
     color: {r: 1, g: 1, b: 1, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_SOCKS
@@ -78,6 +92,8 @@ MonoBehaviour:
     color: {r: 1, g: 1, b: 1, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_CHAUSSE
@@ -86,6 +102,8 @@ MonoBehaviour:
     color: {r: 0.6544118, g: 0.5052444, b: 0.5052444, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_CHAUSSE
@@ -94,6 +112,8 @@ MonoBehaviour:
     color: {r: 0.6544118, g: 0.5052444, b: 0.5052444, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_SANDAL
@@ -102,6 +122,8 @@ MonoBehaviour:
     color: {r: 0.83823526, g: 0.76206297, b: 0.6656574, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_SANDAL
@@ -110,6 +132,8 @@ MonoBehaviour:
     color: {r: 0.83823526, g: 0.76206297, b: 0.6656574, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_SHOES
@@ -118,6 +142,8 @@ MonoBehaviour:
     color: {r: 0.83823526, g: 0.76206297, b: 0.6656574, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_SHOES
@@ -126,6 +152,8 @@ MonoBehaviour:
     color: {r: 0.83823526, g: 0.76206297, b: 0.6656574, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_BOOTS_LOW
@@ -134,6 +162,8 @@ MonoBehaviour:
     color: {r: 0.7058823, g: 0.49970168, b: 0.23875433, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_BOOTS_LOW
@@ -142,6 +172,8 @@ MonoBehaviour:
     color: {r: 0.7058823, g: 0.49970168, b: 0.23875433, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_BOOTS
@@ -150,6 +182,8 @@ MonoBehaviour:
     color: {r: 0.7058823, g: 0.49970168, b: 0.23875433, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_BOOTS
@@ -158,6 +192,8 @@ MonoBehaviour:
     color: {r: 0.7058823, g: 0.49970168, b: 0.23875433, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_PANTS_BRAIES
@@ -166,6 +202,8 @@ MonoBehaviour:
     color: {r: 0.45982915, g: 0.51366186, b: 0.77205884, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_PANTS_PANTS
@@ -174,6 +212,8 @@ MonoBehaviour:
     color: {r: 0.45982915, g: 0.51366186, b: 0.77205884, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_PANTS_LOINCLOTH
@@ -182,6 +222,8 @@ MonoBehaviour:
     color: {r: 0.45982915, g: 0.51366186, b: 0.77205884, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_PANTS_GREAVES
@@ -190,6 +232,8 @@ MonoBehaviour:
     color: {r: 0.49875647, g: 0.5078451, b: 0.5514706, a: 1}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_PANTS_SKIRT_SHORT
@@ -198,6 +242,8 @@ MonoBehaviour:
     color: {r: 0, g: 0.6633367, b: 0.9338235, a: 1}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_PANTS_SKIRT
@@ -206,6 +252,8 @@ MonoBehaviour:
     color: {r: 0, g: 0.6633367, b: 0.9338235, a: 1}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_PANTS_SKIRT_LONG
@@ -214,6 +262,8 @@ MonoBehaviour:
     color: {r: 0, g: 0.6633367, b: 0.9338235, a: 1}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_SHIRT
@@ -222,6 +272,8 @@ MonoBehaviour:
     color: {r: 0.45869377, g: 0.6603985, b: 0.74264705, a: 1}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_VEST
@@ -230,6 +282,8 @@ MonoBehaviour:
     color: {r: 1, g: 1, b: 1, a: 1}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_DRESS
@@ -238,6 +292,8 @@ MonoBehaviour:
     color: {r: 0.9891481, g: 1, b: 0.21323532, a: 1}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_MAIL_SHIRT
@@ -246,6 +302,8 @@ MonoBehaviour:
     color: {r: 0.4920475, g: 0.49264705, b: 0.4491782, a: 1}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 0
     colorSource: 0
     token: ITEM_ARMOR_MAIL_SHIRT
@@ -254,6 +312,8 @@ MonoBehaviour:
     color: {r: 0.28941393, g: 0.57385683, b: 0.74264705, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_GLOVES_GLOVES
@@ -262,6 +322,8 @@ MonoBehaviour:
     color: {r: 0.7058823, g: 0.49970168, b: 0.23875433, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_GLOVES_GLOVES
@@ -270,6 +332,8 @@ MonoBehaviour:
     color: {r: 0.7058823, g: 0.49970168, b: 0.23875433, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_GLOVES_MITTENS
@@ -278,6 +342,8 @@ MonoBehaviour:
     color: {r: 0.7058823, g: 0.49970168, b: 0.23875433, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_GLOVES_MITTENS
@@ -286,6 +352,8 @@ MonoBehaviour:
     color: {r: 0.7058823, g: 0.49970168, b: 0.23875433, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_TUNIC
@@ -294,6 +362,8 @@ MonoBehaviour:
     color: {r: 0.3114187, g: 0.5763512, b: 0.9411765, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_TOGA
@@ -302,6 +372,8 @@ MonoBehaviour:
     color: {r: 1, g: 1, b: 1, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_COAT
@@ -310,6 +382,8 @@ MonoBehaviour:
     color: {r: 0.5661765, g: 0.5661765, b: 0.5661765, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_CAPE
@@ -318,6 +392,8 @@ MonoBehaviour:
     color: {r: 0.5661765, g: 0.5661765, b: 0.5661765, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_ROBE
@@ -326,6 +402,8 @@ MonoBehaviour:
     color: {r: 0.6911765, g: 0.54537046, b: 0.36083478, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_LEATHER
@@ -334,6 +412,8 @@ MonoBehaviour:
     color: {r: 0.7058823, g: 0.49970168, b: 0.23875433, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_BREASTPLATE
@@ -342,6 +422,8 @@ MonoBehaviour:
     color: {r: 0.6985294, g: 0.6985294, b: 0.6985294, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_GLOVES_GAUNTLETS
@@ -350,6 +432,8 @@ MonoBehaviour:
     color: {r: 0.6985294, g: 0.6985294, b: 0.6985294, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_GLOVES_GAUNTLETS
@@ -358,6 +442,8 @@ MonoBehaviour:
     color: {r: 0.6985294, g: 0.6985294, b: 0.6985294, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_CLOAK
@@ -366,6 +452,8 @@ MonoBehaviour:
     color: {r: 0.7058823, g: 0.49970168, b: 0.23875433, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 1
     colorSource: 2
     token: skin
@@ -374,6 +462,8 @@ MonoBehaviour:
     color: {r: 0.9117647, g: 0.82456446, b: 0.7575692, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 1
     colorSource: 2
     token: hair
@@ -382,6 +472,8 @@ MonoBehaviour:
     color: {r: 0.75735295, g: 0.14102432, b: 0, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 0
     colorSource: 1
     token: 
@@ -390,6 +482,8 @@ MonoBehaviour:
     color: {r: 1, g: 1, b: 1, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
   - spriteSource: 0
     colorSource: 1
     token: 
@@ -398,3 +492,5 @@ MonoBehaviour:
     color: {r: 0.28941393, g: 0.57385683, b: 0.74264705, a: 0.5019608}
     hairType: 0
     hairStyle: 0
+    hairMin: 0
+    hairMax: 0
