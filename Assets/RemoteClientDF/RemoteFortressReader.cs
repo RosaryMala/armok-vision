@@ -3953,6 +3953,26 @@ namespace RemoteFortressReader
       UP_STAIR_DIG = 6
     }
   
+    [global::ProtoBuf.ProtoContract(Name=@"HairStyle")]
+    public enum HairStyle
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"NEATLY_COMBED", Value=0)]
+      NEATLY_COMBED = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"BRAIDED", Value=1)]
+      BRAIDED = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DOUBLE_BRAID", Value=2)]
+      DOUBLE_BRAID = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"PONY_TAILS", Value=3)]
+      PONY_TAILS = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CLEAN_SHAVEN", Value=4)]
+      CLEAN_SHAVEN = 4
+    }
+  
     [global::ProtoBuf.ProtoContract(Name=@"MatterState")]
     public enum MatterState
     {

@@ -5,7 +5,19 @@ using UnityEngine;
 
 public class LayeredSprite : MonoBehaviour
 {
-    public float gap;
+    private static Material _spriteMat;
+
+    public static Material SpriteMat
+    {
+        get
+        {
+            if (_spriteMat == null)
+                _spriteMat = Resources.Load<Material>("SpriteMat");
+            return _spriteMat;
+        }
+    }
+
+    public float gap = 0.0001f;
     public CreatureSpriteCollection spriteCollection;
     private void Start()
     {
@@ -24,8 +36,9 @@ public class LayeredSprite : MonoBehaviour
             var sr = go.AddComponent<SpriteRenderer>();
             sr.color = layer.color;
             sr.sprite = layer.spriteTexture;
+            sr.sharedMaterial = SpriteMat;
             var pos = go.transform.localPosition;
-            pos.x = depth;
+            pos.z = depth;
             go.transform.position = pos;
             depth -= gap;
         }
