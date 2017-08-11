@@ -20,6 +20,9 @@ public class CreatureSpriteCollectionEditor : Editor
         raceProp = serializedObject.FindProperty("race");
         casteProp = serializedObject.FindProperty("caste");
 
+        mat = new Material(Shader.Find("Hidden/TransparentPreview"));
+        rectID = Shader.PropertyToID("_Rect");
+
         list.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
         {
             var element = list.serializedProperty.GetArrayElementAtIndex(index);
@@ -45,6 +48,14 @@ public class CreatureSpriteCollectionEditor : Editor
                         new Rect(rect.x, rect.y, 40, EditorGUIUtility.singleLineHeight),
                         element.FindPropertyRelative("hairStyle"), GUIContent.none);
                     rect.xMin += 40;
+                    EditorGUI.PropertyField(
+                      new Rect(rect.x, rect.y, 30, EditorGUIUtility.singleLineHeight),
+                      element.FindPropertyRelative("hairMin"), GUIContent.none);
+                    rect.xMin += 30;
+                    EditorGUI.PropertyField(
+                      new Rect(rect.x, rect.y, 30, EditorGUIUtility.singleLineHeight),
+                      element.FindPropertyRelative("hairMax"), GUIContent.none);
+                    rect.xMin += 30;
                 }
             }
             //right side
@@ -64,8 +75,17 @@ public class CreatureSpriteCollectionEditor : Editor
                 new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight),
                 element.FindPropertyRelative("token"), GUIContent.none);
         };
-        mat = new Material(Shader.Find("Hidden/TransparentPreview"));
-        rectID = Shader.PropertyToID("_Rect");
+
+        list.drawHeaderCallback = (Rect rect) => { EditorGUI.LabelField(rect, "Sprite Layers"); };
+
+        list.onAddCallback = (ReorderableList list) =>
+        {
+            int index = list.index;
+            if (index < 0)
+                index = list.count;
+            list.serializedProperty.InsertArrayElementAtIndex(index);
+            EditorUtility.SetDirty(target);
+        };
     }
 
     public override void OnInspectorGUI()
