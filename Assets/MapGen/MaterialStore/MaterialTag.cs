@@ -78,7 +78,7 @@ namespace MaterialStore
                         return false;
                     }
                 }
-                if (value.Length == 4)
+                if (values.Length == 4)
                 {
                     string tag1 = values[1] + "-" + values[2];
                         result.tag1 = tag1;

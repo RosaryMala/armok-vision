@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 453bc2fe70c290b42ae697fd9728aaf0, type: 3}
+  m_Name: -Normal-CHILD
+  m_EditorClassIdentifier: 
+  race: JABBERER
+  caste: 
+  spriteLayers:
+  - spriteSource: 1
+    colorSource: 2
+    token: skin
+    spriteTexture: {fileID: 21300000, guid: 76b1a9557f61e234499be5141f302ea7, type: 3}
+    preview: 1
+    color: {r: 1, g: 1, b: 1, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 0
+    colorSource: 1
+    token: 
+    spriteTexture: {fileID: 21300000, guid: af33f4ea7c0fe2e4a8e7cff0e80671fb, type: 3}
+    preview: 1
+    color: {r: 0.78431374, g: 0.7058824, b: 0.19607843, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 1
+    colorSource: 2
+    token: feathers
+    spriteTexture: {fileID: 21300000, guid: 38da755392ebe224d859a6c83ba649cc, type: 3}
+    preview: 1
+    color: {r: 0.40000004, g: 0, b: 0.6, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 0
+    colorSource: 0
+    token: 
+    spriteTexture: {fileID: 21300000, guid: 85a72e69f09855742a4bea9ef5dcb7d2, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  special: 0
+  profession: CHILD

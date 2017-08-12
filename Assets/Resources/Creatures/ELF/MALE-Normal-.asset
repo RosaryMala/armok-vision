@@ -1,0 +1,772 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 453bc2fe70c290b42ae697fd9728aaf0, type: 3}
+  m_Name: MALE-Normal-
+  m_EditorClassIdentifier: 
+  race: ELF
+  caste: MALE
+  spriteLayers:
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_ARMOR_CLOAK
+    spriteTexture: {fileID: 21300000, guid: 0f9a7c6e4e1b74c4da73f6042e9c21e6, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_ARMOR_CAPE
+    spriteTexture: {fileID: 21300000, guid: 492287093bbb6874da6fbe2fc582be4d, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_ARMOR_COAT
+    spriteTexture: {fileID: 21300000, guid: 454a12778378b2f4f99212b97c9a615f, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_ARMOR_TOGA
+    spriteTexture: {fileID: 21300000, guid: 557949a848ba1f446aa1d80a017cdbb8, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 1
+    colorSource: 2
+    token: skin
+    spriteTexture: {fileID: 21300000, guid: fd06d85f536d27f43b2f6761e980b866, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_PANTS_THONG
+    spriteTexture: {fileID: 21300000, guid: a1cb64c7379b3d34db95d2a6b321b482, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_PANTS_LEGGINGS
+    spriteTexture: {fileID: 21300000, guid: 3952f65070e5ca84eba580484070e6a4, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 0
+    colorSource: 0
+    token: ITEM_PANTS_LEGGINGS
+    spriteTexture: {fileID: 21300000, guid: e3e07d65834326b4db338047afb505d6, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 1
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_SHOES_SOCKS
+    spriteTexture: {fileID: 21300000, guid: 918e103d67c853d45a32de64a839e601, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_SHOES_SOCKS
+    spriteTexture: {fileID: 21300000, guid: 41bb7239d0a94824e87a6bcf2804bb7a, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 1
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_SHOES_CHAUSSE
+    spriteTexture: {fileID: 21300000, guid: 4822de21f545ece4492132ad38716a76, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_SHOES_CHAUSSE
+    spriteTexture: {fileID: 21300000, guid: 708b1e651dec0aa4f818362a8d4dde3d, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 1
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_SHOES_SANDAL
+    spriteTexture: {fileID: 21300000, guid: 5a3582a94d65a51458244d52a6e49725, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_SHOES_SANDAL
+    spriteTexture: {fileID: 21300000, guid: eac31ccafa13ac545be6aac81320bef8, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 1
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_SHOES_SHOES
+    spriteTexture: {fileID: 21300000, guid: 710039d87875dac4897715d763b4c886, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_SHOES_SHOES
+    spriteTexture: {fileID: 21300000, guid: efebc3b634d1a0c468655a8d10aea04c, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 1
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_SHOES_BOOTS_LOW
+    spriteTexture: {fileID: 21300000, guid: 731a6b4318c87754e9dbd44bc701f94c, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_SHOES_BOOTS_LOW
+    spriteTexture: {fileID: 21300000, guid: f9d5db064efacca4f931e6fdbf297405, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 1
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_SHOES_BOOTS
+    spriteTexture: {fileID: 21300000, guid: cf7f8e6af396c574fa2b5b656e873a69, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_SHOES_BOOTS
+    spriteTexture: {fileID: 21300000, guid: c4561b95cd4854949a894d7ed75088a2, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 1
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_PANTS_BRAIES
+    spriteTexture: {fileID: 21300000, guid: 069317c5c3d5bdd4e92d951449101249, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_PANTS_PANTS
+    spriteTexture: {fileID: 21300000, guid: f63c7d9f764066c40b852ae17da865d5, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_PANTS_LOINCLOTH
+    spriteTexture: {fileID: 21300000, guid: e5ba967ced9ecd045b55d42bdaa8fd71, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_PANTS_GREAVES
+    spriteTexture: {fileID: 21300000, guid: 5cc4f8983d25ae0449d4d8a9b980c85a, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_PANTS_SKIRT_SHORT
+    spriteTexture: {fileID: 21300000, guid: e87660d4e784e6d44849452f414da853, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_PANTS_SKIRT
+    spriteTexture: {fileID: 21300000, guid: ba4d788d9b43eb844bde332c2be078fb, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_PANTS_SKIRT_LONG
+    spriteTexture: {fileID: 21300000, guid: dbb0be898568b5f4fb1e6e41e6a669e5, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_ARMOR_SHIRT
+    spriteTexture: {fileID: 21300000, guid: d9f119d2590f048408f3819d2b7102cf, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_ARMOR_VEST
+    spriteTexture: {fileID: 21300000, guid: 6c1fbc28a91bf894ca83e7da9be26412, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_ARMOR_DRESS
+    spriteTexture: {fileID: 21300000, guid: 13f360274f429084baf80b2374b680e1, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_ARMOR_MAIL_SHIRT
+    spriteTexture: {fileID: 21300000, guid: ac1f85a605a07be41bfe5f99fcac3d5f, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 0
+    colorSource: 0
+    token: ITEM_ARMOR_MAIL_SHIRT
+    spriteTexture: {fileID: 21300000, guid: 725c1bc13b74ce6408fad946a5c69db9, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 1
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_GLOVES_GLOVES
+    spriteTexture: {fileID: 21300000, guid: 07eda2a38a171cc45a1736496a2cc896, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_GLOVES_GLOVES
+    spriteTexture: {fileID: 21300000, guid: edb1baf723fee0f49a009318d172c6d5, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 1
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_GLOVES_MITTENS
+    spriteTexture: {fileID: 21300000, guid: a6ad6306453c5ad429a5ba002f6f1ac4, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_GLOVES_MITTENS
+    spriteTexture: {fileID: 21300000, guid: 401657ff23d81264c8532a50aca7e604, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 1
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_ARMOR_TUNIC
+    spriteTexture: {fileID: 21300000, guid: bb3bcf325cac28546ba6a0837f263f75, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_ARMOR_TOGA
+    spriteTexture: {fileID: 21300000, guid: 46fdd0de3b6aaad42a49ab160f6df992, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_ARMOR_COAT
+    spriteTexture: {fileID: 21300000, guid: 85c860d3f1cee9846a15af36722945ba, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_ARMOR_CAPE
+    spriteTexture: {fileID: 21300000, guid: 50dfcc12f762b1d42a01e6d45d77e904, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_ARMOR_ROBE
+    spriteTexture: {fileID: 21300000, guid: cf3ee7e99b475c54295efd6cf5b0380c, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_ARMOR_LEATHER
+    spriteTexture: {fileID: 21300000, guid: c7c256515aec70f439c7e03ea0d1f5a2, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_ARMOR_BREASTPLATE
+    spriteTexture: {fileID: 21300000, guid: dd8cec90a14a3da4097c22a1bab10c70, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_GLOVES_GAUNTLETS
+    spriteTexture: {fileID: 21300000, guid: 14f82b18198b36e4396d09da65cd21ea, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_GLOVES_GAUNTLETS
+    spriteTexture: {fileID: 21300000, guid: b3acd8de153fd7143b66a1680ef2e103, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 1
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_ARMOR_CLOAK
+    spriteTexture: {fileID: 21300000, guid: 9804ecd2ad71b974dbc0060b83795daa, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 1
+    colorSource: 2
+    token: skin
+    spriteTexture: {fileID: 21300000, guid: 4e5b4a17324a10841bff62c5f2e8501f, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 1
+    colorSource: 2
+    token: hair
+    spriteTexture: {fileID: 21300000, guid: 6cac0b552ec81ef4c86657c8f9bf3ef9, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 1
+    colorSource: 2
+    token: skin
+    spriteTexture: {fileID: 21300000, guid: fc41e388c0967104d87195245d271bf1, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 0
+    colorSource: 0
+    token: 
+    spriteTexture: {fileID: 21300000, guid: 0c461f1250daeb242a9702d6d081f4a0, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_HELM_SCARF_HEAD
+    spriteTexture: {fileID: 21300000, guid: ecb1a2a710fd19d4ca7c6dd5fd2a6dd9, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_HELM_CAP
+    spriteTexture: {fileID: 21300000, guid: 535c0ab631b23bc48971c8063a99f068, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_HELM_VEIL_HEAD
+    spriteTexture: {fileID: 21300000, guid: 41168ad6c90ea274188fd10f73939518, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_HELM_VEIL_FACE
+    spriteTexture: {fileID: 21300000, guid: 1a341c69dd7b9a04784b5e96e1b11666, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_HELM_MASK
+    spriteTexture: {fileID: 21300000, guid: 2d9b6dbe0f5fb7845a3601173a28e0ef, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_HELM_HOOD
+    spriteTexture: {fileID: 21300000, guid: 8375eb00644ea6541b99bf662303b45b, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_HELM_HELM
+    spriteTexture: {fileID: 21300000, guid: aad72b38a352d8d41887696fc753e93e, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 2
+    colorSource: 2
+    token: ITEM_HELM_TURBAN
+    spriteTexture: {fileID: 21300000, guid: cdddd2aa71531c547972ce7a636498c6, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  special: 0
+  profession: 

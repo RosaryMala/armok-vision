@@ -39,4 +39,6 @@ public class CreatureSpriteLayer
     public int hairMin = -1;
     public int hairMax = -1;
     public int patternIndex = 0;
+    public bool metal = false;
+    public Vector2 positionOffset = Vector2.zero;
 }

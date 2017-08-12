@@ -1064,9 +1064,9 @@ namespace RemoteFortressReader
       set { _length = value; }
     }
     [UnityEngine.SerializeField]
-    private RemoteFortressReader.HairStyle _style = RemoteFortressReader.HairStyle.NEATLY_COMBED;
+    private RemoteFortressReader.HairStyle _style = RemoteFortressReader.HairStyle.UNKEMPT;
     [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"style", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.HairStyle.NEATLY_COMBED)]
+    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.HairStyle.UNKEMPT)]
     public RemoteFortressReader.HairStyle style
     {
       get { return _style; }
@@ -4020,6 +4020,9 @@ namespace RemoteFortressReader
     [global::ProtoBuf.ProtoContract(Name=@"HairStyle")]
     public enum HairStyle
     {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"UNKEMPT", Value=-1)]
+      UNKEMPT = -1,
             
       [global::ProtoBuf.ProtoEnum(Name=@"NEATLY_COMBED", Value=0)]
       NEATLY_COMBED = 0,

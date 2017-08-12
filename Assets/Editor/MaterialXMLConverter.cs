@@ -36,7 +36,7 @@ public class MaterialXMLConverter
         foreach (var creature in doc.Elements())
         {
             string race = creature.Attribute("gameID").Value;
-            Debug.Log(race);
+            var creatureFile = creature.Attribute("file");
             foreach (var variant in creature.Elements("variant"))
             {
                 CreatureSpriteCollection spriteCollection = ScriptableObject.CreateInstance<CreatureSpriteCollection>();
@@ -71,7 +71,7 @@ public class MaterialXMLConverter
                     spriteCollection.profession = prof.Value;
                 }
 
-                string filePrefix = Path.GetFileNameWithoutExtension(variant.Attribute("file").Value);
+                var variantFile = variant.Attribute("file");
 
                 spriteCollection.spriteLayers = new List<CreatureSpriteLayer>();
 
@@ -82,11 +82,20 @@ public class MaterialXMLConverter
                         continue;
                     int index = int.Parse(sheetIndex.Value);
 
-                    var file = subsprite.Attribute("file");
-                    string spriteName = filePrefix + "-" + index;
+                    string spriteName;
 
-                    if (file != null)
-                        spriteName = Path.GetFileNameWithoutExtension(file.Value) + "-" + index;
+                    var layerFile = subsprite.Attribute("file");
+                    if (layerFile != null)
+                        spriteName = Path.GetFileNameWithoutExtension(layerFile.Value) + "-" + index;
+                    else if (variantFile != null)
+                        spriteName = Path.GetFileNameWithoutExtension(variantFile.Value) + "-" + index;
+                    else if (creatureFile != null)
+                        spriteName = Path.GetFileNameWithoutExtension(creatureFile.Value) + "-" + index;
+                    else
+                    {
+                        Debug.LogError("Could not find matching file");
+                        continue;
+                    }
 
                     var matchingSprites = AssetDatabase.FindAssets(spriteName + " t:Sprite");
                     if(matchingSprites == null || matchingSprites.Length == 0)
@@ -177,6 +186,44 @@ public class MaterialXMLConverter
                                         break;
                                 }
                                 break;
+                            case "hair_style":
+                                switch (attribute.Value)
+                                {
+                                    case "unkempt":
+                                        layer.hairStyle = RemoteFortressReader.HairStyle.UNKEMPT;
+                                        break;
+                                    case "combed":
+                                        layer.hairStyle = RemoteFortressReader.HairStyle.NEATLY_COMBED;
+                                        break;
+                                    case "braid":
+                                        layer.hairStyle = RemoteFortressReader.HairStyle.BRAIDED;
+                                        break;
+                                    case "two_braid":
+                                        layer.hairStyle = RemoteFortressReader.HairStyle.DOUBLE_BRAID;
+                                        break;
+                                    case "ponytails":
+                                        layer.hairStyle = RemoteFortressReader.HairStyle.PONY_TAILS;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            case "material":
+                                switch (attribute.Value)
+                                {
+                                    case "Metal":
+                                        layer.metal = true;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            case "offsety":
+                                layer.positionOffset.y = float.Parse(attribute.Value) / -16.0f;
+                                break;
+                            case "offsetx":
+                                layer.positionOffset.x = float.Parse(attribute.Value) / -16.0f;
+                                break;
                             default:
                                 Debug.LogError("Unknown creature sprite layer attribute: " + attribute);
                                 break;
@@ -188,8 +235,8 @@ public class MaterialXMLConverter
                     spriteCollection.spriteLayers.Add(layer);
                 }
 
-                Directory.CreateDirectory("Assets/Resources/Creatures");
-                AssetDatabase.CreateAsset(spriteCollection, "Assets/Resources/Creatures/" + spriteCollection.race + "-" + spriteCollection.caste + "-" + spriteCollection.special + "-" + spriteCollection.profession + ".asset");
+                Directory.CreateDirectory("Assets/Resources/Creatures/" + spriteCollection.race + "/");
+                AssetDatabase.CreateAsset(spriteCollection, "Assets/Resources/Creatures/" + spriteCollection.race + "/" + spriteCollection.caste + "-" + spriteCollection.special + "-" + spriteCollection.profession + ".asset");
             }
         }
         AssetDatabase.Refresh();

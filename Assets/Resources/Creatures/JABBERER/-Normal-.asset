@@ -1,0 +1,122 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 453bc2fe70c290b42ae697fd9728aaf0, type: 3}
+  m_Name: -Normal-
+  m_EditorClassIdentifier: 
+  race: JABBERER
+  caste: 
+  spriteLayers:
+  - spriteSource: 1
+    colorSource: 2
+    token: skin
+    spriteTexture: {fileID: 21300000, guid: 2e89b7ab8b1898e40b22ec8ff7e2dc3e, type: 3}
+    preview: 1
+    color: {r: 1, g: 1, b: 1, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 1
+    colorSource: 2
+    token: skin
+    spriteTexture: {fileID: 21300000, guid: 3c103d1d90042a749af55325067d0180, type: 3}
+    preview: 1
+    color: {r: 1, g: 1, b: 1, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 2}
+  - spriteSource: 0
+    colorSource: 1
+    token: 
+    spriteTexture: {fileID: 21300000, guid: 34fb8f5319137514aa6c849bf7e8becf, type: 3}
+    preview: 1
+    color: {r: 0.9411765, g: 0.47058824, b: 0.47058824, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 2}
+  - spriteSource: 0
+    colorSource: 1
+    token: 
+    spriteTexture: {fileID: 21300000, guid: 3e54e39c5ee08944ab216955b43d34ea, type: 3}
+    preview: 1
+    color: {r: 0.98039216, g: 0.78431374, b: 0.23529412, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 2}
+  - spriteSource: 1
+    colorSource: 2
+    token: feathers
+    spriteTexture: {fileID: 21300000, guid: ec4fdac1badded04682b3aaec907c5e2, type: 3}
+    preview: 1
+    color: {r: 0.40000004, g: 0, b: 0.6, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 1
+    colorSource: 2
+    token: feathers
+    spriteTexture: {fileID: 21300000, guid: 58f61d4242ef6b846a2ba6e113bdd171, type: 3}
+    preview: 1
+    color: {r: 0.40000004, g: 0, b: 0.6, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 2}
+  - spriteSource: 0
+    colorSource: 0
+    token: 
+    spriteTexture: {fileID: 21300000, guid: 43d865a41e92a9e4b833aa58eaa35d2e, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 0}
+  - spriteSource: 0
+    colorSource: 0
+    token: 
+    spriteTexture: {fileID: 21300000, guid: 24893f992093d7b448fc9842a2cad99a, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: 2}
+  special: 0
+  profession: 

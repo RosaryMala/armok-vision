@@ -13,6 +13,7 @@ public class CreatureSpriteCollectionEditor : Editor
     private Vector2 listPosition;
     private SerializedProperty raceProp;
     private SerializedProperty casteProp;
+    private int maxLayers;
 
     private void OnEnable()
     {
@@ -72,6 +73,11 @@ public class CreatureSpriteCollectionEditor : Editor
                 element.FindPropertyRelative("spriteTexture"), GUIContent.none);
             rect.xMax -= 60;
             EditorGUI.PropertyField(
+                new Rect(rect.x + rect.width - 80, rect.y, 80, EditorGUIUtility.singleLineHeight),
+                element.FindPropertyRelative("positionOffset"), GUIContent.none);
+            rect.xMax -= 80;
+            //center
+            EditorGUI.PropertyField(
                 new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight),
                 element.FindPropertyRelative("token"), GUIContent.none);
         };
@@ -86,6 +92,8 @@ public class CreatureSpriteCollectionEditor : Editor
             list.serializedProperty.InsertArrayElementAtIndex(index);
             EditorUtility.SetDirty(target);
         };
+
+        maxLayers = list.serializedProperty.arraySize;
     }
 
     public override void OnInspectorGUI()
@@ -99,10 +107,16 @@ public class CreatureSpriteCollectionEditor : Editor
             var rect = EditorGUILayout.GetControlRect(false, 256);
             rect.x += ((rect.width - rect.height) / 2.0f);
             rect.width = rect.height;
+            int count = 0;
             foreach (var layer in ((CreatureSpriteCollection)target).spriteLayers)
             {
+                if (count > maxLayers)
+                    break;
+                count++;
                 if (layer.preview && layer.spriteTexture != null)
                 {
+                    Rect targetRect = rect;
+                    targetRect.position -= (layer.positionOffset * 128);
                     if (layer.colorSource == CreatureSpriteLayer.ColorSource.None)
                         mat.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
                     else
@@ -112,10 +126,11 @@ public class CreatureSpriteCollectionEditor : Editor
                         layer.spriteTexture.rect.y / layer.spriteTexture.texture.height,
                         layer.spriteTexture.rect.width / layer.spriteTexture.texture.width,
                         layer.spriteTexture.rect.height / layer.spriteTexture.texture.height));
-                    EditorGUI.DrawPreviewTexture(rect, layer.spriteTexture.texture, mat, ScaleMode.StretchToFill);
+                    EditorGUI.DrawPreviewTexture(targetRect, layer.spriteTexture.texture, mat, ScaleMode.StretchToFill);
                 }
             }
         }
+        maxLayers = EditorGUILayout.IntSlider(maxLayers, 0, collection.spriteLayers.Count);
         listPosition = EditorGUILayout.BeginScrollView(listPosition);
         list.DoLayoutList();
         EditorGUILayout.EndScrollView();

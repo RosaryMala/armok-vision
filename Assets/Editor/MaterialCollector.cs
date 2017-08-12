@@ -215,21 +215,41 @@ namespace MaterialStore
                 importer.SaveAndReimport();
         }
 
-        [MenuItem("Mytools/Split Stonesense Sprite Sheet")]
-        public static void SplitTextures()
+        [MenuItem("Mytools/Split Stonesense Sprite Sheet/256p")]
+        public static void Split256()
+        {
+            SplitTextures(256);
+        }
+        [MenuItem("Mytools/Split Stonesense Sprite Sheet/128p")]
+        public static void Split128()
+        {
+            SplitTextures(128);
+        }
+        [MenuItem("Mytools/Split Stonesense Sprite Sheet/64p")]
+        public static void Split64()
+        {
+            SplitTextures(64);
+        }
+        [MenuItem("Mytools/Split Stonesense Sprite Sheet/32p")]
+        public static void Split32()
+        {
+            SplitTextures(32);
+        }
+
+        public static void SplitTextures(int spriteSize)
         {
             string path = EditorUtility.OpenFilePanel("Open image file", "", "png");
             if (!File.Exists(path))
                 return;
             Texture2D tex = new Texture2D(4, 4, TextureFormat.ARGB32, false);
             tex.LoadImage(File.ReadAllBytes(path));
-            Texture2D outTex = new Texture2D(256, 256, TextureFormat.ARGB32, false);
+            Texture2D outTex = new Texture2D(spriteSize, spriteSize, TextureFormat.ARGB32, false);
             string outPath = Path.GetDirectoryName(path) + "/" + Path.GetFileNameWithoutExtension(path) + "/";
             Directory.CreateDirectory(outPath);
-            for (int y = 0; y < tex.height; y += 256)
-                for (int x = 0; x < tex.width; x += 256)
+            for (int y = 0; y < tex.height; y += spriteSize)
+                for (int x = 0; x < tex.width; x += spriteSize)
                 {
-                    var pixels = tex.GetPixels(x, y, 256, 256);
+                    var pixels = tex.GetPixels(x, y, spriteSize, spriteSize);
                     float a = 0;
                     foreach (var pixel in pixels)
                     {
@@ -239,7 +259,7 @@ namespace MaterialStore
                         continue;
                     outTex.SetPixels(pixels);
                     outTex.Apply();
-                    File.WriteAllBytes(outPath + Path.GetFileNameWithoutExtension(path) + "-" + (((tex.height - y - 256) / 256) * 20 + (x / 256)).ToString() + ".png", outTex.EncodeToPNG());
+                    File.WriteAllBytes(outPath + Path.GetFileNameWithoutExtension(path) + "-" + (((tex.height - y - spriteSize) / spriteSize) * 20 + (x / spriteSize)).ToString() + ".png", outTex.EncodeToPNG());
                 }
             AssetDatabase.Refresh();
         }
