@@ -99,29 +99,91 @@ public class MaterialXMLConverter
 
                     layer.spriteTexture = AssetDatabase.LoadAssetAtPath<Sprite>(AssetDatabase.GUIDToAssetPath(matchingSprites[0]));
                     layer.preview = true;
-                    layer.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
 
-                    var colorSelection = subsprite.Attribute("color");
-                    if(colorSelection != null)
+                    Color32 color = new Color32(128, 128, 128, 128);
+
+                    foreach (var attribute in subsprite.Attributes())
                     {
-                        switch (colorSelection.Value)
+                        switch (attribute.Name.LocalName)
                         {
-                            case "bodypart":
-                                layer.spriteSource = CreatureSpriteLayer.SpriteSource.Bodypart;
-                                var bodypart = subsprite.Attribute("bodypart");
-                                if (bodypart != null)
-                                    layer.token = bodypart.Value;
+                            case "sheetIndex":
+                            case "file":
+                                break; //already taken care of
+                            case "zoom":
+                            case "equipment_class":
+                                break; //not used
+                            case "color":
+                                switch (attribute.Value)
+                                {
+                                    case "bodypart":
+                                        layer.spriteSource = CreatureSpriteLayer.SpriteSource.Bodypart;
+                                        layer.colorSource = CreatureSpriteLayer.ColorSource.Material;
+                                        break;
+                                    case "equipment":
+                                        layer.spriteSource = CreatureSpriteLayer.SpriteSource.Equipment;
+                                        layer.colorSource = CreatureSpriteLayer.ColorSource.Material;
+                                        break;
+                                    case "xml":
+                                        layer.spriteSource = CreatureSpriteLayer.SpriteSource.Static;
+                                        layer.colorSource = CreatureSpriteLayer.ColorSource.Fixed;
+                                        break;
+                                    default:
+                                        Debug.LogError("Unknown creature sprite layer color attribute: " + attribute);
+                                        break;
+                                }
                                 break;
-                            case "equipment":
-                                layer.spriteSource = CreatureSpriteLayer.SpriteSource.Equipment;
-                                var equipment_name = subsprite.Attribute("equipment_name");
-                                if (equipment_name != null)
-                                    layer.token = equipment_name.Value;
+                            case "bodypart":
+                            case "equipment_name":
+                                layer.token = attribute.Value;
+                                break;
+                            case "red":
+                                color.r = byte.Parse(attribute.Value);
+                                break;
+                            case "green":
+                                color.g = byte.Parse(attribute.Value);
+                                break;
+                            case "blue":
+                                color.b = byte.Parse(attribute.Value);
+                                break;
+                            case "alpha":
+                                color.a = (byte)(byte.Parse(attribute.Value) / 2);
+                                break;
+                            case "pattern_index":
+                                layer.patternIndex = int.Parse(attribute.Value);
+                                break;
+                            case "hair_min":
+                                layer.hairMin = int.Parse(attribute.Value);
+                                break;
+                            case "hair_max":
+                                layer.hairMax = int.Parse(attribute.Value);
+                                break;
+                            case "hair_type":
+                                switch (attribute.Value)
+                                {
+                                    case "hair":
+                                        layer.hairType = CreatureSpriteLayer.HairType.Hair;
+                                        break;
+                                    case "sideburns":
+                                        layer.hairType = CreatureSpriteLayer.HairType.Sideburns;
+                                        break;
+                                    case "beard":
+                                        layer.hairType = CreatureSpriteLayer.HairType.Beard;
+                                        break;
+                                    case "moustache":
+                                        layer.hairType = CreatureSpriteLayer.HairType.Moustache;
+                                        break;
+                                    default:
+                                        layer.hairType = CreatureSpriteLayer.HairType.None;
+                                        break;
+                                }
                                 break;
                             default:
+                                Debug.LogError("Unknown creature sprite layer attribute: " + attribute);
                                 break;
                         }
                     }
+
+                    layer.color = color;
 
                     spriteCollection.spriteLayers.Add(layer);
                 }
