@@ -38,9 +38,4 @@ public class CreatureSpriteLayer
     public HairStyle hairStyle;
     public int hairMin = -1;
     public int hairMax = -1;
-
-    public CreatureSpriteLayer(Color color)
-    {
-        this.color = color;
-    }
 }

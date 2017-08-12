@@ -5,21 +5,136 @@ using System.IO;
 using System.Xml.Linq;
 using UnityEditor;
 using UnityEngine;
+using System;
 
 public class MaterialXMLConverter
 {
-    [MenuItem("Mytools/Convert XML colors to materials")]
+    [MenuItem("Mytools/Convert XML to internal")]
     public static void BuildMaterialCollection()
     {
         var xmlFilePath = EditorUtility.OpenFilePanel("Pick an XML file to load", "Assets/StreamingAssets", "xml");
 
         XElement doc = XElement.Load(xmlFilePath, LoadOptions.SetBaseUri | LoadOptions.SetLineInfo);
 
-        if(doc.Name.LocalName != "colors")
+        switch (doc.Name.LocalName)
         {
-            Debug.Log("Only colors available currently, quitting.");
+            case "colors":
+                ConvertColorXML(doc);
+                break;
+            case "creatures":
+                ConvertCreatureXML(doc);
+                break;
+            default:
+                break;
         }
 
+
+    }
+
+    private static void ConvertCreatureXML(XElement doc)
+    {
+        foreach (var creature in doc.Elements())
+        {
+            string race = creature.Attribute("gameID").Value;
+            Debug.Log(race);
+            foreach (var variant in creature.Elements("variant"))
+            {
+                CreatureSpriteCollection spriteCollection = ScriptableObject.CreateInstance<CreatureSpriteCollection>();
+
+                spriteCollection.race = race;
+                var special = variant.Attribute("special");
+                if (special == null)
+                    spriteCollection.special = CreatureSpriteCollection.Special.Normal;
+                else
+                    spriteCollection.special = (CreatureSpriteCollection.Special)Enum.Parse(typeof(CreatureSpriteCollection.Special), special.Value);
+
+                var sex = variant.Attribute("sex");
+                if (sex != null)
+                {
+                    switch (sex.Value)
+                    {
+                        case "M":
+                            spriteCollection.caste = "MALE";
+                            break;
+                        case "F":
+                            spriteCollection.caste = "FEMALE";
+                            break;
+                        default:
+                            spriteCollection.caste = sex.Value;
+                            break;
+                    }
+                }
+
+                var prof = variant.Attribute("prof");
+                if(prof != null)
+                {
+                    spriteCollection.profession = prof.Value;
+                }
+
+                string filePrefix = Path.GetFileNameWithoutExtension(variant.Attribute("file").Value);
+
+                spriteCollection.spriteLayers = new List<CreatureSpriteLayer>();
+
+                foreach (var subsprite in variant.Elements("subsprite"))
+                {
+                    var sheetIndex = subsprite.Attribute("sheetIndex");
+                    if (sheetIndex == null)
+                        continue;
+                    int index = int.Parse(sheetIndex.Value);
+
+                    var file = subsprite.Attribute("file");
+                    string spriteName = filePrefix + "-" + index;
+
+                    if (file != null)
+                        spriteName = Path.GetFileNameWithoutExtension(file.Value) + "-" + index;
+
+                    var matchingSprites = AssetDatabase.FindAssets(spriteName + " t:Sprite");
+                    if(matchingSprites == null || matchingSprites.Length == 0)
+                    {
+                        Debug.LogWarning("Could not find any sprite named " + spriteName);
+                        continue;
+                    }
+
+                    CreatureSpriteLayer layer = new CreatureSpriteLayer();
+
+                    layer.spriteTexture = AssetDatabase.LoadAssetAtPath<Sprite>(AssetDatabase.GUIDToAssetPath(matchingSprites[0]));
+                    layer.preview = true;
+                    layer.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+
+                    var colorSelection = subsprite.Attribute("color");
+                    if(colorSelection != null)
+                    {
+                        switch (colorSelection.Value)
+                        {
+                            case "bodypart":
+                                layer.spriteSource = CreatureSpriteLayer.SpriteSource.Bodypart;
+                                var bodypart = subsprite.Attribute("bodypart");
+                                if (bodypart != null)
+                                    layer.token = bodypart.Value;
+                                break;
+                            case "equipment":
+                                layer.spriteSource = CreatureSpriteLayer.SpriteSource.Equipment;
+                                var equipment_name = subsprite.Attribute("equipment_name");
+                                if (equipment_name != null)
+                                    layer.token = equipment_name.Value;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    spriteCollection.spriteLayers.Add(layer);
+                }
+
+                Directory.CreateDirectory("Assets/Resources/Creatures");
+                AssetDatabase.CreateAsset(spriteCollection, "Assets/Resources/Creatures/" + spriteCollection.race + "-" + spriteCollection.caste + "-" + spriteCollection.special + "-" + spriteCollection.profession + ".asset");
+            }
+        }
+        AssetDatabase.Refresh();
+    }
+
+    private static void ConvertColorXML(XElement doc)
+    {
         foreach (var item in doc.Elements())
         {
             Color32 color32 = new Color32();
@@ -137,7 +252,7 @@ public class MaterialXMLConverter
                 }
                 Debug.Log(tag);
 
-                string subFolder = Path.GetFileNameWithoutExtension(xmlFilePath) + "/";
+                string subFolder = Path.GetFileNameWithoutExtension(doc.BaseUri) + "/";
                 string assetPath = "Assets/Resources/Materials/" + subFolder + tag.ToFileName() + ".mat";
                 var saveMat = AssetDatabase.LoadAssetAtPath<Material>(assetPath);
                 if (saveMat == null)
