@@ -8,7 +8,9 @@
 	}
 	SubShader
 	{
-        // No culling or depth
+        Tags{ "Queue" = "Transparent" "IgnoreProjector" = "True" "RenderType" = "Transparent" }
+        Blend SrcAlpha OneMinusSrcAlpha 
+            // No culling or depth
 		Cull Off ZWrite Off ZTest Always
 		Pass
 		{
@@ -47,8 +49,10 @@
 			fixed4 frag (v2f i) : SV_Target
 			{
 				fixed4 col = tex2D(_MainTex, (i.uv* _Rect.zw) + _Rect.xy);
-                clip(col.a - 0.5);
-				return overlay(col, _Color);
+                //clip(col.a - 0.5);
+				col.rgb = overlay(col.rgb, _Color.rgb);
+                col.a = col.a * min((_Color.a * 2), 1);
+                return col;
 			}
 			ENDCG
 		}
