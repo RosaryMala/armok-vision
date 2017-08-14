@@ -1,7 +1,9 @@
 ﻿Shader "Custom/AVSprite" {
 	Properties {
         [PerRendererData] _MainTex ("Albedo (RGB)", 2D) = "white" {}
-	}
+        _Color("Tint", Color) = (1,1,1,1)
+        [MaterialToggle] PixelSnap("Pixel snap", Float) = 0
+    }
 	SubShader {
         Tags
     {
@@ -15,7 +17,7 @@
 		
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf Standard fullforwardshadows alpha
+		#pragma surface surf Standard fullforwardshadows alpha vertex:vert
         //#pragma multi_compile _ ETC1_EXTERNAL_ALPHA
 
 		// Use shader model 3.0 target, to get nicer looking lighting
@@ -23,11 +25,23 @@
 
 		sampler2D _MainTex;
         sampler2D _AlphaTex;
+        fixed4 _Color;
 
 		struct Input {
 			float2 uv_MainTex;
             float4 color: Color; // Vertex color
         };
+
+        void vert(inout appdata_full v, out Input o)
+        {
+#if defined(PIXELSNAP_ON)
+            v.vertex = UnityPixelSnap(v.vertex);
+#endif
+
+            UNITY_INITIALIZE_OUTPUT(Input, o);
+            o.color = v.color * _Color;
+        }
+
 
 		// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
 		// See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
