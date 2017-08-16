@@ -63,6 +63,7 @@ GameObject:
   - component: {fileID: 3349260}
   - component: {fileID: 2315868}
   - component: {fileID: 11431700}
+  - component: {fileID: 114267637418432754}
   m_Layer: 12
   m_Name: Dorf
   m_TagString: Untagged
@@ -372,7 +373,7 @@ MonoBehaviour:
     _color_modifiers: []
     _description: 
     _adult_size: 0
-  unitDef:
+  unit:
     _id: 0
     _isValid: 0
     _pos_x: 0
@@ -404,6 +405,32 @@ MonoBehaviour:
       _bp_modifiers: 
       _size_modifier: 0
       _colors: 
+      _hair:
+        _length: 0
+        _style: -1
+      _beard:
+        _length: 0
+        _style: -1
+      _moustache:
+        _length: 0
+        _style: -1
+      _sideburns:
+        _length: 0
+        _style: -1
     _profession_id: 0
     _noble_positions: []
     _rider_id: 0
+  professionColor: {r: 0, g: 0, b: 0, a: 0}
+--- !u!114 &114267637418432754
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 171272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81ee4b15ad5efcb4fbce1790beaa46d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gap: 0.0001
+  spriteCollection: {fileID: 0}
