@@ -119,4 +119,4 @@ MonoBehaviour:
     metal: 0
     positionOffset: {x: 0, y: 2}
   special: 0
-  profession: 
+  profession: -1

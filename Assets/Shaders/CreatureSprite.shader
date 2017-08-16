@@ -29,14 +29,12 @@
             UNITY_DEFINE_INSTANCED_PROP(float, _LayerIndex)
         UNITY_INSTANCING_CBUFFER_END
 
-#include "blend.cginc"
-
 		void surf (Input IN, inout SurfaceOutputStandard o) {
             float layerIndex = UNITY_ACCESS_INSTANCED_PROP(_LayerIndex);
             fixed4 layerPixel = UNITY_SAMPLE_TEX2DARRAY(_MatTex, float3(IN.uv_MatTex.xy, layerIndex));
             fixed4 layerColor = UNITY_ACCESS_INSTANCED_PROP(_LayerColor);
 
-            o.Albedo = overlay(layerPixel.rgb, layerColor.rgb);
+            o.Albedo = layerPixel.rgb * layerColor.rgb;
             o.Metallic = max((layerColor.a * 2) - 1, 0);
             o.Alpha = layerPixel.a;
             o.Normal = UnpackNormal(UNITY_SAMPLE_TEX2DARRAY(_BumpMap, float3(IN.uv_MatTex.xy, layerIndex)));

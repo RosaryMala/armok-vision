@@ -456,8 +456,8 @@ public sealed class DFConnection : MonoBehaviour
     {
         if (inited)
             return;
-        if (netWorldInfo == null)
-            return; //world isn't loaded
+        //if (netWorldInfo == null)
+        //    return; //world isn't loaded
         inited = true;
         BindMethods();
 

@@ -458,7 +458,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: 0}
   - spriteSource: 1
     colorSource: 2
-    token: NONE
+    token: hair
     spriteTexture: {fileID: 21300000, guid: 21f9150ecf58a894697f697c3c7f5a13, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -497,7 +497,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: 0}
   - spriteSource: 1
     colorSource: 2
-    token: NONE
+    token: hair
     spriteTexture: {fileID: 21300000, guid: 21f9150ecf58a894697f697c3c7f5a13, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -523,7 +523,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: 0}
   - spriteSource: 1
     colorSource: 2
-    token: NONE
+    token: hair
     spriteTexture: {fileID: 21300000, guid: de672b74a8c03e64eb93e18362df81c1, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -562,7 +562,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: 0}
   - spriteSource: 1
     colorSource: 2
-    token: NONE
+    token: hair
     spriteTexture: {fileID: 21300000, guid: 0ca8f04b4be78234387dc36c07e1f7df, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -575,7 +575,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: 0}
   - spriteSource: 1
     colorSource: 2
-    token: NONE
+    token: hair
     spriteTexture: {fileID: 21300000, guid: 69bf0a5815e427d4abe11ab83ca049b6, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -588,7 +588,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: 0}
   - spriteSource: 1
     colorSource: 2
-    token: NONE
+    token: hair
     spriteTexture: {fileID: 21300000, guid: cb2f2bfbf25e6f0488de60049f1cf40b, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -717,4 +717,4 @@ MonoBehaviour:
     metal: 0
     positionOffset: {x: 0, y: 0}
   special: 0
-  profession: CHILD
+  profession: 103

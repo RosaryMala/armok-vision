@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using RemoteFortressReader;
 using TokenLists;
 
 public class CreatureRaceMatcher<T>
@@ -6,12 +8,6 @@ public class CreatureRaceMatcher<T>
 
     Dictionary<MatPairStruct, T> creatureRaceList = new Dictionary<MatPairStruct, T>();
 
-    /// <summary>
-    /// sets an object to the specified race/caste ID.
-    /// This will always take precedence over objects set by string tokens.
-    /// </summary>
-    /// <param name="caste">numerical race/caste</param>
-    /// <returns></returns>
     public T this[MatPairStruct caste]
     {
         set
@@ -41,6 +37,10 @@ public class CreatureRaceMatcher<T>
         }
         value = default(T);
         return false;
+    }
+    public bool ContainsKey(MatPairStruct val)
+    {
+        return creatureRaceList.ContainsKey(val);
     }
     public void Clear()
     {

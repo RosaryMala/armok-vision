@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DF.Enums;
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu]
@@ -15,5 +16,5 @@ public class CreatureSpriteCollection : ScriptableObject
     public string caste;
     public List<CreatureSpriteLayer> spriteLayers;
     public Special special;
-    public string profession;
+    public profession profession;
 }

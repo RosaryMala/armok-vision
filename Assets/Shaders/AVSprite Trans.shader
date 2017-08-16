@@ -1,16 +1,15 @@
-﻿Shader "Custom/AVSprite" {
+﻿Shader "Custom/AVSprite Trans" {
 	Properties {
         [PerRendererData] _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _Color("Tint", Color) = (1,1,1,1)
         [MaterialToggle] PixelSnap("Pixel snap", Float) = 0
-        _Cutoff("Alpha cutoff", Range(0,1)) = 0.5
     }
 	SubShader {
         Tags
     {
-        "Queue" = "AlphaTest"
+        "Queue" = "Transparent"
         "IgnoreProjector" = "True"
-        "RenderType" = "TransparentCutout"
+        "RenderType" = "Transparent"
         "PreviewType" = "Plane"
         "CanUseSpriteAtlas" = "True"
     }
@@ -18,7 +17,7 @@
 		
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf Standard fullforwardshadows vertex:vert alphatest:_Cutoff
+		#pragma surface surf Standard fullforwardshadows alpha vertex:vert
         //#pragma multi_compile _ ETC1_EXTERNAL_ALPHA
 
 		// Use shader model 3.0 target, to get nicer looking lighting
@@ -55,13 +54,14 @@
 
             void surf(Input IN, inout SurfaceOutputStandard o) {
             fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
+            clip(c.a - 0.5);
 //#if ETC1_EXTERNAL_ALPHA
 //            // get the color from an external texture (usecase: Alpha support for ETC1 on android)
 //            //c.a = tex2D(_AlphaTex, IN.uv_MainTex).r;
 //#endif //ETC1_EXTERNAL_ALPHA
             o.Albedo = overlay(c.rgb, IN.color.rgb);
             o.Metallic = max((IN.color.a * 2) - 1, 0);
-            o.Alpha = c.a; // *min((IN.color.a * 2), 1);
+            o.Alpha = c.a * min((IN.color.a * 2), 1);
         }
 		ENDCG
 	}

@@ -15,11 +15,10 @@ public class CreatureManager : MonoBehaviour
     public UnitList lastUnitList = null;
     public UnitList unitList = null;
 
+    public Material baseTileMaterial;
+
     public bool singleRow;
 
-    MaterialPropertyBlock creatureMaterialProperties = null;
-    int layerIndexID;
-    int layerColorID;
     public float spacing;
 
     public static CreatureManager Instance { get; private set; }
@@ -27,9 +26,6 @@ public class CreatureManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        layerIndexID = Shader.PropertyToID("_LayerIndex");
-        layerColorID = Shader.PropertyToID("_LayerColor");
-        creatureMaterialProperties = new MaterialPropertyBlock();
     }
 
     // Update is called once per frame
@@ -49,8 +45,6 @@ public class CreatureManager : MonoBehaviour
         if (ContentLoader.Instance == null)
             return;
 
-        CultureInfo cultureInfo = Thread.CurrentThread.CurrentCulture;
-        TextInfo textInfo = cultureInfo.TextInfo;
         var tempUnitList = DFConnection.Instance.PopUnitListUpdate();
         if (tempUnitList == null)
             return;
@@ -80,30 +74,16 @@ public class CreatureManager : MonoBehaviour
             }
             else
             {
-                CreatureRaw creatureRaw = null;
-                if (DFConnection.Instance.CreatureRaws != null)
-                    creatureRaw = DFConnection.Instance.CreatureRaws[unit.race.mat_type];
-
                 if (!creatureList.ContainsKey(unit.id))
                 {
-                    creatureList[unit.id] = Instantiate(creatureTemplate);
-                    creatureList[unit.id].transform.parent = gameObject.transform;
+                    creatureList[unit.id] = Instantiate(creatureTemplate, gameObject.transform);
                     creatureList[unit.id].name = "Unit_" + unit.id;
-                    creatureList[unit.id].GetComponent<Creature>().creatureRaw = creatureRaw;
-                    creatureList[unit.id].GetComponent<Creature>().casteRaw = creatureRaw.caste[unit.race.mat_index];
-                    creatureList[unit.id].GetComponent<Creature>().unitDef = unit;
 
+                    var creature = creatureList[unit.id].GetComponent<Creature>();
+
+                    creature.UpdateCreature(unit);
 
                     Color color = Color.white;
-                    if (unit.profession_color != null)
-                        color = new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 1);
-
-                    if (creatureRaw != null)
-                    {
-                        creatureMaterialProperties.SetFloat(layerIndexID, creatureRaw.creature_tile);
-                        creatureMaterialProperties.SetColor(layerColorID, new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 0.5f));
-                        creatureList[unit.id].GetComponentInChildren<MeshRenderer>().SetPropertyBlock(creatureMaterialProperties);
-                    }
 
                 }
                 if (!singleRow)
@@ -150,50 +130,8 @@ public class CreatureManager : MonoBehaviour
                         cameraFacing.transform.localPosition = new Vector3(0, 1.0f, 0);
                         cameraFacing.enabled = true;
                     }
-                    Material mat;
-                    int index;
-                    bool colored;
-                    if (ContentLoader.Instance.SpriteManager.getCreatureSprite(unit, out mat, out index, out colored))
-                    {
-                        creatureList[unit.id].GetComponentInChildren<MeshRenderer>().material = mat;
-                        creatureMaterialProperties.SetFloat(layerIndexID, index);
-                    }
-                    else
-                    {
-                        creatureList[unit.id].GetComponentInChildren<MeshRenderer>().material = creatureTemplate.GetComponentInChildren<MeshRenderer>().sharedMaterial;
-                        if (creatureRaw != null)
-                        {
-                            if (unit.is_soldier && creatureRaw.creature_soldier_tile != 0)
-                            {
-                                creatureMaterialProperties.SetFloat(layerIndexID, creatureRaw.creature_soldier_tile);
-                            }
-                            else
-                            {
-                                creatureMaterialProperties.SetFloat(layerIndexID, creatureRaw.creature_tile);
-                            }
-                        }
-                    }
-                    if (colored && unit.profession_color != null)
-                        creatureMaterialProperties.SetColor(layerColorID, new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 0.5f));
-                    else
-                        creatureMaterialProperties.SetColor(layerColorID, Color.white);
 
-
-                    creatureList[unit.id].GetComponentInChildren<MeshRenderer>().SetPropertyBlock(creatureMaterialProperties);
-
-                    if (creatureRaw != null)
-                    {
-                        Text unitText = creatureList[unit.id].GetComponentInChildren<Text>();
-                        if (unitText != null)
-                        {
-                            if (unit.name == "")
-                                unitText.text = textInfo.ToTitleCase(creatureRaw.caste[unit.race.mat_index].caste_name[0]);
-                            else
-                            {
-                                unitText.text = unit.name;
-                            }
-                        }
-                    }
+                    creatureList[unit.id].GetComponent<Creature>().UpdateCreature(unit);
                 }
                 creatureCount++;
             }

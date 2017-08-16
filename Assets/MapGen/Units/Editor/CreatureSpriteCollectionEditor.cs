@@ -13,6 +13,8 @@ public class CreatureSpriteCollectionEditor : Editor
     private Vector2 listPosition;
     private SerializedProperty raceProp;
     private SerializedProperty casteProp;
+    private SerializedProperty professionProp;
+    private SerializedProperty specialProp;
     private int maxLayers;
 
     private void OnEnable()
@@ -20,6 +22,8 @@ public class CreatureSpriteCollectionEditor : Editor
         list = new ReorderableList(serializedObject, serializedObject.FindProperty("spriteLayers"), true, true, true, true);
         raceProp = serializedObject.FindProperty("race");
         casteProp = serializedObject.FindProperty("caste");
+        professionProp = serializedObject.FindProperty("profession");
+        specialProp = serializedObject.FindProperty("special");
 
         mat = new Material(Shader.Find("Hidden/TransparentPreview"));
         rectID = Shader.PropertyToID("_Rect");
@@ -102,6 +106,8 @@ public class CreatureSpriteCollectionEditor : Editor
         var collection = (CreatureSpriteCollection)target;
         EditorGUILayout.PropertyField(raceProp);
         EditorGUILayout.PropertyField(casteProp);
+        EditorGUILayout.PropertyField(professionProp);
+        EditorGUILayout.PropertyField(specialProp);
         if (collection.spriteLayers != null && collection.spriteLayers.Count > 0)
         {
             var rect = EditorGUILayout.GetControlRect(false, 256);

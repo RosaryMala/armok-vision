@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using UnityEditor;
 using UnityEngine;
 using System;
+using DF.Enums;
 
 public class MaterialXMLConverter
 {
@@ -68,7 +69,7 @@ public class MaterialXMLConverter
                 var prof = variant.Attribute("prof");
                 if(prof != null)
                 {
-                    spriteCollection.profession = prof.Value;
+                    spriteCollection.profession = (profession)Enum.Parse((typeof(profession)), prof.Value);
                 }
 
                 var variantFile = variant.Attribute("file");
