@@ -17,4 +17,5 @@ public class CreatureSpriteCollection : ScriptableObject
     public List<CreatureSpriteLayer> spriteLayers;
     public Special special;
     public profession profession;
+    public int standardSize;
 }

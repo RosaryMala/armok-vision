@@ -53,6 +53,8 @@ public class LayeredSprite : MonoBehaviour
             sr.color = layer.color;
             sr.sprite = layer.spriteTexture;
             sr.sharedMaterial = SpriteMat;
+            sr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+            sr.receiveShadows = true;
             var pos = go.transform.localPosition;
             pos.z = depth;
             pos.x += layer.positionOffset.x;

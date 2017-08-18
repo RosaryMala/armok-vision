@@ -15,6 +15,7 @@ public class CreatureSpriteCollectionEditor : Editor
     private SerializedProperty casteProp;
     private SerializedProperty professionProp;
     private SerializedProperty specialProp;
+    private SerializedProperty sizeProp;
     private int maxLayers;
 
     private void OnEnable()
@@ -24,6 +25,7 @@ public class CreatureSpriteCollectionEditor : Editor
         casteProp = serializedObject.FindProperty("caste");
         professionProp = serializedObject.FindProperty("profession");
         specialProp = serializedObject.FindProperty("special");
+        sizeProp = serializedObject.FindProperty("standardSize");
 
         mat = new Material(Shader.Find("Hidden/TransparentPreview"));
         rectID = Shader.PropertyToID("_Rect");
@@ -108,6 +110,7 @@ public class CreatureSpriteCollectionEditor : Editor
         EditorGUILayout.PropertyField(casteProp);
         EditorGUILayout.PropertyField(professionProp);
         EditorGUILayout.PropertyField(specialProp);
+        EditorGUILayout.PropertyField(sizeProp);
         if (collection.spriteLayers != null && collection.spriteLayers.Count > 0)
         {
             var rect = EditorGUILayout.GetControlRect(false, 256);

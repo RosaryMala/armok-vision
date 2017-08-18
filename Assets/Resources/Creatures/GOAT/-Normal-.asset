@@ -55,3 +55,4 @@ MonoBehaviour:
     positionOffset: {x: 0, y: 0}
   special: 0
   profession: -1
+  standardSize: 50000

@@ -114,7 +114,15 @@ public class CreatureManager : MonoBehaviour
                     }
                     float scale;
                     if (GameSettings.Instance.units.scaleUnits)
-                        scale = unit.size_info.length_cur / 391.0f;
+                    {
+                        float baseSize = 391.0f;
+                        var layerSprite = creatureList[unit.id].GetComponent<LayeredSprite>();
+                        if(layerSprite != null && layerSprite.spriteCollection != null && layerSprite.spriteCollection.standardSize > 0)
+                        {
+                            baseSize = Mathf.Pow(layerSprite.spriteCollection.standardSize, 0.3333333333f) * 10;
+                        }
+                        scale = unit.size_info.length_cur / baseSize;
+                    }
                     else
                         scale = 1;
                     creatureList[unit.id].transform.localScale = new Vector3(scale, scale, scale);
@@ -127,7 +135,7 @@ public class CreatureManager : MonoBehaviour
                     }
                     else
                     {
-                        cameraFacing.transform.localPosition = new Vector3(0, 1.0f, 0);
+                        cameraFacing.transform.localPosition = new Vector3(0, 1.5f, 0);
                         cameraFacing.enabled = true;
                     }
 
