@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using RemoteFortressReader;
 using UnityEngine;
 using MaterialStore;
+using DF.Enums;
 
 public class LayeredSprite : MonoBehaviour
 {
@@ -126,6 +127,11 @@ public class LayeredSprite : MonoBehaviour
                     switch (spriteLayerDef.hairType)
                     {
                         case CreatureSpriteLayer.HairType.Hair:
+                            if (unit.inventory.FindIndex(x => x.item.type.mat_type == (int)item_type.HELM) >= 0)
+                            {
+                                sprite.enabled = false;
+                                break;
+                            }
                             if(unit.appearance == null || unit.appearance.hair == null)
                             {
                                 sprite.enabled = spriteLayerDef.hairStyle == HairStyle.UNKEMPT;
