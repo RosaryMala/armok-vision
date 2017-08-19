@@ -1220,6 +1220,34 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"InventoryItem")]
+  public partial class InventoryItem : global::ProtoBuf.IExtensible
+  {
+    public InventoryItem() {}
+    
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.InventoryMode _mode = RemoteFortressReader.InventoryMode.Hauled;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"mode", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.InventoryMode.Hauled)]
+    public RemoteFortressReader.InventoryMode mode
+    {
+      get { return _mode; }
+      set { _mode = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.Item _item = null;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"item", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Item item
+    {
+      get { return _item; }
+      set { _item = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"UnitDefinition")]
   public partial class UnitDefinition : global::ProtoBuf.IExtensible
   {
@@ -1394,6 +1422,14 @@ namespace RemoteFortressReader
       get { return _rider_id; }
       set { _rider_id = value; }
     }
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.InventoryItem> _inventory = new global::System.Collections.Generic.List<RemoteFortressReader.InventoryItem>();
+    [global::ProtoBuf.ProtoMember(20, Name=@"inventory", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.InventoryItem> inventory
+    {
+      get { return _inventory; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -4038,6 +4074,44 @@ namespace RemoteFortressReader
             
       [global::ProtoBuf.ProtoEnum(Name=@"CLEAN_SHAVEN", Value=4)]
       CLEAN_SHAVEN = 4
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"InventoryMode")]
+    public enum InventoryMode
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Hauled", Value=0)]
+      Hauled = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Weapon", Value=1)]
+      Weapon = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Worn", Value=2)]
+      Worn = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Piercing", Value=3)]
+      Piercing = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Flask", Value=4)]
+      Flask = 4,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"WrappedAround", Value=5)]
+      WrappedAround = 5,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"StuckIn", Value=6)]
+      StuckIn = 6,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"InMouth", Value=7)]
+      InMouth = 7,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Pet", Value=8)]
+      Pet = 8,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SewnInto", Value=9)]
+      SewnInto = 9,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Strapped", Value=10)]
+      Strapped = 10
     }
   
     [global::ProtoBuf.ProtoContract(Name=@"MatterState")]

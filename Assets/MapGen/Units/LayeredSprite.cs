@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using RemoteFortressReader;
 using UnityEngine;
+using MaterialStore;
 
 public class LayeredSprite : MonoBehaviour
 {
@@ -178,14 +179,36 @@ public class LayeredSprite : MonoBehaviour
                     }
                     break;
                 case CreatureSpriteLayer.SpriteSource.Equipment:
-                    sprite.enabled = spriteLayerDef.preview;
+                    int inventoryIndex = unit.inventory.FindIndex(
+                        x =>
+                        (x.mode == InventoryMode.Weapon || x.mode == InventoryMode.Worn)
+                        && spriteLayerDef.token == GameMap.items[x.item.type].id
+                        );
+                    if (inventoryIndex < 0)
+                    {
+                        sprite.enabled = false;
+                        break;
+                    }
+                    else
+                        sprite.enabled = true;
+                    var item = unit.inventory[inventoryIndex].item;
+
                     switch (spriteLayerDef.colorSource)
                     {
                         case CreatureSpriteLayer.ColorSource.Fixed:
                             sprite.color = spriteLayerDef.color;
                             break;
                         case CreatureSpriteLayer.ColorSource.Material:
-                            sprite.color = new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 0.5f);
+                            Color partColor = new Color32(128, 128, 128, 128);
+                            MaterialTextureSet textureContent;
+                            if (ContentLoader.Instance.MaterialTextures.TryGetValue(item.material, out textureContent))
+                            {
+                                partColor = textureContent.color;
+                            }
+                            var dye = item.dye;
+                            if(dye != null)
+                                partColor *= (Color)new Color32((byte)dye.red, (byte)dye.green, (byte)dye.blue, 255);
+                            sprite.color = partColor;
                             break;
                         case CreatureSpriteLayer.ColorSource.Job:
                             sprite.color = new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 0.5f);

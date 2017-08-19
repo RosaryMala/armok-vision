@@ -58,7 +58,7 @@ public class LayeredSpriteManager : MonoBehaviour
         UnitFlags3 flags3 = (UnitFlags3)unit.flags3;
         if ((flags3 & UnitFlags3.ghostly) == UnitFlags3.ghostly)
             special = CreatureSpriteCollection.Special.Ghost;
-        else if (unit.is_soldier)
+        else if (unit.inventory.FindIndex(x => x.mode == InventoryMode.Weapon) >= 0)
             special = CreatureSpriteCollection.Special.Military;
         Dictionary<profession, CreatureSpriteCollection> specialSprites;
         if (!raceSprites.TryGetValue(special, out specialSprites))
