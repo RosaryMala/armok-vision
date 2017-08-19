@@ -262,16 +262,13 @@ public class RegionMaker : MonoBehaviour
                     west = tiles[x - 1, y].elevation;
 
                 Color terrainColor = Color.green;
-                MaterialTextureSet colorDef;
-                if (ContentLoader.Instance.MaterialTextures.TryGetValue(tile.surfaceMaterial, out colorDef))
-                    terrainColor = colorDef.color;
+                terrainColor = ContentLoader.GetColor(tile.surfaceMaterial);
 
                 Color plantColor = Color.black;
                 Color stoneColor = Color.grey;
                 foreach (var item in tile.plantMaterials)
                 {
-                    if (ContentLoader.Instance.MaterialTextures.TryGetValue(item, out colorDef))
-                        plantColor += colorDef.color;
+                        plantColor += ContentLoader.GetColor(item);
                 }
                 float plantBlend = Mathf.Pow(tile.vegetation / 100.0f, 0.25f);
                 if (tile.plantMaterials.Count == 0)
@@ -281,8 +278,7 @@ public class RegionMaker : MonoBehaviour
 
                 if (tile.stoneMaterials.Count > 0)
                 {
-                    if (ContentLoader.Instance.MaterialTextures.TryGetValue(tile.stoneMaterials[0],  out colorDef))
-                        stoneColor = colorDef.color;
+                        stoneColor = ContentLoader.GetColor(tile.stoneMaterials[0]);
                 }
 
                 Color blendedColor = Color.Lerp(terrainColor, plantColor, plantBlend);
@@ -317,15 +313,7 @@ public class RegionMaker : MonoBehaviour
                             case SiteRealizationBuildingType.library:
                             case SiteRealizationBuildingType.tavern:
                                 {
-                                    Color buildingColor;
-                                    ContentLoader.Instance.MaterialTextures.TryGetValue(building.material, out colorDef);
-                                    if (colorDef != null)
-                                        buildingColor = colorDef.color;
-                                    else
-                                    {
-                                        Debug.LogError("No valid color for " + building.type);
-                                        buildingColor = Color.magenta;
-                                    }
+                                    Color buildingColor = ContentLoader.GetColor(building.material);
                                     min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
                                     max = new Vector3((building.max_x + 1) * GameMap.tileWidth, 2 * GameMap.tileHeight, -(building.max_y + 1) * GameMap.tileWidth);
                                     AddBlock(vert1 + min, vert1 + max, biome, buildingColor, snow);
@@ -361,14 +349,7 @@ public class RegionMaker : MonoBehaviour
                                 }
                             case SiteRealizationBuildingType.great_tower:
                                 {
-                                    Color buildingColor;
-                                    if (ContentLoader.Instance.MaterialTextures.TryGetValue(building.material, out colorDef))
-                                        buildingColor = colorDef.color;
-                                    else
-                                    {
-                                        Debug.LogError("No valid color for " + building.type);
-                                        buildingColor = Color.magenta;
-                                    }
+                                    Color buildingColor = ContentLoader.GetColor(building.material);
                                     min = new Vector3((building.min_x + 5) * GameMap.tileWidth, 0, -(building.min_y + 5) * GameMap.tileWidth);
                                     max = new Vector3((building.max_x - 4) * GameMap.tileWidth, 15 * GameMap.tileHeight, -(building.max_y - 4) * GameMap.tileWidth);
                                     AddCylinder(vert1 + min, vert1 + max, biome, buildingColor, snow);
@@ -376,18 +357,8 @@ public class RegionMaker : MonoBehaviour
                                 }
                             case SiteRealizationBuildingType.castle_tower:
                                 {
-                                    Color buildingColor;
-                                    Color roofColor;
-                                    if (ContentLoader.Instance.MaterialTextures.TryGetValue(building.material, out colorDef))
-                                    {
-                                        buildingColor = colorDef.color;
-                                        roofColor = colorDef.color;
-                                    }
-                                    else
-                                    {
-                                        buildingColor = stoneColor;
-                                        roofColor = terrainColor;
-                                    }
+                                    Color buildingColor = ContentLoader.GetColor(building.material);
+                                    Color roofColor = buildingColor;
                                     int top = 2;
                                     if (building.tower_info != null)
                                     {
@@ -411,13 +382,7 @@ public class RegionMaker : MonoBehaviour
                                 }
                             case SiteRealizationBuildingType.castle_wall:
                                 {
-                                    Color buildingColor;
-                                    if (ContentLoader.Instance.MaterialTextures.TryGetValue(building.material, out colorDef))
-                                        buildingColor = colorDef.color;
-                                    else
-                                    {
-                                        buildingColor = Color.magenta;
-                                    }
+                                    Color buildingColor = ContentLoader.GetColor(building.material);
                                     if (building.wall_info != null)
                                     {
                                         min = new Vector3((building.wall_info.start_x + 1) * GameMap.tileWidth, (building.wall_info.start_z - tile.elevation) * GameMap.tileHeight, -(building.wall_info.start_y + 1) * GameMap.tileWidth);
@@ -437,11 +402,7 @@ public class RegionMaker : MonoBehaviour
                                     var mat = building.material;
                                     if (mat.mat_type < 0)
                                         mat = new MatPairStruct(0, mat.mat_index);
-                                    Color buildingColor;
-                                    if (ContentLoader.Instance.MaterialTextures.TryGetValue(mat, out colorDef))
-                                        buildingColor = colorDef.color;
-                                    else
-                                        buildingColor = Color.grey;
+                                    Color buildingColor = ContentLoader.GetColor(mat);
                                     min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
                                     int tombHeight = (building.max_x - building.min_x + building.max_y - building.min_y) / 8;
                                     max = new Vector3((building.max_x + 1) * GameMap.tileWidth, tombHeight * GameMap.tileHeight, -(building.max_y + 1) * GameMap.tileWidth);
@@ -464,14 +425,7 @@ public class RegionMaker : MonoBehaviour
                                             break;
                                         }
 
-                                    Color buildingColor;
-                                    if (ContentLoader.Instance.MaterialTextures.TryGetValue(tree, out colorDef))
-                                        buildingColor = colorDef.color;
-                                    else
-                                    {
-                                        Debug.LogError("No valid color for " + building.type);
-                                        buildingColor = Color.magenta;
-                                    }
+                                    Color buildingColor = ContentLoader.GetColor(tree);
                                     Vector3 pos = new Vector3((building.min_x + building.max_x + 1) / 2.0f, 0, -(building.min_y + building.max_y + 1) / 2.0f) * GameMap.tileWidth;
 
                                     float treeRadius = (building.max_x - building.min_x + building.max_y - building.min_y) / 4.0f * GameMap.tileWidth * 1.28676f;
@@ -518,10 +472,7 @@ public class RegionMaker : MonoBehaviour
                                 tree = growth.mat;
                                 break;
                             }
-                            Color treeColor = Color.green;
-
-                            if (ContentLoader.Instance.MaterialTextures.TryGetValue(tree, out colorDef))
-                                treeColor = colorDef.color;
+                            Color treeColor = ContentLoader.GetColor(tree);
 
                             if (tree.mat_type == 419) // bare tree
                                 AddTree(new Vector3(coord.x, tile.elevation * GameMap.tileHeight, coord.y), GameMap.tileWidth / 2, Random.Range(7.0f, 9.0f) * GameMap.tileHeight, treeColor, biome, snow, Random.Range(0.0f, 360.0f));

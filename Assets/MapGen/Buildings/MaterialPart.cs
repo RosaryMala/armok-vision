@@ -85,12 +85,15 @@ namespace Building
 
         public void UpdatePart(BuildingInstance buildingInput)
         {
-            ColorDefinition dye = null;
-            MatPairStruct mat = new MatPairStruct(-1,-1);
+            Color partColor = new Color32(128,128,128,128);
+            float textureIndex = 0;
             if (string.IsNullOrEmpty(item) || ItemTokenList.ItemLookup == null)
             {
                 if (index < 0)
-                    mat = buildingInput.material;
+                {
+                    partColor = ContentLoader.GetColor(buildingInput.material);
+                    textureIndex = ContentLoader.GetPatternIndex(buildingInput.material);
+                }
                 else if (index >= buildingInput.items.Count - endOffset)
                 {
                     gameObject.SetActive(false);
@@ -106,8 +109,8 @@ namespace Building
                         gameObject.SetActive(false);
                         return;
                     }
-                    mat = buildingItem.item.material;
-                    dye = buildingItem.item.dye;
+                    partColor = ContentLoader.GetColor(buildingItem.item);
+                    textureIndex = ContentLoader.GetPatternIndex(buildingItem.item.material);
                 }
             }
             else if (!ItemTokenList.ItemLookup.ContainsKey(item))
@@ -129,8 +132,8 @@ namespace Building
                     if ((itemCode.mat_index == -1 && itemCode.mat_type == item.item.type.mat_type)
                         || (item.item.type == itemCode))
                     {
-                        mat = item.item.material;
-                        dye = item.item.dye;
+                        partColor = ContentLoader.GetColor(item.item);
+                        textureIndex = ContentLoader.GetPatternIndex(item.item.material);
                         set = true;
                         break;
                     }
@@ -142,17 +145,6 @@ namespace Building
                 }
             }
             gameObject.SetActive(true);
-            Color partColor = Color.gray;
-            float textureIndex = 0;
-            MaterialTextureSet textureContent;
-            if (ContentLoader.Instance.MaterialTextures.TryGetValue(mat, out textureContent))
-            {
-                textureIndex = textureContent.patternIndex;
-                partColor = textureContent.color;
-            }
-
-            if (dye != null)
-                partColor *= (Color)new Color32((byte)dye.red, (byte)dye.green, (byte)dye.blue, 255);
 
 
             if (meshRenderer == null)

@@ -105,7 +105,59 @@ public class ContentLoader : MonoBehaviour
 
     public TextureStorage shapeTextureStorage { get; private set; }
     public TextureStorage specialTextureStorage { get; private set; }
-    public MaterialMatcher<MaterialTextureSet> MaterialTextures { get; private set; }
+    private MaterialMatcher<MaterialTextureSet> MaterialTextures { get; set; }
+
+    /// <summary>
+    /// Get the color associated with a material, falling back to DF state color.
+    /// </summary>
+    /// <param name="mat"></param>
+    /// <returns></returns>
+    public static Color GetColor(MatPairStruct mat)
+    {
+        MaterialTextureSet textureSet;
+        if (Instance.MaterialTextures.TryGetValue(mat, out textureSet))
+        {
+            return textureSet.color;
+        }
+        if (GameMap.materials.ContainsKey(mat))
+            return new Color32(128, 128, 128, 128);
+        var stateColor = GameMap.materials[mat].state_color;
+        return new Color32((byte)stateColor.red, (byte)stateColor.green, (byte)stateColor.blue, 128);
+    }
+
+    /// <summary>
+    /// Get the material color of an item including dye
+    /// </summary>
+    /// <param name="item">item to get the color from</param>
+    /// <returns></returns>
+    public static Color GetColor(RemoteFortressReader.Item item)
+    {
+        var color = GetColor(item.material);
+        var dye = item.dye;
+        if (dye != null)
+            color *= (Color)new Color32((byte)dye.red, (byte)dye.green, (byte)dye.blue, 255);
+        return color;
+    }
+
+    public static int GetPatternIndex(MatPairStruct mat)
+    {
+        MaterialTextureSet textureSet;
+        if (Instance.MaterialTextures.TryGetValue(mat, out textureSet))
+        {
+            return textureSet.patternIndex;
+        }
+        return Instance.DefaultMatTexIndex;
+    }
+
+    public static int GetShapeIndex(MatPairStruct mat)
+    {
+        MaterialTextureSet textureSet;
+        if (Instance.MaterialTextures.TryGetValue(mat, out textureSet))
+        {
+            return textureSet.shapeIndex;
+        }
+        return Instance.DefaultShapeTexIndex;
+    }
 
     public int DefaultMatTexIndex { get; private set; }
 

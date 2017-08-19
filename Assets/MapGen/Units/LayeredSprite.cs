@@ -205,16 +205,7 @@ public class LayeredSprite : MonoBehaviour
                             sprite.color = spriteLayerDef.color;
                             break;
                         case CreatureSpriteLayer.ColorSource.Material:
-                            Color partColor = new Color32(128, 128, 128, 128);
-                            MaterialTextureSet textureContent;
-                            if (ContentLoader.Instance.MaterialTextures.TryGetValue(item.material, out textureContent))
-                            {
-                                partColor = textureContent.color;
-                            }
-                            var dye = item.dye;
-                            if(dye != null)
-                                partColor *= (Color)new Color32((byte)dye.red, (byte)dye.green, (byte)dye.blue, 255);
-                            sprite.color = partColor;
+                            sprite.color = ContentLoader.GetColor(item);
                             break;
                         case CreatureSpriteLayer.ColorSource.Job:
                             sprite.color = new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 0.5f);

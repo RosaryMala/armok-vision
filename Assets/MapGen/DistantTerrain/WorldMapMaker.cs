@@ -311,9 +311,7 @@ public class WorldMapMaker : MonoBehaviour
                 }
 
 
-                MaterialTextureSet colorContent;
-                ContentLoader.Instance.MaterialTextures.TryGetValue(regionTiles[x, y].surface_material, out colorContent);
-                Color terrainColor = colorContent.color;
+                Color terrainColor = ContentLoader.GetColor(regionTiles[x, y].surface_material);
 
                 Color plantColor = Color.black;
                 float grassPercent = Mathf.Pow(regionTiles[x, y].vegetation / 100.0f, 0.25F);
@@ -321,8 +319,7 @@ public class WorldMapMaker : MonoBehaviour
 
                 foreach (var item in regionTiles[x, y].plant_materials)
                 {
-                    ContentLoader.Instance.MaterialTextures.TryGetValue(item, out colorContent);
-                    plantColor += colorContent.color;
+                    plantColor += ContentLoader.GetColor(item);
                 }
                 if (regionTiles[x, y].plant_materials.Count == 0)
                     grassPercent = 0;
@@ -347,11 +344,8 @@ public class WorldMapMaker : MonoBehaviour
                         treeMat = growth.mat;
                         break;
                     }
-                    if (ContentLoader.Instance.MaterialTextures.TryGetValue(treeMat, out colorContent))
-                    {
-                        treeColor += colorContent.color;
-                        treeCount++;
-                    }
+                    treeColor += ContentLoader.GetColor(treeMat);
+                    treeCount++;
                 }
                 if (treeCount == 0)
                     treePercent = 0;

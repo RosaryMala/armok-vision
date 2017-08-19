@@ -513,14 +513,8 @@ abstract class BlockMesher {
             buffer.meshData = meshContent.MeshData[layer];
             buffer.transform = Matrix4x4.TRS(pos, meshContent.GetRotation(tile), Vector3.one);
 
-            MaterialTextureSet matTex;
-            if(ContentLoader.Instance.MaterialTextures.TryGetValue(tile.DesignationMat, out matTex))
-            {
-                index1.x = matTex.patternIndex / ContentLoader.Instance.PatternTextureDepth;
-                buffer.color = matTex.color;
-            }
-            else
-                index1.x = ContentLoader.Instance.DefaultMatTexArrayIndex;
+            index1.x = ContentLoader.GetPatternIndex(tile.DesignationMat) / ContentLoader.Instance.PatternTextureDepth;
+            buffer.color = ContentLoader.GetColor(tile.DesignationMat);
             if (meshContent.ShapeTexture != null)
                 index1.y = meshContent.ShapeTexture.ArrayIndex;
             else
@@ -537,9 +531,8 @@ abstract class BlockMesher {
             return;
         }
 
-        MaterialTextureSet matTexContent;
-        if (!ContentLoader.Instance.MaterialTextures.TryGetValue(tile.GetMaterial(layer), out matTexContent))
-            matTexContent = null;
+        var matColor = ContentLoader.GetColor(tile.GetMaterial(layer));
+        var matPatternIndex = ContentLoader.GetPatternIndex(tile.GetMaterial(layer));
 
 
         switch (layer)
@@ -603,7 +596,7 @@ abstract class BlockMesher {
         }
 
         //Use the transparent shader instead of the opaque shader if the material is transparent.
-        if(matTexContent != null && matTexContent.color.a < 0.5f)
+        if(matColor.a < 0.5f)
         {
             switch (layer)
             {
@@ -656,10 +649,7 @@ abstract class BlockMesher {
             index1.y = meshContent.ShapeTexture.ArrayIndex;
         }
 
-        if (matTexContent != null)
-        {
-            index1.x = matTexContent.patternIndex / ContentLoader.Instance.PatternTextureDepth;
-        }
+        index1.x = matPatternIndex / ContentLoader.Instance.PatternTextureDepth;
 
 
 
@@ -674,58 +664,7 @@ abstract class BlockMesher {
             index2.x = ContentLoader.Instance.DefaultSpecialTexArrayIndex;
         }
 
-        Color newColor;
-        if (matTexContent != null)
-        {
-            newColor = matTexContent.color;
-        }
-        else
-        {
-            MatPairStruct mat = new MatPairStruct(-1, -1);
-            switch (layer)
-            {
-                case MeshLayer.StaticMaterial:
-                case MeshLayer.StaticCutout:
-                case MeshLayer.StaticTransparent:
-                    mat = tile.material;
-                    break;
-                case MeshLayer.BaseMaterial:
-                case MeshLayer.BaseCutout:
-                case MeshLayer.BaseTransparent:
-                    mat = tile.base_material;
-                    break;
-                case MeshLayer.LayerMaterial:
-                case MeshLayer.LayerCutout:
-                case MeshLayer.LayerTransparent:
-                    mat = tile.layer_material;
-                    break;
-                case MeshLayer.VeinMaterial:
-                case MeshLayer.VeinCutout:
-                case MeshLayer.VeinTransparent:
-                    mat = tile.vein_material;
-                    break;
-                case MeshLayer.NoMaterial:
-                case MeshLayer.NoMaterialCutout:
-                case MeshLayer.NoMaterialTransparent:
-                    break;
-                default:
-                    break;
-            }
-            MaterialDefinition mattie;
-            if (materials.TryGetValue(mat, out mattie))
-            {
-                ColorDefinition color = mattie.state_color;
-                if (color == null)
-                    newColor = Color.cyan;
-                else
-                    newColor = new Color(color.red / 255.0f, color.green / 255.0f, color.blue / 255.0f, 1);
-            }
-            else
-            {
-                newColor = Color.grey;
-            }
-        }
-        buffer.color = newColor;
+        buffer.color = matColor;
 
         buffer.uv1Transform = Matrix4x4.identity;
         buffer.uv2Force = index1;

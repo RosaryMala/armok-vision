@@ -201,19 +201,9 @@ public class SplatManager : MonoBehaviour
                 )
                     layer = MeshLayer.LayerMaterial;
 
-                MaterialTextureSet materialContent;
-                if (ContentLoader.Instance.MaterialTextures.TryGetValue(tile.GetMaterial(layer), out materialContent))
-                {
-                    terrainIndices[index].g = materialContent.shapeIndex / 255f;
-                    terrainIndices[index].r = materialContent.patternIndex / 255f;
-                    terrainColors[index] = materialContent.color;
-                }
-                else
-                {
-                    terrainIndices[index].g = ContentLoader.Instance.DefaultShapeTexIndex;
-                    terrainIndices[index].r = ContentLoader.Instance.DefaultMatTexIndex;
-                    terrainColors[index] = Color.gray;
-                }
+                terrainIndices[index].g = ContentLoader.GetShapeIndex(tile.GetMaterial(layer)) / 255f;
+                terrainIndices[index].r = ContentLoader.GetPatternIndex(tile.GetMaterial(layer)) / 255f;
+                terrainColors[index] = ContentLoader.GetColor(tile.GetMaterial(layer));
             }
         UnityEngine.Profiling.Profiler.EndSample();
         UnityEngine.Profiling.Profiler.EndSample();
@@ -304,20 +294,10 @@ public class SplatManager : MonoBehaviour
 
                 grassTiles++;
 
-                MaterialTextureSet grassTexture;
-                if (ContentLoader.Instance.MaterialTextures.TryGetValue(tile.material, out grassTexture))
-                {
-                    grassIndices[index].r = grassTexture.patternIndex / 255f;
-                    grassIndices[index].g = grassTexture.shapeIndex / 255f;
-                    grassColors[index] = grassTexture.color;
-                    grassColors[index].a = tile.grassPercent / 100f;
-                }
-                else
-                {
-                    grassIndices[index].r = ContentLoader.Instance.DefaultMatTexIndex;
-                    grassIndices[index].g = ContentLoader.Instance.DefaultShapeTexIndex;
-                    grassColors[index] = Color.gray;
-                }
+                grassIndices[index].r = ContentLoader.GetPatternIndex(tile.material) / 255f;
+                grassIndices[index].g = ContentLoader.GetShapeIndex(tile.material) / 255f;
+                grassColors[index] = ContentLoader.GetColor(tile.material);
+                grassColors[index].a = tile.grassPercent / 100f;
             }
         if (grassTiles == 0)
         {
@@ -402,21 +382,11 @@ public class SplatManager : MonoBehaviour
 
                     Color color = Color.white;
 
-                    MaterialTextureSet cont;
-
                     if (spatter.material.mat_type == (int)MatBasic.ICE && spatter.state == MatterState.Powder)
-                    {
                         color = Color.white;
-                    }
-                    else if (ContentLoader.Instance.MaterialTextures.TryGetValue(spatter.material, out cont))
-                    {
-                        color = cont.color;
-                    }
-                    else if (GameMap.materials.ContainsKey(spatter.material))
-                    {
-                        var colorDef = GameMap.materials[spatter.material].state_color;
-                        color = new Color32((byte)colorDef.red, (byte)colorDef.green, (byte)colorDef.blue, 255);
-                    }
+                    else
+                        color = ContentLoader.GetColor(spatter.material);
+
                     float amount = spatter.amount;
                     if (spatter.item != null)
                         amount /= 3000;
