@@ -119,7 +119,7 @@ public class ContentLoader : MonoBehaviour
         {
             return textureSet.color;
         }
-        if (GameMap.materials.ContainsKey(mat))
+        if (!GameMap.materials.ContainsKey(mat))
             return new Color32(128, 128, 128, 128);
         var stateColor = GameMap.materials[mat].state_color;
         return new Color32((byte)stateColor.red, (byte)stateColor.green, (byte)stateColor.blue, 128);
