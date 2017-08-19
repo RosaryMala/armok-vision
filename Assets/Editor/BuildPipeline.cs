@@ -9,7 +9,7 @@ using MaterialStore;
 
 public class BuildFactory
 {
-    [MenuItem("Mytools/Build Release")]
+    [MenuItem("Mytools/Build Release/All")]
     public static void BuildAll()
     {
         BuildRelease(BuildTarget.StandaloneOSXIntel64);
@@ -17,13 +17,13 @@ public class BuildFactory
         BuildRelease(BuildTarget.StandaloneWindows64);
     }
 
-    [MenuItem("Mytools/Build Windows Release")]
+    [MenuItem("Mytools/Build Release/Windows")]
     public static void BuildWin()
     {
         BuildRelease(BuildTarget.StandaloneWindows64);
     }
 
-    [MenuItem("Mytools/Build OSX Release")]
+    [MenuItem("Mytools/Build Release/OSx")]
     public static void BuildOsx()
     {
         BuildRelease(BuildTarget.StandaloneOSXIntel64);
@@ -63,7 +63,7 @@ public class BuildFactory
         if (Directory.Exists(path))
             Directory.Delete(path, true);
 
-        string[] levels = new string[] { "Assets/Start.unity" };
+        string[] levels = new string[] { "Assets/Scenes/Map Mode.unity" };
         EditorUserBuildSettings.SetPlatformSettings("Standalone", "CopyPDBFiles", "false");
         UnityEngine.Debug.Log(BuildPipeline.BuildPlayer(levels, path + releaseName, target, BuildOptions.None));
         CopyExtras(path);

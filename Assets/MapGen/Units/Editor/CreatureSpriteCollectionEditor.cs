@@ -113,11 +113,19 @@ public class CreatureSpriteCollectionEditor : Editor
         EditorGUILayout.PropertyField(sizeProp);
         if (collection.spriteLayers != null && collection.spriteLayers.Count > 0)
         {
+            if (GUILayout.Button("Disable all"))
+            {
+                foreach (var layer in collection.spriteLayers)
+                {
+                    layer.preview = false;
+                    EditorUtility.SetDirty(target);
+                }
+            }
             var rect = EditorGUILayout.GetControlRect(false, 256);
             rect.x += ((rect.width - rect.height) / 2.0f);
             rect.width = rect.height;
             int count = 0;
-            foreach (var layer in ((CreatureSpriteCollection)target).spriteLayers)
+            foreach (var layer in collection.spriteLayers)
             {
                 if (count > maxLayers)
                     break;

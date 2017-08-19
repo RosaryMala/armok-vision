@@ -125,28 +125,57 @@ public class LayeredSprite : MonoBehaviour
                     switch (spriteLayerDef.hairType)
                     {
                         case CreatureSpriteLayer.HairType.Hair:
-                        case CreatureSpriteLayer.HairType.Beard:
-                        case CreatureSpriteLayer.HairType.Moustache:
-                        case CreatureSpriteLayer.HairType.Sideburns:
-                            switch (spriteLayerDef.hairStyle)
+                            if(unit.appearance == null || unit.appearance.hair == null)
                             {
-                                case HairStyle.UNKEMPT:
-                                    sprite.enabled = true;
-                                    break;
-                                case HairStyle.NEATLY_COMBED:
-                                case HairStyle.BRAIDED:
-                                case HairStyle.DOUBLE_BRAID:
-                                case HairStyle.PONY_TAILS:
-                                case HairStyle.CLEAN_SHAVEN:
-                                default:
-                                    sprite.enabled = false;
-                                    continue;
+                                sprite.enabled = spriteLayerDef.hairStyle == HairStyle.UNKEMPT;
+                            }
+                            else
+                            {
+                                sprite.enabled = (spriteLayerDef.hairStyle == unit.appearance.hair.style)
+                                    && (spriteLayerDef.hairMin <= unit.appearance.hair.length)
+                                    && ((spriteLayerDef.hairMax < 0) || (spriteLayerDef.hairMax > unit.appearance.hair.length));
+                            }
+                            break;
+                        case CreatureSpriteLayer.HairType.Beard:
+                            if (unit.appearance == null || unit.appearance.beard == null)
+                            {
+                                sprite.enabled = spriteLayerDef.hairStyle == HairStyle.UNKEMPT;
+                            }
+                            else
+                            {
+                                sprite.enabled = (spriteLayerDef.hairStyle == unit.appearance.beard.style)
+                                    && (spriteLayerDef.hairMin <= unit.appearance.beard.length)
+                                    && ((spriteLayerDef.hairMax < 0) || (spriteLayerDef.hairMax > unit.appearance.beard.length));
+                            }
+                            break;
+                        case CreatureSpriteLayer.HairType.Moustache:
+                            if (unit.appearance == null || unit.appearance.moustache == null)
+                            {
+                                sprite.enabled = spriteLayerDef.hairStyle == HairStyle.UNKEMPT;
+                            }
+                            else
+                            {
+                                sprite.enabled = (spriteLayerDef.hairStyle == unit.appearance.moustache.style)
+                                    && (spriteLayerDef.hairMin <= unit.appearance.moustache.length)
+                                    && ((spriteLayerDef.hairMax < 0) || (spriteLayerDef.hairMax > unit.appearance.moustache.length));
+                            }
+                            break;
+                        case CreatureSpriteLayer.HairType.Sideburns:
+                            if (unit.appearance == null || unit.appearance.sideburns == null)
+                            {
+                                sprite.enabled = spriteLayerDef.hairStyle == HairStyle.UNKEMPT;
+                            }
+                            else
+                            {
+                                sprite.enabled = (spriteLayerDef.hairStyle == unit.appearance.sideburns.style)
+                                    && (spriteLayerDef.hairMin <= unit.appearance.sideburns.length)
+                                    && ((spriteLayerDef.hairMax < 0) || (spriteLayerDef.hairMax > unit.appearance.sideburns.length));
                             }
                             break;
                         default:
+                            sprite.enabled = true;
                             break;
                     }
-                    sprite.enabled = true;
                     break;
                 case CreatureSpriteLayer.SpriteSource.Equipment:
                     sprite.enabled = spriteLayerDef.preview;
