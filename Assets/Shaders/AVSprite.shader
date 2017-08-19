@@ -23,6 +23,7 @@
 		#pragma target 3.0
 
 		sampler2D _MainTex;
+        float4 _MainTex_TexelSize;
         sampler2D _AlphaTex;
         fixed4 _Color;
 
@@ -49,13 +50,28 @@
 
             void surf(Input IN, inout SurfaceOutputStandard o) {
             fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
+
+            float2 alphaCoords = IN.uv_MainTex * _MainTex_TexelSize.zw;
+
+            float distance = 8;
+            float blur = 3;
+
+            float n = tex2Dlod(_MainTex, float4((alphaCoords + float2(0, distance)) * _MainTex_TexelSize.xy, 0, blur)).a;
+            float s = tex2Dlod(_MainTex, float4((alphaCoords + float2(0, -distance)) * _MainTex_TexelSize.xy, 0, blur)).a;
+            float e = tex2Dlod(_MainTex, float4((alphaCoords + float2(-distance, 0)) * _MainTex_TexelSize.xy, 0, blur)).a;
+            float w = tex2Dlod(_MainTex, float4((alphaCoords + float2(distance, 0)) * _MainTex_TexelSize.xy, 0, blur)).a;
+
+            float3 normal = normalize(float3(e - w, s - n, 0.5));
 //#if ETC1_EXTERNAL_ALPHA
 //            // get the color from an external texture (usecase: Alpha support for ETC1 on android)
 //            //c.a = tex2D(_AlphaTex, IN.uv_MainTex).r;
 //#endif //ETC1_EXTERNAL_ALPHA
+            float metal = max((IN.color.a * 2) - 1, 0);
             o.Albedo = overlay(c.rgb, IN.color.rgb);
-            o.Metallic = max((IN.color.a * 2) - 1, 0);
+            o.Metallic = metal;
             o.Alpha = c.a; // *min((IN.color.a * 2), 1);
+            o.Normal = normal;
+            o.Smoothness = lerp(0.1, 0.8, metal);
         }
 		ENDCG
 	}
