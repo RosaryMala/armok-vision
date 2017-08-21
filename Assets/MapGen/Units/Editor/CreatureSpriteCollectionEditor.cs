@@ -79,9 +79,9 @@ public class CreatureSpriteCollectionEditor : Editor
                 element.FindPropertyRelative("spriteTexture"), GUIContent.none);
             rect.xMax -= 60;
             EditorGUI.PropertyField(
-                new Rect(rect.x + rect.width - 80, rect.y, 80, EditorGUIUtility.singleLineHeight),
+                new Rect(rect.x + rect.width - 100, rect.y, 100, EditorGUIUtility.singleLineHeight),
                 element.FindPropertyRelative("positionOffset"), GUIContent.none);
-            rect.xMax -= 80;
+            rect.xMax -= 100;
             //center
             EditorGUI.PropertyField(
                 new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight),
@@ -100,6 +100,15 @@ public class CreatureSpriteCollectionEditor : Editor
         };
 
         maxLayers = list.serializedProperty.arraySize;
+    }
+
+    public static Rect getSpriteRect(Sprite sprite, Vector2 origin)
+    {
+        Rect spriteRect = sprite.rect;
+        spriteRect.position -= new Vector2(spriteRect.width, spriteRect.height);
+        spriteRect.position += origin;
+        spriteRect.position += sprite.pivot;
+        return spriteRect;
     }
 
     public override void OnInspectorGUI()
@@ -122,8 +131,8 @@ public class CreatureSpriteCollectionEditor : Editor
                 }
             }
             var rect = EditorGUILayout.GetControlRect(false, 256);
-            rect.x += ((rect.width - rect.height) / 2.0f);
-            rect.width = rect.height;
+            Vector2 origin = new Vector2(rect.xMin + rect.xMax / 2, rect.yMax);
+            //rect.width = rect.height;
             int count = 0;
             foreach (var layer in collection.spriteLayers)
             {
@@ -132,7 +141,7 @@ public class CreatureSpriteCollectionEditor : Editor
                 count++;
                 if (layer.preview && layer.spriteTexture != null)
                 {
-                    Rect targetRect = rect;
+                    Rect targetRect = getSpriteRect(layer.spriteTexture, origin);
                     targetRect.position -= (layer.positionOffset * 128);
                     if (layer.colorSource == CreatureSpriteLayer.ColorSource.None)
                         mat.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
@@ -146,6 +155,7 @@ public class CreatureSpriteCollectionEditor : Editor
                     EditorGUI.DrawPreviewTexture(targetRect, layer.spriteTexture.texture, mat, ScaleMode.StretchToFill);
                 }
             }
+            EditorGUI.DrawRect(new Rect(origin.x - 5, origin.y - 5, 10, 10), Color.magenta);
         }
         maxLayers = EditorGUILayout.IntSlider(maxLayers, 0, collection.spriteLayers.Count);
         listPosition = EditorGUILayout.BeginScrollView(listPosition);
