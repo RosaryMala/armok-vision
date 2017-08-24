@@ -42,4 +42,5 @@ MonoBehaviour:
     positionOffset: {x: 0, y: 0}
   special: 0
   profession: 103
-  standardSize: 50
+  standardSize: 205
+  standardLength: 58.96369

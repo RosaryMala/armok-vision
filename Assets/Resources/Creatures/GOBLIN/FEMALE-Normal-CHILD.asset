@@ -11,8 +11,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 453bc2fe70c290b42ae697fd9728aaf0, type: 3}
   m_Name: FEMALE-Normal-CHILD
   m_EditorClassIdentifier: 
-  race: GOBLIN
-  caste: FEMALE
+  race: GOBLIN---
+  caste: FEMALE---
   spriteLayers:
   - spriteSource: 2
     colorSource: 2
@@ -732,3 +732,4 @@ MonoBehaviour:
   special: 0
   profession: 103
   standardSize: 22594
+  standardLength: 282.70343

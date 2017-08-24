@@ -106,26 +106,20 @@ public class CreatureManager : MonoBehaviour
                     else
                     {
                         Vector3 position = GameMap.DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z);
-                        creatureList[unit.id].transform.position = position + new Vector3(0, 0.51f, 0);
+                        RaycastHit hitInfo;
+                        if (Physics.Raycast(position + new Vector3(0, 2.9f, 0), Vector3.down, out hitInfo, 3))
+                            creatureList[unit.id].transform.position = hitInfo.point;
+                        else
+                            creatureList[unit.id].transform.position = position;
                     }
                     if (unit.rider_id >= 0 && creatureList.ContainsKey(unit.rider_id))
                     {
                         creatureList[unit.id].transform.position += new Vector3(0, creatureList[unit.rider_id].localScale.y, 0);
                     }
-                    float scale;
-                    if (GameSettings.Instance.units.scaleUnits)
-                    {
-                        float baseSize = 391.0f;
-                        var layerSprite = creatureList[unit.id].GetComponent<LayeredSprite>();
-                        if(layerSprite != null && layerSprite.spriteCollection != null && layerSprite.spriteCollection.standardSize > 0)
-                        {
-                            baseSize = Mathf.Pow(layerSprite.spriteCollection.standardSize, 0.3333333333f) * 10;
-                        }
-                        scale = unit.size_info.length_cur / baseSize;
-                    }
-                    else
-                        scale = 1;
-                    creatureList[unit.id].transform.localScale = new Vector3(scale, scale, scale);
+                    UnitScaler unitScaler = creatureList[unit.id].GetComponentInChildren<UnitScaler>();
+                    if (unitScaler != null)
+                        unitScaler.UpdateSize(unit, creatureList[unit.id].GetComponentInChildren<LayeredSprite>());
+
                     CameraFacing cameraFacing = creatureList[unit.id].GetComponentInChildren<CameraFacing>();
                     if ((flags1 & UnitFlags1.on_ground) == UnitFlags1.on_ground)
                     {
@@ -135,7 +129,7 @@ public class CreatureManager : MonoBehaviour
                     }
                     else
                     {
-                        cameraFacing.transform.localPosition = new Vector3(0, 1.5f, 0);
+                        cameraFacing.transform.localPosition = new Vector3(0, 1, 0);
                         cameraFacing.enabled = true;
                     }
 

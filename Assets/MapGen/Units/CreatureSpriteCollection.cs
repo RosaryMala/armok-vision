@@ -18,4 +18,10 @@ public class CreatureSpriteCollection : ScriptableObject
     public Special special;
     public profession profession;
     public int standardSize;
+    public float standardLength;
+
+    void OnValidate()
+    {
+        standardLength = Mathf.Pow(standardSize, 1.0f / 3.0f) * 10;
+    }
 }
