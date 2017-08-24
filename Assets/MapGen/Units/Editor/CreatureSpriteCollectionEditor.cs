@@ -17,6 +17,7 @@ public class CreatureSpriteCollectionEditor : Editor
     private SerializedProperty specialProp;
     private SerializedProperty sizeProp;
     private int maxLayers;
+    private Vector2 wholePositionOffset = Vector2.zero;
 
     private void OnEnable()
     {
@@ -120,8 +121,21 @@ public class CreatureSpriteCollectionEditor : Editor
         EditorGUILayout.PropertyField(professionProp);
         EditorGUILayout.PropertyField(specialProp);
         EditorGUILayout.PropertyField(sizeProp);
+        wholePositionOffset = EditorGUILayout.Vector2Field("Offset all sprites", wholePositionOffset);
         if (collection.spriteLayers != null && collection.spriteLayers.Count > 0)
         {
+            if(wholePositionOffset.sqrMagnitude > 0)
+            {
+                if(GUILayout.Button("Apply"))
+                {
+                    foreach (var item in collection.spriteLayers)
+                    {
+                        item.positionOffset += wholePositionOffset;
+                    }
+                    wholePositionOffset = Vector2.zero;
+                    EditorUtility.SetDirty(target);
+                }
+            }
             if (GUILayout.Button("Disable all"))
             {
                 foreach (var layer in collection.spriteLayers)
@@ -134,6 +148,10 @@ public class CreatureSpriteCollectionEditor : Editor
             Vector2 origin = new Vector2(rect.xMin + rect.xMax / 2, rect.yMax);
             //rect.width = rect.height;
             int count = 0;
+            if (wholePositionOffset.sqrMagnitude > 0)
+            {
+                EditorGUI.DrawRect(new Rect(origin.x - 5 + (wholePositionOffset.x * 128), origin.y - 5 + (wholePositionOffset.y * 128), 10, 10), Color.yellow);
+            }
             foreach (var layer in collection.spriteLayers)
             {
                 if (count > maxLayers)

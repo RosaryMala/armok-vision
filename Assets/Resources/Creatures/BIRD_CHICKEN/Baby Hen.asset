@@ -9,15 +9,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 453bc2fe70c290b42ae697fd9728aaf0, type: 3}
-  m_Name: -Normal-
+  m_Name: Baby Hen
   m_EditorClassIdentifier: 
   race: BIRD_CHICKEN
-  caste: 
+  caste: FEMALE
   spriteLayers:
   - spriteSource: 0
     colorSource: 0
     token: 
-    spriteTexture: {fileID: 21300000, guid: 5285f208be3712546b165c58dda2006f, type: 3}
+    spriteTexture: {fileID: 21300000, guid: 0150bda689f72d640bdd84cd5149032c, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
     hairType: 0
@@ -26,11 +26,11 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0.02, y: -0.51}
   - spriteSource: 1
     colorSource: 2
     token: feathers
-    spriteTexture: {fileID: 21300000, guid: 64d90d3f9d9fd0e4ba930618198ad3ac, type: 3}
+    spriteTexture: {fileID: 21300000, guid: c1b58ebe51e4a6c4c82f3d6f5b5c9aa5, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
     hairType: 0
@@ -39,7 +39,8 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0.02, y: -0.51}
   special: 0
-  profession: -1
-  standardSize: 3000
+  profession: 103
+  standardSize: 205
+  standardLength: 58.96369
