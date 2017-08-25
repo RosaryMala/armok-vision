@@ -26,7 +26,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.45}
   - spriteSource: 1
     colorSource: 2
     token: wool
@@ -39,7 +39,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.45}
   - spriteSource: 0
     colorSource: 0
     token: 
@@ -52,6 +52,9 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.45}
   special: 0
   profession: 103
+  standardSize: 8080
+  standardArea: 402.66232
+  standardLength: 200.66449

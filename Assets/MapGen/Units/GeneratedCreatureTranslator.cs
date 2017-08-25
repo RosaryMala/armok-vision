@@ -44,6 +44,14 @@ public class GeneratedCreatureTranslator
         var creatureRaw = DFConnection.Instance.CreatureRaws.Find(x => x.creature_id == race);
         if (creatureRaw != null)
             return new CreatureRaw[] { creatureRaw };
+        var tokenParts = race.Split('_');
+        switch (tokenParts[0])
+        {
+            case "WERE":
+                return DFConnection.Instance.CreatureRaws.FindAll(x => x.name[0].ToUpper() == ("were" + tokenParts[1]).ToUpper()).ToArray();
+            default:
+                break;
+        }
         return null;
     }
 }

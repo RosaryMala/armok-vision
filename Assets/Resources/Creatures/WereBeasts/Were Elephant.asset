@@ -9,15 +9,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 453bc2fe70c290b42ae697fd9728aaf0, type: 3}
-  m_Name: -Normal-CHILD
+  m_Name: Were Elephant
   m_EditorClassIdentifier: 
-  race: WATER_BUFFALO
+  race: WERE_ELEPHANT
   caste: 
   spriteLayers:
   - spriteSource: 1
     colorSource: 2
     token: skin
-    spriteTexture: {fileID: 21300000, guid: c177f3269368eca4094aff6c5a7c73d7, type: 3}
+    spriteTexture: {fileID: 21300000, guid: fd06d85f536d27f43b2f6761e980b866, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
     hairType: 0
@@ -26,11 +26,11 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: -0.4}
+    positionOffset: {x: 0, y: -0.12}
   - spriteSource: 1
     colorSource: 2
-    token: hair
-    spriteTexture: {fileID: 21300000, guid: 57265f22cd7359e459cbb0391ceac772, type: 3}
+    token: skin
+    spriteTexture: {fileID: 21300000, guid: 12c90272343af42478a8486638ca3e17, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
     hairType: 0
@@ -39,11 +39,11 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: -0.4}
+    positionOffset: {x: 0, y: -0.12}
   - spriteSource: 0
     colorSource: 0
     token: 
-    spriteTexture: {fileID: 21300000, guid: e2bcedf1db57d4e49a264dd254104f20, type: 3}
+    spriteTexture: {fileID: 21300000, guid: 81eab11610e70634fbd5247d02590fce, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
     hairType: 0
@@ -52,9 +52,9 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: -0.4}
+    positionOffset: {x: 0, y: -0.12}
   special: 0
-  profession: 103
-  standardSize: 23188
-  standardArea: 813.15924
-  standardLength: 285.1595
+  profession: -1
+  standardSize: 47261
+  standardArea: 1307.1799
+  standardLength: 361.5494

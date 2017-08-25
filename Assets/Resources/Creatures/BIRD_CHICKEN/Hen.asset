@@ -26,7 +26,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: -0.06, y: -0.44}
+    positionOffset: {x: -0.06, y: -0.46}
   - spriteSource: 1
     colorSource: 2
     token: feathers
@@ -39,8 +39,9 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: -0.06, y: -0.44}
+    positionOffset: {x: -0.06, y: -0.46}
   special: 0
   profession: -1
   standardSize: 8830
+  standardArea: 427.20914
   standardLength: 206.69038

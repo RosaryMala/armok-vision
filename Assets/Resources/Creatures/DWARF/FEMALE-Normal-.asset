@@ -26,7 +26,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_CAPE
@@ -39,7 +39,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 1
     colorSource: 2
     token: hair
@@ -52,7 +52,7 @@ MonoBehaviour:
     hairMax: 200
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 1
     colorSource: 2
     token: skin
@@ -65,7 +65,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_PANTS_THONG
@@ -78,7 +78,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_PANTS_LEGGINGS
@@ -91,7 +91,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 0
     colorSource: 0
     token: ITEM_PANTS_LEGGINGS
@@ -104,7 +104,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 1
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_SOCKS
@@ -117,7 +117,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_SOCKS
@@ -130,7 +130,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 1
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_CHAUSSE
@@ -143,7 +143,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_CHAUSSE
@@ -156,7 +156,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 1
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_SANDAL
@@ -169,7 +169,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_SANDAL
@@ -182,7 +182,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 1
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_SHOES
@@ -195,7 +195,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_SHOES
@@ -208,7 +208,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 1
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_BOOTS_LOW
@@ -221,7 +221,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_BOOTS_LOW
@@ -234,7 +234,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 1
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_BOOTS
@@ -247,7 +247,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_SHOES_BOOTS
@@ -260,7 +260,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 1
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_PANTS_BRAIES
@@ -273,7 +273,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_PANTS_PANTS
@@ -286,7 +286,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_PANTS_LOINCLOTH
@@ -299,7 +299,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_PANTS_GREAVES
@@ -312,7 +312,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_PANTS_SKIRT_SHORT
@@ -325,7 +325,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_PANTS_SKIRT
@@ -338,7 +338,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_PANTS_SKIRT_LONG
@@ -351,7 +351,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_SHIRT
@@ -364,7 +364,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_VEST
@@ -377,7 +377,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_DRESS
@@ -390,7 +390,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_MAIL_SHIRT
@@ -403,7 +403,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 0
     colorSource: 0
     token: ITEM_ARMOR_MAIL_SHIRT
@@ -416,7 +416,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 1
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_GLOVES_GLOVES
@@ -429,7 +429,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_GLOVES_GLOVES
@@ -442,7 +442,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 1
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_GLOVES_MITTENS
@@ -455,7 +455,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_GLOVES_MITTENS
@@ -468,7 +468,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 1
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_TUNIC
@@ -481,7 +481,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_TOGA
@@ -494,7 +494,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_COAT
@@ -507,7 +507,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_CAPE
@@ -520,7 +520,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_ROBE
@@ -533,7 +533,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_LEATHER
@@ -546,7 +546,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_BREASTPLATE
@@ -559,7 +559,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_GLOVES_GAUNTLETS
@@ -572,7 +572,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_GLOVES_GAUNTLETS
@@ -585,7 +585,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 1
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_ARMOR_CLOAK
@@ -598,7 +598,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 1
     colorSource: 2
     token: skin
@@ -611,7 +611,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 1
     colorSource: 2
     token: hair
@@ -624,7 +624,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 1
     colorSource: 2
     token: hair
@@ -637,7 +637,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 1
     colorSource: 2
     token: hair
@@ -650,7 +650,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 1
     colorSource: 2
     token: hair
@@ -663,7 +663,7 @@ MonoBehaviour:
     hairMax: 200
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 1
     colorSource: 2
     token: hair
@@ -676,7 +676,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 1
     colorSource: 2
     token: hair
@@ -689,7 +689,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 1
     colorSource: 2
     token: hair
@@ -702,7 +702,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 1
     colorSource: 2
     token: hair
@@ -715,7 +715,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 1
     colorSource: 2
     token: hair
@@ -728,7 +728,7 @@ MonoBehaviour:
     hairMax: 200
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 1
     colorSource: 2
     token: hair
@@ -741,7 +741,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 1
     colorSource: 2
     token: hair
@@ -754,7 +754,7 @@ MonoBehaviour:
     hairMax: 200
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 1
     colorSource: 2
     token: hair
@@ -767,7 +767,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 0
     colorSource: 0
     token: 
@@ -780,7 +780,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 1
     colorSource: 2
     token: eyes
@@ -793,7 +793,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 2
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_HELM_SCARF_HEAD
@@ -806,7 +806,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_HELM_CAP
@@ -819,7 +819,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_HELM_VEIL_HEAD
@@ -832,7 +832,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_HELM_VEIL_FACE
@@ -845,7 +845,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_HELM_MASK
@@ -858,7 +858,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_HELM_HOOD
@@ -871,7 +871,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_HELM_HELM
@@ -884,7 +884,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
     token: ITEM_HELM_TURBAN
@@ -897,7 +897,9 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.27}
   special: 0
   profession: -1
   standardSize: 60000
+  standardArea: 1532.6191
+  standardLength: 391.48682

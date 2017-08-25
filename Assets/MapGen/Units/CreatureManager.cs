@@ -107,7 +107,7 @@ public class CreatureManager : MonoBehaviour
                     {
                         Vector3 position = GameMap.DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z);
                         RaycastHit hitInfo;
-                        if (Physics.Raycast(position + new Vector3(0, 2.9f, 0), Vector3.down, out hitInfo, 3))
+                        if (Physics.Raycast(position + new Vector3(0, 2.9f, 0), Vector3.down, out hitInfo, 3, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
                             creatureList[unit.id].transform.position = hitInfo.point;
                         else
                             creatureList[unit.id].transform.position = position;

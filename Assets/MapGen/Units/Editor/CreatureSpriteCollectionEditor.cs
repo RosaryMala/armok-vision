@@ -15,7 +15,6 @@ public class CreatureSpriteCollectionEditor : Editor
     private SerializedProperty casteProp;
     private SerializedProperty professionProp;
     private SerializedProperty specialProp;
-    private SerializedProperty sizeProp;
     private int maxLayers;
     private Vector2 wholePositionOffset = Vector2.zero;
 
@@ -26,7 +25,6 @@ public class CreatureSpriteCollectionEditor : Editor
         casteProp = serializedObject.FindProperty("caste");
         professionProp = serializedObject.FindProperty("profession");
         specialProp = serializedObject.FindProperty("special");
-        sizeProp = serializedObject.FindProperty("standardSize");
 
         mat = new Material(Shader.Find("Hidden/TransparentPreview"));
         rectID = Shader.PropertyToID("_Rect");
@@ -120,7 +118,27 @@ public class CreatureSpriteCollectionEditor : Editor
         EditorGUILayout.PropertyField(casteProp);
         EditorGUILayout.PropertyField(professionProp);
         EditorGUILayout.PropertyField(specialProp);
-        EditorGUILayout.PropertyField(sizeProp);
+        EditorGUI.BeginChangeCheck();
+        collection.standardSize = EditorGUILayout.DelayedFloatField("Standard Size", collection.standardSize);
+        if (EditorGUI.EndChangeCheck())
+        {
+            collection.standardLength = Mathf.Pow(collection.standardSize, 1.0f / 3.0f) * 10;
+            collection.standardArea = Mathf.Pow(collection.standardSize, 2.0f / 3.0f);
+        }
+        EditorGUI.BeginChangeCheck();
+        collection.standardArea = EditorGUILayout.DelayedFloatField("Standard Area", collection.standardArea);
+        if (EditorGUI.EndChangeCheck())
+        {
+            collection.standardLength = Mathf.Pow(collection.standardArea, 1.0f / 2.0f) * 10;
+            collection.standardSize = Mathf.Pow(collection.standardArea, 3.0f / 2.0f);
+        }
+        EditorGUI.BeginChangeCheck();
+        collection.standardLength = EditorGUILayout.DelayedFloatField("Standard Length", collection.standardLength);
+        if (EditorGUI.EndChangeCheck())
+        {
+            collection.standardArea = Mathf.Pow(collection.standardLength / 10, 2.0f);
+            collection.standardSize = Mathf.Pow(collection.standardLength / 10, 3.0f);
+        }
         wholePositionOffset = EditorGUILayout.Vector2Field("Offset all sprites", wholePositionOffset);
         if (collection.spriteLayers != null && collection.spriteLayers.Count > 0)
         {

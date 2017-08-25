@@ -26,7 +26,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.12}
   - spriteSource: 0
     colorSource: 0
     token: 
@@ -39,7 +39,9 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.12}
   special: 2
   profession: -1
   standardSize: 47261
+  standardArea: 1307.1799
+  standardLength: 361.5494

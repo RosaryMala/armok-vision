@@ -9,15 +9,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 453bc2fe70c290b42ae697fd9728aaf0, type: 3}
-  m_Name: -Normal-CHILD
+  m_Name: Billy Goat
   m_EditorClassIdentifier: 
   race: GOAT
-  caste: 
+  caste: MALE
   spriteLayers:
   - spriteSource: 1
     colorSource: 2
     token: hair
-    spriteTexture: {fileID: 21300000, guid: 7efec6fd27aca454393513efebed1e56, type: 3}
+    spriteTexture: {fileID: 21300000, guid: 354ae1efcbb7c6e4abccfdf6229e9c21, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
     hairType: 0
@@ -26,11 +26,24 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.37}
+  - spriteSource: 1
+    colorSource: 2
+    token: beard
+    spriteTexture: {fileID: 21300000, guid: 436f915c717444e48b100954f45f8b44, type: 3}
+    preview: 1
+    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    hairType: 0
+    hairStyle: 0
+    hairMin: -1
+    hairMax: -1
+    patternIndex: 0
+    metal: 0
+    positionOffset: {x: 0, y: -0.37}
   - spriteSource: 0
     colorSource: 0
     token: 
-    spriteTexture: {fileID: 21300000, guid: e60f41d6cd436f641bd9af15d6a29d17, type: 3}
+    spriteTexture: {fileID: 21300000, guid: a0c2fa5afb50d5a40a72c52e44051779, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
     hairType: 0
@@ -39,7 +52,9 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.37}
   special: 0
-  profession: 103
-  standardSize: 5000
+  profession: -1
+  standardSize: 33984
+  standardArea: 1049.1794
+  standardLength: 323.91037
