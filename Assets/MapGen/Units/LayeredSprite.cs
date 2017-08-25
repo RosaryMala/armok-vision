@@ -21,12 +21,30 @@ public class LayeredSprite : MonoBehaviour
     }
 
     public float gap = 0.0001f;
-    public CreatureSpriteCollection spriteCollection;
-    private List<SpriteRenderer> spriteList;
+    public CreatureSpriteCollection SpriteCollection
+    {
+        get
+        {
+            return currentSpriteCollection;
+        }
+        set
+        {
+            if(value != currentSpriteCollection)
+            {
+                currentSpriteCollection = value;
+                if (currentSpriteCollection == null)
+                    Clear();
+                else
+                    BuildSpriteLayers(currentSpriteCollection.spriteLayers);
+            }
+        }
+    }
+    private CreatureSpriteCollection currentSpriteCollection = null;
+    private List<SpriteRenderer> spriteList = new List<SpriteRenderer>();
 
     private void Start()
     {
-        if (spriteCollection == null)
+        if (SpriteCollection == null)
         {
             enabled = false;
             return;
@@ -45,7 +63,7 @@ public class LayeredSprite : MonoBehaviour
 
     private void BuildSpriteLayers(List<CreatureSpriteLayer> spriteLayers)
     {
-        spriteList = new List<SpriteRenderer>();
+        Clear();
         float depth = 0;
         foreach (var layer in spriteLayers)
         {
@@ -67,13 +85,20 @@ public class LayeredSprite : MonoBehaviour
         }
     }
 
+    private void Clear()
+    {
+        foreach (var sprite in spriteList)
+        {
+            Destroy(sprite.gameObject);
+        }
+        spriteList.Clear();
+    }
+
     internal void UpdateLayers(UnitDefinition unit, CreatureRaw creatureRaw, CasteRaw casteRaw)
     {
-        if (spriteList == null)
-            BuildSpriteLayers(spriteCollection.spriteLayers);
         for (int i = 0; i < spriteList.Count; i++)
         {
-            var spriteLayerDef = spriteCollection.spriteLayers[i];
+            var spriteLayerDef = SpriteCollection.spriteLayers[i];
             var sprite = spriteList[i];
             switch (spriteLayerDef.spriteSource)
             {
@@ -100,22 +125,19 @@ public class LayeredSprite : MonoBehaviour
                             sprite.color = spriteLayerDef.color;
                             break;
                         case CreatureSpriteLayer.ColorSource.Material:
-                            int colorModIndex = -1;
-                            for (int j = 0; j < casteRaw.color_modifiers.Count; j++)
+                            ColorDefinition unitColor = new ColorDefinition();
+                            int colorModIndex = casteRaw.color_modifiers.FindIndex(x => x.part == spriteLayerDef.token && x.start_date == 0);
+                            if(colorModIndex >= 0)
                             {
-                                if(casteRaw.color_modifiers[j].part == spriteLayerDef.token && casteRaw.color_modifiers[j].start_date == 0)
-                                {
-                                    colorModIndex = j;
-                                    break;
-                                }
+                                unitColor = casteRaw.color_modifiers[colorModIndex].patterns[unit.appearance.colors[colorModIndex]].colors[spriteLayerDef.patternIndex];
+                                sprite.color = new Color32((byte)unitColor.red, (byte)unitColor.green, (byte)unitColor.blue, 128);
                             }
-                            if(colorModIndex == -1)
+                            else
                             {
-                                sprite.enabled = false;
-                                continue;
+                                int tissueIndex = creatureRaw.tissues.FindIndex(x => x.name == spriteLayerDef.token);
+                                if (tissueIndex >= 0)
+                                    sprite.color = ContentLoader.GetColor(creatureRaw.tissues[tissueIndex].material);
                             }
-                            var unitColor = casteRaw.color_modifiers[colorModIndex].patterns[unit.appearance.colors[colorModIndex]].colors[spriteLayerDef.patternIndex];
-                            sprite.color = new Color32((byte)unitColor.red, (byte)unitColor.green, (byte)unitColor.blue, 128);
                             break;
                         case CreatureSpriteLayer.ColorSource.Job:
                             sprite.color = new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 0.5f);

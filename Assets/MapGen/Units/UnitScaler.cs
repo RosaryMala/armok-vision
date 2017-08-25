@@ -9,9 +9,9 @@ public class UnitScaler : MonoBehaviour {
         if (GameSettings.Instance.units.scaleUnits)
         {
             float baseSize = 391.0f;
-            if (layeredSprite != null && layeredSprite.spriteCollection != null && layeredSprite.spriteCollection.standardLength > 0)
+            if (layeredSprite != null && layeredSprite.SpriteCollection != null && layeredSprite.SpriteCollection.standardLength > 0)
             {
-                baseSize = layeredSprite.spriteCollection.standardLength;
+                baseSize = layeredSprite.SpriteCollection.standardLength;
             }
             scale = unit.size_info.length_cur / baseSize;
         }
