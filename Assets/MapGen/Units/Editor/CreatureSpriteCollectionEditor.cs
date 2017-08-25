@@ -63,6 +63,10 @@ public class CreatureSpriteCollectionEditor : Editor
                       element.FindPropertyRelative("hairMax"), GUIContent.none);
                     rect.xMin += 30;
                 }
+                EditorGUI.PropertyField(
+                    new Rect(rect.x, rect.y, 40, EditorGUIUtility.singleLineHeight),
+                    element.FindPropertyRelative("patternIndex"), GUIContent.none);
+                rect.xMin += 40;
             }
             //right side
             EditorGUI.PropertyField(
