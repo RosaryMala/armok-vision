@@ -26,7 +26,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.33}
   - spriteSource: 1
     colorSource: 2
     token: skin
@@ -39,7 +39,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.33}
   - spriteSource: 0
     colorSource: 0
     token: 
@@ -52,7 +52,7 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 0
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.33}
   - spriteSource: 1
     colorSource: 2
     token: eyes
@@ -65,7 +65,8 @@ MonoBehaviour:
     hairMax: -1
     patternIndex: 2
     metal: 0
-    positionOffset: {x: 0, y: 0}
+    positionOffset: {x: 0, y: -0.33}
   special: 0
   profession: 104
   standardSize: 0
+  standardLength: 0

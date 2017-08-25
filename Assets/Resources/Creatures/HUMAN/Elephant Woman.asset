@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 453bc2fe70c290b42ae697fd9728aaf0, type: 3}
   m_Name: Elephant Woman
   m_EditorClassIdentifier: 
-  race: HUMAN
+  race: ELEPHANT_MAN
   caste: FEMALE
   spriteLayers:
   - spriteSource: 2
