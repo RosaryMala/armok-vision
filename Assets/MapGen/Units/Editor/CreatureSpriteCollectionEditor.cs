@@ -174,8 +174,8 @@ public class CreatureSpriteCollectionEditor : Editor
                 }
             }
             EditorGUI.DrawRect(new Rect(origin.x - 5, origin.y - 5, 10, 10), Color.magenta);
+            maxLayers = EditorGUILayout.IntSlider(maxLayers, 0, collection.spriteLayers.Count);
         }
-        maxLayers = EditorGUILayout.IntSlider(maxLayers, 0, collection.spriteLayers.Count);
         listPosition = EditorGUILayout.BeginScrollView(listPosition);
         list.DoLayoutList();
         EditorGUILayout.EndScrollView();

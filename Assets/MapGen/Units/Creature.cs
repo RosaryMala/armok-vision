@@ -62,17 +62,17 @@ public class Creature : MonoBehaviour
 
         var layers = LayeredSpriteManager.Instance.GetCreatureSprite(unit);
 
-        if (layeredSprite != null && layers != null)
+        if (layers != null)
         {
-            layeredSprite.spriteCollection = layers;
+            layeredSprite.SpriteCollection = layers;
             layeredSprite.enabled = true;
             legacySprite.enabled = false;
             layeredSprite.UpdateLayers(unit, creatureRaw, casteRaw);
         }
-        else if (legacySprite != null)
+        else
         {
-            if(layeredSprite != null)
-                layeredSprite.enabled = false;
+            layeredSprite.SpriteCollection = layers;
+            layeredSprite.enabled = false;
             legacySprite.enabled = true;
             UpdateTileCreature();
         }

@@ -30,22 +30,26 @@ public class LayeredSpriteManager : MonoBehaviour
         foreach (var spriteSet in spriteSetList)
         {
             MatPairStruct raceID = new MatPairStruct(-1, -1);
-            var raceRaw = DFConnection.Instance.CreatureRaws.Find(x => x.creature_id == spriteSet.race);
-            if (raceRaw == null)
+            //With generated creatures, the same sprite can potentially match more than one creature.
+            var raceRawList = GeneratedCreatureTranslator.GetCreatureRaw(spriteSet.race);
+            if (raceRawList == null)
                 continue;
-            raceID = new MatPairStruct(raceRaw.index, -1);
-            if (!string.IsNullOrEmpty(spriteSet.caste))
+            foreach (var raceRaw in raceRawList)
             {
-                var casteRaw = raceRaw.caste.Find(x => x.caste_id == spriteSet.caste);
-                if (casteRaw == null)
-                    continue;
-                raceID = new MatPairStruct(raceID.mat_type, casteRaw.index);
+                raceID = new MatPairStruct(raceRaw.index, -1);
+                if (!string.IsNullOrEmpty(spriteSet.caste))
+                {
+                    var casteRaw = raceRaw.caste.Find(x => x.caste_id == spriteSet.caste);
+                    if (casteRaw == null)
+                        continue;
+                    raceID = new MatPairStruct(raceID.mat_type, casteRaw.index);
+                }
+                if (!spriteSets.ContainsKey(raceID))
+                    spriteSets[raceID] = new Dictionary<CreatureSpriteCollection.Special, Dictionary<profession, CreatureSpriteCollection>>();
+                if (!spriteSets[raceID].ContainsKey(spriteSet.special))
+                    spriteSets[raceID][spriteSet.special] = new Dictionary<profession, CreatureSpriteCollection>();
+                spriteSets[raceID][spriteSet.special][spriteSet.profession] = spriteSet;
             }
-            if (!spriteSets.ContainsKey(raceID))
-                spriteSets[raceID] = new Dictionary<CreatureSpriteCollection.Special, Dictionary<profession, CreatureSpriteCollection>>();
-            if (!spriteSets[raceID].ContainsKey(spriteSet.special))
-                spriteSets[raceID][spriteSet.special] = new Dictionary<profession, CreatureSpriteCollection>();
-            spriteSets[raceID][spriteSet.special][spriteSet.profession] = spriteSet;
         }
     }
 
