@@ -487,7 +487,7 @@ MonoBehaviour:
     token: ITEM_ARMOR_COAT
     spriteTexture: {fileID: 21300000, guid: eb239283da17778488d31172cb128466, type: 3}
     preview: 1
-    color: {r: 0.19117647, g: 0.19117647, b: 0.19117647, a: 0.5019608}
+    color: {r: 0.74264705, g: 0.57423335, b: 0.273032, a: 0.5019608}
     hairType: 0
     hairStyle: 0
     hairMin: -1
