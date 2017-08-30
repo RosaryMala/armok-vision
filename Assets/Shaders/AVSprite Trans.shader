@@ -77,5 +77,5 @@
         }
 		ENDCG
 	}
-	FallBack "Diffuse"
+	FallBack "Unlit/AVSprite Shadow"
 }
