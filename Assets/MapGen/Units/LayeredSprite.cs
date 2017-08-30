@@ -9,6 +9,7 @@ using DF.Enums;
 public class LayeredSprite : MonoBehaviour
 {
     private static Material _spriteMat;
+    private static Material _spriteMatTrans;
 
     public static Material SpriteMat
     {
@@ -17,6 +18,15 @@ public class LayeredSprite : MonoBehaviour
             if (_spriteMat == null)
                 _spriteMat = Resources.Load<Material>("SpriteMat");
             return _spriteMat;
+        }
+    }
+    public static Material SpriteMatTrans
+    {
+        get
+        {
+            if (_spriteMatTrans == null)
+                _spriteMatTrans = Resources.Load<Material>("SpriteMatTrans");
+            return _spriteMatTrans;
         }
     }
 
@@ -72,7 +82,10 @@ public class LayeredSprite : MonoBehaviour
             var sr = go.AddComponent<SpriteRenderer>();
             sr.color = layer.color;
             sr.sprite = layer.spriteTexture;
-            sr.sharedMaterial = SpriteMat;
+            if(layer.color.a < 0.5f)
+                sr.sharedMaterial = SpriteMatTrans;
+            else
+                sr.sharedMaterial = SpriteMat;
             sr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
             sr.receiveShadows = true;
             var pos = go.transform.localPosition;
@@ -241,6 +254,11 @@ public class LayeredSprite : MonoBehaviour
                     sprite.enabled = false;
                     break;
             }
+            if (sprite.color.a < 0.5f)
+                sprite.sharedMaterial = SpriteMatTrans;
+            else
+                sprite.sharedMaterial = SpriteMat;
+
         }
     }
 }
