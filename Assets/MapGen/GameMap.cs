@@ -302,6 +302,7 @@ public class GameMap : MonoBehaviour
                     creatures[creatureCaste] = creatureDef;
                 }
             }
+            GeneratedCreatureTranslator.AddFakeCreaturesToList(creatures);
             if (GameSettings.Instance.debug.saveCreatureList)
                 SaveMaterialList(creatures, Path.Combine(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), Application.productName), "CreatureList.csv"));
         }
@@ -949,20 +950,21 @@ public class GameMap : MonoBehaviour
     {
         if (DFConnection.Instance.NetTiletypeList == null)
             return;
+        string fileName = Path.Combine(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), Application.productName), "TiletypeList.csv");
         try
         {
-            File.Delete("TiletypeList.csv");
+            File.Delete(fileName);
         }
         catch (IOException)
         {
             return;
         }
-        using (StreamWriter writer = new StreamWriter("TiletypeList.csv"))
+        using (StreamWriter writer = new StreamWriter(fileName))
         {
             foreach (Tiletype item in DFConnection.Instance.NetTiletypeList.tiletype_list)
             {
-                writer.WriteLine(
-                    item.name + ";" +
+                writer.WriteLine("\"" + 
+                    item.name + "\"," +
                     item.shape + ":" +
                     item.special + ":" +
                     item.material + ":" +
@@ -991,9 +993,9 @@ public class GameMap : MonoBehaviour
         {
             foreach (var item in DFConnection.Instance.NetBuildingList.building_list)
             {
-                writer.WriteLine(
-                    item.name + ";" +
-                    item.id + ";" +
+                writer.WriteLine("\"" +
+                    item.name + "\",\"" +
+                    item.id + "\"," +
                     item.building_type.building_type + ":" +
                     item.building_type.building_subtype + ":" +
                     item.building_type.building_custom
@@ -1017,10 +1019,10 @@ public class GameMap : MonoBehaviour
         {
             foreach (var item in list)
             {
-                writer.WriteLine(
-                    item.Value.name + ";" +
-                    item.Value.id + ";" +
-                    item.Value.mat_pair.mat_type + ";" +
+                writer.WriteLine("\"" + 
+                    item.Value.name + "\",\"" +
+                    item.Value.id + "\"," +
+                    item.Value.mat_pair.mat_type + "," +
                     item.Value.mat_pair.mat_index
                     );
             }
@@ -1048,14 +1050,15 @@ public class GameMap : MonoBehaviour
                 {
                     foreach (var print in growth.Value)
                     {
+                        writer.Write("\"");
                         writer.Write(plant.Key);
-                        writer.Write(":");
+                        writer.Write("\",\"");
                         writer.Write(growth.Key);
-                        writer.Write(":");
+                        writer.Write("\",\"");
                         writer.Write(print.Key);
-                        writer.Write(";");
+                        writer.Write("\",\"");
                         writer.Write(print.Value);
-                        writer.Write(";");
+                        writer.Write("\"");
                         //var index = print.Value;
                         //if (index.building_type >= 0)
                         //{

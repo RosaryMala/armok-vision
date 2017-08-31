@@ -17,7 +17,7 @@
 		
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf Standard fullforwardshadows alpha vertex:vert
+		#pragma surface surf Standard fullforwardshadows alpha:fade vertex:vert
         //#pragma multi_compile _ ETC1_EXTERNAL_ALPHA
 
 		// Use shader model 3.0 target, to get nicer looking lighting
@@ -52,7 +52,7 @@
 
         void surf(Input IN, inout SurfaceOutputStandard o) {
             fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
-            clip(c.a - _Cutoff);
+            clip(c.a - _Cutoff + 1 - IN.color.a);
             float2 alphaCoords = IN.uv_MainTex * _MainTex_TexelSize.zw;
 
             float distance = 8;

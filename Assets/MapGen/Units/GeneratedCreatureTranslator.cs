@@ -1,6 +1,7 @@
 ﻿
 
 using System;
+using System.Collections.Generic;
 using RemoteFortressReader;
 
 public class GeneratedCreatureTranslator
@@ -53,5 +54,28 @@ public class GeneratedCreatureTranslator
                 break;
         }
         return null;
+    }
+    static int count;
+    internal static void AddFakeCreaturesToList(Dictionary<MatPairStruct, MaterialDefinition> creatures)
+    {
+        count = -2;
+        AddFakeCreaturesToList(creatures, "ANGEL");
+        AddFakeCreaturesToList(creatures, "DEMON");
+        AddFakeCreaturesToList(creatures, "FB");
+        AddFakeCreaturesToList(creatures, "TITAN");
+        AddFakeCreaturesToList(creatures, "WERE");
+    }
+    internal static void AddFakeCreaturesToList(Dictionary<MatPairStruct, MaterialDefinition> creatures, string prefix)
+    {
+        foreach (string template in templateList)
+        {
+            MatPairStruct creatureCaste = new MatPairStruct(count, -1);
+            MaterialDefinition creatureDef = new MaterialDefinition();
+            creatureDef.mat_pair = creatureCaste;
+            creatureDef.id = prefix.ToUpper() + "_" + template.ToUpper() + ":DEFAULT";
+            creatureDef.name = prefix.ToLower() + " " + template.ToLower();
+            creatures[creatureCaste] = creatureDef;
+            count--;
+        }
     }
 }
