@@ -9,6 +9,9 @@ public struct MatPairStruct : IComparable
     public int Type { get { return mat_type; } }
     public int SubType { get { return mat_index; } }
 
+    public int Race { get { return mat_type; } }
+    public int Caste { get { return mat_index; } }
+
     public static implicit operator MatPairStruct(MatPair input)
     {
         if (input == null)

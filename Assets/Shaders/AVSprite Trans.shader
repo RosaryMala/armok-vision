@@ -1,8 +1,8 @@
 ﻿Shader "Custom/AVSprite Trans" {
 	Properties {
-        [PerRendererData] _MainTex ("Albedo (RGB)", 2D) = "white" {}
+        [PerRendererData] _MainTex("Albedo (RGB)", 2D) = "white" {}
         _Color("Tint", Color) = (1,1,1,1)
-        [MaterialToggle] PixelSnap("Pixel snap", Float) = 0
+        _Cutoff("Alpha cutoff", Range(0,1)) = 0.5
     }
 	SubShader {
         Tags
@@ -23,9 +23,11 @@
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 3.0
 
-		sampler2D _MainTex;
+        sampler2D _MainTex;
+        float4 _MainTex_TexelSize;
         sampler2D _AlphaTex;
         fixed4 _Color;
+        float _Cutoff;
 
 		struct Input {
 			float2 uv_MainTex;
@@ -34,10 +36,6 @@
 
         void vert(inout appdata_full v, out Input o)
         {
-#if defined(PIXELSNAP_ON)
-            v.vertex = UnityPixelSnap(v.vertex);
-#endif
-
             UNITY_INITIALIZE_OUTPUT(Input, o);
             o.color = v.color * _Color;
         }
@@ -52,18 +50,32 @@
 
 #include "blend.cginc"
 
-            void surf(Input IN, inout SurfaceOutputStandard o) {
+        void surf(Input IN, inout SurfaceOutputStandard o) {
             fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
-            clip(c.a - 0.5);
-//#if ETC1_EXTERNAL_ALPHA
-//            // get the color from an external texture (usecase: Alpha support for ETC1 on android)
-//            //c.a = tex2D(_AlphaTex, IN.uv_MainTex).r;
-//#endif //ETC1_EXTERNAL_ALPHA
+            clip(c.a - _Cutoff);
+            float2 alphaCoords = IN.uv_MainTex * _MainTex_TexelSize.zw;
+
+            float distance = 8;
+            float blur = 3;
+
+            float n = tex2Dlod(_MainTex, float4((alphaCoords + float2(0, distance)) * _MainTex_TexelSize.xy, 0, blur)).a;
+            float s = tex2Dlod(_MainTex, float4((alphaCoords + float2(0, -distance)) * _MainTex_TexelSize.xy, 0, blur)).a;
+            float e = tex2Dlod(_MainTex, float4((alphaCoords + float2(-distance, 0)) * _MainTex_TexelSize.xy, 0, blur)).a;
+            float w = tex2Dlod(_MainTex, float4((alphaCoords + float2(distance, 0)) * _MainTex_TexelSize.xy, 0, blur)).a;
+
+            float3 normal = normalize(float3(e - w, s - n, 0.5));
+            //#if ETC1_EXTERNAL_ALPHA
+            //            // get the color from an external texture (usecase: Alpha support for ETC1 on android)
+            //            //c.a = tex2D(_AlphaTex, IN.uv_MainTex).r;
+            //#endif //ETC1_EXTERNAL_ALPHA
+            float metal = max((IN.color.a * 2) - 1, 0);
             o.Albedo = overlay(c.rgb, IN.color.rgb);
-            o.Metallic = max((IN.color.a * 2) - 1, 0);
+            o.Metallic = metal;
             o.Alpha = c.a * min((IN.color.a * 2), 1);
+            o.Normal = normal;
+            o.Smoothness = lerp(0.1, 0.8, metal);
         }
 		ENDCG
 	}
-	FallBack "Diffuse"
+	FallBack "Unlit/AVSprite Shadow"
 }

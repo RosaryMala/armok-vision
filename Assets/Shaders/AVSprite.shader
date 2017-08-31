@@ -48,7 +48,7 @@
 
 #include "blend.cginc"
 
-            void surf(Input IN, inout SurfaceOutputStandard o) {
+        void surf(Input IN, inout SurfaceOutputStandard o) {
             fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
 
             float2 alphaCoords = IN.uv_MainTex * _MainTex_TexelSize.zw;
