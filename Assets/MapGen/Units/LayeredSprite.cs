@@ -150,10 +150,22 @@ public class LayeredSprite : MonoBehaviour
                                 int tissueIndex = creatureRaw.tissues.FindIndex(x => x.name == spriteLayerDef.token);
                                 if (tissueIndex >= 0)
                                     sprite.color = ContentLoader.GetColor(creatureRaw.tissues[tissueIndex].material);
+                                else
+                                    sprite.enabled = false;
+                                break;
                             }
                             break;
                         case CreatureSpriteLayer.ColorSource.Job:
                             sprite.color = new Color(unit.profession_color.red / 255.0f, unit.profession_color.green / 255.0f, unit.profession_color.blue / 255.0f, 0.5f);
+                            break;
+                        case CreatureSpriteLayer.ColorSource.BodyPart:
+                            var part = casteRaw.body_parts.Find(x => x.token == spriteLayerDef.token);
+                            if(part == null)
+                            {
+                                sprite.enabled = false;
+                                break;
+                            }
+                            sprite.color = ContentLoader.GetColor(creatureRaw.tissues[part.layers[0].tissue_id].material);
                             break;
                         default:
                             sprite.color = new Color32(128, 128, 128, 128);

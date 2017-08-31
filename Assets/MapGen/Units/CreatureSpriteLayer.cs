@@ -8,7 +8,7 @@ public class CreatureSpriteLayer
     {
         Static,
         Bodypart,
-        Equipment
+        Equipment,
     }
 
     public enum ColorSource
@@ -16,6 +16,7 @@ public class CreatureSpriteLayer
         None,
         Fixed,
         Material,
+        BodyPart,
         Job
     }
 

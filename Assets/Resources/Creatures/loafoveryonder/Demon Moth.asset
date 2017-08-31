@@ -28,11 +28,11 @@ MonoBehaviour:
     metal: 0
     positionOffset: {x: 0, y: 0.44}
   - spriteSource: 1
-    colorSource: 2
-    token: chitin
+    colorSource: 3
+    token: UB
     spriteTexture: {fileID: 21300000, guid: 8fbc113258a766e4285f0f3895a8880a, type: 3}
     preview: 1
-    color: {r: 0.5882353, g: 0.29411766, b: 0, a: 0.5019608}
+    color: {r: 1, g: 0.35294116, b: 0, a: 0.39215687}
     hairType: 0
     hairStyle: 0
     hairMin: 0
