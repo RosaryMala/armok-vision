@@ -172,8 +172,9 @@ public class CreatureSpriteCollectionEditor : Editor
             int count = 0;
             if (wholePositionOffset.sqrMagnitude > 0)
             {
-                EditorGUI.DrawRect(new Rect(origin.x - 5 + (wholePositionOffset.x * 128), origin.y - 5 + (wholePositionOffset.y * 128), 10, 10), Color.yellow);
+                EditorGUI.DrawRect(new Rect(origin.x - 5 + (wholePositionOffset.x * 128), origin.y - 5 + (wholePositionOffset.y * 128), 10, 1), Color.yellow);
             }
+            EditorGUI.DrawRect(new Rect(origin.x - 50, origin.y, 100, 1), Color.magenta);
             foreach (var layer in collection.spriteLayers)
             {
                 if (count > maxLayers)
@@ -195,7 +196,6 @@ public class CreatureSpriteCollectionEditor : Editor
                     EditorGUI.DrawPreviewTexture(targetRect, layer.spriteTexture.texture, mat, ScaleMode.StretchToFill);
                 }
             }
-            EditorGUI.DrawRect(new Rect(origin.x - 5, origin.y - 5, 10, 10), Color.magenta);
             maxLayers = EditorGUILayout.IntSlider(maxLayers, 0, collection.spriteLayers.Count);
         }
         listPosition = EditorGUILayout.BeginScrollView(listPosition);

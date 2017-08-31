@@ -58,7 +58,7 @@ MonoBehaviour:
     token: skin
     spriteTexture: {fileID: 21300000, guid: 20889b1f8d984e241ad17dfc201d5222, type: 3}
     preview: 1
-    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    color: {r: 0.9044118, g: 0.8052567, b: 0.59185773, a: 0.5019608}
     hairType: 0
     hairStyle: 0
     hairMin: -1
@@ -604,7 +604,7 @@ MonoBehaviour:
     token: skin
     spriteTexture: {fileID: 21300000, guid: 7c3c9eab844db464cb4bf7c62fab50ea, type: 3}
     preview: 1
-    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    color: {r: 0.9044118, g: 0.8052567, b: 0.59185773, a: 0.5019608}
     hairType: 0
     hairStyle: 0
     hairMin: -1
@@ -617,7 +617,7 @@ MonoBehaviour:
     token: hair
     spriteTexture: {fileID: 21300000, guid: 57a914a017a226c47bae2ce76e243cce, type: 3}
     preview: 1
-    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    color: {r: 0.9117647, g: 0.52682275, b: 0.32179928, a: 0.5019608}
     hairType: 0
     hairStyle: 0
     hairMin: -1
@@ -629,8 +629,8 @@ MonoBehaviour:
     colorSource: 2
     token: hair
     spriteTexture: {fileID: 21300000, guid: c5c3625f000402f4d96e8ed2d6747790, type: 3}
-    preview: 0
-    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    preview: 1
+    color: {r: 0.9117647, g: 0.52682275, b: 0.32179928, a: 0.5019608}
     hairType: 1
     hairStyle: 1
     hairMin: 10
@@ -642,8 +642,8 @@ MonoBehaviour:
     colorSource: 2
     token: hair
     spriteTexture: {fileID: 21300000, guid: db0f26f9f305e4d43986a57e5cc79770, type: 3}
-    preview: 0
-    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
+    preview: 1
+    color: {r: 0.9117647, g: 0.52682275, b: 0.32179928, a: 0.5019608}
     hairType: 1
     hairStyle: 1
     hairMin: 200
