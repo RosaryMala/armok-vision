@@ -14,8 +14,8 @@ MonoBehaviour:
   race: DEMON_MOTH
   caste: 
   spriteLayers:
-  - spriteSource: 1
-    colorSource: 2
+  - spriteSource: 0
+    colorSource: 1
     token: chitin
     spriteTexture: {fileID: 21300000, guid: 60c511239b8d060479ffed236e25d96a, type: 3}
     preview: 1
