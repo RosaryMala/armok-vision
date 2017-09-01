@@ -34,6 +34,7 @@ public class CreatureSpriteLayer
     public string token;
     public Sprite spriteTexture;
     public bool preview;
+    [ColorUsage(true, true, 0f, 8f, 0.125f, 3f)]
     public Color color = new Color(0.5f,0.5f,0.5f,0.5f);
     public HairType hairType;
     public HairStyle hairStyle;

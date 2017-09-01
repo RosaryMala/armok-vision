@@ -183,7 +183,9 @@ public class CreatureSpriteCollectionEditor : Editor
                 if (layer.preview && layer.spriteTexture != null)
                 {
                     Rect targetRect = getSpriteRect(layer.spriteTexture, origin);
-                    targetRect.position -= (layer.positionOffset * 128);
+                    var offset = layer.positionOffset;
+                    offset.x *= -1;
+                    targetRect.position -= (offset * 128);
                     if (layer.colorSource == CreatureSpriteLayer.ColorSource.None)
                         mat.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
                     else

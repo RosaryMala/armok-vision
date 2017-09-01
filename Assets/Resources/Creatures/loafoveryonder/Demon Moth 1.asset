@@ -9,10 +9,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 453bc2fe70c290b42ae697fd9728aaf0, type: 3}
-  m_Name: Demon Moth
+  m_Name: Demon Moth 1
   m_EditorClassIdentifier: 
-  race: DEMON_MOTH
-  caste: 
+  race: GIANT_MOTH
+  caste: FEMALE
   spriteLayers:
   - spriteSource: 0
     colorSource: 1
@@ -28,11 +28,11 @@ MonoBehaviour:
     metal: 0
     positionOffset: {x: 0, y: 0.44}
   - spriteSource: 1
-    colorSource: 3
+    colorSource: 1
     token: UB
     spriteTexture: {fileID: 21300000, guid: 8fbc113258a766e4285f0f3895a8880a, type: 3}
     preview: 1
-    color: {r: 3, g: 1.0588235, b: 0, a: 0.39215687}
+    color: {r: 1.5, g: 0.52941185, b: 0, a: 0.39215687}
     hairType: 0
     hairStyle: 0
     hairMin: 0
