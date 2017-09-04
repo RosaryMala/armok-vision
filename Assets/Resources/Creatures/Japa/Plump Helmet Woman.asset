@@ -9,9 +9,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 453bc2fe70c290b42ae697fd9728aaf0, type: 3}
-  m_Name: Honey Badger Woman
+  m_Name: Plump Helmet Woman
   m_EditorClassIdentifier: 
-  race: HONEY BADGER MAN
+  race: PLUMP_HELMET_MAN
   caste: FEMALE
   spriteLayers:
   - spriteSource: 2
@@ -41,11 +41,11 @@ MonoBehaviour:
     metal: 0
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 1
-    colorSource: 1
-    token: skin
+    colorSource: 2
+    token: exterior
     spriteTexture: {fileID: 21300000, guid: 20889b1f8d984e241ad17dfc201d5222, type: 3}
     preview: 1
-    color: {r: 0.23137257, g: 0.27058825, b: 0.3254902, a: 0.5019608}
+    color: {r: 0.4, g: 0, b: 0.6, a: 0.5019608}
     hairType: 0
     hairStyle: 0
     hairMin: -1
@@ -587,11 +587,11 @@ MonoBehaviour:
     metal: 0
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 1
-    colorSource: 0
-    token: skin
-    spriteTexture: {fileID: 21300000, guid: 91908ddeae1ba8a48a8205c2fbce14dc, type: 3}
+    colorSource: 2
+    token: exterior
+    spriteTexture: {fileID: 21300000, guid: 6c01971e541b27447b50db38e2f81725, type: 3}
     preview: 1
-    color: {r: 0.23137257, g: 0.27058825, b: 0.3254902, a: 0.5019608}
+    color: {r: 0.4, g: 0, b: 0.6, a: 0.5019608}
     hairType: 0
     hairStyle: 0
     hairMin: -1
