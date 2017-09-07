@@ -1,6 +1,6 @@
 ﻿Shader "Custom/MaterialStore" {
     Properties{
-        [HDR]_Color("Color", Color) = (0.5,0.5,0.5,1)
+        _Color("Color", Color) = (0.5,0.5,0.5,1)
 		_MainTex ("Albedo (RGB)", 2D) = "grey" {}
         _Specular("specular (R)", 2D) = "grey" {}
         _Normal("normal", 2D) = "bump" {}
@@ -9,12 +9,16 @@
         _HeightPreview("height preview cutoff", Range(0,1)) = 0
     }
 	SubShader {
-        Tags{ "Queue" = "Transparent" "IgnoreProjector" = "True" "RenderType" = "Transparent" }
+        Tags{ 
+            "Queue" = "Transparent" 
+            "IgnoreProjector" = "True" 
+            "RenderType" = "Transparent" 
+        }
         LOD 200
 		
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable transparency
-		#pragma surface surf Standard alpha addshadow
+		#pragma surface surf Standard addshadow alpha
 
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 3.0
@@ -45,18 +49,15 @@
             clip(tex2D(_Height, IN.uv_MainTex).r - _HeightPreview);
 			// Albedo comes from a texture tinted by color
             float4 c = overlay(tex2D (_MainTex, IN.uv_MainTex), _Color.rgb);
-            float isHDR = step(max(_Color.r, max(_Color.g, _Color.b)),1.001);
             fixed4 specular = tex2D(_Specular, IN.uv_MainTex);
-			o.Albedo = c.rgb * (1 - isHDR);
             o.Normal = UnpackNormal(tex2D(_Normal, IN.uv_MainTex));
-			// Metallic and smoothness come from slider variables
+            o.Albedo = c.rgb;
             o.Metallic = max((_Color.a * 2) - 1, 0);
-			o.Smoothness = specular.r;
+            o.Smoothness = specular.r;
             o.Occlusion = tex2D(_Occlusion, IN.uv_MainTex).r;
-			o.Alpha = min((_Color.a * 2), 1);
-            o.Emission = c.rgb * isHDR;
-		}
-		ENDCG
+            o.Alpha = min((_Color.a * 2), 1);
+        }
+        ENDCG
 	}
 	FallBack "Diffuse"
 }

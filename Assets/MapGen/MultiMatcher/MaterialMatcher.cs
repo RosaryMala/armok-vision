@@ -86,7 +86,17 @@ public class MaterialMatcher<T>
                     Setwords(parts[0], "", "", newItem);
                     break;
                 case 2:
-                    Setwords(parts[0], parts[1], "", newItem);
+                    if(parts[1].StartsWith("DIVINE")) //Means it's a generated material
+                    {
+                        var parts2 = parts[1].Split('_');
+                        var actualIndex = DFConnection.Instance.NetMaterialList.material_list.FindIndex(x => x.name.ToUpper() == parts2[2] + " " + parts2[1]);
+                        if(actualIndex >= 0)
+                        {
+                            this[DFConnection.Instance.NetMaterialList.material_list[actualIndex].mat_pair] = value;
+                        }
+                    }
+                    else
+                        Setwords(parts[0], parts[1], "", newItem);
                     break;
                 case 3:
                     Setwords(parts[0], parts[1], parts[2], newItem);

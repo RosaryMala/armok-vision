@@ -16,7 +16,7 @@
 		
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf Standard vertex:vert alphatest:_Cutoff addshadow
+		#pragma surface surf Standard alphatest:_Cutoff addshadow //vertex:vert
         //#pragma multi_compile _ ETC1_EXTERNAL_ALPHA
 
 		// Use shader model 3.0 target, to get nicer looking lighting
@@ -25,11 +25,12 @@
 		sampler2D _MainTex;
         float4 _MainTex_TexelSize;
         sampler2D _AlphaTex;
-        fixed4 _Color;
+        float4 _Color;
 
 		struct Input {
 			float2 uv_MainTex;
             float4 color: Color; // Vertex color
+            float3 viewDir;
         };
 
         void vert(inout appdata_full v, out Input o)
@@ -49,7 +50,7 @@
 #include "blend.cginc"
 
         void surf(Input IN, inout SurfaceOutputStandard o) {
-            fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
+            float4 c = tex2D(_MainTex, IN.uv_MainTex);
 
             float2 alphaCoords = IN.uv_MainTex * _MainTex_TexelSize.zw;
 
@@ -66,15 +67,14 @@
 //            // get the color from an external texture (usecase: Alpha support for ETC1 on android)
 //            //c.a = tex2D(_AlphaTex, IN.uv_MainTex).r;
 //#endif //ETC1_EXTERNAL_ALPHA
+
             float metal = max((IN.color.a * 2) - 1, 0);
-            float isHDR = step(max(IN.color.r, max(IN.color.g, IN.color.b)), 1.001);
+            o.Normal = normal;
             c.rgb = overlay(c.rgb, IN.color.rgb);
-            o.Albedo = c.rgb * (1 - isHDR);
+            o.Albedo = IN.color.rgb;
             o.Metallic = metal;
             o.Alpha = c.a; // *min((IN.color.a * 2), 1);
-            o.Normal = normal;
             o.Smoothness = lerp(0.1, 0.8, metal);
-            o.Emission = c.rgb * isHDR;
         }
 		ENDCG
 	}

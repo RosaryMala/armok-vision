@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: INORGANIC-ADAMANTINE
+  m_Name: INORGANIC-DIVINE_METAL_BLAZING
   m_Shader: {fileID: 4800000, guid: 0d849fe31a0566441aadf5b3171b7ad4, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -41,4 +41,4 @@ Material:
     m_Floats:
     - _HeightPreview: 0
     m_Colors:
-    - _Color: {r: 0.37647042, g: 1, b: 1, a: 1}
+    - _Color: {r: 1.225, g: 1.1145098, b: 0.739804, a: 1}

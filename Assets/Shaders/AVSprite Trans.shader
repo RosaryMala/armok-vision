@@ -32,6 +32,7 @@
 		struct Input {
 			float2 uv_MainTex;
             float4 color: Color; // Vertex color
+            float3 viewDir;
         };
 
         void vert(inout appdata_full v, out Input o)
@@ -69,14 +70,12 @@
             //            //c.a = tex2D(_AlphaTex, IN.uv_MainTex).r;
             //#endif //ETC1_EXTERNAL_ALPHA
             float metal = max((IN.color.a * 2) - 1, 0);
-            float isHDR = step(max(IN.color.r, max(IN.color.g, IN.color.b)), 1.001);
-            c.rgb = overlay(c.rgb, IN.color.rgb);
-            o.Albedo = c.rgb * (1 - isHDR);
-            o.Metallic = metal;
-            o.Alpha = c.a * min((IN.color.a * 2), 1);
             o.Normal = normal;
+            c.rgb = overlay(c.rgb, IN.color.rgb);
+            o.Albedo = c.rgb;
+            o.Metallic = metal;
+            o.Alpha = c.a; // *min((IN.color.a * 2), 1);
             o.Smoothness = lerp(0.1, 0.8, metal);
-            o.Emission = c.rgb * isHDR;
         }
 		ENDCG
 	}
