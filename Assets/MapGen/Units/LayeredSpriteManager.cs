@@ -1,5 +1,6 @@
 ﻿using DF.Enums;
 using RemoteFortressReader;
+using System.Collections;
 using System.Collections.Generic;
 using UnitFlags;
 using UnityEngine;
@@ -108,12 +109,14 @@ public class LayeredSpriteManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        DFConnection.RegisterConnectionCallback(LoadLayeredSpriteSets);
+        ContentLoader.RegisterLoadCallback(LoadLayeredSpriteSets);
     }
 
-    private void LoadLayeredSpriteSets()
+    private IEnumerator LoadLayeredSpriteSets()
     {
+        Debug.Log("Loading detailed creature sprites...");
         var spriteSetList = Resources.LoadAll<CreatureSpriteCollection>("Creatures");
+        var stopWatch = System.Diagnostics.Stopwatch.StartNew();
         foreach (var spriteSet in spriteSetList)
         {
             MatPairStruct raceID = new MatPairStruct(-1, -1);
@@ -138,6 +141,12 @@ public class LayeredSpriteManager : MonoBehaviour
                 if (!spriteSets[raceID.Race][spriteSet.profession].ContainsKey(spriteSet.special))
                     spriteSets[raceID.Race][spriteSet.profession][spriteSet.special] = new CasteDictionary();
                 spriteSets[raceID.Race][spriteSet.profession][spriteSet.special][raceID.Caste] = spriteSet;
+            }
+            if (stopWatch.ElapsedMilliseconds > 100)
+            {
+                yield return null;
+                stopWatch.Reset();
+                stopWatch.Start();
             }
         }
     }

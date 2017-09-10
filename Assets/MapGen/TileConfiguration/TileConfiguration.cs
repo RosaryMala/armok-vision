@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -33,8 +34,9 @@ abstract public class TileConfiguration<T> where T : IContent, new()
 
     string nodeName { get; set; }
 
-    void ParseContentElement(XElement elemtype, object externalStorage, object secondaryDictionary)
+    IEnumerator ParseContentElement(XElement elemtype, object externalStorage, object secondaryDictionary)
     {
+        var stopWatch = System.Diagnostics.Stopwatch.StartNew();
         T value = new T();
         value.ExternalStorage = externalStorage;
         if (!value.AddTypeElement(elemtype))
@@ -42,7 +44,7 @@ abstract public class TileConfiguration<T> where T : IContent, new()
             Debug.LogError("Couldn't parse " + elemtype);
             //There was an error parsing the type
             //There's nothing to work with.
-            return;
+            yield break;
         }
         value.ExternalStorage = externalStorage;
         Content content = new Content();
@@ -50,20 +52,37 @@ abstract public class TileConfiguration<T> where T : IContent, new()
         if (elemtype.Element("subObject") != null)
         {
             content.overloadedItem = GetFromRootElement(elemtype, "subObject");
-            content.overloadedItem.AddSingleContentConfig(elemtype, externalStorage, secondaryDictionary);
+            for(var e = content.overloadedItem.AddSingleContentConfig(elemtype, externalStorage, secondaryDictionary); e.MoveNext();)
+            {
+                if (stopWatch.ElapsedMilliseconds > 100)
+                {
+                    stopWatch.Reset();
+                    stopWatch.Start();
+                    yield return null;
+                }
+            }
         }
         ParseElementConditions(elemtype, content);
     }
 
-    public bool AddSingleContentConfig(XElement elemRoot, object externalStorage = null, object secondaryDictionary = null)
+    public IEnumerator AddSingleContentConfig(XElement elemRoot, object externalStorage = null, object secondaryDictionary = null)
     {
+        var stopWatch = System.Diagnostics.Stopwatch.StartNew();
         SecondaryDictionary = secondaryDictionary;
         var elemValues = elemRoot.Elements(nodeName);
         foreach (XElement elemValue in elemValues)
         {
-            ParseContentElement(elemValue, externalStorage, secondaryDictionary);
+            for (var e = ParseContentElement(elemValue, externalStorage, secondaryDictionary); e.MoveNext();)
+            {
+                if(stopWatch.ElapsedMilliseconds > 100)
+                {
+                    stopWatch.Reset();
+                    stopWatch.Start();
+                    yield return null;
+                }
+            }
         }
-        return true;
+        yield break;
     }
 
     public static TileConfiguration<T> GetFromRootElement(XElement elemRoot, XName name)

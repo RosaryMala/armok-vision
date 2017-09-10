@@ -1,5 +1,6 @@
 ﻿using DFHack;
 using RemoteFortressReader;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -30,23 +31,38 @@ namespace Building
             return Instance.buildingInfoMap[pos];
         }
 
-        void LoadBuildings()
+        IEnumerator LoadBuildings()
         {
             if (DFConnection.Instance.NetBuildingList == null)
-                return;
+                yield break;
+            var stopWatch = System.Diagnostics.Stopwatch.StartNew();
             var buildingList = DFConnection.Instance.NetBuildingList.building_list;
 
             foreach (var building in buildingList)
             {
                 string path = "Buildings/" + building.id;
+                GameMap.BeginSample(path);
                 var loadedBuilding = Resources.Load<BuildingModel>(path);
                 if (loadedBuilding == null)
+                {
+                    GameMap.EndSample();
+                    if (stopWatch.ElapsedMilliseconds > 100)
+                    {
+                        yield return null;
+                        stopWatch.Reset();
+                        stopWatch.Start();
+                    }
                     continue;
+                }
 
                 buildingPrefabs[building.building_type] = loadedBuilding;
-
-                Debug.Log("Loaded building: " + path);
-
+                GameMap.EndSample();
+                if (stopWatch.ElapsedMilliseconds > 100)
+                {
+                    yield return null;
+                    stopWatch.Reset();
+                    stopWatch.Start();
+                }
             }
         }
 
@@ -57,7 +73,7 @@ namespace Building
 
         private void Start()
         {
-            DFConnection.RegisterConnectionCallback(LoadBuildings);
+            ContentLoader.RegisterLoadCallback(LoadBuildings);
         }
 
         private void LateUpdate()

@@ -21,6 +21,7 @@ public class TilePage : ICollection
     Texture2DArray normalArray;
     public Texture2DArray TileArray { get { return tileArray; } }
     public Texture2DArray NormalArray { get { return normalArray; } }
+    public string Name { get { return originalPage.name; } }
 
     public int Count
     {
@@ -71,12 +72,11 @@ public class TilePage : ICollection
         return spriteIndices[coord];
     }
 
-    public void FinalizeTextures()
+    public IEnumerator FinalizeTextures(System.Diagnostics.Stopwatch stopWatch)
     {
         if (coordList.Count == 0) // There's nothing that uses this.
         {
-            Debug.LogWarningFormat("Tile page \"{0}\" has no sprites used!", pageName);
-            return;
+            yield break; 
         }
         int scaleFactor = 1;
         if (tileWidth * 4 <= GameSettings.Instance.rendering.maxTextureSize && tileHeight * 4 <= GameSettings.Instance.rendering.maxTextureSize)
@@ -127,6 +127,12 @@ public class TilePage : ICollection
             TextureScale.Bilinear(texture, Mathf.ClosestPowerOfTwo(tileWidth * scaleFactor), Mathf.ClosestPowerOfTwo(tileHeight * scaleFactor));
             tileArray.SetPixels(texture.GetPixels(), i);
             normalArray.SetPixels(TextureTools.Bevel(texture.GetPixels(), texture.width, texture.height), i);
+            if (stopWatch.ElapsedMilliseconds > 100)
+            {
+                yield return null;
+                stopWatch.Reset();
+                stopWatch.Start();
+            }
         }
         tileArray.Apply();
         normalArray.Apply();

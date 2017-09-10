@@ -97,6 +97,18 @@ public class ContentLoader : MonoBehaviour
         }
     }
 
+    internal static Coroutine StartStaticCoroutine(IEnumerator enumerator)
+    {
+        return _routiner.StartCoroutine(enumerator);
+    }
+
+    static List<Func<IEnumerator>> LoadCallbacks = new List<Func<IEnumerator>>();
+
+    internal static void RegisterLoadCallback(Func<IEnumerator> coroutine)
+    {
+        LoadCallbacks.Add(coroutine);
+    }
+
     public Texture2DArray PatternTextureArray { get; private set; }
     public float PatternTextureDepth { get; private set; }
     public Texture2DArray ShapeTextureArray { get; private set; }
@@ -220,10 +232,14 @@ public class ContentLoader : MonoBehaviour
 
     [SerializeField]
     private CreatureSpriteManager _spriteManager = new CreatureSpriteManager();
+    private static ContentLoader _routiner;
+
     public CreatureSpriteManager SpriteManager { get { return _spriteManager; } }
 
     public void Awake()
     {
+        _routiner = this;
+
         shapeTextureStorage = new TextureStorage();
         specialTextureStorage = new TextureStorage();
         MaterialTextures = new MaterialMatcher<MaterialTextureSet>();
@@ -297,14 +313,21 @@ public class ContentLoader : MonoBehaviour
         yield return StartCoroutine(ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt"));
         yield return StartCoroutine(FinalizeTextureAtlases());
         Instance = this;
+        foreach (var callback in LoadCallbacks)
+        {
+            if (callback != null)
+                yield return StartCoroutine(callback());
+        }
+        Debug.Log("Done!");
         watch.Stop();
         Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
         Debug.Log(string.Format("loaded {0} meshes, and {1} shape textures.", MeshContent.NumCreated, NormalContent.NumCreated));
         Debug.Log("Loading Complete. Press ESC to change settings or leave feedback. Have a nice day!");
+        Debug.Break();
         if (GameMap.Instance != null)
             GameMap.Instance.HideHelp();
         DFConnection.Instance.NeedNewBlocks = true;
-        yield return null;
+        yield break;
     }
 
     private void PopulateMatDefinitions()
@@ -384,37 +407,37 @@ public class ContentLoader : MonoBehaviour
                 case "shapeTextures":
                     if (ShapeTextureConfiguration == null)
                         ShapeTextureConfiguration = TileConfiguration<NormalContent>.GetFromRootElement(doc, "shapeTexture");
-                    ShapeTextureConfiguration.AddSingleContentConfig(doc, shapeTextureStorage);
+                    yield return StartCoroutine(ShapeTextureConfiguration.AddSingleContentConfig(doc, shapeTextureStorage));
                     break;
                 case "tileMeshes":
                     if (TileMeshConfiguration == null)
                         TileMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "tileMesh");
-                    TileMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(null, shapeTextureStorage, specialTextureStorage));
+                    yield return StartCoroutine(TileMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(null, shapeTextureStorage, specialTextureStorage)));
                     break;
                 case "materialLayers":
                     if (MaterialLayerConfiguration == null)
                         MaterialLayerConfiguration = TileConfiguration<LayerContent>.GetFromRootElement(doc, "materialLayer");
-                    MaterialLayerConfiguration.AddSingleContentConfig(doc);
+                    yield return StartCoroutine(MaterialLayerConfiguration.AddSingleContentConfig(doc));
                     break;
                 case "growthMeshes":
                     if (GrowthMeshConfiguration == null)
                         GrowthMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "growthMesh");
-                    GrowthMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(null, shapeTextureStorage, specialTextureStorage));
+                    yield return StartCoroutine(GrowthMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(null, shapeTextureStorage, specialTextureStorage)));
                     break;
                 case "designationMeshes":
                     if (DesignationMeshConfiguration == null)
                         DesignationMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "designationMesh");
-                    DesignationMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(null, shapeTextureStorage, specialTextureStorage));
+                    yield return StartCoroutine(DesignationMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(null, shapeTextureStorage, specialTextureStorage)));
                     break;
                 case "collisionMeshes":
                     if (CollisionMeshConfiguration == null)
                         CollisionMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "collisionMesh");
-                    CollisionMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(null, shapeTextureStorage, specialTextureStorage));
+                    yield return StartCoroutine(CollisionMeshConfiguration.AddSingleContentConfig(doc, new MeshContent.TextureStorageContainer(null, shapeTextureStorage, specialTextureStorage)));
                     break;
                 case "itemMeshes":
                     if (ItemMeshConfiguration == null)
                         ItemMeshConfiguration = TileConfiguration<MeshContent>.GetFromRootElement(doc, "itemMesh");
-                    ItemMeshConfiguration.AddSingleContentConfig(doc, null);
+                    yield return StartCoroutine(ItemMeshConfiguration.AddSingleContentConfig(doc, null));
                     break;
                 default:
                     break;
@@ -427,7 +450,6 @@ public class ContentLoader : MonoBehaviour
     IEnumerator ParseContentRawFile(string path)
     {
         Debug.Log("Loading Raw File: " + path);
-
         var tokenList = RawLoader.SplitRawFileText(File.ReadAllText(path));
         var tokenEnumerator = tokenList.GetEnumerator();
         try
@@ -439,7 +461,7 @@ public class ContentLoader : MonoBehaviour
                     switch (tokenEnumerator.Current.Parameters[0])
                     {
                         case "GRAPHICS":
-                            SpriteManager.ParseGraphics(ref tokenEnumerator, path);
+                            yield return StartCoroutine(SpriteManager.ParseGraphics(tokenEnumerator, path));
                             break;
                         default:
                             Debug.Log("Unhandled Token: " + tokenEnumerator.Current.Parameters[0]);
@@ -482,7 +504,6 @@ public class ContentLoader : MonoBehaviour
         yield return null;
 
         Vector4 arrayCount = new Vector4(PatternTextureDepth, shapeTextureStorage.Count, specialTextureStorage.Count, ShapeTextureDepth);
-
         if (MaterialManager.Instance)
         {
             MaterialManager.Instance.SetTexture("_MatTex", PatternTextureArray);
@@ -491,12 +512,8 @@ public class ContentLoader : MonoBehaviour
             MaterialManager.Instance.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
             MaterialManager.Instance.SetVector("_TexArrayCount", arrayCount);
         }
-
-        Debug.Log("Finalizing creature sprites");
-        yield return null;
-        SpriteManager.FinalizeSprites();
-        Debug.Log("Done!");
-        yield return null;
+        Debug.Log("Finalizing low detail creature sprites");
+        yield return StartCoroutine(SpriteManager.FinalizeSprites());
         //get rid of any un-used textures left over.
         Resources.UnloadUnusedAssets();
         GC.Collect();

@@ -1,5 +1,6 @@
 ﻿using RemoteFortressReader;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using TokenLists;
@@ -56,12 +57,14 @@ public class CreatureSpriteManager
         return true;
     }
 
-    public void ParseGraphics(ref List<RawToken>.Enumerator tokenEnumerator, string path)
+    public IEnumerator ParseGraphics(List<RawToken>.Enumerator tokenEnumerator, string path)
     {
         Assert.AreEqual("GRAPHICS", tokenEnumerator.Current.Parameters[0]);
+        var stopWatch = System.Diagnostics.Stopwatch.StartNew();
         bool rawLeft = true;
         while (rawLeft)
         {
+            GameMap.BeginSample(tokenEnumerator.Current.Token);
             switch (tokenEnumerator.Current.Token)
             {
                 case "TILE_PAGE":
@@ -73,6 +76,13 @@ public class CreatureSpriteManager
                 default:
                     rawLeft = tokenEnumerator.MoveNext();
                     break;
+            }
+            GameMap.EndSample();
+            if (stopWatch.ElapsedMilliseconds > 100)
+            {
+                yield return null;
+                stopWatch.Reset();
+                stopWatch.Start();
             }
         }
     }
@@ -178,18 +188,26 @@ public class CreatureSpriteManager
         return rawLeft;
     }
 
-    public void FinalizeSprites()
+    public IEnumerator FinalizeSprites()
     {
         int count = 0;
+        var stopWatch = System.Diagnostics.Stopwatch.StartNew();
         foreach (var page in tilePages)
         {
-            page.FinalizeTextures();
+            page.FinalizeTextures(stopWatch);
             count += page.Count;
             var mat = new Material(baseCreatureMaterial);
             mat.SetTexture("_MatTex", page.TileArray);
             mat.SetTexture("_BumpMap", page.NormalArray);
             mats.Add(mat);
+            Debug.Log("Finalized " + page.Name);
+            if (stopWatch.ElapsedMilliseconds > 100)
+            {
+                yield return null;
+                stopWatch.Reset();
+                stopWatch.Start();
+            }
         }
-        Debug.LogFormat("Loaded {0} creature sprites.", count);
+        Debug.LogFormat("Loaded {0} legacy creature sprites.", count);
     }
 }
