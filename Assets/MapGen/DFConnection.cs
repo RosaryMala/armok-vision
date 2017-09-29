@@ -78,7 +78,7 @@ public sealed class DFConnection : MonoBehaviour
     private RemoteFunction<ListRequest, CreatureRawList> partialCreatureRawListCall;
     private RemoteFunction<dfproto.EmptyMessage, PlantRawList> plantRawListCall;
     private RemoteFunction<KeyboardEvent> keyboardEventCall;
-    private RemoteFunction<dfproto.EmptyMessage, ScreenCapture> copyScreenCall;
+    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.ScreenCapture> copyScreenCall;
     private RemoteFunction<DigCommand> digCommandCall;
     private RemoteFunction<SingleBool> pauseCommandCall;
     private RemoteFunction<dfproto.EmptyMessage, SingleBool> pauseStatusCall;
@@ -154,7 +154,7 @@ public sealed class DFConnection : MonoBehaviour
         partialCreatureRawListCall = CreateAndBind<ListRequest, CreatureRawList>(networkClient, "GetPartialCreatureRaws", "RemoteFortressReader");
         plantRawListCall = CreateAndBind<dfproto.EmptyMessage, PlantRawList>(networkClient, "GetPlantRaws", "RemoteFortressReader");
         keyboardEventCall = CreateAndBind<KeyboardEvent>(networkClient, "PassKeyboardEvent", "RemoteFortressReader");
-        copyScreenCall = CreateAndBind<dfproto.EmptyMessage, ScreenCapture>(networkClient, "CopyScreen", "RemoteFortressReader");
+        copyScreenCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.ScreenCapture>(networkClient, "CopyScreen", "RemoteFortressReader");
         digCommandCall = CreateAndBind<DigCommand>(networkClient, "SendDigCommand", "RemoteFortressReader");
         pauseCommandCall = CreateAndBind<SingleBool>(networkClient, "SetPauseState", "RemoteFortressReader");
         pauseStatusCall = CreateAndBind<dfproto.EmptyMessage, SingleBool>(networkClient, "GetPauseState", "RemoteFortressReader");
@@ -181,7 +181,7 @@ public sealed class DFConnection : MonoBehaviour
     private SingleBuffer<RegionMaps> netRegionMaps;
     private RingBuffer<MapBlock> pendingBlocks
         = new RingBuffer<MapBlock>(1024);
-    private SingleBuffer<ScreenCapture> netScreenCapture;
+    private SingleBuffer<RemoteFortressReader.ScreenCapture> netScreenCapture;
     private EventBuffer worldMapMoved;
 
     // Input queues
@@ -290,7 +290,7 @@ public sealed class DFConnection : MonoBehaviour
         return netViewInfo.Pop();
     }
 
-    public ScreenCapture PopScreenUpdate()
+    public RemoteFortressReader.ScreenCapture PopScreenUpdate()
     {
         return netScreenCapture.Pop();
     }
@@ -502,7 +502,7 @@ public sealed class DFConnection : MonoBehaviour
         }
         if (copyScreenCall != null)
         {
-            ScreenCapture screenCapture;
+            RemoteFortressReader.ScreenCapture screenCapture;
             copyScreenCall.execute(null, out screenCapture);
             netScreenCapture.Set(screenCapture);
         }
@@ -979,7 +979,7 @@ public sealed class DFConnection : MonoBehaviour
         {
             if (copyScreenCall != null)
             {
-                ScreenCapture screenCapture;
+                RemoteFortressReader.ScreenCapture screenCapture;
                 copyScreenCall.execute(null, out screenCapture);
                 netScreenCapture.Set(screenCapture);
             }

@@ -386,7 +386,7 @@ public class GameMap : MonoBehaviour
                     File.WriteAllBytes(screenshotFilename, virtualPhoto.EncodeToPNG());
                 }
                 else
-                    Application.CaptureScreenshot(screenshotFilename);
+                    UnityEngine.ScreenCapture.CaptureScreenshot(screenshotFilename);
             }
             if (Input.GetButtonDown("Refresh"))
             {

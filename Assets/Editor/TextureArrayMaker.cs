@@ -91,13 +91,16 @@ public class TextureArrayMaker : EditorWindow
                     for (int x = 0; x < tiles_x; x++)
                     {
                         var pixels = baseTexture.GetPixels(sourceWidth * x, sourceHeight * y, sourceWidth, sourceHeight);
-                        float totalAlpha = 0;
-                        foreach (var pixel in pixels)
+                        if (skipEmpty)
                         {
-                            totalAlpha += pixel.a;
+                            float totalAlpha = 0;
+                            foreach (var pixel in pixels)
+                            {
+                                totalAlpha += pixel.a;
+                            }
+                            if (totalAlpha < 1) //it's empty, bro.
+                                continue;
                         }
-                        if (totalAlpha < 1) //it's empty, bro.
-                            continue;
                         var tempTex = new Texture2D(sourceWidth, sourceHeight, TextureFormat.ARGB32, false);
                         tempTex.SetPixels(pixels);
                         switch (scaleMode)
