@@ -43,7 +43,7 @@ public class CameraZoom : MonoBehaviour
             }
         }
 #if !UNITY_STANDALONE_LINUX
-        if(VRSettings.enabled)
+        if(UnityEngine.XR.XRSettings.enabled)
         {
             Vector3 angles = transform.rotation.eulerAngles;
             angles = new Vector3(0, angles.y, 0);

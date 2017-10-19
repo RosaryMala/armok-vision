@@ -120,7 +120,7 @@ public class CameraSelector : MonoBehaviour
     public void Start()
     {
 #if !UNITY_STANDALONE_LINUX
-        if (VRSettings.loadedDeviceName == "OpenVR")
+        if (UnityEngine.XR.XRSettings.loadedDeviceName == "OpenVR")
         {
             ChangeCamera(CameraOption.VR);
             Debug.Log("Started VR Mode");
