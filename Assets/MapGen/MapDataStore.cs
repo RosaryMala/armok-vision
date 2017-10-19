@@ -1314,7 +1314,8 @@ public class MapDataStore {
                 case MeshLayer.GrowthMaterial:
                 case MeshLayer.GrowthCutout:
                 case MeshLayer.GrowthTransparent:
-                    if ((material.mat_type != 419)
+                    if (material.mat_type != 419
+                        || material.mat_index < 0
                         || DFConnection.Instance.NetPlantRawList == null
                         || DFConnection.Instance.NetPlantRawList.plant_raws.Count <= material.mat_index
                         || DFConnection.Instance.NetPlantRawList.plant_raws[material.mat_index].growths.Count <= 0
@@ -1326,7 +1327,8 @@ public class MapDataStore {
                 case MeshLayer.GrowthMaterial1:
                 case MeshLayer.GrowthCutout1:
                 case MeshLayer.GrowthTransparent1:
-                    if ((material.mat_type != 419)
+                    if (material.mat_type != 419
+                        || material.mat_index < 0
                         || DFConnection.Instance.NetPlantRawList == null
                         || DFConnection.Instance.NetPlantRawList.plant_raws.Count <= material.mat_index
                         || DFConnection.Instance.NetPlantRawList.plant_raws[material.mat_index].growths.Count <= 1
@@ -1338,7 +1340,8 @@ public class MapDataStore {
                 case MeshLayer.GrowthMaterial2:
                 case MeshLayer.GrowthCutout2:
                 case MeshLayer.GrowthTransparent2:
-                    if ((material.mat_type != 419)
+                    if (material.mat_type != 419
+                        || material.mat_index < 0
                         || DFConnection.Instance.NetPlantRawList == null
                         || DFConnection.Instance.NetPlantRawList.plant_raws.Count <= material.mat_index
                         || DFConnection.Instance.NetPlantRawList.plant_raws[material.mat_index].growths.Count <= 2
@@ -1350,7 +1353,8 @@ public class MapDataStore {
                 case MeshLayer.GrowthMaterial3:
                 case MeshLayer.GrowthCutout3:
                 case MeshLayer.GrowthTransparent3:
-                    if ((material.mat_type != 419)
+                    if (material.mat_type != 419
+                        || material.mat_index < 0
                         || DFConnection.Instance.NetPlantRawList == null
                         || DFConnection.Instance.NetPlantRawList.plant_raws.Count <= material.mat_index
                         || DFConnection.Instance.NetPlantRawList.plant_raws[material.mat_index].growths.Count <= 3
