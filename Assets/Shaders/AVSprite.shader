@@ -71,7 +71,7 @@
             float metal = max((IN.color.a * 2) - 1, 0);
             o.Normal = normal;
             c.rgb = overlay(c.rgb, IN.color.rgb);
-            o.Albedo = IN.color.rgb;
+            o.Albedo = c.rgb;
             o.Metallic = metal;
             o.Alpha = c.a; // *min((IN.color.a * 2), 1);
             o.Smoothness = lerp(0.1, 0.8, metal);
