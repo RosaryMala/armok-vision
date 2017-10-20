@@ -396,6 +396,11 @@ public class GameMap : MonoBehaviour
             {
                 optionsPanel.gameObject.SetActive(!optionsPanel.gameObject.activeSelf);
             }
+            if(Input.GetButtonDown("ToggleMap"))
+            {
+                mapWindow.SetActive(!mapWindow.activeSelf);
+                mapCamera.SetActive(!mapCamera.activeSelf);
+            }
         }
 
         if (ContentLoader.Instance == null)
@@ -1562,6 +1567,8 @@ public class GameMap : MonoBehaviour
 
     public ParticleSystem itemParticleSystem;
     private const int timeout = 100;
+    public GameObject mapWindow;
+    public GameObject mapCamera;
     //ParticleSystem.Particle[] itemParticles;
     //Dictionary<int, ParticleSystem> customItemParticleSystems = new Dictionary<int, ParticleSystem>();
     //Dictionary<int, ParticleSystem.Particle[]> customItemParticles = new Dictionary<int, ParticleSystem.Particle[]>();
