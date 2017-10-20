@@ -29,22 +29,22 @@ public class CreatureSpriteManager
             colored = true;
             return false;
         }
-        TileDef def = new TileDef(-1,-1,true);
+        TileDef def = new TileDef(-1, -1, true);
         bool set = false;
         foreach (var item in unit.noble_positions)
         {
-            if(prof.TryGetValue(item, out def))
+            if (prof.TryGetValue(item, out def))
             {
                 set = true;
                 break;
             }
         }
-        if(!set)
+        if (!set)
         {
             prof.TryGetValue((DF.Enums.profession)unit.profession_id, out def);
             set = (def.page != -1);
         }
-        if(!set || def.page == -1)
+        if (!set || def.page == -1)
         {
             mat = null;
             index = 0;
@@ -93,7 +93,7 @@ public class CreatureSpriteManager
         string raceToken = tokenEnumerator.Current.Parameters[0];
         MatPairStruct creatureID;
         bool raceRecognized = true;
-        if(!CreatureTokenList.TryGetCasteID(raceToken, out creatureID))
+        if (!CreatureTokenList.TryGetCasteID(raceToken, out creatureID))
         {
             raceRecognized = false;
         }
@@ -180,7 +180,7 @@ public class CreatureSpriteManager
                     break;
             }
         }
-        loopExit:
+    loopExit:
         TilePage page = new TilePage(path, pageName, tileWidth, tileHeight, pageWidth, pageHeight);
         tilePageIndices[pageName] = tilePages.Count;
         tilePages.Add(page);
@@ -194,9 +194,13 @@ public class CreatureSpriteManager
         var stopWatch = System.Diagnostics.Stopwatch.StartNew();
         foreach (var page in tilePages)
         {
-            page.FinalizeTextures(stopWatch);
+            if(page.Count == 0)
+                continue;
+            yield return GameMap.Instance.StartCoroutine(page.FinalizeTextures(stopWatch));
             count += page.Count;
             var mat = new Material(baseCreatureMaterial);
+            if (page.TileArray == null)
+                throw new NullReferenceException();
             mat.SetTexture("_MatTex", page.TileArray);
             mat.SetTexture("_BumpMap", page.NormalArray);
             mats.Add(mat);
