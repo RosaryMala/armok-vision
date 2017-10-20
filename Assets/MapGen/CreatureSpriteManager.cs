@@ -194,13 +194,9 @@ public class CreatureSpriteManager
         var stopWatch = System.Diagnostics.Stopwatch.StartNew();
         foreach (var page in tilePages)
         {
-            if(page.Count == 0)
-                continue;
             yield return GameMap.Instance.StartCoroutine(page.FinalizeTextures(stopWatch));
             count += page.Count;
             var mat = new Material(baseCreatureMaterial);
-            if (page.TileArray == null)
-                throw new NullReferenceException();
             mat.SetTexture("_MatTex", page.TileArray);
             mat.SetTexture("_BumpMap", page.NormalArray);
             mats.Add(mat);
