@@ -16,7 +16,7 @@
 		
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf Standard alphatest:_Cutoff addshadow //vertex:vert
+		#pragma surface surf Standard alphatest:_Cutoff addshadow vertex:vert
         //#pragma multi_compile _ ETC1_EXTERNAL_ALPHA
 
 		// Use shader model 3.0 target, to get nicer looking lighting
