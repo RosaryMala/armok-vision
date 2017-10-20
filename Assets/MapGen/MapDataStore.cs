@@ -1368,4 +1368,15 @@ public class MapDataStore {
             }
         }
     }
+
+    internal static bool IsFullyHidden(int posXBlock, int posYBlock, int zz)
+    {
+        for (int x = posXBlock * GameMap.blockSize; x < posXBlock * GameMap.blockSize + GameMap.blockSize; x++)
+            for (int y = posYBlock * GameMap.blockSize; y < posYBlock * GameMap.blockSize + GameMap.blockSize; y++)
+            {
+                if (Main[x, y, zz] != null && !Main[x, y, zz].Hidden)
+                    return false;
+            }
+        return true;
+    }
 }
