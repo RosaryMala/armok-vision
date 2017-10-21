@@ -1217,6 +1217,7 @@ public class GameMap : MonoBehaviour
                 Mesh collisionMesh = new Mesh();
                 collisionMesh.name = string.Format("block_collision_{0}_{1}_{2}", block_x, block_y, block_z);
                 newMeshes.collisionMesh.CopyToMesh(collisionMesh);
+                meshSet.collisionBlocks.sharedMesh = null;
                 meshSet.collisionBlocks.sharedMesh = collisionMesh;
             }
             if (timer.ElapsedMilliseconds > timeout)

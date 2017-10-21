@@ -264,8 +264,7 @@ public class BlockMeshSet : MonoBehaviour
         }
         if (collisionBlocks != null)
         {
-            Destroy(collisionBlocks);
-            collisionBlocks = null;
+            collisionBlocks.sharedMesh = null;
         }
     }
 
