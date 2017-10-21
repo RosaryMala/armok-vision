@@ -10515,6 +10515,7 @@ MonoBehaviour:
   itemParticleSystem: {fileID: 500045872}
   mapWindow: {fileID: 1125495352}
   mapCamera: {fileID: 1147257829}
+  mainUI: {fileID: 1503824702}
 --- !u!114 &861361730
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12676,6 +12677,21 @@ Prefab:
         type: 2}
       propertyPath: m_Text
       value: F2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114470425897897482, guid: bf094266df1576a4984dbc90d2f89ef5,
+        type: 2}
+      propertyPath: m_Color.r
+      value: 0.6764706
+      objectReference: {fileID: 0}
+    - target: {fileID: 114470425897897482, guid: bf094266df1576a4984dbc90d2f89ef5,
+        type: 2}
+      propertyPath: m_Color.g
+      value: 0.9571799
+      objectReference: {fileID: 0}
+    - target: {fileID: 114570351823763994, guid: bf094266df1576a4984dbc90d2f89ef5,
+        type: 2}
+      propertyPath: m_Text
+      value: Toggle UI
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bf094266df1576a4984dbc90d2f89ef5, type: 2}
@@ -17680,7 +17696,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
   reverbZoneMixCustomCurve:
     serializedVersion: 2
     m_Curve:

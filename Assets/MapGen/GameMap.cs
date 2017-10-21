@@ -401,6 +401,10 @@ public class GameMap : MonoBehaviour
                 mapWindow.SetActive(!mapWindow.activeSelf);
                 mapCamera.SetActive(!mapCamera.activeSelf);
             }
+            if(Input.GetButtonDown("ToggleUI"))
+            {
+                mainUI.gameObject.SetActive(!mainUI.gameObject.activeSelf);
+            }
         }
 
         if (ContentLoader.Instance == null)
@@ -1570,6 +1574,7 @@ public class GameMap : MonoBehaviour
     private const int timeout = 100;
     public GameObject mapWindow;
     public GameObject mapCamera;
+    public Canvas mainUI;
     //ParticleSystem.Particle[] itemParticles;
     //Dictionary<int, ParticleSystem> customItemParticleSystems = new Dictionary<int, ParticleSystem>();
     //Dictionary<int, ParticleSystem.Particle[]> customItemParticles = new Dictionary<int, ParticleSystem.Particle[]>();
