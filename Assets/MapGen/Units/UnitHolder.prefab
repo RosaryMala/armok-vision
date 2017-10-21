@@ -69,6 +69,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1
@@ -84,6 +85,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -140,6 +142,7 @@ GameObject:
   - component: {fileID: 4392068997688726}
   - component: {fileID: 114611379571115740}
   - component: {fileID: 114851194084581908}
+  - component: {fileID: 205022976602333644}
   m_Layer: 0
   m_Name: ScalePivot
   m_TagString: Untagged
@@ -320,4 +323,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gap: 0.0001
-  spriteCollection: {fileID: 0}
+--- !u!205 &205022976602333644
+LODGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1409032992061170}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LODs:
+  - screenRelativeHeight: 0.045248125
+    fadeTransitionWidth: 0
+    renderers: []
+  m_Enabled: 1
