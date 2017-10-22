@@ -2593,7 +2593,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 176e8440a4356b94e93f86c5a2dfa17e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  creatureTemplate: {fileID: 422910, guid: f1c56ebe0ff1ec3439724162aa0556bd, type: 2}
+  creatureTemplate: {fileID: 114234982672090002, guid: f1c56ebe0ff1ec3439724162aa0556bd,
+    type: 2}
   lastUnitList:
     _creature_list: []
   unitList:
@@ -17610,6 +17611,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offset: {x: 0, y: 0, z: 0}
   firstPerson: 1
+  following: 0
   forceFollowing: 0
 --- !u!82 &1503855529
 AudioSource:

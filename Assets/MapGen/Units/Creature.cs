@@ -24,6 +24,14 @@ public class Creature : MonoBehaviour
     MeshRenderer legacySprite;
     LayeredSprite layeredSprite;
 
+    private void Update()
+    {
+        if (transform.position.x < -100)
+            transform.position = TargetPos;
+        else
+            transform.position = Vector3.Lerp(transform.position, TargetPos, 0.5f);
+    }
+
     static void InitProperties()
     {
         layerIndexID = Shader.PropertyToID("_LayerIndex");
@@ -139,5 +147,21 @@ public class Creature : MonoBehaviour
             }
         }
 
+    }
+
+    private Vector3 _targetPos;
+
+    public Vector3 TargetPos
+    {
+        get
+        {
+            return _targetPos;
+        }
+        set
+        {
+            _targetPos = value;
+            if(!gameObject.activeInHierarchy || !enabled)
+                transform.position = value;
+        }
     }
 }

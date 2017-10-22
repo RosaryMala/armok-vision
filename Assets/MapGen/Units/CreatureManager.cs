@@ -9,8 +9,8 @@ using UnityEngine.UI;
 public class CreatureManager : MonoBehaviour
 {
 
-    Dictionary<int, Transform> creatureList;
-    public Transform creatureTemplate;
+    Dictionary<int, Creature> creatureList;
+    public Creature creatureTemplate;
 
     public UnitList lastUnitList = null;
     public UnitList unitList = null;
@@ -56,7 +56,7 @@ public class CreatureManager : MonoBehaviour
         foreach (var unit in unitList.creature_list)
         {
             if (creatureList == null)
-                creatureList = new Dictionary<int, Transform>();
+                creatureList = new Dictionary<int, Creature>();
             UnitFlags1 flags1 = (UnitFlags1)unit.flags1;
             //UnitFlags2 flags2 = (UnitFlags2)unit.flags2;
             //UnitFlags3 flags3 = (UnitFlags3)unit.flags3;
@@ -78,6 +78,7 @@ public class CreatureManager : MonoBehaviour
                 {
                     creatureList[unit.id] = Instantiate(creatureTemplate, gameObject.transform);
                     creatureList[unit.id].name = "Unit_" + unit.id;
+                    creatureList[unit.id].transform.position = new Vector3(-3000,-3000,-3000);
 
                     var creature = creatureList[unit.id].GetComponent<Creature>();
 
@@ -108,13 +109,13 @@ public class CreatureManager : MonoBehaviour
                         Vector3 position = GameMap.DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z);
                         RaycastHit hitInfo;
                         if (Physics.Raycast(position + new Vector3(0, 2.9f, 0), Vector3.down, out hitInfo, 3, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
-                            creatureList[unit.id].transform.position = hitInfo.point;
+                            creatureList[unit.id].TargetPos = hitInfo.point;
                         else
-                            creatureList[unit.id].transform.position = position;
+                            creatureList[unit.id].TargetPos = position;
                     }
                     if (unit.rider_id >= 0 && creatureList.ContainsKey(unit.rider_id))
                     {
-                        creatureList[unit.id].transform.position += new Vector3(0, creatureList[unit.rider_id].localScale.y, 0);
+                        creatureList[unit.id].TargetPos += new Vector3(0, creatureList[unit.rider_id].transform.localScale.y, 0);
                     }
                     UnitScaler unitScaler = creatureList[unit.id].GetComponentInChildren<UnitScaler>();
                     if (unitScaler != null)
