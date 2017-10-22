@@ -18,9 +18,6 @@ public class MapPositionUpdater : MonoBehaviour
 
     public FirstPerson firstPerson;
 
-    public bool following;
-    public bool forceFollowing;
-
     public void Awake()
     {
         gameMap = FindObjectOfType<GameMap>();
@@ -32,13 +29,9 @@ public class MapPositionUpdater : MonoBehaviour
     {
         Vector3 newPos = transform.TransformPoint(offset);
         Vector3 scaledOffset = transform.position - newPos;
-        if (following && gameMap != null)
+
+        if (gameMap != null && (oldPos - newPos).sqrMagnitude > 0.01)
         {
-            transform.position = GameMap.DFtoUnityTileCenter(new DFCoord(gameMap.PosXTile, gameMap.PosYTile, gameMap.PosZ - 1)) + scaledOffset;
-        }
-        if (gameMap != null && (oldPos - newPos).sqrMagnitude > 0.01 && !(forceFollowing && following))
-        {
-            following = false;
             gameMap.UpdateCenter(newPos);
             oldPos = newPos;
         }

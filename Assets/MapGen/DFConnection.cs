@@ -49,7 +49,7 @@ public sealed class DFConnection : MonoBehaviour
     // Assignable values
     public int BlocksToFetch = 4;
     public bool RunOnAlternateThread = false;
-    public float refreshDelay = 100;
+    public float refreshDelay = 1;
 
     // Thread management
     private ConnectionManager connectionManager;

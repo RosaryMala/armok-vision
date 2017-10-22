@@ -739,16 +739,19 @@ public class GameMap : MonoBehaviour
         RemoteFortressReader.ViewInfo newView = DFConnection.Instance.PopViewInfoUpdate();
         if (newView == null) return;
 
+        if(!cameraMovement.following)
+            return;
+
         UnityEngine.Profiling.Profiler.BeginSample("UpdateView", this);
         //Debug.Log("Got view");
         view = newView;
 
         if (view.follow_unit_id != -1 && CreatureManager.Instance.lastUnitList != null)
         {
-            int unitIndex = CreatureManager.Instance.unitList.creature_list.FindIndex(x => x.id == view.follow_unit_id);
+            int unitIndex = CreatureManager.Instance.lastUnitList.creature_list.FindIndex(x => x.id == view.follow_unit_id);
             if (unitIndex >= 0)
             {
-                var unit = CreatureManager.Instance.unitList.creature_list[unitIndex];
+                var unit = CreatureManager.Instance.lastUnitList.creature_list[unitIndex];
                 posXTile = unit.pos_x;
                 posYTile = unit.pos_y;
                 posZ = unit.pos_z + 1;
@@ -1454,6 +1457,8 @@ public class GameMap : MonoBehaviour
 
     public void UpdateCenter(Vector3 pos)
     {
+        if(cameraMovement.following)
+            return;
         DFCoord dfPos = UnityToDFCoord(pos);
         posXTile = dfPos.x;
         posYTile = dfPos.y;

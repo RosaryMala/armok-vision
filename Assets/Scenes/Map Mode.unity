@@ -10611,7 +10611,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BlocksToFetch: 80
   RunOnAlternateThread: 1
-  refreshDelay: 1
+  refreshDelay: 0.1
   fetchMap: 1
   fetchScreen: 1
   fetchUnits: 1
@@ -16393,6 +16393,7 @@ GameObject:
   - component: {fileID: 1383803865}
   - component: {fileID: 1383803864}
   - component: {fileID: 1383803866}
+  - component: {fileID: 1383803867}
   m_Layer: 0
   m_Name: God View Rig
   m_TagString: CameraRig
@@ -16466,6 +16467,19 @@ MonoBehaviour:
   firstPersonThreshold: 0
   maxZoom: 3.5
   viewCamera: {fileID: 654332373}
+--- !u!114 &1383803867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1383803862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66481b003c989ca4eaae663093ab5797, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offset: {x: 0, y: 0, z: 0}
+  firstPerson: 0
 --- !u!4 &1404020253
 Transform:
   m_ObjectHideFlags: 0
@@ -17611,8 +17625,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offset: {x: 0, y: 0, z: 0}
   firstPerson: 1
-  following: 0
-  forceFollowing: 0
 --- !u!82 &1503855529
 AudioSource:
   m_ObjectHideFlags: 0
