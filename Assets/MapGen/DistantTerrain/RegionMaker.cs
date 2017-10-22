@@ -306,7 +306,6 @@ public class RegionMaker : MonoBehaviour
                             case SiteRealizationBuildingType.shop_house:
                             case SiteRealizationBuildingType.warehouse:
                             case SiteRealizationBuildingType.well:
-                            case SiteRealizationBuildingType.vault:
                             case SiteRealizationBuildingType.hillock_house:
                             case SiteRealizationBuildingType.mead_hall:
                             case SiteRealizationBuildingType.fortress_entrance:
@@ -347,6 +346,7 @@ public class RegionMaker : MonoBehaviour
                                     AddBlock(vert1 + min, vert1 + max, biome, Color.black, snow);
                                     break;
                                 }
+                            case SiteRealizationBuildingType.vault:
                             case SiteRealizationBuildingType.great_tower:
                                 {
                                     Color buildingColor = ContentLoader.GetColor(building.material);
