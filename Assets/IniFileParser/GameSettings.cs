@@ -21,7 +21,7 @@ public class GameSettings : MonoBehaviour
     public class Meshing
     {
         public int meshingThreads = 4;
-        public int queueLimit = 8;
+        public int queueLimit = 4;
         public VoxelGenerator.CornerType cornerType = VoxelGenerator.CornerType.Rounded;
     }
 

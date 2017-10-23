@@ -417,12 +417,21 @@ public class GameMap : MonoBehaviour
         UpdateBlockVisibility();
     }
 
+    int prevDrawRangeDown = -1;
+    int prevDrawRangeUp = -1;
+    int prevDrawRangeSide = -1;
     bool prevFirstPerson = false;
     bool prevShadows = false;
     int PrevZ = -1;
     private void UpdateBlockVisibility()
     {
-        if (PosZ != PrevZ || firstPerson != prevFirstPerson || overheadShadows != prevShadows)
+        if (PosZ != PrevZ
+            || firstPerson != prevFirstPerson
+            || overheadShadows != prevShadows
+            || GameSettings.Instance.rendering.drawRangeDown != prevDrawRangeDown
+            || GameSettings.Instance.rendering.drawRangeSide != prevDrawRangeSide
+            || GameSettings.Instance.rendering.drawRangeUp != prevDrawRangeUp
+            )
         {
             for (int z = 0; z < mapMeshes.GetLength(2); z++)
             {
@@ -1114,6 +1123,7 @@ public class GameMap : MonoBehaviour
     // Have the mesher mesh all dirty tiles in the region
     void EnqueueMeshUpdates()
     {
+        int queueCount = 0;
         int xmin = Mathf.Clamp(PosXBlock - GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(0));
         int xmax = Mathf.Clamp(PosXBlock + GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(0));
         int ymin = Mathf.Clamp(PosYBlock - GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(1));
@@ -1136,7 +1146,9 @@ public class GameMap : MonoBehaviour
                     return;
                 blockDirtyBits[PosXBlock, PosYBlock, zz] = false;
                 liquidBlockDirtyBits[PosXBlock, PosYBlock, zz] = false;
-                return;
+                queueCount++;
+                if (queueCount > GameSettings.Instance.meshing.queueLimit)
+                    return;
             }
         for (int zz = posZ - 1; zz >= zmin; zz--)
         {
@@ -1158,7 +1170,9 @@ public class GameMap : MonoBehaviour
                         return;
                     blockDirtyBits[xx, yy, zz] = false;
                     liquidBlockDirtyBits[xx, yy, zz] = false;
-                    return;
+                    queueCount++;
+                    if (queueCount > GameSettings.Instance.meshing.queueLimit)
+                        return;
                 }
         }
         for (int zz = posZ; zz < zmax; zz++)
@@ -1180,7 +1194,9 @@ public class GameMap : MonoBehaviour
                         return;
                     blockDirtyBits[xx, yy, zz] = false;
                     liquidBlockDirtyBits[xx, yy, zz] = false;
-                    return;
+                    queueCount++;
+                    if (queueCount > GameSettings.Instance.meshing.queueLimit)
+                        return;
                 }
         }
     }
@@ -1192,7 +1208,6 @@ public class GameMap : MonoBehaviour
     {
 
         UnityEngine.Profiling.Profiler.BeginSample("FetchNewMeshes", this);
-        var timer = System.Diagnostics.Stopwatch.StartNew();
         while (mesher.HasNewMeshes)
         {
             if (blockPrefab == null)
@@ -1226,8 +1241,6 @@ public class GameMap : MonoBehaviour
                 meshSet.collisionBlocks.sharedMesh = null;
                 meshSet.collisionBlocks.sharedMesh = collisionMesh;
             }
-            if (timer.ElapsedMilliseconds > timeout)
-                break;
         }
         UnityEngine.Profiling.Profiler.EndSample();
     }
@@ -1470,7 +1483,6 @@ public class GameMap : MonoBehaviour
 
 
     public ParticleSystem itemParticleSystem;
-    private const int timeout = 100;
     public GameObject mapWindow;
     public GameObject mapCamera;
     public Canvas mainUI;

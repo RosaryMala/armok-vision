@@ -142,7 +142,7 @@ abstract class BlockMesher {
             //if there's no existing queue member, don't add more than needed.
             if (redundant.data == null)
             {
-                if (requestQueue.Count >= GameSettings.Instance.meshing.queueLimit)
+                if (requestQueue.Count >= 16)
                 {
                     UnityEngine.Profiling.Profiler.EndSample();
                     return false;
@@ -588,7 +588,6 @@ abstract class BlockMesher {
                     if (!ContentLoader.Instance.TileMeshConfiguration.GetValue(tile, layer, out meshContent))
                     {
                         buffer.meshData = null;
-                        GameMap.EndSample();
                         return;
                     }
                 }
