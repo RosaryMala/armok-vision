@@ -418,11 +418,20 @@ public class GameMap : MonoBehaviour
     }
     private void UpdateBlockVisibility()
     {
+        Shader.SetGlobalVector("_ViewMin", DFtoUnityBottomCorner(new DFCoord(
+            (PosXBlock - GameSettings.Instance.rendering.drawRangeSide + 1) * blockSize,
+            (PosYBlock + GameSettings.Instance.rendering.drawRangeSide) * blockSize,
+            PosZ - GameSettings.Instance.rendering.drawRangeDown
+        )) + new Vector3(0, 0, GameMap.tileWidth));
+        Shader.SetGlobalVector("_ViewMax", DFtoUnityBottomCorner(new DFCoord(
+            (PosXBlock + GameSettings.Instance.rendering.drawRangeSide) * blockSize,
+            (PosYBlock - GameSettings.Instance.rendering.drawRangeSide + 1) * blockSize,
+            PosZ + (firstPerson ? GameSettings.Instance.rendering.drawRangeUp : 0)
+        )) + new Vector3(0, 0, GameMap.tileWidth));
+
+        for (int z = 0; z < mapMeshes.GetLength(2); z++)
         {
-            for (int z = 0; z < mapMeshes.GetLength(2); z++)
-            {
-                UpdateBlockVisibility(z);
-            }
+            UpdateBlockVisibility(z);
         }
     }
 

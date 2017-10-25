@@ -28,7 +28,6 @@ public class MapPositionUpdater : MonoBehaviour
     public void Update()
     {
         Vector3 newPos = transform.TransformPoint(offset);
-        Vector3 scaledOffset = transform.position - newPos;
 
         if (gameMap != null && (oldPos - newPos).sqrMagnitude > 0.01)
         {

@@ -73,10 +73,25 @@ Shader "Custom/DFTerrainShaderRealMats"
             float _SpatterSmoothness;
             float4 _SpatterNoise_ST;
 
+            float3      _ViewMin = float3(-99999, -99999, -99999);
+            float3      _ViewMax = float3(99999, 99999, 99999);
+
 #include "blend.cginc"
 
             void surf(Input IN, inout SurfaceOutputStandard o)
             {
+                if(
+                    //If the cords are exact, tons of flickering, so we nudge them.
+                    (IN.worldPos.x > _ViewMin.x + 0.001) 
+                    && (IN.worldPos.y > _ViewMin.y + 0.001)  
+                    && (IN.worldPos.z > _ViewMin.z + 0.001) 
+                    && (IN.worldPos.x < _ViewMax.x - 0.001) 
+                    && (IN.worldPos.z < _ViewMax.z - 0.001)  
+                    )
+                    {
+                        discard;
+                    }
+
                 fixed4 noise = tex2D(_SpatterNoise, TRANSFORM_TEX(IN.worldPos.xz, _SpatterNoise));
                 if (dot(IN.worldNormal, _SpatterDirection.xyz) >= lerp(1, 0, (IN.uv3_GraySample.x - noise.r)))
                 {

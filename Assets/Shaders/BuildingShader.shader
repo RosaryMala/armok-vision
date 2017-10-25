@@ -57,6 +57,7 @@
 #else
             float2 uv_MatTex;
 #endif
+            float3 worldPos;
         };
 
 #include "blend.cginc"
@@ -75,6 +76,9 @@
 
 		void surf (Input IN, inout SurfaceOutputStandard o)
         {
+            clip(IN.worldPos - _ViewMin);
+            clip(_ViewMax - IN.worldPos);
+
             float4 texcoords = TexCoords(IN);
             //get the mask 
             fixed4 dfTex = UNITY_SAMPLE_TEX2DARRAY(_MatTex, float3(texcoords.zw, UNITY_ACCESS_INSTANCED_PROP(_MatIndex)));

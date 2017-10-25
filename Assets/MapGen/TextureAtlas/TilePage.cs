@@ -13,7 +13,6 @@ public class TilePage : ICollection
     readonly int tileWidth;
     readonly int tileHeight;
     readonly int pageHeight;
-    readonly string pageName;
     Dictionary<DFCoord2d, int> spriteIndices = new Dictionary<DFCoord2d, int>();
     List<DFCoord2d> coordList = new List<DFCoord2d>();
     [SerializeField]
@@ -59,7 +58,6 @@ public class TilePage : ICollection
         this.tileWidth = originalPage.width / pageWidth;
         this.tileHeight = originalPage.height / pageHeight;
         this.pageHeight = pageHeight;
-        this.pageName = pageName;
     }
 
     public int AddTilePage(DFCoord2d coord)

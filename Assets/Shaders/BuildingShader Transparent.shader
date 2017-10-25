@@ -57,13 +57,17 @@
 #else
             float2 uv_MatTex;
 #endif
-        };
+            float3 worldPos;
+       };
 
 
 #include "blend.cginc"
 
         float4 TexCoords(Input IN)
         {
+            clip(IN.worldPos - _ViewMin);
+            clip(_ViewMax - IN.worldPos);
+
             float4 texcoord;
             texcoord.xy = IN.uv_MainTex; // Always source from uv0
 #ifdef _SECOND_UV

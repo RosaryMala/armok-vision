@@ -110,17 +110,6 @@ public class RegionMaker : MonoBehaviour
     MeshFilter waterChunk;
 
 
-    DFCoord fortOrigin = new DFCoord(-1, -1, -1);
-
-    public void Update()
-    {
-        if(fortOrigin != DFConnection.Instance.EmbarkMapPosition && ContentLoader.Instance != null)
-        {
-            fortOrigin = DFConnection.Instance.EmbarkMapPosition;
-            GenerateMesh();
-        }
-    }
-
     public void CopyFromRemote(RegionMap remoteMap, WorldMap mainMap)
     {
         if (remoteMap == null)
@@ -148,20 +137,6 @@ public class RegionMaker : MonoBehaviour
     {
         tiles = new RegionTile[width, height];
     }
-
-    //// Does about what you'd think it does.
-    //void Start()
-    //{
-    //    enabled = false;
-
-    //    DFConnection.RegisterConnectionCallback(this.OnConnectToDF);
-    //}
-
-    //void OnConnectToDF()
-    //{
-    //    enabled = true;
-    //    CopyFromRemote(DFConnection.Instance.NetWorldMap, DFConnection.Instance.NetMapInfo);
-    //}
 
     bool IsInCoords(DFCoord min, DFCoord max, int x, int y)
     {
@@ -212,15 +187,10 @@ public class RegionMaker : MonoBehaviour
         waterUvs.Clear();
         waterTris.Clear();
 
-        DFCoord fortMin = DFConnection.Instance.EmbarkMapPosition - regionOrigin;
-        DFCoord fortMax = fortMin + (DFConnection.Instance.EmbarkMapSize / 3);
-
         for (int x = 0; x < w; x++)
         {
             for (int y = 0; y < h; y++)
             {
-                if (IsInCoords(fortMin, fortMax, x, y))
-                    continue;
                 RegionTile tile = tiles[x, y];
                 if (tile == null)
                     continue;
@@ -246,19 +216,19 @@ public class RegionMaker : MonoBehaviour
                 }
 
                 int north = 0;
-                if (y > 0 && !IsInCoords(fortMin, fortMax, x, y - 1))
+                if (y > 0)
                     north = tiles[x, y - 1].elevation;
 
                 int south = 0;
-                if (y < h - 1 && !IsInCoords(fortMin, fortMax, x, y + 1))
+                if (y < h - 1)
                     south = tiles[x, y + 1].elevation;
 
                 int east = 0;
-                if (x < w - 1 && !IsInCoords(fortMin, fortMax, x + 1, y))
+                if (x < w - 1)
                     east = tiles[x + 1, y].elevation;
 
                 int west = 0;
-                if (x > 0 && !IsInCoords(fortMin, fortMax, x - 1, y))
+                if (x > 0)
                     west = tiles[x - 1, y].elevation;
 
                 Color terrainColor = Color.green;
