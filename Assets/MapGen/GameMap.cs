@@ -42,18 +42,18 @@ public class GameMap : MonoBehaviour
 
     // Parameters managing the currently visible area of the map.
     // Tracking:
-    int PosXBlock
+    public int PosXBlock
     {
         get
         {
-            return posXTile / 16;
+            return posXTile / blockSize;
         }
     }
-    int PosYBlock
+    public int PosYBlock
     {
         get
         {
-            return posYTile / 16;
+            return posYTile / blockSize;
         }
     }
     [SerializeField]
@@ -416,30 +416,13 @@ public class GameMap : MonoBehaviour
         //DrawBlocks();
         UpdateBlockVisibility();
     }
-
-    int prevDrawRangeDown = -1;
-    int prevDrawRangeUp = -1;
-    int prevDrawRangeSide = -1;
-    bool prevFirstPerson = false;
-    bool prevShadows = false;
-    int PrevZ = -1;
     private void UpdateBlockVisibility()
     {
-        if (PosZ != PrevZ
-            || firstPerson != prevFirstPerson
-            || overheadShadows != prevShadows
-            || GameSettings.Instance.rendering.drawRangeDown != prevDrawRangeDown
-            || GameSettings.Instance.rendering.drawRangeSide != prevDrawRangeSide
-            || GameSettings.Instance.rendering.drawRangeUp != prevDrawRangeUp
-            )
         {
             for (int z = 0; z < mapMeshes.GetLength(2); z++)
             {
                 UpdateBlockVisibility(z);
             }
-            prevFirstPerson = firstPerson;
-            prevShadows = overheadShadows;
-            PrevZ = PosZ;
         }
     }
 
@@ -447,13 +430,20 @@ public class GameMap : MonoBehaviour
     {
         if (z < 0 || z >= mapMeshes.GetLength(2))
             return;
-        for(int x = 0; x < mapMeshes.GetLength(0); x++)
-            for(int y = 0; y < mapMeshes.GetLength(1); y++)
+        for (int x = 0; x < mapMeshes.GetLength(0); x++)
+            for (int y = 0; y < mapMeshes.GetLength(1); y++)
             {
                 if (mapMeshes[x, y, z] == null)
                     continue;
+                if(
+                    x <= PosXBlock - GameSettings.Instance.rendering.drawRangeSide
+                    || x >= PosXBlock + GameSettings.Instance.rendering.drawRangeSide
+                    || y <= PosYBlock - GameSettings.Instance.rendering.drawRangeSide
+                    || y >= PosYBlock + GameSettings.Instance.rendering.drawRangeSide
+                )
+                    mapMeshes[x, y, z].UpdateVisibility(BlockMeshSet.Visibility.None);
+                else
                     mapMeshes[x, y, z].UpdateVisibility(GetVisibility(z));
-
             }
     }
 
@@ -1124,9 +1114,9 @@ public class GameMap : MonoBehaviour
     void EnqueueMeshUpdates()
     {
         int queueCount = 0;
-        int xmin = Mathf.Clamp(PosXBlock - GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(0));
+        int xmin = Mathf.Clamp(PosXBlock - GameSettings.Instance.rendering.drawRangeSide + 1, 0, mapMeshes.GetLength(0));
         int xmax = Mathf.Clamp(PosXBlock + GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(0));
-        int ymin = Mathf.Clamp(PosYBlock - GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(1));
+        int ymin = Mathf.Clamp(PosYBlock - GameSettings.Instance.rendering.drawRangeSide + 1, 0, mapMeshes.GetLength(1));
         int ymax = Mathf.Clamp(PosYBlock + GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(1));
         int zmin = Mathf.Clamp(posZ - GameSettings.Instance.rendering.drawRangeDown, 0, mapMeshes.GetLength(2));
         int zmax = Mathf.Clamp(posZ + GameSettings.Instance.rendering.drawRangeUp, 0, mapMeshes.GetLength(2));

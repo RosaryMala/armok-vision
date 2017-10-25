@@ -196,7 +196,11 @@ namespace Building
                 item.Value.gameObject.SetActive(
                     (building.pos_z_min < (GameMap.Instance.firstPerson ? GameMap.Instance.PosZ + GameSettings.Instance.rendering.drawRangeUp : GameMap.Instance.PosZ))
                     && (building.pos_z_max >= (GameMap.Instance.PosZ - GameSettings.Instance.rendering.drawRangeDown))
-                    );
+                    && (building.pos_x_max / GameMap.blockSize > (GameMap.Instance.PosXBlock - GameSettings.Instance.rendering.drawRangeSide))
+                    && (building.pos_x_min / GameMap.blockSize < (GameMap.Instance.PosXBlock + GameSettings.Instance.rendering.drawRangeSide))
+                    && (building.pos_y_max / GameMap.blockSize > (GameMap.Instance.PosYBlock - GameSettings.Instance.rendering.drawRangeSide))
+                    && (building.pos_y_min / GameMap.blockSize < (GameMap.Instance.PosYBlock + GameSettings.Instance.rendering.drawRangeSide))
+            );
             }
         }
 

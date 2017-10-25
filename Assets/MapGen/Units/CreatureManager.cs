@@ -93,7 +93,12 @@ public class CreatureManager : MonoBehaviour
                     if (MapDataStore.Main != null)
                         tile = MapDataStore.Main[unit.pos_x, unit.pos_y, unit.pos_z];
                     creatureList[unit.id].gameObject.SetActive(
-                        unit.pos_z < GameMap.Instance.PosZ && unit.pos_z >= (GameMap.Instance.PosZ - GameSettings.Instance.rendering.drawRangeDown)
+                        (unit.pos_z < (GameMap.Instance.firstPerson ? GameMap.Instance.PosZ + GameSettings.Instance.rendering.drawRangeUp : GameMap.Instance.PosZ))
+                        && unit.pos_z >= (GameMap.Instance.PosZ - GameSettings.Instance.rendering.drawRangeDown)
+                        && (unit.pos_x / GameMap.blockSize > (GameMap.Instance.PosXBlock - GameSettings.Instance.rendering.drawRangeSide))
+                        && (unit.pos_x / GameMap.blockSize < (GameMap.Instance.PosXBlock + GameSettings.Instance.rendering.drawRangeSide))
+                        && (unit.pos_y / GameMap.blockSize > (GameMap.Instance.PosYBlock - GameSettings.Instance.rendering.drawRangeSide))
+                        && (unit.pos_y / GameMap.blockSize < (GameMap.Instance.PosYBlock + GameSettings.Instance.rendering.drawRangeSide))
                         && (tile != null ? !tile.Hidden : false)
                         );
                 }
