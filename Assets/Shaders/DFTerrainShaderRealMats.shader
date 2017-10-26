@@ -1,7 +1,4 @@
-﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
-
-
+﻿
 Shader "Custom/DFTerrainShaderRealMats" 
 {
     Properties{
@@ -82,11 +79,11 @@ Shader "Custom/DFTerrainShaderRealMats"
             {
                 if(
                     //If the cords are exact, tons of flickering, so we nudge them.
-                    (IN.worldPos.x > _ViewMin.x + 0.001) 
-                    && (IN.worldPos.y > _ViewMin.y + 0.001)  
-                    && (IN.worldPos.z > _ViewMin.z + 0.001) 
-                    && (IN.worldPos.x < _ViewMax.x - 0.001) 
-                    && (IN.worldPos.z < _ViewMax.z - 0.001)  
+                    (IN.worldPos.x > _ViewMin.x - 0.001) 
+                    && (IN.worldPos.y > _ViewMin.y - 0.001)  
+                    && (IN.worldPos.z > _ViewMin.z - 0.001) 
+                    && (IN.worldPos.x < _ViewMax.x + 0.001) 
+                    && (IN.worldPos.z < _ViewMax.z + 0.001)  
                     )
                     {
                         discard;
