@@ -1,3 +1,19 @@
+v0.18.0
+ * New creature sprites that show skin color and equipment.
+ * Centralized the material color lookup, to make sure everything is on the same page, so to speak.
+ * Adjusted a few materials.
+ * Made a basic system for setting sprites for generated creatures. Needs more work, and about 200 sprites.
+ * Many new creature sprites, using the new sprite system.
+ * Made the startup loading function respond better, rather than freezing the entire program.
+ * Updated unity version to 2017.2
+ * Fixed some crashes when plants have a material index of -1
+ * Added a button to toggle the minimap.
+ * Fix some adventure mode errors.
+ * Fix following the DF view in adventure mode.
+ * Fix rendering hidden fun stuff in adventure mode.
+ * Brought back the side view distance behavior.
+ * Made the low-detail terrain render instead of the infinite hole of doom.
+
 v0.17.1
  * Fixed buildings not removing themselved when they're removed from DF. This made Adventure mode unusable.
  * Changed how material textures and colors are stored, leading to more ease of material creation. Now they are stored inside the unity archive itself, rather than separately.
