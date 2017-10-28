@@ -9,3 +9,4 @@
 *.spm	filter=lfs diff=lfs merge=lfs -text
 *.tga	filter=lfs diff=lfs merge=lfs -text
 *Textures.asset filter=lfs diff=lfs merge=lfs -text
+*.so filter=lfs diff=lfs merge=lfs -text
