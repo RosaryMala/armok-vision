@@ -548,21 +548,30 @@ public sealed class DFConnection : MonoBehaviour
         _actuallyConnected = true;
     }
 
+    string _dfhackPluginDir;
+
     string DFHackPluginDirectory
     {
         get
         {
+            if(string.IsNullOrEmpty(_dfhackPluginDir))
+            {
             DFStringStream tempStream = new DFStringStream();
             networkClient.run_command(tempStream, "lua", new List<string>(new string[] { "!dfhack.getHackPath()" }));
 
-            return tempStream.Value.Trim() + "/plugins/";
+            _dfhackPluginDir = tempStream.Value.Trim() + "/plugins/";
+            }
+            return _dfhackPluginDir;
         }
     }
 
+    string _AVPluginDir;
     string AVPluginDirectory
     {
         get
         {
+            if(string.IsNullOrEmpty(_AVPluginDir))
+            {
             if (dfhackVersionCall == null || dfVersionCall == null)
                 return "";
             dfproto.StringMessage dfHackVersion = new dfproto.StringMessage();
@@ -571,21 +580,22 @@ public sealed class DFConnection : MonoBehaviour
             dfhackVersionCall.execute(null, out dfHackVersion);
             dfVersionCall.execute(null, out dfVersion);
 
-            string pluginDirectory = "Plugins/" + dfVersion.value + "/" + dfHackVersion.value + "/";
+            _AVPluginDir = "Plugins/" + dfVersion.value + "/" + dfHackVersion.value + "/";
 #if UNITY_EDITOR
-            pluginDirectory = "ReleaseFiles/" + pluginDirectory;
-            Directory.CreateDirectory(pluginDirectory);
+            _AVPluginDir = "ReleaseFiles/" + _AVPluginDir;
+            Directory.CreateDirectory(_AVPluginDir);
 #endif
-            return pluginDirectory;
+            }
+            return _AVPluginDir;
         }
     }
 
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
-    string pluginName = "plug.dll";
+    string pluginName = "RemoteFortressReader.plug.dll";
 #elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
-    string pluginName = "plug.dylib";
+    string pluginName = "RemoteFortressReader.plug.dylib";
 #elif UNITY_STANDALONE_LINUX
-    string pluginName = "plug.so";
+    string pluginName = "RemoteFortressReader.plug.so";
 #else
     string pluginName = "INVALID";
 #endif
