@@ -45,7 +45,7 @@ MonoBehaviour:
   otherTrackingCode: UA-96435297-1
   productName: Armok-Vision
   bundleIdentifier: 
-  bundleVersion: v0.16.2_indev
+  bundleVersion: 0.18.0
   dispatchPeriod: 5
   sampleFrequency: 100
   logLevel: 1
