@@ -83,6 +83,7 @@ public sealed class DFConnection : MonoBehaviour
     private RemoteFunction<SingleBool> pauseCommandCall;
     private RemoteFunction<dfproto.EmptyMessage, SingleBool> pauseStatusCall;
     private RemoteFunction<dfproto.EmptyMessage, VersionInfo> versionInfoCall;
+    private RemoteFunction<dfproto.EmptyMessage, Status> reportsCall;
     private color_ostream dfNetworkOut = new color_ostream();
     private RemoteClient networkClient;
 
@@ -159,6 +160,7 @@ public sealed class DFConnection : MonoBehaviour
         pauseCommandCall = CreateAndBind<SingleBool>(networkClient, "SetPauseState", "RemoteFortressReader");
         pauseStatusCall = CreateAndBind<dfproto.EmptyMessage, SingleBool>(networkClient, "GetPauseState", "RemoteFortressReader");
         versionInfoCall = CreateAndBind<dfproto.EmptyMessage, VersionInfo>(networkClient, "GetVersionInfo", "RemoteFortressReader");
+        reportsCall = CreateAndBind<dfproto.EmptyMessage, Status>(networkClient, "GetReports", "RemoteFortressReader");
     }
 
     #endregion
@@ -183,6 +185,7 @@ public sealed class DFConnection : MonoBehaviour
         = new RingBuffer<MapBlock>(1024);
     private SingleBuffer<RemoteFortressReader.ScreenCapture> netScreenCapture;
     private EventBuffer worldMapMoved;
+    private SingleBuffer<Status> netStatus;
 
     // Input queues
     private RingBuffer<KeyboardEvent> keyPresses
@@ -325,6 +328,11 @@ public sealed class DFConnection : MonoBehaviour
     public RegionMaps PopRegionMapUpdate()
     {
         return netRegionMaps.Pop();
+    }
+
+    public Status PopStatusUpdate()
+    {
+        return netStatus.Pop();
     }
 
     /// <summary>
@@ -1076,6 +1084,16 @@ public sealed class DFConnection : MonoBehaviour
                 }
             }
         }
+
+        Status stat = null;
+        if(reportsCall != null)
+        {
+            reportsCall.execute(null, out stat);
+            if (stat != null)
+            {
+                netStatus.Set(stat);
+            }
+        }
         #endregion
 
         //All communication with DF should be before this.
@@ -1150,13 +1168,16 @@ public sealed class DFConnection : MonoBehaviour
                 if (Time.time - prevTime < Instance.refreshDelay)
                     return;
                 prevTime = Time.time;
-                try
+                if (ContentLoader.Instance != null)
                 {
-                    connection.PerformSingleUpdate();
-                }
-                catch (System.Exception e)
-                {
-                    throw new DFRemoteException(e);
+                    try
+                    {
+                        connection.PerformSingleUpdate();
+                    }
+                    catch (System.Exception e)
+                    {
+                        throw new DFRemoteException(e);
+                    }
                 }
             }
 
@@ -1207,15 +1228,18 @@ public sealed class DFConnection : MonoBehaviour
             {
                 while (!finished)
                 {
-                    try
+                    if (ContentLoader.Instance != null)
                     {
-                        connection.PerformSingleUpdate();
-                    }
-                    catch (System.Exception e)
-                    {
-                        crashError.Set(e);
-                        connection.ResumeGame();
+                        try
+                        {
+                            connection.PerformSingleUpdate();
+                        }
+                        catch (System.Exception e)
+                        {
+                            crashError.Set(e);
+                            connection.ResumeGame();
                             return;
+                        }
                     }
                     Thread.Sleep((int)(Instance.refreshDelay * 1000));
                 }

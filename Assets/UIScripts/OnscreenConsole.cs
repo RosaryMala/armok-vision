@@ -22,10 +22,12 @@ public class OnscreenConsole : MonoBehaviour
     public RectTransform logParent;
     public Text logItem;
 
-    // Use this for initialization
-    void Start()
-    {
+    private static OnscreenConsole _instance;
 
+    // Use this for initialization
+    void Awake()
+    {
+        _instance = this;
     }
 
     // Update is called once per frame
@@ -72,6 +74,15 @@ public class OnscreenConsole : MonoBehaviour
                     break;
             }
         }
+    }
+
+    public static void ShowMessage(string message, float timeout, Color color)
+    {
+        var item = Instantiate(_instance.logItem, _instance.logParent);
+        item.text = message;
+        item.rectTransform.SetAsLastSibling();
+        item.color = color;
+        item.GetComponent<FadeAndDie>().startfade = timeout;
     }
 
     private void OnEnable()

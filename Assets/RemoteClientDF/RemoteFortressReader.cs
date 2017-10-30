@@ -3772,6 +3772,142 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Report")]
+  public partial class Report : global::ProtoBuf.IExtensible
+  {
+    public Report() {}
+    
+    [UnityEngine.SerializeField]
+    private int _type = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int type
+    {
+      get { return _type; }
+      set { _type = value; }
+    }
+    [UnityEngine.SerializeField]
+    private string _text = "";
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"text", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string text
+    {
+      get { return _text; }
+      set { _text = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.ColorDefinition _color = null;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"color", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.ColorDefinition color
+    {
+      get { return _color; }
+      set { _color = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _duration = default(int);
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"duration", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int duration
+    {
+      get { return _duration; }
+      set { _duration = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _continuation = default(bool);
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"continuation", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool continuation
+    {
+      get { return _continuation; }
+      set { _continuation = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _unconscious = default(bool);
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"unconscious", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool unconscious
+    {
+      get { return _unconscious; }
+      set { _unconscious = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _announcement = default(bool);
+    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"announcement", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool announcement
+    {
+      get { return _announcement; }
+      set { _announcement = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _repeat_count = default(int);
+    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"repeat_count", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int repeat_count
+    {
+      get { return _repeat_count; }
+      set { _repeat_count = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.Coord _pos = null;
+    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"pos", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Coord pos
+    {
+      get { return _pos; }
+      set { _pos = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _id = default(int);
+    [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int id
+    {
+      get { return _id; }
+      set { _id = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _year = default(int);
+    [global::ProtoBuf.ProtoMember(11, IsRequired = false, Name=@"year", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int year
+    {
+      get { return _year; }
+      set { _year = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _time = default(int);
+    [global::ProtoBuf.ProtoMember(12, IsRequired = false, Name=@"time", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int time
+    {
+      get { return _time; }
+      set { _time = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Status")]
+  public partial class Status : global::ProtoBuf.IExtensible
+  {
+    public Status() {}
+    
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.Report> _reports = new global::System.Collections.Generic.List<RemoteFortressReader.Report>();
+    [global::ProtoBuf.ProtoMember(1, Name=@"reports", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.Report> reports
+    {
+      get { return _reports; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
     [global::ProtoBuf.ProtoContract(Name=@"TiletypeShape")]
     public enum TiletypeShape
     {
