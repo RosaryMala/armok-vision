@@ -545,7 +545,7 @@ namespace DFHack
             return (got == fullsz);
         }
 
-        protected command_result execute<Input, Output>(IDFStream outString, Input input, out Output output)
+        protected command_result TryExecute<Input, Output>(IDFStream outString, Input input, out Output output)
             where Input : class, message_type, new()
             where Output : class, message_type, new()
         {
@@ -718,26 +718,26 @@ namespace DFHack
 
         public RemoteFunction() : base(new Input(), new Output()) { }
 
-        public command_result execute()
+        public command_result TryExecute()
         {
             if (p_client == null)
                 return command_result.CR_NOT_IMPLEMENTED;
             else
             {
                 Output tempOut;
-                command_result result = base.execute<Input, Output>(default_ostream(), input, out tempOut);
+                command_result result = base.TryExecute<Input, Output>(default_ostream(), input, out tempOut);
                 output = tempOut;
                 return result;
             }
         }
-        public command_result execute(IDFStream stream)
+        public command_result TryExecute(IDFStream stream)
         {
             Output tempOut;
-            command_result result = base.execute<Input, Output>(stream, input, out tempOut);
+            command_result result = base.TryExecute<Input, Output>(stream, input, out tempOut);
             output = tempOut;
             return result;
         }
-        public command_result execute(Input input, out Output output)
+        public command_result TryExecute(Input input, out Output output)
         {
             if (p_client == null)
             {
@@ -746,15 +746,87 @@ namespace DFHack
             }
             else
             {
-                return base.execute<Input, Output>(default_ostream(), input, out output);
+                return base.TryExecute<Input, Output>(default_ostream(), input, out output);
             }
         }
-        public command_result execute(IDFStream stream, Input input, out Output output)
+        public command_result TryExecute(IDFStream stream, Input input, out Output output)
         {
-            return base.execute<Input, Output>(stream, input, out output);
+            return base.TryExecute<Input, Output>(stream, input, out output);
+        }
+        public Output Execute(Input input = null)
+        {
+            Output output;
+            if (TryExecute(input, out output) == command_result.CR_OK)
+                return output;
+            else
+                return null;
         }
     }
 
+    public class TimedRemoteFunction<Input, Output>
+        where Input : class, message_type, new()
+        where Output : class, message_type, new()
+    {
+        private RemoteFunction<Input, Output> function;
+        private float interval;
+
+        Stopwatch watch = null;
+
+        public TimedRemoteFunction(float interval, RemoteFunction<Input, Output> function)
+        {
+            this.function = function;
+            this.interval = interval;
+        }
+
+        public Output Execute(Input input)
+        {
+            Output output = null;
+            if(watch == null)
+            {
+                output = function.Execute(input);
+                watch = new Stopwatch();
+                watch.Start();
+            }
+            else if(watch.ElapsedMilliseconds > interval)
+            {
+                output = function.Execute(input);
+                watch.Reset();
+                watch.Start();
+            }
+            return output;
+        }
+    }
+    public class TimedRemoteFunction<Input>
+    where Input : class, message_type, new()
+    {
+        private RemoteFunction<Input> function;
+        private double interval;
+
+        Stopwatch watch = null;
+
+        public TimedRemoteFunction(double interval, RemoteFunction<Input> function)
+        {
+            this.function = function;
+            this.interval = interval;
+        }
+
+        public void Execute(Input input)
+        {
+            if (watch == null)
+            {
+                function.Execute(input);
+                watch = new Stopwatch();
+                watch.Start();
+            }
+            else if (watch.ElapsedMilliseconds > interval)
+            {
+                function.Execute(input);
+                watch.Reset();
+                watch.Start();
+            }
+            return;
+        }
+    }
     public class RemoteFunction<Input> : RemoteFunctionBase
         where Input : class, message_type, new()
     {
@@ -773,35 +845,46 @@ namespace DFHack
 
         public RemoteFunction() : base(new Input(), new EmptyMessage()) { }
 
-        public command_result execute()
+        public command_result TryExecute()
         {
             if (p_client == null)
                 return command_result.CR_NOT_IMPLEMENTED;
             else
             {
                 EmptyMessage empty;
-                return base.execute<Input, EmptyMessage>(default_ostream(), input, out empty);
+                return base.TryExecute<Input, EmptyMessage>(default_ostream(), input, out empty);
             }
         }
-        public command_result execute(IDFStream stream)
+        public command_result TryExecute(IDFStream stream)
         {
             EmptyMessage empty;
-            return base.execute<Input, EmptyMessage>(stream, input, out empty);
+            return base.TryExecute<Input, EmptyMessage>(stream, input, out empty);
         }
-        public command_result execute(Input input)
+        public command_result TryExecute(Input input)
         {
             if (p_client == null)
                 return command_result.CR_NOT_IMPLEMENTED;
             else
             {
                 EmptyMessage empty;
-                return base.execute<Input, EmptyMessage>(default_ostream(), input, out empty);
+                return base.TryExecute<Input, EmptyMessage>(default_ostream(), input, out empty);
             }
         }
-        public command_result execute(IDFStream stream, Input input)
+        public command_result TryExecute(IDFStream stream, Input input)
         {
             EmptyMessage empty;
-            return base.execute<Input, EmptyMessage>(stream, input, out empty);
+            return base.TryExecute<Input, EmptyMessage>(stream, input, out empty);
+        }
+        public void Execute(Input input)
+        {
+            if (p_client == null)
+                return;
+            else
+            {
+                EmptyMessage empty;
+                base.TryExecute<Input, EmptyMessage>(default_ostream(), input, out empty);
+                return;
+            }
         }
     };
 
@@ -843,7 +926,7 @@ namespace DFHack
                 input.output_msg = function.p_out_template.GetType().ToString();
             }
 
-            if (bind_call.execute(outStream) != command_result.CR_OK)
+            if (bind_call.TryExecute(outStream) != command_result.CR_OK)
                 return false;
 
             function.id = (Int16)bind_call.output.assigned_id;
@@ -1038,7 +1121,7 @@ namespace DFHack
             for (int i = 0; i < args.Count; i++)
                 runcmd_call.input.arguments.Add(args[i]);
 
-            return runcmd_call.execute(output);
+            return runcmd_call.TryExecute(output);
         }
 
         //    // For executing multiple calls in rapid succession.
@@ -1055,7 +1138,7 @@ namespace DFHack
                 resume_call.bind(this, "CoreResume");
             }
 
-            if (suspend_call.execute(default_output()) == command_result.CR_OK)
+            if (suspend_call.TryExecute(default_output()) == command_result.CR_OK)
                 return suspend_call.output.value;
             else
                 return -1;
@@ -1065,7 +1148,7 @@ namespace DFHack
             if (!suspend_ready)
                 return -1;
 
-            if (resume_call.execute(default_output()) == command_result.CR_OK)
+            if (resume_call.TryExecute(default_output()) == command_result.CR_OK)
                 return resume_call.output.value;
             else
                 return -1;

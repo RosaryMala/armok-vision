@@ -135,6 +135,12 @@ public class GameSettings : MonoBehaviour
     }
 
     [Serializable]
+    public class UpdateTimers
+    {
+        public float blockUpdate = 500;
+    }
+
+    [Serializable]
     public class Settings
     {
         public Meshing meshing = new Meshing();
@@ -143,6 +149,7 @@ public class GameSettings : MonoBehaviour
         public CameraSettings camera = new CameraSettings();
         public Game game = new Game();
         public Debug debug = new Debug();
+        public UpdateTimers updateTimers = new UpdateTimers();
     }
 
     public static Settings Instance = new Settings();
