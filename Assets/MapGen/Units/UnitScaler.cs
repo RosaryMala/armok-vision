@@ -6,7 +6,7 @@ public class UnitScaler : MonoBehaviour {
     internal void UpdateSize(UnitDefinition unit, LayeredSprite layeredSprite)
     {
         float scale = 1;
-        if (GameSettings.Instance.units.scaleUnits)
+        if (GameSettings.Instance.units.scaleUnits && unit.size_info != null)
         {
             float baseSize = 391.0f;
             if (layeredSprite != null && layeredSprite.SpriteCollection != null && layeredSprite.SpriteCollection.standardLength > 0)

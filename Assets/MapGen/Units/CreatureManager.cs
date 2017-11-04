@@ -79,13 +79,6 @@ public class CreatureManager : MonoBehaviour
                     creatureList[unit.id] = Instantiate(creatureTemplate, gameObject.transform);
                     creatureList[unit.id].name = "Unit_" + unit.id;
                     creatureList[unit.id].transform.position = new Vector3(-3000,-3000,-3000);
-
-                    var creature = creatureList[unit.id].GetComponent<Creature>();
-
-                    creature.UpdateCreature(unit);
-
-                    Color color = Color.white;
-
                 }
                 if (!singleRow)
                 {
@@ -102,7 +95,6 @@ public class CreatureManager : MonoBehaviour
                         && (tile != null ? !tile.Hidden : false)
                         );
                 }
-
                 if (creatureList[unit.id].gameObject.activeSelf) //Only update stuff if it's actually visible.
                 {
                     if (singleRow)

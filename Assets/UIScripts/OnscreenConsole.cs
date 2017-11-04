@@ -22,6 +22,8 @@ public class OnscreenConsole : MonoBehaviour
     public RectTransform logParent;
     public Text logItem;
 
+    public int maxLogItems = 100;
+
     private static OnscreenConsole _instance;
 
     // Use this for initialization
@@ -46,6 +48,8 @@ public class OnscreenConsole : MonoBehaviour
             }
             if (string.IsNullOrEmpty(log.logString))
                 continue;
+            if (logParent.childCount >= maxLogItems)
+                Destroy(logParent.GetChild(0).gameObject);
             var item = Instantiate(logItem, logParent);
             item.text = log.logString;
             item.rectTransform.SetAsLastSibling();
@@ -78,6 +82,8 @@ public class OnscreenConsole : MonoBehaviour
 
     public static void ShowMessage(string message, float timeout, Color color)
     {
+        if (_instance.logParent.childCount >= _instance.maxLogItems)
+            Destroy(_instance.logParent.GetChild(0).gameObject);
         var item = Instantiate(_instance.logItem, _instance.logParent);
         item.text = message;
         item.rectTransform.SetAsLastSibling();

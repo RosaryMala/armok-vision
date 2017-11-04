@@ -116,7 +116,7 @@ public class LayeredSprite : MonoBehaviour
             switch (spriteLayerDef.spriteSource)
             {
                 case CreatureSpriteLayer.SpriteSource.Static:
-                    sprite.enabled = true;
+                    sprite.gameObject.SetActive(true);
                     switch (spriteLayerDef.colorSource)
                     {
                         case CreatureSpriteLayer.ColorSource.Fixed:
@@ -131,7 +131,7 @@ public class LayeredSprite : MonoBehaviour
                     }
                     break;
                 case CreatureSpriteLayer.SpriteSource.Bodypart:
-                    sprite.enabled = true;
+                    sprite.gameObject.SetActive(true);
                     switch (spriteLayerDef.colorSource)
                     {
                         case CreatureSpriteLayer.ColorSource.Fixed:
@@ -140,7 +140,7 @@ public class LayeredSprite : MonoBehaviour
                         case CreatureSpriteLayer.ColorSource.Material:
                             ColorDefinition unitColor = new ColorDefinition();
                             int colorModIndex = casteRaw.color_modifiers.FindIndex(x => x.part == spriteLayerDef.token && x.start_date == 0);
-                            if(colorModIndex >= 0)
+                            if(colorModIndex >= 0 && unit.appearance != null)
                             {
                                 unitColor = casteRaw.color_modifiers[colorModIndex].patterns[unit.appearance.colors[colorModIndex]].colors[spriteLayerDef.patternIndex];
                                 sprite.color = new Color32((byte)unitColor.red, (byte)unitColor.green, (byte)unitColor.blue, 128);
@@ -151,7 +151,7 @@ public class LayeredSprite : MonoBehaviour
                                 if (tissueIndex >= 0)
                                     sprite.color = ContentLoader.GetColor(creatureRaw.tissues[tissueIndex].material);
                                 else
-                                    sprite.enabled = false;
+                                    sprite.gameObject.SetActive(false);
                                 break;
                             }
                             break;
@@ -162,7 +162,7 @@ public class LayeredSprite : MonoBehaviour
                             var part = casteRaw.body_parts.Find(x => x.token == spriteLayerDef.token);
                             if(part == null)
                             {
-                                sprite.enabled = false;
+                                sprite.gameObject.SetActive(false);
                                 break;
                             }
                             sprite.color = ContentLoader.GetColor(creatureRaw.tissues[part.layers[0].tissue_id].material);
@@ -176,58 +176,58 @@ public class LayeredSprite : MonoBehaviour
                         case CreatureSpriteLayer.HairType.Hair:
                             if (unit.inventory.FindIndex(x => x.item.type.mat_type == (int)item_type.HELM) >= 0)
                             {
-                                sprite.enabled = false;
+                                sprite.gameObject.SetActive(false);
                                 break;
                             }
                             if(unit.appearance == null || unit.appearance.hair == null)
                             {
-                                sprite.enabled = spriteLayerDef.hairStyle == HairStyle.UNKEMPT;
+                                sprite.gameObject.SetActive(spriteLayerDef.hairStyle == HairStyle.UNKEMPT);
                             }
                             else
                             {
-                                sprite.enabled = (spriteLayerDef.hairStyle == unit.appearance.hair.style)
+                                sprite.gameObject.SetActive((spriteLayerDef.hairStyle == unit.appearance.hair.style)
                                     && (spriteLayerDef.hairMin <= unit.appearance.hair.length)
-                                    && ((spriteLayerDef.hairMax < 0) || (spriteLayerDef.hairMax > unit.appearance.hair.length));
+                                    && ((spriteLayerDef.hairMax < 0) || (spriteLayerDef.hairMax > unit.appearance.hair.length)));
                             }
                             break;
                         case CreatureSpriteLayer.HairType.Beard:
                             if (unit.appearance == null || unit.appearance.beard == null)
                             {
-                                sprite.enabled = spriteLayerDef.hairStyle == HairStyle.UNKEMPT;
+                                sprite.gameObject.SetActive(spriteLayerDef.hairStyle == HairStyle.UNKEMPT);
                             }
                             else
                             {
-                                sprite.enabled = (spriteLayerDef.hairStyle == unit.appearance.beard.style)
+                                sprite.gameObject.SetActive((spriteLayerDef.hairStyle == unit.appearance.beard.style)
                                     && (spriteLayerDef.hairMin <= unit.appearance.beard.length)
-                                    && ((spriteLayerDef.hairMax < 0) || (spriteLayerDef.hairMax > unit.appearance.beard.length));
+                                    && ((spriteLayerDef.hairMax < 0) || (spriteLayerDef.hairMax > unit.appearance.beard.length)));
                             }
                             break;
                         case CreatureSpriteLayer.HairType.Moustache:
                             if (unit.appearance == null || unit.appearance.moustache == null)
                             {
-                                sprite.enabled = spriteLayerDef.hairStyle == HairStyle.UNKEMPT;
+                                sprite.gameObject.SetActive(spriteLayerDef.hairStyle == HairStyle.UNKEMPT);
                             }
                             else
                             {
-                                sprite.enabled = (spriteLayerDef.hairStyle == unit.appearance.moustache.style)
+                                sprite.gameObject.SetActive((spriteLayerDef.hairStyle == unit.appearance.moustache.style)
                                     && (spriteLayerDef.hairMin <= unit.appearance.moustache.length)
-                                    && ((spriteLayerDef.hairMax < 0) || (spriteLayerDef.hairMax > unit.appearance.moustache.length));
+                                    && ((spriteLayerDef.hairMax < 0) || (spriteLayerDef.hairMax > unit.appearance.moustache.length)));
                             }
                             break;
                         case CreatureSpriteLayer.HairType.Sideburns:
                             if (unit.appearance == null || unit.appearance.sideburns == null)
                             {
-                                sprite.enabled = spriteLayerDef.hairStyle == HairStyle.UNKEMPT;
+                                sprite.gameObject.SetActive(spriteLayerDef.hairStyle == HairStyle.UNKEMPT);
                             }
                             else
                             {
-                                sprite.enabled = (spriteLayerDef.hairStyle == unit.appearance.sideburns.style)
+                                sprite.gameObject.SetActive((spriteLayerDef.hairStyle == unit.appearance.sideburns.style)
                                     && (spriteLayerDef.hairMin <= unit.appearance.sideburns.length)
-                                    && ((spriteLayerDef.hairMax < 0) || (spriteLayerDef.hairMax > unit.appearance.sideburns.length));
+                                    && ((spriteLayerDef.hairMax < 0) || (spriteLayerDef.hairMax > unit.appearance.sideburns.length)));
                             }
                             break;
                         default:
-                            sprite.enabled = true;
+                            sprite.gameObject.SetActive(true);
                             break;
                     }
                     break;
@@ -239,7 +239,7 @@ public class LayeredSprite : MonoBehaviour
                         );
                     if (inventoryIndex < 0)
                     {
-                        sprite.enabled = false;
+                        sprite.gameObject.SetActive(false);
                         break;
                     }
                     else
@@ -263,7 +263,7 @@ public class LayeredSprite : MonoBehaviour
                     }
                     break;
                 default:
-                    sprite.enabled = false;
+                    sprite.gameObject.SetActive(false);
                     break;
             }
             if (sprite.color.a < 0.5f)

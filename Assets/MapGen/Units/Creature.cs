@@ -70,11 +70,12 @@ public class Creature : MonoBehaviour
 
         var layers = LayeredSpriteManager.Instance.GetCreatureSprite(unit);
 
-        if (layers != null)
+        //no size info indicates that the unit was only given the most basic data.
+        if (layers != null && unit.size_info != null)
         {
             layeredSprite.SpriteCollection = layers;
             layeredSprite.enabled = true;
-            legacySprite.enabled = false;
+            legacySprite.gameObject.SetActive(false);
             layeredSprite.UpdateLayers(unit, creatureRaw, casteRaw);
             var group = GetComponentInChildren<LODGroup>();
             if (group != null)
@@ -87,9 +88,9 @@ public class Creature : MonoBehaviour
         }
         else
         {
-            layeredSprite.SpriteCollection = layers;
+            layeredSprite.SpriteCollection = null;
             layeredSprite.enabled = false;
-            legacySprite.enabled = true;
+            legacySprite.gameObject.SetActive(true);
             UpdateTileCreature();
             var group = GetComponentInChildren<LODGroup>();
             if (group != null)

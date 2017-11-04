@@ -27,9 +27,12 @@ public class ReportManager : MonoBehaviour
                     condensedReports.Add(report);
                 usedIDs.Add(report.id);
             }
-        foreach(var report in condensedReports)
+        //don't bother displaying a silly amount of reports.
+        for (int i = Mathf.Max(condensedReports.Count - 30, 0); i < condensedReports.Count; i++)
         {
-            switch((AnnouncementType)report.type)
+            var report = condensedReports[i];
+
+            switch ((AnnouncementType)report.type)
             {
                 case AnnouncementType.REGULAR_CONVERSATION:
                 case AnnouncementType.CONFLICT_CONVERSATION:

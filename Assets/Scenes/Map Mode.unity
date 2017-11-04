@@ -10717,6 +10717,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   logParent: {fileID: 365212132}
   logItem: {fileID: 114698939911735150, guid: 5e339a6386b22e242a26c06b194377e3, type: 2}
+  maxLogItems: 50
 --- !u!114 &861361740
 MonoBehaviour:
   m_ObjectHideFlags: 0

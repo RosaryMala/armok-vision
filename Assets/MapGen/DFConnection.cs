@@ -66,7 +66,7 @@ public sealed class DFConnection : MonoBehaviour
     private RemoteFunction<dfproto.EmptyMessage, MaterialList> itemListCall;
     private RemoteFunction<dfproto.EmptyMessage, TiletypeList> tiletypeListCall;
     private TimedRemoteFunction<BlockRequest, BlockList> blockListCall;
-    private RemoteFunction<dfproto.EmptyMessage, UnitList> unitListCall;
+    private RemoteFunction<BlockRequest, UnitList> unitListCall;
     private RemoteFunction<dfproto.EmptyMessage, ViewInfo> viewInfoCall;
     private RemoteFunction<dfproto.EmptyMessage, MapInfo> mapInfoCall;
     private RemoteFunction<dfproto.EmptyMessage> mapResetCall;
@@ -154,7 +154,7 @@ public sealed class DFConnection : MonoBehaviour
         itemListCall = CreateAndBind<dfproto.EmptyMessage, MaterialList>(networkClient, "GetItemList", "RemoteFortressReader");
         tiletypeListCall = CreateAndBind<dfproto.EmptyMessage, TiletypeList>(networkClient, "GetTiletypeList", "RemoteFortressReader");
         blockListCall = CreateAndBindTimed<BlockRequest, BlockList>(GameSettings.Instance.updateTimers.blockUpdate, networkClient, "GetBlockList", "RemoteFortressReader");
-        unitListCall = CreateAndBind<dfproto.EmptyMessage, UnitList>(networkClient, "GetUnitList", "RemoteFortressReader");
+        unitListCall = CreateAndBind<BlockRequest, UnitList>(networkClient, "GetUnitListInside", "RemoteFortressReader");
         viewInfoCall = CreateAndBind<dfproto.EmptyMessage, ViewInfo>(networkClient, "GetViewInfo", "RemoteFortressReader");
         mapInfoCall = CreateAndBind<dfproto.EmptyMessage, MapInfo>(networkClient, "GetMapInfo", "RemoteFortressReader");
         mapResetCall = CreateAndBind<dfproto.EmptyMessage>(networkClient, "ResetMapHashes", "RemoteFortressReader");
@@ -527,8 +527,7 @@ public sealed class DFConnection : MonoBehaviour
         }
         if (unitListCall != null)
         {
-            UnitList unitList;
-            unitListCall.TryExecute(null, out unitList);
+            UnitList unitList =  unitListCall.Execute();
             netUnitList.Set(unitList);
         }
         if (worldMapCall != null)
@@ -1013,12 +1012,23 @@ public sealed class DFConnection : MonoBehaviour
             }
         }
 
+        BlockCoord.Range? requestRangeUpdate = requestRegion.Pop();
+
+        if (requestRangeUpdate != null)
+        {
+            blockRequest.min_x = requestRangeUpdate.Value.Min.x;
+            blockRequest.min_y = requestRangeUpdate.Value.Min.y;
+            blockRequest.min_z = requestRangeUpdate.Value.Min.z;
+            blockRequest.max_x = requestRangeUpdate.Value.Max.x;
+            blockRequest.max_y = requestRangeUpdate.Value.Max.y;
+            blockRequest.max_z = requestRangeUpdate.Value.Max.z;
+        }
+
         if (fetchUnits)
         {
             if (unitListCall != null)
             {
-                UnitList unitList;
-                unitListCall.TryExecute(null, out unitList);
+                UnitList unitList = unitListCall.Execute(blockRequest);
                 netUnitList.Set(unitList);
             }
         }
@@ -1085,19 +1095,6 @@ public sealed class DFConnection : MonoBehaviour
                 && EmbarkMapSize.y > 0
                 && EmbarkMapSize.z > 0 && _needNewBlocks)
             {
-
-                BlockCoord.Range? requestRangeUpdate = requestRegion.Pop();
-
-                if (requestRangeUpdate != null)
-                {
-                    blockRequest.min_x = requestRangeUpdate.Value.Min.x;
-                    blockRequest.min_y = requestRangeUpdate.Value.Min.y;
-                    blockRequest.min_z = requestRangeUpdate.Value.Min.z;
-                    blockRequest.max_x = requestRangeUpdate.Value.Max.x;
-                    blockRequest.max_y = requestRangeUpdate.Value.Max.y;
-                    blockRequest.max_z = requestRangeUpdate.Value.Max.z;
-                }
-
                 if (blockListCall != null)
                 {
                     resultList = blockListCall.Execute(blockRequest);
