@@ -1430,6 +1430,33 @@ namespace RemoteFortressReader
       get { return _inventory; }
     }
   
+    [UnityEngine.SerializeField]
+    private float _subpos_x = default(float);
+    [global::ProtoBuf.ProtoMember(21, IsRequired = false, Name=@"subpos_x", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    [global::System.ComponentModel.DefaultValue(default(float))]
+    public float subpos_x
+    {
+      get { return _subpos_x; }
+      set { _subpos_x = value; }
+    }
+    [UnityEngine.SerializeField]
+    private float _subpos_y = default(float);
+    [global::ProtoBuf.ProtoMember(22, IsRequired = false, Name=@"subpos_y", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    [global::System.ComponentModel.DefaultValue(default(float))]
+    public float subpos_y
+    {
+      get { return _subpos_y; }
+      set { _subpos_y = value; }
+    }
+    [UnityEngine.SerializeField]
+    private float _subpos_z = default(float);
+    [global::ProtoBuf.ProtoMember(23, IsRequired = false, Name=@"subpos_z", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    [global::System.ComponentModel.DefaultValue(default(float))]
+    public float subpos_z
+    {
+      get { return _subpos_z; }
+      set { _subpos_z = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

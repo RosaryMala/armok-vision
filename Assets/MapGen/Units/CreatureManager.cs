@@ -92,7 +92,7 @@ public class CreatureManager : MonoBehaviour
                         && (unit.pos_x / GameMap.blockSize < (GameMap.Instance.PosXBlock + GameSettings.Instance.rendering.drawRangeSide))
                         && (unit.pos_y / GameMap.blockSize > (GameMap.Instance.PosYBlock - GameSettings.Instance.rendering.drawRangeSide))
                         && (unit.pos_y / GameMap.blockSize < (GameMap.Instance.PosYBlock + GameSettings.Instance.rendering.drawRangeSide))
-                        && (tile != null ? !tile.Hidden : false)
+                        && (tile != null ? !tile.Hidden : true)
                         );
                 }
                 if (creatureList[unit.id].gameObject.activeSelf) //Only update stuff if it's actually visible.
@@ -103,12 +103,12 @@ public class CreatureManager : MonoBehaviour
                     }
                     else
                     {
-                        Vector3 position = GameMap.DFtoUnityCoord(unit.pos_x, unit.pos_y, unit.pos_z);
+                        var position = GameMap.DFtoUnityCoord(unit.pos_x + unit.subpos_x, unit.pos_y + unit.subpos_y, unit.pos_z + unit.subpos_z);
                         RaycastHit hitInfo;
-                        if (Physics.Raycast(position + new Vector3(0, 2.9f, 0), Vector3.down, out hitInfo, 3, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+                        if (((flags1 & UnitFlags1.projectile) != UnitFlags1.projectile) && Physics.Raycast(position + new Vector3(0, 2.9f, 0), Vector3.down, out hitInfo, 3, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
                             creatureList[unit.id].TargetPos = hitInfo.point;
                         else
-                            creatureList[unit.id].TargetPos = position;
+                            creatureList[unit.id].TargetPos = position + new Vector3(0, GameMap.floorHeight, 0);
                     }
                     if (unit.rider_id >= 0 && creatureList.ContainsKey(unit.rider_id))
                     {

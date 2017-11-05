@@ -26,10 +26,10 @@ public class Creature : MonoBehaviour
 
     private void Update()
     {
-        if (transform.position.x < -100)
-            transform.position = TargetPos;
-        else
-            transform.position = Vector3.Lerp(transform.position, TargetPos, 0.5f);
+        //if (transform.position.x < -100)
+        //    transform.position = TargetPos;
+        //else
+        //    transform.position = Vector3.Lerp(transform.position, TargetPos, 0.5f);
     }
 
     static void InitProperties()
@@ -161,7 +161,7 @@ public class Creature : MonoBehaviour
         set
         {
             _targetPos = value;
-            if(!gameObject.activeInHierarchy || !enabled)
+            //if(!gameObject.activeInHierarchy || !enabled)
                 transform.position = value;
         }
     }
