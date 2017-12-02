@@ -1,4 +1,3 @@
 TileTextures/index.txt
 TileMeshes/index.txt
-ItemMeshes/index.txt
 graphics/
