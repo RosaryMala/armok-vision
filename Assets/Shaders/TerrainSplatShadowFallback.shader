@@ -4,7 +4,6 @@ Shader "Unlit/TerrainSplatShadowFallback"
 {
     Properties
     {
-        _MatTex("Albedo (RGB)", 2DArray) = "grey" {}
         _BumpMap("Normalmap (RGB) Occlusion (A)", 2DArray) = "bump" {}
         _SpecialTex("Metallic (R)", 2DArray) = "black" {}
         [PerRendererData]_SpatterTex("Spatter", 2D) = "" {}
@@ -34,7 +33,6 @@ Shader "Unlit/TerrainSplatShadowFallback"
             #include "UnityCG.cginc"
             #include "UnityStandardUtils.cginc"
 
-            UNITY_DECLARE_TEX2DARRAY(_MatTex);
             UNITY_DECLARE_TEX2DARRAY(_BumpMap);
             UNITY_DECLARE_TEX2DARRAY(_SpecialTex);
             sampler2D _SpatterTex;

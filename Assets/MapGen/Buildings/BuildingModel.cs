@@ -10,7 +10,7 @@ namespace Building
     {
         public RotationType rotationType;
 
-        public RemoteFortressReader.BuildingInstance originalBuilding;
+        public BuildingInstance originalBuilding;
 
         IBuildingPart[] parts;
         private Matrix4x4[] tilePositions;

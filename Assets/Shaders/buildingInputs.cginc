@@ -1,3 +1,6 @@
+#pragma shader_feature _BOUNDING_BOX_ENABLED
+
+
 half4       _Color;
 
 sampler2D   _MainTex;
@@ -6,7 +9,7 @@ sampler2D   _BumpMap;
 half        _BumpScale;
 
 sampler2D _DFMask;
-UNITY_DECLARE_TEX2DARRAY(_MatTex);
+UNITY_DECLARE_TEX2DARRAY(_MatTexArray);
 
 sampler2D   _SpecGlossMap;
 sampler2D   _MetallicGlossMap;

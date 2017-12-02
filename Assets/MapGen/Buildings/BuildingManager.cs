@@ -45,6 +45,7 @@ namespace Building
                 var loadedBuilding = Resources.Load<BuildingModel>(path);
                 if (loadedBuilding == null)
                 {
+                    Debug.LogWarning("Cannot find model for " + building.id);
                     GameMap.EndSample();
                     if (stopWatch.ElapsedMilliseconds > 100)
                     {

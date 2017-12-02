@@ -11,10 +11,10 @@ public class BuildingMaterialSetter : MonoBehaviour
     public void SetMaterials()
     {
         var materialPattern = Resources.Load<Texture2DArray>("patternTextures");
+        Shader.SetGlobalTexture("_MatTexArray", materialPattern);
         foreach (var part in FindObjectsOfType<Building.MaterialPart>())
         {
             var renderer = part.GetComponent<MeshRenderer>();
-            renderer.sharedMaterial.SetTexture("_MatTex", materialPattern);
             MaterialPropertyBlock prop = new MaterialPropertyBlock();
             prop.SetColor("_MatColor", materialStore.textures[materialChosen].color);
             prop.SetFloat("_MatIndex", materialStore.textures[materialChosen].patternIndex);

@@ -79,8 +79,6 @@ public class BuildingMaterialEditor : ShaderGUI
     MaterialProperty detailMask = null;
     MaterialProperty uvSetSecondary = null;
 
-    MaterialProperty materialTextureMap = null;
-
     MaterialEditor m_MaterialEditor;
     WorkflowMode m_WorkflowMode = WorkflowMode.Specular;
     ColorPickerHDRConfig m_ColorPickerHDRConfig = new ColorPickerHDRConfig(0f, 99f, 1 / 99f, 3f);
@@ -114,7 +112,6 @@ public class BuildingMaterialEditor : ShaderGUI
         emissionMap = FindProperty("_EmissionMap", props);
         detailMask = FindProperty("_DFMask", props);
         uvSetSecondary = FindProperty("_UVSec", props);
-        materialTextureMap = FindProperty("_MatTex", props);
     }
 
     public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] props)
@@ -165,9 +162,7 @@ public class BuildingMaterialEditor : ShaderGUI
 
             // Secondary properties
             GUILayout.Label(Styles.secondaryMapsText, EditorStyles.boldLabel);
-            m_MaterialEditor.TexturePropertySingleLine(Styles.materialTextureText, materialTextureMap);
             m_MaterialEditor.ShaderProperty(uvSetSecondary, Styles.uvSetLabel.text);
-            m_MaterialEditor.TextureScaleOffsetProperty(materialTextureMap);
 
             //// Third properties
             //GUILayout.Label(Styles.forwardText, EditorStyles.boldLabel);

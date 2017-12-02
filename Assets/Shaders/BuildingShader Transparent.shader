@@ -24,7 +24,6 @@
   
         [Enum(UV0,0,UV1,1)] _UVSec("UV Set for secondary textures", Float) = 0
 
-        _MatTex("DF Material Texture", 2DArray) = "grey" {}
         [PerRendererData] _MatColor("DF Material Color", Color) = (0.5,0.5,0.5,1)
         [PerRendererData] _MatIndex("DF Material Array Index", int) = 0
 
@@ -82,7 +81,7 @@
         {
             float4 texcoords = TexCoords(IN);
             //get the mask 
-            fixed4 dfTex = UNITY_SAMPLE_TEX2DARRAY(_MatTex, float3(texcoords.zw, UNITY_ACCESS_INSTANCED_PROP(_MatIndex)));
+            fixed4 dfTex = UNITY_SAMPLE_TEX2DARRAY(_MatTexArray, float3(texcoords.zw, UNITY_ACCESS_INSTANCED_PROP(_MatIndex)));
             fixed4 matColor = UNITY_ACCESS_INSTANCED_PROP(_MatColor);
             fixed3 albedo = overlay(dfTex.rgb, matColor.rgb);
             half smoothness = dfTex.a;

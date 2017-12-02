@@ -307,6 +307,7 @@ public class ContentLoader : MonoBehaviour
             GameMap.Instance.ShowHelp();
         PatternTextureArray = Resources.Load<Texture2DArray>("patternTextures");
         PatternTextureDepth = PatternTextureArray.depth;
+        Shader.SetGlobalTexture("_MatTexArray", PatternTextureArray);
         ShapeTextureArray = Resources.Load<Texture2DArray>("shapeTextures");
         ShapeTextureDepth = ShapeTextureArray.depth;
         PopulateMatDefinitions();
@@ -505,7 +506,6 @@ public class ContentLoader : MonoBehaviour
         Vector4 arrayCount = new Vector4(PatternTextureDepth, shapeTextureStorage.Count, specialTextureStorage.Count, ShapeTextureDepth);
         if (MaterialManager.Instance)
         {
-            MaterialManager.Instance.SetTexture("_MatTex", PatternTextureArray);
             MaterialManager.Instance.SetTexture("_ShapeMap", ShapeTextureArray);
             MaterialManager.Instance.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
             MaterialManager.Instance.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);

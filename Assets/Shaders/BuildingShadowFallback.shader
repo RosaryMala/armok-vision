@@ -26,8 +26,7 @@
 
     [Enum(UV0,0,UV1,1)] _UVSec("UV Set for secondary textures", Float) = 0
 
-        _MatTex("DF Material Texture", 2DArray) = "grey" {}
-    [PerRendererData] _MatColor("DF Material Color", Color) = (0.5,0.5,0.5,1)
+	    [PerRendererData] _MatColor("DF Material Color", Color) = (0.5,0.5,0.5,1)
         [PerRendererData] _MatIndex("DF Material Array Index", int) = 0
 
         // Blending state

@@ -153,7 +153,6 @@ namespace Building
                 meshRenderer.sharedMaterial = TransparentMaterial;
             else
                 meshRenderer.sharedMaterial = OriginalMaterial;
-            meshRenderer.sharedMaterial.SetTexture("_MatTex", ContentLoader.Instance.PatternTextureArray);
             MaterialPropertyBlock prop = new MaterialPropertyBlock();
             prop.SetColor("_MatColor", partColor);
             prop.SetFloat("_MatIndex", textureIndex);
