@@ -2,7 +2,7 @@
 # File Created: 30.10.2016 21:01:14
 
 #
-# object StaticMaterial
+# object BARREL
 #
 
 v  0.6302 0.0000 -0.0000
@@ -115,7 +115,7 @@ vt 0.1926 0.8807 0.0000
 vt 0.3802 0.7724 0.0000
 # 52 texture coords
 
-g StaticMaterial
+g BARREL
 s 1
 f 1/1/1 2/2/1 3/3/1 
 f 3/3/1 4/4/1 5/5/1 

@@ -2,7 +2,7 @@
 # File Created: 31.10.2016 23:43:27
 
 #
-# object StaticMaterial
+# object STATUE
 #
 
 v  0.2005 0.3810 -0.3021
@@ -200,7 +200,7 @@ vt 0.6167 0.2979 0.5449
 vt 0.5626 0.3915 0.6441
 # 95 texture coords
 
-g StaticMaterial
+g STATUE
 s 1
 f 1/1/1 2/2/2 3/3/3 
 f 3/3/3 4/4/4 1/1/1 

@@ -2,7 +2,7 @@
 # File Created: 29.10.2016 19:26:49
 
 #
-# object StaticMaterial
+# object BOULDER
 #
 
 v  0.0633 0.9530 -0.6222
@@ -68,7 +68,7 @@ vt 0.0829 0.8455 0.0000
 vt 0.3582 0.6891 0.0000
 # 33 texture coords
 
-g StaticMaterial
+g BOULDER
 s 1
 f 1/1/1 2/2/2 3/3/3 
 f 1/1/1 4/4/4 2/2/2 

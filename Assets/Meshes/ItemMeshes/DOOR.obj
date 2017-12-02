@@ -2,7 +2,7 @@
 # File Created: 01.11.2016 00:12:56
 
 #
-# object StaticMaterial
+# object DOOR
 #
 
 v  0.8000 0.0000 1.0000
@@ -45,7 +45,7 @@ vt 0.8194 0.0001 0.0000
 vt 0.6901 0.0001 0.0000
 # 20 texture coords
 
-g StaticMaterial
+g DOOR
 s 1
 f 1/1/1 2/2/1 3/3/1 
 f 3/3/1 4/4/1 1/1/1 

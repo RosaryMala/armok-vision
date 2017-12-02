@@ -7,11 +7,16 @@ ModelImporter:
   fileIDToRecycleName:
     100000: //RootNode
     100002: StaticMaterial
+    100004: BLOCKS
     400000: //RootNode
     400002: StaticMaterial
+    400004: BLOCKS
     2300000: StaticMaterial
+    2300002: BLOCKS
     3300000: StaticMaterial
+    3300002: BLOCKS
     4300000: StaticMaterial
+    4300002: BLOCKS
   externalObjects:
   - first:
       type: UnityEngine:Material

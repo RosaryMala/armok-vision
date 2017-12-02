@@ -2,7 +2,7 @@
 # File Created: 31.10.2016 23:36:46
 
 #
-# object StaticMaterial
+# object CAGE
 #
 
 v  -0.9000 0.0000 -0.9000
@@ -29,7 +29,7 @@ vt 0.0000 1.0000 0.0000
 vt 1.0000 1.0000 0.0000
 # 4 texture coords
 
-g StaticMaterial
+g CAGE
 s 2
 f 1/1/1 2/2/1 3/3/1 
 f 3/3/1 4/4/1 1/1/1 

@@ -7,11 +7,16 @@ ModelImporter:
   fileIDToRecycleName:
     100000: StaticMaterial
     100002: //RootNode
+    100004: WOOD
     400000: StaticMaterial
     400002: //RootNode
+    400004: WOOD
     2300000: StaticMaterial
+    2300002: WOOD
     3300000: StaticMaterial
+    3300002: WOOD
     4300000: StaticMaterial
+    4300002: WOOD
   externalObjects:
   - first:
       type: UnityEngine:Material

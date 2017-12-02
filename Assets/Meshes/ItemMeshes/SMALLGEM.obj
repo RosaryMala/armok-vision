@@ -2,7 +2,7 @@
 # File Created: 29.10.2016 21:25:59
 
 #
-# object StaticMaterial
+# object SMALLGEM
 #
 
 v  -0.2682 0.4182 -0.4384
@@ -306,7 +306,7 @@ vt 0.7071 1.0000 0.0000
 vt 0.4142 0.9999 0.0000
 # 117 texture coords
 
-g StaticMaterial
+g SMALLGEM
 s 1
 f 1/1/1 2/2/1 3/3/1 
 f 1/1/1 3/3/1 4/4/1 

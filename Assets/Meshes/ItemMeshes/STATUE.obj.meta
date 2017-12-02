@@ -7,11 +7,16 @@ ModelImporter:
   fileIDToRecycleName:
     100000: StaticMaterial
     100002: //RootNode
+    100004: STATUE
     400000: StaticMaterial
     400002: //RootNode
+    400004: STATUE
     2300000: StaticMaterial
+    2300002: STATUE
     3300000: StaticMaterial
+    3300002: STATUE
     4300000: StaticMaterial
+    4300002: STATUE
   externalObjects:
   - first:
       type: UnityEngine:Material

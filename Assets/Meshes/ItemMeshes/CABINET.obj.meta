@@ -7,11 +7,16 @@ ModelImporter:
   fileIDToRecycleName:
     100000: //RootNode
     100002: StaticMaterial
+    100004: CABINET
     400000: //RootNode
     400002: StaticMaterial
+    400004: CABINET
     2300000: StaticMaterial
+    2300002: CABINET
     3300000: StaticMaterial
+    3300002: CABINET
     4300000: StaticMaterial
+    4300002: CABINET
   externalObjects:
   - first:
       type: UnityEngine:Material
