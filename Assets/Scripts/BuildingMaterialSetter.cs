@@ -20,5 +20,13 @@ public class BuildingMaterialSetter : MonoBehaviour
             prop.SetFloat("_MatIndex", materialStore.textures[materialChosen].patternIndex);
             renderer.SetPropertyBlock(prop);
         }
+        foreach (var part in FindObjectsOfType<ItemModel>())
+        {
+            var renderer = part.GetComponentInChildren<MeshRenderer>();
+            MaterialPropertyBlock prop = new MaterialPropertyBlock();
+            prop.SetColor("_MatColor", materialStore.textures[materialChosen].color);
+            prop.SetFloat("_MatIndex", materialStore.textures[materialChosen].patternIndex);
+            renderer.SetPropertyBlock(prop);
+        }
     }
 }
