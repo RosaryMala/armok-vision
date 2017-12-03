@@ -77,6 +77,16 @@ namespace Building
             ContentLoader.RegisterLoadCallback(LoadBuildings);
         }
 
+        private void OnEnable()
+        {
+            Shader.EnableKeyword("_BOUNDING_BOX_ENABLED");
+        }
+
+        private void OnDisable()
+        {
+            Shader.DisableKeyword("_BOUNDING_BOX_ENABLED");
+        }
+
         private void LateUpdate()
         {
             UpdateVisibility();

@@ -1,4 +1,3 @@
-#pragma shader_feature _BOUNDING_BOX_ENABLED
 
 
 half4       _Color;

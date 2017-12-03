@@ -46,6 +46,7 @@
         #pragma shader_feature _SECOND_UV
         #pragma shader_feature _EMISSION
         #pragma shader_feature _METALLICGLOSSMAP
+#pragma multi_compile _ _BOUNDING_BOX_ENABLED
 
 #include "buildingInputs.cginc"
             
@@ -64,9 +65,6 @@
 
         float4 TexCoords(Input IN)
         {
-            clip(IN.worldPos - _ViewMin);
-            clip(_ViewMax - IN.worldPos);
-
             float4 texcoord;
             texcoord.xy = IN.uv_MainTex; // Always source from uv0
 #ifdef _SECOND_UV
@@ -79,6 +77,11 @@
 
 		void surf (Input IN, inout SurfaceOutputStandard o)
         {
+#ifdef _BOUNDING_BOX_ENABLED
+			clip(IN.worldPos - _ViewMin);
+			clip(_ViewMax - IN.worldPos);
+#endif
+
             float4 texcoords = TexCoords(IN);
             //get the mask 
             fixed4 dfTex = UNITY_SAMPLE_TEX2DARRAY(_MatTexArray, float3(texcoords.zw, UNITY_ACCESS_INSTANCED_PROP(_MatIndex)));

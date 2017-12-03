@@ -46,6 +46,7 @@
         #pragma shader_feature _SECOND_UV
         #pragma shader_feature _EMISSION
         #pragma shader_feature _METALLICGLOSSMAP
+#pragma multi_compile _ _BOUNDING_BOX_ENABLED
 
 #include "buildingInputs.cginc"
 
@@ -75,8 +76,10 @@
 
 		void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            clip( IN.worldPos - _ViewMin);
-            clip(_ViewMax - IN.worldPos);
+#ifdef _BOUNDING_BOX_ENABLED
+			clip(IN.worldPos - _ViewMin);
+			clip(_ViewMax - IN.worldPos);
+#endif
 
             float4 texcoords = TexCoords(IN);
             //get the mask 

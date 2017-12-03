@@ -186,7 +186,6 @@ public class GameMap : MonoBehaviour
     {
         enabled = false;
 
-
         Debug.Log("Started Armok Vision version " + BuildSettings.Instance.content_version + BuildManifest.Instance.buildNumber);
 
         Debug.Log("scmCommitId: " + BuildManifest.Instance.scmCommitId);
