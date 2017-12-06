@@ -9,19 +9,34 @@ ModelImporter:
     100002: //RootNode
     100004: Whip
     100006: Axe, Battle
+    100008: Plane002
+    100010: Whip001
+    100012: Sword Short
     400000: Plane001
     400002: //RootNode
     400004: Whip
     400006: Axe, Battle
+    400008: Plane002
+    400010: Whip001
+    400012: Sword Short
     2300000: Plane001
     2300002: Whip
     2300004: Axe, Battle
+    2300006: Plane002
+    2300008: Whip001
+    2300010: Sword Short
     3300000: Plane001
     3300002: Whip
     3300004: Axe, Battle
+    3300006: Plane002
+    3300008: Whip001
+    3300010: Sword Short
     4300000: Plane001
     4300002: Whip
     4300004: Axe, Battle
+    4300006: Plane002
+    4300008: Whip001
+    4300010: Sword Short
     9500000: //RootNode
   externalObjects:
   - first:
@@ -44,6 +59,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: 'Material #29'
     second: {fileID: 2100000, guid: c53f383dbaf297644965732bdf63c0ab, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 'Material #31'
+    second: {fileID: 2100000, guid: 6d20cb6d5dae36742ab0e665ae67f027, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
