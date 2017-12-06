@@ -44,7 +44,7 @@ public class BuildingMaterialEditor : ShaderGUI
         public static GUIContent normalMapText = new GUIContent("Normal Map", "Normal Map");
         public static GUIContent occlusionText = new GUIContent("Occlusion", "Occlusion (G)");
         public static GUIContent emissionText = new GUIContent("Emission", "Emission (RGB)");
-        public static GUIContent detailMaskText = new GUIContent("Texture Mask", "Mask for custom materials");
+        public static GUIContent detailMaskText = new GUIContent("Texture Mask", "Mask for Albedo (R), Color (G), and Smoothness (B)");
         public static GUIContent materialTextureText = new GUIContent("Material Texture Array", "Texture array for DF-set materials");
         public static GUIContent detailNormalMapText = new GUIContent("Normal Map", "Normal Map");
 

@@ -29,3 +29,25 @@ UNITY_INSTANCING_CBUFFER_START(MyProperties)
 UNITY_DEFINE_INSTANCED_PROP(fixed4, _MatColor)
 UNITY_DEFINE_INSTANCED_PROP(int, _MatIndex)
 UNITY_INSTANCING_CBUFFER_END
+
+struct Input {
+	float2 uv_MainTex;
+#ifdef _SECOND_UV
+	float2 uv2_MatTexArray;
+#else
+	float2 uv_MatTexArray;
+#endif
+	float3 worldPos;
+};
+
+float4 TexCoords(Input IN)
+{
+	float4 texcoord;
+	texcoord.xy = IN.uv_MainTex; // Always source from uv0
+#ifdef _SECOND_UV
+	texcoord.zw = IN.uv2_MatTexArray;
+#else
+	texcoord.zw = IN.uv_MatTexArray;
+#endif
+	return texcoord;
+}
