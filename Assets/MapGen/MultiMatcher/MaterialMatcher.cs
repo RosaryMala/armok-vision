@@ -1,8 +1,10 @@
 ﻿using RemoteFortressReader;
 using System.Collections.Generic;
 using TokenLists;
+using System;
+using System.Collections;
 
-public class MaterialMatcher<T>
+public class MaterialMatcher<T> : IEnumerable <KeyValuePair<MatPair, T>>
 {
     struct MaterialMatch
     {
