@@ -6,7 +6,7 @@ using System.Collections;
 
 public class MaterialMatcher<T> : IEnumerable <KeyValuePair<MatPair, T>>
 {
-    struct MaterialMatch
+    internal struct MaterialMatch
     {
         public T item;
         public int difference;
@@ -152,5 +152,56 @@ public class MaterialMatcher<T> : IEnumerable <KeyValuePair<MatPair, T>>
     public void Clear()
     {
         matList.Clear();
+    }
+
+    public IEnumerator<KeyValuePair<MatPair, T>> GetEnumerator()
+    {
+        var enumerator = new MaterialMatchEnum();
+        enumerator.enumerator = matList.GetEnumerator();
+        return enumerator;
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        var enumerator = new MaterialMatchEnum();
+        enumerator.enumerator = matList.GetEnumerator();
+        return enumerator;
+    }
+
+    public class MaterialMatchEnum : IEnumerator<KeyValuePair<MatPair, T>>
+    {
+        internal Dictionary<MatPairStruct, MaterialMatch>.Enumerator enumerator;
+
+        public KeyValuePair<MatPair, T> Current
+        {
+            get
+            {
+                var current = enumerator.Current;
+                return new KeyValuePair<MatPair, T>(current.Key, current.Value.item);
+            }
+        }
+
+        object IEnumerator.Current
+        {
+            get
+            {
+                return Current;
+            }
+        }
+
+        public void Dispose()
+        {
+            enumerator.Dispose();
+        }
+
+        public bool MoveNext()
+        {
+            return enumerator.MoveNext();
+        }
+
+        public void Reset()
+        {
+            ((IEnumerator)enumerator).Reset();
+        }
     }
 }

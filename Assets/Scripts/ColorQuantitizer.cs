@@ -54,7 +54,7 @@ public static class ColorQuantitizer
         int midPoint = colors.Count / 2;
         for (int i = 0; i < colors.Count; i++)
         {
-            if (i <= midPoint)
+            if (i < midPoint)
                 output[0].Add(colors[i]);
             else
                 output[1].Add(colors[i]);
@@ -62,23 +62,40 @@ public static class ColorQuantitizer
         return output;
     }
 
-    public static Color32[] Quantize (List<Color32> colors)
+    public static Color32[] Quantize (List<Color32> colors, int power)
     {
+        Color32[] output = new Color32[1 << power];
+
+        if(colors.Count <= output.Length)
+        {
+            for (int i = 0; i < colors.Count; i++)
+            {
+                output[i] = colors[i];
+            }
+            return output;
+        }
+
         List<List<Color32>> finalList = new List<List<Color32>>();
         finalList.Add(colors);
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < power; i++)
         {
             List<List<Color32>> tempLists = new List<List<Color32>>();
             foreach (var item in finalList)
             {
                 tempLists.AddRange(Split(item));
             }
+            finalList = tempLists;
         }
 
-        Color32[] output = new Color32[finalList.Count];
+
 
         for (int i = 0; i < finalList.Count; i++)
         {
+            if (finalList[i].Count == 0)
+            {
+                output[i] = new Color32(255, 0, 255, 255);
+                continue;
+            }
             int red = 0;
             int green = 0;
             int blue = 0;

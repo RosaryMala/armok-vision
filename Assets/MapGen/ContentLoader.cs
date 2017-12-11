@@ -311,9 +311,31 @@ public class ContentLoader : MonoBehaviour
         ShapeTextureArray = Resources.Load<Texture2DArray>("shapeTextures");
         ShapeTextureDepth = ShapeTextureArray.depth;
         PopulateMatDefinitions();
+
+
         yield return StartCoroutine(ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt"));
         yield return StartCoroutine(FinalizeTextureAtlases());
         Instance = this;
+
+        //FIXME: Put this in a better place.
+        List<Color32> colors = new List<Color32>();
+        //inorganic, non-metallic, non-transparent colors.
+        foreach (var item in DFConnection.Instance.NetMaterialList.material_list)
+        {
+            Color32 color = GetColor(item.mat_pair);
+            color.a = 255;
+            colors.Add(color);
+        }
+
+        for (int i = colors.Count % 8; i < 8; i++)
+        {
+            colors.Add(Color.magenta);
+        }
+        var image = new Texture2D(8, colors.Count / 8);
+        image.SetPixels32(colors.ToArray());
+        image.Apply();
+        File.WriteAllBytes("palette.png", image.EncodeToPNG());
+
         foreach (var callback in LoadCallbacks)
         {
             if (callback != null)
@@ -334,9 +356,9 @@ public class ContentLoader : MonoBehaviour
     {
         MaterialCollection matCollection = Resources.Load<MaterialCollection>("materialDefinitions");
 
-        foreach (var item in matCollection.textures)
+        foreach (var texture in matCollection.textures)
         {
-            MaterialTextures[item.tag.ToString()] = item;
+            MaterialTextures[texture.tag.ToString()] = texture;
         }
     }
 
