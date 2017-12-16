@@ -18,7 +18,7 @@ fixed4 c = tex2D(_MainTex, texcoords.xy) * _Color;
 fixed4 m = tex2D(_MetallicGlossMap, texcoords.xy);
 albedo = lerp(albedo, c.rgb, mask.r);
 albedo = lerp(albedo, overlay(c.rgb, matColor.rgb), max(mask.g - mask.r, 0));
-alpha = c.a;
+alpha = lerp(c.a * min(matColor.a * 2, 1), c.a, mask.r);
 #ifdef _METALLICGLOSSMAP
 metallic = lerp(metallic, m.r, mask.r);
 smoothness = lerp(smoothness, m.a * _GlossMapScale, mask.b);

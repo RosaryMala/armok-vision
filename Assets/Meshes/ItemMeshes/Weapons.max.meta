@@ -14,6 +14,11 @@ ModelImporter:
     100012: Warhammer
     100014: Spear
     100016: Mace
+    100018: Sword Long
+    100020: Sword 2H
+    100022: Pike
+    100024: Plane003
+    100026: Blowgun
     400000: Axe, Battle
     400002: Plane001
     400004: //RootNode
@@ -23,6 +28,11 @@ ModelImporter:
     400012: Warhammer
     400014: Spear
     400016: Mace
+    400018: Sword Long
+    400020: Sword 2H
+    400022: Pike
+    400024: Plane003
+    400026: Blowgun
     2300000: Axe, Battle
     2300002: Plane001
     2300004: Whip
@@ -31,6 +41,11 @@ ModelImporter:
     2300010: Warhammer
     2300012: Spear
     2300014: Mace
+    2300016: Sword Long
+    2300018: Sword 2H
+    2300020: Pike
+    2300022: Plane003
+    2300024: Blowgun
     3300000: Axe, Battle
     3300002: Plane001
     3300004: Whip
@@ -39,6 +54,11 @@ ModelImporter:
     3300010: Warhammer
     3300012: Spear
     3300014: Mace
+    3300016: Sword Long
+    3300018: Sword 2H
+    3300020: Pike
+    3300022: Plane003
+    3300024: Blowgun
     4300000: Whip
     4300002: Plane001
     4300004: Axe, Battle
@@ -47,6 +67,11 @@ ModelImporter:
     4300010: Warhammer
     4300012: Spear
     4300014: Mace
+    4300016: Sword Long
+    4300018: Sword 2H
+    4300020: Pike
+    4300022: Plane003
+    4300024: Blowgun
     9500000: //RootNode
   externalObjects:
   - first:
@@ -73,7 +98,12 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: 'Material #33'
-    second: {fileID: 2100000, guid: 562f9aff45216c645b39e76c42092e5e, type: 2}
+    second: {fileID: 2100000, guid: 4c59ce6bfc8575d4aa290f233886768b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 'Material #34'
+    second: {fileID: 2100000, guid: c33890c63605da2458b522b2ba2bd040, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
