@@ -12,6 +12,8 @@ ModelImporter:
     100008: Plane002
     100010: Sword Short
     100012: Warhammer
+    100014: Spear
+    100016: Mace
     400000: Axe, Battle
     400002: Plane001
     400004: //RootNode
@@ -19,24 +21,32 @@ ModelImporter:
     400008: Plane002
     400010: Sword Short
     400012: Warhammer
+    400014: Spear
+    400016: Mace
     2300000: Axe, Battle
     2300002: Plane001
     2300004: Whip
     2300006: Plane002
     2300008: Sword Short
     2300010: Warhammer
+    2300012: Spear
+    2300014: Mace
     3300000: Axe, Battle
     3300002: Plane001
     3300004: Whip
     3300006: Plane002
     3300008: Sword Short
     3300010: Warhammer
+    3300012: Spear
+    3300014: Mace
     4300000: Whip
     4300002: Plane001
     4300004: Axe, Battle
     4300006: Plane002
     4300008: Sword Short
     4300010: Warhammer
+    4300012: Spear
+    4300014: Mace
     9500000: //RootNode
   externalObjects:
   - first:
@@ -59,6 +69,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: 'Material #32'
     second: {fileID: 2100000, guid: fb0190c7d0be9fe4f96fb3dbaa6a75aa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 'Material #33'
+    second: {fileID: 2100000, guid: 562f9aff45216c645b39e76c42092e5e, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
