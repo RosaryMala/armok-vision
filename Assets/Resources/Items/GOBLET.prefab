@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33139602535779474}
   - component: {fileID: 23972306008851338}
   - component: {fileID: 114799800404460180}
+  - component: {fileID: 64510068812037100}
   m_Layer: 0
   m_Name: GOBLET
   m_TagString: Untagged
@@ -82,6 +83,20 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1346716988630994}
+  m_Mesh: {fileID: 4300000, guid: eb86c4a3a2d61db41b50f48f8dcaf75d, type: 3}
+--- !u!64 &64510068812037100
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1346716988630994}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Convex: 1
+  m_InflateMesh: 0
+  m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: eb86c4a3a2d61db41b50f48f8dcaf75d, type: 3}
 --- !u!114 &114799800404460180
 MonoBehaviour:

@@ -10,7 +10,7 @@ namespace Building
 
         private void OnMouseOver()
         {
-            root.DrawSelection();
+            //root.DrawSelection();
         }
 
         private void OnMouseDown()

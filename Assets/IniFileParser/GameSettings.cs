@@ -41,6 +41,7 @@ public class GameSettings : MonoBehaviour
         public int targetFrameRate = 60;
         public bool showHiddenTiles = false;
         public bool fog = true;
+        public int maxItemsPerTile = 10;
     }
 
     public static void ClampToMaxSize(Texture2D texture)

@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33237528075112590}
   - component: {fileID: 23515497602181746}
   - component: {fileID: 114038100902273670}
+  - component: {fileID: 64367570757426300}
   m_Layer: 0
   m_Name: FLASK
   m_TagString: Untagged
@@ -82,6 +83,20 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1592928983811624}
+  m_Mesh: {fileID: 4300000, guid: c682545064fc01b4bb49e73426dfb6fb, type: 3}
+--- !u!64 &64367570757426300
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1592928983811624}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Convex: 1
+  m_InflateMesh: 0
+  m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: c682545064fc01b4bb49e73426dfb6fb, type: 3}
 --- !u!114 &114038100902273670
 MonoBehaviour:

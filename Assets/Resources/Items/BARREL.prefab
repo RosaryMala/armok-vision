@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 114455672087304870}
   - component: {fileID: 33895629874642716}
   - component: {fileID: 23394402521458792}
+  - component: {fileID: 64739464094346376}
   m_Layer: 0
   m_Name: BARREL
   m_TagString: Untagged
@@ -82,6 +83,20 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1255886020413506}
+  m_Mesh: {fileID: 4300002, guid: 1518c5f00d2552744835604e4f7da5cf, type: 3}
+--- !u!64 &64739464094346376
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1255886020413506}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Convex: 1
+  m_InflateMesh: 0
+  m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300002, guid: 1518c5f00d2552744835604e4f7da5cf, type: 3}
 --- !u!114 &114455672087304870
 MonoBehaviour:

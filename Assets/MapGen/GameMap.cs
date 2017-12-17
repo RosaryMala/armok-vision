@@ -813,6 +813,7 @@ public class GameMap : MonoBehaviour
             return;
 
         BuildingManager.Instance.BeginExistenceCheck();
+        ItemManager.Instance.BeginExistenceCheck();
         UnityEngine.Profiling.Profiler.BeginSample("UpdateBlocks", this);
         MapBlock block;
         while((block = DFConnection.Instance.PopMapBlockUpdate()) != null)
@@ -845,8 +846,12 @@ public class GameMap : MonoBehaviour
             UnityEngine.Profiling.Profiler.BeginSample("BuildingManager.LoadBlock", this);
             BuildingManager.Instance.LoadBlock(block);
             UnityEngine.Profiling.Profiler.EndSample();
+            UnityEngine.Profiling.Profiler.BeginSample("ItemManager.LoadBlock", this);
+            ItemManager.Instance.LoadBlock(block);
+            UnityEngine.Profiling.Profiler.EndSample();
         }
         BuildingManager.Instance.EndExistenceCheck();
+        ItemManager.Instance.EndExitenceCheck();
         DirtySeasonalBlocks();
         UnityEngine.Profiling.Profiler.BeginSample("EnqueueMeshUpdates", this);
         EnqueueMeshUpdates();

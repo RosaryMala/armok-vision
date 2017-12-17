@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33497074347997842}
   - component: {fileID: 23827594144172796}
   - component: {fileID: 114861427111651902}
+  - component: {fileID: 64216866911912090}
   m_Layer: 0
   m_Name: ITEM_WEAPON_WHIP
   m_TagString: Untagged
@@ -82,6 +83,20 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1380006705053546}
+  m_Mesh: {fileID: 4300000, guid: 958771b6fa331474988bc9657c3c54fc, type: 3}
+--- !u!64 &64216866911912090
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1380006705053546}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Convex: 1
+  m_InflateMesh: 0
+  m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: 958771b6fa331474988bc9657c3c54fc, type: 3}
 --- !u!114 &114861427111651902
 MonoBehaviour:

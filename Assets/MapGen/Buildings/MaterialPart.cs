@@ -49,7 +49,7 @@ namespace Building
             }
         }
 
-        private static string GetTreeName(GameObject go)
+        public static string GetTreeName(GameObject go)
         {
             string name = go.name;
             for(Transform parent = go.transform.parent; parent != null; parent = parent.transform.parent)

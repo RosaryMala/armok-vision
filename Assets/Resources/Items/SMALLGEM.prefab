@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 114612884665966362}
   - component: {fileID: 33066720406363242}
   - component: {fileID: 23663385099413976}
+  - component: {fileID: 64045864054018282}
   m_Layer: 0
   m_Name: SMALLGEM
   m_TagString: Untagged
@@ -82,6 +83,20 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1084098394695862}
+  m_Mesh: {fileID: 4300002, guid: f9af4f26b22d3954fa1f73c61439c078, type: 3}
+--- !u!64 &64045864054018282
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1084098394695862}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Convex: 1
+  m_InflateMesh: 0
+  m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300002, guid: f9af4f26b22d3954fa1f73c61439c078, type: 3}
 --- !u!114 &114612884665966362
 MonoBehaviour:

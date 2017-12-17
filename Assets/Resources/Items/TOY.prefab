@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4469028718749178}
   - component: {fileID: 33420789342336786}
   - component: {fileID: 23205757893699756}
+  - component: {fileID: 64329710657314946}
   m_Layer: 0
   m_Name: Statue_Building
   m_TagString: Untagged
@@ -111,6 +112,20 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1088689069313128}
+  m_Mesh: {fileID: 4300002, guid: 3ea240eae5ecb304dbe3668edf2dbb32, type: 3}
+--- !u!64 &64329710657314946
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1088689069313128}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Convex: 1
+  m_InflateMesh: 0
+  m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300002, guid: 3ea240eae5ecb304dbe3668edf2dbb32, type: 3}
 --- !u!114 &114859588343172790
 MonoBehaviour:
