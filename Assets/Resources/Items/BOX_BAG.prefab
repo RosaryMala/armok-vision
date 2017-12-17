@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 4542205259636446}
   - component: {fileID: 33908885380812774}
   - component: {fileID: 23915234544302030}
-  - component: {fileID: 114433461680872592}
   - component: {fileID: 64391887837498328}
   m_Layer: 0
   m_Name: bag
@@ -128,21 +127,6 @@ MeshCollider:
   m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300002, guid: 103612e5e1ff43a4e896c567a2cb3ae1, type: 3}
---- !u!114 &114433461680872592
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1297685111402438}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b086b02903ca51e479499efe5af7778a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  item: BOX_BAG
-  index: -1
-  storedItem: 0
-  endOffset: 0
 --- !u!114 &114549942647128492
 MonoBehaviour:
   m_ObjectHideFlags: 1
