@@ -123,8 +123,12 @@ public class ItemManager : MonoBehaviour
             if (itemCount.ContainsKey(item.pos))
                 currentTileCount = itemCount[item.pos];
             itemCount[item.pos] = currentTileCount + 1;
-
-            placedItem.transform.position = GameMap.DFtoUnityCoord(item.pos) + new Vector3(0, GameMap.floorHeight, 0) + Stacker.SpiralHemisphere(currentTileCount);
+            //RaycastHit hitInfo;
+            //Vector3 position = GameMap.DFtoUnityCoord(item.pos) + Stacker.SpiralHemisphere(currentTileCount);
+            //if (Physics.Raycast(position + new Vector3(0, 2.9f, 0), Vector3.down, out hitInfo, 3, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Collide))
+            //    placedItem.transform.position = hitInfo.point;
+            //else
+                placedItem.transform.position = GameMap.DFtoUnityCoord(item.pos) + new Vector3(0, GameMap.floorHeight, 0) + Stacker.SpiralHemisphere(currentTileCount);
         }
     }
 

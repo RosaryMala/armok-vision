@@ -86,6 +86,12 @@ public class ItemModel : MonoBehaviour
 
     public void OnMouseDown()
     {
-        Debug.Log(string.Format("{0} {1}", GameMap.materials[originalItem.material].id,GameMap.items[originalItem.type].id));
+        string mat = originalItem.material.ToString();
+        if (GameMap.materials.ContainsKey(originalItem.material))
+            mat = GameMap.materials[originalItem.material].id;
+        if(originalItem.stack_size > 1)
+            Debug.Log(string.Format("{0} {1} [{2}]", mat, GameMap.items[originalItem.type].id, originalItem.stack_size));
+        else
+            Debug.Log(string.Format("{0} {1}", mat, GameMap.items[originalItem.type].id));
     }
 }

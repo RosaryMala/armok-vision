@@ -591,6 +591,15 @@ namespace RemoteFortressReader
       get { return _dye; }
       set { _dye = value; }
     }
+    [UnityEngine.SerializeField]
+    private int _stack_size = default(int);
+    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"stack_size", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int stack_size
+    {
+      get { return _stack_size; }
+      set { _stack_size = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
