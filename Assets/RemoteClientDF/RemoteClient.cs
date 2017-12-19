@@ -565,6 +565,8 @@ namespace DFHack
                 return command_result.CR_LINK_FAILURE;
             }
 
+            GameMap.BeginSample(name);
+
             MemoryStream sendStream = new MemoryStream();
 
             ProtoBuf.Serializer.Serialize<Input>(sendStream, input);
@@ -576,6 +578,7 @@ namespace DFHack
                 outString.printerr("In call to %s::%s: message too large: %d.\n",
                                 this.proto, this.name, send_size);
                 output = default(Output);
+                GameMap.EndSample();
                 return command_result.CR_LINK_FAILURE;
             }
 
@@ -584,6 +587,7 @@ namespace DFHack
                 outString.printerr("In call to %s::%s: I/O error in send.\n",
                                 this.proto, this.name);
                 output = default(Output);
+                GameMap.EndSample();
                 return command_result.CR_LINK_FAILURE;
             }
 
@@ -603,6 +607,7 @@ namespace DFHack
                     outString.printerr("In call to %s::%s: I/O error in receive header.\n",
                                     this.proto, this.name);
                     output = default(Output);
+                    GameMap.EndSample();
                     return command_result.CR_LINK_FAILURE;
                 }
 
@@ -615,6 +620,7 @@ namespace DFHack
                 if ((DFHackReplyCode)header.id == DFHackReplyCode.RPC_REPLY_FAIL)
                 {
                     output = default(Output);
+                    GameMap.EndSample();
                     if (header.size == (int)command_result.CR_OK)
                         return command_result.CR_FAILURE;
                     else
@@ -626,6 +632,7 @@ namespace DFHack
                     outString.printerr("In call to %s::%s: invalid received size %d.\n",
                                     this.proto, this.name, header.size);
                     output = default(Output);
+                    GameMap.EndSample();
                     return command_result.CR_LINK_FAILURE;
                 }
 
@@ -635,6 +642,7 @@ namespace DFHack
                     outString.printerr("In call to %s::%s: I/O error in receive %d bytes of data.\n",
                                     this.proto, this.name, header.size);
                     output = default(Output);
+                    GameMap.EndSample();
                     return command_result.CR_LINK_FAILURE;
                 }
 
@@ -659,8 +667,10 @@ namespace DFHack
                         {
                             outString.printerr("In call to %s::%s: error parsing received result.\n",
                                             this.proto, this.name);
+                            GameMap.EndSample();
                             return command_result.CR_LINK_FAILURE;
                         }
+                        GameMap.EndSample();
                         return command_result.CR_OK;
 
                     case DFHackReplyCode.RPC_REPLY_TEXT:
