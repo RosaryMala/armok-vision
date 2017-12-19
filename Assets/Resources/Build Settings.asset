@@ -20,7 +20,7 @@ MonoBehaviour:
     and beauty.
   win_exe: Armok Vision.exe
   osx_exe: Armok Vision.app
-  linux_exe: Armok Vision.x86_64
+  linux_exe: Armok Vision Linux.x86_64
   launch_with_terminal: 0
   readme: Readme.txt
   needs_dfhack: 1
