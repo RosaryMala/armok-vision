@@ -19,6 +19,9 @@ ModelImporter:
     100022: Pike
     100024: Plane003
     100026: Blowgun
+    100028: Box001
+    100030: Corkscrew
+    100032: Pipe
     400000: Axe, Battle
     400002: Plane001
     400004: //RootNode
@@ -33,6 +36,9 @@ ModelImporter:
     400022: Pike
     400024: Plane003
     400026: Blowgun
+    400028: Box001
+    400030: Corkscrew
+    400032: Pipe
     2300000: Axe, Battle
     2300002: Plane001
     2300004: Whip
@@ -46,6 +52,9 @@ ModelImporter:
     2300020: Pike
     2300022: Plane003
     2300024: Blowgun
+    2300026: Box001
+    2300028: Corkscrew
+    2300030: Pipe
     3300000: Axe, Battle
     3300002: Plane001
     3300004: Whip
@@ -59,6 +68,9 @@ ModelImporter:
     3300020: Pike
     3300022: Plane003
     3300024: Blowgun
+    3300026: Box001
+    3300028: Corkscrew
+    3300030: Pipe
     4300000: Whip
     4300002: Plane001
     4300004: Axe, Battle
@@ -72,6 +84,9 @@ ModelImporter:
     4300020: Pike
     4300022: Plane003
     4300024: Blowgun
+    4300026: Box001
+    4300028: Corkscrew
+    4300030: Pipe
     9500000: //RootNode
   externalObjects:
   - first:
@@ -79,6 +94,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: 02 - Default
     second: {fileID: 2100000, guid: 225dd5c9e3b551e4ba3358bd4aff3b28, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 07 - Default
+    second: {fileID: 2100000, guid: ffab2b014d95a954fb81169a6317fcf8, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
