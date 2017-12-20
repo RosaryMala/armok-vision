@@ -1,3 +1,5 @@
+// Upgrade NOTE: upgraded instancing buffer 'MyProperties' to new syntax.
+
 
 
 half4       _Color;
@@ -25,10 +27,12 @@ sampler2D   _EmissionMap;
 float3      _ViewMin = float3(-99999, -99999, -99999);
 float3      _ViewMax = float3(99999, 99999, 99999);
 
-UNITY_INSTANCING_CBUFFER_START(MyProperties)
+UNITY_INSTANCING_BUFFER_START(MyProperties)
 UNITY_DEFINE_INSTANCED_PROP(fixed4, _MatColor)
+#define _MatColor_arr MyProperties
 UNITY_DEFINE_INSTANCED_PROP(int, _MatIndex)
-UNITY_INSTANCING_CBUFFER_END
+#define _MatIndex_arr MyProperties
+UNITY_INSTANCING_BUFFER_END(MyProperties)
 
 struct Input {
 	float2 uv_MainTex;

@@ -1,4 +1,6 @@
-﻿Shader "Instanced/Items" {
+﻿// Upgrade NOTE: upgraded instancing buffer 'Props' to new syntax.
+
+Shader "Instanced/Items" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
@@ -38,14 +40,15 @@
 		// of 64KB and 16KB respectively on the size of a cubffer, the default array size thus allows two matrix arrays in one cbuffer.
 		// Use maxcount option on #pragma instancing_options directive to specify array size other than default (divided by 4 when used
 		// for GL).
-		UNITY_INSTANCING_CBUFFER_START(Props)
+		UNITY_INSTANCING_BUFFER_START(Props)
 			UNITY_DEFINE_INSTANCED_PROP(fixed4, _Color)	// Make _Color an instanced property (i.e. an array)
-		UNITY_INSTANCING_CBUFFER_END
+#define _Color_arr Props
+		UNITY_INSTANCING_BUFFER_END(Props)
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
 			// Albedo comes from a texture tinted by color
             fixed4 tex = tex2D(_MainTex, IN.uv_MainTex);
-            fixed4 col = UNITY_ACCESS_INSTANCED_PROP(_Color);
+            fixed4 col = UNITY_ACCESS_INSTANCED_PROP(_Color_arr, _Color);
             o.Albedo = tex.rgb < 0.5 ? (2.0 * tex.rgb * col.rgb) : (1.0 - 2.0 * (1.0 - tex.rgb) * (1.0 - col.rgb));
 			// Metallic and smoothness come from slider variables
 			o.Metallic = (1.0 - col.a);

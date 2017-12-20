@@ -5,8 +5,8 @@ clip(_ViewMax - IN.worldPos);
 
 float4 texcoords = TexCoords(IN);
 //get the mask 
-fixed4 dfTex = UNITY_SAMPLE_TEX2DARRAY(_MatTexArray, float3(texcoords.zw, UNITY_ACCESS_INSTANCED_PROP(_MatIndex)));
-fixed4 matColor = UNITY_ACCESS_INSTANCED_PROP(_MatColor);
+fixed4 dfTex = UNITY_SAMPLE_TEX2DARRAY(_MatTexArray, float3(texcoords.zw, UNITY_ACCESS_INSTANCED_PROP(_MatIndex_arr, _MatIndex)));
+fixed4 matColor = UNITY_ACCESS_INSTANCED_PROP(_MatColor_arr, _MatColor);
 fixed3 albedo = overlay(dfTex.rgb, matColor.rgb);
 half smoothness = dfTex.a;
 half metallic = max((matColor.a * 2) - 1, 0);
