@@ -75,7 +75,7 @@
 
             float4 frag(v2f i, UNITY_VPOS_TYPE vpos : VPOS) : SV_Target
             {
-            fixed4 matColor = UNITY_ACCESS_INSTANCED_PROP(_MatColor);
+            fixed4 matColor = UNITY_ACCESS_INSTANCED_PROP(_MatColor_arr, _MatColor);
             fixed alpha = min((matColor.a * 2), 1);
             half metallic = max((matColor.a * 2) - 1, 0);
 
