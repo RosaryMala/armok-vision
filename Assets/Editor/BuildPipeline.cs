@@ -12,7 +12,7 @@ public class BuildFactory
     [MenuItem("Mytools/Build Release/All")]
     public static void BuildAll()
     {
-        BuildRelease(BuildTarget.StandaloneOSXIntel64);
+        BuildRelease(BuildTarget.StandaloneOSX);
         BuildRelease(BuildTarget.StandaloneLinux64);
         BuildRelease(BuildTarget.StandaloneWindows64);
     }
@@ -26,7 +26,7 @@ public class BuildFactory
     [MenuItem("Mytools/Build Release/OSx")]
     public static void BuildOsx()
     {
-        BuildRelease(BuildTarget.StandaloneOSXIntel64);
+        BuildRelease(BuildTarget.StandaloneOSX);
     }
 
     static void BuildRelease(BuildTarget target)
@@ -38,7 +38,7 @@ public class BuildFactory
 
         switch (target)
         {
-            case BuildTarget.StandaloneOSXIntel64:
+            case BuildTarget.StandaloneOSX:
                 releaseName = BuildSettings.Instance.osx_exe;
                 targetString = "Mac";
                 break;
