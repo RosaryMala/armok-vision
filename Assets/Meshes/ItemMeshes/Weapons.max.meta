@@ -22,6 +22,10 @@ ModelImporter:
     100028: Box001
     100030: Corkscrew
     100032: Pipe
+    100034: GeoSphere001
+    100036: Spiked Ball
+    100038: Tube001
+    100040: Serrated Disk
     400000: Axe, Battle
     400002: Plane001
     400004: //RootNode
@@ -39,6 +43,10 @@ ModelImporter:
     400028: Box001
     400030: Corkscrew
     400032: Pipe
+    400034: GeoSphere001
+    400036: Spiked Ball
+    400038: Tube001
+    400040: Serrated Disk
     2300000: Axe, Battle
     2300002: Plane001
     2300004: Whip
@@ -55,6 +63,10 @@ ModelImporter:
     2300026: Box001
     2300028: Corkscrew
     2300030: Pipe
+    2300032: GeoSphere001
+    2300034: Spiked Ball
+    2300036: Tube001
+    2300038: Serrated Disk
     3300000: Axe, Battle
     3300002: Plane001
     3300004: Whip
@@ -71,6 +83,10 @@ ModelImporter:
     3300026: Box001
     3300028: Corkscrew
     3300030: Pipe
+    3300032: GeoSphere001
+    3300034: Spiked Ball
+    3300036: Tube001
+    3300038: Serrated Disk
     4300000: Whip
     4300002: Plane001
     4300004: Axe, Battle
@@ -87,6 +103,10 @@ ModelImporter:
     4300026: Box001
     4300028: Corkscrew
     4300030: Pipe
+    4300032: GeoSphere001
+    4300034: Spiked Ball
+    4300036: Tube001
+    4300038: Serrated Disk
     9500000: //RootNode
   externalObjects:
   - first:
@@ -166,6 +186,8 @@ ModelImporter:
     optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
