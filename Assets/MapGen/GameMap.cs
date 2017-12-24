@@ -342,7 +342,7 @@ public class GameMap : MonoBehaviour
             UpdateView();
 
 
-        if (!GameSettings.Instance.game.showDFScreen && EventSystem.current.currentSelectedGameObject == null)
+        if (!GameSettings.Instance.game.showDFScreen && EventSystem.current.currentSelectedGameObject == null && DFConnection.Instance.WorldMode != dfproto.GetWorldInfoOut.Mode.MODE_ADVENTURE)
         {
             if (Input.GetKeyDown(KeyCode.F1))
             {

@@ -89,12 +89,20 @@ public class BuildFactory
     [MenuItem("Mytools/Build Proto")]
     public static void BuildProto()
     {
-        File.Copy("D:\\Home\\Documents\\GitHub\\dfhack\\plugins\\proto\\RemoteFortressReader.proto", "Assets\\RemoteClientDF\\RemoteFortressReader.proto", true);
+        CompileProtoFile("D:/Home/Documents/GitHub/dfhack/plugins/proto/RemoteFortressReader.proto");
+        CompileProtoFile("D:/Home/Documents/GitHub/dfhack/plugins/proto/AdventureControl.proto");
+        UnityEngine.Debug.Log("Finished compiling protos");
+        AssetDatabase.Refresh();
+    }
+
+    static void CompileProtoFile(string path)
+    {
+        File.Copy(path, Path.Combine("Assets/RemoteClientDF/", Path.GetFileName(path)), true);
         Process protogen = new Process();
 
-        protogen.StartInfo.WorkingDirectory = "Assets\\RemoteClientDF\\";
-        protogen.StartInfo.FileName = "ProtoGen\\protogen.exe";
-        protogen.StartInfo.Arguments = "-i:RemoteFortressReader.proto -o:RemoteFortressReader.cs";
+        protogen.StartInfo.WorkingDirectory = "Assets/RemoteClientDF/";
+        protogen.StartInfo.FileName = "ProtoGen/protogen.exe";
+        protogen.StartInfo.Arguments = string.Format("-i:{0}.proto -o:{0}.cs", Path.GetFileNameWithoutExtension(path));
 
         //redirect output
         protogen.StartInfo.RedirectStandardError = true;
@@ -112,8 +120,6 @@ public class BuildFactory
         protogen.BeginErrorReadLine();
 
         protogen.WaitForExit();
-
-        UnityEngine.Debug.Log("Finished compiling protos");
     }
 
     public static void PreBuild(BuildManifestObject manifest)

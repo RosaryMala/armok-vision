@@ -1,4 +1,6 @@
+using AdventureControl;
 using DFHack;
+using RemoteFortressReader;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +9,6 @@ using System.Threading;
 using TokenLists;
 using UnityEngine;
 using Util;
-using RemoteFortressReader;
 
 // Class for async communication with DF.
 // Will eventually run actual communication on a separate thread.
@@ -85,6 +86,9 @@ public sealed class DFConnection : MonoBehaviour
     private RemoteFunction<dfproto.EmptyMessage, SingleBool> pauseStatusCall;
     private RemoteFunction<dfproto.EmptyMessage, VersionInfo> versionInfoCall;
     private RemoteFunction<dfproto.EmptyMessage, Status> reportsCall;
+
+    private RemoteFunction<AdventureControl.MoveCommandParams> moveCommandCall;
+
     private color_ostream dfNetworkOut = new color_ostream();
     private RemoteClient networkClient;
 
@@ -174,6 +178,7 @@ public sealed class DFConnection : MonoBehaviour
         pauseStatusCall = CreateAndBind<dfproto.EmptyMessage, SingleBool>(networkClient, "GetPauseState", "RemoteFortressReader");
         versionInfoCall = CreateAndBind<dfproto.EmptyMessage, VersionInfo>(networkClient, "GetVersionInfo", "RemoteFortressReader");
         reportsCall = CreateAndBind<dfproto.EmptyMessage, Status>(networkClient, "GetReports", "RemoteFortressReader");
+        moveCommandCall = CreateAndBind<MoveCommandParams>(networkClient, "MoveCommand", "RemoteFortressReader");
     }
 
     #endregion
@@ -231,6 +236,18 @@ public sealed class DFConnection : MonoBehaviour
         command.Value = state;
         if (pauseCommands.Count < pauseCommands.Capacity)
             pauseCommands.Enqueue(command);
+    }
+
+    private RingBuffer<MoveCommandParams> moveCommands
+        = new RingBuffer<MoveCommandParams>(8);
+
+    public void SendMoveCommand(DFCoord direction)
+    {
+        MoveCommandParams command = new MoveCommandParams();
+
+        command.direction = direction;
+        if (moveCommands.Count < moveCommands.Capacity)
+            moveCommands.Enqueue(command);
     }
 
     #endregion
@@ -406,6 +423,8 @@ public sealed class DFConnection : MonoBehaviour
         }
     }
 
+    public dfproto.GetWorldInfoOut.Mode WorldMode { get; private set; }
+
     /// <summary>
     /// Queue a map hash reset, forcing a re-send of all map blocks
     /// </summary>
@@ -452,7 +471,10 @@ public sealed class DFConnection : MonoBehaviour
             if (netWorldInfo == null)
                 Debug.Log("World not loaded.");
             else
+            {
                 Debug.Log("World Mode: " + netWorldInfo.mode);
+                WorldMode = netWorldInfo.mode;
+            }
         }
 
 
@@ -957,6 +979,13 @@ public sealed class DFConnection : MonoBehaviour
             while (keyPresses.TryDequeue(out dfEvent))
             {
                 keyboardEventCall.TryExecute(dfEvent);
+            }
+        }
+        if(moveCommandCall != null)
+        {
+            while(moveCommands.Count > 0)
+            {
+                moveCommandCall.TryExecute(moveCommands.Dequeue());
             }
         }
 
