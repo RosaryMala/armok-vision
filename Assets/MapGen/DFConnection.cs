@@ -87,7 +87,9 @@ public sealed class DFConnection : MonoBehaviour
     private RemoteFunction<dfproto.EmptyMessage, VersionInfo> versionInfoCall;
     private RemoteFunction<dfproto.EmptyMessage, Status> reportsCall;
 
-    private RemoteFunction<AdventureControl.MoveCommandParams> moveCommandCall;
+    private RemoteFunction<MoveCommandParams> moveCommandCall;
+    private RemoteFunction<MoveCommandParams> jumpCommandCall;
+    private RemoteFunction<dfproto.EmptyMessage, MenuContents> menuQueryCall;
 
     private color_ostream dfNetworkOut = new color_ostream();
     private RemoteClient networkClient;
@@ -179,6 +181,8 @@ public sealed class DFConnection : MonoBehaviour
         versionInfoCall = CreateAndBind<dfproto.EmptyMessage, VersionInfo>(networkClient, "GetVersionInfo", "RemoteFortressReader");
         reportsCall = CreateAndBind<dfproto.EmptyMessage, Status>(networkClient, "GetReports", "RemoteFortressReader");
         moveCommandCall = CreateAndBind<MoveCommandParams>(networkClient, "MoveCommand", "RemoteFortressReader");
+        jumpCommandCall = CreateAndBind<MoveCommandParams>(networkClient, "JumpCommand", "RemoteFortressReader");
+        menuQueryCall = CreateAndBind<dfproto.EmptyMessage, MenuContents>(networkClient, "MenuQuery", "RemoteFortressReader");
     }
 
     #endregion
@@ -249,6 +253,21 @@ public sealed class DFConnection : MonoBehaviour
         if (moveCommands.Count < moveCommands.Capacity)
             moveCommands.Enqueue(command);
     }
+
+    private RingBuffer<MoveCommandParams> jumpCommands
+    = new RingBuffer<MoveCommandParams>(8);
+
+    public void SendJumpCommand(DFCoord direction)
+    {
+        MoveCommandParams command = new MoveCommandParams();
+
+        command.direction = direction;
+        if (jumpCommands.Count < jumpCommands.Capacity)
+            jumpCommands.Enqueue(command);
+    }
+
+
+    public MenuContents AdventureMenuContents { get; private set; }
 
     #endregion
 
@@ -981,17 +1000,29 @@ public sealed class DFConnection : MonoBehaviour
                 keyboardEventCall.TryExecute(dfEvent);
             }
         }
-        if(moveCommandCall != null)
+        if (moveCommandCall != null)
         {
-            while(moveCommands.Count > 0)
+            while (moveCommands.Count > 0)
             {
                 moveCommandCall.TryExecute(moveCommands.Dequeue());
+            }
+        }
+        if (jumpCommandCall != null)
+        {
+            while (jumpCommands.Count > 0)
+            {
+                jumpCommandCall.TryExecute(jumpCommands.Dequeue());
             }
         }
 
         #endregion
 
         #region DF Read
+
+        if (menuQueryCall != null)
+        {
+            AdventureMenuContents = menuQueryCall.Execute();
+        }
 
         if (fetchMap)
         {

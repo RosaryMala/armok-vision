@@ -30,4 +30,214 @@ namespace AdventureControl
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MovementOption")]
+  public partial class MovementOption : global::ProtoBuf.IExtensible
+  {
+    public MovementOption() {}
+    
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.Coord _dest = null;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"dest", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Coord dest
+    {
+      get { return _dest; }
+      set { _dest = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.Coord _source = null;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"source", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Coord source
+    {
+      get { return _source; }
+      set { _source = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.Coord _grab = null;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"grab", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Coord grab
+    {
+      get { return _grab; }
+      set { _grab = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MenuContents")]
+  public partial class MenuContents : global::ProtoBuf.IExtensible
+  {
+    public MenuContents() {}
+    
+    [UnityEngine.SerializeField]
+    private AdventureControl.AdvmodeMenu _current_menu = AdventureControl.AdvmodeMenu.Default;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"current_menu", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(AdventureControl.AdvmodeMenu.Default)]
+    public AdventureControl.AdvmodeMenu current_menu
+    {
+      get { return _current_menu; }
+      set { _current_menu = value; }
+    }
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<AdventureControl.MovementOption> _movements = new global::System.Collections.Generic.List<AdventureControl.MovementOption>();
+    [global::ProtoBuf.ProtoMember(2, Name=@"movements", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<AdventureControl.MovementOption> movements
+    {
+      get { return _movements; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"AdvmodeMenu")]
+    public enum AdvmodeMenu
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Default", Value=0)]
+      Default = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Look", Value=1)]
+      Look = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ConversationAddress", Value=2)]
+      ConversationAddress = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ConversationSelect", Value=3)]
+      ConversationSelect = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ConversationSpeak", Value=4)]
+      ConversationSpeak = 4,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Inventory", Value=5)]
+      Inventory = 5,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Drop", Value=6)]
+      Drop = 6,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ThrowItem", Value=7)]
+      ThrowItem = 7,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Wear", Value=8)]
+      Wear = 8,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Remove", Value=9)]
+      Remove = 9,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Interact", Value=10)]
+      Interact = 10,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Put", Value=11)]
+      Put = 11,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"PutContainer", Value=12)]
+      PutContainer = 12,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Eat", Value=13)]
+      Eat = 13,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ThrowAim", Value=14)]
+      ThrowAim = 14,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Fire", Value=15)]
+      Fire = 15,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Get", Value=16)]
+      Get = 16,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Unk17", Value=17)]
+      Unk17 = 17,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CombatPrefs", Value=18)]
+      CombatPrefs = 18,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Companions", Value=19)]
+      Companions = 19,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"MovementPrefs", Value=20)]
+      MovementPrefs = 20,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SpeedPrefs", Value=21)]
+      SpeedPrefs = 21,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"InteractAction", Value=22)]
+      InteractAction = 22,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"MoveCarefully", Value=23)]
+      MoveCarefully = 23,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Announcements", Value=24)]
+      Announcements = 24,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"UseBuilding", Value=25)]
+      UseBuilding = 25,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Travel", Value=26)]
+      Travel = 26,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Unk27", Value=27)]
+      Unk27 = 27,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Unk28", Value=28)]
+      Unk28 = 28,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SleepConfirm", Value=29)]
+      SleepConfirm = 29,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SelectInteractionTarget", Value=30)]
+      SelectInteractionTarget = 30,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Unk31", Value=31)]
+      Unk31 = 31,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Unk32", Value=32)]
+      Unk32 = 32,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"FallAction", Value=33)]
+      FallAction = 33,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ViewTracks", Value=34)]
+      ViewTracks = 34,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Jump", Value=35)]
+      Jump = 35,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Unk36", Value=36)]
+      Unk36 = 36,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"AttackConfirm", Value=37)]
+      AttackConfirm = 37,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"AttackType", Value=38)]
+      AttackType = 38,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"AttackBodypart", Value=39)]
+      AttackBodypart = 39,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"AttackStrike", Value=40)]
+      AttackStrike = 40,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Unk41", Value=41)]
+      Unk41 = 41,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Unk42", Value=42)]
+      Unk42 = 42,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DodgeDirection", Value=43)]
+      DodgeDirection = 43,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Unk44", Value=44)]
+      Unk44 = 44,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Unk45", Value=45)]
+      Unk45 = 45,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Build", Value=46)]
+      Build = 46
+    }
+  
 }
