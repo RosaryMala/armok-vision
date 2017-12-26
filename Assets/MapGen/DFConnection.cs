@@ -90,6 +90,7 @@ public sealed class DFConnection : MonoBehaviour
     private RemoteFunction<MoveCommandParams> moveCommandCall;
     private RemoteFunction<MoveCommandParams> jumpCommandCall;
     private RemoteFunction<dfproto.EmptyMessage, MenuContents> menuQueryCall;
+    private RemoteFunction<dfproto.IntMessage> movementSelectCommandCall;
 
     private color_ostream dfNetworkOut = new color_ostream();
     private RemoteClient networkClient;
@@ -183,6 +184,7 @@ public sealed class DFConnection : MonoBehaviour
         moveCommandCall = CreateAndBind<MoveCommandParams>(networkClient, "MoveCommand", "RemoteFortressReader");
         jumpCommandCall = CreateAndBind<MoveCommandParams>(networkClient, "JumpCommand", "RemoteFortressReader");
         menuQueryCall = CreateAndBind<dfproto.EmptyMessage, MenuContents>(networkClient, "MenuQuery", "RemoteFortressReader");
+        movementSelectCommandCall = CreateAndBind<dfproto.IntMessage>(networkClient, "MovementSelectCommand", "RemoteFortressReader");
     }
 
     #endregion
@@ -264,6 +266,17 @@ public sealed class DFConnection : MonoBehaviour
         command.direction = direction;
         if (jumpCommands.Count < jumpCommands.Capacity)
             jumpCommands.Enqueue(command);
+    }
+
+    private RingBuffer<dfproto.IntMessage> carefulMoveCommands
+        = new RingBuffer<dfproto.IntMessage>(8);
+
+    public void SendCarefulMoveCommand(int option)
+    {
+        dfproto.IntMessage message = new dfproto.IntMessage();
+        message.value = option;
+        if (carefulMoveCommands.Count < carefulMoveCommands.Capacity)
+            carefulMoveCommands.Enqueue(message);
     }
 
 
@@ -1013,6 +1026,11 @@ public sealed class DFConnection : MonoBehaviour
             {
                 jumpCommandCall.TryExecute(jumpCommands.Dequeue());
             }
+        }
+        if(movementSelectCommandCall != null)
+        {
+            while (carefulMoveCommands.Count > 0)
+                movementSelectCommandCall.Execute(carefulMoveCommands.Dequeue());
         }
 
         #endregion

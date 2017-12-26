@@ -23,7 +23,8 @@ public class MapSelection : MonoBehaviour
 
         //mouseWorldPosition = GetMouseWorldPosition(Input.mousePosition);
 
-        UpdateCameraPan();
+        if(DFConnection.Instance.WorldMode != dfproto.GetWorldInfoOut.Mode.MODE_ADVENTURE)
+            UpdateCameraPan();
 
         if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
         {

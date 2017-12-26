@@ -18,6 +18,11 @@ public class AdventureMovement : MonoBehaviour
     public Material movementMat;
     public Material grabMat;
 
+    public MovementOption grabPrefab;
+    public MovementOption movePrefab;
+
+    List<MovementOption> movementChoices = new List<MovementOption>();
+
     // Update is called once per frame
     void Update()
     {
@@ -25,11 +30,28 @@ public class AdventureMovement : MonoBehaviour
         DisplayMovementOptions();
     }
 
+    void ClearMovementChoices()
+    {
+        if (movementChoices.Count == 0)
+            return;
+        foreach (var choice in movementChoices)
+        {
+            Destroy(choice.gameObject);
+        }
+        movementChoices.Clear();
+    }
+
     private void DisplayMovementOptions()
     {
         if (DFConnection.Instance.AdventureMenuContents == null)
             return;
-        switch (DFConnection.Instance.AdventureMenuContents.current_menu)
+
+        var currentMenu = DFConnection.Instance.AdventureMenuContents;
+
+        if (currentMenu.current_menu != AdventureControl.AdvmodeMenu.MoveCarefully)
+            ClearMovementChoices();
+
+        switch (currentMenu.current_menu)
         {
             case AdventureControl.AdvmodeMenu.Default:
                 break;
@@ -78,11 +100,29 @@ public class AdventureMovement : MonoBehaviour
             case AdventureControl.AdvmodeMenu.InteractAction:
                 break;
             case AdventureControl.AdvmodeMenu.MoveCarefully:
-                foreach (var movementOption in DFConnection.Instance.AdventureMenuContents.movements)
+                if (currentMenu.movements.Count != 0 && currentMenu.movements.Count != movementChoices.Count)
                 {
-                    Graphics.DrawMesh(movementMesh, GameMap.DFtoUnityTileCenter(movementOption.dest), Quaternion.identity, movementMat, 0);
-                    if(movementOption.grab != null)
-                        Graphics.DrawMesh(movementMesh, (GameMap.DFtoUnityTileCenter(movementOption.dest) + GameMap.DFtoUnityTileCenter(movementOption.grab)) / 2, Quaternion.identity, grabMat, 0);
+                    ClearMovementChoices();
+                    for (int i = 0; i < currentMenu.movements.Count; i++)
+                    {
+                        var movementOption = currentMenu.movements[i];
+                        if (movementOption.grab == null || movementOption.grab.x < 0)
+                        {
+                            var move = Instantiate(movePrefab,
+                                GameMap.DFtoUnityTileCenter(movementOption.dest), Quaternion.identity, transform);
+                            move.choiceIndex = i;
+                            movementChoices.Add(move);
+                        }
+                        else
+                        {
+                            var move = Instantiate(grabPrefab,
+                                (GameMap.DFtoUnityTileCenter(movementOption.dest) + GameMap.DFtoUnityTileCenter(movementOption.grab)) / 2,
+                                Quaternion.LookRotation(GameMap.DFtoUnityTileCenter(movementOption.grab) - GameMap.DFtoUnityTileCenter(movementOption.dest), Vector3.up),
+                                transform);
+                            move.choiceIndex = i;
+                            movementChoices.Add(move);
+                        }
+                    }
                 }
                 break;
             case AdventureControl.AdvmodeMenu.Announcements:

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 692705303}
-  m_IndirectSpecularColor: {r: 0.29759684, g: 0.3991026, b: 0.54516256, a: 1}
+  m_IndirectSpecularColor: {r: 0.29759607, g: 0.39910132, b: 0.545158, a: 1}
 --- !u!157 &4
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -23890,6 +23890,10 @@ MonoBehaviour:
   movementMesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
   movementMat: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
   grabMat: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  grabPrefab: {fileID: 114643412933633916, guid: 7bf596af75a50dd44ab9b736847c5fb1,
+    type: 2}
+  movePrefab: {fileID: 114299713355789264, guid: 84de4a735300ed54ca5f15f87e6dbbd6,
+    type: 2}
 --- !u!4 &2110427929
 Transform:
   m_ObjectHideFlags: 0
