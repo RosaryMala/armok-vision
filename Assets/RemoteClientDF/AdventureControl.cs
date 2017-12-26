@@ -62,6 +62,15 @@ namespace AdventureControl
       get { return _grab; }
       set { _grab = value; }
     }
+    [UnityEngine.SerializeField]
+    private AdventureControl.CarefulMovementType _movement_type = AdventureControl.CarefulMovementType.DEFAULT_MOVEMENT;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"movement_type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(AdventureControl.CarefulMovementType.DEFAULT_MOVEMENT)]
+    public AdventureControl.CarefulMovementType movement_type
+    {
+      get { return _movement_type; }
+      set { _movement_type = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -89,6 +98,25 @@ namespace AdventureControl
       get { return _movements; }
     }
   
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MiscMoveParams")]
+  public partial class MiscMoveParams : global::ProtoBuf.IExtensible
+  {
+    public MiscMoveParams() {}
+    
+    [UnityEngine.SerializeField]
+    private AdventureControl.MiscMoveType _type = AdventureControl.MiscMoveType.SET_CLIMB;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(AdventureControl.MiscMoveType.SET_CLIMB)]
+    public AdventureControl.MiscMoveType type
+    {
+      get { return _type; }
+      set { _type = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -238,6 +266,64 @@ namespace AdventureControl
             
       [global::ProtoBuf.ProtoEnum(Name=@"Build", Value=46)]
       Build = 46
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"CarefulMovementType")]
+    public enum CarefulMovementType
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DEFAULT_MOVEMENT", Value=0)]
+      DEFAULT_MOVEMENT = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"RELEASE_ITEM_HOLD", Value=1)]
+      RELEASE_ITEM_HOLD = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"RELEASE_TILE_HOLD", Value=2)]
+      RELEASE_TILE_HOLD = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ATTACK_CREATURE", Value=3)]
+      ATTACK_CREATURE = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"HOLD_TILE", Value=4)]
+      HOLD_TILE = 4,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"MOVE", Value=5)]
+      MOVE = 5,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CLIMB", Value=6)]
+      CLIMB = 6,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"HOLD_ITEM", Value=7)]
+      HOLD_ITEM = 7,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"BUILDING_INTERACT", Value=8)]
+      BUILDING_INTERACT = 8,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ITEM_INTERACT", Value=9)]
+      ITEM_INTERACT = 9,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ITEM_INTERACT_GUIDE", Value=10)]
+      ITEM_INTERACT_GUIDE = 10,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ITEM_INTERACT_RIDE", Value=11)]
+      ITEM_INTERACT_RIDE = 11,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ITEM_INTERACT_PUSH", Value=12)]
+      ITEM_INTERACT_PUSH = 12
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"MiscMoveType")]
+    public enum MiscMoveType
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SET_CLIMB", Value=0)]
+      SET_CLIMB = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SET_STAND", Value=1)]
+      SET_STAND = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SET_CANCEL", Value=2)]
+      SET_CANCEL = 2
     }
   
 }

@@ -14,6 +14,5 @@ public class MovementOption : MonoBehaviour
     public void HandleClick()
     {
         DFConnection.Instance.SendCarefulMoveCommand(choiceIndex);
-        Debug.Log("Sent choice index " + choiceIndex);
     }
 }

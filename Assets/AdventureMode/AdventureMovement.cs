@@ -106,7 +106,7 @@ public class AdventureMovement : MonoBehaviour
                     for (int i = 0; i < currentMenu.movements.Count; i++)
                     {
                         var movementOption = currentMenu.movements[i];
-                        if (movementOption.grab == null || movementOption.grab.x < 0)
+                        if (movementOption.grab == null || movementOption.grab.x < 0 || (DFCoord)movementOption.grab == movementOption.dest)
                         {
                             var move = Instantiate(movePrefab,
                                 GameMap.DFtoUnityTileCenter(movementOption.dest), Quaternion.identity, transform);
@@ -224,6 +224,18 @@ public class AdventureMovement : MonoBehaviour
                 0
                 );
             DFConnection.Instance.SendJumpCommand(outDir);
+        }
+        if (Input.GetButtonDown("Crouch"))
+        {
+            DFConnection.Instance.SendMiscMoveCommand(AdventureControl.MiscMoveType.SET_STAND);
+        }
+        if (Input.GetButtonDown("Grab"))
+        {
+            DFConnection.Instance.SendMiscMoveCommand(AdventureControl.MiscMoveType.SET_CLIMB);
+        }
+        if (Input.GetButtonDown("Cancel"))
+        {
+            DFConnection.Instance.SendMiscMoveCommand(AdventureControl.MiscMoveType.SET_CANCEL);
         }
     }
 }

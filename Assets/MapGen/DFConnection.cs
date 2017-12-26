@@ -91,6 +91,7 @@ public sealed class DFConnection : MonoBehaviour
     private RemoteFunction<MoveCommandParams> jumpCommandCall;
     private RemoteFunction<dfproto.EmptyMessage, MenuContents> menuQueryCall;
     private RemoteFunction<dfproto.IntMessage> movementSelectCommandCall;
+    private RemoteFunction<MiscMoveParams> miscMoveCall;
 
     private color_ostream dfNetworkOut = new color_ostream();
     private RemoteClient networkClient;
@@ -185,6 +186,7 @@ public sealed class DFConnection : MonoBehaviour
         jumpCommandCall = CreateAndBind<MoveCommandParams>(networkClient, "JumpCommand", "RemoteFortressReader");
         menuQueryCall = CreateAndBind<dfproto.EmptyMessage, MenuContents>(networkClient, "MenuQuery", "RemoteFortressReader");
         movementSelectCommandCall = CreateAndBind<dfproto.IntMessage>(networkClient, "MovementSelectCommand", "RemoteFortressReader");
+        miscMoveCall = CreateAndBind<MiscMoveParams>(networkClient, "MiscMoveCommand", "RemoteFortressReader");
     }
 
     #endregion
@@ -277,6 +279,16 @@ public sealed class DFConnection : MonoBehaviour
         message.value = option;
         if (carefulMoveCommands.Count < carefulMoveCommands.Capacity)
             carefulMoveCommands.Enqueue(message);
+    }
+
+    private RingBuffer<MiscMoveParams> miscMoveCommands
+        = new RingBuffer<MiscMoveParams>(8);
+    public void SendMiscMoveCommand(MiscMoveType type)
+    {
+        MiscMoveParams command = new MiscMoveParams();
+        command.type = type;
+        if (miscMoveCommands.Count < miscMoveCommands.Capacity)
+            miscMoveCommands.Enqueue(command);
     }
 
 
@@ -1031,6 +1043,12 @@ public sealed class DFConnection : MonoBehaviour
         {
             while (carefulMoveCommands.Count > 0)
                 movementSelectCommandCall.Execute(carefulMoveCommands.Dequeue());
+        }
+
+        if(miscMoveCall != null)
+        {
+            while (miscMoveCommands.Count > 0)
+                miscMoveCall.Execute(miscMoveCommands.Dequeue());
         }
 
         #endregion
