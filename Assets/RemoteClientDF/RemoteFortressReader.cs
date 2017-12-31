@@ -600,6 +600,69 @@ namespace RemoteFortressReader
       get { return _stack_size; }
       set { _stack_size = value; }
     }
+    [UnityEngine.SerializeField]
+    private float _subpos_x = default(float);
+    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"subpos_x", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    [global::System.ComponentModel.DefaultValue(default(float))]
+    public float subpos_x
+    {
+      get { return _subpos_x; }
+      set { _subpos_x = value; }
+    }
+    [UnityEngine.SerializeField]
+    private float _subpos_y = default(float);
+    [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name=@"subpos_y", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    [global::System.ComponentModel.DefaultValue(default(float))]
+    public float subpos_y
+    {
+      get { return _subpos_y; }
+      set { _subpos_y = value; }
+    }
+    [UnityEngine.SerializeField]
+    private float _subpos_z = default(float);
+    [global::ProtoBuf.ProtoMember(11, IsRequired = false, Name=@"subpos_z", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    [global::System.ComponentModel.DefaultValue(default(float))]
+    public float subpos_z
+    {
+      get { return _subpos_z; }
+      set { _subpos_z = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _projectile = default(bool);
+    [global::ProtoBuf.ProtoMember(12, IsRequired = false, Name=@"projectile", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool projectile
+    {
+      get { return _projectile; }
+      set { _projectile = value; }
+    }
+    [UnityEngine.SerializeField]
+    private float _velocity_x = default(float);
+    [global::ProtoBuf.ProtoMember(13, IsRequired = false, Name=@"velocity_x", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    [global::System.ComponentModel.DefaultValue(default(float))]
+    public float velocity_x
+    {
+      get { return _velocity_x; }
+      set { _velocity_x = value; }
+    }
+    [UnityEngine.SerializeField]
+    private float _velocity_y = default(float);
+    [global::ProtoBuf.ProtoMember(14, IsRequired = false, Name=@"velocity_y", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    [global::System.ComponentModel.DefaultValue(default(float))]
+    public float velocity_y
+    {
+      get { return _velocity_y; }
+      set { _velocity_y = value; }
+    }
+    [UnityEngine.SerializeField]
+    private float _velocity_z = default(float);
+    [global::ProtoBuf.ProtoMember(15, IsRequired = false, Name=@"velocity_z", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    [global::System.ComponentModel.DefaultValue(default(float))]
+    public float velocity_z
+    {
+      get { return _velocity_z; }
+      set { _velocity_z = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

@@ -26,6 +26,8 @@ ModelImporter:
     100036: Spiked Ball
     100038: Tube001
     100040: Serrated Disk
+    100042: Cylinder001
+    100044: Bolt
     400000: Axe, Battle
     400002: Plane001
     400004: //RootNode
@@ -47,6 +49,8 @@ ModelImporter:
     400036: Spiked Ball
     400038: Tube001
     400040: Serrated Disk
+    400042: Cylinder001
+    400044: Bolt
     2300000: Axe, Battle
     2300002: Plane001
     2300004: Whip
@@ -67,6 +71,8 @@ ModelImporter:
     2300034: Spiked Ball
     2300036: Tube001
     2300038: Serrated Disk
+    2300040: Cylinder001
+    2300042: Bolt
     3300000: Axe, Battle
     3300002: Plane001
     3300004: Whip
@@ -87,6 +93,8 @@ ModelImporter:
     3300034: Spiked Ball
     3300036: Tube001
     3300038: Serrated Disk
+    3300040: Cylinder001
+    3300042: Bolt
     4300000: Whip
     4300002: Plane001
     4300004: Axe, Battle
@@ -107,6 +115,8 @@ ModelImporter:
     4300034: Spiked Ball
     4300036: Tube001
     4300038: Serrated Disk
+    4300040: Cylinder001
+    4300042: Bolt
     9500000: //RootNode
   externalObjects:
   - first:

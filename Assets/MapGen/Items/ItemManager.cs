@@ -76,11 +76,11 @@ public class ItemManager : MonoBehaviour
     {
         if (!loadedAnyItems)
             return;
-        //foreach (var index in removedItems)
-        //{
-        //    Destroy(sceneItems[index].gameObject);
-        //    sceneItems.Remove(index);
-        //}
+        foreach (var index in removedItems)
+        {
+            Destroy(sceneItems[index].gameObject);
+            sceneItems.Remove(index);
+        }
         loadedAnyItems = false;
     }
 
@@ -128,7 +128,14 @@ public class ItemManager : MonoBehaviour
             //if (Physics.Raycast(position + new Vector3(0, 2.9f, 0), Vector3.down, out hitInfo, 3, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Collide))
             //    placedItem.transform.position = hitInfo.point;
             //else
-                placedItem.transform.position = GameMap.DFtoUnityCoord(item.pos) + new Vector3(0, GameMap.floorHeight, 0) + Stacker.SpiralHemisphere(currentTileCount);
+            placedItem.transform.position = GameMap.DFtoUnityCoord(item.pos.x + item.subpos_x, item.pos.y + item.subpos_y, item.pos.z + item.subpos_z);
+            if (item.projectile)
+            {
+                placedItem.transform.position += new Vector3(0, GameMap.tileHeight / 2, 0);
+                placedItem.transform.rotation = Quaternion.LookRotation(GameMap.DFtoUnityDirection(item.velocity_x, item.velocity_y, item.velocity_z), Vector3.up);
+            }
+            else
+                placedItem.transform.position += (Stacker.SpiralHemisphere(currentTileCount) + new Vector3(0, GameMap.floorHeight, 0));
         }
     }
 

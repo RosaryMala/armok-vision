@@ -143,6 +143,10 @@ public class GameMap : MonoBehaviour
         Vector3 outCoord = new Vector3(x * tileWidth, (z + MapZOffset) * tileHeight, y * (-tileWidth));
         return outCoord;
     }
+    public static Vector3 DFtoUnityDirection(float x, float y, float z)
+    {
+        return new Vector3(x* tileWidth, z *tileHeight, y * (-tileWidth));
+    }
     public static Vector3 DFtoUnityCoord(DFCoord input)
     {
         Vector3 outCoord = new Vector3(input.x * tileWidth, (input.z + MapZOffset) * tileHeight, input.y * (-tileWidth));
