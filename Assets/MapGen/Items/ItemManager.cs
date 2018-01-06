@@ -9,7 +9,7 @@ public class ItemManager : MonoBehaviour
 {
     public static ItemManager Instance { get; private set; }
 
-    Dictionary<MatPairStruct, ItemModel> itemPrefabs = new Dictionary<MatPairStruct, ItemModel>();
+    static Dictionary<MatPairStruct, ItemModel> itemPrefabs = new Dictionary<MatPairStruct, ItemModel>();
 
     public ItemModel defaultItem;
 
@@ -97,19 +97,8 @@ public class ItemManager : MonoBehaviour
                 if (itemCount.ContainsKey(item.pos) && itemCount[item.pos] >= GameSettings.Instance.rendering.maxItemsPerTile)
                     continue;
 
-                MatPairStruct type = item.type;
-
-                if (!itemPrefabs.ContainsKey(type))
-                    type = new MatPairStruct(type.mat_type, -1);
-                if (!itemPrefabs.ContainsKey(type))
-                    type = new MatPairStruct(-1, -1);
-                if (itemPrefabs.ContainsKey(type))
-                    placedItem = Instantiate(itemPrefabs[type], GameMap.DFtoUnityCoord(item.pos), Quaternion.identity);
-                else
-                    placedItem = Instantiate(defaultItem, GameMap.DFtoUnityCoord(item.pos), Quaternion.identity);
-                placedItem.transform.parent = transform;
+                placedItem = InstantiateItem(item, transform);
                 sceneItems[item.id] = placedItem;
-                placedItem.UpdateMaterial(item);
             }
             else
                 placedItem = sceneItems[item.id];
@@ -132,11 +121,45 @@ public class ItemManager : MonoBehaviour
             if (item.projectile)
             {
                 placedItem.transform.position += new Vector3(0, GameMap.tileHeight / 2, 0);
-                placedItem.transform.rotation = Quaternion.LookRotation(GameMap.DFtoUnityDirection(item.velocity_x, item.velocity_y, item.velocity_z), Vector3.up);
+                if (item.velocity_x > 0 || item.velocity_y > 0 || item.velocity_z > 0)
+                {
+                    placedItem.transform.rotation = Quaternion.LookRotation(GameMap.DFtoUnityDirection(item.velocity_x, item.velocity_y, item.velocity_z), Vector3.up);
+                }
             }
             else
+            {
                 placedItem.transform.position += (Stacker.SpiralHemisphere(currentTileCount) + new Vector3(0, GameMap.floorHeight, 0));
+                if(item.velocity_x > 0 || item.velocity_y > 0 || item.velocity_z > 0)
+                {
+                    placedItem.transform.rotation = Quaternion.LookRotation(GameMap.DFtoUnityDirection(item.velocity_x, item.velocity_y, item.velocity_z), Vector3.up);
+                }
+            }
         }
+    }
+
+    public static ItemModel InstantiateItem(Item item, Transform parent, bool worldPositionStays = true)
+    {
+        MatPairStruct type = item.type;
+        ItemModel placedItem;
+
+        var prefab = Instance.defaultItem;
+
+        if (!itemPrefabs.ContainsKey(type))
+            type = new MatPairStruct(type.mat_type, -1);
+        if (!itemPrefabs.ContainsKey(type))
+            type = new MatPairStruct(-1, -1);
+        if (itemPrefabs.ContainsKey(type))
+            prefab = itemPrefabs[type];
+
+        if(worldPositionStays)
+            placedItem = Instantiate(prefab, GameMap.DFtoUnityCoord(item.pos), Quaternion.identity);
+        else
+            placedItem = Instantiate(prefab);
+
+        placedItem.transform.SetParent(parent, worldPositionStays);
+        placedItem.transform.parent = parent;
+        placedItem.UpdateMaterial(item);
+        return placedItem;
     }
 
     private void UpdateVisibility()
