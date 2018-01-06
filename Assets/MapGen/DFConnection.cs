@@ -1198,14 +1198,16 @@ public sealed class DFConnection : MonoBehaviour
         BlockList resultList = null;
         if (fetchMap)
         {
-
             if (EmbarkMapSize.x > 0
                 && EmbarkMapSize.y > 0
                 && EmbarkMapSize.z > 0 && _needNewBlocks)
             {
                 if (blockListCall != null)
                 {
-                    resultList = blockListCall.Execute(blockRequest);
+                    //Don't pull more blocks than we have room for in the queue. It blocks things unneccesarily.
+                    blockRequest.blocks_needed = Mathf.Min(blockRequest.blocks_needed, pendingBlocks.Capacity - pendingBlocks.Count - 1);
+                    if(blockRequest.blocks_needed > 0)
+                        resultList = blockListCall.Execute(blockRequest);
                 }
             }
         }

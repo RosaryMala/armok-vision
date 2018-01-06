@@ -22,6 +22,8 @@ namespace Util
         private Volatile.PaddedLong _consumerCursor = new Volatile.PaddedLong();
         private Volatile.PaddedLong _producerCursor = new Volatile.PaddedLong();
 
+        const int MaxTries = 32768;
+
         /// <summary>
         /// Creates a new RingBuffer with the given capacity
         /// </summary>
@@ -54,13 +56,13 @@ namespace Util
         /// <returns>The next available item</returns>
         public T Dequeue()
         {
-            var next = _consumerCursor.ReadFullFence() + 1;
-            while (_producerCursor.ReadFullFence() < next)
+            var next = _consumerCursor.ReadAcquireFence() + 1;
+            while (_producerCursor.ReadAcquireFence() < next) // makes sure we read the data from _entries after we have read the producer cursor
             {
                 Thread.SpinWait(1);
             }
             var result = this[next];
-            _consumerCursor.WriteFullFence(next);
+            _consumerCursor.WriteReleaseFence(next); // makes sure we read the data from _entries before we update the consumer cursor
             return result;
         }
 
@@ -71,9 +73,9 @@ namespace Util
         /// <returns>True if successful</returns>
         public bool TryDequeue(out T obj)
         {
-            var next = _consumerCursor.ReadFullFence() + 1;
+            var next = _consumerCursor.ReadAcquireFence() + 1;
 
-            if (_producerCursor.ReadFullFence() < next)
+            if (_producerCursor.ReadAcquireFence() < next)
             {
                 obj = default(T);
                 return false;
@@ -88,19 +90,23 @@ namespace Util
         /// <param name="item"></param>
         public void Enqueue(T item)
         {
-            var next = _producerCursor.ReadFullFence() + 1;
+            var next = _producerCursor.ReadAcquireFence() + 1;
 
             long wrapPoint = next - _entries.Length;
-            long min = _consumerCursor.ReadFullFence();
+            long min = _consumerCursor.ReadAcquireFence();
 
+            int tries = 0;
             while (wrapPoint > min)
             {
-                min = _consumerCursor.ReadFullFence();
+                min = _consumerCursor.ReadAcquireFence();
                 Thread.SpinWait(1);
+                tries++;
+                if (tries > MaxTries)
+                    throw new System.IndexOutOfRangeException("Tried too many times to add to a full queue.");
             }
 
             this[next] = item;
-            _producerCursor.WriteUnfenced(next);
+            _producerCursor.WriteReleaseFence(next); // makes sure we write the data in _entries before we update the producer cursor
         }
 
         /// <summary>

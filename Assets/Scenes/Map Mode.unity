@@ -4094,7 +4094,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1794132721
+  randomSeed: 1584590690
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -10760,7 +10760,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BlocksToFetch: 80
-  RunOnAlternateThread: 0
+  RunOnAlternateThread: 1
   refreshDelay: 0.1
   fetchMap: 1
   fetchScreen: 1
@@ -20270,7 +20270,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -32, y: -90}
+  m_AnchoredPosition: {x: -32.00006, y: -90}
   m_SizeDelta: {x: 512, y: 256}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1714306270
@@ -23940,7 +23940,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 19.800049, y: 36.700012}
+  m_AnchoredPosition: {x: 19.799805, y: 36.700012}
   m_SizeDelta: {x: 3, y: 16.5}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &2114566045
