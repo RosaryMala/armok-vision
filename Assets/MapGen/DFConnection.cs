@@ -63,6 +63,7 @@ public sealed class DFConnection : MonoBehaviour
     private RemoteFunction<dfproto.EmptyMessage, dfproto.GetWorldInfoOut> dfWorldInfoCall;
 
     // Plugin bindings
+    private RemoteFunction<dfproto.EmptyMessage, Language> languageCall;
     private RemoteFunction<dfproto.EmptyMessage, MaterialList> materialListCall;
     private RemoteFunction<dfproto.EmptyMessage, MaterialList> itemListCall;
     private RemoteFunction<dfproto.EmptyMessage, TiletypeList> tiletypeListCall;
@@ -187,6 +188,7 @@ public sealed class DFConnection : MonoBehaviour
         menuQueryCall = CreateAndBind<dfproto.EmptyMessage, MenuContents>(networkClient, "MenuQuery", "RemoteFortressReader");
         movementSelectCommandCall = CreateAndBind<dfproto.IntMessage>(networkClient, "MovementSelectCommand", "RemoteFortressReader");
         miscMoveCall = CreateAndBind<MiscMoveParams>(networkClient, "MiscMoveCommand", "RemoteFortressReader");
+        languageCall = CreateAndBind<dfproto.EmptyMessage, Language>(networkClient, "GetLanguage", "RemoteFortressReader");
     }
 
     #endregion
@@ -201,6 +203,7 @@ public sealed class DFConnection : MonoBehaviour
     private BuildingList netBuildingList;
     private List<CreatureRaw> creatureRaws;
     private PlantRawList netPlantRawList;
+    private Language netLanguageList;
 
     // Output queues
     private SingleBuffer<ViewInfo> netViewInfo;
@@ -352,6 +355,11 @@ public sealed class DFConnection : MonoBehaviour
     public PlantRawList NetPlantRawList
     {
         get { return netPlantRawList; }
+    }
+
+    public Language NetLanguageList
+    {
+        get { return netLanguageList; }
     }
 
     public void SetRequestRegion(BlockCoord min, BlockCoord max)
@@ -798,6 +806,8 @@ public sealed class DFConnection : MonoBehaviour
         }
         if (plantRawListCall != null)
             plantRawListCall.TryExecute(null, out netPlantRawList);
+        if (languageCall != null)
+            netLanguageList = languageCall.Execute();
     }
 
     /// <summary>

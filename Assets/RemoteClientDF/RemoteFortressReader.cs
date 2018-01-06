@@ -663,6 +663,15 @@ namespace RemoteFortressReader
       get { return _velocity_z; }
       set { _velocity_z = value; }
     }
+    [UnityEngine.SerializeField]
+    private int _shape = default(int);
+    [global::ProtoBuf.ProtoMember(16, IsRequired = false, Name=@"shape", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int shape
+    {
+      get { return _shape; }
+      set { _shape = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -4000,6 +4009,43 @@ namespace RemoteFortressReader
     public global::System.Collections.Generic.List<RemoteFortressReader.Report> reports
     {
       get { return _reports; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ShapeDescriptior")]
+  public partial class ShapeDescriptior : global::ProtoBuf.IExtensible
+  {
+    public ShapeDescriptior() {}
+    
+    [UnityEngine.SerializeField]
+    private string _id = "";
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string id
+    {
+      get { return _id; }
+      set { _id = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Language")]
+  public partial class Language : global::ProtoBuf.IExtensible
+  {
+    public Language() {}
+    
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.ShapeDescriptior> _shapes = new global::System.Collections.Generic.List<RemoteFortressReader.ShapeDescriptior>();
+    [global::ProtoBuf.ProtoMember(1, Name=@"shapes", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.ShapeDescriptior> shapes
+    {
+      get { return _shapes; }
     }
   
     private global::ProtoBuf.IExtension extensionObject;
