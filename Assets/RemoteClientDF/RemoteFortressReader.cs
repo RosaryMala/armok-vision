@@ -663,15 +663,6 @@ namespace RemoteFortressReader
       get { return _velocity_z; }
       set { _velocity_z = value; }
     }
-    [UnityEngine.SerializeField]
-    private int _shape = default(int);
-    [global::ProtoBuf.ProtoMember(16, IsRequired = false, Name=@"shape", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int shape
-    {
-      get { return _shape; }
-      set { _shape = value; }
-    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

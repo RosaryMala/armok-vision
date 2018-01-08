@@ -12,28 +12,6 @@ public class ItemModel : MonoBehaviour
     static Dictionary<int, Material> transparentMaterialVersions = new Dictionary<int, Material>();
     private MeshRenderer meshRenderer;
 
-    [System.Serializable]
-    public class AlternateShape
-    {
-        public string ID;
-        public Mesh Mesh;
-    }
-    public List<AlternateShape> alternateShapes = new List<AlternateShape>();
-
-    Mesh getAltShapeMesh(int i)
-    {
-        if (alternateShapes.Count == 0)
-            return null;
-        if (DFConnection.Instance.NetLanguageList == null)
-            return null;
-        string name = DFConnection.Instance.NetLanguageList.shapes[i].id;
-
-        int index = alternateShapes.FindIndex(x => x.ID == name);
-        if (index >= 0)
-            return alternateShapes[index].Mesh;
-        return null;
-    }
-
     Material OriginalMaterial
     {
         get
@@ -77,8 +55,10 @@ public class ItemModel : MonoBehaviour
             else
             {
                 opaqueMaterialVersions[originalMaterialID] = originalMat;
-                transparentMaterialVersions[originalMaterialID] = new Material(originalMat);
-                transparentMaterialVersions[originalMaterialID].shader = Shader.Find("Building/Transparent");
+                transparentMaterialVersions[originalMaterialID] = new Material(originalMat)
+                {
+                    shader = Shader.Find("Building/Transparent")
+                };
             }
         }
     }
@@ -104,15 +84,6 @@ public class ItemModel : MonoBehaviour
         prop.SetColor("_MatColor", partColor);
         prop.SetFloat("_MatIndex", textureIndex);
         meshRenderer.SetPropertyBlock(prop);
-
-        var altmesh = getAltShapeMesh(itemInput.shape);
-        if(altmesh != null)
-        {
-            GetComponentInChildren<MeshFilter>().sharedMesh = altmesh;
-            var collider = GetComponentInChildren<MeshCollider>();
-            if (collider != null)
-                collider.sharedMesh = altmesh;
-        }
     }
 
     public void OnMouseDown()
