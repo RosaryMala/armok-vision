@@ -12,6 +12,9 @@ ModelImporter:
     100008: Box001
     100010: Rough Gem
     100012: SunPositioner001
+    100014: Gizzard
+    100016: Oval Cabochon
+    100018: Round Cabochon
     400000: //RootNode
     400002: Rose Cut
     400004: SMALLGEM
@@ -19,6 +22,9 @@ ModelImporter:
     400008: Box001
     400010: Rough Gem
     400012: SunPositioner001
+    400014: Gizzard
+    400016: Oval Cabochon
+    400018: Round Cabochon
     2100000: default
     2100002: No Name
     2300000: Rose Cut
@@ -26,16 +32,25 @@ ModelImporter:
     2300004: BOULDER
     2300006: Box001
     2300008: Rough Gem
+    2300010: Gizzard
+    2300012: Oval Cabochon
+    2300014: Round Cabochon
     3300000: Rose Cut
     3300002: SMALLGEM
     3300004: BOULDER
     3300006: Box001
     3300008: Rough Gem
+    3300010: Gizzard
+    3300012: Oval Cabochon
+    3300014: Round Cabochon
     4300000: SMALLGEM
     4300002: Rose Cut
     4300004: Box001
     4300006: BOULDER
     4300008: Rough Gem
+    4300010: Gizzard
+    4300012: Oval Cabochon
+    4300014: Round Cabochon
     9500000: //RootNode
   externalObjects: {}
   materials:
