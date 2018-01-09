@@ -295,9 +295,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Convex: 1
-  m_InflateMesh: 0
+  m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 0}
 --- !u!114 &114357040981476898
@@ -329,3 +329,11 @@ MonoBehaviour:
       _red: 0
       _green: 0
       _blue: 0
+    _stack_size: 0
+    _subpos_x: 0
+    _subpos_y: 0
+    _subpos_z: 0
+    _projectile: 0
+    _velocity_x: 0
+    _velocity_y: 0
+    _velocity_z: 0

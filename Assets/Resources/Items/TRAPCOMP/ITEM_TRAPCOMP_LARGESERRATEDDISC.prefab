@@ -157,3 +157,10 @@ MonoBehaviour:
       _green: 0
       _blue: 0
     _stack_size: 0
+    _subpos_x: 0
+    _subpos_y: 0
+    _subpos_z: 0
+    _projectile: 0
+    _velocity_x: 0
+    _velocity_y: 0
+    _velocity_z: 0
