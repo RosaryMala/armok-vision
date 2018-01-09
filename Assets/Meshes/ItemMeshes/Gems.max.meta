@@ -8,17 +8,34 @@ ModelImporter:
     100000: //RootNode
     100002: Rose Cut
     100004: SMALLGEM
+    100006: BOULDER
+    100008: Box001
+    100010: Rough Gem
+    100012: SunPositioner001
     400000: //RootNode
     400002: Rose Cut
     400004: SMALLGEM
+    400006: BOULDER
+    400008: Box001
+    400010: Rough Gem
+    400012: SunPositioner001
     2100000: default
     2100002: No Name
     2300000: Rose Cut
     2300002: SMALLGEM
+    2300004: BOULDER
+    2300006: Box001
+    2300008: Rough Gem
     3300000: Rose Cut
     3300002: SMALLGEM
+    3300004: BOULDER
+    3300006: Box001
+    3300008: Rough Gem
     4300000: SMALLGEM
     4300002: Rose Cut
+    4300004: Box001
+    4300006: BOULDER
+    4300008: Rough Gem
     9500000: //RootNode
   externalObjects: {}
   materials:
