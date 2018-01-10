@@ -20,6 +20,9 @@ ModelImporter:
     100024: Point Cut
     100026: Single Cut
     100028: Table Cut
+    100030: Briolette
+    100032: Emerald
+    100034: Plane001
     400000: //RootNode
     400002: Rose Cut
     400004: SMALLGEM
@@ -35,6 +38,9 @@ ModelImporter:
     400024: Point Cut
     400026: Single Cut
     400028: Table Cut
+    400030: Briolette
+    400032: Emerald
+    400034: Plane001
     2100000: default
     2100002: No Name
     2100004: 08 - Default
@@ -51,6 +57,9 @@ ModelImporter:
     2300020: Point Cut
     2300022: Single Cut
     2300024: Table Cut
+    2300026: Briolette
+    2300028: Emerald
+    2300030: Plane001
     3300000: Rose Cut
     3300002: SMALLGEM
     3300004: BOULDER
@@ -64,6 +73,9 @@ ModelImporter:
     3300020: Point Cut
     3300022: Single Cut
     3300024: Table Cut
+    3300026: Briolette
+    3300028: Emerald
+    3300030: Plane001
     4300000: SMALLGEM
     4300002: Rose Cut
     4300004: Box001
@@ -77,6 +89,9 @@ ModelImporter:
     4300020: Point Cut
     4300022: Table Cut
     4300024: Single Cut
+    4300026: Briolette
+    4300028: Plane001
+    4300030: Emerald
     9500000: //RootNode
   externalObjects: {}
   materials:
