@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Building
 {
-    public class BuildingModel : MonoBehaviour
+    public class BuildingModel : MonoBehaviour, IClickable
     {
         public RotationType rotationType;
 
@@ -112,7 +112,7 @@ namespace Building
             }
         }
 
-        internal void PrintInfo()
+        public void HandleClick()
         {
             Debug.Log(GameMap.buildings[originalBuilding.building_type].id);
             foreach (var item in originalBuilding.items)

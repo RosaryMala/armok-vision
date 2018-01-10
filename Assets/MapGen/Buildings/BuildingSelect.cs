@@ -6,7 +6,7 @@ namespace Building
 {
     public class BuildingSelect : MonoBehaviour
     {
-        public BuildingModel root;
+        public IClickable root;
 
         private void OnMouseOver()
         {
@@ -15,7 +15,7 @@ namespace Building
 
         private void OnMouseDown()
         {
-            root.PrintInfo();
+            root.HandleClick();
         }
     }
 }

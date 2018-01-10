@@ -1,86 +1,24 @@
 fileFormatVersion: 2
-guid: e9d3fc86d70d461449bbe2bc1622f9bb
-timeCreated: 1515264915
+guid: ee8e51890a1c0d04f82f97a5847af755
+timeCreated: 1515580834
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: //RootNode
-    100002: Rose Cut
-    100004: SMALLGEM
-    100006: BOULDER
-    100008: Box001
-    100010: Rough Gem
-    100012: SunPositioner001
-    100014: Gizzard
-    100016: Oval Cabochon
-    100018: Round Cabochon
-    100020: Cushion Cabochon
-    100022: Rectangular Cabochon
-    100024: Point Cut
-    100026: Single Cut
-    100028: Table Cut
-    400000: //RootNode
-    400002: Rose Cut
-    400004: SMALLGEM
-    400006: BOULDER
-    400008: Box001
-    400010: Rough Gem
-    400012: SunPositioner001
-    400014: Gizzard
-    400016: Oval Cabochon
-    400018: Round Cabochon
-    400020: Cushion Cabochon
-    400022: Rectangular Cabochon
-    400024: Point Cut
-    400026: Single Cut
-    400028: Table Cut
-    2100000: default
-    2100002: No Name
-    2100004: 08 - Default
-    2300000: Rose Cut
-    2300002: SMALLGEM
-    2300004: BOULDER
-    2300006: Box001
-    2300008: Rough Gem
-    2300010: Gizzard
-    2300012: Oval Cabochon
-    2300014: Round Cabochon
-    2300016: Cushion Cabochon
-    2300018: Rectangular Cabochon
-    2300020: Point Cut
-    2300022: Single Cut
-    2300024: Table Cut
-    3300000: Rose Cut
-    3300002: SMALLGEM
-    3300004: BOULDER
-    3300006: Box001
-    3300008: Rough Gem
-    3300010: Gizzard
-    3300012: Oval Cabochon
-    3300014: Round Cabochon
-    3300016: Cushion Cabochon
-    3300018: Rectangular Cabochon
-    3300020: Point Cut
-    3300022: Single Cut
-    3300024: Table Cut
-    4300000: SMALLGEM
-    4300002: Rose Cut
-    4300004: Box001
-    4300006: BOULDER
-    4300008: Rough Gem
-    4300010: Gizzard
-    4300012: Oval Cabochon
-    4300014: Round Cabochon
-    4300016: Cushion Cabochon
-    4300018: Rectangular Cabochon
-    4300020: Point Cut
-    4300022: Table Cut
-    4300024: Single Cut
+    100000: Box001
+    100002: //RootNode
+    100004: Point001
+    400000: Box001
+    400002: //RootNode
+    400004: Point001
+    2100000: 01 - Default
+    2300000: Box001
+    3300000: Box001
+    4300000: Box001
     9500000: //RootNode
   externalObjects: {}
   materials:
-    importMaterials: 0
+    importMaterials: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -108,7 +46,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.01
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     importVisibility: 1
@@ -129,8 +67,8 @@ ModelImporter:
     secondaryUVPackMargin: 4
     useFileScale: 1
   tangentSpace:
-    normalSmoothAngle: 60
-    normalImportMode: 0
+    normalSmoothAngle: 0
+    normalImportMode: 1
     tangentImportMode: 3
     normalCalculationMode: 4
   importAnimation: 0

@@ -1,9 +1,10 @@
-﻿using RemoteFortressReader;
+﻿using Building;
+using RemoteFortressReader;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemModel : MonoBehaviour
+public class ItemModel : MonoBehaviour, IClickable
 {
     public Item originalItem;
     bool setMaterials = false;
@@ -34,6 +35,13 @@ public class ItemModel : MonoBehaviour
     private void Awake()
     {
         meshRenderer = GetComponentInChildren<MeshRenderer>();
+        foreach (var item in GetComponentsInChildren<Collider>())
+        {
+            if (item.GetComponent<BuildingSelect>() == null)
+            {
+                item.gameObject.AddComponent<BuildingSelect>().root = this;
+            }
+        }
     }
 
 
@@ -86,7 +94,7 @@ public class ItemModel : MonoBehaviour
         meshRenderer.SetPropertyBlock(prop);
     }
 
-    public void OnMouseDown()
+    public void HandleClick()
     {
         string mat = originalItem.material.ToString();
         if (GameMap.materials.ContainsKey(originalItem.material))
