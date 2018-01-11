@@ -57,6 +57,7 @@
 		void surf (Input IN, inout SurfaceOutputStandard o)
         {
 #include "BuildingSurf.cginc"
+#include "BuildingMetallicValues.cginc"
         }
 		ENDCG
 	}

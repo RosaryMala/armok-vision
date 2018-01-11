@@ -1,4 +1,4 @@
-﻿Shader "Building/Transparent" {
+﻿Shader "Building/Opaque" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
@@ -24,19 +24,19 @@
   
         [Enum(UV0,0,UV1,1)] _UVSec("UV Set for secondary textures", Float) = 0
 
-        [PerRendererData] _MatColor("DF Material Color", Color) = (0.5,0.5,0.5,1)
-        [PerRendererData] _MatIndex("DF Material Array Index", int) = 0
+		[PerRendererData] _MatColor("DF Material Color", Color) = (0.5,0.5,0.5,1)
+		[PerRendererData] _MatIndex("DF Material Array Index", int) = 0
 
         // Blending state
         [HideInInspector] _Mode("__mode", Float) = 0.0
     }
-    SubShader{
-        Tags { "Queue" = "Transparent" "RenderType" = "Opaque" }
-        LOD 200
-
-        CGPROGRAM
+	SubShader {
+		Tags { "RenderType"="Opaque" }
+		LOD 200
+		
+		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf Standard alpha
+		#pragma surface surf Standard fullforwardshadows
 
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 4.0
@@ -56,10 +56,11 @@
 		void surf (Input IN, inout SurfaceOutputStandard o)
         {
 #include "BuildingSurf.cginc"
+#include "BuildingMetallicValues.cginc"
         }
 		ENDCG
 	}
-	FallBack "Unlit/BuildingShadowFallback"
+	FallBack "Diffuse"
     CustomEditor "BuildingMaterialEditor"
 
 }

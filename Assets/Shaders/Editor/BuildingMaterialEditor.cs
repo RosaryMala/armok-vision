@@ -47,6 +47,7 @@ public class BuildingMaterialEditor : ShaderGUI
         public static GUIContent detailMaskText = new GUIContent("Texture Mask", "Mask for Albedo (R), Color (G), and Smoothness (B)");
         public static GUIContent materialTextureText = new GUIContent("Material Texture Array", "Texture array for DF-set materials");
         public static GUIContent detailNormalMapText = new GUIContent("Normal Map", "Normal Map");
+        public static GUIContent specularColorText = new GUIContent("Specular Color", "Specular Color for Non-Metallic materials");
 
         public static string whiteSpaceString = " ";
         public static string primaryMapsText = "Main Maps";
@@ -95,9 +96,7 @@ public class BuildingMaterialEditor : ShaderGUI
         specularColor = FindProperty("_SpecColor", props, false);
         metallicMap = FindProperty("_MetallicGlossMap", props, false);
         metallic = FindProperty("_Metallic", props, false);
-        if (specularMap != null && specularColor != null)
-            m_WorkflowMode = WorkflowMode.Specular;
-        else if (metallicMap != null && metallic != null)
+        if (metallicMap != null && metallic != null)
             m_WorkflowMode = WorkflowMode.Metallic;
         else
             m_WorkflowMode = WorkflowMode.Dielectric;
@@ -150,6 +149,8 @@ public class BuildingMaterialEditor : ShaderGUI
                 DoAlbedoArea(material);
                 DoSpecularMetallicArea();
             }
+            if(specularColor != null)
+                m_MaterialEditor.ColorProperty(specularColor, Styles.specularColorText.text);
             m_MaterialEditor.TexturePropertySingleLine(Styles.normalMapText, bumpMap, bumpMap.textureValue != null ? bumpScale : null);
             m_MaterialEditor.TexturePropertySingleLine(Styles.occlusionText, occlusionMap, occlusionMap.textureValue != null ? occlusionStrength : null);
             DoEmissionArea(material);
