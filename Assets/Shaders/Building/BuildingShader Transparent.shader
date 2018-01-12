@@ -1,7 +1,7 @@
 ﻿Shader "Building/Transparent" {
-	Properties {
-		_Color ("Color", Color) = (1,1,1,1)
-		_MainTex ("Albedo (RGB)", 2D) = "white" {}
+    Properties {
+        _Color ("Color", Color) = (1,1,1,1)
+        _MainTex ("Albedo (RGB)", 2D) = "white" {}
 
         //_Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
 
@@ -30,19 +30,19 @@
         // Blending state
         [HideInInspector] _Mode("__mode", Float) = 0.0
 
-		_SpecColor("Standard Specular Color", Color) = (0.220916301, 0.220916301, 0.220916301, 0.779083699)
+        _SpecColor("Standard Specular Color", Color) = (0.220916301, 0.220916301, 0.220916301, 0.779083699)
     }
     SubShader{
         Tags { "Queue" = "Transparent" "RenderType" = "Opaque" }
         LOD 200
 
-		Cull Front
+        Cull Front
         CGPROGRAM
-		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf StandardSpecular alpha vertex:vert
+        // Physically based Standard lighting model, and enable shadows on all light types
+        #pragma surface surf StandardSpecular alpha vertex:vert
 
-		// Use shader model 3.0 target, to get nicer looking lighting
-		#pragma target 4.0
+        // Use shader model 3.0 target, to get nicer looking lighting
+        #pragma target 4.0
 
         #pragma shader_feature _NORMALMAP
         #pragma shader_feature _TEXTURE_MASK
@@ -57,44 +57,26 @@
 
 #include "CustomMetallic.cginc"
 
-		// Flip normal for back faces
-		void vert (inout appdata_full v) 
-		{
-			v.normal *= -1;
-		}
-		void surf (Input IN, inout SurfaceOutputStandardSpecular o)
+        // Flip normal for back faces
+        void vert (inout appdata_full v) 
+        {
+            v.normal *= -1;
+        }
+        void surf (Input IN, inout SurfaceOutputStandardSpecular o)
         {
 #include "BuildingSurf.cginc"
-
-		half3 specColor;
-		half oneMinusReflectivity;
-		
-		albedo = DiffuseAndSpecularFromMetallicCustom(albedo, metallic, specColor, oneMinusReflectivity);
-
-		//Actual output definitions
-		o.Albedo = albedo;
-		o.Specular = specColor;
-		#ifdef _NORMALMAP
-		o.Normal = UnpackScaleNormal(tex2D(_BumpMap, texcoords.xy), _BumpScale);
-		#endif
-		#ifdef _EMISSION
-		o.Emission = tex2D(_EmissionMap, texcoords.xy) * _EmissionColor;
-		#endif
-		o.Smoothness = smoothness;
-		o.Occlusion = lerp(1, tex2D(_OcclusionMap, texcoords.xy), _OcclusionStrength);
-		o.Alpha = alpha;
-
+#include "BuildingSpecularValues.cginc"
         }
-		ENDCG
+        ENDCG
 
 
-		Cull Back
+        Cull Back
         CGPROGRAM
-		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf StandardSpecular alpha
+        // Physically based Standard lighting model, and enable shadows on all light types
+        #pragma surface surf StandardSpecular alpha
 
-		// Use shader model 3.0 target, to get nicer looking lighting
-		#pragma target 4.0
+        // Use shader model 3.0 target, to get nicer looking lighting
+        #pragma target 4.0
 
         #pragma shader_feature _NORMALMAP
         #pragma shader_feature _TEXTURE_MASK
@@ -109,32 +91,14 @@
 
 #include "CustomMetallic.cginc"
 
-		void surf (Input IN, inout SurfaceOutputStandardSpecular o)
+        void surf (Input IN, inout SurfaceOutputStandardSpecular o)
         {
 #include "BuildingSurf.cginc"
-
-		half3 specColor;
-		half oneMinusReflectivity;
-		
-		albedo = DiffuseAndSpecularFromMetallicCustom(albedo, metallic, specColor, oneMinusReflectivity);
-
-		//Actual output definitions
-		o.Albedo = albedo;
-		o.Specular = specColor;
-		#ifdef _NORMALMAP
-		o.Normal = UnpackScaleNormal(tex2D(_BumpMap, texcoords.xy), _BumpScale);
-		#endif
-		#ifdef _EMISSION
-		o.Emission = tex2D(_EmissionMap, texcoords.xy) * _EmissionColor;
-		#endif
-		o.Smoothness = smoothness;
-		o.Occlusion = lerp(1, tex2D(_OcclusionMap, texcoords.xy), _OcclusionStrength);
-		o.Alpha = alpha;
-
+#include "BuildingSpecularValues.cginc"
         }
-		ENDCG
-	}
-	FallBack "Unlit/BuildingShadowFallback"
+        ENDCG
+    }
+    FallBack "Unlit/BuildingShadowFallback"
     CustomEditor "BuildingMaterialEditor"
 
 }

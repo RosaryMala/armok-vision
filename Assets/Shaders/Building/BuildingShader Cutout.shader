@@ -1,7 +1,7 @@
 ﻿Shader "Building/Cutout" {
-	Properties {
-		_Color ("Color", Color) = (1,1,1,1)
-		_MainTex ("Albedo (RGB)", 2D) = "white" {}
+    Properties {
+        _Color ("Color", Color) = (1,1,1,1)
+        _MainTex ("Albedo (RGB)", 2D) = "white" {}
 
         _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
 
@@ -30,16 +30,16 @@
         // Blending state
         [HideInInspector] _Mode("__mode", Float) = 0.0
     }
-	SubShader {
-		Tags { "Queue" = "AlphaTest" "RenderType"="TransparentCutout" }
-		LOD 200
-		
-		CGPROGRAM
-		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf Standard fullforwardshadows alphatest:_Cutoff
+    SubShader {
+        Tags { "Queue" = "AlphaTest" "RenderType"="TransparentCutout" }
+        LOD 200
+        
+        CGPROGRAM
+        // Physically based Standard lighting model, and enable shadows on all light types
+        #pragma surface surf StandardSpecular fullforwardshadows alphatest:_Cutoff
 
-		// Use shader model 3.0 target, to get nicer looking lighting
-		#pragma target 4.0
+        // Use shader model 3.0 target, to get nicer looking lighting
+        #pragma target 4.0
 
         #pragma shader_feature _NORMALMAP
         #pragma shader_feature _TEXTURE_MASK
@@ -52,16 +52,16 @@
 
 #include "blend.cginc"
 
+#include "CustomMetallic.cginc"
 
-
-		void surf (Input IN, inout SurfaceOutputStandard o)
+        void surf(Input IN, inout SurfaceOutputStandardSpecular o)
         {
 #include "BuildingSurf.cginc"
-#include "BuildingMetallicValues.cginc"
+#include "BuildingSpecularValues.cginc"
         }
-		ENDCG
-	}
-	FallBack "Diffuse"
+        ENDCG
+    }
+    FallBack "Diffuse"
     CustomEditor "BuildingMaterialEditor"
 
 }
