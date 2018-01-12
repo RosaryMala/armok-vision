@@ -599,7 +599,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 632c27802609cf448bef79fb5a172114, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  materialChosen: 308
+  materialChosen: 309
   materialStore: {fileID: 11400000, guid: 5a2fd5f0d35d7b240ab072e80c21b2ac, type: 2}
 --- !u!4 &238614217
 Transform:

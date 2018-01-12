@@ -164,6 +164,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4497455568023844}
   - component: {fileID: 215055336431115986}
+  - component: {fileID: 114690517023732846}
   m_Layer: 0
   m_Name: Reflection Probe
   m_TagString: Untagged
@@ -198,6 +199,7 @@ GameObject:
   - component: {fileID: 33525955632854192}
   - component: {fileID: 23839714293166404}
   - component: {fileID: 65511825605266750}
+  - component: {fileID: 114264590312826358}
   m_Layer: 0
   m_Name: Box001
   m_TagString: Untagged
@@ -386,7 +388,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: ee8e51890a1c0d04f82f97a5847af755, type: 3}
+  - {fileID: 2100000, guid: ad26ea8897946ee469d51dd19b68fcfb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -461,6 +463,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemIndex: 4
+--- !u!114 &114264590312826358
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1888715044497840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b086b02903ca51e479499efe5af7778a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item: 
+  index: 0
+  storedItem: 0
+  endOffset: 0
 --- !u!114 &114274694769681204
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -521,6 +538,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemIndex: 6
+--- !u!114 &114690517023732846
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1848270470045242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 241aeb574bbe00448861c4af66e7d291, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  renderDistance: 20
 --- !u!114 &114769192274496098
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -544,7 +573,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3221e5c1b17e2d842b702c9c514125f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationType: 0
+  rotationType: 1
   originalBuilding:
     _index: 0
     _pos_x_min: 0
@@ -581,7 +610,7 @@ ReflectionProbe:
   serializedVersion: 2
   m_Type: 0
   m_Mode: 1
-  m_RefreshMode: 0
+  m_RefreshMode: 2
   m_TimeSlicingMode: 0
   m_Resolution: 128
   m_UpdateFrequency: 0

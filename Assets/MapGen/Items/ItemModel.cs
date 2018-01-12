@@ -96,7 +96,7 @@ public class ItemModel : MonoBehaviour, IClickable
 
     public void HandleClick()
     {
-        string mat = originalItem.material.ToString();
+        string mat = ((MatPairStruct)(originalItem.material)).ToString();
         if (GameMap.materials.ContainsKey(originalItem.material))
             mat = GameMap.materials[originalItem.material].id;
         if(originalItem.stack_size > 1)
