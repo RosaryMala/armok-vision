@@ -23,6 +23,10 @@ ModelImporter:
     100030: Briolette
     100032: Emerald
     100034: Plane001
+    100036: marquise_0
+    100038: oval_dxf_6
+    100040: pear_dxf_7
+    100042: Square Brilliant
     400000: //RootNode
     400002: Rose Cut
     400004: SMALLGEM
@@ -41,6 +45,10 @@ ModelImporter:
     400030: Briolette
     400032: Emerald
     400034: Plane001
+    400036: marquise_0
+    400038: oval_dxf_6
+    400040: pear_dxf_7
+    400042: Square Brilliant
     2100000: default
     2100002: No Name
     2100004: 08 - Default
@@ -60,6 +68,10 @@ ModelImporter:
     2300026: Briolette
     2300028: Emerald
     2300030: Plane001
+    2300032: marquise_0
+    2300034: oval_dxf_6
+    2300036: pear_dxf_7
+    2300038: Square Brilliant
     3300000: Rose Cut
     3300002: SMALLGEM
     3300004: BOULDER
@@ -76,6 +88,10 @@ ModelImporter:
     3300026: Briolette
     3300028: Emerald
     3300030: Plane001
+    3300032: marquise_0
+    3300034: oval_dxf_6
+    3300036: pear_dxf_7
+    3300038: Square Brilliant
     4300000: SMALLGEM
     4300002: Rose Cut
     4300004: Box001
@@ -92,6 +108,10 @@ ModelImporter:
     4300026: Briolette
     4300028: Plane001
     4300030: Emerald
+    4300032: marquise_0
+    4300034: oval_dxf_6
+    4300036: pear_dxf_7
+    4300038: Square Brilliant
     9500000: //RootNode
   externalObjects: {}
   materials:
