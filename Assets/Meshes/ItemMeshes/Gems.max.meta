@@ -27,6 +27,7 @@ ModelImporter:
     100038: oval_dxf_6
     100040: pear_dxf_7
     100042: Square Brilliant
+    100044: Radiant
     400000: //RootNode
     400002: Rose Cut
     400004: SMALLGEM
@@ -49,6 +50,7 @@ ModelImporter:
     400038: oval_dxf_6
     400040: pear_dxf_7
     400042: Square Brilliant
+    400044: Radiant
     2100000: default
     2100002: No Name
     2100004: 08 - Default
@@ -72,6 +74,7 @@ ModelImporter:
     2300034: oval_dxf_6
     2300036: pear_dxf_7
     2300038: Square Brilliant
+    2300040: Radiant
     3300000: Rose Cut
     3300002: SMALLGEM
     3300004: BOULDER
@@ -92,6 +95,7 @@ ModelImporter:
     3300034: oval_dxf_6
     3300036: pear_dxf_7
     3300038: Square Brilliant
+    3300040: Radiant
     4300000: SMALLGEM
     4300002: Rose Cut
     4300004: Box001
@@ -112,6 +116,7 @@ ModelImporter:
     4300034: oval_dxf_6
     4300036: pear_dxf_7
     4300038: Square Brilliant
+    4300040: Radiant
     9500000: //RootNode
   externalObjects: {}
   materials:
