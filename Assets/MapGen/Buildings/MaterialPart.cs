@@ -25,30 +25,6 @@ namespace Building
             meshRenderer = GetComponent<MeshRenderer>();
         }
 
-        private void UpdateMaterialVersions()
-        {
-            if (setMaterials)
-                return;
-            setMaterials = true;
-            var originalMat = meshRenderer.sharedMaterial;
-            originalMaterialID = originalMat.GetInstanceID();
-            if (!opaqueMaterialVersions.ContainsKey(originalMaterialID))
-            {
-                if (originalMat.shader.name == "Standard")
-                {
-                    Debug.LogWarning(GetTreeName(gameObject) + " Has a standard shader!");
-                    opaqueMaterialVersions[originalMaterialID] = originalMat;
-                    transparentMaterialVersions[originalMaterialID] = originalMat;
-                }
-                else
-                {
-                    opaqueMaterialVersions[originalMaterialID] = originalMat;
-                    transparentMaterialVersions[originalMaterialID] = new Material(originalMat);
-                    transparentMaterialVersions[originalMaterialID].shader = Shader.Find("Building/Transparent");
-                }
-            }
-        }
-
         public static string GetTreeName(GameObject go)
         {
             string name = go.name;
@@ -59,29 +35,7 @@ namespace Building
             return name;
         }
 
-        bool setMaterials = false;
-        int originalMaterialID;
-        static Dictionary<int, Material> opaqueMaterialVersions = new Dictionary<int, Material>();
-        static Dictionary<int, Material> transparentMaterialVersions = new Dictionary<int, Material>();
-
-        Material OriginalMaterial
-        {
-            get
-            {
-                if (!setMaterials)
-                    UpdateMaterialVersions();
-                return opaqueMaterialVersions[originalMaterialID];
-            }
-        }
-        Material TransparentMaterial
-        {
-            get
-            {
-                if (!setMaterials)
-                    UpdateMaterialVersions();
-                return transparentMaterialVersions[originalMaterialID];
-            }
-        }
+        Material originalMaterial = null;
 
         public void UpdatePart(BuildingInstance buildingInput)
         {
@@ -149,10 +103,12 @@ namespace Building
 
             if (meshRenderer == null)
                 meshRenderer = GetComponent<MeshRenderer>();
-            if (partColor.a < 0.5f)
-                meshRenderer.sharedMaterial = TransparentMaterial;
-            else
-                meshRenderer.sharedMaterial = OriginalMaterial;
+
+            if (originalMaterial == null)
+                originalMaterial = meshRenderer.sharedMaterial;
+
+            meshRenderer.sharedMaterial = ContentLoader.getFinalMaterial(originalMaterial, partColor.a);
+
             MaterialPropertyBlock prop = new MaterialPropertyBlock();
             prop.SetColor("_MatColor", partColor);
             prop.SetFloat("_MatIndex", textureIndex);

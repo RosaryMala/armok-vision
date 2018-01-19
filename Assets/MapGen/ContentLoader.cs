@@ -540,4 +540,29 @@ public class ContentLoader : MonoBehaviour
         GC.Collect();
         yield return null;
     }
+
+    static Dictionary<int, Material> transparentMaterialVersions = new Dictionary<int, Material>();
+
+    public static Material getFinalMaterial(Material material, float alpha)
+    {
+        int instanceID = material.GetInstanceID();
+        if (!transparentMaterialVersions.ContainsKey(instanceID))
+        {
+            if (material.shader.name == "Standard")
+            {
+                Debug.LogWarning(material.name + " Has a standard shader!");
+                transparentMaterialVersions[instanceID] = material;
+            }
+            else
+            {
+                transparentMaterialVersions[instanceID] = new Material(material);
+                transparentMaterialVersions[instanceID].shader = Shader.Find("Building/Transparent");
+            }
+        }
+
+        if (alpha < 0.5f)
+            return transparentMaterialVersions[instanceID];
+        else
+            return material;
+    }
 }

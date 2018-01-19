@@ -7,30 +7,8 @@ using UnityEngine;
 public class ItemModel : MonoBehaviour, IClickable
 {
     public Item originalItem;
-    bool setMaterials = false;
-    int originalMaterialID;
-    static Dictionary<int, Material> opaqueMaterialVersions = new Dictionary<int, Material>();
-    static Dictionary<int, Material> transparentMaterialVersions = new Dictionary<int, Material>();
     private MeshRenderer meshRenderer;
-
-    Material OriginalMaterial
-    {
-        get
-        {
-            if (!setMaterials)
-                UpdateMaterialVersions();
-            return opaqueMaterialVersions[originalMaterialID];
-        }
-    }
-    Material TransparentMaterial
-    {
-        get
-        {
-            if (!setMaterials)
-                UpdateMaterialVersions();
-            return transparentMaterialVersions[originalMaterialID];
-        }
-    }
+    private Material originalMaterial;
 
     private void Awake()
     {
@@ -44,54 +22,35 @@ public class ItemModel : MonoBehaviour, IClickable
         }
     }
 
-
-    private void UpdateMaterialVersions()
-    {
-        if (setMaterials)
-            return;
-        setMaterials = true;
-        var originalMat = meshRenderer.sharedMaterial;
-        originalMaterialID = originalMat.GetInstanceID();
-        if (!opaqueMaterialVersions.ContainsKey(originalMaterialID))
-        {
-            if (originalMat.shader.name == "Standard")
-            {
-                Debug.LogWarning(Building.MaterialPart.GetTreeName(gameObject) + " Has a standard shader!");
-                opaqueMaterialVersions[originalMaterialID] = originalMat;
-                transparentMaterialVersions[originalMaterialID] = originalMat;
-            }
-            else
-            {
-                opaqueMaterialVersions[originalMaterialID] = originalMat;
-                transparentMaterialVersions[originalMaterialID] = new Material(originalMat)
-                {
-                    shader = Shader.Find("Building/Transparent")
-                };
-            }
-        }
-    }
-
     public void UpdateMaterial(Item itemInput)
     {
-        if (setMaterials)
-            return;
         originalItem = itemInput;
 
         if (meshRenderer == null)
             meshRenderer = GetComponentInChildren<MeshRenderer>();
 
+        if (originalMaterial == null)
+            originalMaterial = meshRenderer.sharedMaterial;
+
         Color partColor = ContentLoader.GetColor(itemInput);
         float textureIndex = ContentLoader.GetPatternIndex(itemInput.material);
 
-        if (partColor.a < 0.5f)
-            meshRenderer.sharedMaterial = TransparentMaterial;
-        else
-            meshRenderer.sharedMaterial = OriginalMaterial;
+        meshRenderer.sharedMaterial = ContentLoader.getFinalMaterial(originalMaterial, partColor.a);
 
         MaterialPropertyBlock prop = new MaterialPropertyBlock();
         prop.SetColor("_MatColor", partColor);
         prop.SetFloat("_MatIndex", textureIndex);
         meshRenderer.SetPropertyBlock(prop);
+
+        foreach (var imp in GetComponentsInChildren<ItemImprovement>())
+        {
+            if(imp.index >= itemInput.improvements.Count)
+            {
+                imp.gameObject.SetActive(false);
+                continue;
+            }
+            imp.UpdateImprovement(itemInput.improvements[imp.index]);
+        }
     }
 
     public void HandleClick()
