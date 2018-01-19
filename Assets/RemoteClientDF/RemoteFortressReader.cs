@@ -672,6 +672,14 @@ namespace RemoteFortressReader
       get { return _volume; }
       set { _volume = value; }
     }
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.ItemImprovement> _improvements = new global::System.Collections.Generic.List<RemoteFortressReader.ItemImprovement>();
+    [global::ProtoBuf.ProtoMember(17, Name=@"improvements", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.ItemImprovement> improvements
+    {
+      get { return _improvements; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -4053,6 +4061,52 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ItemImprovement")]
+  public partial class ItemImprovement : global::ProtoBuf.IExtensible
+  {
+    public ItemImprovement() {}
+    
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.MatPair _material = null;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"material", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.MatPair material
+    {
+      get { return _material; }
+      set { _material = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.ImprovementType _type = RemoteFortressReader.ImprovementType.ART_IMAGE;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.ImprovementType.ART_IMAGE)]
+    public RemoteFortressReader.ImprovementType type
+    {
+      get { return _type; }
+      set { _type = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _shape = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"shape", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int shape
+    {
+      get { return _shape; }
+      set { _shape = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _specific_type = default(int);
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"specific_type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int specific_type
+    {
+      get { return _specific_type; }
+      set { _specific_type = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
     [global::ProtoBuf.ProtoContract(Name=@"TiletypeShape")]
     public enum TiletypeShape
     {
@@ -4581,6 +4635,50 @@ namespace RemoteFortressReader
             
       [global::ProtoBuf.ProtoEnum(Name=@"MOTTLED", Value=5)]
       MOTTLED = 5
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"ImprovementType")]
+    public enum ImprovementType
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ART_IMAGE", Value=0)]
+      ART_IMAGE = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"COVERED", Value=1)]
+      COVERED = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"RINGS_HANGING", Value=2)]
+      RINGS_HANGING = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"BANDS", Value=3)]
+      BANDS = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SPIKES", Value=4)]
+      SPIKES = 4,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ITEMSPECIFIC", Value=5)]
+      ITEMSPECIFIC = 5,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"THREAD", Value=6)]
+      THREAD = 6,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CLOTH", Value=7)]
+      CLOTH = 7,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SEWN_IMAGE", Value=8)]
+      SEWN_IMAGE = 8,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"PAGES", Value=9)]
+      PAGES = 9,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ILLUSTRATION", Value=10)]
+      ILLUSTRATION = 10,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"INSTRUMENT_PIECE", Value=11)]
+      INSTRUMENT_PIECE = 11,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"WRITING", Value=12)]
+      WRITING = 12
     }
   
 }

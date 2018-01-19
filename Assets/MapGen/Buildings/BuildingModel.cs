@@ -117,7 +117,7 @@ namespace Building
             Debug.Log(GameMap.buildings[originalBuilding.building_type].id);
             foreach (var item in originalBuilding.items)
             {
-                Debug.Log(GameMap.items[item.item.type].id + ": " + item.mode);
+                ItemModel.PrintItemInfo(item.item);
             }
         }
 

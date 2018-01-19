@@ -96,12 +96,25 @@ public class ItemModel : MonoBehaviour, IClickable
 
     public void HandleClick()
     {
-        string mat = ((MatPairStruct)(originalItem.material)).ToString();
-        if (GameMap.materials.ContainsKey(originalItem.material))
-            mat = GameMap.materials[originalItem.material].id;
-        if(originalItem.stack_size > 1)
-            Debug.Log(string.Format("{0} {1} [{2}]", mat, GameMap.items[originalItem.type].id, originalItem.stack_size));
+        PrintItemInfo(originalItem);
+    }
+
+    public static void PrintItemInfo(Item item)
+    {
+        string mat = ((MatPairStruct)(item.material)).ToString();
+        if (GameMap.materials.ContainsKey(item.material))
+            mat = GameMap.materials[item.material].id;
+        if (item.stack_size > 1)
+            Debug.Log(string.Format("{0} {1} [{2}]", mat, GameMap.items[item.type].id, item.stack_size));
         else
-            Debug.Log(string.Format("{0} {1}", mat, GameMap.items[originalItem.type].id));
+            Debug.Log(string.Format("{0} {1}", mat, GameMap.items[item.type].id));
+
+        foreach (var imp in item.improvements)
+        {
+            mat = ((MatPairStruct)(imp.material)).ToString();
+            if (GameMap.materials.ContainsKey(imp.material))
+                mat = GameMap.materials[imp.material].id;
+            Debug.Log(string.Format("    {0} {1}", mat, imp.type));
+        }
     }
 }
