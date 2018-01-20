@@ -42,14 +42,68 @@ public class ItemModel : MonoBehaviour, IClickable
         prop.SetFloat("_MatIndex", textureIndex);
         meshRenderer.SetPropertyBlock(prop);
 
-        foreach (var imp in GetComponentsInChildren<ItemImprovement>())
+        List<RemoteFortressReader.ItemImprovement> images = new List<RemoteFortressReader.ItemImprovement>();
+        List<RemoteFortressReader.ItemImprovement> ringSpikeBands = new List<RemoteFortressReader.ItemImprovement>();
+        List<RemoteFortressReader.ItemImprovement> covereds = new List<RemoteFortressReader.ItemImprovement>();
+
+        foreach (var improvement in itemInput.improvements)
         {
-            if(imp.index >= itemInput.improvements.Count)
+            switch (improvement.type)
             {
-                imp.gameObject.SetActive(false);
-                continue;
+                case ImprovementType.ART_IMAGE:
+                    images.Add(improvement);
+                    break;
+                case ImprovementType.COVERED:
+                    covereds.Add(improvement);
+                    break;
+                case ImprovementType.RINGS_HANGING:
+                case ImprovementType.BANDS:
+                case ImprovementType.SPIKES:
+                    ringSpikeBands.Add(improvement);
+                    break;
+                case ImprovementType.THREAD:
+                case ImprovementType.CLOTH:
+                    //Handled already, it's dye.
+                    break;
+                case ImprovementType.ITEMSPECIFIC:
+                case ImprovementType.SEWN_IMAGE:
+                case ImprovementType.PAGES:
+                case ImprovementType.ILLUSTRATION:
+                case ImprovementType.INSTRUMENT_PIECE:
+                case ImprovementType.WRITING:
+                default:
+                    Debug.LogWarning(string.Format("Unhandled improvement {0} on {1}", improvement.type, gameObject.name));
+                    break;
             }
-            imp.UpdateImprovement(itemInput.improvements[imp.index]);
+        }
+
+        var imps = GetComponentsInChildren<ItemImprovement>();
+        for (int i = 0; i < imps.Length; i++)
+        {
+            var imp = imps[i];
+            if (imp.isImage && imp.index < images.Count)
+            {
+                imp.UpdateImprovement(images[imp.index]);
+            }
+            else if (imp.isRings && imp.index < ringSpikeBands.Count && ringSpikeBands[imp.index].type == ImprovementType.RINGS_HANGING)
+            {
+                imp.UpdateImprovement(ringSpikeBands[imp.index]);
+            }
+            else if (imp.isSpikes && imp.index < ringSpikeBands.Count && ringSpikeBands[imp.index].type == ImprovementType.SPIKES)
+            {
+                imp.UpdateImprovement(ringSpikeBands[imp.index]);
+            }
+            else if (imp.isBands && imp.index < ringSpikeBands.Count && ringSpikeBands[imp.index].type == ImprovementType.BANDS)
+            {
+                imp.UpdateImprovement(ringSpikeBands[imp.index]);
+            }
+            else if(covereds.Count > 0)
+            {
+                Random.InitState(i);
+                imp.UpdateImprovement(covereds[Random.Range(0, covereds.Count - 1)]);
+            }
+            else
+                imp.gameObject.SetActive(false);
         }
     }
 

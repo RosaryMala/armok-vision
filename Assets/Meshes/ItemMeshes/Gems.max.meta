@@ -35,6 +35,7 @@ ModelImporter:
     100054: Baguette
     100056: Tapered Baguette
     100058: MenacingSpike
+    100060: Rings
     400000: //RootNode
     400002: Rose Cut
     400004: SMALLGEM
@@ -65,6 +66,7 @@ ModelImporter:
     400054: Baguette
     400056: Tapered Baguette
     400058: MenacingSpike
+    400060: Rings
     2100000: default
     2100002: No Name
     2100004: 08 - Default
@@ -96,6 +98,7 @@ ModelImporter:
     2300050: Baguette
     2300052: Tapered Baguette
     2300054: MenacingSpike
+    2300056: Rings
     3300000: Rose Cut
     3300002: SMALLGEM
     3300004: BOULDER
@@ -124,6 +127,7 @@ ModelImporter:
     3300050: Baguette
     3300052: Tapered Baguette
     3300054: MenacingSpike
+    3300056: Rings
     4300000: SMALLGEM
     4300002: Rose Cut
     4300004: Box001
@@ -152,6 +156,7 @@ ModelImporter:
     4300050: Baguette
     4300052: Tapered Baguette
     4300054: MenacingSpike
+    4300056: Rings
     9500000: //RootNode
   externalObjects: {}
   materials:
