@@ -105,6 +105,7 @@ public class ItemModel : MonoBehaviour, IClickable
             else
                 imp.gameObject.SetActive(false);
         }
+
     }
 
     public void HandleClick()

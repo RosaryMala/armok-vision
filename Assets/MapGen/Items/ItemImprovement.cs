@@ -37,7 +37,7 @@ public class ItemImprovement : MonoBehaviour
                 break;
             case ImprovementType.BANDS:
             case ImprovementType.COVERED:
-                prefab = DecorationManager.Instance.Shape;
+                prefab = DecorationManager.Instance.GetShape(improvement.shape);
                 break;
             case ImprovementType.RINGS_HANGING:
                 prefab = DecorationManager.Instance.Ring;
