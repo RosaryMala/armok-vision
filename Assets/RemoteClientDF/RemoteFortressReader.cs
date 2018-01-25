@@ -680,6 +680,15 @@ namespace RemoteFortressReader
       get { return _improvements; }
     }
   
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.ArtImage _image = null;
+    [global::ProtoBuf.ProtoMember(18, IsRequired = false, Name=@"image", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.ArtImage image
+    {
+      get { return _image; }
+      set { _image = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -4102,6 +4111,88 @@ namespace RemoteFortressReader
       get { return _specific_type; }
       set { _specific_type = value; }
     }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.ArtImage _image = null;
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"image", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.ArtImage image
+    {
+      get { return _image; }
+      set { _image = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ArtImageElement")]
+  public partial class ArtImageElement : global::ProtoBuf.IExtensible
+  {
+    public ArtImageElement() {}
+    
+    [UnityEngine.SerializeField]
+    private int _count = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"count", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int count
+    {
+      get { return _count; }
+      set { _count = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.ArtImageElementType _type = RemoteFortressReader.ArtImageElementType.IMAGE_CREATURE;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.ArtImageElementType.IMAGE_CREATURE)]
+    public RemoteFortressReader.ArtImageElementType type
+    {
+      get { return _type; }
+      set { _type = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.MatPair _creature_item = null;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"creature_item", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.MatPair creature_item
+    {
+      get { return _creature_item; }
+      set { _creature_item = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.MatPair _material = null;
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"material", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.MatPair material
+    {
+      get { return _material; }
+      set { _material = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _id = default(int);
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int id
+    {
+      get { return _id; }
+      set { _id = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ArtImage")]
+  public partial class ArtImage : global::ProtoBuf.IExtensible
+  {
+    public ArtImage() {}
+    
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.ArtImageElement> _elements = new global::System.Collections.Generic.List<RemoteFortressReader.ArtImageElement>();
+    [global::ProtoBuf.ProtoMember(1, Name=@"elements", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.ArtImageElement> elements
+    {
+      get { return _elements; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -4679,6 +4770,26 @@ namespace RemoteFortressReader
             
       [global::ProtoBuf.ProtoEnum(Name=@"WRITING", Value=12)]
       WRITING = 12
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"ArtImageElementType")]
+    public enum ArtImageElementType
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"IMAGE_CREATURE", Value=0)]
+      IMAGE_CREATURE = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"IMAGE_PLANT", Value=1)]
+      IMAGE_PLANT = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"IMAGE_TREE", Value=2)]
+      IMAGE_TREE = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"IMAGE_SHAPE", Value=3)]
+      IMAGE_SHAPE = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"IMAGE_ITEM", Value=4)]
+      IMAGE_ITEM = 4
     }
   
 }
