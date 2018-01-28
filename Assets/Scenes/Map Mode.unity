@@ -2596,10 +2596,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   creatureTemplate: {fileID: 114234982672090002, guid: f1c56ebe0ff1ec3439724162aa0556bd,
     type: 2}
-  lastUnitList:
-    _creature_list: []
-  unitList:
-    _creature_list: []
   baseTileMaterial: {fileID: 2100000, guid: 9cb4e5368216ece42b83524d72cc6d9e, type: 2}
   singleRow: 0
   spacing: 0

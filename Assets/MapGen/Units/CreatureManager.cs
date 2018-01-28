@@ -12,8 +12,7 @@ public class CreatureManager : MonoBehaviour
     Dictionary<int, Creature> creatureList;
     public Creature creatureTemplate;
 
-    public UnitList lastUnitList = null;
-    public UnitList unitList = null;
+    public UnitList Units { get; set; }
 
     public Material baseTileMaterial;
 
@@ -49,11 +48,10 @@ public class CreatureManager : MonoBehaviour
         if (tempUnitList == null)
             return;
         else
-            unitList = tempUnitList;
+            Units = tempUnitList;
         UnityEngine.Profiling.Profiler.BeginSample("UpdateCreatures", this);
-        lastUnitList = unitList;
         int creatureCount = 0;
-        foreach (var unit in unitList.creature_list)
+        foreach (var unit in Units.creature_list)
         {
             if (creatureList == null)
                 creatureList = new Dictionary<int, Creature>();
