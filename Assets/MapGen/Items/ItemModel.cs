@@ -97,7 +97,7 @@ public class ItemModel : MonoBehaviour, IClickable
             {
                 imp.UpdateImprovement(ringSpikeBands[imp.index]);
             }
-            else if(covereds.Count > 0)
+            else if(imp.isCovered && covereds.Count > 0)
             {
                 Random.InitState(i);
                 imp.UpdateImprovement(covereds[Random.Range(0, covereds.Count - 1)]);
