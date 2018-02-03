@@ -22,6 +22,10 @@ Material:
         m_Texture: {fileID: 18700000, guid: 099059a42f9cb254da95f4cd814d0e0e, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _BumpAtlas:
+        m_Texture: {fileID: 18700000, guid: bd2b876762dd5804f9be4c94e8bbeb5c, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -70,6 +74,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _MatIndex: 0
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -83,3 +88,5 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _MatColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _SpecColor: {r: 0.45098037, g: 0.45098037, b: 0.45098037, a: 0.7790837}

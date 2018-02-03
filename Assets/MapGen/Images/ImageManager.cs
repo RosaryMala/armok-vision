@@ -101,7 +101,11 @@ public class ImageManager : MonoBehaviour
                 for (int x = Mathf.RoundToInt(rect.xMin * 16); x < Mathf.RoundToInt(rect.xMax * 16); x++)
                     for (int y = Mathf.RoundToInt(rect.yMin * 16); y < Mathf.RoundToInt(rect.yMax * 16); y++)
                     {
-                        Color32 color = new Color32((byte)tile, (byte)(1 / rect.size.x), (byte)(rect.position.x * 255), (byte)(rect.position.y * 255));
+                        Color32 color = new Color32(
+                            (byte)tile, 
+                            (byte)Mathf.RoundToInt(1 / rect.size.x),
+                            (byte)Mathf.RoundToInt(rect.position.x * 255), 
+                            (byte)Mathf.RoundToInt(rect.position.y * 255));
                         colors[coordToIndex(x, y)] = color;
                     }
             }

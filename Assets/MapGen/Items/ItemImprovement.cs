@@ -70,14 +70,13 @@ public class ItemImprovement : MonoBehaviour
         else
         {
             originalMaterial = meshRenderer.sharedMaterial;
-
             meshRenderer.sharedMaterial = ContentLoader.getFinalMaterial(originalMaterial, matColor.a);
-
-            MaterialPropertyBlock prop = new MaterialPropertyBlock();
-            prop.SetColor("_MatColor", matColor);
-            prop.SetFloat("_MatIndex", textureIndex);
-            meshRenderer.SetPropertyBlock(prop);
         }
+
+        MaterialPropertyBlock prop = new MaterialPropertyBlock();
+        prop.SetColor("_MatColor", matColor);
+        prop.SetFloat("_MatIndex", textureIndex);
+        meshRenderer.SetPropertyBlock(prop);
     }
 
     private void OnDrawGizmos()
