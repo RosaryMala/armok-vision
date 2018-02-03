@@ -49,8 +49,8 @@
             //float index = _Tile;
             // Albedo comes from a texture tinted by color
             float3 uv = float3(IN.uv_Atlas, index.r);
-            uv.xy -= (index.ba / 16);
-            uv.xy /= (index.g / 16);
+            uv.xy -= index.ba;
+            uv.xy *= index.g;
             float4 c = UNITY_SAMPLE_TEX2DARRAY (_Atlas, uv) * _Color;
             o.Albedo = c.rgb*c.a;
             // Metallic and smoothness come from slider variables

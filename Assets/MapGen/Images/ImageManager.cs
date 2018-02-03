@@ -1,5 +1,4 @@
 ﻿using RemoteFortressReader;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -99,12 +98,10 @@ public class ImageManager : MonoBehaviour
             foreach (var item in images)
             {
                 var rect = item;
-                rect.min *= 16;
-                rect.max *= 16;
-                for (int x = Mathf.RoundToInt(rect.xMin); x < Mathf.RoundToInt(rect.xMax); x++)
-                    for (int y = Mathf.RoundToInt(rect.yMin); y < Mathf.RoundToInt(rect.yMax); y++)
+                for (int x = Mathf.RoundToInt(rect.xMin * 16); x < Mathf.RoundToInt(rect.xMax * 16); x++)
+                    for (int y = Mathf.RoundToInt(rect.yMin * 16); y < Mathf.RoundToInt(rect.yMax * 16); y++)
                     {
-                        Color32 color = new Color32((byte)tile, (byte)rect.size.x, (byte)rect.position.x, (byte)rect.position.y);
+                        Color32 color = new Color32((byte)tile, (byte)(1 / rect.size.x), (byte)(rect.position.x * 255), (byte)(rect.position.y * 255));
                         colors[coordToIndex(x, y)] = color;
                     }
             }
