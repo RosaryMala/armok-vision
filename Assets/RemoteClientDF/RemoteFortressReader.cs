@@ -4047,6 +4047,15 @@ namespace RemoteFortressReader
       get { return _id; }
       set { _id = value; }
     }
+    [UnityEngine.SerializeField]
+    private int _tile = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"tile", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int tile
+    {
+      get { return _tile; }
+      set { _tile = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -4193,6 +4202,15 @@ namespace RemoteFortressReader
       get { return _elements; }
     }
   
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.MatPair _id = null;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.MatPair id
+    {
+      get { return _id; }
+      set { _id = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

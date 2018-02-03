@@ -119,6 +119,21 @@ public class LayeredSpriteManager : MonoBehaviour
         var stopWatch = System.Diagnostics.Stopwatch.StartNew();
         foreach (var spriteSet in spriteSetList)
         {
+            //Correct equipment names with missing prefixes.
+            foreach (var layer in spriteSet.spriteLayers)
+            {
+                string token = layer.token;
+                if (!token.Contains("/"))
+                {
+                    var tokenParts = layer.token.Split('_');
+                    if (tokenParts.Length == 3 && tokenParts[0] == "ITEM")
+                    {
+                        token = tokenParts[1] + "/" + token;
+                    }
+                }
+                layer.token = token;
+            }
+
             MatPairStruct raceID = new MatPairStruct(-1, -1);
             //With generated creatures, the same sprite can potentially match more than one creature.
             var raceRawList = GeneratedCreatureTranslator.GetCreatureRaw(spriteSet.race);

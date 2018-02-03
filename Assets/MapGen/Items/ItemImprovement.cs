@@ -15,11 +15,16 @@ public class ItemImprovement : MonoBehaviour
     public bool isRings;
     public bool isSpikes;
     public bool isBands;
+    public bool isCovered = true;
+
+    public ArtImage image;
 
     internal void UpdateImprovement(RemoteFortressReader.ItemImprovement improvement)
     {
         Color matColor = ContentLoader.GetColor(improvement.material);
         float textureIndex = ContentLoader.GetPatternIndex(improvement.material);
+
+        image = improvement.image;
 
         if (actualModel != null)
         {
@@ -58,15 +63,21 @@ public class ItemImprovement : MonoBehaviour
         actualModel = Instantiate(prefab, transform, false);
 
         meshRenderer = actualModel.GetComponentInChildren<MeshRenderer>();
+        if (improvement.type == ImprovementType.ART_IMAGE)
+        {
+            meshRenderer.material.SetTexture("_TileIndex", ImageManager.Instance.CreateImage(improvement.image));
+        }
+        else
+        {
+            originalMaterial = meshRenderer.sharedMaterial;
 
-        originalMaterial = meshRenderer.sharedMaterial;
+            meshRenderer.sharedMaterial = ContentLoader.getFinalMaterial(originalMaterial, matColor.a);
 
-        meshRenderer.sharedMaterial = ContentLoader.getFinalMaterial(originalMaterial, matColor.a);
-
-        MaterialPropertyBlock prop = new MaterialPropertyBlock();
-        prop.SetColor("_MatColor", matColor);
-        prop.SetFloat("_MatIndex", textureIndex);
-        meshRenderer.SetPropertyBlock(prop);
+            MaterialPropertyBlock prop = new MaterialPropertyBlock();
+            prop.SetColor("_MatColor", matColor);
+            prop.SetFloat("_MatIndex", textureIndex);
+            meshRenderer.SetPropertyBlock(prop);
+        }
     }
 
     private void OnDrawGizmos()

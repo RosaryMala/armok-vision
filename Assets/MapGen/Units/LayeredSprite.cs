@@ -232,19 +232,10 @@ public class LayeredSprite : MonoBehaviour
                     }
                     break;
                 case CreatureSpriteLayer.SpriteSource.Equipment:
-                    string token = spriteLayerDef.token;
-                    if (!token.Contains("/"))
-                    {
-                        var tokenParts = spriteLayerDef.token.Split('_');
-                        if(tokenParts.Length == 3 && tokenParts[0] == "ITEM")
-                        {
-                            token = tokenParts[1] + "/" + token;
-                        }
-                    }
                     int inventoryIndex = unit.inventory.FindIndex(
                         x =>
                         (x.mode == InventoryMode.Weapon || x.mode == InventoryMode.Worn)
-                        && token == GameMap.items[x.item.type].id
+                        && spriteLayerDef.token == GameMap.items[x.item.type].id
                         );
                     if (inventoryIndex < 0)
                     {
