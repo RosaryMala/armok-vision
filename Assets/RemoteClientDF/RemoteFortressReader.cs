@@ -1682,6 +1682,14 @@ namespace RemoteFortressReader
       get { return _map_y; }
       set { _map_y = value; }
     }
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.Engraving> _engravings = new global::System.Collections.Generic.List<RemoteFortressReader.Engraving>();
+    [global::ProtoBuf.ProtoMember(4, Name=@"engravings", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.Engraving> engravings
+    {
+      get { return _engravings; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -4189,6 +4197,52 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ArtImageProperty")]
+  public partial class ArtImageProperty : global::ProtoBuf.IExtensible
+  {
+    public ArtImageProperty() {}
+    
+    [UnityEngine.SerializeField]
+    private int _subject = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"subject", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int subject
+    {
+      get { return _subject; }
+      set { _subject = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _object = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"object", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int @object
+    {
+      get { return _object; }
+      set { _object = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.ArtImageVerb _verb = RemoteFortressReader.ArtImageVerb.VERB_WITHERING;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"verb", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.ArtImageVerb.VERB_WITHERING)]
+    public RemoteFortressReader.ArtImageVerb verb
+    {
+      get { return _verb; }
+      set { _verb = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.ArtImagePropertyType _type = RemoteFortressReader.ArtImagePropertyType.TRANSITIVE_VERB;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.ArtImagePropertyType.TRANSITIVE_VERB)]
+    public RemoteFortressReader.ArtImagePropertyType type
+    {
+      get { return _type; }
+      set { _type = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ArtImage")]
   public partial class ArtImage : global::ProtoBuf.IExtensible
   {
@@ -4210,6 +4264,150 @@ namespace RemoteFortressReader
     {
       get { return _id; }
       set { _id = value; }
+    }
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.ArtImageProperty> _properties = new global::System.Collections.Generic.List<RemoteFortressReader.ArtImageProperty>();
+    [global::ProtoBuf.ProtoMember(3, Name=@"properties", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.ArtImageProperty> properties
+    {
+      get { return _properties; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Engraving")]
+  public partial class Engraving : global::ProtoBuf.IExtensible
+  {
+    public Engraving() {}
+    
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.Coord _pos = null;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"pos", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Coord pos
+    {
+      get { return _pos; }
+      set { _pos = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _quality = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"quality", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int quality
+    {
+      get { return _quality; }
+      set { _quality = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _tile = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"tile", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int tile
+    {
+      get { return _tile; }
+      set { _tile = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.ArtImage _image = null;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"image", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.ArtImage image
+    {
+      get { return _image; }
+      set { _image = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _floor = default(bool);
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"floor", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool floor
+    {
+      get { return _floor; }
+      set { _floor = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _west = default(bool);
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"west", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool west
+    {
+      get { return _west; }
+      set { _west = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _east = default(bool);
+    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"east", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool east
+    {
+      get { return _east; }
+      set { _east = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _north = default(bool);
+    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"north", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool north
+    {
+      get { return _north; }
+      set { _north = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _south = default(bool);
+    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"south", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool south
+    {
+      get { return _south; }
+      set { _south = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _hidden = default(bool);
+    [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name=@"hidden", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool hidden
+    {
+      get { return _hidden; }
+      set { _hidden = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _northwest = default(bool);
+    [global::ProtoBuf.ProtoMember(11, IsRequired = false, Name=@"northwest", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool northwest
+    {
+      get { return _northwest; }
+      set { _northwest = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _northeast = default(bool);
+    [global::ProtoBuf.ProtoMember(12, IsRequired = false, Name=@"northeast", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool northeast
+    {
+      get { return _northeast; }
+      set { _northeast = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _southwest = default(bool);
+    [global::ProtoBuf.ProtoMember(13, IsRequired = false, Name=@"southwest", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool southwest
+    {
+      get { return _southwest; }
+      set { _southwest = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _southeast = default(bool);
+    [global::ProtoBuf.ProtoMember(14, IsRequired = false, Name=@"southeast", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool southeast
+    {
+      get { return _southeast; }
+      set { _southeast = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
@@ -4808,6 +5006,166 @@ namespace RemoteFortressReader
             
       [global::ProtoBuf.ProtoEnum(Name=@"IMAGE_ITEM", Value=4)]
       IMAGE_ITEM = 4
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"ArtImagePropertyType")]
+    public enum ArtImagePropertyType
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"TRANSITIVE_VERB", Value=0)]
+      TRANSITIVE_VERB = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"INTRANSITIVE_VERB", Value=1)]
+      INTRANSITIVE_VERB = 1
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"ArtImageVerb")]
+    public enum ArtImageVerb
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_WITHERING", Value=0)]
+      VERB_WITHERING = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_SURROUNDEDBY", Value=1)]
+      VERB_SURROUNDEDBY = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_MASSACRING", Value=2)]
+      VERB_MASSACRING = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_FIGHTING", Value=3)]
+      VERB_FIGHTING = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_LABORING", Value=4)]
+      VERB_LABORING = 4,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_GREETING", Value=5)]
+      VERB_GREETING = 5,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_REFUSING", Value=6)]
+      VERB_REFUSING = 6,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_SPEAKING", Value=7)]
+      VERB_SPEAKING = 7,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_EMBRACING", Value=8)]
+      VERB_EMBRACING = 8,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_STRIKINGDOWN", Value=9)]
+      VERB_STRIKINGDOWN = 9,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_MENACINGPOSE", Value=10)]
+      VERB_MENACINGPOSE = 10,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_TRAVELING", Value=11)]
+      VERB_TRAVELING = 11,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_RAISING", Value=12)]
+      VERB_RAISING = 12,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_HIDING", Value=13)]
+      VERB_HIDING = 13,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_LOOKINGCONFUSED", Value=14)]
+      VERB_LOOKINGCONFUSED = 14,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_LOOKINGTERRIFIED", Value=15)]
+      VERB_LOOKINGTERRIFIED = 15,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_DEVOURING", Value=16)]
+      VERB_DEVOURING = 16,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_ADMIRING", Value=17)]
+      VERB_ADMIRING = 17,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_BURNING", Value=18)]
+      VERB_BURNING = 18,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_WEEPING", Value=19)]
+      VERB_WEEPING = 19,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_LOOKINGDEJECTED", Value=20)]
+      VERB_LOOKINGDEJECTED = 20,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_CRINGING", Value=21)]
+      VERB_CRINGING = 21,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_SCREAMING", Value=22)]
+      VERB_SCREAMING = 22,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_SUBMISSIVEGESTURE", Value=23)]
+      VERB_SUBMISSIVEGESTURE = 23,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_FETALPOSITION", Value=24)]
+      VERB_FETALPOSITION = 24,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_SMEAREDINTOSPIRAL", Value=25)]
+      VERB_SMEAREDINTOSPIRAL = 25,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_FALLING", Value=26)]
+      VERB_FALLING = 26,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_DEAD", Value=27)]
+      VERB_DEAD = 27,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_LAUGHING", Value=28)]
+      VERB_LAUGHING = 28,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_LOOKINGOFFENDED", Value=29)]
+      VERB_LOOKINGOFFENDED = 29,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_BEINGSHOT", Value=30)]
+      VERB_BEINGSHOT = 30,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_PLAINTIVEGESTURE", Value=31)]
+      VERB_PLAINTIVEGESTURE = 31,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_MELTING", Value=32)]
+      VERB_MELTING = 32,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_SHOOTING", Value=33)]
+      VERB_SHOOTING = 33,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_TORTURING", Value=34)]
+      VERB_TORTURING = 34,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_COMMITTINGDEPRAVEDACT", Value=35)]
+      VERB_COMMITTINGDEPRAVEDACT = 35,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_PRAYING", Value=36)]
+      VERB_PRAYING = 36,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_CONTEMPLATING", Value=37)]
+      VERB_CONTEMPLATING = 37,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_COOKING", Value=38)]
+      VERB_COOKING = 38,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_ENGRAVING", Value=39)]
+      VERB_ENGRAVING = 39,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_PROSTRATING", Value=40)]
+      VERB_PROSTRATING = 40,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_SUFFERING", Value=41)]
+      VERB_SUFFERING = 41,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_BEINGIMPALED", Value=42)]
+      VERB_BEINGIMPALED = 42,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_BEINGCONTORTED", Value=43)]
+      VERB_BEINGCONTORTED = 43,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_BEINGFLAYED", Value=44)]
+      VERB_BEINGFLAYED = 44,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_HANGINGFROM", Value=45)]
+      VERB_HANGINGFROM = 45,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_BEINGMUTILATED", Value=46)]
+      VERB_BEINGMUTILATED = 46,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VERB_TRIUMPHANTPOSE", Value=47)]
+      VERB_TRIUMPHANTPOSE = 47
     }
   
 }

@@ -1,10 +1,12 @@
 ﻿using RemoteFortressReader;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ImageManager : MonoBehaviour
 {
     public static ImageManager Instance { get; private set; }
+    const int indexWidth = 16;
 
     private void Awake()
     {
@@ -74,42 +76,30 @@ public class ImageManager : MonoBehaviour
 
     int coordToIndex(int x, int y)
     {
-        return y * 16 + x;
+        return y * indexWidth + x;
     }
 
     Dictionary<MatPairStruct, Texture2D> generatedImages = new Dictionary<MatPairStruct, Texture2D>();
+    Color32[] colors = new Color32[indexWidth * indexWidth];
 
     public Texture2D CreateImage(ArtImage artImage)
     {
+        for(int i = 0; i < indexWidth * indexWidth; i++)
+        {
+            colors[i] = new Color32(0, 1, 0, 0);
+        }
         MatPairStruct id = artImage.id;
 
         if (generatedImages.ContainsKey(id))
             return generatedImages[id];
 
         Texture2D texture = null;
-        Color32[] colors = new Color32[256];
-        int elementCount = artImage.elements.Count;
-
-        if (elementCount >= 1)
+        var imagePattern = GetPattern(artImage.elements.Count);
+        for(int i = 0; i < artImage.elements.Count; i++)
         {
-            var element = artImage.elements[0];
-            var images = GetPattern(element.count);
-            var tile = GetElementTile(element);
-            foreach (var item in images)
-            {
-                var rect = item;
-                for (int x = Mathf.RoundToInt(rect.xMin * 16); x < Mathf.RoundToInt(rect.xMax * 16); x++)
-                    for (int y = Mathf.RoundToInt(rect.yMin * 16); y < Mathf.RoundToInt(rect.yMax * 16); y++)
-                    {
-                        Color32 color = new Color32(
-                            (byte)tile, 
-                            (byte)Mathf.RoundToInt(1 / rect.size.x),
-                            (byte)Mathf.RoundToInt(rect.position.x * 255), 
-                            (byte)Mathf.RoundToInt(rect.position.y * 255));
-                        colors[coordToIndex(x, y)] = color;
-                    }
-            }
+            CopyElement(imagePattern[i], artImage.elements[i]);
         }
+
         texture = new Texture2D(16, 16, TextureFormat.ARGB32, false,true);
         texture.SetPixels32(colors);
         texture.Apply();
@@ -117,5 +107,28 @@ public class ImageManager : MonoBehaviour
         texture.filterMode = FilterMode.Point;
         generatedImages[id] = texture;
         return texture;
+    }
+
+    private void CopyElement(Rect rect, ArtImageElement artImageElement)
+    {
+        var images = GetPattern(artImageElement.count);
+        var tile = GetElementTile(artImageElement);
+        foreach (var item in images)
+        {
+            var itemCopy = item;
+            itemCopy.min *= rect.size.x;
+            itemCopy.max *= rect.size.y;
+            itemCopy.position += rect.position;
+            for (int x = Mathf.RoundToInt(itemCopy.xMin * indexWidth); x < Mathf.RoundToInt(itemCopy.xMax * indexWidth); x++)
+                for (int y = Mathf.RoundToInt(itemCopy.yMin * indexWidth); y < Mathf.RoundToInt(itemCopy.yMax * indexWidth); y++)
+                {
+                    Color32 color = new Color32(
+                        (byte)tile,
+                        (byte)Mathf.RoundToInt(1 / itemCopy.size.x),
+                        (byte)Mathf.RoundToInt(itemCopy.position.x * 255),
+                        (byte)Mathf.RoundToInt(itemCopy.position.y * 255));
+                    colors[coordToIndex(x, y)] = color;
+                }
+        }
     }
 }
