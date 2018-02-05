@@ -21,6 +21,7 @@
 
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 4.0
+        #pragma multi_compile _ _BOUNDING_BOX_ENABLED
 
         UNITY_DECLARE_TEX2DARRAY(_Atlas);
         UNITY_DECLARE_TEX2DARRAY(_BumpAtlas);
@@ -34,11 +35,6 @@
             float2 uv_MatTexArray;
             float3 worldPos;
         };
-
-        half _Glossiness;
-        half _Metallic;
-        fixed4 _Color;
-        float _Tile;
 
         float3      _ViewMin = float3(-99999, -99999, -99999);
         float3      _ViewMax = float3(99999, 99999, 99999);
