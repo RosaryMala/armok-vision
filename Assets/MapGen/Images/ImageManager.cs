@@ -8,12 +8,34 @@ public class ImageManager : MonoBehaviour
     public static ImageManager Instance { get; private set; }
     const int indexWidth = 16;
 
+    public MeshRenderer engravingPrefab;
+
+    int tileIndexProp;
     private void Awake()
     {
         if (Instance == null)
             Instance = this;
         else
             Destroy(gameObject);
+        tileIndexProp = Shader.PropertyToID("_TileIndex");
+    }
+
+    Dictionary<DFHack.DFCoord, MeshRenderer> engravingStore = new Dictionary<DFHack.DFCoord, MeshRenderer>();
+
+    private void Update()
+    {
+        List<Engraving> engravingList;
+        while ((engravingList = DFConnection.Instance.PopEngravingUpdate()) != null)
+        {
+            foreach (var engraving in engravingList)
+            {
+                if (engravingStore.ContainsKey(engraving.pos))
+                    continue;
+                MeshRenderer placedEngraving = Instantiate(engravingPrefab, GameMap.DFtoUnityCoord(engraving.pos) + new Vector3(0, GameMap.floorHeight), Quaternion.Euler(90,0,0), transform);
+                placedEngraving.material.SetTexture(tileIndexProp, CreateImage(engraving.image));
+                engravingStore[engraving.pos] = placedEngraving;
+            }
+        }
     }
 
     int GetElementTile(ArtImageElement element)

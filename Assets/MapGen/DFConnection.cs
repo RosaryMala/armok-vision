@@ -215,6 +215,7 @@ public sealed class DFConnection : MonoBehaviour
     private SingleBuffer<RemoteFortressReader.ScreenCapture> netScreenCapture;
     private EventBuffer worldMapMoved;
     private SingleBuffer<Status> netStatus;
+    private RingBuffer<List<Engraving>> engravings = new RingBuffer<List<Engraving>>(1024);
 
     // Input queues
     private RingBuffer<KeyboardEvent> keyPresses
@@ -454,6 +455,13 @@ public sealed class DFConnection : MonoBehaviour
     {
         MapBlock result;
         pendingBlocks.TryDequeue(out result);
+        return result;
+    }
+
+    public List<Engraving> PopEngravingUpdate()
+    {
+        List<Engraving> result;
+        engravings.TryDequeue(out result);
         return result;
     }
 
@@ -1242,6 +1250,7 @@ public sealed class DFConnection : MonoBehaviour
             {
                 pendingBlocks.Enqueue(mapBlock);
             }
+            engravings.Enqueue(resultList.engravings);
         }
     }
 

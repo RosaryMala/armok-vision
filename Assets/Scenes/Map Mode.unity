@@ -3469,6 +3469,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98ae7f38c8d820f439bd3a96a48492b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  engravingPrefab: {fileID: 23890393662714608, guid: 33f54d171754fd24f85965c733406912,
+    type: 2}
 --- !u!1001 &450904008
 Prefab:
   m_ObjectHideFlags: 0
