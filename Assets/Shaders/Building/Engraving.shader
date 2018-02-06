@@ -3,8 +3,6 @@
     Properties 
     {
         _Color ("Color", Color) = (1,1,1,1)
-        _Atlas ("Albedo (RGB)", 2DArray) = "white" {}
-        _BumpAtlas ("Normal Map", 2DArray) = "bump" {}
         _SpecColor("Standard Specular Color", Color) = (0.220916301, 0.220916301, 0.220916301, 0.779083699)
         _TileIndex ("TileIndex (R)", 2D) = "gray" {}
         _ContributionAlbedo ("Contribution / Albedo", Range(0,1)) = 0.0
@@ -29,13 +27,13 @@
         #pragma target 4.0
         #pragma multi_compile _ _BOUNDING_BOX_ENABLED
 
-        UNITY_DECLARE_TEX2DARRAY(_Atlas);
-        UNITY_DECLARE_TEX2DARRAY(_BumpAtlas);
+        UNITY_DECLARE_TEX2DARRAY(_ImageAtlas);
+        UNITY_DECLARE_TEX2DARRAY(_ImageBumpAtlas);
         sampler2D _TileIndex;
 
         struct Input 
         {
-            float2 uv_Atlas;
+            float2 uv_ImageAtlas;
             float2 uv_TileIndex;
             float3 worldPos;
         };
@@ -67,18 +65,18 @@ UNITY_INSTANCING_BUFFER_END(MyProperties)
                 clip(IN.worldPos - _ViewMin);
                 clip(_ViewMax - IN.worldPos);
             #endif
-            float4 index = floor(tex2D(_TileIndex, IN.uv_TileIndex) * 255);
-            float3 uv = float3(IN.uv_Atlas, index.r);
+            float4 index = tex2D(_TileIndex, IN.uv_TileIndex);
+            float3 uv = float3(IN.uv_ImageAtlas, index.r);
             uv.xy -= index.ba;
             uv.xy *= index.g;
 
-            //clip(UNITY_SAMPLE_TEX2DARRAY (_Atlas, uv).a - 0.5);
+            //clip(UNITY_SAMPLE_TEX2DARRAY (_ImageAtlas, uv).a - 0.5);
 
-            fixed4 matColor = UNITY_SAMPLE_TEX2DARRAY (_Atlas, uv) * _Color;
+            fixed4 matColor = UNITY_SAMPLE_TEX2DARRAY (_ImageAtlas, uv) * _Color;
 
             o.Albedo = matColor.rgb;
             o.Alpha = matColor.a;
-            o.Normal = UnpackScaleNormal(1-UNITY_SAMPLE_TEX2DARRAY(_BumpAtlas, uv), _BumpScale);
+            o.Normal = UnpackScaleNormal(1-UNITY_SAMPLE_TEX2DARRAY(_ImageBumpAtlas, uv), _BumpScale);
         }
 
         void DecalFinalGBuffer (Input IN, SurfaceOutputStandard o, inout half4 diffuse, inout half4 specSmoothness, inout half4 normal, inout half4 emission)

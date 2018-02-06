@@ -1,5 +1,6 @@
 ﻿using RemoteFortressReader;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,6 +19,8 @@ public class ImageManager : MonoBehaviour
         else
             Destroy(gameObject);
         tileIndexProp = Shader.PropertyToID("_TileIndex");
+
+        ContentLoader.RegisterLoadCallback(LoadImages);
     }
 
     Dictionary<DFHack.DFCoord, MeshRenderer> engravingStore = new Dictionary<DFHack.DFCoord, MeshRenderer>();
@@ -37,7 +40,7 @@ public class ImageManager : MonoBehaviour
             }
         }
     }
-
+    #region pattern
     int GetElementTile(ArtImageElement element)
     {
         switch (element.type)
@@ -51,6 +54,10 @@ public class ImageManager : MonoBehaviour
             case ArtImageElementType.IMAGE_SHAPE:
                 return DFConnection.Instance.NetLanguageList.shapes[element.id].tile;
             case ArtImageElementType.IMAGE_ITEM:
+                if (ItemSpriteMap.ContainsKey(element.creature_item))
+                    return ItemSpriteMap[element.creature_item];
+                else
+                    return 7;
             default:
                 return 7;
         }
@@ -102,7 +109,7 @@ public class ImageManager : MonoBehaviour
     }
 
     Dictionary<MatPairStruct, Texture2D> generatedImages = new Dictionary<MatPairStruct, Texture2D>();
-    Color32[] colors = new Color32[indexWidth * indexWidth];
+    Color[] colors = new Color[indexWidth * indexWidth];
 
     public Texture2D CreateImage(ArtImage artImage)
     {
@@ -122,8 +129,8 @@ public class ImageManager : MonoBehaviour
             CopyElement(imagePattern[i], artImage.elements[i]);
         }
 
-        texture = new Texture2D(16, 16, TextureFormat.ARGB32, false,true);
-        texture.SetPixels32(colors);
+        texture = new Texture2D(16, 16, TextureFormat.RGBAHalf, false,true);
+        texture.SetPixels(colors);
         texture.Apply();
         texture.name = id.ToString();
         texture.filterMode = FilterMode.Point;
@@ -144,13 +151,90 @@ public class ImageManager : MonoBehaviour
             for (int x = Mathf.RoundToInt(itemCopy.xMin * indexWidth); x < Mathf.RoundToInt(itemCopy.xMax * indexWidth); x++)
                 for (int y = Mathf.RoundToInt(itemCopy.yMin * indexWidth); y < Mathf.RoundToInt(itemCopy.yMax * indexWidth); y++)
                 {
-                    Color32 color = new Color32(
+                    Color color = new Color(
                         (byte)tile,
                         (byte)Mathf.RoundToInt(1 / itemCopy.size.x),
-                        (byte)Mathf.RoundToInt(itemCopy.position.x * 255),
-                        (byte)Mathf.RoundToInt(itemCopy.position.y * 255));
+                        (byte)Mathf.RoundToInt(itemCopy.position.x),
+                        (byte)Mathf.RoundToInt(itemCopy.position.y));
                     colors[coordToIndex(x, y)] = color;
                 }
         }
     }
+    #endregion
+
+    #region imageList
+
+    public Texture2D dfSpriteMap;
+
+    Texture2DArray imageSpriteArray;
+    Texture2DArray imageSpriteNormals;
+
+    Dictionary<MatPair, int> ItemSpriteMap = new Dictionary<MatPair, int>();
+
+    IEnumerator LoadImages()
+    {
+        var stopWatch = System.Diagnostics.Stopwatch.StartNew();
+
+        List<Texture2D> textureList = new List<Texture2D>();
+
+        //DFTiles:
+        {
+            int sourceWidth = dfSpriteMap.width / 16;
+            int sourceHeight = dfSpriteMap.height / 16;
+            for (int y = 16 - 1; y >= 0; y--)
+                for (int x = 0; x < 16; x++)
+                {
+                    var pixels = dfSpriteMap.GetPixels(sourceWidth * x, sourceHeight * y, sourceWidth, sourceHeight);
+                    var tempTex = new Texture2D(sourceWidth, sourceHeight, TextureFormat.ARGB32, false);
+                    tempTex.SetPixels(pixels);
+                    tempTex.Apply();
+                    if (tempTex.width != 32 || tempTex.height != 32)
+                        TextureScale.Bilinear(tempTex, 32, 32);
+                    textureList.Add(tempTex);
+                }
+        }
+        //IMAGE_CREATURE:
+        //IMAGE_PLANT:
+        //IMAGE_TREE:
+        //IMAGE_SHAPE:
+        //IMAGE_ITEM:
+        foreach (var item in DFConnection.Instance.NetItemList.material_list)
+        {
+            string token = item.id;
+            Texture2D sprite = Resources.Load<Texture2D>("Images/Items/" + token);
+            if (sprite == null)
+            {
+                Debug.LogWarning("Could not find art image for " + token);
+                continue;
+            }
+
+            if(sprite.width != 32 || sprite.height != 32)
+                TextureScale.Bilinear(sprite, 32, 32);
+
+            ItemSpriteMap[item.mat_pair] = textureList.Count;
+            textureList.Add(sprite);
+
+            if (stopWatch.ElapsedMilliseconds > 100)
+            {
+                yield return null;
+                stopWatch.Reset();
+                stopWatch.Start();
+            }
+        }
+
+        imageSpriteArray = new Texture2DArray(32, 32, textureList.Count, TextureFormat.ARGB32, false);
+        imageSpriteNormals = new Texture2DArray(32, 32, textureList.Count, TextureFormat.ARGB32, false);
+        for (int i = 0; i < textureList.Count; i++)
+        {
+            var pixels = textureList[i].GetPixels();
+            imageSpriteArray.SetPixels(pixels, i);
+            imageSpriteNormals.SetPixels(TextureTools.Bevel(pixels, 32,32), i);
+        }
+        imageSpriteArray.Apply();
+        imageSpriteNormals.Apply();
+        Shader.SetGlobalTexture("_ImageAtlas", imageSpriteArray);
+        Shader.SetGlobalTexture("_ImageBumpAtlas", imageSpriteNormals);
+    }
+
+    #endregion
 }
