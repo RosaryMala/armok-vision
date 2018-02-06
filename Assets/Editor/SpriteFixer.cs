@@ -21,6 +21,8 @@ public class SpriteFixer
             {
                 maxAlpha = Mathf.Max(pixels[i].a, maxAlpha);
             }
+            if (maxAlpha > 0.99)
+                continue;
             for (int i = 0; i < pixels.Length; i++)
             {
                 pixels[i].a /= maxAlpha;
@@ -28,5 +30,7 @@ public class SpriteFixer
             tex.SetPixels(pixels);
             File.WriteAllBytes(file, tex.EncodeToPNG());
         }
+        Resources.UnloadUnusedAssets();
+        AssetDatabase.Refresh();
     }
 }
