@@ -106,7 +106,7 @@ public class ImageManager : MonoBehaviour
         }
     }
 
-    int coordToIndex(int x, int y)
+    int CoordToIndex(int x, int y)
     {
         return y * indexWidth + x;
     }
@@ -155,11 +155,11 @@ public class ImageManager : MonoBehaviour
                 for (int y = Mathf.RoundToInt(itemCopy.yMin * indexWidth); y < Mathf.RoundToInt(itemCopy.yMax * indexWidth); y++)
                 {
                     Color color = new Color(
-                        (byte)tile,
-                        (byte)Mathf.RoundToInt(1 / itemCopy.size.x),
-                        (byte)Mathf.RoundToInt(itemCopy.position.x),
-                        (byte)Mathf.RoundToInt(itemCopy.position.y));
-                    colors[coordToIndex(x, y)] = color;
+                        tile,
+                        Mathf.RoundToInt(1 / itemCopy.size.x),
+                        Mathf.RoundToInt(itemCopy.position.x),
+                        Mathf.RoundToInt(itemCopy.position.y));
+                    colors[CoordToIndex(x, y)] = color;
                 }
         }
     }

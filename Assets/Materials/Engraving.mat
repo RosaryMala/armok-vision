@@ -68,7 +68,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 0.5
-    - _ContributionAlbedo: 0.8
+    - _ContributionAlbedo: 0.5
     - _ContributionEmission: 0
     - _ContributionNormal: 1
     - _ContributionSpecSmoothness: 0
@@ -89,7 +89,7 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0, g: 0, b: 0, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _MatColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _SpecColor: {r: 0.22091627, g: 0.22091627, b: 0.22091627, a: 0.7790837}
