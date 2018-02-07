@@ -200,8 +200,9 @@ public class SplatManager : MonoBehaviour
                 || tile.tiletypeMaterial == TiletypeMaterial.PLANT
                 )
                     layer = MeshLayer.LayerMaterial;
-                if (tile.special == TiletypeSpecial.NORMAL)
+                if (tile.special == TiletypeSpecial.NORMAL || layer == MeshLayer.LayerMaterial)
                 {
+                    //If it's natural terrain or grass, use the material normal maps.
                     terrainIndices[index].g = ContentLoader.GetShapeIndex(tile.GetMaterial(layer)) / 255f;
                 }
                 else
