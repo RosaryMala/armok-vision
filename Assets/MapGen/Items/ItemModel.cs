@@ -62,9 +62,9 @@ public class ItemModel : MonoBehaviour, IClickable
                     ringSpikeBands.Add(improvement);
                     break;
                 case ImprovementType.THREAD:
-                    //Handled already, it's dye.
-                    break;
                 case ImprovementType.CLOTH:
+                    //Handled already, in various ways.
+                    break;
                 case ImprovementType.ITEMSPECIFIC:
                 case ImprovementType.SEWN_IMAGE:
                 case ImprovementType.PAGES:
@@ -72,12 +72,7 @@ public class ItemModel : MonoBehaviour, IClickable
                 case ImprovementType.INSTRUMENT_PIECE:
                 case ImprovementType.WRITING:
                 default:
-                    {
-                        string name = gameObject.name;
-                        if (GameMap.items.ContainsKey(itemInput.type))
-                            name = GameMap.items[itemInput.type].id;
-                        Debug.LogWarning(string.Format("Unhandled improvement {0} on {1}", improvement.type, name));
-                    }
+                    Debug.LogWarning(string.Format("Unhandled improvement {0} on {1}", improvement.type, gameObject.name));
                     break;
             }
         }

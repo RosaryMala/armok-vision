@@ -27,13 +27,11 @@ public class TextureStorage
         return atlas.uvRects[texIndexToAtlasIndex[index]].UVTransform;
     }
 
-    public Texture AtlasTexture
+    public Texture2DArray AtlasTexture
     {
         get
         {
-            if (UsingArray)
-                return textureArray;
-            return atlas.texture;
+            return textureArray;
         }
     }
 

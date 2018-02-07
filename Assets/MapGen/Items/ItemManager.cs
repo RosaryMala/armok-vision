@@ -156,6 +156,9 @@ public class ItemManager : MonoBehaviour
         else
             placedItem = Instantiate(prefab);
 
+        if (GameMap.items.ContainsKey(item.type))
+            placedItem.name = GameMap.items[item.type].id + "_" + item.id;
+
         placedItem.transform.SetParent(parent, worldPositionStays);
         placedItem.transform.parent = parent;
         placedItem.UpdateMaterial(item);

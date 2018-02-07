@@ -68,7 +68,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 0.5
-    - _ContributionAlbedo: 0.5
+    - _ContributionAlbedo: 0.75
     - _ContributionEmission: 0
     - _ContributionNormal: 1
     - _ContributionSpecSmoothness: 0

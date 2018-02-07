@@ -25,7 +25,7 @@ public class TiletypeMatcher<T>
         }
         tiletypeList[tile] = match;
     }
-    void SetOptions(string direction, Dictionary<string, Tiletype> optionList, TiletypeMatch match)
+    void SetDirection(string direction, Dictionary<string, Tiletype> optionList, TiletypeMatch match)
     {
         if(direction == "*")
         {
@@ -42,14 +42,14 @@ public class TiletypeMatcher<T>
         }
     }
 
-    void SetOptions(string variant, string direction, Dictionary<TiletypeVariant, Dictionary<string, Tiletype>> optionList, TiletypeMatch match)
+    void SetVariant(string variant, string direction, Dictionary<TiletypeVariant, Dictionary<string, Tiletype>> optionList, TiletypeMatch match)
     {
         if (variant == "*")
         {
             match.difference |= 2;
             foreach (var item in optionList.Values)
             {
-                SetOptions(direction, item, match);
+                SetDirection(direction, item, match);
             }
         }
         else
@@ -58,7 +58,7 @@ public class TiletypeMatcher<T>
             {
                 TiletypeVariant tileVariant = (TiletypeVariant)Enum.Parse(typeof(TiletypeVariant), variant);
                 if (optionList.ContainsKey(tileVariant))
-                    SetOptions(direction, optionList[tileVariant], match);
+                    SetDirection(direction, optionList[tileVariant], match);
             }
             catch (Exception)
             {
@@ -68,14 +68,14 @@ public class TiletypeMatcher<T>
         }
     }
 
-    void SetOptions(string material, string variant, string direction, Dictionary<TiletypeMaterial, Dictionary<TiletypeVariant, Dictionary<string, Tiletype>>> optionList, TiletypeMatch match)
+    void SetMaterial(string material, string variant, string direction, Dictionary<TiletypeMaterial, Dictionary<TiletypeVariant, Dictionary<string, Tiletype>>> optionList, TiletypeMatch match)
     {
         if (material == "*")
         {
             match.difference |= 4;
             foreach (var item in optionList.Values)
             {
-                SetOptions(variant, direction, item, match);
+                SetVariant(variant, direction, item, match);
             }
         }
         else
@@ -84,7 +84,7 @@ public class TiletypeMatcher<T>
             {
                 TiletypeMaterial tileMaterial = (TiletypeMaterial)Enum.Parse(typeof(TiletypeMaterial), material);
                 if (optionList.ContainsKey(tileMaterial))
-                    SetOptions(variant, direction, optionList[tileMaterial], match);
+                    SetVariant(variant, direction, optionList[tileMaterial], match);
             }
             catch (Exception)
             {
@@ -93,7 +93,7 @@ public class TiletypeMatcher<T>
             }
         }
     }
-    void SetOptions(string special, string material, string variant, string direction,
+    void SetSpecial(string special, string material, string variant, string direction,
         Dictionary<TiletypeSpecial,
         Dictionary<TiletypeMaterial,
         Dictionary<TiletypeVariant,
@@ -104,7 +104,7 @@ public class TiletypeMatcher<T>
             match.difference |= 8;
             foreach (var item in optionList.Values)
             {
-                SetOptions(material, variant, direction, item, match);
+                SetMaterial(material, variant, direction, item, match);
             }
         }
         else
@@ -113,7 +113,7 @@ public class TiletypeMatcher<T>
             {
                 TiletypeSpecial tileSpecial = (TiletypeSpecial)Enum.Parse(typeof(TiletypeSpecial), special);
                 if (optionList.ContainsKey(tileSpecial))
-                    SetOptions(material, variant, direction, optionList[tileSpecial], match);
+                    SetMaterial(material, variant, direction, optionList[tileSpecial], match);
             }
             catch (Exception)
             {
@@ -122,14 +122,14 @@ public class TiletypeMatcher<T>
             }
         }
     }
-    void SetOptions(string shape, string special, string material, string variant, string direction, TiletypeMatch match)
+    void SetShape(string shape, string special, string material, string variant, string direction, TiletypeMatch match)
     {
         if (shape == "*")
         {
             match.difference |= 16;
             foreach (var item in TiletypeTokenList.tileDefs.Values)
             {
-                SetOptions(special, material, variant, direction, item, match);
+                SetSpecial(special, material, variant, direction, item, match);
             }
         }
         else
@@ -138,7 +138,7 @@ public class TiletypeMatcher<T>
             {
                 TiletypeShape tileShape = (TiletypeShape)Enum.Parse(typeof(TiletypeShape), shape);
                 if (TiletypeTokenList.tileDefs.ContainsKey(tileShape))
-                    SetOptions(special, material, variant, direction, TiletypeTokenList.tileDefs[tileShape], match);
+                    SetSpecial(special, material, variant, direction, TiletypeTokenList.tileDefs[tileShape], match);
             }
             catch (Exception)
             {
@@ -164,7 +164,7 @@ public class TiletypeMatcher<T>
                     break;
                 case 5:
                     newItem.difference |= 32;
-                    SetOptions(parts[0], parts[1], parts[2], parts[3], parts[4], newItem);
+                    SetShape(parts[0], parts[1], parts[2], parts[3], parts[4], newItem);
                     break;
                 default:
                     break;

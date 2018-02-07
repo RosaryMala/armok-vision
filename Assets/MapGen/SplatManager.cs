@@ -208,7 +208,7 @@ public class SplatManager : MonoBehaviour
                 {
                     NormalContent norms;
                     ContentLoader.Instance.ShapeTextureConfiguration.GetValue(tile, layer, out norms);
-                    terrainIndices[index].g = norms.ArrayIndex;
+                    terrainIndices[index].g = norms.StorageIndex / 255f;
                 }
                 terrainIndices[index].r = ContentLoader.GetPatternIndex(tile.GetMaterial(layer)) / 255f;
                 terrainColors[index] = ContentLoader.GetColor(tile.GetMaterial(layer));

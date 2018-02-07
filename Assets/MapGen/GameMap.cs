@@ -995,8 +995,9 @@ public class GameMap : MonoBehaviour
         {
             foreach (Tiletype item in DFConnection.Instance.NetTiletypeList.tiletype_list)
             {
-                writer.WriteLine("\"" + 
-                    item.name + "\"," +
+                writer.WriteLine(
+                    item.id + "," + 
+                    "\"" + item.name + "\"," +
                     item.shape + ":" +
                     item.special + ":" +
                     item.material + ":" +
