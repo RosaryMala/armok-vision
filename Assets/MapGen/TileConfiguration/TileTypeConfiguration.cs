@@ -3,7 +3,6 @@
 public class TileTypeConfiguration<T> : TileConfiguration<T> where T : IContent, new()
 {
     TiletypeMatcher<Content> tiletypeMatcher = new TiletypeMatcher<Content>();
-    Content invalidContent = new Content();
 
     public override object SecondaryDictionary
     {
@@ -34,7 +33,7 @@ public class TileTypeConfiguration<T> : TileConfiguration<T> where T : IContent,
             value = cont.GetValue(tile, layer);
             return true;
         }
-        value = invalidContent.GetValue(tile, layer);
+        value = default(T);
         return false;
     }
 }

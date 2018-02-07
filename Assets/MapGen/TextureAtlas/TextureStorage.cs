@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class TextureStorage
 {
@@ -131,5 +132,17 @@ public class TextureStorage
             textureArray.SetPixels(textureList[i].GetPixels(), i);
         }
         textureArray.Apply();
+    }
+
+    internal void AddTextureArray(Texture2DArray array)
+    {
+        for (int i = 0; i < array.depth; i++)
+        {
+            var tex = new Texture2D(array.width, array.height, array.format, false);
+            tex.name = array.name + "[" + i + "]";
+            tex.SetPixels(array.GetPixels(i));
+            tex.Apply();
+            AddTexture(tex);
+        }
     }
 }

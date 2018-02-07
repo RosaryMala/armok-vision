@@ -200,8 +200,16 @@ public class SplatManager : MonoBehaviour
                 || tile.tiletypeMaterial == TiletypeMaterial.PLANT
                 )
                     layer = MeshLayer.LayerMaterial;
-
-                terrainIndices[index].g = ContentLoader.GetShapeIndex(tile.GetMaterial(layer)) / 255f;
+                if (tile.special == TiletypeSpecial.NORMAL)
+                {
+                    terrainIndices[index].g = ContentLoader.GetShapeIndex(tile.GetMaterial(layer)) / 255f;
+                }
+                else
+                {
+                    NormalContent norms;
+                    ContentLoader.Instance.ShapeTextureConfiguration.GetValue(tile, layer, out norms);
+                    terrainIndices[index].g = norms.ArrayIndex;
+                }
                 terrainIndices[index].r = ContentLoader.GetPatternIndex(tile.GetMaterial(layer)) / 255f;
                 terrainColors[index] = ContentLoader.GetColor(tile.GetMaterial(layer));
             }

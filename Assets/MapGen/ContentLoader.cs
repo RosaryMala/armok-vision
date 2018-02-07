@@ -111,9 +111,6 @@ public class ContentLoader : MonoBehaviour
 
     public Texture2DArray PatternTextureArray { get; private set; }
     public float PatternTextureDepth { get; private set; }
-    public Texture2DArray ShapeTextureArray { get; private set; }
-    public float ShapeTextureDepth { get; private set; }
-
 
     public TextureStorage shapeTextureStorage { get; private set; }
     public TextureStorage specialTextureStorage { get; private set; }
@@ -244,6 +241,9 @@ public class ContentLoader : MonoBehaviour
         specialTextureStorage = new TextureStorage();
         MaterialTextures = new MaterialMatcher<MaterialTextureSet>();
 
+        Debug.Log("Compiling material shape textures.");
+        shapeTextureStorage.AddTextureArray(Resources.Load<Texture2DArray>("shapeTextures"));
+
         DefaultShapeTexIndex = shapeTextureStorage.AddTexture(CreateFlatTexture(new Color(1f, 0.5f, 1f, 0.5f)));
         defaultSpecialTexIndex = specialTextureStorage.AddTexture(Texture2D.blackTexture);
     }
@@ -308,8 +308,6 @@ public class ContentLoader : MonoBehaviour
         PatternTextureArray = Resources.Load<Texture2DArray>("patternTextures");
         PatternTextureDepth = PatternTextureArray.depth;
         Shader.SetGlobalTexture("_MatTexArray", PatternTextureArray);
-        ShapeTextureArray = Resources.Load<Texture2DArray>("shapeTextures");
-        ShapeTextureDepth = ShapeTextureArray.depth;
         PopulateMatDefinitions();
 
 
@@ -344,7 +342,7 @@ public class ContentLoader : MonoBehaviour
         Debug.Log("Done!");
         watch.Stop();
         Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
-        Debug.Log(string.Format("loaded {0} meshes, and {1} shape textures.", MeshContent.NumCreated, NormalContent.NumCreated));
+        Debug.Log(string.Format("loaded {0} meshes, and {1} shape textures.", MeshContent.NumCreated, shapeTextureStorage.Count));
         Debug.Log("Loading Complete. Press ESC to change settings or leave feedback. Have a nice day!");
         if (GameMap.Instance != null)
             GameMap.Instance.HideHelp();
@@ -525,10 +523,10 @@ public class ContentLoader : MonoBehaviour
         Debug.Log("Updating Material Manager...");
         yield return null;
 
-        Vector4 arrayCount = new Vector4(PatternTextureDepth, shapeTextureStorage.Count, specialTextureStorage.Count, ShapeTextureDepth);
+        Vector4 arrayCount = new Vector4(PatternTextureDepth, shapeTextureStorage.Count, specialTextureStorage.Count, shapeTextureStorage.Count);
         if (MaterialManager.Instance)
         {
-            MaterialManager.Instance.SetTexture("_ShapeMap", ShapeTextureArray);
+            MaterialManager.Instance.SetTexture("_ShapeMap", shapeTextureStorage.AtlasTexture);
             MaterialManager.Instance.SetTexture("_BumpMap", shapeTextureStorage.AtlasTexture);
             MaterialManager.Instance.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
             MaterialManager.Instance.SetVector("_TexArrayCount", arrayCount);
