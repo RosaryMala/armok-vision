@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33861977316255316}
   - component: {fileID: 64700644048036940}
   - component: {fileID: 23890393662714608}
+  - component: {fileID: 114597461904200882}
   m_Layer: 0
   m_Name: FloorEngraving
   m_TagString: Untagged
@@ -97,3 +98,20 @@ MeshCollider:
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &114597461904200882
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1483176139841502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 709cf1f11fe179d4e9a1796d28170d2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image:
+    _elements: []
+    _id:
+      _mat_type: 0
+      _mat_index: 0
+    _properties: []

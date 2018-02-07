@@ -3,8 +3,6 @@
     Properties 
     {
         _Color ("Color", Color) = (1,1,1,1)
-        _Atlas ("Albedo (RGB)", 2DArray) = "white" {}
-        _BumpAtlas ("Normal Map", 2DArray) = "bump" {}
         _SpecColor("Standard Specular Color", Color) = (0.220916301, 0.220916301, 0.220916301, 0.779083699)
         _TileIndex ("TileIndex (R)", 2D) = "gray" {}
         [PerRendererData] _MatColor("DF Material Color", Color) = (0.5,0.5,0.5,1)
@@ -23,14 +21,14 @@
         #pragma target 4.0
         #pragma multi_compile _ _BOUNDING_BOX_ENABLED
 
-        UNITY_DECLARE_TEX2DARRAY(_Atlas);
-        UNITY_DECLARE_TEX2DARRAY(_BumpAtlas);
+        UNITY_DECLARE_TEX2DARRAY(_ImageAtlas);
+        UNITY_DECLARE_TEX2DARRAY(_ImageBumpAtlas);
         UNITY_DECLARE_TEX2DARRAY(_MatTexArray);
         sampler2D _TileIndex;
 
         struct Input 
         {
-            float2 uv_Atlas;
+            float2 uv_ImageAtlas;
             float2 uv_TileIndex;
             float2 uv_MatTexArray;
             float3 worldPos;
@@ -56,11 +54,11 @@ UNITY_INSTANCING_BUFFER_END(MyProperties)
                 clip(IN.worldPos - _ViewMin);
                 clip(_ViewMax - IN.worldPos);
             #endif
-            float4 index = floor(tex2D(_TileIndex, IN.uv_TileIndex) * 255);
-            float3 uv = float3(IN.uv_Atlas, index.r);
+            float4 index = tex2D(_TileIndex, IN.uv_TileIndex);
+            float3 uv = float3(IN.uv_ImageAtlas, index.r);
             uv.xy -= index.ba;
             uv.xy *= index.g;
-            clip(UNITY_SAMPLE_TEX2DARRAY (_Atlas, uv).a - 0.5);
+            clip(UNITY_SAMPLE_TEX2DARRAY (_ImageAtlas, uv).a - 0.5);
 
             fixed4 dfTex = UNITY_SAMPLE_TEX2DARRAY(_MatTexArray, float3(IN.uv_MatTexArray, UNITY_ACCESS_INSTANCED_PROP(_MatIndex_arr, _MatIndex)));
             fixed4 matColor = UNITY_ACCESS_INSTANCED_PROP(_MatColor_arr, _MatColor);
@@ -79,7 +77,7 @@ UNITY_INSTANCING_BUFFER_END(MyProperties)
             o.Specular = specColor;
             // Metallic and smoothness come from slider variables
             o.Alpha = alpha;
-            o.Normal = UnpackNormal(UNITY_SAMPLE_TEX2DARRAY(_BumpAtlas, uv));
+            o.Normal = UnpackNormal(UNITY_SAMPLE_TEX2DARRAY(_ImageBumpAtlas, uv));
 
         }
         ENDCG

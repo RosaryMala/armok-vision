@@ -37,6 +37,9 @@ public class ImageManager : MonoBehaviour
                 MeshRenderer placedEngraving = Instantiate(engravingPrefab, GameMap.DFtoUnityCoord(engraving.pos) + new Vector3(0, GameMap.floorHeight), Quaternion.Euler(90,0,0), transform);
                 placedEngraving.material.SetTexture(tileIndexProp, CreateImage(engraving.image));
                 engravingStore[engraving.pos] = placedEngraving;
+                var eng = placedEngraving.GetComponent<CarvedEngraving>();
+                if (eng != null)
+                    eng.image = engraving.image;
             }
         }
     }
@@ -166,10 +169,10 @@ public class ImageManager : MonoBehaviour
 
     public Texture2D dfSpriteMap;
 
-    Texture2DArray imageSpriteArray;
-    Texture2DArray imageSpriteNormals;
+    public Texture2DArray imageSpriteArray;
+    public Texture2DArray imageSpriteNormals;
 
-    Dictionary<MatPair, int> ItemSpriteMap = new Dictionary<MatPair, int>();
+    Dictionary<MatPairStruct, int> ItemSpriteMap = new Dictionary<MatPairStruct, int>();
 
     IEnumerator LoadImages()
     {
