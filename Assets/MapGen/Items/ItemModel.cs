@@ -42,42 +42,48 @@ public class ItemModel : MonoBehaviour, IClickable
         prop.SetFloat("_MatIndex", textureIndex);
         meshRenderer.SetPropertyBlock(prop);
 
-        List<RemoteFortressReader.ItemImprovement> images = new List<RemoteFortressReader.ItemImprovement>();
-        List<RemoteFortressReader.ItemImprovement> ringSpikeBands = new List<RemoteFortressReader.ItemImprovement>();
-        List<RemoteFortressReader.ItemImprovement> covereds = new List<RemoteFortressReader.ItemImprovement>();
 
-        foreach (var improvement in itemInput.improvements)
+        UpdateImprovements(gameObject, itemInput);
+    }
+
+    public static void UpdateImprovements(GameObject GO, Item itemInput)
+    {
+    List<RemoteFortressReader.ItemImprovement> images = new List<RemoteFortressReader.ItemImprovement>();
+    List<RemoteFortressReader.ItemImprovement> ringSpikeBands = new List<RemoteFortressReader.ItemImprovement>();
+    List<RemoteFortressReader.ItemImprovement> covereds = new List<RemoteFortressReader.ItemImprovement>();
+
+    foreach (var improvement in itemInput.improvements)
+    {
+        switch (improvement.type)
         {
-            switch (improvement.type)
-            {
-                case ImprovementType.ART_IMAGE:
-                    images.Add(improvement);
-                    break;
-                case ImprovementType.COVERED:
-                    covereds.Add(improvement);
-                    break;
-                case ImprovementType.RINGS_HANGING:
-                case ImprovementType.BANDS:
-                case ImprovementType.SPIKES:
-                    ringSpikeBands.Add(improvement);
-                    break;
-                case ImprovementType.THREAD:
-                case ImprovementType.CLOTH:
-                    //Handled already, in various ways.
-                    break;
-                case ImprovementType.ITEMSPECIFIC:
-                case ImprovementType.SEWN_IMAGE:
-                case ImprovementType.PAGES:
-                case ImprovementType.ILLUSTRATION:
-                case ImprovementType.INSTRUMENT_PIECE:
-                case ImprovementType.WRITING:
-                default:
-                    Debug.LogWarning(string.Format("Unhandled improvement {0} on {1}", improvement.type, gameObject.name));
-                    break;
-            }
+            case ImprovementType.ART_IMAGE:
+                images.Add(improvement);
+                break;
+            case ImprovementType.COVERED:
+                covereds.Add(improvement);
+                break;
+            case ImprovementType.RINGS_HANGING:
+            case ImprovementType.BANDS:
+            case ImprovementType.SPIKES:
+                ringSpikeBands.Add(improvement);
+                break;
+            case ImprovementType.THREAD:
+            case ImprovementType.CLOTH:
+                //Handled already, in various ways.
+                break;
+            case ImprovementType.ITEMSPECIFIC:
+            case ImprovementType.SEWN_IMAGE:
+            case ImprovementType.PAGES:
+            case ImprovementType.ILLUSTRATION:
+            case ImprovementType.INSTRUMENT_PIECE:
+            case ImprovementType.WRITING:
+            default:
+                Debug.LogWarning(string.Format("Unhandled improvement {0} on {1}", improvement.type, GO.name));
+                break;
         }
+    }
 
-        var imps = GetComponentsInChildren<ItemImprovement>();
+    var imps = GO.GetComponentsInChildren<ItemImprovement>();
         for (int i = 0; i < imps.Length; i++)
         {
             var imp = imps[i];
@@ -97,15 +103,14 @@ public class ItemModel : MonoBehaviour, IClickable
             {
                 imp.UpdateImprovement(ringSpikeBands[imp.index]);
             }
-            else if(imp.isCovered && covereds.Count > 0)
+            else if (imp.isCovered && covereds.Count > 0)
             {
                 Random.InitState(i);
-                imp.UpdateImprovement(covereds[Random.Range(0, covereds.Count - 1)]);
+                imp.UpdateImprovement(covereds[Random.Range(0, covereds.Count)]);
             }
             else
                 imp.gameObject.SetActive(false);
         }
-
     }
 
     public void HandleClick()

@@ -5,6 +5,7 @@
         _Color ("Color", Color) = (1,1,1,1)
         _SpecColor("Standard Specular Color", Color) = (0.220916301, 0.220916301, 0.220916301, 0.779083699)
         _TileIndex ("TileIndex (R)", 2D) = "gray" {}
+        _ContributionAlbedo ("Contribution / Albedo", Range(0,1)) = 0.0
         [PerRendererData] _MatColor("DF Material Color", Color) = (0.5,0.5,0.5,1)
         [PerRendererData] _MatIndex("DF Material Array Index", int) = 0
     }
@@ -36,7 +37,7 @@
 
         float3      _ViewMin = float3(-99999, -99999, -99999);
         float3      _ViewMax = float3(99999, 99999, 99999);
-
+        float _ContributionAlbedo;
 
 UNITY_INSTANCING_BUFFER_START(MyProperties)
 UNITY_DEFINE_INSTANCED_PROP(fixed4, _MatColor)
@@ -58,7 +59,8 @@ UNITY_INSTANCING_BUFFER_END(MyProperties)
             float3 uv = float3(IN.uv_ImageAtlas, index.r);
             uv.xy -= index.ba;
             uv.xy *= index.g;
-            clip(UNITY_SAMPLE_TEX2DARRAY (_ImageAtlas, uv).a - 0.5);
+            float4 c = UNITY_SAMPLE_TEX2DARRAY (_ImageAtlas, uv);
+            clip(c.a - 0.5);
 
             fixed4 dfTex = UNITY_SAMPLE_TEX2DARRAY(_MatTexArray, float3(IN.uv_MatTexArray, UNITY_ACCESS_INSTANCED_PROP(_MatIndex_arr, _MatIndex)));
             fixed4 matColor = UNITY_ACCESS_INSTANCED_PROP(_MatColor_arr, _MatColor);
@@ -66,12 +68,12 @@ UNITY_INSTANCING_BUFFER_END(MyProperties)
             half smoothness = dfTex.a;
             half metallic = max((matColor.a * 2) - 1, 0);
             fixed alpha = min(matColor.a * 2, 1);
-
             half3 specColor;
             half oneMinusReflectivity;
 
             albedo = DiffuseAndSpecularFromMetallicCustom(albedo, metallic, specColor, oneMinusReflectivity);
 
+            albedo = lerp(albedo, c.rgb, _ContributionAlbedo);
 
             o.Albedo = albedo;
             o.Specular = specColor;

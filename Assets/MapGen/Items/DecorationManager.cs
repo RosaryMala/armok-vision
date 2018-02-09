@@ -66,6 +66,8 @@ public class DecorationManager : MonoBehaviour
 
     public GameObject GetShape(int shapeIndex)
     {
+        if (shapeIndex == -1)
+            return _shape;
         if (shapes.ContainsKey(shapeIndex))
             return shapes[shapeIndex];
         if (DFConnection.Instance.NetLanguageList != null && shapeIndex >= 0 && shapeIndex < DFConnection.Instance.NetLanguageList.shapes.Count)
