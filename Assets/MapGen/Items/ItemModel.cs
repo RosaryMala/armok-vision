@@ -48,42 +48,46 @@ public class ItemModel : MonoBehaviour, IClickable
 
     public static void UpdateImprovements(GameObject GO, Item itemInput)
     {
-    List<RemoteFortressReader.ItemImprovement> images = new List<RemoteFortressReader.ItemImprovement>();
-    List<RemoteFortressReader.ItemImprovement> ringSpikeBands = new List<RemoteFortressReader.ItemImprovement>();
-    List<RemoteFortressReader.ItemImprovement> covereds = new List<RemoteFortressReader.ItemImprovement>();
+        List<RemoteFortressReader.ItemImprovement> images = new List<RemoteFortressReader.ItemImprovement>();
+        List<RemoteFortressReader.ItemImprovement> ringSpikeBands = new List<RemoteFortressReader.ItemImprovement>();
+        List<RemoteFortressReader.ItemImprovement> covereds = new List<RemoteFortressReader.ItemImprovement>();
+        List<RemoteFortressReader.ItemImprovement> specifics = new List<RemoteFortressReader.ItemImprovement>();
 
-    foreach (var improvement in itemInput.improvements)
-    {
-        switch (improvement.type)
+        foreach (var improvement in itemInput.improvements)
         {
-            case ImprovementType.ART_IMAGE:
-                images.Add(improvement);
-                break;
-            case ImprovementType.COVERED:
-                covereds.Add(improvement);
-                break;
-            case ImprovementType.RINGS_HANGING:
-            case ImprovementType.BANDS:
-            case ImprovementType.SPIKES:
-                ringSpikeBands.Add(improvement);
-                break;
-            case ImprovementType.THREAD:
-            case ImprovementType.CLOTH:
-                //Handled already, in various ways.
-                break;
-            case ImprovementType.ITEMSPECIFIC:
-            case ImprovementType.SEWN_IMAGE:
-            case ImprovementType.PAGES:
-            case ImprovementType.ILLUSTRATION:
-            case ImprovementType.INSTRUMENT_PIECE:
-            case ImprovementType.WRITING:
-            default:
-                Debug.LogWarning(string.Format("Unhandled improvement {0} on {1}", improvement.type, GO.name));
-                break;
+            switch (improvement.type)
+            {
+                case ImprovementType.ART_IMAGE:
+                    images.Add(improvement);
+                    break;
+                case ImprovementType.COVERED:
+                    covereds.Add(improvement);
+                    break;
+                case ImprovementType.RINGS_HANGING:
+                case ImprovementType.BANDS:
+                case ImprovementType.SPIKES:
+                    ringSpikeBands.Add(improvement);
+                    break;
+                case ImprovementType.THREAD:
+                case ImprovementType.CLOTH:
+                    //Handled already, in various ways.
+                    break;
+                case ImprovementType.WRITING:
+                    break; //Not rendered, currently.
+                case ImprovementType.ITEMSPECIFIC:
+                case ImprovementType.PAGES:
+                    specifics.Add(improvement);
+                    break;
+                case ImprovementType.SEWN_IMAGE:
+                case ImprovementType.ILLUSTRATION:
+                case ImprovementType.INSTRUMENT_PIECE:
+                default:
+                    Debug.LogWarning(string.Format("Unhandled improvement {0} on {1}", improvement.type, GO.name));
+                    break;
+            }
         }
-    }
 
-    var imps = GO.GetComponentsInChildren<ItemImprovement>();
+        var imps = GO.GetComponentsInChildren<ItemImprovement>();
         for (int i = 0; i < imps.Length; i++)
         {
             var imp = imps[i];
@@ -110,6 +114,12 @@ public class ItemModel : MonoBehaviour, IClickable
             }
             else
                 imp.gameObject.SetActive(false);
+        }
+        foreach (var sub in GO.GetComponentsInChildren<ItemSubPart>())
+        {
+            if (sub.partIndex < 0 || sub.partIndex >= specifics.Count)
+                sub.gameObject.SetActive(false);
+            sub.UpdateImprovement(specifics[sub.partIndex]);
         }
     }
 

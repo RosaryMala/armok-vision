@@ -6373,7 +6373,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3221e5c1b17e2d842b702c9c514125f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationType: 1
+  rotationType: 9
   originalBuilding:
     _index: 0
     _pos_x_min: 0

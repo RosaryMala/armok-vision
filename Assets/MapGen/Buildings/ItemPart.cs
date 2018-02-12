@@ -26,5 +26,19 @@ namespace Building
 
             item = ItemManager.InstantiateItem(placedItem.item, transform, false);
         }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawSphere(transform.position, 0.025f);
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(transform.position, transform.right * 0.025f);
+            Gizmos.color = Color.green;
+            Gizmos.DrawRay(transform.position, transform.up * 0.025f);
+            Gizmos.color = Color.blue;
+            Gizmos.DrawRay(transform.position, transform.forward * 0.025f);
+
+        }
+
     }
 }

@@ -56,7 +56,8 @@ public enum RotationType
     Random90,
     TreeFlat,
     TreeRound,
-    TreeRoundTall
+    TreeRoundTall,
+    AwayFromWall90
 }
 
 public class MeshContent : IContent
@@ -145,6 +146,39 @@ public class MeshContent : IContent
                         return Quaternion.Euler(0, angle90, 0);
                     else
                         return Quaternion.Euler(0, angle45, 0);
+                }
+            case RotationType.AwayFromWall90:
+                {
+                    Directions wallSides = tile.WallBuildingSides;
+                    Vector2 average = Vector2.zero;
+                    if ((wallSides & Directions.NorthWest) == Directions.NorthWest)
+                        average += new Vector2(-1, 1);
+                    if ((wallSides & Directions.North) == Directions.North)
+                        average += new Vector2(0, 1);
+                    if ((wallSides & Directions.NorthEast) == Directions.NorthEast)
+                        average += new Vector2(1, 1);
+
+                    if ((wallSides & Directions.West) == Directions.West)
+                        average += new Vector2(-1, 0);
+                    if ((wallSides & Directions.East) == Directions.East)
+                        average += new Vector2(1, -0);
+
+                    if ((wallSides & Directions.SouthWest) == Directions.SouthWest)
+                        average += new Vector2(-1, -1);
+                    if ((wallSides & Directions.South) == Directions.South)
+                        average += new Vector2(0, -1);
+                    if ((wallSides & Directions.SouthEast) == Directions.SouthEast)
+                        average += new Vector2(1, -1);
+
+                    if (average.magnitude < 0.001)
+                        return Quaternion.Euler(0, 0, 0);
+
+
+                    float angle = Mathf.Atan2(average.x, average.y) * 180 / Mathf.PI;
+
+                    float angle90 = Mathf.Round(angle / 90) * 90;
+
+                    return Quaternion.Euler(0, angle90, 0);
                 }
             case RotationType.Door:
                 {

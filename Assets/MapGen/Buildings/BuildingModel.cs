@@ -52,7 +52,7 @@ namespace Building
             {
                 group = gameObject.AddComponent<LODGroup>();
                 var lods = new LOD[1];
-                lods[0] = new LOD(0.05f, GetComponentsInChildren<MeshRenderer>());
+                lods[0] = new LOD(0.01f, GetComponentsInChildren<MeshRenderer>());
                 group.SetLODs(lods);
                 group.RecalculateBounds();
             }
