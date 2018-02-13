@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class CarvedEngraving : MonoBehaviour
 {
-    public RemoteFortressReader.ArtImage image;
+    public RemoteFortressReader.Engraving image;
 }

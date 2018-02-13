@@ -9,7 +9,8 @@ public class ImageManager : MonoBehaviour
     public static ImageManager Instance { get; private set; }
     const int indexWidth = 16;
 
-    public MeshRenderer engravingPrefab;
+    public MeshRenderer floorEngravingPrefab;
+    public MeshRenderer wallEngravingPrefab;
 
     int tileIndexProp;
     private void Awake()
@@ -34,12 +35,20 @@ public class ImageManager : MonoBehaviour
             {
                 if (engravingStore.ContainsKey(engraving.pos))
                     continue;
-                MeshRenderer placedEngraving = Instantiate(engravingPrefab, GameMap.DFtoUnityCoord(engraving.pos) + new Vector3(0, GameMap.floorHeight), Quaternion.Euler(90,0,0), transform);
+                MeshRenderer placedEngraving;
+                if (engraving.floor)
+                    placedEngraving = Instantiate(floorEngravingPrefab, transform);
+                else if (engraving.north || engraving.northwest || engraving.west || engraving.southwest
+                    || engraving.south || engraving.southeast || engraving.east || engraving.northeast)
+                    placedEngraving = Instantiate(wallEngravingPrefab, transform);
+                else
+                    continue;
+                placedEngraving.transform.position = GameMap.DFtoUnityCoord(engraving.pos) + new Vector3(0, GameMap.floorHeight);
                 placedEngraving.material.SetTexture(tileIndexProp, CreateImage(engraving.image));
                 engravingStore[engraving.pos] = placedEngraving;
                 var eng = placedEngraving.GetComponent<CarvedEngraving>();
                 if (eng != null)
-                    eng.image = engraving.image;
+                    eng.image = engraving;
             }
         }
     }

@@ -3469,7 +3469,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98ae7f38c8d820f439bd3a96a48492b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  engravingPrefab: {fileID: 23890393662714608, guid: 33f54d171754fd24f85965c733406912,
+  floorEngravingPrefab: {fileID: 23890393662714608, guid: 33f54d171754fd24f85965c733406912,
+    type: 2}
+  wallEngravingPrefab: {fileID: 23890393662714608, guid: e12363b0e2c9b584dacec4ba06ff7745,
     type: 2}
   dfSpriteMap: {fileID: 2800000, guid: 3f66b27f2539c8f4b9f20c6d462feab7, type: 3}
   imageSpriteArray: {fileID: 0}

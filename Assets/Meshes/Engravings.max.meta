@@ -1,60 +1,25 @@
 fileFormatVersion: 2
-guid: 65a00d2ae0a7e4d4aa264488280a2e8d
-timeCreated: 1518453760
+guid: 70bc7a8543bcdea4086de05cabd7cbcf
+timeCreated: 1518546307
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: Crappy Scroll
-    100002: //RootNode
-    100004: Quire
-    100006: Book
-    100008: Pages
-    100010: Scroll
-    100012: Scroll Roller
-    100014: Scroll Roller001
-    100016: Scroll Roller002
-    400000: Crappy Scroll
-    400002: //RootNode
-    400004: Quire
-    400006: Book
-    400008: Pages
-    400010: Scroll
-    400012: Scroll Roller
-    400014: Scroll Roller001
-    400016: Scroll Roller002
+    100000: //RootNode
+    100002: Floor Engraving
+    100004: Wall Engraving
+    400000: //RootNode
+    400002: Floor Engraving
+    400004: Wall Engraving
     2100000: No Name
-    2300000: Crappy Scroll
-    2300002: Quire
-    2300004: Book
-    2300006: Pages
-    2300008: Scroll
-    2300010: Scroll Roller
-    2300012: Scroll Roller001
-    2300014: Scroll Roller002
-    3300000: Crappy Scroll
-    3300002: Quire
-    3300004: Book
-    3300006: Pages
-    3300008: Scroll
-    3300010: Scroll Roller
-    3300012: Scroll Roller001
-    3300014: Scroll Roller002
-    4300000: Quire
-    4300002: Crappy Scroll
-    4300004: Book
-    4300006: Pages
-    4300008: Scroll Roller
-    4300010: Scroll
-    4300012: Scroll Roller001
-    4300014: Scroll Roller002
+    2300000: Floor Engraving
+    2300002: Wall Engraving
+    3300000: Floor Engraving
+    3300002: Wall Engraving
+    4300000: Floor Engraving
+    4300002: Wall Engraving
     9500000: //RootNode
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: No Name
-    second: {fileID: 2100000, guid: ad26ea8897946ee469d51dd19b68fcfb, type: 2}
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
