@@ -1,10 +1,9 @@
-﻿Shader "Custom/Engraving" 
+﻿Shader "Art/EngravingVertex" 
 {
     Properties 
     {
         _Color ("Color", Color) = (1,1,1,1)
         _SpecColor("Standard Specular Color", Color) = (0.220916301, 0.220916301, 0.220916301, 0.779083699)
-        _TileIndex ("TileIndex (R)", 2D) = "gray" {}
         _ContributionAlbedo ("Contribution / Albedo", Range(0,1)) = 0.0
         _ContributionSpecSmoothness ("Contribution / Smoothness", Range(0,1)) = 0.0
         _ContributionNormal ("Contribution / Normal", Range(0,1)) = 1.0
@@ -21,7 +20,7 @@
 
         CGPROGRAM
         // Physically based Standard lighting model, and enable shadows on all light types
-        #pragma surface surf Standard finalgbuffer:DecalFinalGBuffer keepalpha exclude_path:forward exclude_path:prepass noshadow noforwardadd
+        #pragma surface surf Standard vertex:vert finalgbuffer:DecalFinalGBuffer keepalpha exclude_path:forward exclude_path:prepass noshadow noforwardadd
 
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 4.0
@@ -29,14 +28,13 @@
 
         UNITY_DECLARE_TEX2DARRAY(_ImageAtlas);
         UNITY_DECLARE_TEX2DARRAY(_ImageBumpAtlas);
-        sampler2D _TileIndex;
 
         struct Input 
         {
             float2 uv_ImageAtlas;
-            float2 uv_TileIndex;
             float3 worldPos;
-        };
+            float imageAtlasIndex;
+         };
 
         float3      _ViewMin = float3(-99999, -99999, -99999);
         float3      _ViewMax = float3(99999, 99999, 99999);
@@ -58,6 +56,11 @@ UNITY_INSTANCING_BUFFER_END(MyProperties)
         half _ContributionNormal;
         half _ContributionEmission;
 
+        void vert (inout appdata_full v, out Input o) 
+        {
+            UNITY_INITIALIZE_OUTPUT(Input,o);
+            o.imageAtlasIndex = v.texcoord3.x;
+        }
 
         void surf (Input IN, inout SurfaceOutputStandard o) 
         {
@@ -65,11 +68,7 @@ UNITY_INSTANCING_BUFFER_END(MyProperties)
                 clip(IN.worldPos - _ViewMin);
                 clip(_ViewMax - IN.worldPos);
             #endif
-            float4 index = tex2D(_TileIndex, IN.uv_TileIndex);
-            float3 uv = float3(IN.uv_ImageAtlas, index.r);
-            uv.xy -= index.ba;
-            uv.xy *= index.g;
-
+            float3 uv = float3(IN.uv_ImageAtlas, IN.imageAtlasIndex);
 
             fixed4 matColor = UNITY_SAMPLE_TEX2DARRAY (_ImageAtlas, uv) * _Color;
             clip(matColor.a - 0.5);

@@ -9,8 +9,7 @@ public class ImageManager : MonoBehaviour
     public static ImageManager Instance { get; private set; }
     const int indexWidth = 16;
 
-    public MeshRenderer floorEngravingPrefab;
-    public MeshRenderer wallEngravingPrefab;
+    public Material engravingMaterial;
 
     int tileIndexProp;
     private void Awake()
@@ -35,20 +34,23 @@ public class ImageManager : MonoBehaviour
             {
                 if (engravingStore.ContainsKey(engraving.pos))
                     continue;
-                MeshRenderer placedEngraving;
+
+                var engravingObject = new GameObject("Engraving " + ((DFHack.DFCoord)engraving.pos));
+                var renderer = engravingObject.AddComponent<MeshRenderer>();
+                var filter = engravingObject.AddComponent<MeshFilter>();
+                engravingObject.transform.parent = transform;
+                renderer.sharedMaterial = engravingMaterial;
+
                 if (engraving.floor)
-                    placedEngraving = Instantiate(floorEngravingPrefab, transform);
+                    filter.mesh = CreateMesh(engraving.image, false, 2);
                 else if (engraving.north || engraving.northwest || engraving.west || engraving.southwest
                     || engraving.south || engraving.southeast || engraving.east || engraving.northeast)
-                    placedEngraving = Instantiate(wallEngravingPrefab, transform);
+                    filter.mesh = CreateMesh(engraving.image, true, 2);
                 else
                     continue;
-                placedEngraving.transform.position = GameMap.DFtoUnityCoord(engraving.pos) + new Vector3(0, GameMap.floorHeight);
-                placedEngraving.material.SetTexture(tileIndexProp, CreateImage(engraving.image));
-                engravingStore[engraving.pos] = placedEngraving;
-                var eng = placedEngraving.GetComponent<CarvedEngraving>();
-                if (eng != null)
-                    eng.image = engraving;
+                engravingObject.transform.position = GameMap.DFtoUnityCoord(engraving.pos) + new Vector3(0, GameMap.floorHeight);
+                var eng = engravingObject.AddComponent<CarvedEngraving>();
+                eng.image = engraving;
             }
         }
     }
@@ -121,6 +123,8 @@ public class ImageManager : MonoBehaviour
     }
 
     Dictionary<MatPairStruct, Texture2D> generatedImages = new Dictionary<MatPairStruct, Texture2D>();
+    Dictionary<MatPairStruct, Mesh> generatedMeshes = new Dictionary<MatPairStruct, Mesh>();
+
     Color[] colors = new Color[indexWidth * indexWidth];
 
     public Texture2D CreateImage(ArtImage artImage)
@@ -135,10 +139,13 @@ public class ImageManager : MonoBehaviour
             return generatedImages[id];
 
         Texture2D texture = null;
-        var imagePattern = GetPattern(artImage.elements.Count);
-        for(int i = 0; i < artImage.elements.Count; i++)
+        Rect[][] imagePattern = GetFullPattern(artImage);
+        for (int i = 0; i < imagePattern.Length; i++)
         {
-            CopyElement(imagePattern[i], artImage.elements[i]);
+            foreach (var item in imagePattern[i])
+            {
+                CopyElement(item, GetElementTile(artImage.elements[i]));
+            }
         }
 
         texture = new Texture2D(16, 16, TextureFormat.RGBAHalf, false,true);
@@ -150,27 +157,129 @@ public class ImageManager : MonoBehaviour
         return texture;
     }
 
-    private void CopyElement(Rect rect, ArtImageElement artImageElement)
+    List<Vector3> vertices = new List<Vector3>();
+    List<int> triangles = new List<int>();
+    List<Vector2> uvs = new List<Vector2>();
+    List<Vector2> indices = new List<Vector2>();
+
+    public Mesh CreateMesh(ArtImage artImage, bool walls = false, float size = 1)
     {
-        var images = GetPattern(artImageElement.count);
-        var tile = GetElementTile(artImageElement);
-        foreach (var item in images)
+        MatPairStruct id = artImage.id;
+
+        if (generatedMeshes.ContainsKey(id))
+            return generatedMeshes[id];
+
+        vertices.Clear();
+        triangles.Clear();
+        uvs.Clear();
+        indices.Clear();
+
+        Rect[][] imagePattern = GetFullPattern(artImage);
+        for (int i = 0; i < imagePattern.Length; i++)
         {
-            var itemCopy = item;
-            itemCopy.min *= rect.size.x;
-            itemCopy.max *= rect.size.y;
-            itemCopy.position += rect.position;
-            for (int x = Mathf.RoundToInt(itemCopy.xMin * indexWidth); x < Mathf.RoundToInt(itemCopy.xMax * indexWidth); x++)
-                for (int y = Mathf.RoundToInt(itemCopy.yMin * indexWidth); y < Mathf.RoundToInt(itemCopy.yMax * indexWidth); y++)
+            int tile = GetElementTile(artImage.elements[i]);
+            foreach (var item in imagePattern[i])
+            {
+                if(walls)
                 {
-                    Color color = new Color(
-                        tile,
-                        Mathf.RoundToInt(1 / itemCopy.size.x),
-                        Mathf.RoundToInt(itemCopy.position.x),
-                        Mathf.RoundToInt(itemCopy.position.y));
-                    colors[CoordToIndex(x, y)] = color;
+                    AddRectToMesh(item, tile, Matrix4x4.TRS(
+                        new Vector3(0, GameMap.tileWidth / 2, -GameMap.tileWidth / 2),
+                        Quaternion.Euler(-90, 0, 0),
+                        new Vector3(size, size, size)));
+                    AddRectToMesh(item, tile, Matrix4x4.TRS(
+                        new Vector3(-GameMap.tileWidth / 2, GameMap.tileWidth / 2, 0),
+                        Quaternion.Euler(-90, 0, 90),
+                        new Vector3(size, size, size)));
+                    AddRectToMesh(item, tile, Matrix4x4.TRS(
+                        new Vector3(0, GameMap.tileWidth / 2, GameMap.tileWidth / 2),
+                        Quaternion.Euler(-90, 0, 180),
+                        new Vector3(size, size, size)));
+                    AddRectToMesh(item, tile, Matrix4x4.TRS(
+                        new Vector3(GameMap.tileWidth / 2, GameMap.tileWidth / 2, 0),
+                        Quaternion.Euler(-90, 0, 270),
+                        new Vector3(size, size, size)));
                 }
+                else
+                {
+                    AddRectToMesh(item, tile, Matrix4x4.Scale(new Vector3(size, size, size)));
+                }
+            }
         }
+        var mesh = new Mesh();
+        mesh.SetVertices(vertices);
+        mesh.SetTriangles(triangles, 0);
+        mesh.SetUVs(0, uvs);
+        mesh.SetUVs(3, indices);
+        mesh.RecalculateBounds();
+        mesh.RecalculateNormals();
+        mesh.RecalculateTangents();
+        generatedMeshes[id] = mesh;
+        return mesh;
+    }
+
+    private void AddRectToMesh(Rect item, int tile, Matrix4x4 matrix)
+    {
+        int start = vertices.Count;
+        vertices.Add(matrix.MultiplyPoint3x4(new Vector3(item.xMin - 0.5f, 0, item.yMin - 0.5f)));
+        vertices.Add(matrix.MultiplyPoint3x4(new Vector3(item.xMax - 0.5f, 0, item.yMin - 0.5f)));
+        vertices.Add(matrix.MultiplyPoint3x4(new Vector3(item.xMin - 0.5f, 0, item.yMax - 0.5f)));
+        vertices.Add(matrix.MultiplyPoint3x4(new Vector3(item.xMax - 0.5f, 0, item.yMax - 0.5f)));
+        uvs.Add(new Vector2(0, 0));
+        uvs.Add(new Vector2(1, 0));
+        uvs.Add(new Vector2(0, 1));
+        uvs.Add(new Vector2(1, 1));
+        indices.Add(new Vector2(tile, 0));
+        indices.Add(new Vector2(tile, 0));
+        indices.Add(new Vector2(tile, 0));
+        indices.Add(new Vector2(tile, 0));
+        triangles.Add(start + 0);
+        triangles.Add(start + 2);
+        triangles.Add(start + 1);
+
+        triangles.Add(start + 2);
+        triangles.Add(start + 3);
+        triangles.Add(start + 1);
+    }
+
+    private Rect[][] GetFullPattern(ArtImage artImage)
+    {
+        //Todo: More advanced combinations, depending on verbs.
+
+        var mainPattern = GetPattern(artImage.elements.Count);
+        var outPut = new Rect[mainPattern.Length][];
+        //We use the painpattern length because it may have less than the full amount of elements, if the pattern is very large.
+        for (int i = 0; i < mainPattern.Length; i++)
+        {
+            var element = artImage.elements[i];
+            outPut[i] = GetPattern(element.count);
+            for(int j = 0; j < outPut[i].Length;j++)
+            {
+                var min = outPut[i][j].min;
+                var max = outPut[i][j].max;
+                min.x *= mainPattern[i].size.x;
+                min.y *= mainPattern[i].size.y;
+                max.x *= mainPattern[i].size.x;
+                max.y *= mainPattern[i].size.y;
+                outPut[i][j].min = min;
+                outPut[i][j].max = max;
+                outPut[i][j].position += mainPattern[i].position;
+            }
+        }
+        return outPut;
+    }
+
+    private void CopyElement(Rect rect, int tile)
+    {
+        for (int x = Mathf.RoundToInt(rect.xMin * indexWidth); x < Mathf.RoundToInt(rect.xMax * indexWidth); x++)
+            for (int y = Mathf.RoundToInt(rect.yMin * indexWidth); y < Mathf.RoundToInt(rect.yMax * indexWidth); y++)
+            {
+                Color color = new Color(
+                    tile,
+                    Mathf.RoundToInt(1 / rect.size.x),
+                    Mathf.RoundToInt(rect.position.x),
+                    Mathf.RoundToInt(rect.position.y));
+                colors[CoordToIndex(x, y)] = color;
+            }
     }
     #endregion
 
