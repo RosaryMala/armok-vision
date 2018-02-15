@@ -42,10 +42,10 @@ public class ImageManager : MonoBehaviour
                 renderer.sharedMaterial = engravingMaterial;
 
                 if (engraving.floor)
-                    filter.mesh = CreateMesh(engraving.image, false, 2);
+                    filter.mesh = CreateMesh(engraving.image, Direction.Floor, 2);
                 else if (engraving.north || engraving.northwest || engraving.west || engraving.southwest
                     || engraving.south || engraving.southeast || engraving.east || engraving.northeast)
-                    filter.mesh = CreateMesh(engraving.image, true, 2);
+                    filter.mesh = CreateMesh(engraving.image, Direction.Wall4, 2);
                 else
                     continue;
                 engravingObject.transform.position = GameMap.DFtoUnityCoord(engraving.pos) + new Vector3(0, GameMap.floorHeight);
@@ -162,7 +162,14 @@ public class ImageManager : MonoBehaviour
     List<Vector2> uvs = new List<Vector2>();
     List<Vector2> indices = new List<Vector2>();
 
-    public Mesh CreateMesh(ArtImage artImage, bool walls = false, float size = 1)
+    public enum Direction
+    {
+        Floor,
+        Wall4,
+        Front
+    }
+
+    public Mesh CreateMesh(ArtImage artImage, Direction direction = Direction.Floor, float size = 1)
     {
         MatPairStruct id = artImage.id;
 
@@ -180,28 +187,37 @@ public class ImageManager : MonoBehaviour
             int tile = GetElementTile(artImage.elements[i]);
             foreach (var item in imagePattern[i])
             {
-                if(walls)
+                switch (direction)
                 {
-                    AddRectToMesh(item, tile, Matrix4x4.TRS(
-                        new Vector3(0, GameMap.tileWidth / 2, -GameMap.tileWidth / 2),
-                        Quaternion.Euler(-90, 0, 0),
-                        new Vector3(size, size, size)));
-                    AddRectToMesh(item, tile, Matrix4x4.TRS(
-                        new Vector3(-GameMap.tileWidth / 2, GameMap.tileWidth / 2, 0),
-                        Quaternion.Euler(-90, 0, 90),
-                        new Vector3(size, size, size)));
-                    AddRectToMesh(item, tile, Matrix4x4.TRS(
-                        new Vector3(0, GameMap.tileWidth / 2, GameMap.tileWidth / 2),
-                        Quaternion.Euler(-90, 0, 180),
-                        new Vector3(size, size, size)));
-                    AddRectToMesh(item, tile, Matrix4x4.TRS(
-                        new Vector3(GameMap.tileWidth / 2, GameMap.tileWidth / 2, 0),
-                        Quaternion.Euler(-90, 0, 270),
-                        new Vector3(size, size, size)));
-                }
-                else
-                {
-                    AddRectToMesh(item, tile, Matrix4x4.Scale(new Vector3(size, size, size)));
+                    case Direction.Floor:
+                        AddRectToMesh(item, tile, Matrix4x4.Scale(new Vector3(size, size, size)));
+                        break;
+                    case Direction.Wall4:
+                        AddRectToMesh(item, tile, Matrix4x4.TRS(
+                            new Vector3(0, GameMap.tileWidth / 2, -GameMap.tileWidth / 2),
+                            Quaternion.Euler(-90, 0, 0),
+                            new Vector3(size, size, size)));
+                        AddRectToMesh(item, tile, Matrix4x4.TRS(
+                            new Vector3(-GameMap.tileWidth / 2, GameMap.tileWidth / 2, 0),
+                            Quaternion.Euler(-90, 0, 90),
+                            new Vector3(size, size, size)));
+                        AddRectToMesh(item, tile, Matrix4x4.TRS(
+                            new Vector3(0, GameMap.tileWidth / 2, GameMap.tileWidth / 2),
+                            Quaternion.Euler(-90, 0, 180),
+                            new Vector3(size, size, size)));
+                        AddRectToMesh(item, tile, Matrix4x4.TRS(
+                            new Vector3(GameMap.tileWidth / 2, GameMap.tileWidth / 2, 0),
+                            Quaternion.Euler(-90, 0, 270),
+                            new Vector3(size, size, size)));
+                        break;
+                    case Direction.Front:
+                        AddRectToMesh(item, tile, Matrix4x4.TRS(
+                            Vector3.zero,
+                            Quaternion.Euler(-90, 0, 0),
+                            new Vector3(size, size, size)));
+                        break;
+                    default:
+                        break;
                 }
             }
         }

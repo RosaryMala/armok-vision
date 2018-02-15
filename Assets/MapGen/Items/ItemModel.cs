@@ -44,6 +44,10 @@ public class ItemModel : MonoBehaviour, IClickable
 
 
         UpdateImprovements(gameObject, itemInput);
+
+        var image = GetComponentInChildren<ItemImage>();
+        if (image != null)
+            image.UpdateImage(itemInput);
     }
 
     public static void UpdateImprovements(GameObject GO, Item itemInput)
