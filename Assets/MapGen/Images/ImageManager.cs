@@ -43,9 +43,22 @@ public class ImageManager : MonoBehaviour
 
                 if (engraving.floor)
                     filter.mesh = CreateMesh(engraving.image, Direction.Floor, 2);
-                else if (engraving.north || engraving.northwest || engraving.west || engraving.southwest
-                    || engraving.south || engraving.southeast || engraving.east || engraving.northeast)
-                    filter.mesh = CreateMesh(engraving.image, Direction.Wall4, 2);
+                else if (engraving.north)
+                    filter.mesh = CreateMesh(engraving.image, Direction.WallNorth, 2);
+                else if (engraving.northwest)
+                    filter.mesh = CreateMesh(engraving.image, Direction.WallNorthWest, 2);
+                else if (engraving.west)
+                    filter.mesh = CreateMesh(engraving.image, Direction.WallWest, 2);
+                else if (engraving.southwest)
+                    filter.mesh = CreateMesh(engraving.image, Direction.WallSouthWest, 2);
+                else if (engraving.south)
+                    filter.mesh = CreateMesh(engraving.image, Direction.WallSouth, 2);
+                else if (engraving.southeast)
+                    filter.mesh = CreateMesh(engraving.image, Direction.WallSouthEast, 2);
+                else if (engraving.east)
+                    filter.mesh = CreateMesh(engraving.image, Direction.WallEast, 2);
+                else if (engraving.northeast)
+                    filter.mesh = CreateMesh(engraving.image, Direction.WallNorthEast, 2);
                 else
                     continue;
                 engravingObject.transform.position = GameMap.DFtoUnityCoord(engraving.pos) + new Vector3(0, GameMap.floorHeight);
@@ -166,7 +179,15 @@ public class ImageManager : MonoBehaviour
     {
         Floor,
         Wall4,
-        Front
+        Front,
+        WallNorth,
+        WallNorthWest,
+        WallWest,
+        WallSouthWest,
+        WallSouth,
+        WallSouthEast,
+        WallEast,
+        WallNorthEast
     }
 
     public Mesh CreateMesh(ArtImage artImage, Direction direction = Direction.Floor, float size = 1)
@@ -193,18 +214,22 @@ public class ImageManager : MonoBehaviour
                         AddRectToMesh(item, tile, Matrix4x4.Scale(new Vector3(size, size, size)));
                         break;
                     case Direction.Wall4:
+                        //South
                         AddRectToMesh(item, tile, Matrix4x4.TRS(
                             new Vector3(0, GameMap.tileWidth / 2, -GameMap.tileWidth / 2),
                             Quaternion.Euler(-90, 0, 0),
                             new Vector3(size, size, size)));
+                        //West
                         AddRectToMesh(item, tile, Matrix4x4.TRS(
                             new Vector3(-GameMap.tileWidth / 2, GameMap.tileWidth / 2, 0),
                             Quaternion.Euler(-90, 0, 90),
                             new Vector3(size, size, size)));
+                        //North
                         AddRectToMesh(item, tile, Matrix4x4.TRS(
                             new Vector3(0, GameMap.tileWidth / 2, GameMap.tileWidth / 2),
                             Quaternion.Euler(-90, 0, 180),
                             new Vector3(size, size, size)));
+                        //East
                         AddRectToMesh(item, tile, Matrix4x4.TRS(
                             new Vector3(GameMap.tileWidth / 2, GameMap.tileWidth / 2, 0),
                             Quaternion.Euler(-90, 0, 270),
@@ -214,6 +239,82 @@ public class ImageManager : MonoBehaviour
                         AddRectToMesh(item, tile, Matrix4x4.TRS(
                             Vector3.zero,
                             Quaternion.Euler(-90, 0, 0),
+                            new Vector3(size, size, size)));
+                        break;
+                    case Direction.WallNorth:
+                        //North
+                        AddRectToMesh(item, tile, Matrix4x4.TRS(
+                            new Vector3(0, GameMap.tileWidth / 2, GameMap.tileWidth / 2),
+                            Quaternion.Euler(-90, 0, 180),
+                            new Vector3(size, size, size)));
+                        break;
+                    case Direction.WallNorthWest:
+                        //West
+                        AddRectToMesh(item, tile, Matrix4x4.TRS(
+                            new Vector3(-GameMap.tileWidth / 2, GameMap.tileWidth / 2, 0),
+                            Quaternion.Euler(-90, 0, 90),
+                            new Vector3(size, size, size)));
+                        //North
+                        AddRectToMesh(item, tile, Matrix4x4.TRS(
+                            new Vector3(0, GameMap.tileWidth / 2, GameMap.tileWidth / 2),
+                            Quaternion.Euler(-90, 0, 180),
+                            new Vector3(size, size, size)));
+                        break;
+                    case Direction.WallWest:
+                        //West
+                        AddRectToMesh(item, tile, Matrix4x4.TRS(
+                            new Vector3(-GameMap.tileWidth / 2, GameMap.tileWidth / 2, 0),
+                            Quaternion.Euler(-90, 0, 90),
+                            new Vector3(size, size, size)));
+                        break;
+                    case Direction.WallSouthWest:
+                        //South
+                        AddRectToMesh(item, tile, Matrix4x4.TRS(
+                            new Vector3(0, GameMap.tileWidth / 2, -GameMap.tileWidth / 2),
+                            Quaternion.Euler(-90, 0, 0),
+                            new Vector3(size, size, size)));
+                        //West
+                        AddRectToMesh(item, tile, Matrix4x4.TRS(
+                            new Vector3(-GameMap.tileWidth / 2, GameMap.tileWidth / 2, 0),
+                            Quaternion.Euler(-90, 0, 90),
+                            new Vector3(size, size, size)));
+                        break;
+                    case Direction.WallSouth:
+                        //South
+                        AddRectToMesh(item, tile, Matrix4x4.TRS(
+                            new Vector3(0, GameMap.tileWidth / 2, -GameMap.tileWidth / 2),
+                            Quaternion.Euler(-90, 0, 0),
+                            new Vector3(size, size, size)));
+                        break;
+                    case Direction.WallSouthEast:
+                        //South
+                        AddRectToMesh(item, tile, Matrix4x4.TRS(
+                            new Vector3(0, GameMap.tileWidth / 2, -GameMap.tileWidth / 2),
+                            Quaternion.Euler(-90, 0, 0),
+                            new Vector3(size, size, size)));
+                        //East
+                        AddRectToMesh(item, tile, Matrix4x4.TRS(
+                            new Vector3(GameMap.tileWidth / 2, GameMap.tileWidth / 2, 0),
+                            Quaternion.Euler(-90, 0, 270),
+                            new Vector3(size, size, size)));
+                        break;
+                    case Direction.WallEast:
+                        //East
+                        AddRectToMesh(item, tile, Matrix4x4.TRS(
+                            new Vector3(GameMap.tileWidth / 2, GameMap.tileWidth / 2, 0),
+                            Quaternion.Euler(-90, 0, 270),
+                            new Vector3(size, size, size)));
+                        break;
+                    case Direction.WallNorthEast:
+                        //North
+                        AddRectToMesh(item, tile, Matrix4x4.TRS(
+                            new Vector3(0, GameMap.tileWidth / 2, GameMap.tileWidth / 2),
+                            Quaternion.Euler(-90, 0, 180),
+                            new Vector3(size, size, size)));
+                        //East
+                        AddRectToMesh(item, tile, Matrix4x4.TRS(
+                            new Vector3(GameMap.tileWidth / 2, GameMap.tileWidth / 2, 0),
+                            Quaternion.Euler(-90, 0, 270),
                             new Vector3(size, size, size)));
                         break;
                     default:
