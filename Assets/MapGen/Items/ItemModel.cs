@@ -122,7 +122,10 @@ public class ItemModel : MonoBehaviour, IClickable
         foreach (var sub in GO.GetComponentsInChildren<ItemSubPart>())
         {
             if (sub.partIndex < 0 || sub.partIndex >= specifics.Count)
+            {
                 sub.gameObject.SetActive(false);
+                continue;
+            }
             sub.UpdateImprovement(specifics[sub.partIndex]);
         }
     }
