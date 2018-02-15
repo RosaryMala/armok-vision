@@ -73,7 +73,10 @@ public class ImageManager : MonoBehaviour
         switch (element.type)
         {
             case ArtImageElementType.IMAGE_CREATURE:
-                return DFConnection.Instance.CreatureRaws[element.creature_item.mat_type].creature_tile;
+                if (CreatureSpriteMap.ContainsKey(element.creature_item.mat_type))
+                    return CreatureSpriteMap[element.creature_item.mat_type];
+                else
+                    return DFConnection.Instance.CreatureRaws[element.creature_item.mat_type].creature_tile;
             case ArtImageElementType.IMAGE_PLANT:
                 return DFConnection.Instance.NetPlantRawList.plant_raws[element.id].tile;
             case ArtImageElementType.IMAGE_TREE:
@@ -361,6 +364,25 @@ public class ImageManager : MonoBehaviour
     private Rect[][] GetFullPattern(ArtImage artImage)
     {
         //Todo: More advanced combinations, depending on verbs.
+        if(artImage.elements.Count == 2)
+        {
+            //There's two elements, so we can easily do surrounds.
+            int surroundIndex = artImage.properties.FindIndex(x => x.type == ArtImagePropertyType.TRANSITIVE_VERB && x.verb == ArtImageVerb.VERB_SURROUNDEDBY);
+            if(surroundIndex >= 0)
+            {
+                var property = artImage.properties[surroundIndex];
+                var surrounded = new Rect[2][];
+                surrounded[property.subject] = new Rect[] { new Rect(0.25f, 0.25f, 0.5f, 0.5f) };
+                surrounded[property.@object] = new Rect[] {
+                    new Rect(0.0f, 0.0f, 0.25f, 0.25f), new Rect(0.25f, 0.0f, 0.25f, 0.25f), new Rect(0.5f, 0.0f, 0.25f, 0.25f), new Rect(0.75f, 0.0f, 0.25f, 0.25f),
+                    new Rect(0.0f, 0.25f, 0.25f, 0.25f),                                                                          new Rect(0.75f, 0.25f, 0.25f, 0.25f),
+                    new Rect(0.0f, 0.5f, 0.25f, 0.25f),                                                                          new Rect(0.75f, 0.5f, 0.25f, 0.25f),
+                    new Rect(0.0f, 0.75f, 0.25f, 0.25f), new Rect(0.25f, 0.75f, 0.25f, 0.25f), new Rect(0.5f, 0.75f, 0.25f, 0.25f), new Rect(0.75f, 0.75f, 0.25f, 0.25f),
+                };
+                return surrounded;
+            }
+        }
+
 
         var mainPattern = GetPattern(artImage.elements.Count);
         var outPut = new Rect[mainPattern.Length][];
@@ -409,6 +431,8 @@ public class ImageManager : MonoBehaviour
 
     Dictionary<MatPairStruct, int> ItemSpriteMap = new Dictionary<MatPairStruct, int>();
 
+    Dictionary<int, int> CreatureSpriteMap = new Dictionary<int, int>();
+
     IEnumerator LoadImages()
     {
         var stopWatch = System.Diagnostics.Stopwatch.StartNew();
@@ -432,6 +456,33 @@ public class ImageManager : MonoBehaviour
                 }
         }
         //IMAGE_CREATURE:
+        foreach (var creature in DFConnection.Instance.CreatureRaws)
+        {
+            string token = creature.creature_id;
+            Texture2D sprite = Resources.Load<Texture2D>("Images/Creatures/" + token);
+            if (sprite == null)
+            {
+                //Try again without stupid numbers
+                token.TrimEnd('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '_');
+                sprite = Resources.Load<Texture2D>("Images/Creatures/" + token);
+            }
+            if (sprite == null)
+            {
+                Debug.LogWarning("Could not find art image for " + token);
+                continue;
+            }
+            if (sprite.width != 32 || sprite.height != 32)
+                TextureScale.Bilinear(sprite, 32, 32);
+            CreatureSpriteMap[creature.index] = textureList.Count;
+            textureList.Add(sprite);
+
+            if (stopWatch.ElapsedMilliseconds > 100)
+            {
+                yield return null;
+                stopWatch.Reset();
+                stopWatch.Start();
+            }
+        }
         //IMAGE_PLANT:
         //IMAGE_TREE:
         //IMAGE_SHAPE:
@@ -440,6 +491,12 @@ public class ImageManager : MonoBehaviour
         {
             string token = item.id;
             Texture2D sprite = Resources.Load<Texture2D>("Images/Items/" + token);
+            if (sprite == null)
+            {
+                //Try again without stupid numbers
+                token.TrimEnd('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '_');
+                sprite = Resources.Load<Texture2D>("Images/Items/" + token);
+            }
             if (sprite == null)
             {
                 Debug.LogWarning("Could not find art image for " + token);
