@@ -76,7 +76,10 @@ public class ImageManager : MonoBehaviour
                 else
                     return DFConnection.Instance.CreatureRaws[element.creature_item.mat_type].creature_tile;
             case ArtImageElementType.IMAGE_PLANT:
-                return DFConnection.Instance.NetPlantRawList.plant_raws[element.id].tile;
+                if (PlantSpriteMap.ContainsKey(element.id))
+                    return PlantSpriteMap[element.id];
+                else
+                    return DFConnection.Instance.NetPlantRawList.plant_raws[element.id].tile;
             case ArtImageElementType.IMAGE_TREE:
                 return DFConnection.Instance.NetPlantRawList.plant_raws[element.id].tile;
             case ArtImageElementType.IMAGE_SHAPE:
@@ -92,8 +95,10 @@ public class ImageManager : MonoBehaviour
     {
         if (ItemSpriteMap.ContainsKey(item))
             return ItemSpriteMap[item];
-        else
-            return 7;
+        item = new MatPairStruct(item.mat_type, -1);
+        if (ItemSpriteMap.ContainsKey(item))
+            return ItemSpriteMap[item];
+        return 7;
     }
 
     Rect[] GetPattern(int count)
@@ -435,6 +440,7 @@ public class ImageManager : MonoBehaviour
     Dictionary<MatPairStruct, int> ItemSpriteMap = new Dictionary<MatPairStruct, int>();
 
     Dictionary<int, int> CreatureSpriteMap = new Dictionary<int, int>();
+    Dictionary<int, int> PlantSpriteMap = new Dictionary<int, int>();
 
     IEnumerator LoadImages()
     {
@@ -510,6 +516,8 @@ public class ImageManager : MonoBehaviour
                 TextureScale.Bilinear(sprite, 32, 32);
 
             ItemSpriteMap[item.mat_pair] = textureList.Count;
+            if (item.mat_pair.mat_type == 53) //Plant
+                PlantSpriteMap[item.mat_pair.mat_index] = textureList.Count;
             textureList.Add(sprite);
 
             if (stopWatch.ElapsedMilliseconds > 100)
