@@ -1,4 +1,5 @@
 ﻿using Building;
+using DF.Flags;
 using RemoteFortressReader;
 using System.Collections;
 using System.Collections.Generic;
@@ -36,6 +37,9 @@ public class ItemModel : MonoBehaviour, IClickable
         float textureIndex = ContentLoader.GetPatternIndex(itemInput.material);
 
         meshRenderer.sharedMaterial = ContentLoader.getFinalMaterial(originalMaterial, partColor.a);
+
+        if (((ItemFlags)(itemInput.flags1) & ItemFlags.rotten) == ItemFlags.rotten)
+            partColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
 
         MaterialPropertyBlock prop = new MaterialPropertyBlock();
         prop.SetColor("_MatColor", partColor);
