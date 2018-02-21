@@ -689,15 +689,6 @@ namespace RemoteFortressReader
       get { return _image; }
       set { _image = value; }
     }
-    [UnityEngine.SerializeField]
-    private int _wear = default(int);
-    [global::ProtoBuf.ProtoMember(19, IsRequired = false, Name=@"wear", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int wear
-    {
-      get { return _wear; }
-      set { _wear = value; }
-    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

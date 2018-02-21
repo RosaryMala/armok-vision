@@ -278,7 +278,6 @@ message Item
     optional int32 volume = 16;
     repeated ItemImprovement improvements = 17;
     optional ArtImage image = 18;
-    optional int32  wear = 19;
 }
 
 message MapBlock

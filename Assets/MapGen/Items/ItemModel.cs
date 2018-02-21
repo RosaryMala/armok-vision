@@ -38,8 +38,13 @@ public class ItemModel : MonoBehaviour, IClickable
 
         meshRenderer.sharedMaterial = ContentLoader.getFinalMaterial(originalMaterial, partColor.a);
 
-        if (((ItemFlags)(itemInput.flags1) & ItemFlags.rotten) == ItemFlags.rotten)
+        if(itemInput.type.mat_type == 53 && originalMaterial.shader.name == "Art/SingleImage") //plant. We have colored sprites for these.
             partColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+
+        if (((ItemFlags)(itemInput.flags1) & ItemFlags.rotten) == ItemFlags.rotten)
+            partColor = new Color(0, 0, 0, 0.5f);
+
+
 
         MaterialPropertyBlock prop = new MaterialPropertyBlock();
         prop.SetColor("_MatColor", partColor);
