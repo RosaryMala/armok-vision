@@ -40,6 +40,7 @@ public class ItemModel : MonoBehaviour, IClickable
         MaterialPropertyBlock prop = new MaterialPropertyBlock();
         prop.SetColor("_MatColor", partColor);
         prop.SetFloat("_MatIndex", textureIndex);
+        prop.SetFloat("_SpriteIndex", ImageManager.Instance.GetItemTile(itemInput.type));
         meshRenderer.SetPropertyBlock(prop);
 
 

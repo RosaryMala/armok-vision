@@ -1,4 +1,4 @@
-﻿Shader "Art/ArtImageVertex" 
+﻿Shader "Art/SingleImage" 
 {
     Properties 
     {
@@ -7,16 +7,18 @@
         _ContributionAlbedo ("Contribution / Albedo", Range(0,1)) = 0.0
         [PerRendererData] _MatColor("DF Material Color", Color) = (0.5,0.5,0.5,1)
         [PerRendererData] _MatIndex("DF Material Array Index", int) = 0
+        [PerRendererData] _SpriteIndex("Sprite Index", int) = 0
+        _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
     }
     SubShader 
     {
-        Tags { "RenderType"="Opaque" }
+        Tags { "Queue" = "AlphaTest" "RenderType"="TransparentCutout"}
         LOD 200
         Offset -1, -1
 
         CGPROGRAM
         // Physically based Standard lighting model, and enable shadows on all light types
-        #pragma surface surf StandardSpecular alpha vertex:vert
+        #pragma surface surf StandardSpecular
 
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 4.0
@@ -31,28 +33,20 @@
             float2 uv_ImageAtlas;
             float2 uv_MatTexArray;
             float3 worldPos;
-            float imageAtlasIndex;
         };
 
         float3      _ViewMin = float3(-99999, -99999, -99999);
         float3      _ViewMax = float3(99999, 99999, 99999);
         float _ContributionAlbedo;
-
-UNITY_INSTANCING_BUFFER_START(MyProperties)
-UNITY_DEFINE_INSTANCED_PROP(fixed4, _MatColor)
-#define _MatColor_arr MyProperties
-UNITY_DEFINE_INSTANCED_PROP(int, _MatIndex)
-#define _MatIndex_arr MyProperties
-UNITY_INSTANCING_BUFFER_END(MyProperties)
+        float _Cutoff;
+UNITY_INSTANCING_BUFFER_START(Props)
+    UNITY_DEFINE_INSTANCED_PROP(fixed4, _MatColor)
+    UNITY_DEFINE_INSTANCED_PROP(int, _MatIndex)
+    UNITY_DEFINE_INSTANCED_PROP(int, _SpriteIndex)
+UNITY_INSTANCING_BUFFER_END(Props)
 
 #include "blend.cginc"
 #include "CustomMetallic.cginc"
-
-        void vert (inout appdata_full v, out Input o) 
-        {
-            UNITY_INITIALIZE_OUTPUT(Input,o);
-            o.imageAtlasIndex = v.texcoord3.x;
-        }
 
         void surf (Input IN, inout SurfaceOutputStandardSpecular o) 
         {
@@ -60,12 +54,12 @@ UNITY_INSTANCING_BUFFER_END(MyProperties)
                 clip(IN.worldPos - _ViewMin);
                 clip(_ViewMax - IN.worldPos);
             #endif
-            float3 uv = float3(IN.uv_ImageAtlas, IN.imageAtlasIndex);
+            float3 uv = float3(IN.uv_ImageAtlas, UNITY_ACCESS_INSTANCED_PROP(Props, _SpriteIndex));
             float4 c = UNITY_SAMPLE_TEX2DARRAY (_ImageAtlas, uv);
             clip(c.a - 0.5);
 
-            fixed4 dfTex = UNITY_SAMPLE_TEX2DARRAY(_MatTexArray, float3(IN.uv_MatTexArray, UNITY_ACCESS_INSTANCED_PROP(_MatIndex_arr, _MatIndex)));
-            fixed4 matColor = UNITY_ACCESS_INSTANCED_PROP(_MatColor_arr, _MatColor);
+            fixed4 dfTex = UNITY_SAMPLE_TEX2DARRAY(_MatTexArray, float3(IN.uv_MatTexArray, UNITY_ACCESS_INSTANCED_PROP(Props, _MatIndex)));
+            fixed4 matColor = UNITY_ACCESS_INSTANCED_PROP(Props, _MatColor);
             fixed3 albedo = overlay(dfTex.rgb, matColor.rgb);
             half smoothness = dfTex.a;
             half metallic = max((matColor.a * 2) - 1, 0);
@@ -77,7 +71,6 @@ UNITY_INSTANCING_BUFFER_END(MyProperties)
 
             albedo = DiffuseAndSpecularFromMetallicCustom(albedo, metallic, specColor, oneMinusReflectivity);
 
-
             o.Albedo = albedo;
             o.Specular = specColor;
             // Metallic and smoothness come from slider variables
@@ -87,5 +80,5 @@ UNITY_INSTANCING_BUFFER_END(MyProperties)
         }
         ENDCG
     }
-    FallBack "Transparent/Diffuse"
+    FallBack "Diffuse"
 }

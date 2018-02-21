@@ -74,9 +74,10 @@ UNITY_INSTANCING_BUFFER_END(MyProperties)
             half3 specColor;
             half oneMinusReflectivity;
 
+            albedo = lerp(albedo, overlay(c.rgb, albedo), _ContributionAlbedo);
+
             albedo = DiffuseAndSpecularFromMetallicCustom(albedo, metallic, specColor, oneMinusReflectivity);
 
-            albedo = lerp(albedo, c.rgb, _ContributionAlbedo);
 
             o.Albedo = albedo;
             o.Specular = specColor;

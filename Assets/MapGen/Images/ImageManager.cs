@@ -11,14 +11,12 @@ public class ImageManager : MonoBehaviour
 
     public Material engravingMaterial;
 
-    int tileIndexProp;
     private void Awake()
     {
         if (Instance == null)
             Instance = this;
         else
             Destroy(gameObject);
-        tileIndexProp = Shader.PropertyToID("_TileIndex");
 
         ContentLoader.RegisterLoadCallback(LoadImages);
     }
@@ -84,13 +82,18 @@ public class ImageManager : MonoBehaviour
             case ArtImageElementType.IMAGE_SHAPE:
                 return DFConnection.Instance.NetLanguageList.shapes[element.id].tile;
             case ArtImageElementType.IMAGE_ITEM:
-                if (ItemSpriteMap.ContainsKey(element.creature_item))
-                    return ItemSpriteMap[element.creature_item];
-                else
-                    return 7;
+                return GetItemTile(element.creature_item);
             default:
                 return 7;
         }
+    }
+
+    public int GetItemTile(MatPairStruct item)
+    {
+        if (ItemSpriteMap.ContainsKey(item))
+            return ItemSpriteMap[item];
+        else
+            return 7;
     }
 
     Rect[] GetPattern(int count)

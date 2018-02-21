@@ -143,7 +143,7 @@ public class ItemManager : MonoBehaviour
         ItemModel placedItem;
 
         var prefab = Instance.defaultItem;
-
+        
         if (!itemPrefabs.ContainsKey(type))
             type = new MatPairStruct(type.mat_type, -1);
         if (!itemPrefabs.ContainsKey(type))
