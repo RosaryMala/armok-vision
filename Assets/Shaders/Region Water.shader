@@ -17,7 +17,7 @@
         
         CGPROGRAM
         // Physically based Standard lighting model, and enable shadows on all light types
-        #pragma surface surf Standard fullforwardshadows alpha
+        #pragma surface surf Standard alpha
 
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 3.0
@@ -71,5 +71,5 @@
         }
         ENDCG
     }
-    FallBack "Diffuse"
+    FallBack "Transparent/Diffuse"
 }
