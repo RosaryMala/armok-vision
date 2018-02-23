@@ -16,9 +16,21 @@ namespace Building
         public void UpdatePart(BuildingInstance buildingInstance)
         {
             if (itemIndex < 0)
+            {
+                gameObject.SetActive(false);
                 return;
+            }
             if (itemIndex >= buildingInstance.items.Count)
-                return; // There isn't enough items for this part.
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+            // There isn't enough items for this part.
+            if (buildingInstance.items[itemIndex].item.image == null)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
 
             var placedItem = buildingInstance.items[itemIndex];
             if (placedItem.item.type == itemType)
