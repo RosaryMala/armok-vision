@@ -109,19 +109,19 @@ public class ItemModel : MonoBehaviour, IClickable
             {
                 imp.UpdateImprovement(images[imp.index]);
             }
-            else if (imp.isRings && imp.index < ringSpikeBands.Count && ringSpikeBands[imp.index].type == ImprovementType.RINGS_HANGING)
+            else if (!imp.isImage && imp.index < ringSpikeBands.Count && ringSpikeBands[imp.index].type == ImprovementType.RINGS_HANGING)
             {
                 imp.UpdateImprovement(ringSpikeBands[imp.index]);
             }
-            else if (imp.isSpikes && imp.index < ringSpikeBands.Count && ringSpikeBands[imp.index].type == ImprovementType.SPIKES)
+            else if (!imp.isImage && imp.index < ringSpikeBands.Count && ringSpikeBands[imp.index].type == ImprovementType.SPIKES)
             {
                 imp.UpdateImprovement(ringSpikeBands[imp.index]);
             }
-            else if (imp.isBands && imp.index < ringSpikeBands.Count && ringSpikeBands[imp.index].type == ImprovementType.BANDS)
+            else if (!imp.isImage && imp.index < ringSpikeBands.Count && ringSpikeBands[imp.index].type == ImprovementType.BANDS)
             {
                 imp.UpdateImprovement(ringSpikeBands[imp.index]);
             }
-            else if (imp.isCovered && covereds.Count > 0)
+            else if (covereds.Count > 0)
             {
                 Random.InitState(i);
                 imp.UpdateImprovement(covereds[Random.Range(0, covereds.Count)]);

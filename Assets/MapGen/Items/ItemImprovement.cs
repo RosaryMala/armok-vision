@@ -12,10 +12,6 @@ public class ItemImprovement : MonoBehaviour
     private GameObject actualModel = null;
 
     public bool isImage;
-    public bool isRings;
-    public bool isSpikes;
-    public bool isBands;
-    public bool isCovered = true;
 
     public ArtImage image;
 
@@ -82,7 +78,7 @@ public class ItemImprovement : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.white;
-        Gizmos.DrawSphere(transform.position, 0.02f);
+        Gizmos.DrawSphere(transform.position, (isImage ? 0.05f : 0.025f) * transform.lossyScale.x);
         Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position, transform.right * 0.025f);
         Gizmos.color = Color.green;
