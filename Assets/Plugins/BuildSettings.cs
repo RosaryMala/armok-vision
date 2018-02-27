@@ -29,6 +29,8 @@ public class BuildSettings : ScriptableObject
     public string readme;
     [JsonProperty]
     public bool needs_dfhack;
+    [JsonProperty]
+    public string build_date;
 
     private static BuildSettings _instance = null;
     public static BuildSettings Instance
@@ -52,6 +54,7 @@ public class BuildSettings : ScriptableObject
                 _instance.launch_with_terminal = false;
                 _instance.readme = "MISSING_MANIFEST";
                 _instance.needs_dfhack = true;
+                _instance.build_date = "MISSING_MANIFEST";
             }
             return _instance;
         }

@@ -155,7 +155,7 @@ public class GoogleAnalyticsV4 : MonoBehaviour {
 
 
             productName = BuildSettings.Instance.title;
-            bundleVersion = BuildSettings.Instance.content_version + BuildManifest.Instance.buildNumber;
+            bundleVersion = (Debug.isDebugBuild ? BuildSettings.Instance.build_date : BuildSettings.Instance.content_version) + (Debug.isDebugBuild ? "_Debug" : "");
 
 #if UNITY_ANDROID && !UNITY_EDITOR
       androidTracker.SetTrackingCode(androidTrackingCode);
