@@ -100,20 +100,36 @@ public class BuildFactory
     [MenuItem("Mytools/Build Proto")]
     public static void BuildProto()
     {
-        CompileProtoFile("D:/Home/Documents/GitHub/dfhack/plugins/proto/RemoteFortressReader.proto");
-        CompileProtoFile("D:/Home/Documents/GitHub/dfhack/plugins/proto/AdventureControl.proto");
+        if (!File.Exists("ProtoPath.txt"))
+        {
+            string tempPath = EditorUtility.OpenFolderPanel("Proto file folder", "", "");
+            File.WriteAllText("ProtoPath.txt", tempPath);
+        }
+        string path = File.ReadAllText("ProtoPath.txt");
+        CompileProtoFile(path, "RemoteFortressReader.proto",  "AdventureControl.proto", "ItemdefInstrument.proto");
         UnityEngine.Debug.Log("Finished compiling protos");
         AssetDatabase.Refresh();
     }
 
-    static void CompileProtoFile(string path)
+    static void CompileProtoFile(string folder, params string[] protos)
     {
-        File.Copy(path, Path.Combine("Assets/RemoteClientDF/", Path.GetFileName(path)), true);
+        foreach (var proto in protos)
+        {
+            File.Copy(Path.Combine(folder, proto), Path.Combine("Assets/RemoteClientDF/", proto), true);
+        }
         Process protogen = new Process();
 
         protogen.StartInfo.WorkingDirectory = "Assets/RemoteClientDF/";
         protogen.StartInfo.FileName = "ProtoGen/protogen.exe";
-        protogen.StartInfo.Arguments = string.Format("-i:{0}.proto -o:{0}.cs", Path.GetFileNameWithoutExtension(path));
+        string arguments = "";
+        foreach (var proto in protos)
+        {
+            arguments += "-i:";
+            arguments += proto;
+            arguments += " ";
+        }
+        arguments += "-o:protos.cs";
+        protogen.StartInfo.Arguments = arguments;
 
         //redirect output
         protogen.StartInfo.RedirectStandardError = true;
