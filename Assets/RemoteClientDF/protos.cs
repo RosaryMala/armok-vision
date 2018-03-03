@@ -4509,6 +4509,15 @@ namespace RemoteFortressReader
       get { return _guide_id; }
       set { _guide_id = value; }
     }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.MatPair _material = null;
+    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"material", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.MatPair material
+    {
+      get { return _material; }
+      set { _material = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
