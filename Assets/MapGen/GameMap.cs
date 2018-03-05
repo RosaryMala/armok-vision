@@ -379,7 +379,7 @@ public class GameMap : MonoBehaviour
 
                 } while (File.Exists(screenshotFilename));
 
-				Debug.Log ("Saving screenshot to: " + screenshotFilename);
+                Debug.Log ("Saving screenshot to: " + screenshotFilename);
 
                 if (Input.GetButton("Mod"))
                 {
@@ -1036,18 +1036,24 @@ public class GameMap : MonoBehaviour
             }
         }
     }
-
+    class ListContainer
+    {
+        public List<MaterialDefinition> list = new List<MaterialDefinition>();
+    }
 
     void SaveMaterialList(IEnumerable<KeyValuePair<MatPairStruct, MaterialDefinition>> list, string filename)
     {
+        string jsonFile = Path.ChangeExtension(filename, "json");
         try
         {
             File.Delete(filename);
+            File.Delete(jsonFile);
         }
         catch (IOException)
         {
             return;
         }
+        ListContainer container = new ListContainer();
         using (StreamWriter writer = new StreamWriter(filename))
         {
             foreach (var item in list)
@@ -1058,8 +1064,10 @@ public class GameMap : MonoBehaviour
                     item.Value.mat_pair.mat_type + "," +
                     item.Value.mat_pair.mat_index
                     );
+                container.list.Add(item.Value);
             }
         }
+        File.WriteAllText(jsonFile, Newtonsoft.Json.JsonConvert.SerializeObject(container, Newtonsoft.Json.Formatting.Indented));
     }
 
     void SavePlantList()
