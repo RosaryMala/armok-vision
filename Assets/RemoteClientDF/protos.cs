@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 
 // Generated from: RemoteFortressReader.proto
+// Note: requires additional types generated from: ItemdefInstrument.proto
 namespace RemoteFortressReader
 {
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Coord")]
@@ -931,6 +932,14 @@ namespace RemoteFortressReader
       get { return _grass_percent; }
     }
   
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.FlowInfo> _flows = new global::System.Collections.Generic.List<RemoteFortressReader.FlowInfo>();
+    [global::ProtoBuf.ProtoMember(30, Name=@"flows", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.FlowInfo> flows
+    {
+      get { return _flows; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -1035,6 +1044,15 @@ namespace RemoteFortressReader
     {
       get { return _state_color; }
       set { _state_color = value; }
+    }
+    [UnityEngine.SerializeField]
+    private ItemdefInstrument.InstrumentDef _instrument = null;
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"instrument", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public ItemdefInstrument.InstrumentDef instrument
+    {
+      get { return _instrument; }
+      set { _instrument = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
@@ -4414,6 +4432,97 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"FlowInfo")]
+  public partial class FlowInfo : global::ProtoBuf.IExtensible
+  {
+    public FlowInfo() {}
+    
+    [UnityEngine.SerializeField]
+    private int _index = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int index
+    {
+      get { return _index; }
+      set { _index = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.FlowType _type = RemoteFortressReader.FlowType.Miasma;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.FlowType.Miasma)]
+    public RemoteFortressReader.FlowType type
+    {
+      get { return _type; }
+      set { _type = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _density = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"density", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int density
+    {
+      get { return _density; }
+      set { _density = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.Coord _pos = null;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"pos", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Coord pos
+    {
+      get { return _pos; }
+      set { _pos = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.Coord _dest = null;
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"dest", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Coord dest
+    {
+      get { return _dest; }
+      set { _dest = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _expanding = default(bool);
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"expanding", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool expanding
+    {
+      get { return _expanding; }
+      set { _expanding = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _reuse = default(bool);
+    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"reuse", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool reuse
+    {
+      get { return _reuse; }
+      set { _reuse = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _guide_id = default(int);
+    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"guide_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int guide_id
+    {
+      get { return _guide_id; }
+      set { _guide_id = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.MatPair _material = null;
+    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"material", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.MatPair material
+    {
+      get { return _material; }
+      set { _material = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
     [global::ProtoBuf.ProtoContract(Name=@"TiletypeShape")]
     public enum TiletypeShape
     {
@@ -5166,6 +5275,842 @@ namespace RemoteFortressReader
             
       [global::ProtoBuf.ProtoEnum(Name=@"VERB_TRIUMPHANTPOSE", Value=47)]
       VERB_TRIUMPHANTPOSE = 47
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"FlowType")]
+    public enum FlowType
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Miasma", Value=0)]
+      Miasma = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Steam", Value=1)]
+      Steam = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Mist", Value=2)]
+      Mist = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"MaterialDust", Value=3)]
+      MaterialDust = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"MagmaMist", Value=4)]
+      MagmaMist = 4,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Smoke", Value=5)]
+      Smoke = 5,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Dragonfire", Value=6)]
+      Dragonfire = 6,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Fire", Value=7)]
+      Fire = 7,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Web", Value=8)]
+      Web = 8,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"MaterialGas", Value=9)]
+      MaterialGas = 9,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"MaterialVapor", Value=10)]
+      MaterialVapor = 10,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"OceanWave", Value=11)]
+      OceanWave = 11,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SeaFoam", Value=12)]
+      SeaFoam = 12,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ItemCloud", Value=13)]
+      ItemCloud = 13
+    }
+  
+}
+// Generated from: AdventureControl.proto
+// Note: requires additional types generated from: RemoteFortressReader.proto
+namespace AdventureControl
+{
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MoveCommandParams")]
+  public partial class MoveCommandParams : global::ProtoBuf.IExtensible
+  {
+    public MoveCommandParams() {}
+    
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.Coord _direction = null;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"direction", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Coord direction
+    {
+      get { return _direction; }
+      set { _direction = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MovementOption")]
+  public partial class MovementOption : global::ProtoBuf.IExtensible
+  {
+    public MovementOption() {}
+    
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.Coord _dest = null;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"dest", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Coord dest
+    {
+      get { return _dest; }
+      set { _dest = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.Coord _source = null;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"source", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Coord source
+    {
+      get { return _source; }
+      set { _source = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.Coord _grab = null;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"grab", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Coord grab
+    {
+      get { return _grab; }
+      set { _grab = value; }
+    }
+    [UnityEngine.SerializeField]
+    private AdventureControl.CarefulMovementType _movement_type = AdventureControl.CarefulMovementType.DEFAULT_MOVEMENT;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"movement_type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(AdventureControl.CarefulMovementType.DEFAULT_MOVEMENT)]
+    public AdventureControl.CarefulMovementType movement_type
+    {
+      get { return _movement_type; }
+      set { _movement_type = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MenuContents")]
+  public partial class MenuContents : global::ProtoBuf.IExtensible
+  {
+    public MenuContents() {}
+    
+    [UnityEngine.SerializeField]
+    private AdventureControl.AdvmodeMenu _current_menu = AdventureControl.AdvmodeMenu.Default;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"current_menu", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(AdventureControl.AdvmodeMenu.Default)]
+    public AdventureControl.AdvmodeMenu current_menu
+    {
+      get { return _current_menu; }
+      set { _current_menu = value; }
+    }
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<AdventureControl.MovementOption> _movements = new global::System.Collections.Generic.List<AdventureControl.MovementOption>();
+    [global::ProtoBuf.ProtoMember(2, Name=@"movements", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<AdventureControl.MovementOption> movements
+    {
+      get { return _movements; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MiscMoveParams")]
+  public partial class MiscMoveParams : global::ProtoBuf.IExtensible
+  {
+    public MiscMoveParams() {}
+    
+    [UnityEngine.SerializeField]
+    private AdventureControl.MiscMoveType _type = AdventureControl.MiscMoveType.SET_CLIMB;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(AdventureControl.MiscMoveType.SET_CLIMB)]
+    public AdventureControl.MiscMoveType type
+    {
+      get { return _type; }
+      set { _type = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"AdvmodeMenu")]
+    public enum AdvmodeMenu
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Default", Value=0)]
+      Default = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Look", Value=1)]
+      Look = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ConversationAddress", Value=2)]
+      ConversationAddress = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ConversationSelect", Value=3)]
+      ConversationSelect = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ConversationSpeak", Value=4)]
+      ConversationSpeak = 4,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Inventory", Value=5)]
+      Inventory = 5,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Drop", Value=6)]
+      Drop = 6,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ThrowItem", Value=7)]
+      ThrowItem = 7,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Wear", Value=8)]
+      Wear = 8,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Remove", Value=9)]
+      Remove = 9,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Interact", Value=10)]
+      Interact = 10,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Put", Value=11)]
+      Put = 11,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"PutContainer", Value=12)]
+      PutContainer = 12,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Eat", Value=13)]
+      Eat = 13,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ThrowAim", Value=14)]
+      ThrowAim = 14,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Fire", Value=15)]
+      Fire = 15,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Get", Value=16)]
+      Get = 16,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Unk17", Value=17)]
+      Unk17 = 17,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CombatPrefs", Value=18)]
+      CombatPrefs = 18,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Companions", Value=19)]
+      Companions = 19,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"MovementPrefs", Value=20)]
+      MovementPrefs = 20,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SpeedPrefs", Value=21)]
+      SpeedPrefs = 21,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"InteractAction", Value=22)]
+      InteractAction = 22,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"MoveCarefully", Value=23)]
+      MoveCarefully = 23,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Announcements", Value=24)]
+      Announcements = 24,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"UseBuilding", Value=25)]
+      UseBuilding = 25,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Travel", Value=26)]
+      Travel = 26,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Unk27", Value=27)]
+      Unk27 = 27,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Unk28", Value=28)]
+      Unk28 = 28,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SleepConfirm", Value=29)]
+      SleepConfirm = 29,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SelectInteractionTarget", Value=30)]
+      SelectInteractionTarget = 30,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Unk31", Value=31)]
+      Unk31 = 31,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Unk32", Value=32)]
+      Unk32 = 32,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"FallAction", Value=33)]
+      FallAction = 33,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ViewTracks", Value=34)]
+      ViewTracks = 34,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Jump", Value=35)]
+      Jump = 35,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Unk36", Value=36)]
+      Unk36 = 36,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"AttackConfirm", Value=37)]
+      AttackConfirm = 37,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"AttackType", Value=38)]
+      AttackType = 38,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"AttackBodypart", Value=39)]
+      AttackBodypart = 39,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"AttackStrike", Value=40)]
+      AttackStrike = 40,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Unk41", Value=41)]
+      Unk41 = 41,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Unk42", Value=42)]
+      Unk42 = 42,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DodgeDirection", Value=43)]
+      DodgeDirection = 43,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Unk44", Value=44)]
+      Unk44 = 44,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Unk45", Value=45)]
+      Unk45 = 45,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Build", Value=46)]
+      Build = 46
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"CarefulMovementType")]
+    public enum CarefulMovementType
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DEFAULT_MOVEMENT", Value=0)]
+      DEFAULT_MOVEMENT = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"RELEASE_ITEM_HOLD", Value=1)]
+      RELEASE_ITEM_HOLD = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"RELEASE_TILE_HOLD", Value=2)]
+      RELEASE_TILE_HOLD = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ATTACK_CREATURE", Value=3)]
+      ATTACK_CREATURE = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"HOLD_TILE", Value=4)]
+      HOLD_TILE = 4,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"MOVE", Value=5)]
+      MOVE = 5,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CLIMB", Value=6)]
+      CLIMB = 6,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"HOLD_ITEM", Value=7)]
+      HOLD_ITEM = 7,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"BUILDING_INTERACT", Value=8)]
+      BUILDING_INTERACT = 8,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ITEM_INTERACT", Value=9)]
+      ITEM_INTERACT = 9,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ITEM_INTERACT_GUIDE", Value=10)]
+      ITEM_INTERACT_GUIDE = 10,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ITEM_INTERACT_RIDE", Value=11)]
+      ITEM_INTERACT_RIDE = 11,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ITEM_INTERACT_PUSH", Value=12)]
+      ITEM_INTERACT_PUSH = 12
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"MiscMoveType")]
+    public enum MiscMoveType
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SET_CLIMB", Value=0)]
+      SET_CLIMB = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SET_STAND", Value=1)]
+      SET_STAND = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SET_CANCEL", Value=2)]
+      SET_CANCEL = 2
+    }
+  
+}
+// Generated from: ItemdefInstrument.proto
+namespace ItemdefInstrument
+{
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"InstrumentFlags")]
+  public partial class InstrumentFlags : global::ProtoBuf.IExtensible
+  {
+    public InstrumentFlags() {}
+    
+    [UnityEngine.SerializeField]
+    private bool _indefinite_pitch = default(bool);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"indefinite_pitch", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool indefinite_pitch
+    {
+      get { return _indefinite_pitch; }
+      set { _indefinite_pitch = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _placed_as_building = default(bool);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"placed_as_building", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool placed_as_building
+    {
+      get { return _placed_as_building; }
+      set { _placed_as_building = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _metal_mat = default(bool);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"metal_mat", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool metal_mat
+    {
+      get { return _metal_mat; }
+      set { _metal_mat = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _stone_mat = default(bool);
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"stone_mat", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool stone_mat
+    {
+      get { return _stone_mat; }
+      set { _stone_mat = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _wood_mat = default(bool);
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"wood_mat", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool wood_mat
+    {
+      get { return _wood_mat; }
+      set { _wood_mat = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _glass_mat = default(bool);
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"glass_mat", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool glass_mat
+    {
+      get { return _glass_mat; }
+      set { _glass_mat = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _ceramic_mat = default(bool);
+    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"ceramic_mat", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool ceramic_mat
+    {
+      get { return _ceramic_mat; }
+      set { _ceramic_mat = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _shell_mat = default(bool);
+    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"shell_mat", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool shell_mat
+    {
+      get { return _shell_mat; }
+      set { _shell_mat = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _bone_mat = default(bool);
+    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"bone_mat", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool bone_mat
+    {
+      get { return _bone_mat; }
+      set { _bone_mat = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"InstrumentPiece")]
+  public partial class InstrumentPiece : global::ProtoBuf.IExtensible
+  {
+    public InstrumentPiece() {}
+    
+    [UnityEngine.SerializeField]
+    private string _type = "";
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"type", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string type
+    {
+      get { return _type; }
+      set { _type = value; }
+    }
+    [UnityEngine.SerializeField]
+    private string _id = "";
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string id
+    {
+      get { return _id; }
+      set { _id = value; }
+    }
+    [UnityEngine.SerializeField]
+    private string _name = "";
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string name
+    {
+      get { return _name; }
+      set { _name = value; }
+    }
+    [UnityEngine.SerializeField]
+    private string _name_plural = "";
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"name_plural", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string name_plural
+    {
+      get { return _name_plural; }
+      set { _name_plural = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"InstrumentRegister")]
+  public partial class InstrumentRegister : global::ProtoBuf.IExtensible
+  {
+    public InstrumentRegister() {}
+    
+    [UnityEngine.SerializeField]
+    private int _pitch_range_min = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"pitch_range_min", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int pitch_range_min
+    {
+      get { return _pitch_range_min; }
+      set { _pitch_range_min = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _pitch_range_max = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"pitch_range_max", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int pitch_range_max
+    {
+      get { return _pitch_range_max; }
+      set { _pitch_range_max = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"InstrumentDef")]
+  public partial class InstrumentDef : global::ProtoBuf.IExtensible
+  {
+    public InstrumentDef() {}
+    
+    [UnityEngine.SerializeField]
+    private ItemdefInstrument.InstrumentFlags _flags = null;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"flags", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public ItemdefInstrument.InstrumentFlags flags
+    {
+      get { return _flags; }
+      set { _flags = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _size = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"size", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int size
+    {
+      get { return _size; }
+      set { _size = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _value = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"value", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int value
+    {
+      get { return _value; }
+      set { _value = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _material_size = default(int);
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"material_size", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int material_size
+    {
+      get { return _material_size; }
+      set { _material_size = value; }
+    }
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<ItemdefInstrument.InstrumentPiece> _pieces = new global::System.Collections.Generic.List<ItemdefInstrument.InstrumentPiece>();
+    [global::ProtoBuf.ProtoMember(5, Name=@"pieces", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<ItemdefInstrument.InstrumentPiece> pieces
+    {
+      get { return _pieces; }
+    }
+  
+    [UnityEngine.SerializeField]
+    private int _pitch_range_min = default(int);
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"pitch_range_min", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int pitch_range_min
+    {
+      get { return _pitch_range_min; }
+      set { _pitch_range_min = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _pitch_range_max = default(int);
+    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"pitch_range_max", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int pitch_range_max
+    {
+      get { return _pitch_range_max; }
+      set { _pitch_range_max = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _volume_mb_min = default(int);
+    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"volume_mb_min", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int volume_mb_min
+    {
+      get { return _volume_mb_min; }
+      set { _volume_mb_min = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _volume_mb_max = default(int);
+    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"volume_mb_max", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int volume_mb_max
+    {
+      get { return _volume_mb_max; }
+      set { _volume_mb_max = value; }
+    }
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<ItemdefInstrument.SoundProductionType> _sound_production = new global::System.Collections.Generic.List<ItemdefInstrument.SoundProductionType>();
+    [global::ProtoBuf.ProtoMember(10, Name=@"sound_production", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<ItemdefInstrument.SoundProductionType> sound_production
+    {
+      get { return _sound_production; }
+    }
+  
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<string> _sound_production_parm1 = new global::System.Collections.Generic.List<string>();
+    [global::ProtoBuf.ProtoMember(11, Name=@"sound_production_parm1", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<string> sound_production_parm1
+    {
+      get { return _sound_production_parm1; }
+    }
+  
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<string> _sound_production_parm2 = new global::System.Collections.Generic.List<string>();
+    [global::ProtoBuf.ProtoMember(12, Name=@"sound_production_parm2", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<string> sound_production_parm2
+    {
+      get { return _sound_production_parm2; }
+    }
+  
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<ItemdefInstrument.PitchChoiceType> _pitch_choice = new global::System.Collections.Generic.List<ItemdefInstrument.PitchChoiceType>();
+    [global::ProtoBuf.ProtoMember(13, Name=@"pitch_choice", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<ItemdefInstrument.PitchChoiceType> pitch_choice
+    {
+      get { return _pitch_choice; }
+    }
+  
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<string> _pitch_choice_parm1 = new global::System.Collections.Generic.List<string>();
+    [global::ProtoBuf.ProtoMember(14, Name=@"pitch_choice_parm1", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<string> pitch_choice_parm1
+    {
+      get { return _pitch_choice_parm1; }
+    }
+  
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<string> _pitch_choice_parm2 = new global::System.Collections.Generic.List<string>();
+    [global::ProtoBuf.ProtoMember(15, Name=@"pitch_choice_parm2", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<string> pitch_choice_parm2
+    {
+      get { return _pitch_choice_parm2; }
+    }
+  
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<ItemdefInstrument.TuningType> _tuning = new global::System.Collections.Generic.List<ItemdefInstrument.TuningType>();
+    [global::ProtoBuf.ProtoMember(16, Name=@"tuning", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<ItemdefInstrument.TuningType> tuning
+    {
+      get { return _tuning; }
+    }
+  
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<string> _tuning_parm = new global::System.Collections.Generic.List<string>();
+    [global::ProtoBuf.ProtoMember(17, Name=@"tuning_parm", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<string> tuning_parm
+    {
+      get { return _tuning_parm; }
+    }
+  
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<ItemdefInstrument.InstrumentRegister> _registers = new global::System.Collections.Generic.List<ItemdefInstrument.InstrumentRegister>();
+    [global::ProtoBuf.ProtoMember(18, Name=@"registers", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<ItemdefInstrument.InstrumentRegister> registers
+    {
+      get { return _registers; }
+    }
+  
+    [UnityEngine.SerializeField]
+    private string _description = "";
+    [global::ProtoBuf.ProtoMember(19, IsRequired = false, Name=@"description", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string description
+    {
+      get { return _description; }
+      set { _description = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"PitchChoiceType")]
+    public enum PitchChoiceType
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"MEMBRANE_POSITION", Value=0)]
+      MEMBRANE_POSITION = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SUBPART_CHOICE", Value=1)]
+      SUBPART_CHOICE = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"KEYBOARD", Value=2)]
+      KEYBOARD = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"STOPPING_FRET", Value=3)]
+      STOPPING_FRET = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"STOPPING_AGAINST_BODY", Value=4)]
+      STOPPING_AGAINST_BODY = 4,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"STOPPING_HOLE", Value=5)]
+      STOPPING_HOLE = 5,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"STOPPING_HOLE_KEY", Value=6)]
+      STOPPING_HOLE_KEY = 6,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SLIDE", Value=7)]
+      SLIDE = 7,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"HARMONIC_SERIES", Value=8)]
+      HARMONIC_SERIES = 8,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VALVE_ROUTES_AIR", Value=9)]
+      VALVE_ROUTES_AIR = 9,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"BP_IN_BELL", Value=10)]
+      BP_IN_BELL = 10,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"FOOT_PEDALS", Value=11)]
+      FOOT_PEDALS = 11
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"SoundProductionType")]
+    public enum SoundProductionType
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"PLUCKED_BY_BP", Value=0)]
+      PLUCKED_BY_BP = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"PLUCKED", Value=1)]
+      PLUCKED = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"BOWED", Value=2)]
+      BOWED = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"STRUCK_BY_BP", Value=3)]
+      STRUCK_BY_BP = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"STRUCK", Value=4)]
+      STRUCK = 4,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"VIBRATE_BP_AGAINST_OPENING", Value=5)]
+      VIBRATE_BP_AGAINST_OPENING = 5,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"BLOW_AGAINST_FIPPLE", Value=6)]
+      BLOW_AGAINST_FIPPLE = 6,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"BLOW_OVER_OPENING_SIDE", Value=7)]
+      BLOW_OVER_OPENING_SIDE = 7,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"BLOW_OVER_OPENING_END", Value=8)]
+      BLOW_OVER_OPENING_END = 8,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"BLOW_OVER_SINGLE_REED", Value=9)]
+      BLOW_OVER_SINGLE_REED = 9,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"BLOW_OVER_DOUBLE_REED", Value=10)]
+      BLOW_OVER_DOUBLE_REED = 10,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"BLOW_OVER_FREE_REED", Value=11)]
+      BLOW_OVER_FREE_REED = 11,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"STRUCK_TOGETHER", Value=12)]
+      STRUCK_TOGETHER = 12,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SHAKEN", Value=13)]
+      SHAKEN = 13,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SCRAPED", Value=14)]
+      SCRAPED = 14,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"FRICTION", Value=15)]
+      FRICTION = 15,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"RESONATOR", Value=16)]
+      RESONATOR = 16,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"BAG_OVER_REED", Value=17)]
+      BAG_OVER_REED = 17,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"AIR_OVER_REED", Value=18)]
+      AIR_OVER_REED = 18,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"AIR_OVER_FREE_REED", Value=19)]
+      AIR_OVER_FREE_REED = 19,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"AIR_AGAINST_FIPPLE", Value=20)]
+      AIR_AGAINST_FIPPLE = 20
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"TuningType")]
+    public enum TuningType
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"PEGS", Value=0)]
+      PEGS = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ADJUSTABLE_BRIDGES", Value=1)]
+      ADJUSTABLE_BRIDGES = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CROOKS", Value=2)]
+      CROOKS = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"TIGHTENING", Value=3)]
+      TIGHTENING = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"LEVERS", Value=4)]
+      LEVERS = 4
     }
   
 }

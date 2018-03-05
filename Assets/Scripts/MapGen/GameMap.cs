@@ -820,6 +820,11 @@ public class GameMap : MonoBehaviour
         ItemManager.Instance.BeginExistenceCheck();
         UnityEngine.Profiling.Profiler.BeginSample("UpdateBlocks", this);
         MapBlock block;
+        if(DFConnection.Instance.UpdatedAnyBlocks)
+        {
+            FlowManager.Instance.Clear();
+            DFConnection.Instance.UpdatedAnyBlocks = false;
+        }
         while((block = DFConnection.Instance.PopMapBlockUpdate()) != null)
         {
             bool setTiles;
@@ -853,6 +858,7 @@ public class GameMap : MonoBehaviour
             UnityEngine.Profiling.Profiler.BeginSample("ItemManager.LoadBlock", this);
             ItemManager.Instance.LoadBlock(block);
             UnityEngine.Profiling.Profiler.EndSample();
+            FlowManager.Instance[new DFCoord(block.map_x, block.map_y, block.map_z)] = block.flows;
         }
         BuildingManager.Instance.EndExistenceCheck();
         ItemManager.Instance.EndExitenceCheck();

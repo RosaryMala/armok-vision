@@ -485,6 +485,8 @@ public sealed class DFConnection : MonoBehaviour
 
     public dfproto.GetWorldInfoOut.Mode WorldMode { get; private set; }
 
+    public bool UpdatedAnyBlocks;
+
     /// <summary>
     /// Queue a map hash reset, forcing a re-send of all map blocks
     /// </summary>
@@ -1251,6 +1253,7 @@ public sealed class DFConnection : MonoBehaviour
                 pendingBlocks.Enqueue(mapBlock);
             }
             engravings.Enqueue(resultList.engravings);
+            UpdatedAnyBlocks = true;
         }
     }
 
