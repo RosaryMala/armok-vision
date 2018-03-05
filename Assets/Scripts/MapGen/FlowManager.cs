@@ -29,7 +29,7 @@ public class FlowManager : MonoBehaviour
 
     private void Start()
     {
-        InvokeRepeating("DrawParticles", 0, 0.5f);
+        InvokeRepeating("DrawParticles", 0, 0.3f);
     }
 
     public List<FlowInfo> this[DFCoord pos]

@@ -161,6 +161,8 @@ public class VoxelGenerator
             case TiletypeMaterial.RIVER:
             case TiletypeMaterial.ROOT:
             case TiletypeMaterial.HFS:
+            case TiletypeMaterial.FIRE:
+            case TiletypeMaterial.CAMPFIRE:
                 return true;
             default:
                 return false;
