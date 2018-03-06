@@ -15,9 +15,10 @@ public class FlowManager : MonoBehaviour
     Dictionary<FlowType, ParticleSystem> flowParticles = new Dictionary<FlowType, ParticleSystem>();
 
     public static FlowManager Instance { get; set; }
-    public Color miasmaColor;
     public float dragonColorTempMin = 0;
     public float dragonColorTempMax = 22495;
+
+    public float updateRate = 0.1f;
 
     private void Awake()
     {
@@ -29,7 +30,7 @@ public class FlowManager : MonoBehaviour
 
     private void Start()
     {
-        InvokeRepeating("DrawParticles", 0, 0.3f);
+        StartCoroutine(DrawParticles());
     }
 
     public List<FlowInfo> this[DFCoord pos]
@@ -64,72 +65,84 @@ public class FlowManager : MonoBehaviour
         }
     }
 
-    void DrawParticles()
+    HashSet<FlowType> warningGiven = new HashSet<FlowType>();
+
+    IEnumerator DrawParticles()
     {
-        foreach (var item in flowTypes)
+        while (true)
         {
-            if (!flowParticles.ContainsKey(item.Key))
+            foreach (var item in flowTypes)
             {
-                var child = transform.Find(item.Key.ToString());
-                if (child == null)
+                if (!flowParticles.ContainsKey(item.Key))
                 {
-                    //Debug.LogError("No particle system for " + item.Key);
-                    continue;
+                    var child = transform.Find(item.Key.ToString());
+                    if (child == null)
+                    {
+                        if (!warningGiven.Contains(item.Key))
+                        {
+                            Debug.LogError("No particle system for " + item.Key);
+                            warningGiven.Add(item.Key);
+                        }
+                        continue;
+                    }
+                    var particle = child.GetComponent<ParticleSystem>();
+                    if (particle == null)
+                    {
+                        if (!warningGiven.Contains(item.Key))
+                        {
+                            Debug.LogError("Malformed particle system for " + item.Key);
+                            warningGiven.Add(item.Key);
+                        }
+                        continue;
+                    }
+                    flowParticles[item.Key] = particle;
                 }
-                var particle = child.GetComponent<ParticleSystem>();
-                if (particle == null)
+                foreach (var particle in item.Value)
                 {
-                    //Debug.LogError("Malformed particle system for " + item.Key);
-                    continue;
+                    var emitParams = new ParticleSystem.EmitParams();
+                    emitParams.position = GameMap.DFtoUnityTileCenter(particle.pos);
+                    Color color = Color.white;
+                    switch (item.Key)
+                    {
+                        case FlowType.Miasma:
+                            break;
+                        case FlowType.Steam:
+                            break;
+                        case FlowType.Mist:
+                            break;
+                        case FlowType.MaterialDust:
+                            break;
+                        case FlowType.MagmaMist:
+                            break;
+                        case FlowType.Smoke:
+                            break;
+                        case FlowType.Dragonfire:
+                            color = ColorTemperature.Color(Mathf.Lerp(dragonColorTempMin, dragonColorTempMax, particle.density / 100.0f));
+                            break;
+                        case FlowType.Fire:
+                            break;
+                        case FlowType.Web:
+                            break;
+                        case FlowType.MaterialGas:
+                            break;
+                        case FlowType.MaterialVapor:
+                            break;
+                        case FlowType.OceanWave:
+                            break;
+                        case FlowType.SeaFoam:
+                            break;
+                        case FlowType.ItemCloud:
+                        default:
+                            color = ContentLoader.GetColor(particle.material);
+                            break;
+                    }
+                    color.a = particle.density / 100f;
+                    emitParams.startColor = color;
+                    emitParams.applyShapeToPosition = true;
+                    flowParticles[item.Key].Emit(emitParams, 1);
                 }
-                flowParticles[item.Key] = particle;
             }
-            foreach (var particle in item.Value)
-            {
-                var emitParams = new ParticleSystem.EmitParams();
-                emitParams.position = GameMap.DFtoUnityTileCenter(particle.pos);
-                Color color = Color.white;
-                switch (item.Key)
-                {
-                    case FlowType.Miasma:
-                        color = miasmaColor;
-                        break;
-                    case FlowType.Steam:
-                        break;
-                    case FlowType.Mist:
-                        break;
-                    case FlowType.MaterialDust:
-                        break;
-                    case FlowType.MagmaMist:
-                        break;
-                    case FlowType.Smoke:
-                        break;
-                    case FlowType.Dragonfire:
-                        color = ColorTemperature.Color(Mathf.Lerp(dragonColorTempMin, dragonColorTempMax, particle.density / 100.0f));
-                        break;
-                    case FlowType.Fire:
-                        break;
-                    case FlowType.Web:
-                        break;
-                    case FlowType.MaterialGas:
-                        break;
-                    case FlowType.MaterialVapor:
-                        break;
-                    case FlowType.OceanWave:
-                        break;
-                    case FlowType.SeaFoam:
-                        break;
-                    case FlowType.ItemCloud:
-                        break;
-                    default:
-                        color = ContentLoader.GetColor(particle.material);
-                        break;
-                }
-                color.a = particle.density / 100f;
-                emitParams.startColor = color;
-                emitParams.applyShapeToPosition = true;
-                flowParticles[item.Key].Emit(emitParams, 1);
-            }
+            yield return new WaitForSeconds(updateRate);
         }
     }
 
