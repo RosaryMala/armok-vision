@@ -1,87 +1,103 @@
-﻿Shader "Custom/ItemParticle" {
-    Properties {
-        _SpecColor("Standard Specular Color", Color) = (0.220916301, 0.220916301, 0.220916301, 0.779083699)
-        [PerRendererData] _MatColor("DF Material Color", Color) = (0.5,0.5,0.5,1)
-        [PerRendererData] _MatIndex("DF Material Array Index", int) = 0
-    }
+﻿// Unity built-in shader source. Copyright (c) 2016 Unity Technologies. MIT license (see license.txt)
+
+Shader "Particles/ItemParticle" {
+Properties {
+    _InvFade ("Soft Particles Factor", Range(0.01,3.0)) = 1.0
+}
+
+Category {
+    Tags { "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent" "PreviewType"="Plane" }
+    Blend SrcAlpha OneMinusSrcAlpha
+    ColorMask RGB
+    Cull Off Lighting Off ZWrite Off
+
     SubShader {
-        Tags { "RenderType"="Opaque" }
-        LOD 200
+        Pass {
 
-        CGPROGRAM
-        // Physically based Standard lighting model, and enable shadows on all light types
-        #pragma surface surf Standard fullforwardshadows alpha vertex:vert
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+            #pragma target 2.0
+            #pragma multi_compile_particles
+            #pragma multi_compile_fog
 
-        // Use shader model 3.0 target, to get nicer looking lighting
-        #pragma target 3.0
-        #pragma multi_compile _ _BOUNDING_BOX_ENABLED
+            #include "UnityCG.cginc"
 
-        UNITY_DECLARE_TEX2DARRAY(_ImageAtlas);
-        UNITY_DECLARE_TEX2DARRAY(_ImageBumpAtlas);
-        UNITY_DECLARE_TEX2DARRAY(_MatTexArray);
+            UNITY_DECLARE_TEX2DARRAY(_ImageAtlas);
+            UNITY_DECLARE_TEX2DARRAY(_MatTexArray);
 
-        sampler2D _MainTex;
+            struct appdata_t {
+                float4 vertex : POSITION;
+                fixed4 color : COLOR;
+                float4 texcoord : TEXCOORD0;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
 
-        struct appdata_particles {
-            float4 vertex : POSITION;
-            float3 normal : NORMAL;
-            float4 color : COLOR;
-            float4 texcoord : TEXCOORD0;
-            float2 texcoordIndex : TEXCOORD1;
-        };
+            struct v2f {
+                float4 vertex : SV_POSITION;
+                fixed4 color : COLOR;
+                float2 texcoord : TEXCOORD0;
+                float2 atlasIndex : TEXCOORD1;
+                UNITY_FOG_COORDS(2)
+                #ifdef SOFTPARTICLES_ON
+                float4 projPos : TEXCOORD4;
+                #endif
+                UNITY_VERTEX_OUTPUT_STEREO
+            };
 
-        struct Input {
-            float2 uv_ImageAtlas;
-            float3 worldPos;
-            float2 texcoord1; 
-            float2 imageAtlasIndex;
-            float4 color;
-        };
+            float3      _ViewMin = float3(-99999, -99999, -99999);
+            float3      _ViewMax = float3(99999, 99999, 99999);
 
-        float3      _ViewMin = float3(-99999, -99999, -99999);
-        float3      _ViewMax = float3(99999, 99999, 99999);
-        float _ContributionAlbedo;
+            v2f vert (appdata_t v)
+            {
+                v2f o;
+                UNITY_SETUP_INSTANCE_ID(v);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+                o.vertex = UnityObjectToClipPos(v.vertex);
+                #ifdef SOFTPARTICLES_ON
+                o.projPos = ComputeScreenPos (o.vertex);
+                COMPUTE_EYEDEPTH(o.projPos.z);
+                #endif
+                o.color = v.color;
+                o.texcoord = v.texcoord.xy;
+                UNITY_TRANSFER_FOG(o,o.vertex);
+                o.atlasIndex = v.texcoord.zw;
+                return o;
+            }
+
+            UNITY_DECLARE_DEPTH_TEXTURE(_CameraDepthTexture);
+            float _InvFade;
 
 #include "blend.cginc"
 
-        void vert(inout appdata_particles v, out Input o) {
-            UNITY_INITIALIZE_OUTPUT(Input, o);
-            o.uv_ImageAtlas = v.texcoord.xy;
-            o.texcoord1 = v.texcoord.zw;
-            o.imageAtlasIndex = v.texcoordIndex.xy;
-            o.color = v.color;
+            fixed4 frag (v2f i) : SV_Target
+            {
+                #ifdef _BOUNDING_BOX_ENABLED
+                    clip(IN.worldPos - _ViewMin);
+                    clip(_ViewMax - IN.worldPos);
+                #endif
+                float3 uv = float3(i.texcoord, i.atlasIndex.x);
+                float4 c = UNITY_SAMPLE_TEX2DARRAY (_ImageAtlas, uv);
+                clip(c.a - 0.5);
+
+                fixed4 dfTex = UNITY_SAMPLE_TEX2DARRAY(_MatTexArray, float3(i.texcoord, i.atlasIndex.y));
+                fixed3 albedo = overlay(dfTex.rgb, i.color.rgb);
+                c.a *= min(i.color.a * 2, 1);
+                c.rgb = overlay(c.rgb, albedo);
+
+                #ifdef SOFTPARTICLES_ON
+                float sceneZ = LinearEyeDepth (SAMPLE_DEPTH_TEXTURE_PROJ(_CameraDepthTexture, UNITY_PROJ_COORD(i.projPos)));
+                float partZ = i.projPos.z;
+                float fade = saturate (_InvFade * (sceneZ-partZ));
+                i.color.a *= fade;
+                #endif
+
+                fixed4 col = c;
+                UNITY_APPLY_FOG(i.fogCoord, col);
+                return col;
+            }
+            ENDCG
         }
-
-        // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
-        // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
-        // #pragma instancing_options assumeuniformscaling
-        UNITY_INSTANCING_BUFFER_START(Props)
-            // put more per-instance properties here
-        UNITY_INSTANCING_BUFFER_END(Props)
-
-        void surf (Input IN, inout SurfaceOutputStandard o) 
-        {
-        #ifdef _BOUNDING_BOX_ENABLED
-            clip(IN.worldPos - _ViewMin);
-            clip(_ViewMax - IN.worldPos);
-        #endif
-
-            float3 uv = float3(IN.uv_ImageAtlas, IN.imageAtlasIndex.x);
-            float4 c = UNITY_SAMPLE_TEX2DARRAY(_ImageAtlas, uv);
-            clip(c.a - 0.5);
-
-            float4 dfTex = UNITY_SAMPLE_TEX2DARRAY(_MatTexArray, float3(IN.uv_ImageAtlas, IN.imageAtlasIndex.y));
-            float3 albedo = overlay(dfTex.rgb, IN.color.rgb);
-            float metallic = max((IN.color.a * 2) - 1, 0);
-            float alpha = min(IN.color.a * 2, 1);
-
-            o.Albedo = overlay(c.rgb, albedo);
-            // Metallic and smoothness come from slider variables
-            o.Metallic = metallic;
-            o.Smoothness = dfTex.a;
-            o.Alpha = alpha;
-        }
-        ENDCG
     }
-    FallBack "Diffuse"
+}
 }
