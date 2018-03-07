@@ -48,8 +48,6 @@ class PlantGrowthConfiguration<T> : TileConfiguration<T> where T : IContent, new
             default:
                 break;
         }
-        if (typeof(T) == typeof(UnityEngine.Color))
-            UnityEngine.Debug.Log("Hey!");
         MatPairStruct mat = tile.material;
         if (mat.mat_type != PlantType
             || mat.mat_index < 0
