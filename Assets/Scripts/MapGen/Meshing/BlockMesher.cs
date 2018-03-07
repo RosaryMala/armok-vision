@@ -534,6 +534,31 @@ abstract class BlockMesher {
         var matColor = ContentLoader.GetColor(tile.GetMaterial(layer));
         var matPatternIndex = ContentLoader.GetPatternIndex(tile.GetMaterial(layer));
 
+        switch (layer)
+        {
+            case MeshLayer.GrowthMaterial:
+            case MeshLayer.GrowthCutout:
+            case MeshLayer.GrowthTransparent:
+                matColor = ContentLoader.GetColor(new MatPairStruct(55, 0), tile.GetMaterial(layer));
+                break;
+            case MeshLayer.GrowthMaterial1:
+            case MeshLayer.GrowthCutout1:
+            case MeshLayer.GrowthTransparent1:
+                matColor = ContentLoader.GetColor(new MatPairStruct(55, 1), tile.GetMaterial(layer));
+                break;
+            case MeshLayer.GrowthMaterial2:
+            case MeshLayer.GrowthCutout2:
+            case MeshLayer.GrowthTransparent2:
+                matColor = ContentLoader.GetColor(new MatPairStruct(55, 2), tile.GetMaterial(layer));
+                break;
+            case MeshLayer.GrowthMaterial3:
+            case MeshLayer.GrowthCutout3:
+            case MeshLayer.GrowthTransparent3:
+                matColor = ContentLoader.GetColor(new MatPairStruct(55, 3), tile.GetMaterial(layer));
+                break;
+            default:
+                break;
+        }
 
         switch (layer)
         {

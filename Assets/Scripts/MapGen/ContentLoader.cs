@@ -148,14 +148,19 @@ public class ContentLoader : MonoBehaviour
         {
             case 55://PLANT_GROWTH
                 {
+                    if (mat.mat_index >= DFConnection.Instance.NetPlantRawList.plant_raws.Count)
+                        break;
+                    if (item.mat_index >= DFConnection.Instance.NetPlantRawList.plant_raws[mat.mat_index].growths.Count)
+                        break;
                     var growth = DFConnection.Instance.NetPlantRawList.plant_raws[mat.mat_index].growths[item.mat_index];
                     int currentTicks = TimeHolder.DisplayedTime.CurrentYearTicks;
-                    var print = growth.prints.Find(x => (x.timing_start == -1 || x.timing_start <= currentTicks) && (x.timing_end == -1 || x.timing_end >= currentTicks));
-                    if (print == null)
+                    var print = growth.prints.FindIndex(x => (x.timing_start == -1 || x.timing_start <= currentTicks) && (x.timing_end == -1 || x.timing_end >= currentTicks));
+                    if (print == -1)
                         break;
-
+                    if (print == 0)
+                        return GetColor(mat);
+                    return DfColor.MorphColor(GetColor(mat), growth.prints[0].color, growth.prints[print].color);
                 }
-                break;
             default:
                 break;
         }

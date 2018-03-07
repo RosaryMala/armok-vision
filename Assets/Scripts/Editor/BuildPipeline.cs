@@ -9,6 +9,21 @@ using MaterialStore;
 
 public class BuildFactory
 {
+    [MenuItem("Mytools/Check HSV values")]
+    public static void RGB()
+    {
+        for(int i = 0; i < 16; i++)
+        {
+            float h, s, v;
+            var color = DfColor.GetColor(i);
+            Color.RGBToHSV(color, out h, out s, out v);
+            UnityEngine.Debug.Log(string.Format("RGB: {0}, {1}, {2}; HSV: {3}, {4}, {5}", color.r, color.g, color.b, h, s, v));
+        }
+        UnityEngine.Debug.Log(Color.HSVToRGB(2, 1, 1));
+        UnityEngine.Debug.Log(Color.HSVToRGB(1, 2, 1));
+        UnityEngine.Debug.Log(Color.HSVToRGB(1, 1, 2));
+    }
+
     [MenuItem("Mytools/Build Release/All")]
     public static void BuildAll()
     {

@@ -140,7 +140,13 @@ public class FlowManager : MonoBehaviour
                             color = ContentLoader.GetColor(particle.material);
                             break;
                     }
-                    color.a = particle.density / 100f;
+                    if (item.Key == FlowType.ItemCloud)
+                    {
+                        if (UnityEngine.Random.Range(0, 100) > particle.density)
+                            continue;
+                    }
+                    else
+                        color.a = particle.density / 100f;
                     emitParams.startColor = color;
                     emitParams.applyShapeToPosition = true;
                     flowParticles[item.Key].Emit(emitParams, 1);
