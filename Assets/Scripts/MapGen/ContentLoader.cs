@@ -137,13 +137,39 @@ public class ContentLoader : MonoBehaviour
     }
 
     /// <summary>
+    /// Gets a color for a given item type and material combination, including any seasonal variations.
+    /// </summary>
+    /// <param name="item">Item type</param>
+    /// <param name="mat">Material</param>
+    /// <returns></returns>
+    public static Color GetColor(MatPairStruct item, MatPairStruct mat)
+    {
+        switch (item.mat_type)
+        {
+            case 55://PLANT_GROWTH
+                {
+                    var growth = DFConnection.Instance.NetPlantRawList.plant_raws[mat.mat_index].growths[item.mat_index];
+                    int currentTicks = TimeHolder.DisplayedTime.CurrentYearTicks;
+                    var print = growth.prints.Find(x => (x.timing_start == -1 || x.timing_start <= currentTicks) && (x.timing_end == -1 || x.timing_end >= currentTicks));
+                    if (print == null)
+                        break;
+
+                }
+                break;
+            default:
+                break;
+        }
+        return GetColor(mat);
+    }
+
+    /// <summary>
     /// Get the material color of an item including dye
     /// </summary>
     /// <param name="item">item to get the color from</param>
     /// <returns></returns>
     public static Color GetColor(RemoteFortressReader.Item item)
     {
-        var color = GetColor(item.material);
+        var color = GetColor(item.type, item.material);
         var dye = item.dye;
         if (dye != null)
             color *= (Color)new Color32((byte)dye.red, (byte)dye.green, (byte)dye.blue, 255);

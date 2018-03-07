@@ -132,7 +132,7 @@ public class FlowManager : MonoBehaviour
                         case FlowType.SeaFoam:
                             break;
                         case FlowType.ItemCloud:
-                            color = ContentLoader.GetColor(particle.material);
+                            color = ContentLoader.GetColor(particle.item, particle.material);
                             flowParticles[item.Key].customData.SetVector(ParticleSystemCustomData.Custom1, 0, new ParticleSystem.MinMaxCurve(ImageManager.Instance.GetItemTile(particle.item)));
                             flowParticles[item.Key].customData.SetVector(ParticleSystemCustomData.Custom1, 1, new ParticleSystem.MinMaxCurve(ContentLoader.GetPatternIndex(particle.material)));
                             break;
