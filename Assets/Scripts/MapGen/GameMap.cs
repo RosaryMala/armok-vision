@@ -464,6 +464,16 @@ public class GameMap : MonoBehaviour
             }
     }
 
+    public static bool IsInVisibleArea(DFCoord coord)
+    {
+        return (coord.z < (Instance.firstPerson ? Instance.PosZ + GameSettings.Instance.rendering.drawRangeUp : Instance.PosZ))
+                    && (coord.z >= (Instance.PosZ - GameSettings.Instance.rendering.drawRangeDown))
+                    && (coord.x / blockSize > (Instance.PosXBlock - GameSettings.Instance.rendering.drawRangeSide))
+                    && (coord.x / blockSize < (Instance.PosXBlock + GameSettings.Instance.rendering.drawRangeSide))
+                    && (coord.y / blockSize > (Instance.PosYBlock - GameSettings.Instance.rendering.drawRangeSide))
+                    && (coord.y / blockSize < (Instance.PosYBlock + GameSettings.Instance.rendering.drawRangeSide));
+    }
+
     BlockMeshSet.Visibility GetVisibility(int z)
     {
         if (z > PosZ + GameSettings.Instance.rendering.drawRangeUp)

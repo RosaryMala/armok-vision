@@ -136,6 +136,59 @@ public class ContentLoader : MonoBehaviour
         return new Color32((byte)stateColor.red, (byte)stateColor.green, (byte)stateColor.blue, 128);
     }
 
+    public enum GrowthPeriod
+    {
+        Fresh,
+        Current,
+        Stale
+    }
+
+    public static Color GetGrowthColor(GrowthPeriod period, int growthID, MatPairStruct mat)
+    {
+        if (period == GrowthPeriod.Fresh)
+            return GetColor(mat);
+        if (mat.mat_index >= DFConnection.Instance.NetPlantRawList.plant_raws.Count)
+            return GetColor(mat);
+        if (growthID >= DFConnection.Instance.NetPlantRawList.plant_raws[mat.mat_index].growths.Count)
+            return GetColor(mat);
+
+        var growth = DFConnection.Instance.NetPlantRawList.plant_raws[mat.mat_index].growths[growthID];
+        int currentTicks = TimeHolder.DisplayedTime.CurrentYearTicks;
+
+        RemoteFortressReader.GrowthPrint freshPrints = null;
+        RemoteFortressReader.GrowthPrint currentPrint = null;
+        RemoteFortressReader.GrowthPrint stalePrint = null;
+
+        int minTicks = int.MaxValue;
+        int maxTicks = int.MinValue;
+
+        foreach (var print in growth.prints)
+        {
+            if ((print.timing_start == -1 || print.timing_start <= currentTicks) && (print.timing_end == -1 || print.timing_end >= currentTicks))
+                currentPrint = print;
+            if(print.timing_start == -1 || print.timing_start < minTicks)
+            {
+                minTicks = print.timing_start;
+                freshPrints = print;
+            }
+            if (print.timing_end == -1 || print.timing_end > maxTicks)
+            {
+                maxTicks = print.timing_end;
+                stalePrint = print;
+            }
+        }
+        if (currentPrint == null)
+            currentPrint = stalePrint;
+        switch (period)
+        {
+            case GrowthPeriod.Current:
+                return DfColor.MorphColor(GetColor(mat), freshPrints.color, currentPrint.color);
+            case GrowthPeriod.Stale:
+                return DfColor.MorphColor(GetColor(mat), freshPrints.color, stalePrint.color);
+        }
+        return GetColor(mat);
+    }
+
     /// <summary>
     /// Gets a color for a given item type and material combination, including any seasonal variations.
     /// </summary>
@@ -148,18 +201,7 @@ public class ContentLoader : MonoBehaviour
         {
             case 55://PLANT_GROWTH
                 {
-                    if (mat.mat_index >= DFConnection.Instance.NetPlantRawList.plant_raws.Count)
-                        break;
-                    if (item.mat_index >= DFConnection.Instance.NetPlantRawList.plant_raws[mat.mat_index].growths.Count)
-                        break;
-                    var growth = DFConnection.Instance.NetPlantRawList.plant_raws[mat.mat_index].growths[item.mat_index];
-                    int currentTicks = TimeHolder.DisplayedTime.CurrentYearTicks;
-                    var print = growth.prints.FindIndex(x => (x.timing_start == -1 || x.timing_start <= currentTicks) && (x.timing_end == -1 || x.timing_end >= currentTicks));
-                    if (print == -1)
-                        break;
-                    if (print == 0)
-                        return GetColor(mat);
-                    return DfColor.MorphColor(GetColor(mat), growth.prints[0].color, growth.prints[print].color);
+                    return GetGrowthColor(GrowthPeriod.Current, item.mat_index, mat);
                 }
             default:
                 break;

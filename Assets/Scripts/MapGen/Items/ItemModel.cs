@@ -154,6 +154,7 @@ public class ItemModel : MonoBehaviour, IClickable
             Debug.Log(string.Format("{0} {1} [{2}]", mat, GameMap.items[item.type].id, item.stack_size));
         else
             Debug.Log(string.Format("{0} {1}", mat, GameMap.items[item.type].id));
+        Debug.Log(((ItemFlags)item.flags1));
 
         foreach (var imp in item.improvements)
         {

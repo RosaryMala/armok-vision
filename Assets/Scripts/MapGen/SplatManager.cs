@@ -394,7 +394,12 @@ public class SplatManager : MonoBehaviour
                     if (spatter.material.mat_type == (int)MatBasic.ICE && spatter.state == MatterState.Powder)
                         color = Color.white;
                     else
-                        color = ContentLoader.GetColor(spatter.item, spatter.material);
+                    {
+                        if (spatter.item != null)
+                            color = ContentLoader.GetGrowthColor(ContentLoader.GrowthPeriod.Stale, spatter.item.mat_index, spatter.material);
+                        else
+                            color = ContentLoader.GetColor(spatter.material);
+                    }
 
                     float amount = spatter.amount;
                     if (spatter.item != null)

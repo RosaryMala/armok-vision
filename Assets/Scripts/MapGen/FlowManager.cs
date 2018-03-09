@@ -99,6 +99,8 @@ public class FlowManager : MonoBehaviour
                 }
                 foreach (var particle in item.Value)
                 {
+                    if (!GameMap.IsInVisibleArea(particle.pos))
+                        continue;
                     var emitParams = new ParticleSystem.EmitParams();
                     emitParams.position = GameMap.DFtoUnityTileCenter(particle.pos);
                     Color color = Color.white;
@@ -160,5 +162,27 @@ public class FlowManager : MonoBehaviour
     {
         flowMap.Clear();
         dirty = true;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        foreach (var pos in flowMap)
+        {
+            foreach (var particle in pos.Value)
+            {
+                if (particle.density <= 0)
+                    continue;
+                switch (particle.type)
+                {
+                    case FlowType.Dragonfire:
+                    case FlowType.Web:
+                        Gizmos.DrawLine(GameMap.DFtoUnityTileCenter(particle.pos), GameMap.DFtoUnityTileCenter(particle.dest));
+                        break;
+                    default:
+                        Gizmos.DrawRay(GameMap.DFtoUnityTileCenter(particle.pos), Vector3.up);
+                        break;
+                }
+            }
+        }
     }
 }
