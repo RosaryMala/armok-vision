@@ -868,7 +868,34 @@ public class GameMap : MonoBehaviour
             UnityEngine.Profiling.Profiler.BeginSample("ItemManager.LoadBlock", this);
             ItemManager.Instance.LoadBlock(block);
             UnityEngine.Profiling.Profiler.EndSample();
+
             FlowManager.Instance[new DFCoord(block.map_x, block.map_y, block.map_z)] = block.flows;
+            //Add tile fires to flows directly.
+            List<FlowInfo> tileFlows = null;
+            if(block.tiles != null && block.tiles.Count == 256)
+            {
+                for(int x = 0; x < 16; x++)
+                    for(int y = 0; y < 16; y++)
+                    {
+                        int index = y * 16 + x;
+                        var tile = DFConnection.Instance.NetTiletypeList.tiletype_list[block.tiles[index]];
+                        if(tile.material == TiletypeMaterial.CAMPFIRE || tile.material == TiletypeMaterial.FIRE)
+                        {
+                            FlowInfo flow = new FlowInfo();
+                            flow.type = FlowType.Fire;
+                            if (tile.material == TiletypeMaterial.CAMPFIRE)
+                                flow.type = FlowType.CampFire;
+                            else
+                                flow.type = FlowType.Fire;
+                            flow.density = 100;
+                            flow.pos = new DFCoord(block.map_x + x, block.map_y + y, block.map_z);
+                            if (tileFlows == null)
+                                tileFlows = new List<FlowInfo>();
+                            tileFlows.Add(flow);
+                        }
+                    }
+                FlowManager.Instance.SetTileFlows(new DFCoord(block.map_x, block.map_y, block.map_z), tileFlows);
+            }
         }
         BuildingManager.Instance.EndExistenceCheck();
         ItemManager.Instance.EndExitenceCheck();

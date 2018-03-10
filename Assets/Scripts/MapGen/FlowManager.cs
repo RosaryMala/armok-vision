@@ -8,6 +8,7 @@ using UnityEngine;
 public class FlowManager : MonoBehaviour
 {
     Dictionary<DFCoord, List<FlowInfo>> flowMap = new Dictionary<DFCoord, List<FlowInfo>>();
+    Dictionary<DFCoord, List<FlowInfo>> tileFlowMap = new Dictionary<DFCoord, List<FlowInfo>>();
     private bool dirty;
 
     Dictionary<FlowType, List<FlowInfo>> flowTypes = new Dictionary<FlowType, List<FlowInfo>>();
@@ -42,6 +43,20 @@ public class FlowManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Since tiles aren't updated as often as regular flows, they need to be in a separate list.
+    /// </summary>
+    /// <param name="pos"></param>
+    /// <param name="flows"></param>
+    public void SetTileFlows(DFCoord pos, List<FlowInfo> flows)
+    {
+        if (flows == null || flows.Count == 0)
+            tileFlowMap.Remove(pos);
+        else
+            tileFlowMap[pos] = flows;
+        dirty = true;
+    }
+
     private void Update()
     {
         if(dirty)
@@ -57,7 +72,17 @@ public class FlowManager : MonoBehaviour
                 {
                     if (!flowTypes.ContainsKey(flow.type))
                         flowTypes[flow.type] = new List<FlowInfo>();
-                    if(flow.density > 0)
+                    if (flow.density > 0)
+                        flowTypes[flow.type].Add(flow);
+                }
+            }
+            foreach (var pos in tileFlowMap)
+            {
+                foreach (var flow in pos.Value)
+                {
+                    if (!flowTypes.ContainsKey(flow.type))
+                        flowTypes[flow.type] = new List<FlowInfo>();
+                    if (flow.density > 0)
                         flowTypes[flow.type].Add(flow);
                 }
             }
@@ -121,7 +146,9 @@ public class FlowManager : MonoBehaviour
                         case FlowType.Dragonfire:
                             color = ColorTemperature.Color(Mathf.Lerp(dragonColorTempMin, dragonColorTempMax, particle.density / 100.0f));
                             break;
+                        case FlowType.CampFire:
                         case FlowType.Fire:
+                            color = Color.white;
                             break;
                         case FlowType.Web:
                             break;

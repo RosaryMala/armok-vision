@@ -5330,7 +5330,10 @@ namespace RemoteFortressReader
       SeaFoam = 12,
             
       [global::ProtoBuf.ProtoEnum(Name=@"ItemCloud", Value=13)]
-      ItemCloud = 13
+      ItemCloud = 13,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CampFire", Value=-1)]
+      CampFire = -1
     }
   
 }
