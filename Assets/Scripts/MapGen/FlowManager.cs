@@ -131,40 +131,29 @@ public class FlowManager : MonoBehaviour
                     Color color = Color.white;
                     switch (item.Key)
                     {
-                        case FlowType.Miasma:
-                            break;
-                        case FlowType.Steam:
-                            break;
-                        case FlowType.Mist:
-                            break;
-                        case FlowType.MaterialDust:
-                            break;
-                        case FlowType.MagmaMist:
-                            break;
-                        case FlowType.Smoke:
-                            break;
                         case FlowType.Dragonfire:
                             color = ColorTemperature.Color(Mathf.Lerp(dragonColorTempMin, dragonColorTempMax, particle.density / 100.0f));
                             break;
+                        case FlowType.Miasma:
+                        case FlowType.Steam:
+                        case FlowType.Mist:
+                        case FlowType.Smoke:
+                        case FlowType.MagmaMist:
                         case FlowType.CampFire:
                         case FlowType.Fire:
-                            color = Color.white;
-                            break;
-                        case FlowType.Web:
-                            break;
-                        case FlowType.MaterialGas:
-                            break;
-                        case FlowType.MaterialVapor:
-                            break;
                         case FlowType.OceanWave:
-                            break;
                         case FlowType.SeaFoam:
+                            color = Color.white;
                             break;
                         case FlowType.ItemCloud:
                             color = ContentLoader.GetColor(particle.item, particle.material);
                             flowParticles[item.Key].customData.SetVector(ParticleSystemCustomData.Custom1, 0, new ParticleSystem.MinMaxCurve(ImageManager.Instance.GetItemTile(particle.item)));
                             flowParticles[item.Key].customData.SetVector(ParticleSystemCustomData.Custom1, 1, new ParticleSystem.MinMaxCurve(ContentLoader.GetPatternIndex(particle.material)));
                             break;
+                        case FlowType.MaterialGas:
+                        case FlowType.MaterialVapor:
+                        case FlowType.MaterialDust:
+                        case FlowType.Web:
                         default:
                             color = ContentLoader.GetColor(particle.material);
                             break;
