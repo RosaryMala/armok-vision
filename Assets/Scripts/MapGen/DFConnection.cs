@@ -485,6 +485,8 @@ public sealed class DFConnection : MonoBehaviour
 
     public dfproto.GetWorldInfoOut.Mode WorldMode { get; private set; }
 
+    [NonSerialized]
+    public List<Wave> waves;
     public bool UpdatedAnyBlocks;
 
     /// <summary>
@@ -1253,6 +1255,8 @@ public sealed class DFConnection : MonoBehaviour
                 pendingBlocks.Enqueue(mapBlock);
             }
             engravings.Enqueue(resultList.engravings);
+
+            waves = resultList.ocean_waves;
             UpdatedAnyBlocks = true;
         }
     }

@@ -14,7 +14,12 @@
 	SubShader {
         Tags { "RenderType" = "Transparent" "Queue" = "Transparent" }
 		LOD 200
-		
+		    // extra pass that renders to depth buffer only
+
+        Pass {
+            ZWrite On
+            ColorMask 0
+        }
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
 		#pragma surface surf Standard fullforwardshadows alpha

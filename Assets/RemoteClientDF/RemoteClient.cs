@@ -177,6 +177,23 @@ namespace DFHack
         {
             return new DFCoord(a.x, a.y, a.z);
         }
+
+        public int Max
+        {
+            get
+            {
+                return Math.Max(Math.Max(Math.Abs(x), Math.Abs(y)), Math.Abs(z));
+            }
+        }
+
+        public float Magnitude
+        {
+            get
+            {
+                return (float)(Math.Sqrt(x * x + y * y + z * z));
+            }
+        }
+
     }
     public struct DFCoord2d
     {
@@ -243,6 +260,22 @@ namespace DFHack
         public override int GetHashCode()
         {
             return (x * 499) + y;
+        }
+
+        public int Max
+        {
+            get
+            {
+                return Math.Max(x, y);
+            }
+        }
+
+        public float Magnitude
+        {
+            get
+            {
+                return (float)(Math.Sqrt(x * x + y * y));
+            }
         }
 
     }

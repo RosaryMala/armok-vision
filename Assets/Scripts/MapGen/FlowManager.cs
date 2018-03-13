@@ -15,18 +15,17 @@ public class FlowManager : MonoBehaviour
 
     Dictionary<FlowType, ParticleSystem> flowParticles = new Dictionary<FlowType, ParticleSystem>();
 
-    public static FlowManager Instance { get; set; }
     public float dragonColorTempMin = 0;
     public float dragonColorTempMax = 22495;
 
     public float updateRate = 0.1f;
 
+    public static FlowManager Instance { get; set; }
     private void Awake()
     {
         if (Instance != null && Instance != this)
             Destroy(gameObject);
         Instance = this;
-        DontDestroyOnLoad(this);
     }
 
     private void Start()

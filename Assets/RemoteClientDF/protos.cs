@@ -1708,6 +1708,14 @@ namespace RemoteFortressReader
       get { return _engravings; }
     }
   
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.Wave> _ocean_waves = new global::System.Collections.Generic.List<RemoteFortressReader.Wave>();
+    [global::ProtoBuf.ProtoMember(5, Name=@"ocean_waves", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.Wave> ocean_waves
+    {
+      get { return _ocean_waves; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -4526,6 +4534,34 @@ namespace RemoteFortressReader
     {
       get { return _item; }
       set { _item = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Wave")]
+  public partial class Wave : global::ProtoBuf.IExtensible
+  {
+    public Wave() {}
+    
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.Coord _dest = null;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"dest", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Coord dest
+    {
+      get { return _dest; }
+      set { _dest = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.Coord _pos = null;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"pos", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Coord pos
+    {
+      get { return _pos; }
+      set { _pos = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
