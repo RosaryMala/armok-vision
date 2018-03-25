@@ -4,7 +4,7 @@
 namespace MaterialStore
 {
     [Serializable]
-    public class MaterialTag
+    public class MaterialTag : IEquatable<MaterialTag>
     {
         public MaterialType type = MaterialType.NONE;
         public string tag1;
@@ -226,6 +226,38 @@ namespace MaterialStore
             return value;
         }
 
+        public override int GetHashCode()
+        {
+            unchecked // Overflow is fine, just wrap
+            {
+                int hash = 17;
+                // Suitable nullity checks etc, of course :)
+                hash = hash * 23 + type.GetHashCode();
+                hash = hash * 23 + tag1.GetHashCode();
+                hash = hash * 23 + tag2.GetHashCode();
+                return hash;
+            }
+        }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as MaterialTag;
+            if (obj == null)
+                return false;
+            return Equals(other);
+        }
+
+        public bool Equals(MaterialTag other)
+        {
+            if (type != other.type)
+                return false;
+            if (NumTags > 0 && tag1 != other.tag1)
+                return false;
+            if (NumTags > 1 && tag2 != other.tag2)
+                return false;
+            return true;
+        }
+
         public int NumTags
         {
             get
@@ -244,5 +276,7 @@ namespace MaterialStore
                 }
             }
         }
+
+        
     }
 }

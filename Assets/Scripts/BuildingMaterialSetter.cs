@@ -5,10 +5,9 @@ using UnityEngine;
 
 public class BuildingMaterialSetter : MonoBehaviour
 {
-    public int materialChosen;
-    public MaterialCollection materialStore;
+    public MaterialTag currentMaterialTag;
 
-    public void SetMaterials()
+    public void SetMaterials(MaterialTextureSet set)
     {
         var materialPattern = Resources.Load<Texture2DArray>("patternTextures");
         Shader.SetGlobalTexture("_MatTexArray", materialPattern);
@@ -16,16 +15,16 @@ public class BuildingMaterialSetter : MonoBehaviour
         {
             var renderer = part.GetComponent<MeshRenderer>();
             MaterialPropertyBlock prop = new MaterialPropertyBlock();
-            prop.SetColor("_MatColor", materialStore.textures[materialChosen].color);
-            prop.SetFloat("_MatIndex", materialStore.textures[materialChosen].patternIndex);
+            prop.SetColor("_MatColor", set.color);
+            prop.SetFloat("_MatIndex", set.patternIndex);
             renderer.SetPropertyBlock(prop);
         }
         foreach (var part in FindObjectsOfType<ItemModel>())
         {
             var renderers = part.GetComponentsInChildren<MeshRenderer>();
             MaterialPropertyBlock prop = new MaterialPropertyBlock();
-            prop.SetColor("_MatColor", materialStore.textures[materialChosen].color);
-            prop.SetFloat("_MatIndex", materialStore.textures[materialChosen].patternIndex);
+            prop.SetColor("_MatColor", set.color);
+            prop.SetFloat("_MatIndex", set.patternIndex);
             foreach (var renderer in renderers)
             {
                 renderer.SetPropertyBlock(prop);

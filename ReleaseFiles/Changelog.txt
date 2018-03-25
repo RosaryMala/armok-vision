@@ -1,3 +1,28 @@
+v0.19.0
+ * Added onscreen announcements.
+ * Finetuned map update rate
+ * Show units in finer, sub-tile positions, when available.
+ * Overhauled the item model system, bringing them back again.
+ * Added many new item models.
+ * Added many new building models.
+ * Fixed the options menu being covered by the dig panel.
+ * Added very basic adventure mode movement. Needs much improvement to be very useful.
+ * Added support for projectiles and other flung items.
+ * Fixed a hang from too many blocks being processed at once.
+ * Allowed container buildings to show contained items, depending on the building type.
+ * Allow items to display improvements on them. Not all items have required artwork, but the code is there.
+ * Display engravings and other image types from DF.
+ * Fixed different plant types all having the same sprite.
+ * Made rotten items black.
+ * Adjusted item sprites to be above stockpiles.
+ * Removed shadows from world map rivers that were always falling onto the fortress.
+ * Added build date to builds, for logging purposes.
+ * Added particle systems for DF Flows, including miasma, fire breath, etc.
+ * Added more debug info dumping.
+ * Made spider web sprites distinct from regular silk thread sprites.
+ * Added basic ocean waves.
+ * Added a discord button.
+
 v0.18.0
  * New creature sprites that show skin color and equipment.
  * Centralized the material color lookup, to make sure everything is on the same page, so to speak.
