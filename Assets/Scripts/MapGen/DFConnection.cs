@@ -211,7 +211,7 @@ public sealed class DFConnection : MonoBehaviour
     private SingleBuffer<WorldMap> netWorldMap;
     private SingleBuffer<RegionMaps> netRegionMaps;
     private RingBuffer<MapBlock> pendingBlocks
-        = new RingBuffer<MapBlock>(1024);
+        = new RingBuffer<MapBlock>(4096);
     private SingleBuffer<RemoteFortressReader.ScreenCapture> netScreenCapture;
     private EventBuffer worldMapMoved;
     private SingleBuffer<Status> netStatus;
