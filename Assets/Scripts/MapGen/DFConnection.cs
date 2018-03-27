@@ -1250,11 +1250,18 @@ public sealed class DFConnection : MonoBehaviour
 
         if (resultList != null)
         {
-            foreach (MapBlock mapBlock in resultList.map_blocks)
+            try
             {
-                pendingBlocks.Enqueue(mapBlock);
+                foreach (MapBlock mapBlock in resultList.map_blocks)
+                {
+                    pendingBlocks.Enqueue(mapBlock);
+                }
+                engravings.Enqueue(resultList.engravings);
             }
-            engravings.Enqueue(resultList.engravings);
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
 
             waves = resultList.ocean_waves;
             UpdatedAnyBlocks = true;
