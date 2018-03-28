@@ -619,15 +619,19 @@ public class ContentLoader : MonoBehaviour
         int instanceID = material.GetInstanceID();
         if (!transparentMaterialVersions.ContainsKey(instanceID))
         {
-            if (material.shader.name == "Standard")
+            switch(material.shader.name)
             {
-                Debug.LogWarning(material.name + " Has a standard shader!");
-                transparentMaterialVersions[instanceID] = material;
-            }
-            else
-            {
-                transparentMaterialVersions[instanceID] = new Material(material);
-                transparentMaterialVersions[instanceID].shader = Shader.Find("Building/Transparent");
+                case "Standard":
+                    Debug.LogWarning(material.name + " Has a standard shader!");
+                    transparentMaterialVersions[instanceID] = material;
+                    break;
+                case "Art/ArtImageVertexOpaque":
+                    transparentMaterialVersions[instanceID] = material;
+                    break;
+                default:
+                    transparentMaterialVersions[instanceID] = new Material(material);
+                    transparentMaterialVersions[instanceID].shader = Shader.Find("Building/Transparent");
+                    break;
             }
         }
 
