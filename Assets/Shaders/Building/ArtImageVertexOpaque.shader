@@ -7,17 +7,16 @@
         _ContributionAlbedo ("Contribution / Albedo", Range(0,1)) = 0.0
         [PerRendererData] _MatColor("DF Material Color", Color) = (0.5,0.5,0.5,1)
         [PerRendererData] _MatIndex("DF Material Array Index", int) = 0
-        _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
     }
     SubShader 
     {
-        Tags { "Queue" = "AlphaTest" "RenderType"="TransparentCutout"}
+        Tags { "Queue" = "Transparent+1" "RenderType"="TransparentCutout"}
         LOD 200
         Offset -1, -1
 
         CGPROGRAM
         // Physically based Standard lighting model, and enable shadows on all light types
-        #pragma surface surf StandardSpecular vertex:vert
+        #pragma surface surf StandardSpecular alpha vertex:vert
 
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 4.0
@@ -38,7 +37,6 @@
         float3      _ViewMin = float3(-99999, -99999, -99999);
         float3      _ViewMax = float3(99999, 99999, 99999);
         float _ContributionAlbedo;
-        float _Cutoff;
 UNITY_INSTANCING_BUFFER_START(MyProperties)
 UNITY_DEFINE_INSTANCED_PROP(fixed4, _MatColor)
 #define _MatColor_arr MyProperties
@@ -84,9 +82,8 @@ UNITY_INSTANCING_BUFFER_END(MyProperties)
             // Metallic and smoothness come from slider variables
             o.Alpha = alpha;
             o.Normal = UnpackNormal(UNITY_SAMPLE_TEX2DARRAY(_ImageBumpAtlas, uv));
-
         }
         ENDCG
     }
-    FallBack "Diffuse"
+    Fallback Off
 }
