@@ -147,7 +147,7 @@ public class ImageManager : MonoBehaviour
     }
 
     Dictionary<MatPairStruct, Texture2D> generatedImages = new Dictionary<MatPairStruct, Texture2D>();
-    Dictionary<MatPairStruct, Mesh> generatedMeshes = new Dictionary<MatPairStruct, Mesh>();
+    Dictionary<Direction, Dictionary<MatPairStruct, Mesh>> generatedMeshes = new Dictionary<Direction, Dictionary<MatPairStruct, Mesh>>();
 
     Color[] colors = new Color[indexWidth * indexWidth];
 
@@ -205,8 +205,12 @@ public class ImageManager : MonoBehaviour
     {
         MatPairStruct id = artImage.id;
 
-        if (generatedMeshes.ContainsKey(id))
-            return generatedMeshes[id];
+        if(!generatedMeshes.ContainsKey(direction))
+        {
+            generatedMeshes[direction] = new Dictionary<MatPairStruct, Mesh>();
+        }
+        if (generatedMeshes[direction].ContainsKey(id))
+            return generatedMeshes[direction][id];
 
         vertices.Clear();
         triangles.Clear();
@@ -341,7 +345,7 @@ public class ImageManager : MonoBehaviour
         mesh.RecalculateBounds();
         mesh.RecalculateNormals();
         mesh.RecalculateTangents();
-        generatedMeshes[id] = mesh;
+        generatedMeshes[direction][id] = mesh;
         return mesh;
     }
 
@@ -394,7 +398,7 @@ public class ImageManager : MonoBehaviour
 
         var mainPattern = GetPattern(artImage.elements.Count);
         var outPut = new Rect[mainPattern.Length][];
-        //We use the painpattern length because it may have less than the full amount of elements, if the pattern is very large.
+        //We use the mainpattern length because it may have less than the full amount of elements, if the pattern is very large.
         for (int i = 0; i < mainPattern.Length; i++)
         {
             var element = artImage.elements[i];
