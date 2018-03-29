@@ -74,7 +74,12 @@ public class ImageManager : MonoBehaviour
                 if (CreatureSpriteMap.ContainsKey(element.creature_item.mat_type))
                     return CreatureSpriteMap[element.creature_item.mat_type];
                 else
-                    return DFConnection.Instance.CreatureRaws[element.creature_item.mat_type].creature_tile;
+                {
+                    if (element.creature_item.mat_type >= 0 && element.creature_item.mat_type < DFConnection.Instance.CreatureRaws.Count)
+                        return DFConnection.Instance.CreatureRaws[element.creature_item.mat_type].creature_tile;
+                    else
+                        return 7;
+                }
             case ArtImageElementType.IMAGE_PLANT:
                 if (PlantSpriteMap.ContainsKey(element.id))
                     return PlantSpriteMap[element.id];
