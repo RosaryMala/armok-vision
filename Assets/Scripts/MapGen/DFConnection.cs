@@ -94,7 +94,7 @@ public sealed class DFConnection : MonoBehaviour
     private RemoteFunction<dfproto.IntMessage> movementSelectCommandCall;
     private RemoteFunction<MiscMoveParams> miscMoveCall;
 
-    private color_ostream dfNetworkOut = new color_ostream();
+    private ColorOstream dfNetworkOut = new ColorOstream();
     private RemoteClient networkClient;
 
     /// <summary>
@@ -108,7 +108,7 @@ public sealed class DFConnection : MonoBehaviour
     RemoteFunction<Input> CreateAndBind<Input>(RemoteClient client, string name, string proto = "") where Input : class, ProtoBuf.IExtensible, new()
     {
         RemoteFunction<Input> output = new RemoteFunction<Input>();
-        if (output.bind(client, name, proto))
+        if (output.Bind(client, name, proto))
             return output;
         else
             return null;
@@ -128,7 +128,7 @@ public sealed class DFConnection : MonoBehaviour
         where Output : class, ProtoBuf.IExtensible, new()
     {
         RemoteFunction<Input, Output> output = new RemoteFunction<Input, Output>();
-        if (output.bind(client, name, proto))
+        if (output.Bind(client, name, proto))
             return output;
         else
             return null;
@@ -139,7 +139,7 @@ public sealed class DFConnection : MonoBehaviour
     where Output : class, ProtoBuf.IExtensible, new()
     {
         RemoteFunction<Input, Output> output = new RemoteFunction<Input, Output>();
-        if (output.bind(client, name, proto))
+        if (output.Bind(client, name, proto))
             return new TimedRemoteFunction<Input, Output>(interval, output);
         else
             return null;
@@ -516,10 +516,10 @@ public sealed class DFConnection : MonoBehaviour
     {
         blockRequest.blocks_needed = BlocksToFetch;
         networkClient = new DFHack.RemoteClient(dfNetworkOut);
-        bool success = networkClient.connect();
+        bool success = networkClient.Connect();
         if (!success)
         {
-            networkClient.disconnect();
+            networkClient.Disconnect();
             networkClient = null;
             ModalPanel.Instance.Choice(
                 "Armok Vision could not find a running instance of Dwarf Fortress!\n\n" +
@@ -600,7 +600,7 @@ public sealed class DFConnection : MonoBehaviour
 
         // Get some initial stuff
         // Necessary for initialization, apparently.
-        networkClient.suspend_game();
+        networkClient.SuspendGame();
         if (viewInfoCall != null)
         {
             ViewInfo viewInfo;
@@ -635,7 +635,7 @@ public sealed class DFConnection : MonoBehaviour
             regionMapCall.TryExecute(null, out regionMaps);
             netRegionMaps.Set(regionMaps);
         }
-        networkClient.resume_game();
+        networkClient.ResumeGame();
 
         if (mapResetCall != null)
             mapResetCall.TryExecute();
@@ -668,7 +668,7 @@ public sealed class DFConnection : MonoBehaviour
             if(string.IsNullOrEmpty(_dfhackPluginDir))
             {
             DFStringStream tempStream = new DFStringStream();
-            networkClient.run_command(tempStream, "lua", new List<string>(new string[] { "!dfhack.getHackPath()" }));
+            networkClient.RunCommand(tempStream, "lua", new List<string>(new string[] { "!dfhack.getHackPath()" }));
 
             _dfhackPluginDir = tempStream.Value.Trim() + "/plugins/";
             }
@@ -717,7 +717,7 @@ public sealed class DFConnection : MonoBehaviour
         Version avVersion = new Version(BuildSettings.Instance.content_version);
 
         DFStringStream tempStream = new DFStringStream();
-        networkClient.run_command(tempStream, "RemoteFortressReader_version", new List<string>());
+        networkClient.RunCommand(tempStream, "RemoteFortressReader_version", new List<string>());
         var results = tempStream.Value.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
         string versionString = results[0].Trim();
         try
@@ -763,9 +763,9 @@ public sealed class DFConnection : MonoBehaviour
     void UpdatePlugin()
     {
 
-        networkClient.run_command("unload", new List<string>(new string[] { "RemoteFortressReader" }));
+        networkClient.RunCommand("unload", new List<string>(new string[] { "RemoteFortressReader" }));
     File.Copy(AVPluginDirectory + pluginName, DFHackPluginDirectory + pluginName, true);
-        networkClient.run_command("load", new List<string>(new string[] { "RemoteFortressReader" }));
+        networkClient.RunCommand("load", new List<string>(new string[] { "RemoteFortressReader" }));
         Init();
     }
 
@@ -949,17 +949,17 @@ public sealed class DFConnection : MonoBehaviour
                         dfEvent.state = 0;
                         break;
                 }
-                SDL.Mod mod = SDL.Mod.KMOD_NONE;
+                SDL.Mod mod = SDL.Mod.KmodNone;
                 if (e.shift)
-                    mod |= SDL.Mod.KMOD_SHIFT;
+                    mod |= SDL.Mod.KmodShift;
                 if (e.control)
-                    mod |= SDL.Mod.KMOD_CTRL;
+                    mod |= SDL.Mod.KmodCtrl;
                 if (e.alt)
-                    mod |= SDL.Mod.KMOD_ALT;
+                    mod |= SDL.Mod.KmodAlt;
                 if (e.command)
-                    mod |= SDL.Mod.KMOD_META;
+                    mod |= SDL.Mod.KmodMeta;
                 if (e.capsLock)
-                    mod |= SDL.Mod.KMOD_CAPS;
+                    mod |= SDL.Mod.KmodCaps;
 
                 dfEvent.mod = (uint)mod;
                 dfEvent.scancode = (uint)e.keyCode;
@@ -1015,7 +1015,7 @@ public sealed class DFConnection : MonoBehaviour
     void PerformSingleUpdate()
     {
         //pause df here, so it doesn't try to resume while we're working.
-        networkClient.suspend_game();
+        networkClient.SuspendGame();
 
         //everything that controls DF.
         #region DF Control
@@ -1064,13 +1064,13 @@ public sealed class DFConnection : MonoBehaviour
         if(movementSelectCommandCall != null)
         {
             while (carefulMoveCommands.Count > 0)
-                movementSelectCommandCall.Execute(carefulMoveCommands.Dequeue());
+                movementSelectCommandCall.TryExecute(carefulMoveCommands.Dequeue());
         }
 
         if(miscMoveCall != null)
         {
             while (miscMoveCommands.Count > 0)
-                miscMoveCall.Execute(miscMoveCommands.Dequeue());
+                miscMoveCall.TryExecute(miscMoveCommands.Dequeue());
         }
 
         #endregion
@@ -1246,7 +1246,7 @@ public sealed class DFConnection : MonoBehaviour
         #endregion
 
         //All communication with DF should be before this.
-        networkClient.resume_game();
+        networkClient.ResumeGame();
 
         if (resultList != null)
         {
@@ -1270,7 +1270,7 @@ public sealed class DFConnection : MonoBehaviour
 
     internal void ResumeGame()
     {
-        networkClient.resume_game();
+        networkClient.ResumeGame();
     }
 
     /// <summary>
@@ -1343,7 +1343,7 @@ public sealed class DFConnection : MonoBehaviour
 
             public override void Terminate()
             {
-                connection.networkClient.disconnect();
+                connection.networkClient.Disconnect();
                 connection.networkClient = null;
             }
         }
@@ -1404,7 +1404,7 @@ public sealed class DFConnection : MonoBehaviour
                     Thread.Sleep((int)(Instance.refreshDelay * 1000));
                 }
                 // finished
-                connection.networkClient.disconnect();
+                connection.networkClient.Disconnect();
                 connection.networkClient = null;
             }
         }
