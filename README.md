@@ -34,8 +34,9 @@ If you know how to code and want to hack on the engine:
 2. Non-Windows users: install the [Git LFS](https://git-lfs.github.com/) extension if you haven't already (testable with `git lfs version`).
 3. `$ git clone --recurse-submodules --depth 1 https://github.com/JapaMala/armok-vision.git` (or without `--depth 1` if you want the full history, but it's pretty big).
 4. Load the `armok-vision` folder in the Unity editor.
-5. Hack around. Check out the [issues](https://github.com/JapaMala/armok-vision/issues) to find things that need fixing / ideas that could be implemented.
-6. Submit a [pull request](https://github.com/JapaMala/armok-vision/pulls) with your changes!
+5. Run the `Mytools->Build Material Collection` menu item. This is required after a fresh pull from Git, as well as after changing any material files. 
+6. Hack around. Check out the [issues](https://github.com/JapaMala/armok-vision/issues) to find things that need fixing / ideas that could be implemented.
+7. Submit a [pull request](https://github.com/JapaMala/armok-vision/pulls) with your changes!
 
 #### Financially
 If you want to buy the lead programmer a snack, you can donate on his [Patreon Page](https://www.patreon.com/japamala)
