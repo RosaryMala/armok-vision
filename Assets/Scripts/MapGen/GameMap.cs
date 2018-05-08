@@ -364,6 +364,10 @@ public class GameMap : MonoBehaviour
             {
                 cameraMovement.following = true;
             }
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                cameraMovement.following = false;
+            }
 
             // take screenshot on up->down transition of F9 key
             if (Input.GetButtonDown("TakeScreenshot"))
@@ -1539,10 +1543,7 @@ public class GameMap : MonoBehaviour
         DFCoord dfPos = UnityToDFCoord(pos);
         posXTile = dfPos.x;
         posYTile = dfPos.y;
-        if (posZ != dfPos.z + 1)
-        {
-            posZ = dfPos.z + 1;
-        }
+        posZ = dfPos.z + 1;
     }
 
 
