@@ -30,11 +30,13 @@ If you're an artist and want to contribute 3D models, sounds, concept art:
 #### Developers
 If you know how to code and want to hack on the engine:
 
-1. Install [Unity 5](http://unity3d.com/get-unity). (We're using the Personal Edition.)
-2. `$ git clone --depth 1 https://github.com/JapaMala/armok-vision.git` (or without `--depth 1` if you want the full history, but it's pretty big).
-3. Load the `armok-vision` folder in the Unity editor.
-4. Hack around. Check out the [issues](https://github.com/JapaMala/armok-vision/issues) to find things that need fixing / ideas that could be implemented.
-5. Submit a [pull request](https://github.com/JapaMala/armok-vision/pulls) with your changes!
+1. Install [Unity 5](http://unity3d.com/get-unity). (We're using the Personal Edition, and either the classic installer or Unity Hub is fine.)
+2. Non-Windows users: install the [Git LFS](https://git-lfs.github.com/) extension if you haven't already (testable with `git lfs version`).
+3. `$ git clone --recurse-submodules --depth 1 https://github.com/JapaMala/armok-vision.git` (or without `--depth 1` if you want the full history, but it's pretty big).
+4. Load the `armok-vision` folder in the Unity editor.
+5. Run the `Mytools->Build Material Collection` menu item. This is required after a fresh pull from Git, as well as after changing any material files. 
+6. Hack around. Check out the [issues](https://github.com/JapaMala/armok-vision/issues) to find things that need fixing / ideas that could be implemented.
+7. Submit a [pull request](https://github.com/JapaMala/armok-vision/pulls) with your changes!
 
 #### Financially
 If you want to buy the lead programmer a snack, you can donate on his [Patreon Page](https://www.patreon.com/japamala)
@@ -43,8 +45,8 @@ If you want to buy the lead programmer a snack, you can donate on his [Patreon P
 (Some short notes for anyone getting started with the codebase.)
 
 - Armok Vision is an application built with the [Unity engine](https://unity3d.com/). It connects to the [remotefortressreader](https://github.com/DFHack/dfhack/blob/master/plugins/remotefortressreader.cpp) DFHack plugin over TCP and exchanges [protobuf-formatted messages](https://github.com/DFHack/dfhack/blob/master/plugins/proto/RemoteFortressReader.proto). (You don't need to be familiar with DFHack to work with Armok Vision.)
-- On the Unity side, [Assets/RemoteClientDF](https://github.com/JapaMala/armok-vision/tree/master/Assets/RemoteClientDF) contains the generated C# protobuf files, as well as classes for managing the network connection. The script [Assets/MapGen/DFConnection.cs](https://github.com/JapaMala/armok-vision/blob/master/Assets/MapGen/DFConnection.cs) runs the connection on a separate thread and exposes data collected from DF.
-- The script that actually manages the onscreen map is [Assets/MapGen/GameMap.cs](https://github.com/JapaMala/armok-vision/blob/master/Assets/MapGen/GameMap.cs), which stores the `GameObject`s representing different map chunks. It calls the scripts in [Assets/MapGen/Meshing](https://github.com/JapaMala/armok-vision/tree/master/Assets/MapGen/Meshing) to build the actual meshes (on separate threads).
-- Most assets - textures, 3d models, sprites, etc. - are loaded at runtime from [Assets/StreamingAssets](https://github.com/JapaMala/armok-vision/tree/master/Assets/StreamingAssets), which is copied directly to folder containing the generated app. The script that handles this is [Assets/MapGen/ContentLoader.cs](https://github.com/JapaMala/armok-vision/blob/master/Assets/MapGen/ContentLoader.cs).
+- On the Unity side, the submodule [Assets/RemoteClientDF-Net](https://github.com/JapaMala/armok-vision/tree/master/Assets) contains the generated C# protobuf files, as well as classes for managing the network connection. The script [Assets/Scripts/MapGen/DFConnection.cs](https://github.com/JapaMala/armok-vision/blob/master/Assets/Scripts/MapGen/DFConnection.cs) runs the connection on a separate thread and exposes data collected from DF.
+- The script that actually manages the onscreen map is [Assets/Scripts/MapGen/GameMap.cs](https://github.com/JapaMala/armok-vision/blob/master/Assets/Scripts/MapGen/GameMap.cs), which stores the `GameObject`s representing different map chunks. It calls the scripts in [Assets/Scripts/MapGen/Meshing](https://github.com/JapaMala/armok-vision/tree/master/Assets/Scripts/MapGen/Meshing) to build the actual meshes (on separate threads).
+- Most assets - textures, 3d models, sprites, etc. - are loaded at runtime from [Assets/StreamingAssets](https://github.com/JapaMala/armok-vision/tree/master/Assets/StreamingAssets), which is copied directly to folder containing the generated app. The script that handles this is [Assets/Scripts/MapGen/ContentLoader.cs](https://github.com/JapaMala/armok-vision/blob/master/Assets/Scripts/MapGen/ContentLoader.cs).
 
 There's a lot of other stuff but hopefully it'll be reasonably self-explanatory. Alternatively, you can ask in the forum thread, or the #dfhack IRC channel on freenode; somebody might be lurking who can help.
