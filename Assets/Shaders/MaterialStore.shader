@@ -2,8 +2,8 @@
 
 Shader "Custom/MaterialStore" {
     Properties{
-        _Color("Color", Color) = (0.5,0.5,0.5,1)
-		_MainTex ("Albedo (RGB)", 2D) = "grey" {}
+        _Color("Color", Color) = (1,1,1,1)
+		_MainTex ("Albedo (RGB)", 2D) = "white" {}
         _Specular("specular (R)", 2D) = "grey" {}
         _Normal("normal", 2D) = "bump" {}
         _Occlusion("occlusion", 2D) = "white" {}
