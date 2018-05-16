@@ -73,8 +73,6 @@ Shader "Custom/DFTerrainShaderRealMats"
             float3      _ViewMin = float3(-99999, -99999, -99999);
             float3      _ViewMax = float3(99999, 99999, 99999);
 
-#include "blend.cginc"
-
             void surf(Input IN, inout SurfaceOutputStandard o)
             {
                 if(
@@ -100,7 +98,7 @@ Shader "Custom/DFTerrainShaderRealMats"
                     half correctedElevation = ((IN.worldPos.y / _Scale) - _SeaLevel) / 3;
                     // Albedo comes from a texture tinted by color
                     fixed4 gray = tex2D(_GraySample, float2(0.5, 0.5));
-                    fixed3 terrainColor = overlay(gray.rgb, IN.color.rgb);
+                    fixed3 terrainColor = gray.rgb * IN.color.rgb;
                     fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
                     fixed4 g = tex2D(_ElevationGradient, ((((IN.worldPos / _Scale) - _SeaLevel) / 3) + 100) / 280);
                     fixed4 b = tex2D(_BiomeMap, IN.uv2_BiomeMap);

@@ -22,8 +22,6 @@ struct Input {
 	INTERNAL_DATA
 };
 
-#include "blend.cginc"
-
 
 void surf(Input IN, inout SurfaceOutputStandard o) {
 	// Albedo comes from a texture tinted by color
@@ -49,7 +47,7 @@ void surf(Input IN, inout SurfaceOutputStandard o) {
 	else
 #endif
     {
-		fixed3 albedo = overlay(c.rgb, IN.color.rgb);
+		fixed3 albedo = c.rgb * IN.color.rgb;
         o.Albedo = albedo *(1 - special.g);
 		o.Smoothness = c.a;
 		o.Emission = albedo * special.g;

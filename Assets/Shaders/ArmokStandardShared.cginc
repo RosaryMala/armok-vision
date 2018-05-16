@@ -24,8 +24,6 @@ struct Input {
 half _Glossiness;
 fixed4 _Color;
 
-#include "blend.cginc"
-
 void surf(Input IN, inout SurfaceOutputStandard o) {
 	// Albedo comes from a texture tinted by color
 	fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
@@ -46,7 +44,7 @@ void surf(Input IN, inout SurfaceOutputStandard o) {
 	}
 	else
 	{
-        fixed3 albedo = overlay(c.rgb, IN.color.rgb);
+        fixed3 albedo = c.rgb * IN.color.rgb;
 		o.Albedo = albedo *(1 - special.g);
 		o.Metallic = (1.0 - IN.color.a) + special.r;
 		o.Smoothness = c.a;

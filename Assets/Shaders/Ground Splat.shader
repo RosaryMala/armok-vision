@@ -53,7 +53,6 @@
         };
 
 
-#include "blend.cginc"
         float4 MixColor(float4 texture1, float height1, float a1, float4 texture2, float height2, float a2)
         {
             float depth = 0.2;
@@ -173,7 +172,7 @@
             else
 #endif
             {
-                o.Albedo = overlay(abcd_c.rgb, abcd_tint.rgb);
+                o.Albedo = abcd_c.rgb * abcd_tint.rgb;
                 o.Smoothness = abcd_c.a;
                 o.Metallic = max((abcd_tint.a * 2) - 1, 0);
             }

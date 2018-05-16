@@ -68,8 +68,6 @@ Category {
             UNITY_DECLARE_DEPTH_TEXTURE(_CameraDepthTexture);
             float _InvFade;
 
-#include "blend.cginc"
-
             fixed4 frag (v2f i) : SV_Target
             {
                 #ifdef _BOUNDING_BOX_ENABLED
@@ -81,9 +79,9 @@ Category {
                 clip(c.a - 0.5);
 
                 fixed4 dfTex = UNITY_SAMPLE_TEX2DARRAY(_MatTexArray, float3(i.texcoord, i.atlasIndex.y));
-                fixed3 albedo = overlay(dfTex.rgb, i.color.rgb);
+                fixed3 albedo = dfTex.rgb * i.color.rgb;
                 c.a *= min(i.color.a * 2, 1);
-                c.rgb = overlay(c.rgb, albedo);
+                c.rgb =c.rgb * albedo;
 
                 #ifdef SOFTPARTICLES_ON
                 float sceneZ = LinearEyeDepth (SAMPLE_DEPTH_TEXTURE_PROJ(_CameraDepthTexture, UNITY_PROJ_COORD(i.projPos)));

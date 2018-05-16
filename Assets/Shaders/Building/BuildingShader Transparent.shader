@@ -53,8 +53,6 @@
 
 #include "buildingInputs.cginc"
 
-#include "blend.cginc"
-
 #include "CustomMetallic.cginc"
 
         // Flip normal for back faces
@@ -91,8 +89,6 @@
 #pragma multi_compile _ _BOUNDING_BOX_ENABLED
 
 #include "buildingInputs.cginc"
-
-#include "blend.cginc"
 
 #include "CustomMetallic.cginc"
 

@@ -51,8 +51,6 @@
 
 #include "buildingInputs.cginc"
 
-#include "blend.cginc"
-
 #include "CustomMetallic.cginc"
 
         void surf(Input IN, inout SurfaceOutputStandardSpecular o)
