@@ -1203,8 +1203,6 @@ public class GameMap : MonoBehaviour
                 {
                     continue;
                 }
-                if (!(zz == posZ - 1) && MapDataStore.IsFullyHidden(PosXBlock, PosYBlock, zz))
-                    continue;
                 //If we were not able to add it to the queue, don't try any more till next fame.
                 if (!mesher.Enqueue(new DFCoord(PosXBlock * 16, PosYBlock * 16, zz), blockDirtyBits[PosXBlock, PosYBlock, zz], liquidBlockDirtyBits[PosXBlock, PosYBlock, zz]))
                     return;
@@ -1226,8 +1224,6 @@ public class GameMap : MonoBehaviour
                     {
                         continue;
                     }
-                    if (!(zz == posZ - 1) && MapDataStore.IsFullyHidden(PosXBlock, PosYBlock, zz))
-                        continue;
 
                     //If we were not able to add it to the queue, don't try any more till next fame.
                     if (!mesher.Enqueue(new DFCoord(xx * 16, yy * 16, zz), blockDirtyBits[xx, yy, zz], liquidBlockDirtyBits[xx, yy, zz]))
@@ -1250,8 +1246,6 @@ public class GameMap : MonoBehaviour
                     {
                         continue;
                     }
-                    if (MapDataStore.IsFullyHidden(PosXBlock, PosYBlock, zz))
-                        continue;
 
                     //If we were not able to add it to the queue, don't try any more till next fame.
                     if (!mesher.Enqueue(new DFCoord(xx * 16, yy * 16, zz), blockDirtyBits[xx, yy, zz], liquidBlockDirtyBits[xx, yy, zz]))
