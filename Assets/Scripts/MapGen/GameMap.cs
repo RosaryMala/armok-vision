@@ -112,7 +112,7 @@ public class GameMap : MonoBehaviour
     public const float tileHeight = 3.0f;
     public const float floorHeight = 0.5f;
     public const float tileWidth = 2.0f;
-    public const int blockSize = 16;
+    public const int blockSize = 48;
 
     static object mapZOffsetLock = new object();
     static int _mapZoffset = 0;
@@ -1208,7 +1208,7 @@ public class GameMap : MonoBehaviour
                     continue;
                 }
                 //If we were not able to add it to the queue, don't try any more till next fame.
-                if (!mesher.Enqueue(new DFCoord(PosXBlock * 16, PosYBlock * 16, zz), blockDirtyBits[PosXBlock, PosYBlock, zz], liquidBlockDirtyBits[PosXBlock, PosYBlock, zz]))
+                if (!mesher.Enqueue(new DFCoord(PosXBlock * blockSize, PosYBlock * blockSize, zz), blockDirtyBits[PosXBlock, PosYBlock, zz], liquidBlockDirtyBits[PosXBlock, PosYBlock, zz]))
                     return;
                 blockDirtyBits[PosXBlock, PosYBlock, zz] = false;
                 liquidBlockDirtyBits[PosXBlock, PosYBlock, zz] = false;
@@ -1230,7 +1230,7 @@ public class GameMap : MonoBehaviour
                     }
 
                     //If we were not able to add it to the queue, don't try any more till next fame.
-                    if (!mesher.Enqueue(new DFCoord(xx * 16, yy * 16, zz), blockDirtyBits[xx, yy, zz], liquidBlockDirtyBits[xx, yy, zz]))
+                    if (!mesher.Enqueue(new DFCoord(xx * blockSize, yy * blockSize, zz), blockDirtyBits[xx, yy, zz], liquidBlockDirtyBits[xx, yy, zz]))
                         return;
                     blockDirtyBits[xx, yy, zz] = false;
                     liquidBlockDirtyBits[xx, yy, zz] = false;
@@ -1252,7 +1252,7 @@ public class GameMap : MonoBehaviour
                     }
 
                     //If we were not able to add it to the queue, don't try any more till next fame.
-                    if (!mesher.Enqueue(new DFCoord(xx * 16, yy * 16, zz), blockDirtyBits[xx, yy, zz], liquidBlockDirtyBits[xx, yy, zz]))
+                    if (!mesher.Enqueue(new DFCoord(xx * blockSize, yy * blockSize, zz), blockDirtyBits[xx, yy, zz], liquidBlockDirtyBits[xx, yy, zz]))
                         return;
                     blockDirtyBits[xx, yy, zz] = false;
                     liquidBlockDirtyBits[xx, yy, zz] = false;

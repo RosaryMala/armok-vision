@@ -65,7 +65,7 @@ public class MapDataStore {
     public const int WATER_INDEX = 0;
     public const int MAGMA_INDEX = 1;
 
-    public static readonly DFCoord BLOCK_SIZE = new DFCoord(16,16,1);
+    public static readonly DFCoord BLOCK_SIZE = new DFCoord(GameMap.blockSize, GameMap.blockSize, 1);
 
 
     // Instance stuff
