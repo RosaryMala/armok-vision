@@ -187,47 +187,47 @@ public class BlockMeshSet : MonoBehaviour
         bool madeNew = false;
         if (newMeshes.tiles != null)
         {
-            madeNew |= CopyMesh(MeshType.Tiles, newMeshes.tiles);
+            madeNew |= CopyMesh(MeshType.Tiles, newMeshes.tiles, suffix);
         }
         if(newMeshes.topTiles != null)
         {
-            madeNew |= CopyMesh(MeshType.TopTiles, newMeshes.topTiles);
+            madeNew |= CopyMesh(MeshType.TopTiles, newMeshes.topTiles, suffix);
         }
         if (newMeshes.stencilTiles != null)
         {
-            madeNew |= CopyMesh(MeshType.StencilTiles, newMeshes.stencilTiles);
+            madeNew |= CopyMesh(MeshType.StencilTiles, newMeshes.stencilTiles, suffix);
         }
         if (newMeshes.topStencilTiles != null)
         {
-            madeNew |= CopyMesh(MeshType.TopStencilTiles, newMeshes.topStencilTiles);
+            madeNew |= CopyMesh(MeshType.TopStencilTiles, newMeshes.topStencilTiles, suffix);
         }
         if (newMeshes.transparentTiles != null)
         {
-            madeNew |= CopyMesh(MeshType.TransparentTiles, newMeshes.transparentTiles);
+            madeNew |= CopyMesh(MeshType.TransparentTiles, newMeshes.transparentTiles, suffix);
         }
         if (newMeshes.topTransparentTiles != null)
         {
-            madeNew |= CopyMesh(MeshType.TopTransparentTiles, newMeshes.topTransparentTiles);
+            madeNew |= CopyMesh(MeshType.TopTransparentTiles, newMeshes.topTransparentTiles, suffix);
         }
         if (newMeshes.terrainMesh != null)
         {
-            madeNew |= CopyMesh(MeshType.Terrain, newMeshes.terrainMesh);
+            madeNew |= CopyMesh(MeshType.Terrain, newMeshes.terrainMesh, suffix);
             meshFilters[MeshType.Terrain].mesh.RecalculateNormals();
             meshFilters[MeshType.Terrain].mesh.RecalculateTangents();
         }
         if (newMeshes.topTerrainMesh != null)
         {
-            madeNew |= CopyMesh(MeshType.TopTerrain, newMeshes.topTerrainMesh);
+            madeNew |= CopyMesh(MeshType.TopTerrain, newMeshes.topTerrainMesh, suffix);
             meshFilters[MeshType.TopTerrain].mesh.RecalculateNormals();
             meshFilters[MeshType.TopTerrain].mesh.RecalculateTangents();
         }
         if (newMeshes.water != null)
         {
-            madeNew |= CopyMesh(MeshType.Water, newMeshes.water);
+            madeNew |= CopyMesh(MeshType.Water, newMeshes.water, suffix);
         }
         if (newMeshes.magma != null)
         {
-            madeNew |= CopyMesh(MeshType.Magma, newMeshes.magma);
+            madeNew |= CopyMesh(MeshType.Magma, newMeshes.magma, suffix);
         }
         if (madeNew)
         {
@@ -236,7 +236,7 @@ public class BlockMeshSet : MonoBehaviour
         }
     }
 
-    private bool CopyMesh(MeshType type, CPUMesh mesh)
+    private bool CopyMesh(MeshType type, CPUMesh mesh, string suffix)
     {
         bool madeNew = false;
         if(!meshFilters.ContainsKey(type))
@@ -248,7 +248,7 @@ public class BlockMeshSet : MonoBehaviour
             meshFilters[type] = newGameObject.AddComponent<MeshFilter>();
             meshRenderers[type] = newGameObject.AddComponent<MeshRenderer>();
             meshFilters[type].mesh = new Mesh();
-            meshFilters[type].mesh.name = type.ToString() + "_Mesh";
+            meshFilters[type].mesh.name = type.ToString() + suffix;
             madeNew = true;
         }
         meshFilters[type].mesh.Clear();
