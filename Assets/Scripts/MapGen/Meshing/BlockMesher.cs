@@ -393,8 +393,7 @@ abstract class BlockMesher {
 
                     if (i < (int)MeshLayer.StaticCutout)
                     {
-                        FillMeshBuffer(
-                            out meshBuffer[bufferIndex],
+                        FillMeshBuffer(out meshBuffer[bufferIndex],
                             (MeshLayer)i,
                             data[xx, yy, block_z],
                             GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize),
@@ -404,8 +403,7 @@ abstract class BlockMesher {
                     }
                     else if (i < (int)MeshLayer.StaticTransparent)
                     {
-                        FillMeshBuffer(
-                            out stencilMeshBuffer[stencilBufferIndex],
+                        FillMeshBuffer(out stencilMeshBuffer[stencilBufferIndex],
                             (MeshLayer)i,
                             data[xx, yy, block_z],
                             GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize),
@@ -415,8 +413,7 @@ abstract class BlockMesher {
                     }
                     else if (i < (int)MeshLayer.Collision)
                     {
-                        FillMeshBuffer(
-                            out transparentMeshBuffer[transparentBufferIndex],
+                        FillMeshBuffer(out transparentMeshBuffer[transparentBufferIndex],
                             (MeshLayer)i,
                             data[xx, yy, block_z],
                             GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize),
@@ -426,8 +423,7 @@ abstract class BlockMesher {
                     }
                     else if (i < (int)MeshLayer.NaturalTerrain)
                     {
-                        FillMeshBuffer(
-                            out collisionMeshBuffer[collisionIndex],
+                        FillMeshBuffer(out collisionMeshBuffer[collisionIndex],
                             (MeshLayer)i,
                             data[xx, yy, block_z],
                             GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize),
@@ -456,15 +452,15 @@ abstract class BlockMesher {
          var naturalTerrain = voxelGen.Triangulate(data);
         GameMap.EndSample();
         GameMap.BeginSample("Combine Meshes");
-        terrainTiles = MeshCombineUtility.ColorCombine(terrainMeshBuffer, out dontCare, false, naturalTerrain);
-        topTerrainTiles = MeshCombineUtility.ColorCombine(terrainMeshBuffer, out dontCare, true);
-        stencilTiles = MeshCombineUtility.ColorCombine(stencilMeshBuffer, out dontCare, false);
-        topStencilTiles = MeshCombineUtility.ColorCombine(stencilMeshBuffer, out dontCare, true);
-        transparentTiles = MeshCombineUtility.ColorCombine(transparentMeshBuffer, out dontCare, false);
-        topTransparentTiles = MeshCombineUtility.ColorCombine(transparentMeshBuffer, out dontCare, true);
-        topTiles = MeshCombineUtility.ColorCombine(meshBuffer, out dontCare, true);
-        tiles = MeshCombineUtility.ColorCombine(meshBuffer, out success, false);
-        collisionTiles = MeshCombineUtility.ColorCombine(collisionMeshBuffer, out dontCare, false, naturalTerrain);
+        terrainTiles = MeshCombineUtility.ColorCombine(terrainMeshBuffer, terrainIndex, out dontCare, false, naturalTerrain);
+        topTerrainTiles = MeshCombineUtility.ColorCombine(terrainMeshBuffer, terrainIndex, out dontCare, true);
+        stencilTiles = MeshCombineUtility.ColorCombine(stencilMeshBuffer, stencilBufferIndex, out dontCare, false);
+        topStencilTiles = MeshCombineUtility.ColorCombine(stencilMeshBuffer, stencilBufferIndex, out dontCare, true);
+        transparentTiles = MeshCombineUtility.ColorCombine(transparentMeshBuffer, transparentBufferIndex, out dontCare, false);
+        topTransparentTiles = MeshCombineUtility.ColorCombine(transparentMeshBuffer, transparentBufferIndex, out dontCare, true);
+        topTiles = MeshCombineUtility.ColorCombine(meshBuffer, bufferIndex, out dontCare, true);
+        tiles = MeshCombineUtility.ColorCombine(meshBuffer, bufferIndex, out success, false);
+        collisionTiles = MeshCombineUtility.ColorCombine(collisionMeshBuffer, collisionIndex, out dontCare, false, naturalTerrain);
         GameMap.EndSample();
 
         return success;
