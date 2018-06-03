@@ -248,7 +248,7 @@ public class BlockMeshSet : MonoBehaviour
             meshFilters[type] = newGameObject.AddComponent<MeshFilter>();
             meshRenderers[type] = newGameObject.AddComponent<MeshRenderer>();
             meshFilters[type].mesh = new Mesh();
-            meshFilters[type].mesh.name = type.ToString() + suffix;
+            meshFilters[type].mesh.name = type.ToString() + "_" + suffix;
             madeNew = true;
         }
         meshFilters[type].mesh.Clear();
