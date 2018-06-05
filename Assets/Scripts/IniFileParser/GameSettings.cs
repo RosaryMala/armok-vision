@@ -38,7 +38,7 @@ public class GameSettings : MonoBehaviour
         public bool drawClouds = true;
         public LandscapeDetail distantTerrainDetail = LandscapeDetail.High;
         public int vSyncCount = 0;
-        public int targetFrameRate = 60;
+        public int targetFrameRate = -1;
         public bool showHiddenTiles = false;
         public bool fog = true;
         public int maxItemsPerTile = 10;
