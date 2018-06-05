@@ -431,14 +431,14 @@ public class GameMap : MonoBehaviour
     private void UpdateBlockVisibility()
     {
         Shader.SetGlobalVector("_ViewMin", DFtoUnityBottomCorner(new DFCoord(
-            (PosXBlock - GameSettings.Instance.rendering.drawRangeSide + 1) * blockSize,
-            (PosYBlock + GameSettings.Instance.rendering.drawRangeSide) * blockSize,
-            PosZ - GameSettings.Instance.rendering.drawRangeDown
+            Mathf.Max((PosXBlock - GameSettings.Instance.rendering.drawRangeSide + 1) * blockSize, 0),
+            Mathf.Min((PosYBlock + GameSettings.Instance.rendering.drawRangeSide) * blockSize, mapSize.y * 16),
+            Mathf.Max(PosZ - GameSettings.Instance.rendering.drawRangeDown, 0)
         )) + new Vector3(0, 0, GameMap.tileWidth));
         Shader.SetGlobalVector("_ViewMax", DFtoUnityBottomCorner(new DFCoord(
-            (PosXBlock + GameSettings.Instance.rendering.drawRangeSide) * blockSize,
-            (PosYBlock - GameSettings.Instance.rendering.drawRangeSide + 1) * blockSize,
-            PosZ + (firstPerson ? GameSettings.Instance.rendering.drawRangeUp : 0)
+            Mathf.Min((PosXBlock + GameSettings.Instance.rendering.drawRangeSide) * blockSize, mapSize.x * 16),
+            Mathf.Max((PosYBlock - GameSettings.Instance.rendering.drawRangeSide + 1) * blockSize, 0),
+            Mathf.Min(PosZ + (firstPerson ? GameSettings.Instance.rendering.drawRangeUp : 0), mapSize.z)
         )) + new Vector3(0, 0, GameMap.tileWidth));
 
         for (int z = 0; z < mapMeshes.GetLength(2); z++)
