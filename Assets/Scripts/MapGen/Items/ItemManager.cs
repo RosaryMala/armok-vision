@@ -110,7 +110,7 @@ public class ItemManager : MonoBehaviour
         foreach (var item in itemCache)
         {
             UpdateItem(item.Value);
-            if (stopWatch.ElapsedMilliseconds > 100)
+            if (stopWatch.ElapsedMilliseconds > 20)
             {
                 yield return null;
                 stopWatch.Reset();
