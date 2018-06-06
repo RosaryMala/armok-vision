@@ -65,6 +65,8 @@ public class ItemManager : MonoBehaviour
     Dictionary<DFCoord, int> itemCount = new Dictionary<DFCoord, int>();
     HashSet<int> removedItems = new HashSet<int>();
     bool loadedAnyItems = false;
+    private Coroutine updateRoutine;
+
     internal void BeginExistenceCheck()
     {
         removedItems.Clear();
@@ -76,13 +78,19 @@ public class ItemManager : MonoBehaviour
     {
         if (!loadedAnyItems)
             return;
+        if (updateRoutine != null)
+            StopCoroutine(updateRoutine);
         foreach (var index in removedItems)
         {
             Destroy(sceneItems[index].gameObject);
             sceneItems.Remove(index);
+            itemCache.Remove(index);
         }
         loadedAnyItems = false;
+        updateRoutine = StartCoroutine(CreateAllItems());
     }
+
+    Dictionary<int, Item> itemCache = new Dictionary<int, Item>();
 
     internal void LoadBlock(MapBlock block)
     {
@@ -91,50 +99,73 @@ public class ItemManager : MonoBehaviour
         foreach (var item in block.items)
         {
             removedItems.Remove(item.id);
-            ItemModel placedItem;
-            if (!sceneItems.ContainsKey(item.id))
-            {
-                if (itemCount.ContainsKey(item.pos) && itemCount[item.pos] >= GameSettings.Instance.rendering.maxItemsPerTile)
-                    continue;
 
-                placedItem = InstantiateItem(item, transform);
-                sceneItems[item.id] = placedItem;
-            }
-            else
-                placedItem = sceneItems[item.id];
+            itemCache[item.id] = item;
+        }
+    }
 
-            if (itemCount.ContainsKey(item.pos) && itemCount[item.pos] >= GameSettings.Instance.rendering.maxItemsPerTile)
+    IEnumerator CreateAllItems()
+    {
+        var stopWatch = System.Diagnostics.Stopwatch.StartNew();
+        foreach (var item in itemCache)
+        {
+            UpdateItem(item.Value);
+            if (stopWatch.ElapsedMilliseconds > 100)
             {
-                placedItem.gameObject.SetActive(false);
-                continue;
-            }
-            int currentTileCount = 0;
-            if (itemCount.ContainsKey(item.pos))
-                currentTileCount = itemCount[item.pos];
-            itemCount[item.pos] = currentTileCount + 1;
-            //RaycastHit hitInfo;
-            //Vector3 position = GameMap.DFtoUnityCoord(item.pos) + Stacker.SpiralHemisphere(currentTileCount);
-            //if (Physics.Raycast(position + new Vector3(0, 2.9f, 0), Vector3.down, out hitInfo, 3, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Collide))
-            //    placedItem.transform.position = hitInfo.point;
-            //else
-            placedItem.transform.position = GameMap.DFtoUnityCoord(item.pos.x + item.subpos_x, item.pos.y + item.subpos_y, item.pos.z + item.subpos_z);
-            if (item.projectile)
-            {
-                placedItem.transform.position += new Vector3(0, GameMap.tileHeight / 2, 0);
-                if (item.velocity_x > 0 || item.velocity_y > 0 || item.velocity_z > 0)
-                {
-                    placedItem.transform.rotation = Quaternion.LookRotation(GameMap.DFtoUnityDirection(item.velocity_x, item.velocity_y, item.velocity_z), Vector3.up);
-                }
-            }
-            else
-            {
-                placedItem.transform.position += (Stacker.SpiralHemisphere(currentTileCount) + new Vector3(0, GameMap.floorHeight, 0));
-                if(item.velocity_x > 0 || item.velocity_y > 0 || item.velocity_z > 0)
-                {
-                    placedItem.transform.rotation = Quaternion.LookRotation(GameMap.DFtoUnityDirection(item.velocity_x, item.velocity_y, item.velocity_z), Vector3.up);
-                }
+                yield return null;
+                stopWatch.Reset();
+                stopWatch.Start();
             }
         }
+        updateRoutine = null;
+    }
+
+    void UpdateItem(Item item)
+    {
+        ItemModel placedItem;
+        if (!sceneItems.ContainsKey(item.id))
+        {
+            if (itemCount.ContainsKey(item.pos) && itemCount[item.pos] >= GameSettings.Instance.rendering.maxItemsPerTile)
+                return;
+
+            placedItem = InstantiateItem(item, transform);
+            sceneItems[item.id] = placedItem;
+        }
+        else
+            placedItem = sceneItems[item.id];
+
+        if (itemCount.ContainsKey(item.pos) && itemCount[item.pos] >= GameSettings.Instance.rendering.maxItemsPerTile)
+        {
+            placedItem.gameObject.SetActive(false);
+            return;
+        }
+        int currentTileCount = 0;
+        if (itemCount.ContainsKey(item.pos))
+            currentTileCount = itemCount[item.pos];
+        itemCount[item.pos] = currentTileCount + 1;
+        //RaycastHit hitInfo;
+        //Vector3 position = GameMap.DFtoUnityCoord(item.pos) + Stacker.SpiralHemisphere(currentTileCount);
+        //if (Physics.Raycast(position + new Vector3(0, 2.9f, 0), Vector3.down, out hitInfo, 3, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Collide))
+        //    placedItem.transform.position = hitInfo.point;
+        //else
+        placedItem.transform.position = GameMap.DFtoUnityCoord(item.pos.x + item.subpos_x, item.pos.y + item.subpos_y, item.pos.z + item.subpos_z);
+        if (item.projectile)
+        {
+            placedItem.transform.position += new Vector3(0, GameMap.tileHeight / 2, 0);
+            if (item.velocity_x > 0 || item.velocity_y > 0 || item.velocity_z > 0)
+            {
+                placedItem.transform.rotation = Quaternion.LookRotation(GameMap.DFtoUnityDirection(item.velocity_x, item.velocity_y, item.velocity_z), Vector3.up);
+            }
+        }
+        else
+        {
+            placedItem.transform.position += (Stacker.SpiralHemisphere(currentTileCount) + new Vector3(0, GameMap.floorHeight, 0));
+            if (item.velocity_x > 0 || item.velocity_y > 0 || item.velocity_z > 0)
+            {
+                placedItem.transform.rotation = Quaternion.LookRotation(GameMap.DFtoUnityDirection(item.velocity_x, item.velocity_y, item.velocity_z), Vector3.up);
+            }
+        }
+
     }
 
     public static ItemModel InstantiateItem(Item item, Transform parent, bool worldPositionStays = true)
