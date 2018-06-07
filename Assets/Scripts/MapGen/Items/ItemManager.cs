@@ -65,7 +65,6 @@ public class ItemManager : MonoBehaviour
     Dictionary<DFCoord, int> itemCount = new Dictionary<DFCoord, int>();
     HashSet<int> removedItems = new HashSet<int>();
     bool loadedAnyItems = false;
-    private Coroutine updateRoutine;
 
     internal void BeginExistenceCheck()
     {
@@ -78,8 +77,6 @@ public class ItemManager : MonoBehaviour
     {
         if (!loadedAnyItems)
             return;
-        if (updateRoutine != null)
-            StopCoroutine(updateRoutine);
         foreach (var index in removedItems)
         {
             Destroy(sceneItems[index].gameObject);
@@ -87,7 +84,6 @@ public class ItemManager : MonoBehaviour
             itemCache.Remove(index);
         }
         loadedAnyItems = false;
-        updateRoutine = StartCoroutine(CreateAllItems());
     }
 
     Dictionary<int, Item> itemCache = new Dictionary<int, Item>();
@@ -104,41 +100,58 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    IEnumerator CreateAllItems()
-    {
-        var stopWatch = System.Diagnostics.Stopwatch.StartNew();
-        foreach (var item in itemCache)
-        {
-            UpdateItem(item.Value);
-            if (stopWatch.ElapsedMilliseconds > 20)
-            {
-                yield return null;
-                stopWatch.Reset();
-                stopWatch.Start();
-            }
-        }
-        updateRoutine = null;
-    }
-
     void UpdateItem(Item item)
     {
         ItemModel placedItem;
+        var itemPos = GameMap.DFtoUnityCoord(item.pos.x + item.subpos_x, item.pos.y + item.subpos_y, item.pos.z + item.subpos_z);
+
+        //Disable the item if it's too far from the camera.
+        if((itemPos - Camera.main.transform.position).sqrMagnitude > (GameSettings.Instance.rendering.itemDrawDistance * GameSettings.Instance.rendering.itemDrawDistance))
+        {
+            if (sceneItems.ContainsKey(item.id))
+                sceneItems[item.id].gameObject.SetActive(false);
+            return;
+        }
+
+        //Also disable if it's outside of the viewing AABB
+        if(!((item.pos.z < (GameMap.Instance.firstPerson ? GameMap.Instance.PosZ + GameSettings.Instance.rendering.drawRangeUp : GameMap.Instance.PosZ))
+                    && (item.pos.z >= (GameMap.Instance.PosZ - GameSettings.Instance.rendering.drawRangeDown))
+                    && (item.pos.x / GameMap.blockSize > (GameMap.Instance.PosXBlock - GameSettings.Instance.rendering.drawRangeSide))
+                    && (item.pos.x / GameMap.blockSize < (GameMap.Instance.PosXBlock + GameSettings.Instance.rendering.drawRangeSide))
+                    && (item.pos.y / GameMap.blockSize > (GameMap.Instance.PosYBlock - GameSettings.Instance.rendering.drawRangeSide))
+                    && (item.pos.y / GameMap.blockSize < (GameMap.Instance.PosYBlock + GameSettings.Instance.rendering.drawRangeSide))))
+        {
+            if (sceneItems.ContainsKey(item.id))
+                sceneItems[item.id].gameObject.SetActive(false);
+            return;
+        }
+
+        //Limit the number of items per tile.
+        if (itemCount.ContainsKey(item.pos) && itemCount[item.pos] >= GameSettings.Instance.rendering.maxItemsPerTile)
+        {
+            if (sceneItems.ContainsKey(item.id))
+                sceneItems[item.id].gameObject.SetActive(false);
+            return;
+        }
+
+        //Instantiate it if it's not already there.
         if (!sceneItems.ContainsKey(item.id))
         {
-            if (itemCount.ContainsKey(item.pos) && itemCount[item.pos] >= GameSettings.Instance.rendering.maxItemsPerTile)
-                return;
-
             placedItem = InstantiateItem(item, transform);
             sceneItems[item.id] = placedItem;
         }
         else
-            placedItem = sceneItems[item.id];
-
-        if (itemCount.ContainsKey(item.pos) && itemCount[item.pos] >= GameSettings.Instance.rendering.maxItemsPerTile)
         {
-            placedItem.gameObject.SetActive(false);
-            return;
+            placedItem = sceneItems[item.id];
+            placedItem.gameObject.SetActive(true);
+
+            //If there's no significant differences between the new item and the existing one, there's no need to update it.
+            if (AreItemsEqual(placedItem.originalItem, item))
+                return;
+            else
+                placedItem.originalItem = item;
         }
+
         int currentTileCount = 0;
         if (itemCount.ContainsKey(item.pos))
             currentTileCount = itemCount[item.pos];
@@ -148,7 +161,7 @@ public class ItemManager : MonoBehaviour
         //if (Physics.Raycast(position + new Vector3(0, 2.9f, 0), Vector3.down, out hitInfo, 3, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Collide))
         //    placedItem.transform.position = hitInfo.point;
         //else
-        placedItem.transform.position = GameMap.DFtoUnityCoord(item.pos.x + item.subpos_x, item.pos.y + item.subpos_y, item.pos.z + item.subpos_z);
+        placedItem.transform.position = itemPos;
         if (item.projectile)
         {
             placedItem.transform.position += new Vector3(0, GameMap.tileHeight / 2, 0);
@@ -198,17 +211,48 @@ public class ItemManager : MonoBehaviour
 
     private void UpdateVisibility()
     {
-        foreach (var item in sceneItems)
+        GameMap.BeginSample("Update Item Visibility", this);
+        foreach (var item in itemCache)
         {
-            var itemInstance = item.Value.originalItem;
-            item.Value.gameObject.SetActive(
-                    (itemInstance.pos.z < (GameMap.Instance.firstPerson ? GameMap.Instance.PosZ + GameSettings.Instance.rendering.drawRangeUp : GameMap.Instance.PosZ))
-                    && (itemInstance.pos.z >= (GameMap.Instance.PosZ - GameSettings.Instance.rendering.drawRangeDown))
-                    && (itemInstance.pos.x / GameMap.blockSize > (GameMap.Instance.PosXBlock - GameSettings.Instance.rendering.drawRangeSide))
-                    && (itemInstance.pos.x / GameMap.blockSize < (GameMap.Instance.PosXBlock + GameSettings.Instance.rendering.drawRangeSide))
-                    && (itemInstance.pos.y / GameMap.blockSize > (GameMap.Instance.PosYBlock - GameSettings.Instance.rendering.drawRangeSide))
-                    && (itemInstance.pos.y / GameMap.blockSize < (GameMap.Instance.PosYBlock + GameSettings.Instance.rendering.drawRangeSide))
-                );
+            UpdateItem(item.Value);
         }
+        GameMap.EndSample();
+    }
+
+    //Roughly checks if any two DF items are equal.
+    bool AreItemsEqual(Item a, Item b)
+    {
+        if (a.id != b.id)
+            return false;
+        if (((DfCoord)a.pos) != b.pos)
+            return false;
+        if (a.projectile != b.projectile)
+            return false;
+        if (a.subpos_x != b.subpos_x)
+            return false;
+        if (a.subpos_y != b.subpos_y)
+            return false;
+        if (a.subpos_z != b.subpos_z)
+            return false;
+        if (a.image != null)
+        {
+            if (b.image == null)
+                return false;
+            if (a.image.id != b.image.id)
+                return false;
+        }
+        else if (b.image != null)
+            return false;
+        if (a.improvements != null)
+        {
+            if (b.improvements == null)
+                return false;
+            if (a.improvements.Count != b.improvements.Count)
+                return false;
+        }
+        else if (b.improvements != null)
+            return false;
+
+        return true;
     }
 }

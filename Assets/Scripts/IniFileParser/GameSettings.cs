@@ -42,6 +42,7 @@ public class GameSettings : MonoBehaviour
         public bool showHiddenTiles = false;
         public bool fog = true;
         public int maxItemsPerTile = 10;
+        internal float itemDrawDistance = 50;
     }
 
     public static void ClampToMaxSize(Texture2D texture)
