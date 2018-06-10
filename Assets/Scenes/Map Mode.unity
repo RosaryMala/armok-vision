@@ -12398,9 +12398,6 @@ MonoBehaviour:
   cursZ: -30000
   worldMap: {fileID: 458878501}
   optionsPanel: {fileID: 1459889554}
-  posXTile: 0
-  posYTile: 0
-  posZ: 0
   dfScreen: {fileID: 771652859}
   helpFadeLength: 0.25
   testMesh: {fileID: 0}
@@ -12500,7 +12497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10e38d62d238e445a9a8002799fa9d78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BlocksToFetch: 80
+  BlocksToFetch: 30
   RunOnAlternateThread: 1
   refreshDelay: 0.1
   UpdatedAnyBlocks: 0

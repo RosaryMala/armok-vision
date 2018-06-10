@@ -1,18 +1,17 @@
+using Building;
 using DF.Enums;
 using DFHack;
 using MapGen;
 using RemoteFortressReader;
+using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
 using UnitFlags;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections;
-using Building;
+using UnityEngine.UI;
 
 // The class responsible for talking to DF and meshing the data it gets.
 // Relevant vocabulary: A "map tile" is an individual square on the map.
@@ -754,10 +753,10 @@ public class GameMap : MonoBehaviour
 
         if (view.follow_unit_id != -1 && CreatureManager.Instance.Units != null)
         {
-            int unitIndex = CreatureManager.Instance.Units.creature_list.FindIndex(x => x.id == view.follow_unit_id);
+            int unitIndex = CreatureManager.Instance.Units.FindIndex(x => x.id == view.follow_unit_id);
             if (unitIndex >= 0)
             {
-                var unit = CreatureManager.Instance.Units.creature_list[unitIndex];
+                var unit = CreatureManager.Instance.Units[unitIndex];
                 PosXTile = unit.pos_x;
                 PosYTile = unit.pos_y;
                 PosZ = unit.pos_z + 1;
@@ -787,6 +786,10 @@ public class GameMap : MonoBehaviour
             ));
         UnityEngine.Profiling.Profiler.EndSample();
     }
+
+    const double timeout = 15;
+    System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+
     void UpdateBlocks()
     {
         if (DFConnection.Instance.EmbarkMapSize != mapSize)
@@ -806,6 +809,7 @@ public class GameMap : MonoBehaviour
         if (MapDataStore.MapSize.x < 48)
             return;
 
+        stopwatch.Restart();
         BuildingManager.Instance.BeginExistenceCheck();
         ItemManager.Instance.BeginExistenceCheck();
         UnityEngine.Profiling.Profiler.BeginSample("UpdateBlocks", this);
@@ -1167,6 +1171,8 @@ public class GameMap : MonoBehaviour
     // Have the mesher mesh all dirty tiles in the region
     void EnqueueMeshUpdates()
     {
+        if (stopwatch.ElapsedMilliseconds > timeout)
+            return;
         int queueCount = 0;
         int xmin = Mathf.Clamp(PosXBlock - GameSettings.Instance.rendering.drawRangeSide + 1, 0, mapMeshes.GetLength(0));
         int xmax = Mathf.Clamp(PosXBlock + GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(0));
@@ -1191,6 +1197,8 @@ public class GameMap : MonoBehaviour
                 queueCount++;
                 if (queueCount > GameSettings.Instance.meshing.queueLimit)
                     return;
+                if (stopwatch.ElapsedMilliseconds > timeout)
+                    return;
             }
         for (int zz = PosZ - 1; zz >= zmin; zz--)
         {
@@ -1213,6 +1221,8 @@ public class GameMap : MonoBehaviour
                     queueCount++;
                     if (queueCount > GameSettings.Instance.meshing.queueLimit)
                         return;
+                    if (stopwatch.ElapsedMilliseconds > timeout)
+                        return;
                 }
         }
         for (int zz = PosZ; zz < zmax; zz++)
@@ -1234,6 +1244,8 @@ public class GameMap : MonoBehaviour
                     liquidBlockDirtyBits[xx, yy, zz] = false;
                     queueCount++;
                     if (queueCount > GameSettings.Instance.meshing.queueLimit)
+                        return;
+                    if (stopwatch.ElapsedMilliseconds > timeout)
                         return;
                 }
         }
@@ -1427,7 +1439,7 @@ public class GameMap : MonoBehaviour
             if (CreatureManager.Instance.Units != null)
             {
                 UnitDefinition foundUnit = null;
-                foreach (UnitDefinition unit in CreatureManager.Instance.Units.creature_list)
+                foreach (UnitDefinition unit in CreatureManager.Instance.Units)
                 {
                     UnitFlags1 flags1 = (UnitFlags1)unit.flags1;
 
