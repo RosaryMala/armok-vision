@@ -78,7 +78,7 @@ public class CreatureSpriteManager
                     break;
             }
             GameMap.EndSample();
-            if (stopWatch.ElapsedMilliseconds > 100)
+            if (stopWatch.ElapsedMilliseconds > ContentLoader.LoadFrameTimeout)
             {
                 yield return null;
                 stopWatch.Reset();
@@ -201,7 +201,7 @@ public class CreatureSpriteManager
             mat.SetTexture("_BumpMap", page.NormalArray);
             mats.Add(mat);
             Debug.Log("Finalized " + page.Name);
-            if (stopWatch.ElapsedMilliseconds > 100)
+            if (stopWatch.ElapsedMilliseconds > ContentLoader.LoadFrameTimeout)
             {
                 yield return null;
                 stopWatch.Reset();

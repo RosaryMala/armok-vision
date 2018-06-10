@@ -44,7 +44,7 @@ public class DecorationManager : MonoBehaviour
             var loadedItem = Resources.Load<GameObject>(path);
             if (loadedItem == null)
             {
-                if (stopWatch.ElapsedMilliseconds > 100)
+                if (stopWatch.ElapsedMilliseconds > ContentLoader.LoadFrameTimeout)
                 {
                     yield return null;
                     stopWatch.Reset();
@@ -55,7 +55,7 @@ public class DecorationManager : MonoBehaviour
 
             shapes[i] = loadedItem;
 
-            if (stopWatch.ElapsedMilliseconds > 100)
+            if (stopWatch.ElapsedMilliseconds > ContentLoader.LoadFrameTimeout)
             {
                 yield return null;
                 stopWatch.Reset();

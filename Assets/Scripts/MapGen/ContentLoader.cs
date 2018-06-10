@@ -613,6 +613,7 @@ public class ContentLoader : MonoBehaviour
     }
 
     static Dictionary<int, Material> transparentMaterialVersions = new Dictionary<int, Material>();
+    public const long LoadFrameTimeout = 16;
 
     public static Material getFinalMaterial(Material material, float alpha)
     {

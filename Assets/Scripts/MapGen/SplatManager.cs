@@ -21,7 +21,7 @@ public class SplatManager : MonoBehaviour
     Color[][] grassSplatColor;
     Color[][] grassTintColor;
 
-    const int timeout = 10;
+    const int timeout = 5;
 
     public static SplatManager Instance { get; private set; }
 
@@ -84,7 +84,6 @@ public class SplatManager : MonoBehaviour
         UnityEngine.Profiling.Profiler.BeginSample("UpdateTerrainTextures", this);
         var timer = System.Diagnostics.Stopwatch.StartNew();
         for (int z = terrainDirtyBits.GetLength(2) - 1; z >= 0; z--)
-        {
             for (int y = 0; y < terrainDirtyBits.GetLength(1); y++)
                 for (int x = 0; x < terrainDirtyBits.GetLength(0); x++)
                 {
@@ -95,7 +94,7 @@ public class SplatManager : MonoBehaviour
                         UpdateTerrainTintTexture(x, y, z);
                         terrainDirtyBits[x, y, z] = false;
                         if (timer.ElapsedMilliseconds > timeout)
-                            break;
+                            goto BREAKOUT;
                     }
                     if (grassDirtyBits[x, y, z])
                     {
@@ -103,7 +102,7 @@ public class SplatManager : MonoBehaviour
                             UpdateGrassTexture(x, y, z);
                         grassDirtyBits[x, y, z] = false;
                         if (timer.ElapsedMilliseconds > timeout)
-                            break;
+                            goto BREAKOUT;
                     }
                     if (spatterDirtyBits[x, y, z])
                     {
@@ -111,12 +110,10 @@ public class SplatManager : MonoBehaviour
                         UpdateSplatterTexture(x, y, z);
                         spatterDirtyBits[x, y, z] = false;
                         if (timer.ElapsedMilliseconds > timeout)
-                            break;
+                            goto BREAKOUT;
                     }
-                    if (timer.ElapsedMilliseconds > timeout)
-                        break;
                 }
-        }
+        BREAKOUT:
         UnityEngine.Profiling.Profiler.EndSample();
     }
 
@@ -252,6 +249,7 @@ public class SplatManager : MonoBehaviour
 
     private void UpdateTerrainSplatTexture(int blockX, int blockY, int blockZ)
     {
+        GameMap.BeginSample("UpdateTerrainSplatTexture");
         if (terrainSplatLayers[blockZ] == null)
         {
             terrainSplatLayers[blockZ] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGB24, false, true);
@@ -264,10 +262,12 @@ public class SplatManager : MonoBehaviour
 
         terrainSplatLayers[blockZ].SetPixels(blockX * GameMap.blockSize, blockY * GameMap.blockSize, GameMap.blockSize, GameMap.blockSize, GetColorBlock(blockX, blockY, terrainSplatColor[blockZ]));
         terrainSplatLayers[blockZ].Apply();
+        GameMap.EndSample();
     }
 
     private void UpdateTerrainSplatTexture(int blockZ)
     {
+        GameMap.BeginSample("UpdateTerrainSplatTexture");
         if (terrainSplatLayers[blockZ] == null)
         {
             terrainSplatLayers[blockZ] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGB24, false, true);
@@ -279,6 +279,7 @@ public class SplatManager : MonoBehaviour
 
         terrainSplatLayers[blockZ].SetPixels(terrainSplatColor[blockZ]);
         terrainSplatLayers[blockZ].Apply();
+        GameMap.EndSample();
     }
 
     bool GenerateGrassTexture(int blockX, int blockY, int blockZ)
@@ -332,6 +333,7 @@ public class SplatManager : MonoBehaviour
 
     void UpdateGrassTexture(int blockZ)
     {
+        GameMap.BeginSample("UpdateGrassTexture");
         if (grassSplatLayers[blockZ] == null)
         {
             grassSplatLayers[blockZ] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGB24, false, true);
@@ -362,10 +364,12 @@ public class SplatManager : MonoBehaviour
 
         grassTintLayers[blockZ].SetPixels(grassTintColor[blockZ]);
         grassTintLayers[blockZ].Apply();
+        GameMap.EndSample();
     }
 
     void UpdateGrassTexture(int blockX, int blockY, int blockZ)
     {
+        GameMap.BeginSample("UpdateGrassTexture");
         if (grassSplatLayers[blockZ] == null)
         {
             grassSplatLayers[blockZ] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.RGB24, false, true);
@@ -398,6 +402,7 @@ public class SplatManager : MonoBehaviour
 
         grassTintLayers[blockZ].SetPixels(blockX * GameMap.blockSize, blockY * GameMap.blockSize, GameMap.blockSize, GameMap.blockSize, GetColorBlock(blockX, blockY, grassTintColor[blockZ]));
         grassTintLayers[blockZ].Apply();
+        GameMap.EndSample();
     }
 
     void GenerateSpatterTexture(int blockX, int blockY, int blockZ)
@@ -476,6 +481,7 @@ public class SplatManager : MonoBehaviour
 
     private void UpdateSplatterTexture(int blockZ)
     {
+        GameMap.BeginSample("UpdateSpatterTexture");
         if (spatterLayers[blockZ] == null)
         {
             spatterLayers[blockZ] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.ARGB32, false);
@@ -493,10 +499,12 @@ public class SplatManager : MonoBehaviour
 
         spatterLayers[blockZ].SetPixels(spatterColor[blockZ]);
         spatterLayers[blockZ].Apply();
+        GameMap.EndSample();
     }
 
     private void UpdateSplatterTexture(int blockX, int blockY, int blockZ)
     {
+        GameMap.BeginSample("UpdateSpatterTexture");
         if (spatterLayers[blockZ] == null)
         {
             spatterLayers[blockZ] = new Texture2D(MapDataStore.MapSize.x, MapDataStore.MapSize.y, TextureFormat.ARGB32, false);
@@ -518,6 +526,7 @@ public class SplatManager : MonoBehaviour
 
         spatterLayers[blockZ].SetPixels(blockX * GameMap.blockSize, blockY * GameMap.blockSize, GameMap.blockSize, GameMap.blockSize, GetColorBlock(blockX, blockY, spatterColor[blockZ]));
         spatterLayers[blockZ].Apply();
+        GameMap.EndSample();
     }
 
 

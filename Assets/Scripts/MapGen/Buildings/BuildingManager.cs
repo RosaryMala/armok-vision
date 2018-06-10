@@ -47,7 +47,7 @@ namespace Building
                 {
                     //Debug.LogWarning("Cannot find model for " + building.id);
                     GameMap.EndSample();
-                    if (stopWatch.ElapsedMilliseconds > 100)
+                    if (stopWatch.ElapsedMilliseconds > ContentLoader.LoadFrameTimeout)
                     {
                         yield return null;
                         stopWatch.Reset();
@@ -58,7 +58,7 @@ namespace Building
 
                 buildingPrefabs[building.building_type] = loadedBuilding;
                 GameMap.EndSample();
-                if (stopWatch.ElapsedMilliseconds > 100)
+                if (stopWatch.ElapsedMilliseconds > ContentLoader.LoadFrameTimeout)
                 {
                     yield return null;
                     stopWatch.Reset();

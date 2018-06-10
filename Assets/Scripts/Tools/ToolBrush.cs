@@ -49,12 +49,12 @@ public class ToolBrush : MonoBehaviour
                 {
                     Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
                     DFCoord mapTargetPos;
-                    Vector3 unityTargetPos;
-                    if (MapDataStore.FindCurrentTarget(ray, out mapTargetPos, out unityTargetPos))
+                    RaycastHit hit;
+                    if (MapDataStore.Raycast(ray, out mapTargetPos, out hit))
                     {
                         //lastTargetPos = mapTargetPos;
-                        unityTargetPos += (ray.direction * 0.001f);
-                        lastTargetPosF = GameMap.UnityToFloatingDFCoord(unityTargetPos);
+                        hit.point += (ray.direction * 0.001f);
+                        lastTargetPosF = GameMap.UnityToFloatingDFCoord(hit.point);
                         drawing = true;
                     }
                 }
@@ -63,12 +63,12 @@ public class ToolBrush : MonoBehaviour
             {
                 Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
                 DFCoord mapTargetPos;
-                Vector3 unityTargetPos;
+                RaycastHit hit;
 
-                if (MapDataStore.FindCurrentTarget(ray, out mapTargetPos, out unityTargetPos))
+                if (MapDataStore.Raycast(ray, out mapTargetPos, out hit))
                 {
-                    unityTargetPos += (ray.direction * 0.001f);
-                    Vector3 mapFloatTargetPos = GameMap.UnityToFloatingDFCoord(unityTargetPos);
+                    hit.point += (ray.direction * 0.001f);
+                    Vector3 mapFloatTargetPos = GameMap.UnityToFloatingDFCoord(hit.point);
                     switch (brushShape)
                     {
                         case BrushShape.Freehand:
@@ -105,11 +105,11 @@ public class ToolBrush : MonoBehaviour
             {
                 Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
                 DFCoord mapTargetPos;
-                Vector3 unityTargetPos;
-                if (MapDataStore.FindCurrentTarget(ray, out mapTargetPos, out unityTargetPos))
+                RaycastHit hit;
+                if (MapDataStore.Raycast(ray, out mapTargetPos, out hit))
                 {
-                    unityTargetPos += ray.direction * 0.001f;
-                    Vector3 pos = GameMap.UnityToFloatingDFCoord(unityTargetPos);
+                    hit.point += ray.direction * 0.001f;
+                    Vector3 pos = GameMap.UnityToFloatingDFCoord(hit.point);
                     mapTargetPos = new DFCoord(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
                     DrawCursor(mapTargetPos, false);
                 }

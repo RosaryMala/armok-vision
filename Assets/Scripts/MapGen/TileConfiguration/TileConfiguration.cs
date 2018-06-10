@@ -54,7 +54,7 @@ abstract public class TileConfiguration<T> where T : IContent, new()
             content.overloadedItem = GetFromRootElement(elemtype, "subObject");
             for(var e = content.overloadedItem.AddSingleContentConfig(elemtype, externalStorage, secondaryDictionary); e.MoveNext();)
             {
-                if (stopWatch.ElapsedMilliseconds > 100)
+                if (stopWatch.ElapsedMilliseconds > ContentLoader.LoadFrameTimeout)
                 {
                     stopWatch.Reset();
                     stopWatch.Start();
@@ -74,7 +74,7 @@ abstract public class TileConfiguration<T> where T : IContent, new()
         {
             for (var e = ParseContentElement(elemValue, externalStorage, secondaryDictionary); e.MoveNext();)
             {
-                if(stopWatch.ElapsedMilliseconds > 100)
+                if(stopWatch.ElapsedMilliseconds > ContentLoader.LoadFrameTimeout)
                 {
                     stopWatch.Reset();
                     stopWatch.Start();

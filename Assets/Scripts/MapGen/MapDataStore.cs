@@ -144,263 +144,6 @@ public class MapDataStore {
         return success;
     }
 
-    const int MAXIMUM_CHECKS = 5000;
-
-    /// <summary>
-    /// A big method, but pretty simple.
-    /// Walk through tiles (starting in current one);
-    /// in each tile, check if the ray is actively hitting something.
-    /// If it's not, find the wall of the tile the ray exits through,
-    /// go to that tile, and repeat.
-    /// </summary>
-    /// <param name="ray"></param>
-    /// <param name="tileCoord"></param>
-    /// <param name="unityCoord"></param>
-    /// <returns>True, if hit.</returns>
-    public static bool FindCurrentTarget(Ray ray, out DFCoord tileCoord, out Vector3 unityCoord)
-    {
-        if (!HitsMapCube(ray))
-        {
-            tileCoord = default(DFCoord);
-            unityCoord = default(Vector3);
-            return false;
-        }
-
-        // In each tile, we find its bottom corner, and then add these
-        // values to find the coordinates of the walls.
-        // If the ray increases on this axis, the offset will be the
-        // width of the tile along that axis; if the ray decreases,
-        // the offset will be 0 (since we're already on that wall.)
-        float xWallOffset, yWallOffset, zWallOffset;
-        // When we pass through a tile and hit this wall, how do we increment
-        // our DFCoord?
-        DFCoord xHitIncrement, yHitIncrement, zHitIncrement;
-        if (ray.direction.x > 0)
-        {
-            xWallOffset = GameMap.tileWidth;
-            xHitIncrement = new DFCoord(1, 0, 0);
-        }
-        else
-        {
-            xWallOffset = 0;
-            xHitIncrement = new DFCoord(-1, 0, 0);
-        }
-        if (ray.direction.z > 0)
-        {
-            zWallOffset = GameMap.tileWidth;
-            zHitIncrement = new DFCoord(0, -1, 0);
-        }
-        else
-        {
-            zWallOffset = 0;
-            zHitIncrement = new DFCoord(0, 1, 0);
-        }
-        if (ray.direction.y > 0)
-        {
-            yWallOffset = GameMap.tileHeight;
-            yHitIncrement = new DFCoord(0, 0, 1);
-        }
-        else
-        {
-            yWallOffset = 0;
-            yHitIncrement = new DFCoord(0, 0, -1);
-        }
-
-        // If this is true and we go onto a tile outside the map,
-        // we stop iterating (since we can't hit anything.)
-        bool haveHitMap = false;
-
-        // The coordinate we start at.
-        DFCoord currentCoord = GameMap.UnityToDFCoord(ray.origin);
-
-        // The coordinate of the last tile wall intersection.
-        Vector3 lastHit = ray.origin;
-
-        // Cheap hack to keep from looping forever if we screw up somehow.
-        for (int _insurance = 0; _insurance < MAXIMUM_CHECKS; _insurance++)
-        {
-            // Make sure we don't move backwards somehow.
-            if ((lastHit.x - ray.origin.x) / ray.direction.x < 0)
-            {
-                throw new UnityException("Negative distance multiplier?");
-            }
-
-            // Get the corner of the current tile.
-            Vector3 cornerCoord = GameMap.DFtoUnityBottomCorner(currentCoord);
-
-            // Are we in the selectable area of the map?
-            if (!InMapBounds(currentCoord) || GameMap.Instance.PosZ <= currentCoord.z)
-            {
-                // No.
-                if (haveHitMap)
-                {
-                    // But we have been before;
-                    // we've entered and exited the map without hitting anything.
-                    tileCoord = default(DFCoord);
-                    unityCoord = default(Vector3);
-                    return false;
-                }
-            }
-            else
-            {
-                // We are in the map.
-                haveHitMap = true;
-
-                Tile currentTile = Main[currentCoord.x, currentCoord.y, currentCoord.z];
-                // Are we in a real tile?
-                if (currentTile != null)
-                {
-                    // Yes.
-                    switch (currentTile.shape)
-                    {
-                        case TiletypeShape.EMPTY:
-                        case TiletypeShape.NO_SHAPE:
-                            // We're not hitting anything, though.
-                            break;
-                        //case RemoteFortressReader.TiletypeShape.SHRUB:
-                        //case RemoteFortressReader.TiletypeShape.SAPLING:
-                        case TiletypeShape.WALL:
-                        case TiletypeShape.FORTIFICATION:
-                        //case RemoteFortressReader.TiletypeShape.TRUNK_BRANCH:
-                        case TiletypeShape.TWIG:
-                            // We must be hitting things.
-                            // (maybe adjust shrub, saplings out of this group?)
-                            tileCoord = currentCoord;
-                            unityCoord = lastHit;
-                            return true;
-                        case TiletypeShape.RAMP:
-                            {
-                                // Check if we're in the ramp.
-                                // (that we're in the tile is implied.)
-                                if (Between(cornerCoord.y, lastHit.y, cornerCoord.y + GameMap.floorHeight + (GameMap.tileHeight / 2)))
-                                {
-                                    tileCoord = currentCoord;
-                                    unityCoord = lastHit;
-                                    return true;
-                                }
-                                // Check if we enter the ramp; same way we check wall intersections.
-                                float floorY = cornerCoord.y + GameMap.floorHeight + (GameMap.tileHeight / 2);
-                                float toFloorMult = (floorY - ray.origin.y) / ray.direction.y;
-                                Vector3 floorIntercept = ray.origin + ray.direction * toFloorMult;
-                                if (Between(cornerCoord.x, floorIntercept.x, cornerCoord.x + GameMap.tileWidth) &&
-                                    Between(cornerCoord.z, floorIntercept.z, cornerCoord.z + GameMap.tileWidth))
-                                {
-                                    tileCoord = currentCoord;
-                                    unityCoord = lastHit;
-                                    return true;
-                                }
-                            }
-                            break;
-                        case TiletypeShape.FLOOR:
-                        case TiletypeShape.BOULDER:
-                        case TiletypeShape.PEBBLES:
-                        case TiletypeShape.BROOK_TOP:
-                        case TiletypeShape.SAPLING:
-                        case TiletypeShape.SHRUB:
-                        case TiletypeShape.BRANCH:
-                        case TiletypeShape.TRUNK_BRANCH:
-                            {
-                                // Check if we're in the floor.
-                                // (that we're in the tile is implied.)
-                                if (Between(cornerCoord.y, lastHit.y, cornerCoord.y + GameMap.floorHeight))
-                                {
-                                    tileCoord = currentCoord;
-                                    unityCoord = lastHit;
-                                    return true;
-                                }
-                                // Check if we enter the floor; same way we check wall intersections.
-                                float floorY = cornerCoord.y + GameMap.floorHeight;
-                                float toFloorMult = (floorY - ray.origin.y) / ray.direction.y;
-                                Vector3 floorIntercept = ray.origin + ray.direction * toFloorMult;
-                                if (Between(cornerCoord.x, floorIntercept.x, cornerCoord.x + GameMap.tileWidth) &&
-                                    Between(cornerCoord.z, floorIntercept.z, cornerCoord.z + GameMap.tileWidth))
-                                {
-                                    tileCoord = currentCoord;
-                                    unityCoord = lastHit;
-                                    return true;
-                                }
-                            }
-                            break;
-                    }
-                }
-            }
-            // Didn't hit anything in the tile; figure out which wall we're hitting & walk to that tile.
-            {
-                float xMult = (cornerCoord.x + xWallOffset - ray.origin.x) / ray.direction.x;
-                Vector3 xIntercept = ray.origin + ray.direction * xMult;
-                if (Between(cornerCoord.z, xIntercept.z, cornerCoord.z + GameMap.tileWidth) &&
-                    Between(cornerCoord.y, xIntercept.y, cornerCoord.y + GameMap.tileHeight))
-                {
-                    lastHit = xIntercept;
-                    currentCoord += xHitIncrement;
-                    continue;
-                }
-            }
-            {
-                float zMult = (cornerCoord.z + zWallOffset - ray.origin.z) / ray.direction.z;
-                Vector3 zIntercept = ray.origin + ray.direction * zMult;
-                if (Between(cornerCoord.x, zIntercept.x, cornerCoord.x + GameMap.tileWidth) &&
-                    Between(cornerCoord.y, zIntercept.y, cornerCoord.y + GameMap.tileHeight))
-                {
-                    lastHit = zIntercept;
-                    currentCoord += zHitIncrement;
-                    continue;
-                }
-            }
-            {
-                float yMult = (cornerCoord.y + yWallOffset - ray.origin.y) / ray.direction.y;
-                Vector3 yIntercept = ray.origin + ray.direction * yMult;
-                if (cornerCoord.x <= yIntercept.x && yIntercept.x <= cornerCoord.x + GameMap.tileWidth &&
-                    cornerCoord.z <= yIntercept.z && yIntercept.z <= cornerCoord.z + GameMap.tileWidth)
-                {
-                    lastHit = yIntercept;
-                    currentCoord += yHitIncrement;
-                    continue;
-                }
-            }
-            // We haven't found a wall to hit.
-            // This shouldn't happen, but occasionally does.
-            //throw new UnityException("Didn't hit any tile walls?");
-        }
-
-        // We went the maximum amount of time without hitting anything
-        tileCoord = default(DFCoord);
-        unityCoord = default(Vector3);
-        return false;
-    }
-
-    static bool Between(float lower, float t, float upper)
-    {
-        return lower <= t && t <= upper;
-    }
-
-    // Check if a ray could possibly hit the game map at all
-    static bool HitsMapCube(Ray ray)
-    {
-        if (Main == null)
-            return false; //there's no cube to hit.
-        Vector3 lowerLimits = GameMap.DFtoUnityBottomCorner(new DFCoord(0, 0, 0));
-        Vector3 upperLimits = GameMap.DFtoUnityBottomCorner(new DFCoord(
-            MapSize.x - 1,
-            MapSize.y - 1,
-            MapSize.z - 1
-            )) + new Vector3(GameMap.tileWidth, GameMap.tileHeight, GameMap.tileWidth);
-
-        // Multipliers to scale the ray to hit the different walls of the cube
-        float tx1 = (lowerLimits.x - ray.origin.x) / ray.direction.x;
-        float tx2 = (upperLimits.x - ray.origin.x) / ray.direction.x;
-        float ty1 = (lowerLimits.y - ray.origin.y) / ray.direction.y;
-        float ty2 = (upperLimits.y - ray.origin.y) / ray.direction.y;
-        float tz1 = (lowerLimits.z - ray.origin.z) / ray.direction.z;
-        float tz2 = (upperLimits.z - ray.origin.z) / ray.direction.z;
-
-        float tMin = Mathf.Min(tx1, tx2, ty1, ty2, tz1, tz2);
-        float tMax = Mathf.Max(tx1, tx2, ty1, ty2, tz1, tz2);
-
-        // If tMax < 0, cube is entirely behind us; 
-        // if tMin > tMax, we don't intersect the cube at all
-        return tMin < tMax && 0 < tMax;
-    }
     public void CopySliceTo(BlockCoord block, MapDataStore target) {
         CopySliceTo(block.ToDFCoord(), BLOCK_SIZE, target);
     }
@@ -617,11 +360,14 @@ public class MapDataStore {
         return x * SliceSize.y * SliceSize.z + y * SliceSize.z + z;
     }
 
+    #region Physics
+
     public enum CollisionState
     {
         None,
         Stairs,
         Water,
+        Magma,
         Solid
     }
 
@@ -679,6 +425,7 @@ public class MapDataStore {
                 state = CollisionState.Stairs;
                 break;
             case TiletypeShape.RAMP:
+
                 if (localPos.y < 0.5f)
                     state = CollisionState.Solid;
                 else
@@ -690,6 +437,10 @@ public class MapDataStore {
             default:
                 break;
         }
+        if (localPos.y < (tile.waterLevel / 7.0f * GameMap.tileHeight))
+            state = CollisionState.Water;
+        if (localPos.y < (tile.magmaLevel / 7.0f * GameMap.tileHeight))
+            state = CollisionState.Water;
         return state;
     }
 
@@ -713,6 +464,268 @@ public class MapDataStore {
         }
     }
 
+
+    const int MAXIMUM_CHECKS = 5000;
+
+    /// <summary>
+    /// A big method, but pretty simple.
+    /// Walk through tiles (starting in current one);
+    /// in each tile, check if the ray is actively hitting something.
+    /// If it's not, find the wall of the tile the ray exits through,
+    /// go to that tile, and repeat.
+    /// </summary>
+    /// <param name="ray"></param>
+    /// <param name="tileCoord"></param>
+    /// <param name="unityCoord"></param>
+    /// <returns>True, if hit.</returns>
+    public static bool Raycast(Ray ray, out DFCoord tileCoord, out RaycastHit hitInfo, float maxDistance = float.MaxValue)
+    {
+        hitInfo = default(RaycastHit);
+        if (!HitsMapCube(ray))
+        {
+            tileCoord = default(DFCoord);
+            return false;
+        }
+
+        // In each tile, we find its bottom corner, and then add these
+        // values to find the coordinates of the walls.
+        // If the ray increases on this axis, the offset will be the
+        // width of the tile along that axis; if the ray decreases,
+        // the offset will be 0 (since we're already on that wall.)
+        float xWallOffset, yWallOffset, zWallOffset;
+        // When we pass through a tile and hit this wall, how do we increment
+        // our DFCoord?
+        DFCoord xHitIncrement, yHitIncrement, zHitIncrement;
+        if (ray.direction.x > 0)
+        {
+            xWallOffset = GameMap.tileWidth;
+            xHitIncrement = new DFCoord(1, 0, 0);
+        }
+        else
+        {
+            xWallOffset = 0;
+            xHitIncrement = new DFCoord(-1, 0, 0);
+        }
+        if (ray.direction.z > 0)
+        {
+            zWallOffset = GameMap.tileWidth;
+            zHitIncrement = new DFCoord(0, -1, 0);
+        }
+        else
+        {
+            zWallOffset = 0;
+            zHitIncrement = new DFCoord(0, 1, 0);
+        }
+        if (ray.direction.y > 0)
+        {
+            yWallOffset = GameMap.tileHeight;
+            yHitIncrement = new DFCoord(0, 0, 1);
+        }
+        else
+        {
+            yWallOffset = 0;
+            yHitIncrement = new DFCoord(0, 0, -1);
+        }
+
+        // If this is true and we go onto a tile outside the map,
+        // we stop iterating (since we can't hit anything.)
+        bool haveHitMap = false;
+
+        // The coordinate we start at.
+        DFCoord currentCoord = GameMap.UnityToDFCoord(ray.origin);
+
+        // The coordinate of the last tile wall intersection.
+        Vector3 lastHit = ray.origin;
+
+        // Cheap hack to keep from looping forever if we screw up somehow.
+        for (int _insurance = 0; _insurance < MAXIMUM_CHECKS; _insurance++)
+        {
+            // Make sure we don't move backwards somehow.
+            if ((lastHit.x - ray.origin.x) / ray.direction.x < 0)
+            {
+                throw new UnityException("Negative distance multiplier?");
+            }
+
+            // Get the corner of the current tile.
+            Vector3 cornerCoord = GameMap.DFtoUnityBottomCorner(currentCoord);
+
+            // Are we in the selectable area of the map?
+            if (!InMapBounds(currentCoord) || GameMap.Instance.PosZ <= currentCoord.z)
+            {
+                // No.
+                if (haveHitMap)
+                {
+                    // But we have been before;
+                    // we've entered and exited the map without hitting anything.
+                    tileCoord = default(DFCoord);
+                    return false;
+                }
+            }
+            else
+            {
+                // We are in the map.
+                haveHitMap = true;
+
+                Tile currentTile = Main[currentCoord.x, currentCoord.y, currentCoord.z];
+                // Are we in a real tile?
+                if (currentTile != null)
+                {
+                    // Yes.
+                    switch (currentTile.shape)
+                    {
+                        case TiletypeShape.EMPTY:
+                        case TiletypeShape.NO_SHAPE:
+                            // We're not hitting anything, though.
+                            break;
+                        //case RemoteFortressReader.TiletypeShape.SHRUB:
+                        //case RemoteFortressReader.TiletypeShape.SAPLING:
+                        case TiletypeShape.WALL:
+                        case TiletypeShape.FORTIFICATION:
+                        //case RemoteFortressReader.TiletypeShape.TRUNK_BRANCH:
+                        case TiletypeShape.TWIG:
+                            // We must be hitting things.
+                            // (maybe adjust shrub, saplings out of this group?)
+                            tileCoord = currentCoord;
+                            hitInfo.point = lastHit;
+                            return true;
+                        case TiletypeShape.RAMP:
+                            {
+                                // Check if we're in the ramp.
+                                // (that we're in the tile is implied.)
+                                if (Between(cornerCoord.y, lastHit.y, cornerCoord.y + GameMap.floorHeight + (GameMap.tileHeight / 2)))
+                                {
+                                    tileCoord = currentCoord;
+                                    hitInfo.point = lastHit;
+                                    return true;
+                                }
+                                // Check if we enter the ramp; same way we check wall intersections.
+                                float floorY = cornerCoord.y + GameMap.floorHeight + (GameMap.tileHeight / 2);
+                                float toFloorMult = (floorY - ray.origin.y) / ray.direction.y;
+                                Vector3 floorIntercept = ray.origin + ray.direction * toFloorMult;
+                                if (Between(cornerCoord.x, floorIntercept.x, cornerCoord.x + GameMap.tileWidth) &&
+                                    Between(cornerCoord.z, floorIntercept.z, cornerCoord.z + GameMap.tileWidth))
+                                {
+                                    tileCoord = currentCoord;
+                                    hitInfo.point = lastHit;
+                                    return true;
+                                }
+                            }
+                            break;
+                        case TiletypeShape.FLOOR:
+                        case TiletypeShape.BOULDER:
+                        case TiletypeShape.PEBBLES:
+                        case TiletypeShape.BROOK_TOP:
+                        case TiletypeShape.SAPLING:
+                        case TiletypeShape.SHRUB:
+                        case TiletypeShape.BRANCH:
+                        case TiletypeShape.TRUNK_BRANCH:
+                            {
+                                // Check if we're in the floor.
+                                // (that we're in the tile is implied.)
+                                if (Between(cornerCoord.y, lastHit.y, cornerCoord.y + GameMap.floorHeight))
+                                {
+                                    tileCoord = currentCoord;
+                                    hitInfo.point = lastHit;
+                                    return true;
+                                }
+                                // Check if we enter the floor; same way we check wall intersections.
+                                float floorY = cornerCoord.y + GameMap.floorHeight;
+                                float toFloorMult = (floorY - ray.origin.y) / ray.direction.y;
+                                Vector3 floorIntercept = ray.origin + ray.direction * toFloorMult;
+                                if (Between(cornerCoord.x, floorIntercept.x, cornerCoord.x + GameMap.tileWidth) &&
+                                    Between(cornerCoord.z, floorIntercept.z, cornerCoord.z + GameMap.tileWidth))
+                                {
+                                    tileCoord = currentCoord;
+                                    hitInfo.point = lastHit;
+                                    return true;
+                                }
+                            }
+                            break;
+                    }
+                }
+            }
+            // Didn't hit anything in the tile; figure out which wall we're hitting & walk to that tile.
+            {
+                float xMult = (cornerCoord.x + xWallOffset - ray.origin.x) / ray.direction.x;
+                Vector3 xIntercept = ray.origin + ray.direction * xMult;
+                if (Between(cornerCoord.z, xIntercept.z, cornerCoord.z + GameMap.tileWidth) &&
+                    Between(cornerCoord.y, xIntercept.y, cornerCoord.y + GameMap.tileHeight))
+                {
+                    lastHit = xIntercept;
+                    currentCoord += xHitIncrement;
+                    continue;
+                }
+            }
+            {
+                float zMult = (cornerCoord.z + zWallOffset - ray.origin.z) / ray.direction.z;
+                Vector3 zIntercept = ray.origin + ray.direction * zMult;
+                if (Between(cornerCoord.x, zIntercept.x, cornerCoord.x + GameMap.tileWidth) &&
+                    Between(cornerCoord.y, zIntercept.y, cornerCoord.y + GameMap.tileHeight))
+                {
+                    lastHit = zIntercept;
+                    currentCoord += zHitIncrement;
+                    continue;
+                }
+            }
+            {
+                float yMult = (cornerCoord.y + yWallOffset - ray.origin.y) / ray.direction.y;
+                Vector3 yIntercept = ray.origin + ray.direction * yMult;
+                if (cornerCoord.x <= yIntercept.x && yIntercept.x <= cornerCoord.x + GameMap.tileWidth &&
+                    cornerCoord.z <= yIntercept.z && yIntercept.z <= cornerCoord.z + GameMap.tileWidth)
+                {
+                    lastHit = yIntercept;
+                    currentCoord += yHitIncrement;
+                    continue;
+                }
+            }
+            // We haven't found a wall to hit.
+            // This shouldn't happen, but occasionally does.
+            //throw new UnityException("Didn't hit any tile walls?");
+        }
+
+        // We went the maximum amount of time without hitting anything
+        tileCoord = default(DFCoord);
+        hitInfo.point = default(Vector3);
+        return false;
+    }
+
+    static bool Between(float lower, float t, float upper)
+    {
+        return lower <= t && t <= upper;
+    }
+
+    // Check if a ray could possibly hit the game map at all
+    static bool HitsMapCube(Ray ray)
+    {
+        if (Main == null)
+            return false; //there's no cube to hit.
+        Vector3 lowerLimits = GameMap.DFtoUnityBottomCorner(new DFCoord(0, 0, 0));
+        Vector3 upperLimits = GameMap.DFtoUnityBottomCorner(new DFCoord(
+            MapSize.x - 1,
+            MapSize.y - 1,
+            MapSize.z - 1
+            )) + new Vector3(GameMap.tileWidth, GameMap.tileHeight, GameMap.tileWidth);
+
+        // Multipliers to scale the ray to hit the different walls of the cube
+        float tx1 = (lowerLimits.x - ray.origin.x) / ray.direction.x;
+        float tx2 = (upperLimits.x - ray.origin.x) / ray.direction.x;
+        float ty1 = (lowerLimits.y - ray.origin.y) / ray.direction.y;
+        float ty2 = (upperLimits.y - ray.origin.y) / ray.direction.y;
+        float tz1 = (lowerLimits.z - ray.origin.z) / ray.direction.z;
+        float tz2 = (upperLimits.z - ray.origin.z) / ray.direction.z;
+
+        float tMin = Mathf.Min(tx1, tx2, ty1, ty2, tz1, tz2);
+        float tMax = Mathf.Max(tx1, tx2, ty1, ty2, tz1, tz2);
+
+        // If tMax < 0, cube is entirely behind us; 
+        // if tMin > tMax, we don't intersect the cube at all
+        return tMin < tMax && 0 < tMax;
+    }
+
+
+    #endregion
+
+    #region Tile Definition
     // The data for a single tile of the map.
     // Nested struct because it depends heavily on its container.
     public class Tile
@@ -1368,4 +1381,6 @@ public class MapDataStore {
             }
         }
     }
+
+    #endregion
 }

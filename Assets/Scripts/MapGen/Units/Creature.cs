@@ -77,14 +77,6 @@ public class Creature : MonoBehaviour
             layeredSprite.enabled = true;
             legacySprite.gameObject.SetActive(false);
             layeredSprite.UpdateLayers(unit, creatureRaw, casteRaw);
-            var group = GetComponentInChildren<LODGroup>();
-            if (group != null)
-            {
-                var lods = new LOD[1];
-                lods[0] = new LOD(0.05f, GetComponentsInChildren<SpriteRenderer>());
-                group.SetLODs(lods);
-                group.RecalculateBounds();
-            }
         }
         else
         {
@@ -92,14 +84,6 @@ public class Creature : MonoBehaviour
             layeredSprite.enabled = false;
             legacySprite.gameObject.SetActive(true);
             UpdateTileCreature();
-            var group = GetComponentInChildren<LODGroup>();
-            if (group != null)
-            {
-                var lods = new LOD[1];
-                lods[0] = new LOD(0.05f, GetComponentsInChildren<MeshRenderer>());
-                group.SetLODs(lods);
-                group.RecalculateBounds();
-            }
         }
 
     }

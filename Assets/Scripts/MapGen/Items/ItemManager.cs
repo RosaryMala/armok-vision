@@ -27,7 +27,7 @@ public class ItemManager : MonoBehaviour
             if(loadedItem == null)
             {
                 //Debug.LogWarning("Cannot find model for " + item.id);
-                if (stopWatch.ElapsedMilliseconds > 100)
+                if (stopWatch.ElapsedMilliseconds > ContentLoader.LoadFrameTimeout)
                 {
                     yield return null;
                     stopWatch.Reset();
@@ -37,7 +37,7 @@ public class ItemManager : MonoBehaviour
             }
 
             itemPrefabs[item.mat_pair] = loadedItem;
-            if (stopWatch.ElapsedMilliseconds > 100)
+            if (stopWatch.ElapsedMilliseconds > ContentLoader.LoadFrameTimeout)
             {
                 yield return null;
                 stopWatch.Reset();
@@ -82,11 +82,13 @@ public class ItemManager : MonoBehaviour
             Destroy(sceneItems[index].gameObject);
             sceneItems.Remove(index);
             itemCache.Remove(index);
+            cacheIsDirty = true;
         }
         loadedAnyItems = false;
     }
 
     Dictionary<int, Item> itemCache = new Dictionary<int, Item>();
+    private Dictionary<int, Item>.ValueCollection.Enumerator cacheEnumerator;
 
     internal void LoadBlock(MapBlock block)
     {
@@ -95,8 +97,11 @@ public class ItemManager : MonoBehaviour
         foreach (var item in block.items)
         {
             removedItems.Remove(item.id);
-
-            itemCache[item.id] = item;
+            if (!(itemCache.ContainsKey(item.id) && AreItemsEqual(item, itemCache[item.id])))
+            {
+                itemCache[item.id] = item;
+                cacheIsDirty = true;
+            }
         }
     }
 
@@ -209,13 +214,29 @@ public class ItemManager : MonoBehaviour
         return placedItem;
     }
 
+    bool cacheIsDirty = true;
+
     private void UpdateVisibility()
     {
         GameMap.BeginSample("Update Item Visibility", this);
-        foreach (var item in itemCache)
+        if (cacheIsDirty)
         {
-            UpdateItem(item.Value);
+            cacheEnumerator.Dispose();
+            cacheEnumerator = itemCache.Values.GetEnumerator();
+            cacheIsDirty = false;
         }
+        var watch = System.Diagnostics.Stopwatch.StartNew();
+        while(cacheEnumerator.MoveNext())
+        {
+            UpdateItem(cacheEnumerator.Current);
+            if (watch.ElapsedMilliseconds > 2)
+            {
+                GameMap.EndSample();
+                return;
+            }
+        }
+        cacheIsDirty = true;
+        cacheEnumerator.Dispose();
         GameMap.EndSample();
     }
 

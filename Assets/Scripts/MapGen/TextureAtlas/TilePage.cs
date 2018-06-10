@@ -125,7 +125,7 @@ public class TilePage : ICollection
             TextureScale.Bilinear(texture, Mathf.ClosestPowerOfTwo(tileWidth * scaleFactor), Mathf.ClosestPowerOfTwo(tileHeight * scaleFactor));
             tileArray.SetPixels(texture.GetPixels(), i);
             normalArray.SetPixels(TextureTools.Bevel(texture.GetPixels(), texture.width, texture.height), i);
-            if (stopWatch.ElapsedMilliseconds > 100)
+            if (stopWatch.ElapsedMilliseconds > ContentLoader.LoadFrameTimeout)
             {
                 yield return null;
                 stopWatch.Reset();

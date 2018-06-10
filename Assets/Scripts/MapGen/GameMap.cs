@@ -46,43 +46,19 @@ public class GameMap : MonoBehaviour
     {
         get
         {
-            return posXTile / blockSize;
+            return PosXTile / blockSize;
         }
     }
     public int PosYBlock
     {
         get
         {
-            return posYTile / blockSize;
+            return PosYTile / blockSize;
         }
     }
-    [SerializeField]
-    int posXTile = 0;
-    [SerializeField]
-    int posYTile = 0;
-    [SerializeField]
-    int posZ = 0;
-    public int PosZ
-    { // Public accessor; used from MapSelection
-        get
-        {
-            return posZ;
-        }
-    }
-    public int PosXTile
-    {
-        get
-        {
-            return posXTile;
-        }
-    }
-    public int PosYTile
-    {
-        get
-        {
-            return posYTile;
-        }
-    }
+    public int PosXTile { get; private set; }
+    public int PosYTile { get; private set; }
+    public int PosZ { get; private set; }
 
     // Stored view information
     ViewInfo view;
@@ -782,16 +758,16 @@ public class GameMap : MonoBehaviour
             if (unitIndex >= 0)
             {
                 var unit = CreatureManager.Instance.Units.creature_list[unitIndex];
-                posXTile = unit.pos_x;
-                posYTile = unit.pos_y;
-                posZ = unit.pos_z + 1;
+                PosXTile = unit.pos_x;
+                PosYTile = unit.pos_y;
+                PosZ = unit.pos_z + 1;
                 return;
             }
         }
 
-        posXTile = (view.view_pos_x + (view.view_size_x / 2));
-        posYTile = (view.view_pos_y + (view.view_size_y / 2));
-        posZ = view.view_pos_z + 1;
+        PosXTile = (view.view_pos_x + (view.view_size_x / 2));
+        PosYTile = (view.view_pos_y + (view.view_size_y / 2));
+        PosZ = view.view_pos_z + 1;
         UnityEngine.Profiling.Profiler.EndSample();
     }
     // Update the region we're requesting
@@ -802,12 +778,12 @@ public class GameMap : MonoBehaviour
             new BlockCoord(
                 PosXBlock - GameSettings.Instance.rendering.drawRangeSide,
                 PosYBlock - GameSettings.Instance.rendering.drawRangeSide,
-                posZ - GameSettings.Instance.rendering.drawRangeDown
+                PosZ - GameSettings.Instance.rendering.drawRangeDown
             ),
             new BlockCoord(
                 PosXBlock + GameSettings.Instance.rendering.drawRangeSide,
                 PosYBlock + GameSettings.Instance.rendering.drawRangeSide,
-                posZ + GameSettings.Instance.rendering.drawRangeUp
+                PosZ + GameSettings.Instance.rendering.drawRangeUp
             ));
         UnityEngine.Profiling.Profiler.EndSample();
     }
@@ -1175,8 +1151,8 @@ public class GameMap : MonoBehaviour
         int xmax = Mathf.Clamp(PosXBlock + GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(0));
         int ymin = Mathf.Clamp(PosYBlock - GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(1));
         int ymax = Mathf.Clamp(PosYBlock + GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(1));
-        int zmin = Mathf.Clamp(posZ - GameSettings.Instance.rendering.drawRangeDown, 0, mapMeshes.GetLength(2));
-        int zmax = Mathf.Clamp(posZ + GameSettings.Instance.rendering.drawRangeUp, 0, mapMeshes.GetLength(2));
+        int zmin = Mathf.Clamp(PosZ - GameSettings.Instance.rendering.drawRangeDown, 0, mapMeshes.GetLength(2));
+        int zmax = Mathf.Clamp(PosZ + GameSettings.Instance.rendering.drawRangeUp, 0, mapMeshes.GetLength(2));
         for (int zz = zmin; zz < zmax; zz++)
             for (int yy = ymin; yy < ymax; yy++)
                 for (int xx = xmin; xx < xmax; xx++)
@@ -1196,10 +1172,10 @@ public class GameMap : MonoBehaviour
         int xmax = Mathf.Clamp(PosXBlock + GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(0));
         int ymin = Mathf.Clamp(PosYBlock - GameSettings.Instance.rendering.drawRangeSide + 1, 0, mapMeshes.GetLength(1));
         int ymax = Mathf.Clamp(PosYBlock + GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(1));
-        int zmin = Mathf.Clamp(posZ - GameSettings.Instance.rendering.drawRangeDown, 0, mapMeshes.GetLength(2));
-        int zmax = Mathf.Clamp(posZ + GameSettings.Instance.rendering.drawRangeUp, 0, mapMeshes.GetLength(2));
+        int zmin = Mathf.Clamp(PosZ - GameSettings.Instance.rendering.drawRangeDown, 0, mapMeshes.GetLength(2));
+        int zmax = Mathf.Clamp(PosZ + GameSettings.Instance.rendering.drawRangeUp, 0, mapMeshes.GetLength(2));
         if (PosXBlock >= 0 && PosXBlock < mapMeshes.GetLength(0) && PosYBlock >= 0 && PosYBlock < mapMeshes.GetLength(1))
-            for (int zz = posZ - 1; zz >= zmin; zz--)
+            for (int zz = PosZ - 1; zz >= zmin; zz--)
             {
                 if (zz >= mapMeshes.GetLength(2))
                     continue;
@@ -1216,7 +1192,7 @@ public class GameMap : MonoBehaviour
                 if (queueCount > GameSettings.Instance.meshing.queueLimit)
                     return;
             }
-        for (int zz = posZ - 1; zz >= zmin; zz--)
+        for (int zz = PosZ - 1; zz >= zmin; zz--)
         {
             if (zz >= mapMeshes.GetLength(2))
                 continue;
@@ -1239,7 +1215,7 @@ public class GameMap : MonoBehaviour
                         return;
                 }
         }
-        for (int zz = posZ; zz < zmax; zz++)
+        for (int zz = PosZ; zz < zmax; zz++)
         {
             if (zz < 0)
                 continue;
@@ -1294,15 +1270,15 @@ public class GameMap : MonoBehaviour
             meshSet.LoadMeshes(newMeshes, string.Format("{0}_{1}_{2}", block_x, block_y, block_z));
             meshSet.UpdateVisibility(GetVisibility(block_z));
 
-            if (newMeshes.collisionMesh != null)
-            {
+            //if (newMeshes.collisionMesh != null)
+            //{
 
-                Mesh collisionMesh = new Mesh();
-                collisionMesh.name = string.Format("block_collision_{0}_{1}_{2}", block_x, block_y, block_z);
-                newMeshes.collisionMesh.CopyToMesh(collisionMesh);
-                meshSet.collisionBlocks.sharedMesh = null;
-                meshSet.collisionBlocks.sharedMesh = collisionMesh;
-            }
+            //    Mesh collisionMesh = new Mesh();
+            //    collisionMesh.name = string.Format("block_collision_{0}_{1}_{2}", block_x, block_y, block_z);
+            //    newMeshes.collisionMesh.CopyToMesh(collisionMesh);
+            //    meshSet.collisionBlocks.sharedMesh = null;
+            //    meshSet.collisionBlocks.sharedMesh = collisionMesh;
+            //}
         }
         UnityEngine.Profiling.Profiler.EndSample();
     }
@@ -1535,9 +1511,9 @@ public class GameMap : MonoBehaviour
         if(cameraMovement.following)
             return;
         DFCoord dfPos = UnityToDFCoord(pos);
-        posXTile = dfPos.x;
-        posYTile = dfPos.y;
-        posZ = dfPos.z + 1;
+        PosXTile = dfPos.x;
+        PosYTile = dfPos.y;
+        PosZ = dfPos.z + 1;
     }
 
 

@@ -494,7 +494,7 @@ public class ImageManager : MonoBehaviour
             CreatureSpriteMap[creature.index] = textureList.Count;
             textureList.Add(sprite);
 
-            if (stopWatch.ElapsedMilliseconds > 100)
+            if (stopWatch.ElapsedMilliseconds > ContentLoader.LoadFrameTimeout)
             {
                 yield return null;
                 stopWatch.Reset();
@@ -529,7 +529,7 @@ public class ImageManager : MonoBehaviour
                 PlantSpriteMap[item.mat_pair.mat_index] = textureList.Count;
             textureList.Add(sprite);
 
-            if (stopWatch.ElapsedMilliseconds > 100)
+            if (stopWatch.ElapsedMilliseconds > ContentLoader.LoadFrameTimeout)
             {
                 yield return null;
                 stopWatch.Reset();

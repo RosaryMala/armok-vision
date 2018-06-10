@@ -157,7 +157,7 @@ public class LayeredSpriteManager : MonoBehaviour
                     spriteSets[raceID.Race][spriteSet.profession][spriteSet.special] = new CasteDictionary();
                 spriteSets[raceID.Race][spriteSet.profession][spriteSet.special][raceID.Caste] = spriteSet;
             }
-            if (stopWatch.ElapsedMilliseconds > 100)
+            if (stopWatch.ElapsedMilliseconds > ContentLoader.LoadFrameTimeout)
             {
                 yield return null;
                 stopWatch.Reset();

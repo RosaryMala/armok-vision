@@ -67,7 +67,7 @@ public class DFSpriteConverter
                     break;
             }
             GameMap.EndSample();
-            if (stopWatch.ElapsedMilliseconds > 100)
+            if (stopWatch.ElapsedMilliseconds > ContentLoader.LoadFrameTimeout)
             {
                 yield return null;
                 stopWatch.Reset();
