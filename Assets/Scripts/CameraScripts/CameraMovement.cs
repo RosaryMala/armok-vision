@@ -49,9 +49,9 @@ public class CameraMovement : MonoBehaviour
         if (GameSettings.Instance.game.showDFScreen || EventSystem.current.currentSelectedGameObject != null || DFConnection.Instance.WorldMode == dfproto.GetWorldInfoOut.Mode.MODE_ADVENTURE)
             return;
 
-        float moveZ = Input.GetAxis("CamUpDown");
-        float moveX = Input.GetAxis("CamLeftRight");
-        float moveY = Input.GetAxis("CamFrontBack");
+        float moveZ = Input.GetAxisRaw("CamUpDown");
+        float moveX = Input.GetAxisRaw("CamLeftRight");
+        float moveY = Input.GetAxisRaw("CamFrontBack");
 
 
         if (moveZ != 0.0f || moveY != 0.0f || moveX != 0.0f)
