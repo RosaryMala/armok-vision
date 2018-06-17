@@ -1325,9 +1325,9 @@ public sealed class DFConnection : MonoBehaviour
 
             public override void Poll()
             {
-                if (Time.time - prevTime < Instance.refreshDelay)
+                if (Time.realtimeSinceStartup - prevTime < Instance.refreshDelay)
                     return;
-                prevTime = Time.time;
+                prevTime = Time.realtimeSinceStartup;
                 if (ContentLoader.Instance != null)
                 {
                     try
