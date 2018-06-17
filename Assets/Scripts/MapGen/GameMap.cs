@@ -505,7 +505,7 @@ public class GameMap : MonoBehaviour
     IEnumerator DisableHelp()
     {
         helpEnabled = false;
-        for (float f = helpOverlay.alpha; f >= 0; f -= (Time.deltaTime / helpFadeLength))
+        for (float f = helpOverlay.alpha; f >= 0; f -= (Time.unscaledDeltaTime / helpFadeLength))
         {
             helpOverlay.alpha = f;
             yield return null;
@@ -517,7 +517,7 @@ public class GameMap : MonoBehaviour
     {
         helpEnabled = true;
         helpOverlay.gameObject.SetActive(true);
-        for (float f = helpOverlay.alpha; f <= 1; f += (Time.deltaTime / helpFadeLength))
+        for (float f = helpOverlay.alpha; f <= 1; f += (Time.unscaledDeltaTime / helpFadeLength))
         {
             helpOverlay.alpha = f;
             yield return null;

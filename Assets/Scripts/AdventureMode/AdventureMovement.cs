@@ -181,7 +181,7 @@ public class AdventureMovement : MonoBehaviour
         Vector3 moveDir = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("CamUpDown"), Input.GetAxis("Vertical"));
         if (moveDir.sqrMagnitude > 0.1)
         {
-            nexttick -= Time.deltaTime;
+            nexttick -= Time.unscaledDeltaTime;
             if (nexttick <= 0 || initialPress)
             {
                 moveDir = cameraCenter.TransformDirection(moveDir);

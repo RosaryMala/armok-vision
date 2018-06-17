@@ -38,7 +38,7 @@ public class CameraMovement : MonoBehaviour
             }
             else
             {
-                float interp = Time.deltaTime * diff.magnitude * followSpeed;
+                float interp = Time.unscaledDeltaTime * diff.magnitude * followSpeed;
                 if (interp > 1)
                 {
                     interp = 1;
@@ -63,7 +63,7 @@ public class CameraMovement : MonoBehaviour
             if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
                 cameraDistance *= fasterMultiplier;
             Vector3 movement = new Vector3(moveX, moveZ, moveY);
-            transform.Translate(movement * Time.deltaTime * speed * cameraDistance, Space.Self);
+            transform.Translate(movement * Time.unscaledDeltaTime * speed * cameraDistance, Space.Self);
         }
     }
 

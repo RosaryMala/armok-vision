@@ -44,7 +44,7 @@ public class StatsReadout : MonoBehaviour
         StringBuilder updateBuilder = new StringBuilder();
         updateBuilder.Append("Blocks drawn: ").Append(BlocksDrawn).AppendLine();
         updateBuilder.Append("Blocks waiting to be processed: ").Append(QueueLength).AppendLine();
-        updateBuilder.Append("Block processing time: ").Append(BlockProcessTime.Milliseconds).Append("ms (").Append((Time.deltaTime / BlockProcessTime.TotalSeconds).ToString("F2")).Append(" blocks per frame)").AppendLine();
+        updateBuilder.Append("Block processing time: ").Append(BlockProcessTime.Milliseconds).Append("ms (").Append((Time.unscaledDeltaTime / BlockProcessTime.TotalSeconds).ToString("F2")).Append(" blocks per frame)").AppendLine();
         text.text = updateBuilder.ToString();
     }
 }
