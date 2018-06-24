@@ -6162,3 +6162,201 @@ namespace ItemdefInstrument
     }
   
 }
+// Generated from: DwarfControl.proto
+// Note: requires additional types generated from: ui_sidebar_mode.proto
+namespace DwarfControl
+{
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"SidebarState")]
+  public partial class SidebarState : global::ProtoBuf.IExtensible
+  {
+    public SidebarState() {}
+    
+    [UnityEngine.SerializeField]
+    private proto.enums.ui_sidebar_mode.ui_sidebar_mode _mode = proto.enums.ui_sidebar_mode.ui_sidebar_mode.Default;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"mode", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(proto.enums.ui_sidebar_mode.ui_sidebar_mode.Default)]
+    public proto.enums.ui_sidebar_mode.ui_sidebar_mode mode
+    {
+      get { return _mode; }
+      set { _mode = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+}
+// Generated from: ui_sidebar_mode.proto
+namespace proto.enums.ui_sidebar_mode
+{
+    [global::ProtoBuf.ProtoContract(Name=@"ui_sidebar_mode")]
+    public enum ui_sidebar_mode
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Default", Value=0)]
+      Default = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Squads", Value=1)]
+      Squads = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateMine", Value=2)]
+      DesignateMine = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateRemoveRamps", Value=3)]
+      DesignateRemoveRamps = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateUpStair", Value=4)]
+      DesignateUpStair = 4,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateDownStair", Value=5)]
+      DesignateDownStair = 5,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateUpDownStair", Value=6)]
+      DesignateUpDownStair = 6,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateUpRamp", Value=7)]
+      DesignateUpRamp = 7,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateChannel", Value=8)]
+      DesignateChannel = 8,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateGatherPlants", Value=9)]
+      DesignateGatherPlants = 9,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateRemoveDesignation", Value=10)]
+      DesignateRemoveDesignation = 10,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateSmooth", Value=11)]
+      DesignateSmooth = 11,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateCarveTrack", Value=12)]
+      DesignateCarveTrack = 12,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateEngrave", Value=13)]
+      DesignateEngrave = 13,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateCarveFortification", Value=14)]
+      DesignateCarveFortification = 14,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Stockpiles", Value=15)]
+      Stockpiles = 15,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Build", Value=16)]
+      Build = 16,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"QueryBuilding", Value=17)]
+      QueryBuilding = 17,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Orders", Value=18)]
+      Orders = 18,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"OrdersForbid", Value=19)]
+      OrdersForbid = 19,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"OrdersRefuse", Value=20)]
+      OrdersRefuse = 20,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"OrdersWorkshop", Value=21)]
+      OrdersWorkshop = 21,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"OrdersZone", Value=22)]
+      OrdersZone = 22,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"BuildingItems", Value=23)]
+      BuildingItems = 23,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ViewUnits", Value=24)]
+      ViewUnits = 24,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"LookAround", Value=25)]
+      LookAround = 25,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateItemsClaim", Value=26)]
+      DesignateItemsClaim = 26,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateItemsForbid", Value=27)]
+      DesignateItemsForbid = 27,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateItemsMelt", Value=28)]
+      DesignateItemsMelt = 28,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateItemsUnmelt", Value=29)]
+      DesignateItemsUnmelt = 29,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateItemsDump", Value=30)]
+      DesignateItemsDump = 30,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateItemsUndump", Value=31)]
+      DesignateItemsUndump = 31,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateItemsHide", Value=32)]
+      DesignateItemsHide = 32,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateItemsUnhide", Value=33)]
+      DesignateItemsUnhide = 33,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateChopTrees", Value=34)]
+      DesignateChopTrees = 34,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateToggleEngravings", Value=35)]
+      DesignateToggleEngravings = 35,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateToggleMarker", Value=36)]
+      DesignateToggleMarker = 36,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Hotkeys", Value=37)]
+      Hotkeys = 37,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateTrafficHigh", Value=38)]
+      DesignateTrafficHigh = 38,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateTrafficNormal", Value=39)]
+      DesignateTrafficNormal = 39,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateTrafficLow", Value=40)]
+      DesignateTrafficLow = 40,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateTrafficRestricted", Value=41)]
+      DesignateTrafficRestricted = 41,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Zones", Value=42)]
+      Zones = 42,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ZonesPenInfo", Value=43)]
+      ZonesPenInfo = 43,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ZonesPitInfo", Value=44)]
+      ZonesPitInfo = 44,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ZonesHospitalInfo", Value=45)]
+      ZonesHospitalInfo = 45,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ZonesGatherInfo", Value=46)]
+      ZonesGatherInfo = 46,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DesignateRemoveConstruction", Value=47)]
+      DesignateRemoveConstruction = 47,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"DepotAccess", Value=48)]
+      DepotAccess = 48,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"NotesPoints", Value=49)]
+      NotesPoints = 49,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"NotesRoutes", Value=50)]
+      NotesRoutes = 50,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Burrows", Value=51)]
+      Burrows = 51,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Hauling", Value=52)]
+      Hauling = 52,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ArenaWeather", Value=53)]
+      ArenaWeather = 53,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ArenaTrees", Value=54)]
+      ArenaTrees = 54
+    }
+  
+}
