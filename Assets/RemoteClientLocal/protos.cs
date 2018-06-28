@@ -6164,6 +6164,7 @@ namespace ItemdefInstrument
 }
 // Generated from: DwarfControl.proto
 // Note: requires additional types generated from: ui_sidebar_mode.proto
+// Note: requires additional types generated from: RemoteFortressReader.proto
 namespace DwarfControl
 {
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"SidebarState")]
@@ -6180,10 +6181,84 @@ namespace DwarfControl
       get { return _mode; }
       set { _mode = value; }
     }
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<DwarfControl.MenuItem> _menu_items = new global::System.Collections.Generic.List<DwarfControl.MenuItem>();
+    [global::ProtoBuf.ProtoMember(2, Name=@"menu_items", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<DwarfControl.MenuItem> menu_items
+    {
+      get { return _menu_items; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MenuItem")]
+  public partial class MenuItem : global::ProtoBuf.IExtensible
+  {
+    public MenuItem() {}
+    
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.BuildingType _building_type = null;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"building_type", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.BuildingType building_type
+    {
+      get { return _building_type; }
+      set { _building_type = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _existing_count = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"existing_count", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int existing_count
+    {
+      get { return _existing_count; }
+      set { _existing_count = value; }
+    }
+    [UnityEngine.SerializeField]
+    private DwarfControl.BuildCategory _build_category = DwarfControl.BuildCategory.NotCategory;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"build_category", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(DwarfControl.BuildCategory.NotCategory)]
+    public DwarfControl.BuildCategory build_category
+    {
+      get { return _build_category; }
+      set { _build_category = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"BuildCategory")]
+    public enum BuildCategory
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"NotCategory", Value=0)]
+      NotCategory = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SiegeEngines", Value=1)]
+      SiegeEngines = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Traps", Value=2)]
+      Traps = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Workshops", Value=3)]
+      Workshops = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Furnaces", Value=4)]
+      Furnaces = 4,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Constructions", Value=5)]
+      Constructions = 5,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"MachineComponents", Value=6)]
+      MachineComponents = 6,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Track", Value=7)]
+      Track = 7
+    }
   
 }
 // Generated from: ui_sidebar_mode.proto

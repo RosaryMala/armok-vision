@@ -96,7 +96,10 @@ public sealed class DFConnection : MonoBehaviour
     private RemoteFunction<IntMessage> movementSelectCommandCall;
     private RemoteFunction<MiscMoveParams> miscMoveCall;
 
-    private RemoteFunction<EmptyMessage, SidebarState> sidebarStateCall;
+    #region Dwarf Mode Control
+    private RemoteFunction<EmptyMessage, SidebarState> getSideMenuCall;
+    private RemoteFunction<SidebarState> setSideMenuCall;
+    #endregion
 
     private readonly ColorOstream dfNetworkOut = new ColorOstream();
     private RemoteClient networkClient;
@@ -193,7 +196,8 @@ public sealed class DFConnection : MonoBehaviour
         movementSelectCommandCall = CreateAndBind<IntMessage>(networkClient, "MovementSelectCommand", "RemoteFortressReader");
         miscMoveCall = CreateAndBind<MiscMoveParams>(networkClient, "MiscMoveCommand", "RemoteFortressReader");
         languageCall = CreateAndBind<EmptyMessage, Language>(networkClient, "GetLanguage", "RemoteFortressReader");
-        sidebarStateCall = CreateAndBind<EmptyMessage, SidebarState>(networkClient, "GetSideMenu", "RemoteFortressReader");
+        getSideMenuCall = CreateAndBind<EmptyMessage, SidebarState>(networkClient, "GetSideMenu", "RemoteFortressReader");
+        setSideMenuCall = CreateAndBind<SidebarState>(networkClient, "SetSideMenu", "RemoteFortressReader");
     }
 
     #endregion
@@ -228,8 +232,9 @@ public sealed class DFConnection : MonoBehaviour
 
     #region Command DF
 
-    private RingBuffer<DigCommand> netDigCommands 
+    private readonly RingBuffer<DigCommand> netDigCommands 
         = new RingBuffer<DigCommand>(8);
+
 
     /// <summary>
     /// Enqueue's a digging designation command to send to DF
@@ -241,6 +246,17 @@ public sealed class DFConnection : MonoBehaviour
             return; //don't bother.
         if(netDigCommands.Count < netDigCommands.Capacity)
             netDigCommands.Enqueue(command);
+    }
+
+    private readonly RingBuffer<SidebarState> netSidebarSets
+    = new RingBuffer<SidebarState>(8);
+
+    public void EnqueueSidebarSet(SidebarState sidebar)
+    {
+        if (setSideMenuCall == null)
+            return;
+        if (!netSidebarSets.Full)
+            netSidebarSets.Enqueue(sidebar);
     }
 
     private RingBuffer<SingleBool> pauseCommands
@@ -798,9 +814,9 @@ public sealed class DFConnection : MonoBehaviour
     /// </summary>
     void FetchUnchangingInfo()
     {
-        if (sidebarStateCall != null)
+        if (getSideMenuCall != null)
         {
-            SidebarState = sidebarStateCall.Execute();
+            SidebarState = getSideMenuCall.Execute();
         }
         if (materialListCall != null)
             materialListCall.TryExecute(null, out netMaterialList);
@@ -1061,6 +1077,13 @@ public sealed class DFConnection : MonoBehaviour
                 digCommandCall.TryExecute(netDigCommands.Dequeue());
             }
         }
+        if(setSideMenuCall != null)
+        {
+            while(netSidebarSets.Count > 0)
+            {
+                setSideMenuCall.TryExecute(netSidebarSets.Dequeue());
+            }
+        }
         if(pauseCommandCall != null)
         {
             while(pauseCommands.Count > 0)
@@ -1111,9 +1134,9 @@ public sealed class DFConnection : MonoBehaviour
             AdventureMenuContents = menuQueryCall.Execute();
         }
 
-        if(sidebarStateCall != null)
+        if(getSideMenuCall != null)
         {
-            SidebarState = sidebarStateCall.Execute();
+            SidebarState = getSideMenuCall.Execute();
         }
 
         if (fetchMap)
