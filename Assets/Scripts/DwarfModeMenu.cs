@@ -27,16 +27,38 @@ public class DwarfModeMenu : MonoBehaviour
             UpdateMenu(sidebar);
     }
 
+    #region Button Callbacks
+
     public void SetSidebar(string mode)
     {
-        SidebarState sidebar = new SidebarState
+        SidebarCommand sidebar = new SidebarCommand
         {
             mode = (ui_sidebar_mode)Enum.Parse(typeof(ui_sidebar_mode), mode)
         };
         DFConnection.Instance.EnqueueSidebarSet(sidebar);
     }
 
+    public void BuildButton(string index)
+    {
+        SidebarCommand sidebar = new SidebarCommand
+        {
+            mode = ui_sidebar_mode.Build,
+            menu_index = int.Parse(index),
+            action = MenuAction.MenuSelect
+        };
+        DFConnection.Instance.EnqueueSidebarSet(sidebar);
+    }
 
+    public void CancelButton()
+    {
+        SidebarCommand sidebar = new SidebarCommand
+        {
+            action = MenuAction.MenuCancel
+        };
+        DFConnection.Instance.EnqueueSidebarSet(sidebar);
+    }
+
+    #endregion
 
     void UpdateMenu(SidebarState sidebar)
     {
@@ -158,15 +180,19 @@ public class DwarfModeMenu : MonoBehaviour
 
     private void BuildBuildMenu(SidebarState sidebar)
     {
-        if(menuPanel.childCount != sidebar.menu_items.Count)
+        if(menuPanel.childCount != sidebar.menu_items.Count + 1)
         {
             EmptyMenu();
-            foreach (var item in sidebar.menu_items)
+            AddMenuButton("Cancel", CancelButton);
+
+            for (int i = 0; i < sidebar.menu_items.Count; i++)
             {
+                string index = i.ToString(); //They all end up with i being Count if we don't do this.
+                var item = sidebar.menu_items[i];
                 if (item.building_type != null)
-                    AddMenuButton(GameMap.buildings[item.building_type].id);
+                    AddMenuButton(GameMap.buildings[item.building_type].id, delegate { BuildButton(index); });
                 else
-                    AddMenuButton(item.build_category.ToString());
+                    AddMenuButton(item.build_category.ToString(), delegate { BuildButton(index); });
             }
         }
         mode = sidebar.mode;

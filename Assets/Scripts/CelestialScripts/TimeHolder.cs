@@ -65,7 +65,6 @@ public class TimeHolder : MonoBehaviour {
             var tickDifference = realTime.CurrentYearTicks - lastTicks;
             var secondDifference = currentSeconds - lastSeconds;
             Time.timeScale = (tickDifference / secondDifference) / CanonFPS;
-            Debug.Log("FPS: " + Time.timeScale * CanonFPS);
             lastSeconds = currentSeconds;
             lastTicks = realTime.CurrentYearTicks;
         }

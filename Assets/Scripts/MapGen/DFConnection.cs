@@ -98,7 +98,7 @@ public sealed class DFConnection : MonoBehaviour
 
     #region Dwarf Mode Control
     private RemoteFunction<EmptyMessage, SidebarState> getSideMenuCall;
-    private RemoteFunction<SidebarState> setSideMenuCall;
+    private RemoteFunction<SidebarCommand> setSideMenuCall;
     #endregion
 
     private readonly ColorOstream dfNetworkOut = new ColorOstream();
@@ -197,7 +197,7 @@ public sealed class DFConnection : MonoBehaviour
         miscMoveCall = CreateAndBind<MiscMoveParams>(networkClient, "MiscMoveCommand", "RemoteFortressReader");
         languageCall = CreateAndBind<EmptyMessage, Language>(networkClient, "GetLanguage", "RemoteFortressReader");
         getSideMenuCall = CreateAndBind<EmptyMessage, SidebarState>(networkClient, "GetSideMenu", "RemoteFortressReader");
-        setSideMenuCall = CreateAndBind<SidebarState>(networkClient, "SetSideMenu", "RemoteFortressReader");
+        setSideMenuCall = CreateAndBind<SidebarCommand>(networkClient, "SetSideMenu", "RemoteFortressReader");
     }
 
     #endregion
@@ -248,10 +248,10 @@ public sealed class DFConnection : MonoBehaviour
             netDigCommands.Enqueue(command);
     }
 
-    private readonly RingBuffer<SidebarState> netSidebarSets
-    = new RingBuffer<SidebarState>(8);
+    private readonly RingBuffer<SidebarCommand> netSidebarSets
+    = new RingBuffer<SidebarCommand>(8);
 
-    public void EnqueueSidebarSet(SidebarState sidebar)
+    public void EnqueueSidebarSet(SidebarCommand sidebar)
     {
         if (setSideMenuCall == null)
             return;

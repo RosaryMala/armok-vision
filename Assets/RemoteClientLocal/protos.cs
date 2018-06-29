@@ -6231,6 +6231,43 @@ namespace DwarfControl
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"SidebarCommand")]
+  public partial class SidebarCommand : global::ProtoBuf.IExtensible
+  {
+    public SidebarCommand() {}
+    
+    [UnityEngine.SerializeField]
+    private proto.enums.ui_sidebar_mode.ui_sidebar_mode _mode = proto.enums.ui_sidebar_mode.ui_sidebar_mode.Default;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"mode", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(proto.enums.ui_sidebar_mode.ui_sidebar_mode.Default)]
+    public proto.enums.ui_sidebar_mode.ui_sidebar_mode mode
+    {
+      get { return _mode; }
+      set { _mode = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _menu_index = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"menu_index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int menu_index
+    {
+      get { return _menu_index; }
+      set { _menu_index = value; }
+    }
+    [UnityEngine.SerializeField]
+    private DwarfControl.MenuAction _action = DwarfControl.MenuAction.MenuNone;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"action", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(DwarfControl.MenuAction.MenuNone)]
+    public DwarfControl.MenuAction action
+    {
+      get { return _action; }
+      set { _action = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
     [global::ProtoBuf.ProtoContract(Name=@"BuildCategory")]
     public enum BuildCategory
     {
@@ -6258,6 +6295,20 @@ namespace DwarfControl
             
       [global::ProtoBuf.ProtoEnum(Name=@"Track", Value=7)]
       Track = 7
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"MenuAction")]
+    public enum MenuAction
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"MenuNone", Value=0)]
+      MenuNone = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"MenuSelect", Value=1)]
+      MenuSelect = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"MenuCancel", Value=2)]
+      MenuCancel = 2
     }
   
 }
