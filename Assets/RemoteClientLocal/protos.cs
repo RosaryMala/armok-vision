@@ -6189,6 +6189,15 @@ namespace DwarfControl
       get { return _menu_items; }
     }
   
+    [UnityEngine.SerializeField]
+    private DwarfControl.BuildSelector _build_selector = null;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"build_selector", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public DwarfControl.BuildSelector build_selector
+    {
+      get { return _build_selector; }
+      set { _build_selector = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -6268,6 +6277,159 @@ namespace DwarfControl
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BuiildReqChoice")]
+  public partial class BuiildReqChoice : global::ProtoBuf.IExtensible
+  {
+    public BuiildReqChoice() {}
+    
+    [UnityEngine.SerializeField]
+    private int _distance = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"distance", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int distance
+    {
+      get { return _distance; }
+      set { _distance = value; }
+    }
+    [UnityEngine.SerializeField]
+    private string _name = "";
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string name
+    {
+      get { return _name; }
+      set { _name = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _num_candidates = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"num_candidates", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int num_candidates
+    {
+      get { return _num_candidates; }
+      set { _num_candidates = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _used_count = default(int);
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"used_count", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int used_count
+    {
+      get { return _used_count; }
+      set { _used_count = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BuildItemReq")]
+  public partial class BuildItemReq : global::ProtoBuf.IExtensible
+  {
+    public BuildItemReq() {}
+    
+    [UnityEngine.SerializeField]
+    private int _count_required = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"count_required", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int count_required
+    {
+      get { return _count_required; }
+      set { _count_required = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _count_max = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"count_max", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int count_max
+    {
+      get { return _count_max; }
+      set { _count_max = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _count_provided = default(int);
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"count_provided", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int count_provided
+    {
+      get { return _count_provided; }
+      set { _count_provided = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BuildSelector")]
+  public partial class BuildSelector : global::ProtoBuf.IExtensible
+  {
+    public BuildSelector() {}
+    
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.BuildingType _building_type = null;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"building_type", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.BuildingType building_type
+    {
+      get { return _building_type; }
+      set { _building_type = value; }
+    }
+    [UnityEngine.SerializeField]
+    private DwarfControl.BuildSelectorStage _stage = DwarfControl.BuildSelectorStage.StageNoMat;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"stage", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(DwarfControl.BuildSelectorStage.StageNoMat)]
+    public DwarfControl.BuildSelectorStage stage
+    {
+      get { return _stage; }
+      set { _stage = value; }
+    }
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<DwarfControl.BuiildReqChoice> _choices = new global::System.Collections.Generic.List<DwarfControl.BuiildReqChoice>();
+    [global::ProtoBuf.ProtoMember(3, Name=@"choices", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<DwarfControl.BuiildReqChoice> choices
+    {
+      get { return _choices; }
+    }
+  
+    [UnityEngine.SerializeField]
+    private int _sel_index = default(int);
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"sel_index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int sel_index
+    {
+      get { return _sel_index; }
+      set { _sel_index = value; }
+    }
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<DwarfControl.BuildItemReq> _requirements = new global::System.Collections.Generic.List<DwarfControl.BuildItemReq>();
+    [global::ProtoBuf.ProtoMember(5, Name=@"requirements", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<DwarfControl.BuildItemReq> requirements
+    {
+      get { return _requirements; }
+    }
+  
+    [UnityEngine.SerializeField]
+    private int _req_index = default(int);
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"req_index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int req_index
+    {
+      get { return _req_index; }
+      set { _req_index = value; }
+    }
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<string> _errors = new global::System.Collections.Generic.List<string>();
+    [global::ProtoBuf.ProtoMember(7, Name=@"errors", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<string> errors
+    {
+      get { return _errors; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
     [global::ProtoBuf.ProtoContract(Name=@"BuildCategory")]
     public enum BuildCategory
     {
@@ -6308,7 +6470,24 @@ namespace DwarfControl
       MenuSelect = 1,
             
       [global::ProtoBuf.ProtoEnum(Name=@"MenuCancel", Value=2)]
-      MenuCancel = 2
+      MenuCancel = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"MenuSelectAll", Value=3)]
+      MenuSelectAll = 3
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"BuildSelectorStage")]
+    public enum BuildSelectorStage
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"StageNoMat", Value=0)]
+      StageNoMat = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"StagePlace", Value=1)]
+      StagePlace = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"StageItemSelect", Value=2)]
+      StageItemSelect = 2
     }
   
 }

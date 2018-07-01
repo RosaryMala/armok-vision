@@ -10,13 +10,16 @@ public class DwarfModeMenu : MonoBehaviour
     public ui_sidebar_mode mode = ui_sidebar_mode.Default;
 
     public Button buttonPrefab;
+    public RectTransform labelPrefab;
+    public RectTransform errorPrefab;
+    public RectTransform spacerPrefab;
 
     public RectTransform menuPanel;
 
     // Use this for initialization
     void Start()
     {
-        BuildDefaultMenu(null);
+        BuildDefaultMenu(null, true);
     }
 
     // Update is called once per frame
@@ -62,10 +65,6 @@ public class DwarfModeMenu : MonoBehaviour
 
     void UpdateMenu(SidebarState sidebar)
     {
-        if (mode != sidebar.mode)
-        {
-            EmptyMenu();
-        }
         switch (sidebar.mode)
         {
             case ui_sidebar_mode.Default:
@@ -128,7 +127,12 @@ public class DwarfModeMenu : MonoBehaviour
             case ui_sidebar_mode.ArenaWeather:
             case ui_sidebar_mode.ArenaTrees:
             default:
-                mode = sidebar.mode;
+                if (mode != sidebar.mode)
+                {
+                    EmptyMenu();
+                    AddMenuButton("Cancel", CancelButton);
+                    mode = sidebar.mode;
+                }
                 break;
         }
     }
@@ -142,10 +146,11 @@ public class DwarfModeMenu : MonoBehaviour
 
     }
 
-    private void BuildDefaultMenu(SidebarState sidebar)
+    private void BuildDefaultMenu(SidebarState sidebar, bool force = false)
     {
-        if (sidebar != null && mode == sidebar.mode)
+        if (mode == ui_sidebar_mode.Default && !force)
             return;
+        EmptyMenu();
         AddMenuButton("View Announcements");
         AddMenuButton("Building", delegate { SetSidebar(ui_sidebar_mode.Build.ToString()); });
         AddMenuButton("Reports");
@@ -174,30 +179,116 @@ public class DwarfModeMenu : MonoBehaviour
         AddMenuButton("Options");
         AddMenuButton("Depot Access", delegate { SetSidebar(ui_sidebar_mode.DepotAccess.ToString()); });
         AddMenuButton("Resume");
-        if(sidebar != null)
-            mode = sidebar.mode;
+        mode = ui_sidebar_mode.Default;
     }
+
+    int numBuildingOptions = 0;
 
     private void BuildBuildMenu(SidebarState sidebar)
     {
-        if(menuPanel.childCount != sidebar.menu_items.Count + 1)
+        if (
+            numBuildingOptions != sidebar.menu_items.Count
+            || SelectorChanged(sidebar.build_selector)
+            || mode != sidebar.mode
+            )
         {
             EmptyMenu();
             AddMenuButton("Cancel", CancelButton);
 
+            numBuildingOptions = sidebar.menu_items.Count;
             for (int i = 0; i < sidebar.menu_items.Count; i++)
             {
                 string index = i.ToString(); //They all end up with i being Count if we don't do this.
                 var item = sidebar.menu_items[i];
                 if (item.building_type != null)
-                    AddMenuButton(GameMap.buildings[item.building_type].id, delegate { BuildButton(index); });
+                    AddMenuButton(GameMap.buildings[item.building_type].name, delegate { BuildButton(index); });
                 else
                     AddMenuButton(item.build_category.ToString(), delegate { BuildButton(index); });
+            }
+
+            if(sidebar.build_selector != null)
+            {
+                AddHeader(GameMap.buildings[sidebar.build_selector.building_type].name);
+                AddSpacer();
+                foreach (var error in sidebar.build_selector.errors)
+                {
+                    AddError(error);
+                }
+                switch (sidebar.build_selector.stage)
+                {
+                    case BuildSelectorStage.StageNoMat:
+                        break;
+                    case BuildSelectorStage.StagePlace:
+                        break;
+                    case BuildSelectorStage.StageItemSelect:
+                        foreach (var choice in sidebar.build_selector.choices)
+                        {
+                            AddMenuButton(choice.name + " " + choice.distance + " " + choice.used_count + "/" + choice.num_candidates);
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
         }
         mode = sidebar.mode;
     }
 
+    BuildSelector prevBuildSelector = null;
+    private bool SelectorChanged(BuildSelector theirs)
+    {
+        var ours = prevBuildSelector;
+        prevBuildSelector = theirs;
+        if (ours == null)
+        {
+            if (theirs == null)
+                return false;
+            return true;
+        }
+        else
+        {
+            if (theirs == null)
+                return true;
+            if ((BuildingStruct)ours.building_type != theirs.building_type)
+                return true;
+            if (ours.stage != theirs.stage)
+                return true;
+            if (ours.req_index != theirs.req_index)
+                return true;
+            if (ours.requirements.Count != theirs.requirements.Count)
+                return true;
+            if (ours.choices.Count != theirs.choices.Count)
+                return true;
+            if (ours.errors.Count != theirs.errors.Count)
+                return true;
+            for (int i = 0; i < ours.choices.Count; i++)
+            {
+                if (ours.choices[i].used_count != theirs.choices[i].used_count)
+                    return true;
+                if (ours.choices[i].distance != theirs.choices[i].distance)
+                    return true;
+                if (ours.choices[i].num_candidates != theirs.choices[i].num_candidates)
+                    return true;
+                if (ours.choices[i].name != theirs.choices[i].name)
+                    return true;
+            }
+            for (int i = 0; i < ours.requirements.Count; i++)
+            {
+                if (ours.requirements[i].count_provided != theirs.requirements[i].count_provided)
+                    return true;
+                if (ours.requirements[i].count_required != theirs.requirements[i].count_required)
+                    return true;
+                if (ours.requirements[i].count_max != theirs.requirements[i].count_max)
+                    return true;
+            }
+            for (int i = 0; i < ours.errors.Count; i++)
+            {
+                if (ours.errors[i] != theirs.errors[i])
+                    return true;
+            }
+        }
+        return false;
+    }
 
     private void AddMenuButton(string label, UnityAction action = null)
     {
@@ -207,5 +298,28 @@ public class DwarfModeMenu : MonoBehaviour
         if(action != null)
             button.onClick.AddListener(action);
         button.transform.SetParent(menuPanel, false);
+    }
+
+    private void AddHeader(string label)
+    {
+        var prefab = Instantiate(labelPrefab);
+        var text = prefab.GetComponentInChildren<Text>();
+        text.text = label;
+        prefab.name = label;
+        prefab.transform.SetParent(menuPanel, false);
+    }
+
+    private void AddError(string label)
+    {
+        var prefab = Instantiate(errorPrefab);
+        var text = prefab.GetComponentInChildren<Text>();
+        text.text = label;
+        prefab.name = label;
+        prefab.transform.SetParent(menuPanel, false);
+    }
+
+    private void AddSpacer()
+    {
+        Instantiate(spacerPrefab).transform.SetParent(menuPanel, false);
     }
 }
