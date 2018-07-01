@@ -3,6 +3,7 @@ using proto.enums.ui_sidebar_mode;
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class DwarfModeMenu : MonoBehaviour
@@ -13,6 +14,8 @@ public class DwarfModeMenu : MonoBehaviour
     public RectTransform labelPrefab;
     public RectTransform errorPrefab;
     public RectTransform spacerPrefab;
+    public Mesh previewMesh;
+    public Material previewMaterial;
 
     public RectTransform menuPanel;
 
@@ -28,6 +31,49 @@ public class DwarfModeMenu : MonoBehaviour
         var sidebar = DFConnection.Instance.SidebarState;
         if (sidebar != null)
             UpdateMenu(sidebar);
+        if(prevBuildSelector != null)
+        {
+            DrawBuildLocation(prevBuildSelector);
+        }
+    }
+
+    private void DrawBuildLocation(BuildSelector prevBuildSelector)
+    {
+        if (!(prevBuildSelector.stage == BuildSelectorStage.StagePlace || prevBuildSelector.stage == BuildSelectorStage.StageItemSelect))
+            return;
+
+        var mouseCenter = GetMouseCenterDF();
+        if (prevBuildSelector.stage == BuildSelectorStage.StageItemSelect)
+            mouseCenter = prevBuildSelector.cursor;
+        for (int y = mouseCenter.y - prevBuildSelector.radius_y_low; y <= mouseCenter.y + prevBuildSelector.radius_y_high; y++)
+            for (int x = mouseCenter.x - prevBuildSelector.radius_x_low; x <= mouseCenter.x + prevBuildSelector.radius_x_high; x++)
+            {
+                var drawCenter = GameMap.DFtoUnityCoord(x, y, mouseCenter.z);
+                Graphics.DrawMesh(previewMesh, Matrix4x4.TRS(drawCenter, Quaternion.identity, Vector3.one), previewMaterial, 0);
+            }
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+        SidebarCommand sidebarCommand = new SidebarCommand
+        {
+            selection_coord = mouseCenter
+        };
+        if (Input.GetMouseButtonDown(0) && prevBuildSelector.stage == BuildSelectorStage.StagePlace)
+            sidebarCommand.action = MenuAction.MenuSelect;
+        DFConnection.Instance.EnqueueSidebarSet(sidebarCommand);
+    }
+
+    Vector3 GetMouseCenter()
+    {
+        Vector3 viewCenter = GameMap.DFtoUnityCoord(GameMap.Instance.PosXTile, GameMap.Instance.PosYTile, GameMap.Instance.PosZ - 1) + new Vector3(0, GameMap.floorHeight, 0);
+        var groundPlane = new Plane(Vector3.up, viewCenter);
+        Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        groundPlane.Raycast(mouseRay, out float distance);
+        return mouseRay.GetPoint(distance);
+    }
+
+    DFHack.DFCoord GetMouseCenterDF()
+    {
+        return GameMap.UnityToDFCoord(GetMouseCenter());
     }
 
     #region Button Callbacks
@@ -221,9 +267,11 @@ public class DwarfModeMenu : MonoBehaviour
                     case BuildSelectorStage.StagePlace:
                         break;
                     case BuildSelectorStage.StageItemSelect:
-                        foreach (var choice in sidebar.build_selector.choices)
+                        for (int i = 0; i < sidebar.build_selector.choices.Count; i++)
                         {
-                            AddMenuButton(choice.name + " " + choice.distance + " " + choice.used_count + "/" + choice.num_candidates);
+                            var choice = sidebar.build_selector.choices[i];
+                            string index = i.ToString(); //They all end up with i being Count if we don't do this.
+                            AddMenuButton(choice.name + " " + choice.distance + " " + choice.used_count + "/" + choice.num_candidates, delegate { BuildButton(index); });
                         }
                         break;
                     default:
@@ -235,6 +283,7 @@ public class DwarfModeMenu : MonoBehaviour
     }
 
     BuildSelector prevBuildSelector = null;
+
     private bool SelectorChanged(BuildSelector theirs)
     {
         var ours = prevBuildSelector;

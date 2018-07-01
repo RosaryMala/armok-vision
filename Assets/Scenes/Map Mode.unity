@@ -21757,6 +21757,8 @@ MonoBehaviour:
     type: 2}
   spacerPrefab: {fileID: 224594751988374808, guid: 7a63c9e2c92a1a24e8c97a74af41f427,
     type: 2}
+  previewMesh: {fileID: 4300000, guid: dcfb5e4b97b90874288075d6e4f49be1, type: 3}
+  previewMaterial: {fileID: 2100000, guid: 9392ca0270383b341abb11547457950c, type: 2}
   menuPanel: {fileID: 726471150}
 --- !u!4 &1614134862
 Transform:
@@ -26874,9 +26876,9 @@ MonoBehaviour:
   cameraCenter: {fileID: 1383803863}
   repeatRate: 0.15
   repeatStart: 0.25
-  movementMesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
-  movementMat: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  grabMat: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  movementMesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 3}
+  movementMat: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 3}
+  grabMat: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 3}
   grabPrefab: {fileID: 114643412933633916, guid: 7bf596af75a50dd44ab9b736847c5fb1,
     type: 2}
   movePrefab: {fileID: 114299713355789264, guid: 84de4a735300ed54ca5f15f87e6dbbd6,

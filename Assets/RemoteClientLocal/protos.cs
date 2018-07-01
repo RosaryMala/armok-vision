@@ -6272,6 +6272,15 @@ namespace DwarfControl
       get { return _action; }
       set { _action = value; }
     }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.Coord _selection_coord = null;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"selection_coord", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Coord selection_coord
+    {
+      get { return _selection_coord; }
+      set { _selection_coord = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -6425,6 +6434,51 @@ namespace DwarfControl
       get { return _errors; }
     }
   
+    [UnityEngine.SerializeField]
+    private int _radius_x_low = default(int);
+    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"radius_x_low", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int radius_x_low
+    {
+      get { return _radius_x_low; }
+      set { _radius_x_low = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _radius_y_low = default(int);
+    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"radius_y_low", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int radius_y_low
+    {
+      get { return _radius_y_low; }
+      set { _radius_y_low = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _radius_x_high = default(int);
+    [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name=@"radius_x_high", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int radius_x_high
+    {
+      get { return _radius_x_high; }
+      set { _radius_x_high = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _radius_y_high = default(int);
+    [global::ProtoBuf.ProtoMember(11, IsRequired = false, Name=@"radius_y_high", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int radius_y_high
+    {
+      get { return _radius_y_high; }
+      set { _radius_y_high = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.Coord _cursor = null;
+    [global::ProtoBuf.ProtoMember(12, IsRequired = false, Name=@"cursor", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Coord cursor
+    {
+      get { return _cursor; }
+      set { _cursor = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
