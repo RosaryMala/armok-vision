@@ -6479,6 +6479,14 @@ namespace DwarfControl
       get { return _cursor; }
       set { _cursor = value; }
     }
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<int> _tiles = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(13, Name=@"tiles", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> tiles
+    {
+      get { return _tiles; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

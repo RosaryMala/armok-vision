@@ -14,8 +14,13 @@ public class DwarfModeMenu : MonoBehaviour
     public RectTransform labelPrefab;
     public RectTransform errorPrefab;
     public RectTransform spacerPrefab;
-    public Mesh previewMesh;
-    public Material previewMaterial;
+    public Mesh previewHigh;
+    public Mesh previewLow;
+    public Material previewLight;
+    public Material previewDark;
+    public Material previewPurpleLight;
+    public Material previewPurpleDark;
+    public Material previewRed;
 
     public RectTransform menuPanel;
 
@@ -48,8 +53,31 @@ public class DwarfModeMenu : MonoBehaviour
         for (int y = mouseCenter.y - prevBuildSelector.radius_y_low; y <= mouseCenter.y + prevBuildSelector.radius_y_high; y++)
             for (int x = mouseCenter.x - prevBuildSelector.radius_x_low; x <= mouseCenter.x + prevBuildSelector.radius_x_high; x++)
             {
+                int x_local = x + prevBuildSelector.radius_x_low - mouseCenter.x;
+                int y_local = y + prevBuildSelector.radius_y_low - mouseCenter.y;
+                int tile = prevBuildSelector.tiles[x_local + (y_local * (prevBuildSelector.radius_x_low + prevBuildSelector.radius_x_high + 1))];
                 var drawCenter = GameMap.DFtoUnityCoord(x, y, mouseCenter.z);
-                Graphics.DrawMesh(previewMesh, Matrix4x4.TRS(drawCenter, Quaternion.identity, Vector3.one), previewMaterial, 0);
+                switch (tile)
+                {
+                    case 0:
+                        if (prevBuildSelector.errors.Count == 0)
+                            Graphics.DrawMesh(previewLow, Matrix4x4.TRS(drawCenter, Quaternion.identity, Vector3.one), previewLight, 0);
+                        else
+                            Graphics.DrawMesh(previewLow, Matrix4x4.TRS(drawCenter, Quaternion.identity, Vector3.one), previewPurpleLight, 0);
+                        break;
+                    case 1:
+                        if (prevBuildSelector.errors.Count == 0)
+                            Graphics.DrawMesh(previewHigh, Matrix4x4.TRS(drawCenter, Quaternion.identity, Vector3.one), previewDark, 0);
+                        else
+                            Graphics.DrawMesh(previewHigh, Matrix4x4.TRS(drawCenter, Quaternion.identity, Vector3.one), previewPurpleDark, 0);
+                        break;
+                    case 6: //Blocked
+                    case 7: //Hidden
+                    case 14: //Too close to edge
+                    default:
+                        Graphics.DrawMesh(previewHigh, Matrix4x4.TRS(drawCenter, Quaternion.identity, Vector3.one), previewRed, 0);
+                        break;
+                }
             }
         if (EventSystem.current.IsPointerOverGameObject())
             return;

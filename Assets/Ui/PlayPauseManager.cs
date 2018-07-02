@@ -11,8 +11,10 @@ public class PlayPauseManager : MonoBehaviour
 
     void Start()
     {
-        playButton.SetActive(paused);
-        pauseButton.SetActive(!paused);
+        if (playButton != null)
+            playButton.SetActive(paused);
+        if (pauseButton != null)
+            pauseButton.SetActive(!paused);
     }
 
     // Update is called once per frame
@@ -21,8 +23,10 @@ public class PlayPauseManager : MonoBehaviour
         if (paused != DFConnection.Instance.DfPauseState)
         {
             paused = DFConnection.Instance.DfPauseState;
-            playButton.SetActive(paused);
-            pauseButton.SetActive(!paused);
+            if (playButton != null)
+                playButton.SetActive(paused);
+            if (pauseButton != null)
+                pauseButton.SetActive(!paused);
         }
     }
 }
