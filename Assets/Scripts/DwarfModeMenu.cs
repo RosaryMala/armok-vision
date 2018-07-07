@@ -23,11 +23,20 @@ public class DwarfModeMenu : MonoBehaviour
     public Material previewRed;
 
     public RectTransform menuPanel;
+    private DiggingTool diggingTool;
+    private PlayPauseManager pauseManager;
+
+    private void Awake()
+    {
+        diggingTool = GetComponent<DiggingTool>();
+        pauseManager = GetComponent<PlayPauseManager>();
+    }
 
     // Use this for initialization
     void Start()
     {
         BuildDefaultMenu(null, true);
+        Debug.Log(Screen.dpi);
     }
 
     // Update is called once per frame
@@ -128,6 +137,7 @@ public class DwarfModeMenu : MonoBehaviour
 
     public void CancelButton()
     {
+        diggingTool.digMode = DiggingTool.DigMode.None;
         SidebarCommand sidebar = new SidebarCommand
         {
             action = MenuAction.MenuCancel
@@ -136,6 +146,7 @@ public class DwarfModeMenu : MonoBehaviour
     }
 
     #endregion
+    #region Menu Filling
 
     void UpdateMenu(SidebarState sidebar)
     {
@@ -147,7 +158,6 @@ public class DwarfModeMenu : MonoBehaviour
             case ui_sidebar_mode.Build:
                 BuildBuildMenu(sidebar);
                 break;
-            case ui_sidebar_mode.Squads:
             case ui_sidebar_mode.DesignateMine:
             case ui_sidebar_mode.DesignateRemoveRamps:
             case ui_sidebar_mode.DesignateUpStair:
@@ -161,6 +171,9 @@ public class DwarfModeMenu : MonoBehaviour
             case ui_sidebar_mode.DesignateCarveTrack:
             case ui_sidebar_mode.DesignateEngrave:
             case ui_sidebar_mode.DesignateCarveFortification:
+                BuildDigMenu(sidebar);
+                break;
+            case ui_sidebar_mode.Squads:
             case ui_sidebar_mode.Stockpiles:
             case ui_sidebar_mode.QueryBuilding:
             case ui_sidebar_mode.Orders:
@@ -203,7 +216,7 @@ public class DwarfModeMenu : MonoBehaviour
             default:
                 if (mode != sidebar.mode)
                 {
-                    EmptyMenu();
+                    ClearMenu();
                     AddMenuButton("Cancel", CancelButton);
                     mode = sidebar.mode;
                 }
@@ -211,20 +224,21 @@ public class DwarfModeMenu : MonoBehaviour
         }
     }
 
-    private void EmptyMenu()
+    private void ClearMenu()
     {
         foreach (Transform child in menuPanel.transform)
         {
             Destroy(child.gameObject);
         }
-
+        pauseManager.pauseButton = null;
+        pauseManager.playButton = null;
     }
 
     private void BuildDefaultMenu(SidebarState sidebar, bool force = false)
     {
         if (mode == ui_sidebar_mode.Default && !force)
             return;
-        EmptyMenu();
+        ClearMenu();
         AddMenuButton("View Announcements");
         AddMenuButton("Building", delegate { SetSidebar(ui_sidebar_mode.Build.ToString()); });
         AddMenuButton("Reports");
@@ -252,7 +266,8 @@ public class DwarfModeMenu : MonoBehaviour
         AddMenuButton("Help");
         AddMenuButton("Options");
         AddMenuButton("Depot Access", delegate { SetSidebar(ui_sidebar_mode.DepotAccess.ToString()); });
-        AddMenuButton("Resume");
+        pauseManager.pauseButton = AddMenuButton("Pause", delegate { DFConnection.Instance.SendPauseCommand(true); }).gameObject;
+        pauseManager.playButton = AddMenuButton("Resume", delegate { DFConnection.Instance.SendPauseCommand(false); }).gameObject;
         mode = ui_sidebar_mode.Default;
     }
 
@@ -266,7 +281,7 @@ public class DwarfModeMenu : MonoBehaviour
             || mode != sidebar.mode
             )
         {
-            EmptyMenu();
+            ClearMenu();
             AddMenuButton("Cancel", CancelButton);
 
             numBuildingOptions = sidebar.menu_items.Count;
@@ -309,6 +324,78 @@ public class DwarfModeMenu : MonoBehaviour
         }
         mode = sidebar.mode;
     }
+
+    private void BuildDigMenu(SidebarState sidebar)
+    {
+        switch (sidebar.mode)
+        {
+            case ui_sidebar_mode.DesignateMine:
+                diggingTool.digMode = DiggingTool.DigMode.Dig;
+                break;
+            case ui_sidebar_mode.DesignateRemoveRamps:
+                diggingTool.digMode = DiggingTool.DigMode.RemoveUpStairRamp;
+                break;
+            case ui_sidebar_mode.DesignateUpStair:
+                diggingTool.digMode = DiggingTool.DigMode.UpStair;
+                break;
+            case ui_sidebar_mode.DesignateDownStair:
+                diggingTool.digMode = DiggingTool.DigMode.DownStair;
+                break;
+            case ui_sidebar_mode.DesignateUpDownStair:
+                diggingTool.digMode = DiggingTool.DigMode.UpDownStair;
+                break;
+            case ui_sidebar_mode.DesignateUpRamp:
+                diggingTool.digMode = DiggingTool.DigMode.UpRamp;
+                break;
+            case ui_sidebar_mode.DesignateChannel:
+                diggingTool.digMode = DiggingTool.DigMode.Channel;
+                break;
+            case ui_sidebar_mode.DesignateGatherPlants:
+                diggingTool.digMode = DiggingTool.DigMode.GatherPlants;
+                break;
+            case ui_sidebar_mode.DesignateRemoveDesignation:
+                diggingTool.digMode = DiggingTool.DigMode.RemoveDesignation;
+                break;
+            case ui_sidebar_mode.DesignateSmooth:
+                diggingTool.digMode = DiggingTool.DigMode.SmoothStone;
+                break;
+            case ui_sidebar_mode.DesignateCarveTrack:
+                break;
+            case ui_sidebar_mode.DesignateEngrave:
+                diggingTool.digMode = DiggingTool.DigMode.EngraveStone;
+                break;
+            case ui_sidebar_mode.DesignateCarveFortification:
+                diggingTool.digMode = DiggingTool.DigMode.CarveFortifications;
+                break;
+        }
+
+        if (sidebar.mode == mode)
+            return;
+        mode = sidebar.mode;
+        ClearMenu();
+        AddMenuButton("Cancel", CancelButton);
+        AddMenuButton("Mine", delegate { SetSidebar(ui_sidebar_mode.DesignateMine.ToString()); });
+        AddMenuButton("Channel", delegate { SetSidebar(ui_sidebar_mode.DesignateChannel.ToString()); });
+        AddMenuButton("Up Stair", delegate { SetSidebar(ui_sidebar_mode.DesignateUpStair.ToString()); });
+        AddMenuButton("Down Stair", delegate { SetSidebar(ui_sidebar_mode.DesignateDownStair.ToString()); });
+        AddMenuButton("U/D Stair", delegate { SetSidebar(ui_sidebar_mode.DesignateUpDownStair.ToString()); });
+        AddMenuButton("Up Ramp", delegate { SetSidebar(ui_sidebar_mode.DesignateUpRamp.ToString()); });
+        AddMenuButton("Remove Up Stairs/Ramps", delegate { SetSidebar(ui_sidebar_mode.DesignateRemoveRamps.ToString()); });
+        AddMenuButton("Chop Down Trees", delegate { SetSidebar(ui_sidebar_mode.DesignateChopTrees.ToString()); });
+        AddMenuButton("Gather Plants", delegate { SetSidebar(ui_sidebar_mode.DesignateGatherPlants.ToString()); });
+        AddMenuButton("Smooth Stone", delegate { SetSidebar(ui_sidebar_mode.DesignateSmooth.ToString()); });
+        AddMenuButton("Engrave Stone", delegate { SetSidebar(ui_sidebar_mode.DesignateEngrave.ToString()); });
+        AddMenuButton("Carve Fortifications", delegate { SetSidebar(ui_sidebar_mode.DesignateCarveFortification.ToString()); });
+        AddMenuButton("Carve Track", delegate { SetSidebar(ui_sidebar_mode.DesignateCarveTrack.ToString()); });
+        AddMenuButton("Toggle Engravings", delegate { SetSidebar(ui_sidebar_mode.DesignateToggleEngravings.ToString()); });
+        AddMenuButton("Toggle Standard/Marking", delegate { SetSidebar(ui_sidebar_mode.DesignateToggleMarker.ToString()); });
+        AddMenuButton("Remove Construction", delegate { SetSidebar(ui_sidebar_mode.DesignateRemoveConstruction.ToString()); });
+        AddMenuButton("Remove Designation", delegate { SetSidebar(ui_sidebar_mode.DesignateRemoveDesignation.ToString()); });
+        AddMenuButton("Set Building/Item Properties", delegate { SetSidebar(ui_sidebar_mode.DesignateItemsClaim.ToString()); });
+        AddMenuButton("Set Traffic Areas", delegate { SetSidebar(ui_sidebar_mode.DesignateTrafficNormal.ToString()); });
+    }
+
+    #endregion
 
     BuildSelector prevBuildSelector = null;
 
@@ -367,7 +454,7 @@ public class DwarfModeMenu : MonoBehaviour
         return false;
     }
 
-    private void AddMenuButton(string label, UnityAction action = null)
+    private Button AddMenuButton(string label, UnityAction action = null)
     {
         Button button = Instantiate(buttonPrefab);
         button.GetComponentInChildren<Text>().text = label;
@@ -375,6 +462,7 @@ public class DwarfModeMenu : MonoBehaviour
         if(action != null)
             button.onClick.AddListener(action);
         button.transform.SetParent(menuPanel, false);
+        return button;
     }
 
     private void AddHeader(string label)

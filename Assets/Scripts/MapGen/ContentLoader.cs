@@ -417,6 +417,7 @@ public class ContentLoader : MonoBehaviour
         Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
         Debug.Log(string.Format("loaded {0} meshes, and {1} shape textures.", MeshContent.NumCreated, shapeTextureStorage.AtlasTexture.depth));
         Debug.Log("Loading Complete. Press ESC to change settings or leave feedback. Have a nice day!");
+        Debug.Log("Screen is " + Screen.dpi + "dpi.");
         if (GameMap.Instance != null)
             GameMap.Instance.HideHelp();
         DFConnection.Instance.NeedNewBlocks = true;
