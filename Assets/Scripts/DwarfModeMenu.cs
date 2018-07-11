@@ -11,6 +11,7 @@ public class DwarfModeMenu : MonoBehaviour
     public ui_sidebar_mode mode = ui_sidebar_mode.Default;
 
     public Button buttonPrefab;
+    public Button itemSelectButton;
     public RectTransform labelPrefab;
     public RectTransform errorPrefab;
     public RectTransform spacerPrefab;
@@ -104,7 +105,8 @@ public class DwarfModeMenu : MonoBehaviour
         Vector3 viewCenter = GameMap.DFtoUnityCoord(GameMap.Instance.PosXTile, GameMap.Instance.PosYTile, GameMap.Instance.PosZ - 1) + new Vector3(0, GameMap.floorHeight, 0);
         var groundPlane = new Plane(Vector3.up, viewCenter);
         Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        groundPlane.Raycast(mouseRay, out float distance);
+        float distance;
+        groundPlane.Raycast(mouseRay, out distance);
         return mouseRay.GetPoint(distance);
     }
 
@@ -230,7 +232,6 @@ public class DwarfModeMenu : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
-        pauseManager.pauseButton = null;
         pauseManager.playButton = null;
     }
 
@@ -266,9 +267,13 @@ public class DwarfModeMenu : MonoBehaviour
         AddMenuButton("Help");
         AddMenuButton("Options");
         AddMenuButton("Depot Access", delegate { SetSidebar(ui_sidebar_mode.DepotAccess.ToString()); });
-        pauseManager.pauseButton = AddMenuButton("Pause", delegate { DFConnection.Instance.SendPauseCommand(true); }).gameObject;
-        pauseManager.playButton = AddMenuButton("Resume", delegate { DFConnection.Instance.SendPauseCommand(false); }).gameObject;
+        pauseManager.playButton = AddMenuButton("Resume", TogglePause).gameObject;
         mode = ui_sidebar_mode.Default;
+    }
+
+    private void TogglePause()
+    {
+        DFConnection.Instance.SendPauseCommand(!DFConnection.Instance.DfPauseState);
     }
 
     int numBuildingOptions = 0;
@@ -314,7 +319,7 @@ public class DwarfModeMenu : MonoBehaviour
                         {
                             var choice = sidebar.build_selector.choices[i];
                             string index = i.ToString(); //They all end up with i being Count if we don't do this.
-                            AddMenuButton(choice.name + " " + choice.distance + " " + choice.used_count + "/" + choice.num_candidates, delegate { BuildButton(index); });
+                            AddItemButton(choice.name, choice.distance.ToString(), choice.used_count + "/" + choice.num_candidates, delegate { BuildButton(index); });
                         }
                         break;
                     default:
@@ -460,6 +465,19 @@ public class DwarfModeMenu : MonoBehaviour
         button.GetComponentInChildren<Text>().text = label;
         button.name = label;
         if(action != null)
+            button.onClick.AddListener(action);
+        button.transform.SetParent(menuPanel, false);
+        return button;
+    }
+
+    private Button AddItemButton(string label, string distance, string count, UnityAction action = null)
+    {
+        Button button = Instantiate(itemSelectButton);
+        button.transform.Find("Label").GetComponent<Text>().text = label;
+        button.transform.Find("Distance").GetComponent<Text>().text = distance;
+        button.transform.Find("Count").GetComponent<Text>().text = count;
+        button.name = label;
+        if (action != null)
             button.onClick.AddListener(action);
         button.transform.SetParent(menuPanel, false);
         return button;
