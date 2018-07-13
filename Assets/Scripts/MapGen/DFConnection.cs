@@ -104,43 +104,6 @@ public sealed class DFConnection : MonoBehaviour
     private readonly ColorOstream dfNetworkOut = new ColorOstream();
     private RemoteClient networkClient;
 
-    /// <summary>
-    /// Tries to bind an RPC function, leaving returning null if it fails.
-    /// </summary>
-    /// <typeparam name="Input">Protobuf class used as an input</typeparam>
-    /// <param name="client">Connection to Dwarf Fortress</param>
-    /// <param name="name">Name of the RPC function to bind to</param>
-    /// <param name="proto">Name of the protobuf file to use</param>
-    /// <returns>Bound remote function on success, otherwise null.</returns>
-    RemoteFunction<Input> CreateAndBind<Input>(RemoteClient client, string name, string proto = "") where Input : class, ProtoBuf.IExtensible, new()
-    {
-        RemoteFunction<Input> output = new RemoteFunction<Input>();
-        if (output.Bind(client, name, proto))
-            return output;
-        else
-            return null;
-    }
-
-    /// <summary>
-    /// Tries to bind an RPC function, returning null if it fails.
-    /// </summary>
-    /// <typeparam name="Input">Protobuf class used as an input</typeparam>
-    /// <typeparam name="Output">Protobuf class to use as an output</typeparam>
-    /// <param name="client">Connection to Dwarf Fortress</param>
-    /// <param name="name">Name of the RPC function to bind to</param>
-    /// <param name="proto">Name of the protobuf file to use</param>
-    /// <returns>Bound remote function on success, otherwise null.</returns>
-    RemoteFunction<Input, Output> CreateAndBind<Input, Output>(RemoteClient client, string name, string proto = "")
-        where Input : class, ProtoBuf.IExtensible, new()
-        where Output : class, ProtoBuf.IExtensible, new()
-    {
-        RemoteFunction<Input, Output> output = new RemoteFunction<Input, Output>();
-        if (output.Bind(client, name, proto))
-            return output;
-        else
-            return null;
-    }
-
     TimedRemoteFunction<Input, Output> CreateAndBindTimed<Input, Output>(float interval, RemoteClient client, string name, string proto = "")
     where Input : class, ProtoBuf.IExtensible, new()
     where Output : class, ProtoBuf.IExtensible, new()
@@ -157,9 +120,9 @@ public sealed class DFConnection : MonoBehaviour
     /// </summary>
     void BindStaticMethods()
     {
-        dfhackVersionCall = CreateAndBind<EmptyMessage, StringMessage>(networkClient, "GetVersion");
-        dfVersionCall = CreateAndBind<EmptyMessage, StringMessage>(networkClient, "GetDFVersion");
-        dfWorldInfoCall = CreateAndBind<EmptyMessage, GetWorldInfoOut>(networkClient, "GetWorldInfo");
+        dfhackVersionCall = new RemoteFunction<EmptyMessage, StringMessage>(networkClient, "GetVersion");
+        dfVersionCall = new RemoteFunction<EmptyMessage, StringMessage>(networkClient, "GetDFVersion");
+        dfWorldInfoCall = new RemoteFunction<EmptyMessage, GetWorldInfoOut>(networkClient, "GetWorldInfo");
     }
 
     /// <summary>
@@ -167,37 +130,37 @@ public sealed class DFConnection : MonoBehaviour
     /// </summary>
     void BindMethods()
     {
-        materialListCall = CreateAndBind<EmptyMessage, MaterialList>(networkClient, "GetMaterialList", "RemoteFortressReader");
-        itemListCall = CreateAndBind<EmptyMessage, MaterialList>(networkClient, "GetItemList", "RemoteFortressReader");
-        tiletypeListCall = CreateAndBind<EmptyMessage, TiletypeList>(networkClient, "GetTiletypeList", "RemoteFortressReader");
+        materialListCall = new RemoteFunction<EmptyMessage, MaterialList>(networkClient, "GetMaterialList", "RemoteFortressReader");
+        itemListCall = new RemoteFunction<EmptyMessage, MaterialList>(networkClient, "GetItemList", "RemoteFortressReader");
+        tiletypeListCall = new RemoteFunction<EmptyMessage, TiletypeList>(networkClient, "GetTiletypeList", "RemoteFortressReader");
         blockListCall = CreateAndBindTimed<BlockRequest, BlockList>(GameSettings.Instance.updateTimers.blockUpdate, networkClient, "GetBlockList", "RemoteFortressReader");
-        unitListCall = CreateAndBind<BlockRequest, UnitList>(networkClient, "GetUnitListInside", "RemoteFortressReader");
-        unitListCallLegacy = CreateAndBind<EmptyMessage, UnitList>(networkClient, "GetUnitList", "RemoteFortressReader");
-        viewInfoCall = CreateAndBind<EmptyMessage, ViewInfo>(networkClient, "GetViewInfo", "RemoteFortressReader");
-        mapInfoCall = CreateAndBind<EmptyMessage, MapInfo>(networkClient, "GetMapInfo", "RemoteFortressReader");
-        mapResetCall = CreateAndBind<EmptyMessage>(networkClient, "ResetMapHashes", "RemoteFortressReader");
-        buildingListCall = CreateAndBind<EmptyMessage, BuildingList>(networkClient, "GetBuildingDefList", "RemoteFortressReader");
-        worldMapCall = CreateAndBind<EmptyMessage, WorldMap>(networkClient, "GetWorldMapNew", "RemoteFortressReader");
-        worldMapCenterCall = CreateAndBind<EmptyMessage, WorldMap>(networkClient, "GetWorldMapCenter", "RemoteFortressReader");
-        regionMapCall = CreateAndBind<EmptyMessage, RegionMaps>(networkClient, "GetRegionMapsNew", "RemoteFortressReader");
-        creatureRawListCall = CreateAndBind<EmptyMessage, CreatureRawList>(networkClient, "GetCreatureRaws", "RemoteFortressReader");
-        partialCreatureRawListCall = CreateAndBind<ListRequest, CreatureRawList>(networkClient, "GetPartialCreatureRaws", "RemoteFortressReader");
-        plantRawListCall = CreateAndBind<EmptyMessage, PlantRawList>(networkClient, "GetPlantRaws", "RemoteFortressReader");
-        keyboardEventCall = CreateAndBind<KeyboardEvent>(networkClient, "PassKeyboardEvent", "RemoteFortressReader");
-        copyScreenCall = CreateAndBind<EmptyMessage, RemoteFortressReader.ScreenCapture>(networkClient, "CopyScreen", "RemoteFortressReader");
-        digCommandCall = CreateAndBind<DigCommand>(networkClient, "SendDigCommand", "RemoteFortressReader");
-        pauseCommandCall = CreateAndBind<SingleBool>(networkClient, "SetPauseState", "RemoteFortressReader");
-        pauseStatusCall = CreateAndBind<EmptyMessage, SingleBool>(networkClient, "GetPauseState", "RemoteFortressReader");
-        versionInfoCall = CreateAndBind<EmptyMessage, VersionInfo>(networkClient, "GetVersionInfo", "RemoteFortressReader");
-        reportsCall = CreateAndBind<EmptyMessage, Status>(networkClient, "GetReports", "RemoteFortressReader");
-        moveCommandCall = CreateAndBind<MoveCommandParams>(networkClient, "MoveCommand", "RemoteFortressReader");
-        jumpCommandCall = CreateAndBind<MoveCommandParams>(networkClient, "JumpCommand", "RemoteFortressReader");
-        menuQueryCall = CreateAndBind<EmptyMessage, MenuContents>(networkClient, "MenuQuery", "RemoteFortressReader");
-        movementSelectCommandCall = CreateAndBind<IntMessage>(networkClient, "MovementSelectCommand", "RemoteFortressReader");
-        miscMoveCall = CreateAndBind<MiscMoveParams>(networkClient, "MiscMoveCommand", "RemoteFortressReader");
-        languageCall = CreateAndBind<EmptyMessage, Language>(networkClient, "GetLanguage", "RemoteFortressReader");
-        getSideMenuCall = CreateAndBind<EmptyMessage, SidebarState>(networkClient, "GetSideMenu", "RemoteFortressReader");
-        setSideMenuCall = CreateAndBind<SidebarCommand>(networkClient, "SetSideMenu", "RemoteFortressReader");
+        unitListCall = new RemoteFunction<BlockRequest, UnitList>(networkClient, "GetUnitListInside", "RemoteFortressReader");
+        unitListCallLegacy = new RemoteFunction<EmptyMessage, UnitList>(networkClient, "GetUnitList", "RemoteFortressReader");
+        viewInfoCall = new RemoteFunction<EmptyMessage, ViewInfo>(networkClient, "GetViewInfo", "RemoteFortressReader");
+        mapInfoCall = new RemoteFunction<EmptyMessage, MapInfo>(networkClient, "GetMapInfo", "RemoteFortressReader");
+        mapResetCall = new RemoteFunction<EmptyMessage>(networkClient, "ResetMapHashes", "RemoteFortressReader");
+        buildingListCall = new RemoteFunction<EmptyMessage, BuildingList>(networkClient, "GetBuildingDefList", "RemoteFortressReader");
+        worldMapCall = new RemoteFunction<EmptyMessage, WorldMap>(networkClient, "GetWorldMapNew", "RemoteFortressReader");
+        worldMapCenterCall = new RemoteFunction<EmptyMessage, WorldMap>(networkClient, "GetWorldMapCenter", "RemoteFortressReader");
+        regionMapCall = new RemoteFunction<EmptyMessage, RegionMaps>(networkClient, "GetRegionMapsNew", "RemoteFortressReader");
+        creatureRawListCall = new RemoteFunction<EmptyMessage, CreatureRawList>(networkClient, "GetCreatureRaws", "RemoteFortressReader");
+        partialCreatureRawListCall = new RemoteFunction<ListRequest, CreatureRawList>(networkClient, "GetPartialCreatureRaws", "RemoteFortressReader");
+        plantRawListCall = new RemoteFunction<EmptyMessage, PlantRawList>(networkClient, "GetPlantRaws", "RemoteFortressReader");
+        keyboardEventCall = new RemoteFunction<KeyboardEvent>(networkClient, "PassKeyboardEvent", "RemoteFortressReader");
+        copyScreenCall = new RemoteFunction<EmptyMessage, RemoteFortressReader.ScreenCapture>(networkClient, "CopyScreen", "RemoteFortressReader");
+        digCommandCall = new RemoteFunction<DigCommand>(networkClient, "SendDigCommand", "RemoteFortressReader");
+        pauseCommandCall = new RemoteFunction<SingleBool>(networkClient, "SetPauseState", "RemoteFortressReader");
+        pauseStatusCall = new RemoteFunction<EmptyMessage, SingleBool>(networkClient, "GetPauseState", "RemoteFortressReader");
+        versionInfoCall = new RemoteFunction<EmptyMessage, VersionInfo>(networkClient, "GetVersionInfo", "RemoteFortressReader");
+        reportsCall = new RemoteFunction<EmptyMessage, Status>(networkClient, "GetReports", "RemoteFortressReader");
+        moveCommandCall = new RemoteFunction<MoveCommandParams>(networkClient, "MoveCommand", "RemoteFortressReader");
+        jumpCommandCall = new RemoteFunction<MoveCommandParams>(networkClient, "JumpCommand", "RemoteFortressReader");
+        menuQueryCall = new RemoteFunction<EmptyMessage, MenuContents>(networkClient, "MenuQuery", "RemoteFortressReader");
+        movementSelectCommandCall = new RemoteFunction<IntMessage>(networkClient, "MovementSelectCommand", "RemoteFortressReader");
+        miscMoveCall = new RemoteFunction<MiscMoveParams>(networkClient, "MiscMoveCommand", "RemoteFortressReader");
+        languageCall = new RemoteFunction<EmptyMessage, Language>(networkClient, "GetLanguage", "RemoteFortressReader");
+        getSideMenuCall = new RemoteFunction<EmptyMessage, SidebarState>(networkClient, "GetSideMenu", "RemoteFortressReader");
+        setSideMenuCall = new RemoteFunction<SidebarCommand>(networkClient, "SetSideMenu", "RemoteFortressReader");
     }
 
     #endregion
@@ -545,7 +508,7 @@ public sealed class DFConnection : MonoBehaviour
     void Connect()
     {
         blockRequest.blocks_needed = BlocksToFetch;
-        networkClient = new DFHack.RemoteClient(dfNetworkOut);
+        networkClient = new RemoteClient(dfNetworkOut);
         bool success = networkClient.Connect();
         if (!success)
         {
