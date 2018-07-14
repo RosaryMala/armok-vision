@@ -69,6 +69,7 @@ public class DFRawReader : EditorWindow
                             cube.transform.SetParent(spawnedPart.transform);
                             cube.volume = part.relsize * scale;
                             cube.FixVolume();
+                            spawnedPart.volume = cube.volume;
                             spawnedPart.placeholder = cube;
                             spawnedParts[i] = spawnedPart;
                         }
