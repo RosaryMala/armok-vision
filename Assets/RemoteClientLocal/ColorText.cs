@@ -61,38 +61,4 @@ namespace  DFHack
 
     protected string buffer;
     }
-    public class ColorOstreamProxy : BufferedColorOstream
-    {
-        protected IDFStream target;
-
-        //virtual void flush_proxy();
-
-        public ColorOstreamProxy(IDFStream targetIn)
-        {
-            target = targetIn;
-        }
-
-        public virtual IDFStream proxy_target() { return target; }
-
-        public void Decode(dfproto.CoreTextNotification data)
-        {
-            int cnt = data.fragments.Count;
-
-            if (cnt > 0)
-            {
-                target.BeginBatch();
-
-                for (int i = 0; i < cnt; i++)
-                {
-                    var frag = data.fragments[i];
-
-                    //color_value color = frag.has_color() ? color_value(frag.color()) : COLOR_RESET;
-                    target.AddText(ColorValue.ColorReset, frag.text);
-                    //target.printerr(data.fragments[i].text);
-                }
-
-                target.EndBatch();
-            }
-        }
-    }
 }
