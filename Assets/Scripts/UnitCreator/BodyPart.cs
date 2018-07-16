@@ -74,6 +74,8 @@ public class BodyPart : MonoBehaviour
         Shapen();
         List<BodyPart> toes = new List<BodyPart>();
         List<BodyPart> fingers = new List<BodyPart>();
+        List<BodyPart> mouthParts = new List<BodyPart>();
+        BodyPart mouth = null;
         foreach (Transform child in transform)
         {
             var childPart = child.GetComponent<BodyPart>();
@@ -139,14 +141,24 @@ public class BodyPart : MonoBehaviour
                         break;
                     }
                 case "MOUTH":
-                    childPart.transform.localPosition = new Vector3(0, bounds.min.y, bounds.max.z);
+                    childPart.transform.localPosition = new Vector3(0, bounds.min.y, bounds.max.z - childPart.bounds.max.z);
+                    mouth = childPart;
                     break;
                 case "NOSE":
                     childPart.transform.localPosition = new Vector3(0, bounds.center.y - (bounds.extents.y / 2), bounds.max.z);
                     break;
+                case "CHEEK":
+                    childPart.transform.localPosition = new Vector3(bounds.center.x + (bounds.extents.x * (childPart.token.StartsWith("L") ? -1 : 1)), bounds.min.y, bounds.max.z);
+                    if(childPart.token.StartsWith("L"))
+                        childPart.transform.localScale = new Vector3(-1, 1, 1);
+                    break;
                 case "EAR":
                     childPart.transform.localPosition = new Vector3(bounds.center.x + (bounds.extents.x * (childPart.flags[BodyPartRawFlags.LEFT] ? -1 : 1)), bounds.center.y, bounds.center.z);
                     childPart.transform.localRotation = Quaternion.LookRotation(new Vector3(child.transform.localPosition.x, 0, 0), Vector3.up);
+                    break;
+                case "TONGUE":
+                case "LIP":
+                    mouthParts.Add(childPart);
                     break;
                 default:
                     childPart.transform.localPosition = new Vector3(0, 0, bounds.max.z);
@@ -167,6 +179,30 @@ public class BodyPart : MonoBehaviour
             float step = bounds.size.x / fingers.Count;
             fingers[i].transform.localPosition = new Vector3(basecoord + step / 2 + step * i, bounds.center.y, bounds.max.z);
         }
+        if(mouth != null)
+            foreach (var mouthPart in mouthParts)
+            {
+                switch (mouthPart.category)
+                {
+                    case "TONGUE":
+                        mouthPart.transform.SetParent(mouth.transform, false);
+                        mouthPart.transform.localPosition = new Vector3(0, 0, mouth.bounds.max.z - mouth.bounds.extents.y);
+                        break;
+                    case "LIP":
+                        if (mouthPart.token.StartsWith("L"))
+                        {
+                            mouthPart.transform.SetParent(mouth.transform, false);
+                            mouthPart.transform.localPosition = new Vector3(0, mouth.bounds.max.y + mouth.bounds.extents.y / 2, mouth.bounds.max.z);
+                        }
+                        else
+                        {
+                            mouthPart.transform.localPosition = new Vector3(0, bounds.min.y - mouth.bounds.extents.y / 2, bounds.max.z);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
     }
     public void Shapen()
     {
@@ -219,9 +255,9 @@ public class BodyPart : MonoBehaviour
                 placeholder.transform.localPosition = new Vector3(0, placeholder.transform.localScale.y / 2, 0);
                 break;
             case "MOUTH":
-                placeholder.transform.localScale = new Vector3(2, 1, 1);
+                placeholder.transform.localScale = new Vector3(3.5f, 1, 2);
                 placeholder.FixVolume();
-                placeholder.transform.localPosition = Vector3.zero;
+                placeholder.transform.localPosition = new Vector3(0, -placeholder.transform.localScale.y, placeholder.transform.localScale.z / 2);
                 break;
             case "EYE":
             case "EAR":
@@ -233,6 +269,24 @@ public class BodyPart : MonoBehaviour
                 placeholder.transform.localScale = new Vector3(2.5f, 1, 1);
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
+                break;
+            case "CHEEK":
+                placeholder.transform.localScale = new Vector3(1, 4, 4);
+                placeholder.FixVolume();
+                placeholder.transform.localPosition = new Vector3(-placeholder.transform.localScale.x * .51f, 0, -placeholder.transform.localScale.z / 2);
+                break;
+            case "TONGUE":
+                placeholder.transform.localScale = new Vector3(2.5f, 1, 2.8f);
+                placeholder.FixVolume();
+                placeholder.transform.localPosition = new Vector3(0, -placeholder.transform.localScale.y / 2, -placeholder.transform.localScale.z / 2);
+                break;
+            case "LIP":
+                placeholder.transform.localScale = new Vector3(5, 1, 1f);
+                placeholder.FixVolume();
+                if (token.StartsWith("U"))
+                    placeholder.transform.localPosition = new Vector3(0, placeholder.transform.localScale.y / 2, 0);
+                else
+                    placeholder.transform.localPosition = new Vector3(0, -placeholder.transform.localScale.y / 2, 0);
                 break;
             default:
                 placeholder.transform.localScale = Vector3.one;
