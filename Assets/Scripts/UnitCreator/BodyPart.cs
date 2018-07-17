@@ -53,6 +53,7 @@ public class BodyPart : MonoBehaviour
     [SerializeField]
     private Bounds bounds;
     public float volume;
+    bool quadrupedBody;
 
     private BodyPart FindChild(string category)
     {
@@ -85,8 +86,16 @@ public class BodyPart : MonoBehaviour
             switch (childPart.category)
             {
                 case "BODY_LOWER":
-                    childPart.transform.localPosition = new Vector3(0, bounds.min.y, 0);
-                    childPart.transform.localRotation = Quaternion.LookRotation(Vector3.down, Vector3.forward);
+                    if (quadrupedBody)
+                    {
+                        childPart.transform.localPosition = new Vector3(0, 0,bounds.min.z);
+                        childPart.transform.localRotation = Quaternion.LookRotation(Vector3.back, Vector3.down);
+                    }
+                    else
+                    {
+                        childPart.transform.localPosition = new Vector3(0, bounds.min.y, 0);
+                        childPart.transform.localRotation = Quaternion.LookRotation(Vector3.down, Vector3.forward);
+                    }
                     break;
                 case "LEG_UPPER":
                     childPart.transform.localPosition = new Vector3(bounds.extents.x / 2 * (childPart.flags[BodyPartRawFlags.LEFT] ? -1 : 1), 0, bounds.max.z);
@@ -107,7 +116,7 @@ public class BodyPart : MonoBehaviour
                         fingers.Add(childPart);
                     break;
                 case "NECK":
-                    childPart.transform.localPosition = new Vector3(0, bounds.max.y, 0);
+                    childPart.transform.localPosition = new Vector3(0, bounds.max.y, quadrupedBody ? bounds.max.z - childPart.bounds.extents.z : 0);
                     childPart.transform.localRotation = Quaternion.LookRotation(Vector3.up, Vector3.forward);
                     break;
                 case "ARM_UPPER":
@@ -156,6 +165,14 @@ public class BodyPart : MonoBehaviour
                 case "LIP":
                 case "TOOTH":
                     mouthParts.Add(childPart);
+                    break;
+                case "LEG_FRONT":
+                    childPart.transform.localPosition = new Vector3(bounds.extents.x * (childPart.flags[BodyPartRawFlags.LEFT] ? -1 : 1), bounds.max.y, bounds.max.z - childPart.bounds.extents.y);
+                    childPart.transform.localRotation = Quaternion.LookRotation(Vector3.down, Vector3.forward);
+                    break;
+                case "LEG_REAR":
+                    childPart.transform.localPosition = new Vector3(bounds.extents.x * (childPart.flags[BodyPartRawFlags.LEFT] ? -1 : 1), bounds.min.y, bounds.max.z - childPart.bounds.extents.y);
+                    childPart.transform.localRotation = Quaternion.LookRotation(Vector3.up, Vector3.back);
                     break;
                 default:
                     childPart.transform.localPosition = new Vector3(0, 0, bounds.max.z);
@@ -224,6 +241,20 @@ public class BodyPart : MonoBehaviour
                             childPart.transform.localScale = new Vector3(1, -1, -1);
                             childPart.transform.localRotation = Quaternion.Euler(0, 90, 0);
                         }
+                        else if (childPart.token.StartsWith("L_R_B_"))
+                        {
+                            childPart.transform.SetParent(mouth.transform, false);
+                            childPart.transform.localPosition = new Vector3(mouth.bounds.max.x - childPart.bounds.extents.z, mouth.bounds.max.y + mouth.bounds.extents.y * 0.51f, mouth.bounds.max.z - childPart.bounds.extents.x);
+                            childPart.transform.localScale = new Vector3(1, 1, 1);
+                            childPart.transform.localRotation = Quaternion.Euler(0, 90, 0);
+                        }
+                        else if (childPart.token.StartsWith("L_L_B_"))
+                        {
+                            childPart.transform.SetParent(mouth.transform, false);
+                            childPart.transform.localPosition = new Vector3(mouth.bounds.min.x + childPart.bounds.extents.z, mouth.bounds.max.y + mouth.bounds.extents.y * 0.51f, mouth.bounds.max.z - childPart.bounds.extents.x);
+                            childPart.transform.localScale = new Vector3(1, 1, -1);
+                            childPart.transform.localRotation = Quaternion.Euler(0, 90, 0);
+                        }
                         break;
                     default:
                         break;
@@ -232,10 +263,16 @@ public class BodyPart : MonoBehaviour
     }
     public void Shapen()
     {
+        var FrontLeg = FindChild("LEG_FRONT");
+        if (FrontLeg != null)
+            quadrupedBody = true;
         switch (category)
         {
             case "BODY_UPPER":
-                placeholder.transform.localScale = new Vector3(1.5f, 1.5f, 1);
+                if (quadrupedBody)
+                    placeholder.transform.localScale = new Vector3(1.5f, 1, 1.5f);
+                else
+                    placeholder.transform.localScale = new Vector3(1.5f, 1.5f, 1);
                 placeholder.FixVolume();
                 break;
             case "BODY_LOWER":
@@ -252,6 +289,12 @@ public class BodyPart : MonoBehaviour
             case "LEG_LOWER":
             case "ARM_LOWER":
                 placeholder.transform.localScale = new Vector3(0.75f, 0.75f, 2f);
+                placeholder.FixVolume();
+                placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
+                break;
+            case "LEG_FRONT":
+            case "LEG_REAR":
+                placeholder.transform.localScale = new Vector3(1, 1, 4f);
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
                 break;
