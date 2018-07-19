@@ -90,6 +90,13 @@ public class DFRawReader : EditorWindow
                         }
                         Debug.Log(string.Format("Found {0} feet.", stanceParts));
                         rootPart.Arrange();
+                        var bounds = rootPart.GetComponentInChildren<MeshRenderer>().bounds;
+                        foreach (var item in rootPart.GetComponentsInChildren<MeshRenderer>())
+                        {
+                            bounds.Encapsulate(item.bounds);
+                        }
+                        rootPart.transform.localPosition = new Vector3(0, -bounds.min.y, 0);
+                        Selection.SetActiveObjectWithContext(creatureBase, null);
                     }
                 }
                 GUILayout.EndHorizontal();
