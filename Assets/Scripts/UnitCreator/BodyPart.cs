@@ -53,9 +53,8 @@ public class BodyPart : MonoBehaviour
     [SerializeField]
     private Bounds bounds;
     public float volume;
-    bool quadrupedBody;
 
-    private BodyPart FindChild(string category)
+    internal BodyPart FindChild(string category)
     {
         foreach (Transform child in transform)
         {
@@ -68,26 +67,28 @@ public class BodyPart : MonoBehaviour
         return null;
     }
 
-    public void Arrange()
+    public void Arrange(CreatureBody body)
     {
         if (placeholder == null)
             return;
-        Shapen();
+        Shapen(body);
         List<BodyPart> toes = new List<BodyPart>();
         List<BodyPart> fingers = new List<BodyPart>();
         List<BodyPart> mouthParts = new List<BodyPart>();
         BodyPart mouth = null;
         BodyPart beak = null;
+        List<BodyPart> leftLegs = new List<BodyPart>();
+        List<BodyPart> rightLegs = new List<BodyPart>();
         foreach (Transform child in transform)
         {
             var childPart = child.GetComponent<BodyPart>();
             if (childPart == null)
                 continue;
-            childPart.Arrange();
+            childPart.Arrange(body);
             switch (childPart.category)
             {
                 case "BODY_LOWER":
-                    if (quadrupedBody)
+                    if (body.bodyCategory != CreatureBody.BodyCategory.Humanoid)
                     {
                         childPart.transform.localPosition = new Vector3(0, 0,bounds.min.z);
                         childPart.transform.localRotation = Quaternion.LookRotation(Vector3.back, Vector3.down);
@@ -99,7 +100,13 @@ public class BodyPart : MonoBehaviour
                     }
                     break;
                 case "LEG_UPPER":
-                    childPart.transform.localPosition = new Vector3(bounds.extents.x / 2 * (childPart.flags[BodyPartRawFlags.LEFT] ? -1 : 1), 0, bounds.max.z);
+                    if (body.bodyCategory == CreatureBody.BodyCategory.Humanoid)
+                        childPart.transform.localPosition = new Vector3(bounds.extents.x / 2 * (childPart.flags[BodyPartRawFlags.LEFT] ? -1 : 1), 0, bounds.max.z);
+                    else
+                    {
+                        childPart.transform.localPosition = new Vector3(bounds.max.x * (childPart.flags[BodyPartRawFlags.LEFT] ? -1 : 1), bounds.min.y, bounds.min.z);
+                        childPart.transform.localRotation = Quaternion.LookRotation(Vector3.up, Vector3.back);
+                    }
                     break;
                 case "FOOT":
                 case "FOOT_REAR":
@@ -119,7 +126,7 @@ public class BodyPart : MonoBehaviour
                         fingers.Add(childPart);
                     break;
                 case "NECK":
-                    childPart.transform.localPosition = new Vector3(0, bounds.max.y, quadrupedBody ? bounds.max.z - childPart.bounds.extents.z : 0);
+                    childPart.transform.localPosition = new Vector3(0, bounds.max.y, body.bodyCategory != CreatureBody.BodyCategory.Humanoid ? bounds.max.z - childPart.bounds.extents.z : 0);
                     childPart.transform.localRotation = Quaternion.LookRotation(Vector3.up, Vector3.forward);
                     break;
                 case "ARM_UPPER":
@@ -127,15 +134,28 @@ public class BodyPart : MonoBehaviour
                     childPart.transform.localRotation = Quaternion.LookRotation(Vector3.down, new Vector3(child.transform.localPosition.x, 0, 0));
                     break;
                 case "HEAD":
-                    if (category == "BODY_UPPER")
-                    {
-                        childPart.transform.localPosition = new Vector3(0, bounds.max.y, quadrupedBody ? bounds.max.z - childPart.bounds.extents.z : 0);
-                        childPart.transform.localRotation = Quaternion.LookRotation(Vector3.forward, Vector3.up);
-                    }
-                    else
+                    if (category == "NECK")
                     {
                         childPart.transform.localPosition = new Vector3(0, 0, bounds.max.z);
                         childPart.transform.localRotation = Quaternion.LookRotation(Vector3.up, Vector3.forward);
+                    }
+                    else
+                    {
+                        switch (body.bodyCategory)
+                        {
+                            case CreatureBody.BodyCategory.Humanoid:
+                                childPart.transform.localPosition = new Vector3(bounds.center.x, bounds.max.y, bounds.center.z);
+                                break;
+                            case CreatureBody.BodyCategory.Bug:
+                                childPart.transform.localPosition = new Vector3(0, bounds.center.y - childPart.bounds.center.y, bounds.max.z - childPart.bounds.min.z);
+                                break;
+                            case CreatureBody.BodyCategory.Quadruped:
+                            case CreatureBody.BodyCategory.Avian:
+                            default:
+                                childPart.transform.localPosition = new Vector3(0, bounds.max.y, bounds.max.z - childPart.bounds.extents.z);
+                                break;
+                        }
+                        childPart.transform.localRotation = Quaternion.LookRotation(Vector3.forward, Vector3.up);
                     }
                     break;
                 case "EYE":
@@ -183,12 +203,11 @@ public class BodyPart : MonoBehaviour
                     mouthParts.Add(childPart);
                     break;
                 case "LEG_FRONT":
-                    childPart.transform.localPosition = new Vector3(bounds.extents.x * (childPart.flags[BodyPartRawFlags.LEFT] ? -1 : 1), bounds.max.y, bounds.max.z - childPart.bounds.extents.y);
-                    childPart.transform.localRotation = Quaternion.LookRotation(Vector3.down, Vector3.forward);
-                    break;
                 case "LEG_REAR":
-                    childPart.transform.localPosition = new Vector3(bounds.extents.x * (childPart.flags[BodyPartRawFlags.LEFT] ? -1 : 1), bounds.min.y, bounds.max.z - childPart.bounds.extents.y);
-                    childPart.transform.localRotation = Quaternion.LookRotation(Vector3.up, Vector3.back);
+                    if (childPart.token.StartsWith("L"))
+                        leftLegs.Add(childPart);
+                    else
+                        rightLegs.Add(childPart);
                     break;
                 case "WING":
                     childPart.transform.localPosition = new Vector3(bounds.extents.x * (childPart.flags[BodyPartRawFlags.LEFT] ? -1 : 1), bounds.max.y, bounds.center.z);
@@ -196,6 +215,10 @@ public class BodyPart : MonoBehaviour
                     break;
                 case "TAIL":
                     childPart.transform.localPosition = new Vector3(bounds.center.x, bounds.min.y, bounds.max.z);
+                    childPart.transform.localRotation = Quaternion.LookRotation(new Vector3(0, -1, 1), Vector3.forward);
+                    break;
+                case "STINGER":
+                    childPart.transform.localPosition = new Vector3(bounds.center.x, bounds.center.y, bounds.max.z);
                     childPart.transform.localRotation = Quaternion.LookRotation(new Vector3(0, -1, 1), Vector3.forward);
                     break;
                 case "ANTENNA":
@@ -214,9 +237,12 @@ public class BodyPart : MonoBehaviour
                     break;
                 case "SHELL":
                 case "HUMP":
-                    if (quadrupedBody)
+                    if (body.bodyCategory != CreatureBody.BodyCategory.Humanoid)
                     {
-                        childPart.transform.localPosition = new Vector3(bounds.center.x, bounds.max.y, bounds.min.z);
+                        if(FindChild("BODY_LOWER") == null)
+                            childPart.transform.localPosition = new Vector3(bounds.center.x, bounds.max.y, bounds.center.z);
+                        else
+                            childPart.transform.localPosition = new Vector3(bounds.center.x, bounds.max.y, bounds.min.z);
                         childPart.transform.localRotation = Quaternion.LookRotation(Vector3.up, Vector3.forward);
                     }
                     else
@@ -353,16 +379,92 @@ public class BodyPart : MonoBehaviour
                 }
             }
         }
+        if (leftLegs.Count == 1)
+        {
+            if (category == "BODY_UPPER")
+            {
+                leftLegs[0].transform.localPosition = new Vector3(bounds.min.x, bounds.max.y, bounds.max.z - leftLegs[0].bounds.extents.y);
+                leftLegs[0].transform.localRotation = Quaternion.LookRotation(Vector3.down, Vector3.forward);
+            }
+            else
+            {
+                leftLegs[0].transform.localPosition = new Vector3(bounds.min.x, bounds.min.y, bounds.max.z - leftLegs[0].bounds.extents.y);
+                leftLegs[0].transform.localRotation = Quaternion.LookRotation(Vector3.up, Vector3.back);
+            }
+        }
+        else for (int i = 0; i < leftLegs.Count; i++)
+            {
+                switch (body.bodyCategory)
+                {
+                    case CreatureBody.BodyCategory.Bug:
+                        leftLegs[i].transform.localPosition = Vector3.Lerp(
+                            new Vector3(bounds.min.x, bounds.center.y, bounds.max.z),
+                            new Vector3(bounds.min.x, bounds.center.y, bounds.min.z),
+                            (float)i / (leftLegs.Count - 1));
+                        leftLegs[i].transform.localRotation = Quaternion.Lerp(
+                            Quaternion.LookRotation(new Vector3(-1, -1, 1)),
+                            Quaternion.LookRotation(new Vector3(-1, -1, -1)),
+                            (float)i / (leftLegs.Count - 1));
+                        break;
+                    case CreatureBody.BodyCategory.Humanoid:
+                    case CreatureBody.BodyCategory.Quadruped:
+                    case CreatureBody.BodyCategory.Avian:
+                    default:
+                        //I don't know of any quadrupeds that have all 4 legs on one body part.
+                        leftLegs[i].transform.localPosition = Vector3.Lerp(
+                            new Vector3(bounds.max.x, bounds.center.y, bounds.max.z),
+                            new Vector3(bounds.max.x, bounds.center.y, bounds.min.z),
+                            (float)i / (leftLegs.Count));
+                        leftLegs[i].transform.localRotation = Quaternion.LookRotation(new Vector3(0, -1, 0));
+                        break;
+                }
+            }
+        if (rightLegs.Count == 1)
+        {
+            if (category == "BODY_UPPER")
+            {
+                rightLegs[0].transform.localPosition = new Vector3(bounds.max.x, bounds.max.y, bounds.max.z - rightLegs[0].bounds.extents.y);
+                rightLegs[0].transform.localRotation = Quaternion.LookRotation(Vector3.down, Vector3.forward);
+            }
+            else
+            {
+                rightLegs[0].transform.localPosition = new Vector3(bounds.max.x, bounds.min.y, bounds.max.z - rightLegs[0].bounds.extents.y);
+                rightLegs[0].transform.localRotation = Quaternion.LookRotation(Vector3.up, Vector3.back);
+            }
+        }
+        else for (int i = 0; i < rightLegs.Count; i++)
+            {
+                switch (body.bodyCategory)
+                {
+                    case CreatureBody.BodyCategory.Bug:
+                        rightLegs[i].transform.localPosition = Vector3.Lerp(
+                            new Vector3(bounds.max.x, bounds.center.y, bounds.max.z),
+                            new Vector3(bounds.max.x, bounds.center.y, bounds.min.z),
+                            (float)i / (rightLegs.Count - 1));
+                        rightLegs[i].transform.localRotation = Quaternion.Lerp(
+                            Quaternion.LookRotation(new Vector3(1, -1, 1)),
+                            Quaternion.LookRotation(new Vector3(1, -1, -1)),
+                            (float)i / (rightLegs.Count - 1));
+                        break;
+                    case CreatureBody.BodyCategory.Humanoid:
+                    case CreatureBody.BodyCategory.Quadruped:
+                    case CreatureBody.BodyCategory.Avian:
+                    default:
+                        rightLegs[i].transform.localPosition = Vector3.Lerp(
+                            new Vector3(bounds.max.x, bounds.center.y, bounds.max.z),
+                            new Vector3(bounds.max.x, bounds.center.y, bounds.min.z),
+                            (float)i / (rightLegs.Count));
+                        rightLegs[i].transform.localRotation = Quaternion.LookRotation(new Vector3(0, -1, 0));
+                        break;
+                }
+            }
     }
-    public void Shapen()
+    public void Shapen(CreatureBody body)
     {
-        var FrontLeg = FindChild("LEG_FRONT");
-        if (FrontLeg != null)
-            quadrupedBody = true;
         switch (category)
         {
             case "BODY_UPPER":
-                if (quadrupedBody)
+                if (body.bodyCategory != CreatureBody.BodyCategory.Humanoid)
                     placeholder.transform.localScale = new Vector3(1.5f, 1, 1.5f);
                 else
                     placeholder.transform.localScale = new Vector3(1.5f, 1.5f, 1);
@@ -482,6 +584,11 @@ public class BodyPart : MonoBehaviour
                 break;
             case "TAIL":
                 placeholder.transform.localScale = new Vector3(1, 1, 4);
+                placeholder.FixVolume();
+                placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
+                break;
+            case "STINGER":
+                placeholder.transform.localScale = new Vector3(1, 1, 5);
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
                 break;

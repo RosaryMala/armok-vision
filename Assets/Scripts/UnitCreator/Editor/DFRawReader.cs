@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using DFHack;
 using dfproto;
 using RemoteFortressReader;
@@ -18,6 +19,8 @@ public class DFRawReader : EditorWindow
         GetWindow<DFRawReader>();
     }
 
+    string filter;
+
     private void OnGUI()
     {
         if (GUILayout.Button("Read Raws"))
@@ -33,9 +36,53 @@ public class DFRawReader : EditorWindow
         }
         if (creatureRaws != null)
         {
+            if(GUILayout.Button("Dump Part Categories"))
+            {
+                var path = EditorUtility.SaveFilePanel("Save bodypart list", "", "Bodyparts.csv", "csv");
+                Dictionary<string, HashSet<string>> parts = new Dictionary<string, HashSet<string>>();
+                foreach (var creature in creatureRaws)
+                {
+                    foreach (var caste in creature.caste)
+                    {
+                        foreach (var part in caste.body_parts)
+                        {
+                            //this is an internal part, and doesn't need modeling.
+                            if (part.flags[(int)BodyPart.BodyPartRawFlags.INTERNAL])
+                                continue;
+                            if (!parts.ContainsKey(part.category))
+                                parts[part.category] = new HashSet<string>();
+
+                            if (part.parent >= 0)
+                            {
+                                if (!parts.ContainsKey(caste.body_parts[part.parent].category))
+                                    parts[caste.body_parts[part.parent].category] = new HashSet<string>();
+
+                                parts[caste.body_parts[part.parent].category].Add(part.category);
+                            }
+                        }
+                    }
+                }
+                using (var writer = new StreamWriter(path))
+                {
+                    foreach (var parent in parts)
+                    {
+                        writer.Write("\"" + parent.Key + "\",");
+                        foreach (var child in parent.Value)
+                        {
+                            writer.Write("\"" + child + "\",");
+                        }
+                        writer.WriteLine();
+                    }
+                }
+            }
+
+            filter = EditorGUILayout.TextField(filter);
+
             scrollPosition = GUILayout.BeginScrollView(scrollPosition);
             foreach (var creature in creatureRaws)
             {
+                if (!string.IsNullOrEmpty(filter) && !creature.creature_id.ToUpper().Contains(filter.ToUpper()))
+                    continue;
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(creature.creature_id);
 
@@ -43,59 +90,11 @@ public class DFRawReader : EditorWindow
                 {
                     if (GUILayout.Button(caste.caste_id))
                     {
-                        float scale = caste.adult_size / (float)caste.total_relsize;
-
-                        var spawnedParts = new Dictionary<int, BodyPart>();
                         var creatureBase = new GameObject().AddComponent<CreatureBody>();
                         creatureBase.name = creature.creature_id + "_" + caste.caste_id;
                         creatureBase.race = creature;
                         creatureBase.caste = caste;
-                        BodyPart rootPart = null;
-                        for (int i = 0; i < caste.body_parts.Count; i++)
-                        {
-                            var part = caste.body_parts[i];
-                            if (part.flags[(int)BodyPart.BodyPartRawFlags.INTERNAL])
-                                continue;
-                            var spawnedPart = new GameObject().AddComponent<BodyPart>();
-                            spawnedPart.name = string.Format("{0} ({1})", part.token, part.category);
-                            spawnedPart.token = part.token;
-                            spawnedPart.category = part.category;
-                            for(int j = 0; j < part.flags.Count; j++)
-                            {
-                                spawnedPart.flags[(BodyPart.BodyPartRawFlags)j] = part.flags[j];
-                            }
-                            var cube = GameObject.CreatePrimitive(PrimitiveType.Cube).AddComponent<VolumeKeeper>();
-                            cube.name = spawnedPart.name + " cube";
-                            cube.transform.SetParent(spawnedPart.transform);
-                            cube.volume = part.relsize * scale;
-                            cube.FixVolume();
-                            spawnedPart.volume = cube.volume;
-                            spawnedPart.placeholder = cube;
-                            spawnedParts[i] = spawnedPart;
-                        }
-                        int stanceParts = 0;
-                        for (int i = 0; i < caste.body_parts.Count; i++)
-                        {
-                            if (!spawnedParts.ContainsKey(i))
-                                continue;
-                            var part = caste.body_parts[i];
-                            if (!spawnedParts.ContainsKey(part.parent))
-                                spawnedParts[i].transform.SetParent(creatureBase.transform);
-                            else
-                                spawnedParts[i].transform.SetParent(spawnedParts[part.parent].transform);
-                            if (part.parent < 0)
-                                rootPart = spawnedParts[i];
-                            if (spawnedParts[i].flags[BodyPart.BodyPartRawFlags.STANCE])
-                                stanceParts++;
-                        }
-                        Debug.Log(string.Format("Found {0} feet.", stanceParts));
-                        rootPart.Arrange();
-                        var bounds = rootPart.GetComponentInChildren<MeshRenderer>().bounds;
-                        foreach (var item in rootPart.GetComponentsInChildren<MeshRenderer>())
-                        {
-                            bounds.Encapsulate(item.bounds);
-                        }
-                        rootPart.transform.localPosition = new Vector3(0, -bounds.min.y, 0);
+                        creatureBase.MakeBody();
                         Selection.SetActiveObjectWithContext(creatureBase, null);
                     }
                 }
