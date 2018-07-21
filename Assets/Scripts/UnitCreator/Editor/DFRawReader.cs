@@ -47,7 +47,7 @@ public class DFRawReader : EditorWindow
                         foreach (var part in caste.body_parts)
                         {
                             //this is an internal part, and doesn't need modeling.
-                            if (part.flags[(int)BodyPart.BodyPartRawFlags.INTERNAL])
+                            if (part.flags[(int)BodyPartFlags.BodyPartRawFlags.INTERNAL])
                                 continue;
                             if (!parts.ContainsKey(part.category))
                                 parts[part.category] = new HashSet<string>();
@@ -77,6 +77,17 @@ public class DFRawReader : EditorWindow
             }
 
             filter = EditorGUILayout.TextField(filter);
+
+            GUILayout.BeginHorizontal();
+            if(GUILayout.Button("Sort by name"))
+            {
+                creatureRaws.Sort((x, y) => x.creature_id.CompareTo(y.creature_id));
+            }
+            if(GUILayout.Button("Sort by size"))
+            {
+                creatureRaws.Sort((x, y) => x.adultsize.CompareTo(y.adultsize));
+            }
+            GUILayout.EndHorizontal();
 
             scrollPosition = GUILayout.BeginScrollView(scrollPosition);
             foreach (var creature in creatureRaws)

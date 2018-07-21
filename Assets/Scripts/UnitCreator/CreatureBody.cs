@@ -26,16 +26,13 @@ public class CreatureBody : MonoBehaviour
         for (int i = 0; i < caste.body_parts.Count; i++)
         {
             var part = caste.body_parts[i];
-            if (part.flags[(int)BodyPart.BodyPartRawFlags.INTERNAL])
+            if (part.flags[(int)BodyPartFlags.BodyPartRawFlags.INTERNAL])
                 continue;
             var spawnedPart = new GameObject().AddComponent<BodyPart>();
             spawnedPart.name = string.Format("{0} ({1})", part.token, part.category);
             spawnedPart.token = part.token;
             spawnedPart.category = part.category;
-            for (int j = 0; j < part.flags.Count; j++)
-            {
-                spawnedPart.flags[(BodyPart.BodyPartRawFlags)j] = part.flags[j];
-            }
+            spawnedPart.flags = new BodyPartFlags(part.flags);
             var cube = GameObject.CreatePrimitive(PrimitiveType.Cube).AddComponent<VolumeKeeper>();
             cube.name = spawnedPart.name + " cube";
             cube.transform.SetParent(spawnedPart.transform);
@@ -56,7 +53,7 @@ public class CreatureBody : MonoBehaviour
                 spawnedParts[i].transform.SetParent(spawnedParts[part.parent].transform);
             if (part.parent < 0)
                 rootPart = spawnedParts[i];
-            if (spawnedParts[i].flags[BodyPart.BodyPartRawFlags.STANCE])
+            if (spawnedParts[i].flags.stance)
                 stanceCount++;
         }
 
