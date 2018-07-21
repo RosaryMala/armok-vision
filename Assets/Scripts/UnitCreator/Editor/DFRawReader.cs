@@ -112,6 +112,27 @@ public class DFRawReader : EditorWindow
                 GUILayout.EndHorizontal();
             }
             GUILayout.EndScrollView();
+            if(GUILayout.Button("Place all creatures"))
+            {
+                var watch = System.Diagnostics.Stopwatch.StartNew();
+                CreatureBody prevCreature = null;
+                foreach (var creature in creatureRaws)
+                {
+                    var creatureBase = new GameObject().AddComponent<CreatureBody>();
+                    creatureBase.name = creature.creature_id + "_" + creature.caste[0].caste_id;
+                    creatureBase.race = creature;
+                    creatureBase.caste = creature.caste[0];
+                    creatureBase.MakeBody();
+                    creatureBase.transform.rotation = Quaternion.LookRotation(Vector3.back);
+                    if(prevCreature != null)
+                    {
+                        creatureBase.transform.position = new Vector3(prevCreature.transform.position.x + prevCreature.bounds.max.x - creatureBase.bounds.min.x, 0, 0);
+                    }
+                    prevCreature = creatureBase;
+                }
+                watch.Stop();
+                Debug.Log(string.Format("Took {0}ms to create {1} creatures, averaging {2}ms per creature.", watch.ElapsedMilliseconds, creatureRaws.Count, (float)watch.ElapsedMilliseconds / creatureRaws.Count));
+            }
         }
     }
 }

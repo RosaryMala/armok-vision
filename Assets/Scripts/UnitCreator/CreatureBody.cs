@@ -57,6 +57,9 @@ public class CreatureBody : MonoBehaviour
                 stanceCount++;
         }
 
+        if (rootPart == null)
+            return; //There's no root part, means there's no body.
+
         if (stanceCount > 4)
             bodyCategory = BodyCategory.Bug;
         else if (stanceCount > 2)
