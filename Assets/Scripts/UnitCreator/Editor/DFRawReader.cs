@@ -118,6 +118,8 @@ public class DFRawReader : EditorWindow
                 CreatureBody prevCreature = null;
                 foreach (var creature in creatureRaws)
                 {
+                    if (!string.IsNullOrEmpty(filter) && !creature.creature_id.ToUpper().Contains(filter.ToUpper()))
+                        continue;
                     var creatureBase = new GameObject().AddComponent<CreatureBody>();
                     creatureBase.name = creature.creature_id + "_" + creature.caste[0].caste_id;
                     creatureBase.race = creature;
