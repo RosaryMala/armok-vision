@@ -9,7 +9,8 @@ public class CreatureBody : MonoBehaviour
         Humanoid,
         Quadruped,
         Avian,
-        Bug
+        Bug,
+        Fish
     }
     public BodyCategory bodyCategory;
 
@@ -64,7 +65,9 @@ public class CreatureBody : MonoBehaviour
             bodyCategory = BodyCategory.Bug;
         else if (stanceCount > 2)
             bodyCategory = BodyCategory.Quadruped;
-        else if (rootPart.FindChild("ARM_UPPER") == null)
+        else if (stanceCount == 0)
+            bodyCategory = BodyCategory.Fish;
+        else if (rootPart.FindChild("ARM_UPPER") == null && rootPart.FindChild("ARM") == null)
             bodyCategory = BodyCategory.Avian;
         else
             bodyCategory = BodyCategory.Humanoid;
