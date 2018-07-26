@@ -6,6 +6,7 @@ public class CreatureBody : MonoBehaviour
 {
     public enum BodyCategory
     {
+        None, //No body at all.
         Humanoid,
         Quadruped,
         Avian,
@@ -19,6 +20,37 @@ public class CreatureBody : MonoBehaviour
     public BodyPart rootPart;
     public int stanceCount;
     public Bounds bounds;
+
+    public static BodyCategory FindBodyCategory(CasteRaw caste)
+    {
+        if (caste.body_parts.Count == 0)
+            return BodyCategory.None;
+        var rootPart = caste.body_parts[0];
+        int stanceCount = 0;
+        bool hasArms = false;
+        foreach (var part in caste.body_parts)
+        {
+            if (part.parent < 0)
+                rootPart = part;
+            if (part.flags[(int)BodyPartFlags.BodyPartRawFlags.STANCE])
+                stanceCount++;
+            if (part.category.StartsWith("ARM"))
+                hasArms = true;
+        }
+        if (stanceCount > 4)
+            return BodyCategory.Bug;
+        else if (stanceCount > 2)
+            return BodyCategory.Quadruped;
+        else if(stanceCount == 2)
+        {
+            if (hasArms)
+                return BodyCategory.Humanoid;
+            else
+                return BodyCategory.Avian;
+        }
+            return BodyCategory.Fish;
+
+    }
 
     public void MakeBody()
     {
@@ -61,16 +93,7 @@ public class CreatureBody : MonoBehaviour
         if (rootPart == null)
             return; //There's no root part, means there's no body.
 
-        if (stanceCount > 4)
-            bodyCategory = BodyCategory.Bug;
-        else if (stanceCount > 2)
-            bodyCategory = BodyCategory.Quadruped;
-        else if (stanceCount == 0)
-            bodyCategory = BodyCategory.Fish;
-        else if (rootPart.FindChild("ARM_UPPER") == null && rootPart.FindChild("ARM") == null)
-            bodyCategory = BodyCategory.Avian;
-        else
-            bodyCategory = BodyCategory.Humanoid;
+        bodyCategory = FindBodyCategory(caste);
 
         rootPart.Arrange(this);
         bounds = rootPart.GetComponentInChildren<MeshRenderer>().bounds;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using DFHack;
 using dfproto;
@@ -12,6 +13,8 @@ public class DFRawReader : EditorWindow
     private Vector2 scrollPosition;
     [SerializeField]
     private List<CreatureRaw> creatureRaws;
+    [SerializeField]
+    private List<CreatureRaw> filteredRaws;
 
     [MenuItem("Mytools/DF Raw Reader")]
     public static void ShowWindow()
@@ -19,12 +22,32 @@ public class DFRawReader : EditorWindow
         GetWindow<DFRawReader>();
     }
 
+    [SerializeField]
     string filter;
+
+    [SerializeField]
+    CreatureBody.BodyCategory bodyCategoryFilter;
 
     class ChildCount
     {
         public int min = int.MaxValue;
         public int max = int.MinValue;
+    }
+
+    bool FitsFilter(CreatureRaw creature)
+    {
+        if (!string.IsNullOrEmpty(filter) && !creature.creature_id.ToUpper().Contains(filter.ToUpper()))
+            return false;
+        if (bodyCategoryFilter != CreatureBody.BodyCategory.None)
+        {
+            foreach (var caste in creature.caste)
+            {
+                if (bodyCategoryFilter == CreatureBody.FindBodyCategory(caste))
+                    return true;
+            }
+            return false;
+        }
+        return true;
     }
 
     private void OnGUI()
@@ -39,28 +62,28 @@ public class DFRawReader : EditorWindow
             Debug.Log(string.Format("Pulled {0} creature raws from DF.", creatureRaws.Count));
             client.Disconnect();
             creatureRaws.Sort((x, y) => x.creature_id.CompareTo(y.creature_id));
+            RefilterList();
         }
         if (creatureRaws != null)
         {
-            if(GUILayout.Button("Dump Part Categories"))
+            EditorGUI.BeginChangeCheck();
+            filter = EditorGUILayout.TextField(filter);
+
+            bodyCategoryFilter = (CreatureBody.BodyCategory)EditorGUILayout.EnumPopup(bodyCategoryFilter);
+            if(EditorGUI.EndChangeCheck())
+            {
+                RefilterList();
+            }
+
+            if (GUILayout.Button("Dump Part Categories"))
             {
                 var path = EditorUtility.SaveFilePanel("Save bodypart list", "", "Bodyparts.csv", "csv");
                 Dictionary<string, Dictionary<string, ChildCount>> parts = new Dictionary<string, Dictionary<string, ChildCount>>();
-                foreach (var creature in creatureRaws)
+                foreach (var creature in filteredRaws)
                 {
                     foreach (var caste in creature.caste)
                     {
-                        int numLegs = 0;
-                        bool hasArms = false;
-                        foreach (var part in caste.body_parts)
-                        {
-                            if (part.flags[(int)BodyPartFlags.BodyPartRawFlags.STANCE])
-                                numLegs++;
-                            if (part.category == "ARM_UPPER" || part.category == "ARM")
-                                hasArms = true;
-                        }
-                        //Temp thing to only count humanoids.
-                        if (numLegs != 2 && !hasArms)
+                        if (bodyCategoryFilter != CreatureBody.BodyCategory.None && bodyCategoryFilter != CreatureBody.FindBodyCategory(caste))
                             continue;
 
                         Dictionary<string, Dictionary<string, int>> tempCount = new Dictionary<string, Dictionary<string, int>>();
@@ -114,24 +137,22 @@ public class DFRawReader : EditorWindow
                 }
             }
 
-            filter = EditorGUILayout.TextField(filter);
-
             GUILayout.BeginHorizontal();
             if(GUILayout.Button("Sort by name"))
             {
                 creatureRaws.Sort((x, y) => x.creature_id.CompareTo(y.creature_id));
+                RefilterList();
             }
-            if(GUILayout.Button("Sort by size"))
+            if (GUILayout.Button("Sort by size"))
             {
                 creatureRaws.Sort((x, y) => x.adultsize.CompareTo(y.adultsize));
+                RefilterList();
             }
             GUILayout.EndHorizontal();
 
             scrollPosition = GUILayout.BeginScrollView(scrollPosition);
-            foreach (var creature in creatureRaws)
+            foreach (var creature in filteredRaws)
             {
-                if (!string.IsNullOrEmpty(filter) && !creature.creature_id.ToUpper().Contains(filter.ToUpper()))
-                    continue;
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(creature.creature_id);
 
@@ -150,14 +171,12 @@ public class DFRawReader : EditorWindow
                 GUILayout.EndHorizontal();
             }
             GUILayout.EndScrollView();
-            if(GUILayout.Button("Place all creatures"))
+            if (GUILayout.Button("Place all creatures"))
             {
                 var watch = System.Diagnostics.Stopwatch.StartNew();
                 CreatureBody prevCreature = null;
-                foreach (var creature in creatureRaws)
+                foreach (var creature in filteredRaws)
                 {
-                    if (!string.IsNullOrEmpty(filter) && !creature.creature_id.ToUpper().Contains(filter.ToUpper()))
-                        continue;
                     var creatureBase = new GameObject().AddComponent<CreatureBody>();
                     creatureBase.name = creature.creature_id + "_" + creature.caste[0].caste_id;
                     creatureBase.race = creature;
@@ -171,8 +190,25 @@ public class DFRawReader : EditorWindow
                     prevCreature = creatureBase;
                 }
                 watch.Stop();
-                Debug.Log(string.Format("Took {0}ms to create {1} creatures, averaging {2}ms per creature.", watch.ElapsedMilliseconds, creatureRaws.Count, (float)watch.ElapsedMilliseconds / creatureRaws.Count));
+                Debug.Log(string.Format("Took {0}ms to create {1} creatures, averaging {2}ms per creature.", watch.ElapsedMilliseconds, filteredRaws.Count, (float)watch.ElapsedMilliseconds / filteredRaws.Count));
             }
+        }
+    }
+
+    private void RefilterList()
+    {
+        if (creatureRaws == null)
+        {
+            filteredRaws = null;
+            return;
+        }
+        if (filteredRaws == null)
+            filteredRaws = new List<CreatureRaw>();
+        filteredRaws.Clear();
+        foreach (var creature in creatureRaws)
+        {
+            if (FitsFilter(creature))
+                filteredRaws.Add(creature);
         }
     }
 }
