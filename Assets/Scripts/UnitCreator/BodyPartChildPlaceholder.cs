@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class BodyPartChildPlaceholder : MonoBehaviour
 {
-    public bool categoryRegex;
     public string category;
-    public bool tokenRegex;
+    public bool categoryRegex;
     public string token;
+    public bool tokenRegex;
     public enum PlacementCategory
     {
         Singular,

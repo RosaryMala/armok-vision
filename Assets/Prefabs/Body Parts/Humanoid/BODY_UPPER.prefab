@@ -425,10 +425,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61557350f9ef13446a33d376169a686c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  categoryRegex: 1
   category: ^ARM
-  tokenRegex: 1
+  categoryRegex: 1
   token: ^R
+  tokenRegex: 1
   placement: 1
 --- !u!114 &114152393114308056
 MonoBehaviour:
@@ -441,10 +441,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61557350f9ef13446a33d376169a686c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  categoryRegex: 0
   category: NECK
-  tokenRegex: 0
+  categoryRegex: 0
   token: 
+  tokenRegex: 0
   placement: 0
 --- !u!114 &114215175416714694
 MonoBehaviour:
@@ -457,10 +457,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61557350f9ef13446a33d376169a686c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  categoryRegex: 1
   category: ^ARM
-  tokenRegex: 1
+  categoryRegex: 1
   token: ^L
+  tokenRegex: 1
   placement: 1
 --- !u!114 &114237005598940900
 MonoBehaviour:
@@ -473,10 +473,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61557350f9ef13446a33d376169a686c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  categoryRegex: 1
   category: ^ARM
-  tokenRegex: 1
+  categoryRegex: 1
   token: ^R
+  tokenRegex: 1
   placement: 0
 --- !u!114 &114254492191679344
 MonoBehaviour:
@@ -489,10 +489,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61557350f9ef13446a33d376169a686c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  categoryRegex: 1
   category: ^ARM
-  tokenRegex: 1
+  categoryRegex: 1
   token: ^R
+  tokenRegex: 1
   placement: 1
 --- !u!114 &114382594511348450
 MonoBehaviour:
@@ -505,10 +505,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61557350f9ef13446a33d376169a686c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  categoryRegex: 0
   category: NECK
-  tokenRegex: 0
+  categoryRegex: 0
   token: 
+  tokenRegex: 0
   placement: 1
 --- !u!114 &114419311113332702
 MonoBehaviour:
@@ -533,10 +533,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61557350f9ef13446a33d376169a686c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  categoryRegex: 1
   category: ^ARM
-  tokenRegex: 1
+  categoryRegex: 1
   token: ^L
+  tokenRegex: 1
   placement: 0
 --- !u!114 &114642312352671334
 MonoBehaviour:
@@ -549,10 +549,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61557350f9ef13446a33d376169a686c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  categoryRegex: 0
   category: NECK
-  tokenRegex: 0
+  categoryRegex: 0
   token: 
+  tokenRegex: 0
   placement: 2
 --- !u!114 &114691561578710464
 MonoBehaviour:
@@ -565,7 +565,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3066aaadb7b047449ad3b993502d84f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canonVolume: 1
+  canonVolume: 12621.71
 --- !u!114 &114708143502172696
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -577,10 +577,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61557350f9ef13446a33d376169a686c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  categoryRegex: 0
   category: BODY_LOWER
-  tokenRegex: 0
+  categoryRegex: 0
   token: 
+  tokenRegex: 0
   placement: 0
 --- !u!114 &114905859803399162
 MonoBehaviour:
@@ -593,8 +593,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61557350f9ef13446a33d376169a686c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  categoryRegex: 1
   category: ^ARM
-  tokenRegex: 1
+  categoryRegex: 1
   token: ^L
+  tokenRegex: 1
   placement: 1
