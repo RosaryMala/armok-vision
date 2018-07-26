@@ -36,6 +36,7 @@ public class BodyPart : MonoBehaviour
         public Transform start;
         public Transform end;
         public Transform single;
+        bool kill = false;
 
         List<BodyPart> bodyParts = new List<BodyPart>();
 
@@ -50,6 +51,8 @@ public class BodyPart : MonoBehaviour
 
         public void Add(BodyPartChildPlaceholder placeholder)
         {
+            if (kill)
+                return;
             switch (placeholder.placement)
             {
                 case BodyPartChildPlaceholder.PlacementCategory.Singular:
@@ -60,6 +63,9 @@ public class BodyPart : MonoBehaviour
                     break;
                 case BodyPartChildPlaceholder.PlacementCategory.ArrayEnd:
                     end = placeholder.transform;
+                    break;
+                case BodyPartChildPlaceholder.PlacementCategory.Kill:
+                    kill = true;
                     break;
             }
         }
@@ -111,11 +117,23 @@ public class BodyPart : MonoBehaviour
 
         internal void Add(BodyPart childPart)
         {
-            bodyParts.Add(childPart);
+            if (kill)
+                childPart.gameObject.SetActive(false);
+            else
+                bodyParts.Add(childPart);
         }
 
         internal void Arrange()
         {
+            //This shouldn't be, but just in case.
+            if (kill)
+            {
+                foreach (var item in bodyParts)
+                {
+                    item.gameObject.SetActive(false);
+                }
+                return;
+            }
             if (bodyParts.Count == 0)
                 return;
             if(bodyParts.Count == 1)
@@ -124,6 +142,7 @@ public class BodyPart : MonoBehaviour
                 {
                     bodyParts[0].transform.position = single.position;
                     bodyParts[0].transform.rotation = single.rotation;
+                    bodyParts[0].transform.localScale = single.localScale;
                 }
                 else
                     SetTransform(bodyParts[0].transform, 0.5f);
@@ -203,11 +222,8 @@ public class BodyPart : MonoBehaviour
                     break;
                 }
             }
-            if (childPart.flags.left && !flags.left)
-                childPart.transform.localScale = new Vector3(-1, 1, 1);
             childPart.Arrange(body);
         }
-        modeledPart.FixVolume();
         foreach (var placement in placements)
         {
             placement.Arrange();
@@ -345,6 +361,7 @@ public class BodyPart : MonoBehaviour
                         childPart.transform.localRotation = Quaternion.LookRotation(Vector3.forward, Vector3.up);
                     }
                     break;
+                case "EYELID":
                 case "EYE":
                     if (childPart.token.StartsWith("R"))
                         childPart.transform.localPosition = new Vector3(bounds.center.x - bounds.extents.x / 2, bounds.center.y, bounds.max.z);
@@ -353,20 +370,6 @@ public class BodyPart : MonoBehaviour
                     else
                         centerEyes.Add(childPart);
                     break;
-                case "EYELID":
-                    {
-                        float offset = 0;
-                        var eyeball = FindChild("EYE");
-                        if (eyeball != null)
-                            offset = Mathf.Pow(eyeball.volume, 1 / 3.0f) / 200;
-                        if (childPart.token.StartsWith("R"))
-                            childPart.transform.localPosition = new Vector3(bounds.center.x - bounds.extents.x / 2, bounds.center.y + offset, bounds.max.z);
-                        else if (childPart.token.StartsWith("L"))
-                            childPart.transform.localPosition = new Vector3(bounds.center.x + bounds.extents.x / 2, bounds.center.y + offset, bounds.max.z);
-                        else
-                            childPart.transform.localPosition = new Vector3(bounds.center.x, bounds.center.y + bounds.extents.y / 2 + offset, bounds.max.z);
-                        break;
-                    }
                 case "MOUTH":
                     childPart.transform.localPosition = new Vector3(0, bounds.min.y, bounds.max.z - childPart.bounds.max.z);
                     mouth = childPart;
@@ -789,7 +792,7 @@ public class BodyPart : MonoBehaviour
             case "EYELID":
                 placeholder.transform.localScale = new Vector3(2.5f, 1, 1);
                 placeholder.FixVolume();
-                placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
+                placeholder.transform.localPosition = new Vector3(0, placeholder.transform.localScale.y, placeholder.transform.localScale.z / 2);
                 break;
             case "CHEEK":
                 placeholder.transform.localScale = new Vector3(1, 3, 4);
@@ -867,6 +870,10 @@ public class BodyPart : MonoBehaviour
                 placeholder.transform.localScale = new Vector3(3, 1, 2);
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(-placeholder.transform.localScale.y / 2, 0, placeholder.transform.localScale.z / 2);
+                break;
+            case "NOSE":
+                placeholder.FixVolume();
+                placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
                 break;
             default:
                 placeholder.transform.localScale = Vector3.one;
