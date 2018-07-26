@@ -86,39 +86,37 @@ public class DFRawReader : EditorWindow
                         if (bodyCategoryFilter != CreatureBody.BodyCategory.None && bodyCategoryFilter != CreatureBody.FindBodyCategory(caste))
                             continue;
 
-                        Dictionary<string, Dictionary<string, int>> tempCount = new Dictionary<string, Dictionary<string, int>>();
-
-                        foreach (var part in caste.body_parts)
+                        for(int i = 0; i < caste.body_parts.Count; i++)
                         {
+                            var part = caste.body_parts[i];
                             //this is an internal part, and doesn't need modeling.
                             if (part.flags[(int)BodyPartFlags.BodyPartRawFlags.INTERNAL])
                                 continue;
-                            if (!tempCount.ContainsKey(part.category))
-                                tempCount[part.category] = new Dictionary<string, int>();
+                            if (!parts.ContainsKey(part.category))
+                                parts[part.category] = new Dictionary<string, ChildCount>();
 
-                            if (part.parent >= 0)
+                            Dictionary<string, int> childCounts = new Dictionary<string, int>();
+
+                            foreach (var sub in caste.body_parts)
                             {
-                                if (!tempCount.ContainsKey(caste.body_parts[part.parent].category))
-                                    tempCount[caste.body_parts[part.parent].category] = new Dictionary<string, int>();
-
-                                if (!tempCount[caste.body_parts[part.parent].category].ContainsKey(part.category))
-                                    tempCount[caste.body_parts[part.parent].category][part.category] = 1;
+                                if (sub.parent != i)
+                                    continue;
+                                if (sub.flags[(int)BodyPartFlags.BodyPartRawFlags.INTERNAL])
+                                    continue;
+                                if (!childCounts.ContainsKey(sub.category))
+                                    childCounts[sub.category] = 1;
                                 else
-                                    tempCount[caste.body_parts[part.parent].category][part.category]++;
+                                    childCounts[sub.category]++;
                             }
-                        }
-                        foreach (var item in tempCount)
-                        {
-                            if (!parts.ContainsKey(item.Key))
-                                parts[item.Key] = new Dictionary<string, ChildCount>();
-                            foreach (var childs in item.Value)
+
+                            foreach (var item in childCounts)
                             {
-                                if (!parts[item.Key].ContainsKey(childs.Key))
-                                    parts[item.Key][childs.Key] = new ChildCount();
-                                if (parts[item.Key][childs.Key].min > childs.Value)
-                                    parts[item.Key][childs.Key].min = childs.Value;
-                                if (parts[item.Key][childs.Key].max < childs.Value)
-                                    parts[item.Key][childs.Key].max = childs.Value;
+                                if (!parts[part.category].ContainsKey(item.Key))
+                                    parts[part.category][item.Key] = new ChildCount();
+                                if (parts[part.category][item.Key].min > item.Value)
+                                    parts[part.category][item.Key].min = item.Value;
+                                if (parts[part.category][item.Key].max < item.Value)
+                                    parts[part.category][item.Key].max = item.Value;
                             }
                         }
                     }

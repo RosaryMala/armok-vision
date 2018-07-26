@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class BodyPart : MonoBehaviour
@@ -10,6 +12,7 @@ public class BodyPart : MonoBehaviour
     [SerializeField]
     private Bounds bounds;
     public float volume;
+    internal BodyPartModel modeledPart;
 
     internal BodyPart FindChild(string category)
     {
@@ -24,8 +27,200 @@ public class BodyPart : MonoBehaviour
         return null;
     }
 
+    class ChildPlacement
+    {
+        public string category;
+        public bool categoryRegex;
+        public string token;
+        public bool tokenRegex;
+        public Transform start;
+        public Transform end;
+        public Transform single;
+
+        List<BodyPart> bodyParts = new List<BodyPart>();
+
+        public ChildPlacement(BodyPartChildPlaceholder placeholder)
+        {
+            category = placeholder.category;
+            categoryRegex = placeholder.categoryRegex;
+            token = placeholder.token;
+            tokenRegex = placeholder.tokenRegex;
+            Add(placeholder);
+        }
+
+        public void Add(BodyPartChildPlaceholder placeholder)
+        {
+            switch (placeholder.placement)
+            {
+                case BodyPartChildPlaceholder.PlacementCategory.Singular:
+                    single = placeholder.transform;
+                    break;
+                case BodyPartChildPlaceholder.PlacementCategory.ArrayStart:
+                    start = placeholder.transform;
+                    break;
+                case BodyPartChildPlaceholder.PlacementCategory.ArrayEnd:
+                    end = placeholder.transform;
+                    break;
+            }
+        }
+
+        public bool Matches(BodyPartChildPlaceholder placeholder)
+        {
+            return
+                category == placeholder.category &&
+                categoryRegex == placeholder.categoryRegex &&
+                token == placeholder.token &&
+                tokenRegex == placeholder.tokenRegex;
+        }
+
+        public bool Matches(BodyPart part)
+        {
+            if (!string.IsNullOrEmpty(category))
+            {
+                if (categoryRegex)
+                {
+                    if (!Regex.IsMatch(part.category, category))
+                        return false;
+                }
+                else
+                {
+                    if (category != part.category)
+                        return false;
+                }
+            }
+            if (!string.IsNullOrEmpty(token))
+            {
+                if (tokenRegex)
+                {
+                    if (!Regex.IsMatch(part.token, token))
+                        return false;
+                }
+                else
+                {
+                    if (token != part.token)
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        internal void Place(BodyPart childPart)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void Add(BodyPart childPart)
+        {
+            bodyParts.Add(childPart);
+        }
+
+        internal void Arrange()
+        {
+            if (bodyParts.Count == 0)
+                return;
+            if(bodyParts.Count == 1)
+            {
+                if (single != null)
+                {
+                    bodyParts[0].transform.position = single.position;
+                    bodyParts[0].transform.rotation = single.rotation;
+                }
+                else
+                    SetTransform(bodyParts[0].transform, 0.5f);
+            }
+            else
+            {
+                for(int i = 0; i < bodyParts.Count; i++)
+                {
+                    SetTransform(bodyParts[i].transform, i / (float)(bodyParts.Count - 1));
+                }
+            }
+        }
+
+        private void SetTransform(Transform trans, float t)
+        {
+            var tempStart = start;
+            var tempEnd = end;
+            if(tempStart == null)
+            {
+                if (end != null)
+                    tempStart = end;
+                else
+                    tempStart = single;
+            }
+            if(tempEnd == null)
+            {
+                if (start != null)
+                    tempEnd = start;
+                else
+                    tempEnd = single;
+            }
+            trans.position = Vector3.Lerp(tempStart.position, tempEnd.position, t);
+            trans.rotation = Quaternion.Lerp(tempStart.rotation, tempEnd.rotation, t);
+        }
+    }
+
+    void ArrangeModeledPart(CreatureBody body)
+    {
+        if (modeledPart == null)
+            return;
+        modeledPart.volume = volume;
+        modeledPart.FixVolume();
+        bounds = modeledPart.GetComponentInChildren<MeshRenderer>().bounds;
+        foreach (var renderer in GetComponentsInChildren<MeshRenderer>())
+        {
+            bounds.Encapsulate(renderer.bounds);
+        }
+        List<ChildPlacement> placements = new List<ChildPlacement>();
+        foreach (Transform child in modeledPart.transform)
+        {
+            BodyPartChildPlaceholder bodyPartChild = child.GetComponent<BodyPartChildPlaceholder>();
+            if (bodyPartChild == null)
+                continue;
+            bool placedPart = false;
+            foreach (var placement in placements)
+            {
+                if(placement.Matches(bodyPartChild))
+                {
+                    placement.Add(bodyPartChild);
+                    placedPart = true;
+                }
+            }
+            if (!placedPart)
+                placements.Add(new ChildPlacement(bodyPartChild));
+        }
+
+        foreach (Transform child in transform)
+        {
+            var childPart = child.GetComponent<BodyPart>();
+            if (childPart == null)
+                continue;
+            foreach (var placement in placements)
+            {
+                if (placement.Matches(childPart))
+                {
+                    placement.Add(childPart);
+                    break;
+                }
+            }
+            if (childPart.flags.left && !flags.left)
+                childPart.transform.localScale = new Vector3(-1, 1, 1);
+            childPart.Arrange(body);
+        }
+        modeledPart.FixVolume();
+        foreach (var placement in placements)
+        {
+            placement.Arrange();
+        }
+    }
+
     public void Arrange(CreatureBody body)
     {
+        if (modeledPart != null)
+        {
+            ArrangeModeledPart(body);
+            return;
+        }
         if (placeholder == null)
             return;
         Shapen(body);
@@ -48,32 +243,19 @@ public class BodyPart : MonoBehaviour
             switch (childPart.category)
             {
                 case "BODY_LOWER":
-                    if (body.bodyCategory != CreatureBody.BodyCategory.Humanoid)
-                    {
-                        childPart.transform.localPosition = new Vector3(0, 0,bounds.min.z);
-                        childPart.transform.localRotation = Quaternion.LookRotation(Vector3.back, Vector3.down);
-                    }
-                    else
-                    {
+                    if (body.bodyCategory == CreatureBody.BodyCategory.Humanoid)
                         childPart.transform.localPosition = new Vector3(0, bounds.min.y, 0);
-                        childPart.transform.localRotation = Quaternion.LookRotation(Vector3.down, Vector3.forward);
-                    }
+                    else
+                        childPart.transform.localPosition = new Vector3(0, 0, bounds.min.z);
                     break;
                 case "LEG_UPPER":
                 case "LEG":
-                    if (body.bodyCategory == CreatureBody.BodyCategory.Humanoid)
-                        childPart.transform.localPosition = new Vector3(bounds.extents.x / 2 * (childPart.flags.left ? -1 : 1), 0, bounds.max.z);
-                    else
-                    {
-                        childPart.transform.localPosition = new Vector3(bounds.max.x * (childPart.flags.left ? -1 : 1), bounds.min.y, bounds.min.z);
-                        childPart.transform.localRotation = Quaternion.LookRotation(Vector3.up, Vector3.back);
-                    }
+                    childPart.transform.localPosition = new Vector3(bounds.extents.x / 2 * (childPart.flags.left ? -1 : 1), bounds.min.y, 0);
                     break;
                 case "FOOT":
                 case "FOOT_REAR":
                 case "FOOT_FRONT":
-                    childPart.transform.localPosition = new Vector3(0, 0, bounds.max.z);
-                    childPart.transform.localRotation = Quaternion.LookRotation(Vector3.up, Vector3.back);
+                    childPart.transform.localPosition = new Vector3(bounds.center.x, bounds.min.y, bounds.center.z);
                     break;
                 case "TOE":
                     toes.Add(childPart);
@@ -81,7 +263,7 @@ public class BodyPart : MonoBehaviour
                 case "FINGER":
                     if (childPart.token.EndsWith("1")) //It's a thumb
                     {
-                        childPart.transform.localPosition = new Vector3(-bounds.extents.x - childPart.bounds.extents.x, 0, bounds.center.z);
+                        childPart.transform.localPosition = new Vector3(bounds.center.x, bounds.center.y, bounds.max.z + childPart.bounds.extents.z);
                     }
                     else
                         fingers.Add(childPart);
@@ -91,7 +273,6 @@ public class BodyPart : MonoBehaviour
                     {
                         case CreatureBody.BodyCategory.Humanoid:
                             childPart.transform.localPosition = new Vector3(0, bounds.max.y, 0);
-                            childPart.transform.localRotation = Quaternion.LookRotation(Vector3.up, Vector3.forward);
                             break;
                         case CreatureBody.BodyCategory.Bug:
                         case CreatureBody.BodyCategory.Fish:
@@ -118,6 +299,11 @@ public class BodyPart : MonoBehaviour
                         childPart.transform.localRotation = Quaternion.LookRotation(Vector3.down, new Vector3(child.transform.localPosition.x, 0, 0));
                     }
                     break;
+                case "ARM_LOWER":
+                case "LEG_LOWER":
+                case "HAND":
+                    childPart.transform.localPosition = new Vector3(bounds.center.x, bounds.min.y, bounds.center.z);
+                    break;
                 case "TENTACLE":
                     tentacles.Add(childPart);
                     break;
@@ -135,8 +321,7 @@ public class BodyPart : MonoBehaviour
                             case CreatureBody.BodyCategory.Avian:
                             case CreatureBody.BodyCategory.Bug:
                             default:
-                                childPart.transform.localPosition = new Vector3(0, 0, bounds.max.z);
-                                childPart.transform.localRotation = Quaternion.LookRotation(Vector3.up, Vector3.forward);
+                                childPart.transform.localPosition = new Vector3(0, bounds.max.y, 0);
                                 break;
                         }
                     }
@@ -216,8 +401,16 @@ public class BodyPart : MonoBehaviour
                     childPart.transform.localRotation = Quaternion.LookRotation(new Vector3(0, 1, -1), new Vector3(child.transform.localPosition.x, 0, 0));
                     break;
                 case "TAIL":
-                    childPart.transform.localPosition = new Vector3(bounds.center.x, bounds.min.y, bounds.max.z);
-                    childPart.transform.localRotation = Quaternion.LookRotation(new Vector3(0, -1, 1), Vector3.forward);
+                    if(body.bodyCategory == CreatureBody.BodyCategory.Humanoid)
+                    {
+                        childPart.transform.localPosition = new Vector3(bounds.center.x, bounds.min.y, bounds.min.z);
+                        childPart.transform.localRotation = Quaternion.LookRotation(new Vector3(0, -1, -1), Vector3.up);
+                    }
+                    else
+                    {
+                        childPart.transform.localPosition = new Vector3(bounds.center.x, bounds.min.y, bounds.min.z);
+                        childPart.transform.localRotation = Quaternion.LookRotation(new Vector3(0, 1, -1), Vector3.up);
+                    }
                     break;
                 case "STINGER":
                     childPart.transform.localPosition = new Vector3(bounds.center.x, bounds.center.y, bounds.max.z);
@@ -278,7 +471,7 @@ public class BodyPart : MonoBehaviour
                     childPart.transform.localPosition = new Vector3(bounds.min.x * (childPart.flags.left ? -1 : 1), bounds.center.y, bounds.max.z);
                     break;
                 default:
-                    childPart.transform.localPosition = new Vector3(0, 0, bounds.max.z);
+                    childPart.transform.localPosition = new Vector3(bounds.center.x, bounds.center.y, bounds.max.z);
                     break;
             }
             if (childPart.flags.left && !flags.left)
@@ -292,9 +485,9 @@ public class BodyPart : MonoBehaviour
         }
         for (int i = 0; i < fingers.Count; i++)
         {
-            float basecoord = bounds.min.x;
-            float step = bounds.size.x / fingers.Count;
-            fingers[i].transform.localPosition = new Vector3(basecoord + step / 2 + step * i, bounds.center.y, bounds.max.z);
+            float basecoord = bounds.min.z;
+            float step = bounds.size.z / fingers.Count;
+            fingers[i].transform.localPosition = new Vector3(bounds.center.x, bounds.min.y, basecoord + step / 2 + step * i);
         }
         if(mouth != null)
             foreach (var childPart in mouthParts)
@@ -491,26 +684,42 @@ public class BodyPart : MonoBehaviour
         switch (category)
         {
             case "BODY_UPPER":
-                if (body.bodyCategory != CreatureBody.BodyCategory.Humanoid)
-                    placeholder.transform.localScale = new Vector3(1.5f, 1, 1.5f);
-                else
+                if (body.bodyCategory == CreatureBody.BodyCategory.Humanoid)
+                {
                     placeholder.transform.localScale = new Vector3(1.5f, 1.5f, 1);
-                placeholder.FixVolume();
+                    placeholder.FixVolume();
+                    placeholder.transform.localPosition = new Vector3(0, placeholder.transform.localScale.y / 2, 0);
+                }
+                else
+                {
+                    placeholder.transform.localScale = new Vector3(1.5f, 1, 1.5f);
+                    placeholder.FixVolume();
+                    placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
+                }
                 break;
             case "BODY_LOWER":
-                placeholder.transform.localScale = new Vector3(1.5f, 1, 1.5f);
-                placeholder.FixVolume();
-                placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
+                if (body.bodyCategory == CreatureBody.BodyCategory.Humanoid)
+                {
+                    placeholder.transform.localScale = new Vector3(1.5f, 1.5f, 1);
+                    placeholder.FixVolume();
+                    placeholder.transform.localPosition = new Vector3(0, -placeholder.transform.localScale.y / 2, 0);
+                }
+                else
+                {
+                    placeholder.transform.localScale = new Vector3(1.5f, 1, 1.5f);
+                    placeholder.FixVolume();
+                    placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
+                }
                 break;
             case "ARM_UPPER":
-                placeholder.transform.localScale = new Vector3(0.75f, 0.75f, 2f);
+                placeholder.transform.localScale = new Vector3(0.75f, 2f, 0.75f);
                 placeholder.FixVolume();
-                placeholder.transform.localPosition = new Vector3(0, 0, (placeholder.transform.localScale.z / 2) - (placeholder.transform.localScale.x / 2));
+                placeholder.transform.localPosition = new Vector3(0, -(placeholder.transform.localScale.y / 2) + (placeholder.transform.localScale.x / 2), 0);
                 break;
             case "ARM":
-                placeholder.transform.localScale = new Vector3(0.75f, 0.75f, 4f);
+                placeholder.transform.localScale = new Vector3(0.75f, 4f, 0.75f);
                 placeholder.FixVolume();
-                placeholder.transform.localPosition = new Vector3(0, 0, (placeholder.transform.localScale.z / 2) - (placeholder.transform.localScale.x / 2));
+                placeholder.transform.localPosition = new Vector3(0, -(placeholder.transform.localScale.y / 2) + (placeholder.transform.localScale.x / 2), 0);
                 break;
             case "TENTACLE":
                 placeholder.transform.localScale = new Vector3(0.75f, 0.75f, 4f);
@@ -520,9 +729,9 @@ public class BodyPart : MonoBehaviour
             case "LEG_UPPER":
             case "LEG_LOWER":
             case "ARM_LOWER":
-                placeholder.transform.localScale = new Vector3(0.75f, 0.75f, 2f);
+                placeholder.transform.localScale = new Vector3(0.75f, 2f, 0.75f);
                 placeholder.FixVolume();
-                placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
+                placeholder.transform.localPosition = new Vector3(0, -placeholder.transform.localScale.y / 2, 0);
                 break;
             case "LEG":
                 placeholder.transform.localScale = new Vector3(0.75f, 0.75f, 4f);
@@ -552,14 +761,14 @@ public class BodyPart : MonoBehaviour
                 placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
                 break;
             case "HAND":
-                placeholder.transform.localScale = new Vector3(5, 2, 6);
+                placeholder.transform.localScale = new Vector3(2, 6, 5);
                 placeholder.FixVolume();
-                placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
+                placeholder.transform.localPosition = new Vector3(0, -placeholder.transform.localScale.y / 2, 0);
                 break;
             case "FINGER":
-                placeholder.transform.localScale = new Vector3(1, 1, 4);
+                placeholder.transform.localScale = new Vector3(1, 4, 1);
                 placeholder.FixVolume();
-                placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
+                placeholder.transform.localPosition = new Vector3(0, -placeholder.transform.localScale.y / 2, 0);
                 break;
             case "HEAD":
                 placeholder.transform.localScale = new Vector3(1, 1, 1);
@@ -625,9 +834,9 @@ public class BodyPart : MonoBehaviour
                 placeholder.transform.localPosition = new Vector3(-placeholder.transform.localScale.x / 2, 0, placeholder.transform.localScale.z / 2);
                 break;
             case "TAIL":
-                placeholder.transform.localScale = new Vector3(1, 1, 4);
+                placeholder.transform.localScale = new Vector3(1, 4, 1);
                 placeholder.FixVolume();
-                placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
+                placeholder.transform.localPosition = new Vector3(0, -placeholder.transform.localScale.y / 2, 0);
                 break;
             case "STINGER":
                 placeholder.transform.localScale = new Vector3(1, 1, 5);
@@ -665,7 +874,7 @@ public class BodyPart : MonoBehaviour
                 if (flags.embedded)
                     placeholder.transform.localPosition = Vector3.zero;
                 else
-                    placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
+                    placeholder.transform.localPosition = new Vector3(0, placeholder.transform.localScale.y / 2, 0);
                 break;
         }
         bounds = new Bounds(placeholder.transform.localPosition, placeholder.transform.localScale);

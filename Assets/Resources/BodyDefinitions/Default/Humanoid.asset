@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Name: Humanoid
   m_EditorClassIdentifier: 
   bodyParts:
-  - category: UPPER_BODY
+  - category: BODY_UPPER
     categoryRegex: 0
     token: 
     tokenRegex: 0
     model: {fileID: 114691561578710464, guid: 8999fc690db13dd49ae4224fa7411a1d, type: 2}
+  - category: BODY_LOWER
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114953123022586616, guid: 30671cd45fc26564ea444d1bd4a6777a, type: 2}
