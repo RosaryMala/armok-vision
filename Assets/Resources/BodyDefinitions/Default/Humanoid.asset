@@ -22,3 +22,38 @@ MonoBehaviour:
     token: 
     tokenRegex: 0
     model: {fileID: 114953123022586616, guid: 30671cd45fc26564ea444d1bd4a6777a, type: 2}
+  - category: NECK
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114117451483890954, guid: fd99b98f233c52a4f9030fccda0fef85, type: 2}
+  - category: EAR
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114734084299114382, guid: 184c8b791d318b64b8de24d1ff317459, type: 2}
+  - category: NOSE
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114969915012405212, guid: dcdeb1c58b701eb47b1f1e73308f16b4, type: 2}
+  - category: HEAD
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114804328168084632, guid: 9ed28659692abd84f9df5252e1d1dc25, type: 2}
+  - category: ARM_UPPER
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114170322383671874, guid: 30815856fcb49774abd864b89917b875, type: 2}
+  - category: ARM_LOWER
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114768097348945934, guid: aff341ab7944b0a49931011fd20341b9, type: 2}
+  - category: ARM
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114786286765057488, guid: 7c7061750182a254ca470c8f61c228d4, type: 2}
