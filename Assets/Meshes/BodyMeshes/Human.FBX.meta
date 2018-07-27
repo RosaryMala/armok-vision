@@ -40,6 +40,8 @@ ModelImporter:
     100068: NOSE
     100070: L_EAR
     100072: R_EAR
+    100074: Elf Ear
+    100076: Goblin Ear
     400000: Box001
     400002: Box002
     400004: HD
@@ -77,6 +79,8 @@ ModelImporter:
     400068: NOSE
     400070: L_EAR
     400072: R_EAR
+    400074: Elf Ear
+    400076: Goblin Ear
     2100000: 'Material #25'
     2100002: No Name
     2300000: Box001
@@ -115,6 +119,8 @@ ModelImporter:
     2300066: NOSE
     2300068: L_EAR
     2300070: R_EAR
+    2300072: Elf Ear
+    2300074: Goblin Ear
     3300000: Box001
     3300002: Box002
     3300004: HD
@@ -151,6 +157,8 @@ ModelImporter:
     3300066: NOSE
     3300068: L_EAR
     3300070: R_EAR
+    3300072: Elf Ear
+    3300074: Goblin Ear
     4300000: Plane001
     4300002: Plane002
     4300004: HD
@@ -184,6 +192,8 @@ ModelImporter:
     4300060: NOSE
     4300062: R_EAR
     4300064: L_EAR
+    4300066: Elf Ear
+    4300068: Goblin Ear
   externalObjects: {}
   materials:
     importMaterials: 1
