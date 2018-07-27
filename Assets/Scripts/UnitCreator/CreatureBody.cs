@@ -20,25 +20,7 @@ public class CreatureBody : MonoBehaviour
     public BodyPart rootPart;
     public int stanceCount;
     public Bounds bounds;
-
-    static Dictionary<BodyCategory, BodyDefinition> defaultBodyParts;
-
-    static void LoadDefaultBodyParts()
-    {
-        defaultBodyParts = new Dictionary<BodyCategory, BodyDefinition>();
-        LoadDefaultBodyParts(BodyCategory.Humanoid);
-        LoadDefaultBodyParts(BodyCategory.Quadruped);
-        LoadDefaultBodyParts(BodyCategory.Avian);
-        LoadDefaultBodyParts(BodyCategory.Bug);
-        LoadDefaultBodyParts(BodyCategory.Fish);
-    }
-
-    static void LoadDefaultBodyParts(BodyCategory category)
-    {
-        var part = Resources.Load<BodyDefinition>("BodyDefinitions/Default/" + category);
-        if (part != null)
-            defaultBodyParts[category] = part;
-    }
+    public Vector3 bodyScale;
 
     public static BodyCategory FindBodyCategory(CasteRaw caste)
     {
@@ -89,21 +71,18 @@ public class CreatureBody : MonoBehaviour
             spawnedPart.flags = new BodyPartFlags(part.flags);
             spawnedPart.volume = part.relsize * scale;
 
-            if (defaultBodyParts == null)
-                LoadDefaultBodyParts();
-            if (defaultBodyParts.ContainsKey(bodyCategory))
-            {
-                var model = defaultBodyParts[bodyCategory].GetPart(part);
-                if (model != null)
-                {
-                    var placedModel = Instantiate(model);
-                    placedModel.transform.SetParent(spawnedPart.transform);
-                    placedModel.volume = spawnedPart.volume;
-                    placedModel.FixVolume();
-                    spawnedPart.modeledPart = placedModel;
-                }
+            bodyScale = BodyDefinition.GetBodyScale(bodyCategory, race, caste);
 
+            var model = BodyDefinition.GetPart(bodyCategory, race, caste, part);
+            if (model != null)
+            {
+                var placedModel = Instantiate(model);
+                placedModel.transform.SetParent(spawnedPart.transform);
+                placedModel.volume = spawnedPart.volume;
+                placedModel.FixVolume();
+                spawnedPart.modeledPart = placedModel;
             }
+
             if (spawnedPart.modeledPart == null)
             {
                 var cube = GameObject.CreatePrimitive(PrimitiveType.Cube).AddComponent<VolumeKeeper>();

@@ -183,6 +183,7 @@ public class BodyPart : MonoBehaviour
     {
         if (modeledPart == null)
             return;
+        modeledPart.transform.localScale = body.bodyScale;
         modeledPart.volume = volume;
         modeledPart.FixVolume();
         bounds = modeledPart.GetComponentInChildren<MeshRenderer>().bounds;
@@ -689,13 +690,13 @@ public class BodyPart : MonoBehaviour
             case "BODY_UPPER":
                 if (body.bodyCategory == CreatureBody.BodyCategory.Humanoid)
                 {
-                    placeholder.transform.localScale = new Vector3(1.5f, 1.5f, 1);
+                    placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(1.5f, 1.5f, 1));
                     placeholder.FixVolume();
                     placeholder.transform.localPosition = new Vector3(0, placeholder.transform.localScale.y / 2, 0);
                 }
                 else
                 {
-                    placeholder.transform.localScale = new Vector3(1.5f, 1, 1.5f);
+                    placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(1.5f, 1, 1.5f));
                     placeholder.FixVolume();
                     placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
                 }
@@ -703,109 +704,109 @@ public class BodyPart : MonoBehaviour
             case "BODY_LOWER":
                 if (body.bodyCategory == CreatureBody.BodyCategory.Humanoid)
                 {
-                    placeholder.transform.localScale = new Vector3(1.5f, 1.5f, 1);
+                    placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(1.5f, 1.5f, 1));
                     placeholder.FixVolume();
                     placeholder.transform.localPosition = new Vector3(0, -placeholder.transform.localScale.y / 2, 0);
                 }
                 else
                 {
-                    placeholder.transform.localScale = new Vector3(1.5f, 1, 1.5f);
+                    placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(1.5f, 1, 1.5f));
                     placeholder.FixVolume();
                     placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
                 }
                 break;
             case "ARM_UPPER":
-                placeholder.transform.localScale = new Vector3(0.75f, 2f, 0.75f);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(0.75f, 2f, 0.75f));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, -(placeholder.transform.localScale.y / 2) + (placeholder.transform.localScale.x / 2), 0);
                 break;
             case "ARM":
-                placeholder.transform.localScale = new Vector3(0.75f, 4f, 0.75f);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(0.75f, 4f, 0.75f));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, -(placeholder.transform.localScale.y / 2) + (placeholder.transform.localScale.x / 2), 0);
                 break;
             case "TENTACLE":
-                placeholder.transform.localScale = new Vector3(0.75f, 0.75f, 4f);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(0.75f, 0.75f, 4f));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
                 break;
             case "LEG_UPPER":
             case "LEG_LOWER":
             case "ARM_LOWER":
-                placeholder.transform.localScale = new Vector3(0.75f, 2f, 0.75f);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(0.75f, 2f, 0.75f));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, -placeholder.transform.localScale.y / 2, 0);
                 break;
             case "LEG":
-                placeholder.transform.localScale = new Vector3(0.75f, 0.75f, 4f);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(0.75f, 0.75f, 4f));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
                 break;
             case "LEG_FRONT":
             case "LEG_REAR":
-                placeholder.transform.localScale = new Vector3(1, 1, 4f);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(1, 1, 4f));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
                 break;
             case "FOOT":
-                placeholder.transform.localScale = new Vector3(0.5f, 0.25f, 1f);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(0.5f, 0.25f, 1f));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, -placeholder.transform.localScale.y / 2, (placeholder.transform.localScale.z / 2) - (placeholder.transform.localScale.x / 2));
                 break;
             case "FOOT_REAR":
             case "FOOT_FRONT":
-                placeholder.transform.localScale = new Vector3(1, 1, 1);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(1, 1, 1));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, -placeholder.transform.localScale.y / 2, (placeholder.transform.localScale.z / 2) - (placeholder.transform.localScale.x / 2));
                 break;
             case "TOE":
-                placeholder.transform.localScale = new Vector3(1, 1, 2);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(1, 1, 2));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
                 break;
             case "HAND":
-                placeholder.transform.localScale = new Vector3(2, 6, 5);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(2, 6, 5));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, -placeholder.transform.localScale.y / 2, 0);
                 break;
             case "FINGER":
-                placeholder.transform.localScale = new Vector3(1, 4, 1);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(1, 4, 1));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, -placeholder.transform.localScale.y / 2, 0);
                 break;
             case "HEAD":
-                placeholder.transform.localScale = new Vector3(1, 1, 1);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(1, 1, 1));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, placeholder.transform.localScale.y / 2, 0);
                 break;
             case "MOUTH":
-                placeholder.transform.localScale = new Vector3(3.5f, 1, 2);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(3.5f, 1, 2));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, -placeholder.transform.localScale.y / 2, placeholder.transform.localScale.z / 2);
                 break;
             case "EYE":
             case "EAR":
-                placeholder.transform.localScale = Vector3.one;
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  Vector3.one);
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = Vector3.zero;
                 break;
             case "EYELID":
-                placeholder.transform.localScale = new Vector3(2.5f, 1, 1);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(2.5f, 1, 1));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, placeholder.transform.localScale.y, placeholder.transform.localScale.z / 2);
                 break;
             case "CHEEK":
-                placeholder.transform.localScale = new Vector3(1, 3, 4);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(1, 3, 4));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(placeholder.transform.localScale.x / 2, 0, -placeholder.transform.localScale.z / 2);
                 break;
             case "TONGUE":
-                placeholder.transform.localScale = new Vector3(1.5f, 1, 2.8f);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(1.5f, 1, 2.8f));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, -placeholder.transform.localScale.y / 2, -placeholder.transform.localScale.z / 2);
                 break;
             case "LIP":
-                placeholder.transform.localScale = new Vector3(5, 1, 1f);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(5, 1, 1f));
                 placeholder.FixVolume();
                 if (token.StartsWith("U"))
                     placeholder.transform.localPosition = new Vector3(0, placeholder.transform.localScale.y / 2, 0);
@@ -815,59 +816,59 @@ public class BodyPart : MonoBehaviour
             case "TOOTH":
                 if (token.EndsWith("EYE_TOOTH"))
                 {
-                    placeholder.transform.localScale = new Vector3(1, 1, 6);
+                    placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(1, 1, 6));
                     placeholder.FixVolume();
                     placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
                 }
                 else
                 {
-                    placeholder.transform.localScale = new Vector3(6, 1, 1);
+                    placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(6, 1, 1));
                     placeholder.FixVolume();
                     placeholder.transform.localPosition = new Vector3(0, -placeholder.transform.localScale.y / 2, 0);
                 }
                 break;
             case "TUSK":
-                placeholder.transform.localScale = new Vector3(1, 1, 6);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(1, 1, 6));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
                 break;
             case "WING":
-                placeholder.transform.localScale = new Vector3(10, 1, 20);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(10, 1, 20));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(-placeholder.transform.localScale.x / 2, 0, placeholder.transform.localScale.z / 2);
                 break;
             case "TAIL":
-                placeholder.transform.localScale = new Vector3(1, 4, 1);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(1, 4, 1));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, -placeholder.transform.localScale.y / 2, 0);
                 break;
             case "STINGER":
-                placeholder.transform.localScale = new Vector3(1, 1, 5);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(1, 1, 5));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
                 break;
             case "ANTENNA":
-                placeholder.transform.localScale = new Vector3(1, 1, 8);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(1, 1, 8));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
                 break;
             case "HORN":
-                placeholder.transform.localScale = new Vector3(1, 1, 4);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(1, 1, 4));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
                 break;
             case "FIN":
-                placeholder.transform.localScale = new Vector3(1, 3, 5);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(1, 3, 5));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, -placeholder.transform.localScale.y / 2, placeholder.transform.localScale.z / 2);
                 break;
             case "PINCER":
-                placeholder.transform.localScale = new Vector3(2, 1, 3);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(2, 1, 3));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
                 break;
             case "FLIPPER":
-                placeholder.transform.localScale = new Vector3(3, 1, 2);
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(3, 1, 2));
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(-placeholder.transform.localScale.y / 2, 0, placeholder.transform.localScale.z / 2);
                 break;
@@ -876,7 +877,7 @@ public class BodyPart : MonoBehaviour
                 placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
                 break;
             default:
-                placeholder.transform.localScale = Vector3.one;
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  Vector3.one);
                 placeholder.FixVolume();
                 if (flags.embedded)
                     placeholder.transform.localPosition = Vector3.zero;
@@ -885,5 +886,10 @@ public class BodyPart : MonoBehaviour
                 break;
         }
         bounds = new Bounds(placeholder.transform.localPosition, placeholder.transform.localScale);
+    }
+
+    static Vector3 MultiplyScales(Vector3 a, Vector3 b)
+    {
+        return new Vector3(a.x * b.x, a.y * b.y, a.z * b.z);
     }
 }
