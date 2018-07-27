@@ -57,3 +57,23 @@ MonoBehaviour:
     token: 
     tokenRegex: 0
     model: {fileID: 114786286765057488, guid: 7c7061750182a254ca470c8f61c228d4, type: 2}
+  - category: LEG_UPPER
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114969142043065572, guid: fa508f471d7033a408d98318371da4ea, type: 2}
+  - category: LEG_LOWER
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114042711827524434, guid: 6f08b12c35fc39b488137f81a95600a8, type: 2}
+  - category: LEG
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114826970097127382, guid: 64524ccfc545e0d479d23729bc91460f, type: 2}
+  - category: FOOT
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114753468451499174, guid: cb465413b37969b4caddfd9a49e69b39, type: 2}
