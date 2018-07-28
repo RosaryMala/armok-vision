@@ -183,9 +183,13 @@ public class BodyPart : MonoBehaviour
     {
         if (modeledPart == null)
             return;
-        modeledPart.transform.localScale = body.bodyScale;
-        modeledPart.volume = volume;
-        modeledPart.FixVolume();
+        //If the're flagged as small, they don't need to worry about volume. Just need to scale according to the parent.
+        if (!flags.small)
+        {
+            modeledPart.transform.localScale = body.bodyScale;
+            modeledPart.volume = volume;
+            modeledPart.FixVolume();
+        }
         bounds = modeledPart.GetComponentInChildren<MeshRenderer>().bounds;
         foreach (var renderer in GetComponentsInChildren<MeshRenderer>())
         {
@@ -210,11 +214,22 @@ public class BodyPart : MonoBehaviour
                 placements.Add(new ChildPlacement(bodyPartChild));
         }
 
+        List<BodyPart> childParts = new List<BodyPart>();
+
         foreach (Transform child in transform)
         {
             var childPart = child.GetComponent<BodyPart>();
             if (childPart == null)
                 continue;
+            childParts.Add(childPart);
+        }
+        foreach (var childPart in childParts)
+        {
+            if (childPart.flags.small)
+            {
+                //Its size doesn't matter if it's considered small, so it should just take the scale directly from the parent part.
+                childPart.transform.SetParent(modeledPart.transform, false);
+            }
             foreach (var placement in placements)
             {
                 if (placement.Matches(childPart))

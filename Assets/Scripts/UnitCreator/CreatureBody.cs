@@ -78,8 +78,6 @@ public class CreatureBody : MonoBehaviour
             {
                 var placedModel = Instantiate(model);
                 placedModel.transform.SetParent(spawnedPart.transform);
-                placedModel.volume = spawnedPart.volume;
-                placedModel.FixVolume();
                 spawnedPart.modeledPart = placedModel;
             }
 
