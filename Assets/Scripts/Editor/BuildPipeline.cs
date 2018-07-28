@@ -43,7 +43,13 @@ public class BuildFactory
         BuildRelease(BuildTarget.StandaloneWindows64, true);
     }
 
-    [MenuItem("Mytools/Build Release/OSx")]
+    [MenuItem("Mytools/Build Release/Linux")]
+    public static void BuildLinux()
+    {
+        BuildRelease(BuildTarget.StandaloneLinux64);
+    }
+
+    [MenuItem("Mytools/Build Release/macOS")]
     public static void BuildOsx()
     {
         BuildRelease(BuildTarget.StandaloneOSX);
