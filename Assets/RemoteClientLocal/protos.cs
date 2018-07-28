@@ -3281,6 +3281,14 @@ namespace RemoteFortressReader
       get { return _tissues; }
     }
   
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<bool> _flags = new global::System.Collections.Generic.List<bool>();
+    [global::ProtoBuf.ProtoMember(12, Name=@"flags", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<bool> flags
+    {
+      get { return _flags; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

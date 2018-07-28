@@ -42,6 +42,17 @@ ModelImporter:
     100072: R_EAR
     100074: Elf Ear
     100076: Goblin Ear
+    100078: Antenna
+    100080: Antenna001
+    100082: Horn
+    100084: Tusk
+    100086: Ribs_False
+    100088: Ribs_Floating
+    100090: Ribs_True
+    100092: Finger
+    100094: Hand
+    100096: Thumb
+    100098: Toe
     400000: Box001
     400002: Box002
     400004: HD
@@ -81,6 +92,17 @@ ModelImporter:
     400072: R_EAR
     400074: Elf Ear
     400076: Goblin Ear
+    400078: Antenna
+    400080: Antenna001
+    400082: Horn
+    400084: Tusk
+    400086: Ribs_False
+    400088: Ribs_Floating
+    400090: Ribs_True
+    400092: Finger
+    400094: Hand
+    400096: Thumb
+    400098: Toe
     2100000: 'Material #25'
     2100002: No Name
     2300000: Box001
@@ -121,6 +143,17 @@ ModelImporter:
     2300070: R_EAR
     2300072: Elf Ear
     2300074: Goblin Ear
+    2300076: Antenna
+    2300078: Antenna001
+    2300080: Horn
+    2300082: Tusk
+    2300084: Ribs_False
+    2300086: Ribs_Floating
+    2300088: Ribs_True
+    2300090: Finger
+    2300092: Hand
+    2300094: Thumb
+    2300096: Toe
     3300000: Box001
     3300002: Box002
     3300004: HD
@@ -159,6 +192,17 @@ ModelImporter:
     3300070: R_EAR
     3300072: Elf Ear
     3300074: Goblin Ear
+    3300076: Antenna
+    3300078: Antenna001
+    3300080: Horn
+    3300082: Tusk
+    3300084: Ribs_False
+    3300086: Ribs_Floating
+    3300088: Ribs_True
+    3300090: Finger
+    3300092: Hand
+    3300094: Thumb
+    3300096: Toe
     4300000: Plane001
     4300002: Plane002
     4300004: HD
@@ -194,6 +238,17 @@ ModelImporter:
     4300064: L_EAR
     4300066: Elf Ear
     4300068: Goblin Ear
+    4300070: Antenna001
+    4300072: Antenna
+    4300074: Horn
+    4300076: Tusk
+    4300078: Ribs_True
+    4300080: Ribs_Floating
+    4300082: Ribs_False
+    4300084: Toe
+    4300086: Hand
+    4300088: Thumb
+    4300090: Finger
   externalObjects: {}
   materials:
     importMaterials: 1

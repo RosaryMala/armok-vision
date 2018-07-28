@@ -6,37 +6,37 @@ using UnityEngine;
 [CreateAssetMenu]
 public class BodyDefinition : ScriptableObject
 {
-    readonly string[] generatedCreatureTypes = {
-    "blob",        "quadruped",       "humanoid",     "silverfish",    "mayfly",        "dragonfly",   "damselfly",    "stonefly",
-    "earwig",      "grasshopper",     "cricket",      "stick insect",  "cockroach",     "termite",     "mantis",       "louse",
-    "thrips",      "aphid",           "cicada",       "assassin bug",  "wasp",          "hornet",      "tiger beetle", "ladybug",
-    "weevil",      "darkling beetle", "click beetle", "firefly",       "scarab beetle", "stag beetle", "dung beetle",  "rhinoceros beetle",
-    "rove beetle", "snakefly",        "lacewing",     "antlion larva", "mosquito",      "flea",        "scorpionfly",  "caddisfly",
-    "butterfly",   "moth",            "caterpillar",  "maggot",        "spider",        "tarantula",   "scorpion",     "tick",
-    "mite",        "shrimp",          "lobster",      "crab",          "nematode",      "snail",       "slug",         "earthworm",
-    "leech",       "bristleworm",     "ribbon worm",  "flat worm",     "toad",          "frog",        "salamander",   "newt",
-    "alligator",   "crocodile",       "lizard",       "chameleon",     "iguana",        "gecko",       "skink",        "gila monster",
-    "monitor",     "serpent",         "viper",        "rattlesnake",   "cobra",         "python",      "anaconda",     "turtle",
-    "tortoise",    "pterosaur",       "dimetrodon",   "sauropod",      "theropod",      "iguanodont",  "hadrosaurid",  "stegosaurid",
-    "ceratopsid",  "ankylosaurid",    "duck",         "goose",         "swan",          "turkey",      "grouse",       "chicken",
-    "quail",       "pheasant",        "gull",         "loon",          "grebe",         "albatross",   "petrel",       "penguin",
-    "pelican",     "stork",           "vulture",      "flamingo",      "falcon",        "kestrel",     "condor",       "osprey",
-    "buzzard",     "eagle",           "harrier",      "kite",          "crane",         "dove",        "pigeon",       "parrot",
-    "cockatoo",    "cuckoo",          "nightjar",     "swift",         "hummingbird",   "kingfisher",  "hornbill",     "quetzal",
-    "toucan",      "woodpecker",      "lyrebird",     "thornbill",     "honeyeater",    "oriole",      "fantail",      "shrike",
-    "crow",        "raven",           "magpie",       "kinglet",       "lark",          "swallow",     "martin",       "bushtit",
-    "warbler",     "thrush",          "oxpecker",     "starling",      "mockingbird",   "wren",        "nuthatch",     "sparrow",
-    "tanager",     "cardinal",        "bunting",      "finch",         "titmouse",      "chickadee",   "waxwing",      "flycatcher",
-    "opossum",     "koala",           "wombat",       "kangaroo",      "sloth",         "anteater",    "armadillo",    "squirrel",
-    "marmot",      "beaver",          "gopher",       "mouse",         "porcupine",     "chinchilla",  "cavy",         "capybara",
-    "rabbit",      "hare",            "lemur",        "loris",         "monkey",        "hedgehog",    "shrew",        "mole",
-    "fruit bat",   "wolf",            "coyote",       "jackal",        "raccoon",       "coati",       "weasel",       "otter",
-    "badger",      "skunk",           "bear",         "panda",         "panther",       "mongoose",    "hyena",        "civet",
-    "walrus",      "pangolin",        "elephant",     "mammoth",       "horse",         "zebra",       "tapir",        "rhinoceros",
-    "warthog",     "hippopotamus",    "camel",        "llama",         "giraffe",       "deer",        "moose",        "antelope",
-    "sheep",       "goat",            "bison",        "buffalo",       "bull",          "ape",         "ant",          "bat",
-    "owl",         "pig",             "bee",          "fly",           "hawk",          "jay",         "rat",          "fox",
-    "cat",         "ass",             "elk"
+    static readonly string[] generatedCreatureTypes = {
+    "BLOB",        "QUADRUPED",     /*"HUMANOID",*/   "SILVERFISH",    "MAYFLY",        "DRAGONFLY",   "DAMSELFLY",    "STONEFLY",
+    "EARWIG",      "GRASSHOPPER",     "CRICKET",      "STICK INSECT",  "COCKROACH",     "TERMITE",     "MANTIS",       "LOUSE",
+    "THRIPS",      "APHID",           "CICADA",       "ASSASSIN BUG",  "WASP",          "HORNET",      "TIGER BEETLE", "LADYBUG",
+    "WEEVIL",      "DARKLING BEETLE", "CLICK BEETLE", "FIREFLY",       "SCARAB BEETLE", "STAG BEETLE", "DUNG BEETLE",  "RHINOCEROS BEETLE",
+    "ROVE BEETLE", "SNAKEFLY",        "LACEWING",     "ANTLION LARVA", "MOSQUITO",      "FLEA",        "SCORPIONFLY",  "CADDISFLY",
+    "BUTTERFLY",   "MOTH",            "CATERPILLAR",  "MAGGOT",        "SPIDER",        "TARANTULA",   "SCORPION",     "TICK",
+    "MITE",        "SHRIMP",          "LOBSTER",      "CRAB",          "NEMATODE",      "SNAIL",       "SLUG",         "EARTHWORM",
+    "LEECH",       "BRISTLEWORM",     "RIBBON WORM",  "FLAT WORM",     "TOAD",          "FROG",        "SALAMANDER",   "NEWT",
+    "ALLIGATOR",   "CROCODILE",       "LIZARD",       "CHAMELEON",     "IGUANA",        "GECKO",       "SKINK",        "GILA MONSTER",
+    "MONITOR",     "SERPENT",         "VIPER",        "RATTLESNAKE",   "COBRA",         "PYTHON",      "ANACONDA",     "TURTLE",
+    "TORTOISE",    "PTEROSAUR",       "DIMETRODON",   "SAUROPOD",      "THEROPOD",      "IGUANODONT",  "HADROSAURID",  "STEGOSAURID",
+    "CERATOPSID",  "ANKYLOSAURID",    "DUCK",         "GOOSE",         "SWAN",          "TURKEY",      "GROUSE",       "CHICKEN",
+    "QUAIL",       "PHEASANT",        "GULL",         "LOON",          "GREBE",         "ALBATROSS",   "PETREL",       "PENGUIN",
+    "PELICAN",     "STORK",           "VULTURE",      "FLAMINGO",      "FALCON",        "KESTREL",     "CONDOR",       "OSPREY",
+    "BUZZARD",     "EAGLE",           "HARRIER",      "KITE",          "CRANE",         "DOVE",        "PIGEON",       "PARROT",
+    "COCKATOO",    "CUCKOO",          "NIGHTJAR",     "SWIFT",         "HUMMINGBIRD",   "KINGFISHER",  "HORNBILL",     "QUETZAL",
+    "TOUCAN",      "WOODPECKER",      "LYREBIRD",     "THORNBILL",     "HONEYEATER",    "ORIOLE",      "FANTAIL",      "SHRIKE",
+    "CROW",        "RAVEN",           "MAGPIE",       "KINGLET",       "LARK",          "SWALLOW",     "MARTIN",       "BUSHTIT",
+    "WARBLER",     "THRUSH",          "OXPECKER",     "STARLING",      "MOCKINGBIRD",   "WREN",        "NUTHATCH",     "SPARROW",
+    "TANAGER",     "CARDINAL",        "BUNTING",      "FINCH",         "TITMOUSE",      "CHICKADEE",   "WAXWING",      "FLYCATCHER",
+    "OPOSSUM",     "KOALA",           "WOMBAT",       "KANGAROO",      "SLOTH",         "ANTEATER",    "ARMADILLO",    "SQUIRREL",
+    "MARMOT",      "BEAVER",          "GOPHER",       "MOUSE",         "PORCUPINE",     "CHINCHILLA",  "CAVY",         "CAPYBARA",
+    "RABBIT",      "HARE",            "LEMUR",        "LORIS",         "MONKEY",        "HEDGEHOG",    "SHREW",        "MOLE",
+    "FRUIT BAT",   "WOLF",            "COYOTE",       "JACKAL",        "RACCOON",       "COATI",       "WEASEL",       "OTTER",
+    "BADGER",      "SKUNK",           "BEAR",         "PANDA",         "PANTHER",       "MONGOOSE",    "HYENA",        "CIVET",
+    "WALRUS",      "PANGOLIN",        "ELEPHANT",     "MAMMOTH",       "HORSE",         "ZEBRA",       "TAPIR",        "RHINOCEROS",
+    "WARTHOG",     "HIPPOPOTAMUS",    "CAMEL",        "LLAMA",         "GIRAFFE",       "DEER",        "MOOSE",        "ANTELOPE",
+    "SHEEP",       "GOAT",            "BISON",        "BUFFALO",       "BULL",          "APE",         "ANT",          "BAT",
+    "OWL",         "PIG",             "BEE",          "FLY",           "HAWK",          "JAY",         "RAT",          "FOX",
+    "CAT",         "ASS",             "ELK"
     };
 
 
@@ -92,28 +92,10 @@ public class BodyDefinition : ScriptableObject
     static Dictionary<string, BodyDefinition> raceParts = new Dictionary<string, BodyDefinition>();
     static Dictionary<string, Dictionary<string, BodyDefinition>> casteParts = new Dictionary<string, Dictionary<string, BodyDefinition>>();
 
-    static void LoadDefaultBodyParts()
-    {
-        categoryParts = new Dictionary<CreatureBody.BodyCategory, BodyDefinition>();
-        LoadDefaultBodyParts(CreatureBody.BodyCategory.Humanoid);
-        LoadDefaultBodyParts(CreatureBody.BodyCategory.Quadruped);
-        LoadDefaultBodyParts(CreatureBody.BodyCategory.Avian);
-        LoadDefaultBodyParts(CreatureBody.BodyCategory.Bug);
-        LoadDefaultBodyParts(CreatureBody.BodyCategory.Fish);
-    }
 
-    static void LoadDefaultBodyParts(CreatureBody.BodyCategory category)
-    {
-        var part = Resources.Load<BodyDefinition>("BodyDefinitions/Default/" + category);
-        if (part != null)
-            categoryParts[category] = part;
-    }
 
     public static BodyPartModel GetPart(CreatureBody.BodyCategory category, CreatureRaw race, CasteRaw caste, BodyPartRaw part)
     {
-        if (categoryParts == null)
-            LoadDefaultBodyParts();
-
         BodyPartModel partModel = null;
         var bodyDef = GetBodyDefinition(race, caste);
         if (bodyDef != null)
@@ -126,6 +108,11 @@ public class BodyDefinition : ScriptableObject
         if (partModel != null)
             return partModel;
         bodyDef = GetBodyDefinition(category);
+        if (bodyDef != null)
+            partModel = bodyDef.GetPart(part);
+        if (partModel != null)
+            return partModel;
+        bodyDef = GetBodyDefinition(CreatureBody.BodyCategory.None);
         if (bodyDef != null)
             partModel = bodyDef.GetPart(part);
         return partModel;
@@ -168,5 +155,27 @@ public class BodyDefinition : ScriptableObject
         if (!categoryParts.ContainsKey(category))
             categoryParts[category] = Resources.Load<BodyDefinition>("BodyDefinitions/Default/" + category);
         return categoryParts[category];
+    }
+
+    public static string GetCorrectedCreatureID(CreatureRaw race, CasteRaw caste = null)
+    {
+        if (!race.flags[(int)CreatureRawFlags.RawFlags.GENERATED])
+            return race.creature_id;
+        if (caste == null)
+            caste = race.caste[0];
+        var descParts = caste.description.Split('.');
+        foreach (var type in generatedCreatureTypes)
+        {
+            if(Regex.IsMatch(descParts[0], @"\b" + type + @"\b", RegexOptions.IgnoreCase))
+            {
+                if (Regex.IsMatch(descParts[0], @"\bHUMANOID\b", RegexOptions.IgnoreCase))
+                    return type + "_MAN";
+                else
+                    return type;
+            }
+        }
+        if (Regex.IsMatch(descParts[0], @"\bHUMANOID\b", RegexOptions.IgnoreCase))
+            return "HUMANOID";
+        return race.creature_id;
     }
 }

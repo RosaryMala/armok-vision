@@ -77,6 +77,10 @@ public class DFRawReader : EditorWindow
             creatureRaws = getCreatureRaws.Execute().creature_raws;
             Debug.Log(string.Format("Pulled {0} creature raws from DF.", creatureRaws.Count));
             client.Disconnect();
+            foreach (var raw in creatureRaws)
+            {
+                raw.creature_id = BodyDefinition.GetCorrectedCreatureID(raw);
+            }
             RefilterList();
         }
         if (creatureRaws != null)

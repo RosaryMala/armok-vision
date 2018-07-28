@@ -21,6 +21,7 @@ public class CreatureBody : MonoBehaviour
     public int stanceCount;
     public Bounds bounds;
     public Vector3 bodyScale;
+    public CreatureRawFlags flags;
 
     public static BodyCategory FindBodyCategory(CasteRaw caste)
     {
@@ -55,6 +56,7 @@ public class CreatureBody : MonoBehaviour
 
     public void MakeBody()
     {
+        flags = new CreatureRawFlags(race.flags);
         bodyCategory = FindBodyCategory(caste);
         var spawnedParts = new Dictionary<int, BodyPart>();
         float scale = caste.adult_size / (float)caste.total_relsize * 10;

@@ -83,3 +83,23 @@ MonoBehaviour:
     token: 
     tokenRegex: 0
     model: {fileID: 114021459532079582, guid: 0171f5ff3746e5e4db59763d3e4db434, type: 2}
+  - category: HAND
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114406356298729122, guid: 2a7ddc8d982187b48990e52f79da5c72, type: 2}
+  - category: FINGER
+    categoryRegex: 0
+    token: 1$
+    tokenRegex: 1
+    model: {fileID: 114354694556385798, guid: c69654a77fba1d04493ed1a18df1b465, type: 2}
+  - category: FINGER
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114477310374771898, guid: 6942b6a692917304495b41782db9792a, type: 2}
+  - category: TOE
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114064974233655170, guid: ab1c0a999dc99ae4ab333c47181b64f0, type: 2}
