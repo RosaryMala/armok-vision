@@ -61,7 +61,6 @@ public class DFRawReader : EditorWindow
             creatureRaws = getCreatureRaws.Execute().creature_raws;
             Debug.Log(string.Format("Pulled {0} creature raws from DF.", creatureRaws.Count));
             client.Disconnect();
-            creatureRaws.Sort((x, y) => x.creature_id.CompareTo(y.creature_id));
             RefilterList();
         }
         if (creatureRaws != null)
@@ -146,6 +145,11 @@ public class DFRawReader : EditorWindow
                 creatureRaws.Sort((x, y) => x.adultsize.CompareTo(y.adultsize));
                 RefilterList();
             }
+            if (GUILayout.Button("Sort by index"))
+            {
+                creatureRaws.Sort((x, y) => x.index.CompareTo(y.index));
+                RefilterList();
+            }
             GUILayout.EndHorizontal();
 
             scrollPosition = GUILayout.BeginScrollView(scrollPosition);
@@ -180,7 +184,6 @@ public class DFRawReader : EditorWindow
                     creatureBase.race = creature;
                     creatureBase.caste = creature.caste[0];
                     creatureBase.MakeBody();
-                    creatureBase.transform.rotation = Quaternion.LookRotation(Vector3.back);
                     if(prevCreature != null)
                     {
                         creatureBase.transform.position = new Vector3(prevCreature.transform.position.x + prevCreature.bounds.max.x - creatureBase.bounds.min.x, 0, 0);

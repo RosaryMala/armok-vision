@@ -176,6 +176,7 @@ public class BodyPart : MonoBehaviour
             }
             trans.position = Vector3.Lerp(tempStart.position, tempEnd.position, t);
             trans.rotation = Quaternion.Lerp(tempStart.rotation, tempEnd.rotation, t);
+            trans.localScale = Vector3.Lerp(tempStart.localScale, tempEnd.localScale, t);
         }
     }
 
@@ -573,13 +574,11 @@ public class BodyPart : MonoBehaviour
                         {
                             childPart.transform.localPosition = new Vector3(mouth.bounds.max.x - childPart.bounds.extents.z, bounds.min.y, bounds.max.z);
                             childPart.transform.localScale = new Vector3(1, 1, 1);
-                            childPart.transform.localRotation = Quaternion.LookRotation(Vector3.down, Vector3.back);
                         }
                         else if (childPart.token.StartsWith("L"))
                         {
                             childPart.transform.localPosition = new Vector3(mouth.bounds.min.x + childPart.bounds.extents.z, bounds.min.y, bounds.max.z);
                             childPart.transform.localScale = new Vector3(-1, 1, 1);
-                            childPart.transform.localRotation = Quaternion.LookRotation(Vector3.down, Vector3.back);
                         }
                         break;
                     default:
@@ -712,7 +711,7 @@ public class BodyPart : MonoBehaviour
                 {
                     placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(1.5f, 1, 1.5f));
                     placeholder.FixVolume();
-                    placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
+                    placeholder.transform.localPosition = new Vector3(0, 0, -placeholder.transform.localScale.z / 2);
                 }
                 break;
             case "ARM_UPPER":
@@ -828,9 +827,9 @@ public class BodyPart : MonoBehaviour
                 }
                 break;
             case "TUSK":
-                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(1, 1, 6));
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(1, 6, 1));
                 placeholder.FixVolume();
-                placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
+                placeholder.transform.localPosition = new Vector3(0, placeholder.transform.localScale.y / 2, 0);
                 break;
             case "WING":
                 placeholder.transform.localScale = MultiplyScales(body.bodyScale,  new Vector3(10, 1, 20));
