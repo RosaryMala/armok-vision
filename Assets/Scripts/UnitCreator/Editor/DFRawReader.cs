@@ -36,8 +36,24 @@ public class DFRawReader : EditorWindow
 
     bool FitsFilter(CreatureRaw creature)
     {
-        if (!string.IsNullOrEmpty(filter) && !creature.creature_id.ToUpper().Contains(filter.ToUpper()))
-            return false;
+        if (!string.IsNullOrEmpty(filter))
+        {
+            bool matched = false;
+            if (creature.creature_id.ToUpper().Contains(filter.ToUpper()))
+                matched = true;
+            if (creature.name[0].ToUpper().Contains(filter.ToUpper()))
+                matched = true;
+            if(!matched)
+                foreach (var caste in creature.caste)
+                {
+                    if (caste.caste_name[0].ToUpper().Contains(filter.ToUpper()))
+                        matched = true;
+                    if (caste.description.ToUpper().Contains(filter.ToUpper()))
+                        matched = true;
+                }
+            if (!matched)
+                return false;
+        }
         if (bodyCategoryFilter != CreatureBody.BodyCategory.None)
         {
             foreach (var caste in creature.caste)
