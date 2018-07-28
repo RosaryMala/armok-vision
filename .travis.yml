@@ -9,6 +9,14 @@ env:
     # UNITY_PASSWORD=
     - secure: jpE4wqxm4mpLujz/7f1xOW9w386qTVp5alQ3be5EngPRgk/+wwQWoT2pLsQ/IEj4E1EfxTqJCtLNPh/KVs2CaOZ3hvRa1lZzCOlbUiOQp0KRxT+Xn+HW8oJ/hxGpYEXjIesD59QeM2waeZM0HvYMtwChDln6/seJwZZFKxPXUdVMMiEdnkawKXy95Xde9Roa/MztI+gt0t7cPKvekLIBzyh/DwUWs77Z7DFojhYKa2Rn8mDJDeTqU2TxnsRDhrIqmLcJ9A1q91M7NyY+rUqnIZO8yNVtl2xR5Obb2s+tPacYFk31wkRCOqpVg5A7t+QgaPwSHZCBHpyZLNswgvtVBaRPTWQieN6akdCboaa3q8eFJEs9q2V+ZhAtkMFyRISZeuNl0ynVdsb+BNtSDsiiojiDyggWbUOQ6IQDFmh8oUMcu7zQvNjc4xDRUvGm2krCx4j+CHtLd7rxoBRJsPJf20/geBQm9GzkxvZRprVdAB1SxboPawgHRrCp2MCBjto4agmkLSQ/8m/KHIB5Khx6FYnCQ4EJWsS+xJ1B1v5Pv/M77TEgOK9y+185PNX5WpR+jiDma8TGCzs9bt1eZ+Rivlt0CP+KrpiYbP4O2Mqy4tHBLd3FoToZr3ExIKRUXye3oAfLBbdv29Nlz18Rnrbci6mD5pVHiwGBKsK37NCPu04=
 
+matrix:
+  include:
+    - name: macOS
+      env: BUILD_METHOD=BuildFactory.BuildOsx
+    - name: Windows
+      env: BUILD_METHOD=BuildFactory.BuildWin
+    - name: Linux
+      env: BUILD_METHOD=BuildFactory.BuildLinux
 
 before_install:
   - brew install git-lfs python@2
@@ -26,7 +34,7 @@ before_script:
   - git lfs pull
 
 script:
-  - travis_wait 90 /Applications/Unity/Unity.app/Contents/MacOS/Unity -quit -batchmode -projectPath . -executeMethod BuildFactory.BuildAll
+  - travis_wait 90 /Applications/Unity/Unity.app/Contents/MacOS/Unity -quit -batchmode -projectPath . -executeMethod "$BUILD_METHOD"
 
 deploy:
   provider: releases
