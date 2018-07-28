@@ -18,7 +18,7 @@ public class BodyPartChildPlaceholder : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;
-        Gizmos.DrawSphere(transform.position, 0.02f);
+        Gizmos.DrawSphere(transform.position, 0.005f);
         Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position, transform.right * 0.03f * transform.localScale.x);
         Gizmos.color = Color.green;
