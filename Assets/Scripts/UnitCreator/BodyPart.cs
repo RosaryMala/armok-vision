@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RemoteFortressReader;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -12,6 +13,9 @@ public class BodyPart : MonoBehaviour
     [SerializeField]
     private Bounds bounds;
     public float volume;
+
+    public MaterialDefinition material;
+
     internal BodyPartModel modeledPart;
 
     internal BodyPart FindChild(string category)

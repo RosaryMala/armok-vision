@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using MaterialStore;
 using RemoteFortressReader;
 using UnityEngine;
 
@@ -60,6 +61,7 @@ public class CreatureBody : MonoBehaviour
         bodyCategory = FindBodyCategory(caste);
         var spawnedParts = new Dictionary<int, BodyPart>();
         float scale = caste.adult_size / (float)caste.total_relsize * 10;
+        MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
         for (int i = 0; i < caste.body_parts.Count; i++)
         {
             var part = caste.body_parts[i];
@@ -75,12 +77,27 @@ public class CreatureBody : MonoBehaviour
 
             bodyScale = BodyDefinition.GetBodyScale(bodyCategory, race, caste);
 
+            BodyPartLayerRaw usedLayer = null;
+            foreach (var layer in part.layers)
+            {
+                if (usedLayer == null || usedLayer.layer_depth >= layer.layer_depth)
+                    usedLayer = layer;
+            }
+
+            var tissue = race.tissues[usedLayer.tissue_id];
+
+            var color = ContentLoader.GetColor(tissue.material);
+            spawnedPart.material = MaterialRaws.Instance[tissue.material];
+
+            propertyBlock.SetColor("_Color", color);
+
             var model = BodyDefinition.GetPart(bodyCategory, race, caste, part);
             if (model != null)
             {
                 var placedModel = Instantiate(model);
                 placedModel.transform.SetParent(spawnedPart.transform);
                 spawnedPart.modeledPart = placedModel;
+                placedModel.GetComponentInChildren<MeshRenderer>().SetPropertyBlock(propertyBlock);
             }
 
             if (spawnedPart.modeledPart == null)
@@ -91,8 +108,33 @@ public class CreatureBody : MonoBehaviour
                 cube.volume = spawnedPart.volume;
                 cube.FixVolume();
                 spawnedPart.placeholder = cube;
+                cube.GetComponentInChildren<MeshRenderer>().SetPropertyBlock(propertyBlock);
             }
             spawnedParts[i] = spawnedPart;
+        }
+        foreach (var mod in caste.color_modifiers)
+        {
+            foreach (var partID in mod.body_part_id)
+            {
+                var part = spawnedParts[partID];
+                var colorMod = mod.patterns[Mathf.Abs(GetInstanceID()) % mod.patterns.Count].colors[0];
+                var color = new Color32((byte)colorMod.red, (byte)colorMod.green, (byte)colorMod.blue, 128);
+                propertyBlock.SetColor("_Color", color);
+                if (part.modeledPart != null)
+                {
+                    foreach (var renderer in part.modeledPart.GetComponentsInChildren<MeshRenderer>())
+                    {
+                        renderer.SetPropertyBlock(propertyBlock);
+                    }
+                }
+                if (part.placeholder != null)
+                {
+                    foreach (var renderer in part.placeholder.GetComponentsInChildren<MeshRenderer>())
+                    {
+                        renderer.SetPropertyBlock(propertyBlock);
+                    }
+                }
+            }
         }
         for (int i = 0; i < caste.body_parts.Count; i++)
         {
@@ -111,6 +153,14 @@ public class CreatureBody : MonoBehaviour
 
         if (rootPart == null)
             return; //There's no root part, means there's no body.
+
+        //Use this when we do body part mods.
+        //for(int i = 0; i < caste.modifier_idx.Count; i++)
+        //{
+        //    var modifier = caste.modifiers[caste.modifier_idx[i]];
+        //    var part = caste.body_parts[caste.part_idx[i]];
+        //}
+
 
         rootPart.Arrange(this);
         bounds = rootPart.GetComponentInChildren<MeshRenderer>().bounds;
