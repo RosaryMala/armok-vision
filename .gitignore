@@ -44,3 +44,5 @@ palette.png
 *.kra-autosave.kra
 *.kra~
 /ProtoPath.txt
+Assets/Resources/MaterialRaws.asset
+Assets/Resources/MaterialRaws.asset.meta

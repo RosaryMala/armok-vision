@@ -1,10 +1,9 @@
 ﻿using RemoteFortressReader;
 using System.Collections.Generic;
 using TokenLists;
-using System;
 using System.Collections;
 
-public class MaterialMatcher<T> : IEnumerable <KeyValuePair<MatPair, T>>
+public class MaterialMatcher<T> : IEnumerable <KeyValuePair<MatPairStruct, T>>, IReadOnlyDictionary<MatPairStruct, T>
 {
     internal struct MaterialMatch
     {
@@ -12,12 +11,24 @@ public class MaterialMatcher<T> : IEnumerable <KeyValuePair<MatPair, T>>
         public int difference;
     }
 
-    Dictionary<MatPairStruct, MaterialMatch> matList;
+    Dictionary<MatPairStruct, MaterialMatch> matList = new Dictionary<MatPairStruct, MaterialMatch>();
+
+    public IEnumerable<MatPairStruct> Keys => matList.Keys;
+
+    public IEnumerable<T> Values
+    {
+        get
+        {
+            var collection = new ValueCollection();
+            collection.collection = matList.Values;
+            return collection;
+        }
+    }
+
+    public int Count => matList.Count;
 
     void TrySetMatch(MaterialMatch match, MatPairStruct mat)
     {
-        if (matList == null)
-            matList = new Dictionary<MatPairStruct, MaterialMatch>();
         if (matList.ContainsKey(mat))
         {
             if (matList[mat].difference < match.difference)//overwrite existing exact matches
@@ -62,15 +73,15 @@ public class MaterialMatcher<T> : IEnumerable <KeyValuePair<MatPair, T>>
         if (prefix == "*")
         {
             match.difference |= 1;
-            foreach (var item in MaterialTokenList.tripleWords.Values)
+            foreach (var item in MaterialTokenList.TripleWords.Values)
             {
                 Setwords(word, suffix, item, match);
             }
         }
         else
         {
-            if (MaterialTokenList.tripleWords.ContainsKey(prefix))
-                Setwords(word, suffix, MaterialTokenList.tripleWords[prefix], match);
+            if (MaterialTokenList.TripleWords.ContainsKey(prefix))
+                Setwords(word, suffix, MaterialTokenList.TripleWords[prefix], match);
         }
     }
 
@@ -91,10 +102,10 @@ public class MaterialMatcher<T> : IEnumerable <KeyValuePair<MatPair, T>>
                     if(parts[1].StartsWith("DIVINE")) //Means it's a generated material
                     {
                         var parts2 = parts[1].Split('_');
-                        var actualIndex = DFConnection.Instance.NetMaterialList.material_list.FindIndex(x => x.name.ToUpper() == parts2[2] + " " + parts2[1]);
+                        var actualIndex = MaterialRaws.Instance.MaterialList.FindIndex(x => x.name.ToUpper() == parts2[2] + " " + parts2[1]);
                         if(actualIndex >= 0)
                         {
-                            this[DFConnection.Instance.NetMaterialList.material_list[actualIndex].mat_pair] = value;
+                            this[MaterialRaws.Instance.MaterialList[actualIndex].mat_pair] = value;
                         }
                     }
                     else
@@ -110,13 +121,12 @@ public class MaterialMatcher<T> : IEnumerable <KeyValuePair<MatPair, T>>
     }
     public T this[MatPairStruct mat]
     {
-        //get
-        //{
-        //    T output;
-        //    if (!TryGetValue(mat, out output))
-        //        output = default(T);
-        //    return output;
-        //}
+        get
+        {
+            if (!TryGetValue(mat, out T output))
+                throw new KeyNotFoundException();
+            return output;
+        }
         set
         {
             if (matList == null)
@@ -130,31 +140,27 @@ public class MaterialMatcher<T> : IEnumerable <KeyValuePair<MatPair, T>>
     }
     public bool TryGetValue(MatPairStruct mat, out T value)
     {
-        if (matList != null)
+        MaterialMatch output;
+        if (matList.TryGetValue(mat, out output))
         {
-            MaterialMatch output;
-            if (matList.TryGetValue(mat, out output))
-            {
-                value = output.item;
-                return true;
-            }
-            mat = new MatPairStruct(mat.mat_type, -1); //Try once more with a more generic value.
-            if (matList.TryGetValue(mat, out output))
-            {
-                value = output.item;
-                return true;
-            }
+            value = output.item;
+            return true;
+        }
+        mat = new MatPairStruct(mat.mat_type, -1); //Try once more with a more generic value.
+        if (matList.TryGetValue(mat, out output))
+        {
+            value = output.item;
+            return true;
         }
         value = default(T);
         return false;
-
     }
     public void Clear()
     {
         matList.Clear();
     }
 
-    public IEnumerator<KeyValuePair<MatPair, T>> GetEnumerator()
+    public IEnumerator<KeyValuePair<MatPairStruct, T>> GetEnumerator()
     {
         var enumerator = new MaterialMatchEnum();
         enumerator.enumerator = matList.GetEnumerator();
@@ -168,16 +174,21 @@ public class MaterialMatcher<T> : IEnumerable <KeyValuePair<MatPair, T>>
         return enumerator;
     }
 
-    public class MaterialMatchEnum : IEnumerator<KeyValuePair<MatPair, T>>
+    public bool ContainsKey(MatPairStruct key)
+    {
+        return matList.ContainsKey(key);
+    }
+
+    public class MaterialMatchEnum : IEnumerator<KeyValuePair<MatPairStruct, T>>
     {
         internal Dictionary<MatPairStruct, MaterialMatch>.Enumerator enumerator;
 
-        public KeyValuePair<MatPair, T> Current
+        public KeyValuePair<MatPairStruct, T> Current
         {
             get
             {
                 var current = enumerator.Current;
-                return new KeyValuePair<MatPair, T>(current.Key, current.Value.item);
+                return new KeyValuePair<MatPairStruct, T>(current.Key, current.Value.item);
             }
         }
 
@@ -204,4 +215,56 @@ public class MaterialMatcher<T> : IEnumerable <KeyValuePair<MatPair, T>>
             ((IEnumerator)enumerator).Reset();
         }
     }
+
+    public class ValueCollection : IEnumerable<T>
+    {
+        internal Dictionary<MatPairStruct, MaterialMatch>.ValueCollection collection;
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            var enumerator = new Enumerator();
+            enumerator.enumerator = collection.GetEnumerator();
+            return enumerator;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            var enumerator = new Enumerator();
+            enumerator.enumerator = collection.GetEnumerator();
+            return enumerator;
+        }
+
+        public class Enumerator : IEnumerator<T>
+        {
+            internal Dictionary<MatPairStruct, MaterialMatch>.ValueCollection.Enumerator enumerator;
+
+            public T Current
+            {
+                get
+                {
+                    var current = enumerator.Current;
+                    return current.item;
+                }
+            }
+
+            object IEnumerator.Current => enumerator.Current;
+
+            public void Dispose()
+            {
+                enumerator.Dispose();
+            }
+
+            public bool MoveNext()
+            {
+                return enumerator.MoveNext();
+            }
+
+            public void Reset()
+            {
+                ((IEnumerator)enumerator).Reset();
+            }
+        }
+
+    }
+
 }

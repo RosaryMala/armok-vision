@@ -150,8 +150,8 @@ public class ItemModel : MonoBehaviour, IClickable
     public static void PrintItemInfo(Item item)
     {
         string mat = ((MatPairStruct)(item.material)).ToString();
-        if (GameMap.materials.ContainsKey(item.material))
-            mat = GameMap.materials[item.material].id;
+        if (MaterialRaws.Instance.ContainsKey(item.material))
+            mat = MaterialRaws.Instance[item.material].id;
         if (item.stack_size > 1)
             Debug.Log(string.Format("{0} {1} [{2}]", mat, GameMap.items[item.type].id, item.stack_size));
         else
@@ -161,8 +161,8 @@ public class ItemModel : MonoBehaviour, IClickable
         foreach (var imp in item.improvements)
         {
             mat = ((MatPairStruct)(imp.material)).ToString();
-            if (GameMap.materials.ContainsKey(imp.material))
-                mat = GameMap.materials[imp.material].id;
+            if (MaterialRaws.Instance.ContainsKey(imp.material))
+                mat = MaterialRaws.Instance[imp.material].id;
             Debug.Log(string.Format("    {0} {1}", mat, imp.type));
         }
     }

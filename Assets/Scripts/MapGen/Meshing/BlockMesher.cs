@@ -72,11 +72,6 @@ abstract class BlockMesher {
         heights = new float[2, 2];
     }
 
-    // Stuff for runtime configuration.
-    // These will be accessed from multiple threads, but DON'T need to be
-    // locked, since they don't change after being loaded.
-    protected readonly Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> materials;
-
     // Some queues.
     // All of these need to be locked before access.
     // In general, NEVER LOCK MORE THAN ONE at the same time - 
@@ -91,13 +86,7 @@ abstract class BlockMesher {
         recycledBlocks = new Stack<MapDataStore>();
         resultQueue = new Queue<Result>();
 
-        // Load materials
-        materials = new Dictionary<MatPairStruct, MaterialDefinition>();
-        foreach (MaterialDefinition material in DFConnection.Instance.NetMaterialList.material_list)
-        {
-            materials[material.mat_pair] = material;
-        }
-        System.GC.Collect(); //force a garbage collect after initial load.
+        GC.Collect(); //force a garbage collect after initial load.
     }
 
     // Needs to be run frequently.

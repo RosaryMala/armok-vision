@@ -114,7 +114,6 @@ public class ContentLoader : MonoBehaviour
 
     public TextureStorage shapeTextureStorage { get; private set; }
     public TextureStorage specialTextureStorage { get; private set; }
-    private MaterialMatcher<MaterialTextureSet> MaterialTextures { get; set; }
 
     /// <summary>
     /// Get the color associated with a material, falling back to DF state color.
@@ -124,13 +123,13 @@ public class ContentLoader : MonoBehaviour
     public static Color GetColor(MatPairStruct mat)
     {
         MaterialTextureSet textureSet;
-        if (Instance.MaterialTextures.TryGetValue(mat, out textureSet))
+        if (MaterialCollection.Instance.TryGetValue(mat, out textureSet))
         {
             return textureSet.color;
         }
-        if (!GameMap.materials.ContainsKey(mat))
+        if (!MaterialRaws.Instance.ContainsKey(mat))
             return new Color32(128, 128, 128, 128);
-        var stateColor = GameMap.materials[mat].state_color;
+        var stateColor = MaterialRaws.Instance[mat].state_color;
         if (stateColor == null)
             return new Color32(128, 128, 128, 128);
         return new Color32((byte)stateColor.red, (byte)stateColor.green, (byte)stateColor.blue, 128);
@@ -226,7 +225,7 @@ public class ContentLoader : MonoBehaviour
     public static int GetPatternIndex(MatPairStruct mat)
     {
         MaterialTextureSet textureSet;
-        if (Instance.MaterialTextures.TryGetValue(mat, out textureSet))
+        if (MaterialCollection.Instance.TryGetValue(mat, out textureSet))
         {
             return textureSet.patternIndex;
         }
@@ -236,7 +235,7 @@ public class ContentLoader : MonoBehaviour
     public static int GetShapeIndex(MatPairStruct mat)
     {
         MaterialTextureSet textureSet;
-        if (Instance.MaterialTextures.TryGetValue(mat, out textureSet))
+        if (MaterialCollection.Instance.TryGetValue(mat, out textureSet))
         {
             return textureSet.shapeIndex;
         }
@@ -312,7 +311,6 @@ public class ContentLoader : MonoBehaviour
 
         shapeTextureStorage = new TextureStorage();
         specialTextureStorage = new TextureStorage();
-        MaterialTextures = new MaterialMatcher<MaterialTextureSet>();
 
         Debug.Log("Compiling material shape textures.");
         shapeTextureStorage.AddTextureArray(Resources.Load<Texture2DArray>("shapeTextures"));
@@ -381,7 +379,6 @@ public class ContentLoader : MonoBehaviour
         PatternTextureArray = Resources.Load<Texture2DArray>("patternTextures");
         PatternTextureDepth = PatternTextureArray.depth;
         Shader.SetGlobalTexture("_MatTexArray", PatternTextureArray);
-        PopulateMatDefinitions();
 
 
         yield return StartCoroutine(ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt"));
@@ -391,9 +388,9 @@ public class ContentLoader : MonoBehaviour
         //FIXME: Put this in a better place.
         List<Color32> colors = new List<Color32>();
         //inorganic, non-metallic, non-transparent colors.
-        foreach (var item in DFConnection.Instance.NetMaterialList.material_list)
+        foreach (var item in MaterialRaws.Instance)
         {
-            Color32 color = GetColor(item.mat_pair);
+            Color32 color = GetColor(item.Key);
             color.a = 255;
             colors.Add(color);
         }
@@ -422,16 +419,6 @@ public class ContentLoader : MonoBehaviour
             GameMap.Instance.HideHelp();
         DFConnection.Instance.NeedNewBlocks = true;
         yield break;
-    }
-
-    private void PopulateMatDefinitions()
-    {
-        MaterialCollection matCollection = Resources.Load<MaterialCollection>("materialDefinitions");
-
-        foreach (var texture in matCollection.textures)
-        {
-            MaterialTextures[texture.tag.ToString()] = texture;
-        }
     }
 
     IEnumerator ParseContentIndexFile(string path)

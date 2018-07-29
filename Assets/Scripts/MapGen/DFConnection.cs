@@ -829,7 +829,7 @@ public sealed class DFConnection : MonoBehaviour
         if (netMaterialList != null)
         {
             AddFakeMaterials(netMaterialList);
-            MaterialTokenList.MaterialTokens = netMaterialList.material_list;
+            MaterialRaws.Instance.MaterialList = netMaterialList.material_list;
             Debug.Log("Materials fetched: " + netMaterialList.material_list.Count);
         }
         if (netTiletypeList != null)

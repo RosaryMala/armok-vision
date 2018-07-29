@@ -78,7 +78,6 @@ public class GameMap : MonoBehaviour
     DFCoord mapPosition;
 
     // Stuff to let the material list & various meshes & whatnot be loaded from xml specs at runtime.
-    public static Dictionary<MatPairStruct, MaterialDefinition> materials;
     public static Dictionary<MatPairStruct, MaterialDefinition> items;
     public static Dictionary<BuildingStruct, BuildingDefinition> buildings;
     public static Dictionary<MatPairStruct, MaterialDefinition> creatures;
@@ -231,18 +230,8 @@ public class GameMap : MonoBehaviour
         enabled = true;
         mesher = BlockMesher.GetMesher(GameSettings.Instance.meshing.meshingThreads);
         // Initialize materials, if available
-        if (DFConnection.Instance.NetMaterialList != null)
-        {
-            if (materials == null)
-                materials = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
-            materials.Clear();
-            foreach (RemoteFortressReader.MaterialDefinition material in DFConnection.Instance.NetMaterialList.material_list)
-            {
-                materials[material.mat_pair] = material;
-            }
-            if (GameSettings.Instance.debug.saveMaterialList)
-                SaveMaterialList(materials, Path.Combine(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), Application.productName), "MaterialList.csv"));
-        }
+        if (GameSettings.Instance.debug.saveMaterialList)
+            SaveMaterialList(MaterialRaws.Instance, Path.Combine(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), Application.productName), "MaterialList.csv"));
         // Initialize items, if available
         if (DFConnection.Instance.NetItemList != null)
         {
@@ -990,21 +979,6 @@ public class GameMap : MonoBehaviour
 
 #region Debug Data Saving
 
-    void PrintFullMaterialList()
-    {
-        int totalCount = DFConnection.Instance.NetMaterialList.material_list.Count;
-        int limit = totalCount;
-        if (limit >= 100)
-            limit = 100;
-        //Don't ever do this.
-        for (int i = totalCount - limit; i < totalCount; i++)
-        {
-            //no really, don't.
-            RemoteFortressReader.MaterialDefinition material = DFConnection.Instance.NetMaterialList.material_list[i];
-            Debug.Log("{" + material.mat_pair.mat_index + "," + material.mat_pair.mat_type + "}, " + material.id + ", " + material.name);
-        }
-    }
-
     void SaveTileTypeList()
     {
         if (DFConnection.Instance.NetTiletypeList == null)
@@ -1352,10 +1326,10 @@ public class GameMap : MonoBehaviour
                 statusText.Append("Material: ");
                 statusText.Append(mat);
 
-                if (materials.ContainsKey(mat))
+                if (MaterialRaws.Instance.ContainsKey(mat))
                 {
                     statusText.Append(", ");
-                    statusText.Append(materials[mat].id).AppendLine();
+                    statusText.Append(MaterialRaws.Instance[mat].id).AppendLine();
                 }
                 else
                     statusText.AppendLine();
@@ -1364,10 +1338,10 @@ public class GameMap : MonoBehaviour
                 statusText.Append("Base Material: ");
                 statusText.Append(basemat);
 
-                if (materials.ContainsKey(basemat))
+                if (MaterialRaws.Instance.ContainsKey(basemat))
                 {
                     statusText.Append(", ");
-                    statusText.Append(materials[basemat].id).AppendLine();
+                    statusText.Append(MaterialRaws.Instance[basemat].id).AppendLine();
                 }
                 else
                     statusText.Append("Unknown Base Material\n");
@@ -1376,10 +1350,10 @@ public class GameMap : MonoBehaviour
                 statusText.Append("Layer Material: ");
                 statusText.Append(layermat);
 
-                if (materials.ContainsKey(layermat))
+                if (MaterialRaws.Instance.ContainsKey(layermat))
                 {
                     statusText.Append(", ");
-                    statusText.Append(materials[layermat].id).AppendLine();
+                    statusText.Append(MaterialRaws.Instance[layermat].id).AppendLine();
                 }
                 else
                     statusText.Append("Unknown Layer Material\n");
@@ -1388,10 +1362,10 @@ public class GameMap : MonoBehaviour
                 statusText.Append("Vein Material: ");
                 statusText.Append(veinmat);
 
-                if (materials.ContainsKey(veinmat))
+                if (MaterialRaws.Instance.ContainsKey(veinmat))
                 {
                     statusText.Append(", ");
-                    statusText.Append(materials[veinmat].id).AppendLine();
+                    statusText.Append(MaterialRaws.Instance[veinmat].id).AppendLine();
                 }
                 else
                     statusText.Append("Unknown Vein Material\n");
@@ -1416,8 +1390,8 @@ public class GameMap : MonoBehaviour
                     foreach (var spatter in tile.spatters)
                     {
                         string matString = ((MatPairStruct)spatter.material).ToString();
-                        if (materials.ContainsKey(spatter.material))
-                            matString = materials[spatter.material].id;
+                        if (MaterialRaws.Instance.ContainsKey(spatter.material))
+                            matString = MaterialRaws.Instance[spatter.material].id;
                         if (spatter.item != null)
                         {
                             string item = ((MatPairStruct)spatter.item).ToString();

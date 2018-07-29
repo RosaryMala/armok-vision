@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using DFHack;
 using dfproto;
+using MaterialStore;
 using RemoteFortressReader;
+using TokenLists;
 using UnityEditor;
 using UnityEngine;
 
@@ -73,9 +75,18 @@ public class DFRawReader : EditorWindow
             var client = new RemoteClient();
             if (!client.Connect())
                 return;
+            client.SuspendGame();
             var getCreatureRaws = new RemoteFunction<EmptyMessage, CreatureRawList>(client, "GetCreatureRaws", "RemoteFortressReader");
+            var materialListCall = new RemoteFunction<EmptyMessage, MaterialList>(client, "GetMaterialList", "RemoteFortressReader");
+            client.ResumeGame();
             creatureRaws = getCreatureRaws.Execute().creature_raws;
+            var ExistingMatList = AssetDatabase.LoadAssetAtPath<MaterialRaws>("Assets/Resources/MaterialRaws.asset");
+            MaterialRaws.Instance.MaterialList = materialListCall.Execute().material_list;
+            if(ExistingMatList == null)
+                AssetDatabase.CreateAsset(MaterialRaws.Instance, "Assets/Resources/MaterialRaws.asset");
+            AssetDatabase.SaveAssets();
             Debug.Log(string.Format("Pulled {0} creature raws from DF.", creatureRaws.Count));
+            MaterialCollection.Instance.PopulateMatTextures();
             client.Disconnect();
             foreach (var raw in creatureRaws)
             {

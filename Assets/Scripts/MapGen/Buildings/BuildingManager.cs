@@ -272,10 +272,10 @@ namespace Building
             else
                 statusText.Append(building.building_type).AppendLine();
 
-            if (GameMap.materials.ContainsKey(building.material))
+            if (MaterialRaws.Instance.ContainsKey(building.material))
             {
                 statusText.Append("Building Material: ");
-                statusText.Append(GameMap.materials[building.material].id).AppendLine();
+                statusText.Append(MaterialRaws.Instance[building.material].id).AppendLine();
             }
             else
                 statusText.Append("Unknown Building Material\n");
@@ -286,8 +286,8 @@ namespace Building
                 for(int i = 0; i < building.items.Count && i < 10; i++)
                 {
                     var item = building.items[i];
-                    if (GameMap.materials.ContainsKey(item.item.material))
-                        statusText.Append(GameMap.materials[item.item.material].id).Append(" ");
+                    if (MaterialRaws.Instance.ContainsKey(item.item.material))
+                        statusText.Append(MaterialRaws.Instance[item.item.material].id).Append(" ");
                     if (GameMap.items.ContainsKey(item.item.type))
                         statusText.Append(GameMap.items[item.item.type].id);
                     else
