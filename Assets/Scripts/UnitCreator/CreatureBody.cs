@@ -97,7 +97,10 @@ public class CreatureBody : MonoBehaviour
                 var placedModel = Instantiate(model);
                 placedModel.transform.SetParent(spawnedPart.transform);
                 spawnedPart.modeledPart = placedModel;
-                placedModel.GetComponentInChildren<MeshRenderer>().SetPropertyBlock(propertyBlock);
+                foreach (var renderer in placedModel.GetComponentsInChildren<MeshRenderer>())
+                {
+                    renderer.SetPropertyBlock(propertyBlock);
+                }
             }
 
             if (spawnedPart.modeledPart == null)
@@ -108,7 +111,10 @@ public class CreatureBody : MonoBehaviour
                 cube.volume = spawnedPart.volume;
                 cube.FixVolume();
                 spawnedPart.placeholder = cube;
-                cube.GetComponentInChildren<MeshRenderer>().SetPropertyBlock(propertyBlock);
+                foreach (var renderer in cube.GetComponentsInChildren<MeshRenderer>())
+                {
+                    renderer.SetPropertyBlock(propertyBlock);
+                }
             }
             spawnedParts[i] = spawnedPart;
         }
