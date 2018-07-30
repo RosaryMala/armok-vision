@@ -276,7 +276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3066aaadb7b047449ad3b993502d84f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canonVolume: 813.2708
+  canonVolume: 200
   volume: 0
 --- !u!114 &114623324019630456
 MonoBehaviour:

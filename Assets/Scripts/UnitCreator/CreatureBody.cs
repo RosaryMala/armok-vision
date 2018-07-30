@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class CreatureBody : MonoBehaviour
 {
+    static Material skinMat = null;
+
     public enum BodyCategory
     {
         None, //No body at all.
@@ -87,9 +89,11 @@ public class CreatureBody : MonoBehaviour
             var tissue = race.tissues[usedLayer.tissue_id];
 
             var color = ContentLoader.GetColor(tissue.material);
+            var index = ContentLoader.GetPatternIndex(tissue.material);
             spawnedPart.material = MaterialRaws.Instance[tissue.material];
 
-            propertyBlock.SetColor("_Color", color);
+            propertyBlock.SetColor("_MatColor", color);
+            propertyBlock.SetFloat("_MatIndex", index);
 
             var model = BodyDefinition.GetPart(bodyCategory, race, caste, part);
             if (model != null)
@@ -113,6 +117,9 @@ public class CreatureBody : MonoBehaviour
                 spawnedPart.placeholder = cube;
                 foreach (var renderer in cube.GetComponentsInChildren<MeshRenderer>())
                 {
+                    if (skinMat == null)
+                        skinMat = Resources.Load<Material>("Skin");
+                    renderer.sharedMaterial = skinMat;
                     renderer.SetPropertyBlock(propertyBlock);
                 }
             }
@@ -125,7 +132,9 @@ public class CreatureBody : MonoBehaviour
                 var part = spawnedParts[partID];
                 var colorMod = mod.patterns[Mathf.Abs(GetInstanceID()) % mod.patterns.Count].colors[0];
                 var color = new Color32((byte)colorMod.red, (byte)colorMod.green, (byte)colorMod.blue, 128);
-                propertyBlock.SetColor("_Color", color);
+                var index = ContentLoader.GetPatternIndex(part.material.mat_pair);
+                propertyBlock.SetColor("_MatColor", color);
+                propertyBlock.SetFloat("_MatIndex", index);
                 if (part.modeledPart != null)
                 {
                     foreach (var renderer in part.modeledPart.GetComponentsInChildren<MeshRenderer>())
@@ -176,5 +185,10 @@ public class CreatureBody : MonoBehaviour
         }
         rootPart.transform.localPosition = new Vector3(0, -bounds.min.y, 0);
 
+    }
+
+    private void OnDrawGizmos()
+    {
+        
     }
 }

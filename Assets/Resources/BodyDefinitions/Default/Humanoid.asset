@@ -103,3 +103,18 @@ MonoBehaviour:
     token: 
     tokenRegex: 0
     model: {fileID: 114064974233655170, guid: ab1c0a999dc99ae4ab333c47181b64f0, type: 2}
+  - category: RIB_TRUE
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114433678884629108, guid: 1793f09995f47254aabd74542ad6a799, type: 2}
+  - category: RIB_FALSE
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114290082651677378, guid: cbd2252357d48da44ae607b8f4a2b6bd, type: 2}
+  - category: RIB_FLOATING
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114221642601311524, guid: af7bd3bf468ca4f4fb61602b1f26b73e, type: 2}

@@ -229,6 +229,8 @@ public class ContentLoader : MonoBehaviour
         {
             return textureSet.patternIndex;
         }
+        if (Instance == null)
+            return 0;
         return Instance.DefaultMatTexIndex;
     }
 
@@ -239,6 +241,8 @@ public class ContentLoader : MonoBehaviour
         {
             return textureSet.shapeIndex;
         }
+        if (Instance == null)
+            return 0;
         return Instance.DefaultShapeTexIndex;
     }
 

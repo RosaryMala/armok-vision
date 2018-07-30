@@ -46,14 +46,14 @@ namespace MaterialStore
             occlusionList = new List<Texture2D>();
             alphaList = new List<Texture2D>();
 
-            defaultAlbedo = Resources.Load<Texture2D>("Grey");
+            defaultAlbedo = Resources.Load<Texture2D>("White");
             defaultSpecular = Resources.Load<Texture2D>("Low_S");
 
             defaultNormal = Resources.Load<Texture2D>("Flat_N");
             defaultOcclusion = Resources.Load<Texture2D>("Flat_O");
             defaultAlpha = Resources.Load<Texture2D>("Opaque_A");
 
-            matCollection.textures.Add(CreateTextureSet(new MaterialTag(), new Color(0.5f, 0.5f, 0.5f, 0.5f), null, null, null, null, null));
+            matCollection.textures.Add(CreateTextureSet(new MaterialTag(), new Color(1, 1, 1, 0.5f), null, null, null, null, null));
 
             foreach (var item in materialGUIDs)
             {
@@ -128,11 +128,11 @@ namespace MaterialStore
             }
 
             shapeArray.Apply(true);
-
             AssetDatabase.CreateAsset(patternArray, "Assets/Resources/patternTextures.asset");
             AssetDatabase.CreateAsset(shapeArray, "Assets/Resources/shapeTextures.asset");
             AssetDatabase.CreateAsset(matCollection, "Assets/Resources/materialDefinitions.asset");
             AssetDatabase.SaveAssets();
+            MaterialCollection.Instance.Refresh();
         }
 
         private static MaterialTextureSet CreateTextureSet(MaterialTag materialTag, Color color, Texture2D albedo = null, Texture2D specular = null, Texture2D normal = null, Texture2D occlusion = null, Texture2D alpha = null)

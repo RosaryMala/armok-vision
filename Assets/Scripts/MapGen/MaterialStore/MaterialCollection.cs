@@ -61,6 +61,8 @@ namespace MaterialStore
         }
 
         MaterialMatcher<MaterialTextureSet> matTextures = new MaterialMatcher<MaterialTextureSet>();
+        private Texture2DArray PatternTextureArray;
+        private int PatternTextureDepth;
 
         public void PopulateMatTextures()
         {
@@ -73,8 +75,20 @@ namespace MaterialStore
 
         private void OnEnable()
         {
+            Refresh();
+        }
+
+        public void Refresh()
+        {
             if (MaterialRaws.Instance != null)
+            {
                 PopulateMatTextures();
+                PatternTextureArray = Resources.Load<Texture2DArray>("patternTextures");
+                PatternTextureDepth = PatternTextureArray.depth;
+                Shader.SetGlobalTexture("_MatTexArray", PatternTextureArray);
+                Vector4 arrayCount = new Vector4(PatternTextureDepth, 1, 1, 1);
+                Shader.SetGlobalVector("_TexArrayCount", arrayCount);
+            }
         }
     }
 }

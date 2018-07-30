@@ -891,6 +891,11 @@ public class BodyPart : MonoBehaviour
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
                 break;
+            case "HOOF":
+                placeholder.transform.localScale = MultiplyScales(body.bodyScale, Vector3.one);
+                placeholder.FixVolume();
+                placeholder.transform.localPosition = new Vector3(0, -placeholder.transform.localScale.y / 2, 0);
+                break;
             default:
                 placeholder.transform.localScale = MultiplyScales(body.bodyScale,  Vector3.one);
                 placeholder.FixVolume();

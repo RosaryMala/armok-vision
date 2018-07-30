@@ -1192,8 +1192,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61557350f9ef13446a33d376169a686c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  category: NOSE
-  categoryRegex: 0
+  category: NOSE|PROBOSCIS
+  categoryRegex: 1
   token: 
   tokenRegex: 0
   placement: 0
