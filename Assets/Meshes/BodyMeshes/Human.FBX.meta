@@ -53,6 +53,9 @@ ModelImporter:
     100094: Hand
     100096: Thumb
     100098: Toe
+    100100: Proboscis
+    100102: Shell
+    100104: Wing
     400000: Box001
     400002: Box002
     400004: HD
@@ -103,8 +106,12 @@ ModelImporter:
     400094: Hand
     400096: Thumb
     400098: Toe
+    400100: Proboscis
+    400102: Shell
+    400104: Wing
     2100000: 'Material #25'
     2100002: No Name
+    2100004: 03 - Default
     2300000: Box001
     2300002: Box002
     2300004: HD
@@ -154,6 +161,9 @@ ModelImporter:
     2300092: Hand
     2300094: Thumb
     2300096: Toe
+    2300098: Proboscis
+    2300100: Shell
+    2300102: Wing
     3300000: Box001
     3300002: Box002
     3300004: HD
@@ -203,6 +213,9 @@ ModelImporter:
     3300092: Hand
     3300094: Thumb
     3300096: Toe
+    3300098: Proboscis
+    3300100: Shell
+    3300102: Wing
     4300000: Plane001
     4300002: Plane002
     4300004: HD
@@ -249,6 +262,9 @@ ModelImporter:
     4300086: Hand
     4300088: Thumb
     4300090: Finger
+    4300092: Proboscis
+    4300094: Shell
+    4300096: Wing
   externalObjects: {}
   materials:
     importMaterials: 1
