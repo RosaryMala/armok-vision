@@ -88,10 +88,10 @@ public class DFRawReader : EditorWindow
             Debug.Log(string.Format("Pulled {0} creature raws from DF.", creatureRaws.Count));
             MaterialCollection.Instance.PopulateMatTextures();
             client.Disconnect();
-            foreach (var raw in creatureRaws)
-            {
-                raw.creature_id = BodyDefinition.GetCorrectedCreatureID(raw);
-            }
+            //foreach (var raw in creatureRaws)
+            //{
+            //    raw.creature_id = BodyDefinition.GetCorrectedCreatureID(raw);
+            //}
             RefilterList();
         }
         if (creatureRaws != null)

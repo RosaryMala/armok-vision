@@ -8,15 +8,13 @@ using UnityEngine;
 public class MaterialRaws : ScriptableObject, IReadOnlyDictionary<MatPairStruct, MaterialDefinition>
 {
     [SerializeField]
-    List<MaterialDefinition> _materialList;
+    List<MaterialDefinition> _materialList = new List<MaterialDefinition>();
 
-    Dictionary<MatPairStruct, MaterialDefinition> materialLookup;
+    Dictionary<MatPairStruct, MaterialDefinition> materialLookup = new Dictionary<MatPairStruct, MaterialDefinition>();
 
     private void PopulateLookupTable()
     {
         MaterialTokenList.MaterialTokens = _materialList;
-        if (materialLookup == null)
-            materialLookup = new Dictionary<MatPairStruct, MaterialDefinition>();
         materialLookup.Clear();
         foreach (var item in _materialList)
         {

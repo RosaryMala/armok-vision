@@ -239,6 +239,8 @@ public class CreatureRawFlags
 
     public CreatureRawFlags(List<bool> flags)
     {
+        if (flags.Count == 0)
+            return;
         unk_wagon = flags[0]; // 0x0
         EQUIPMENT_WAGON = flags[1]; // 0x1
         MUNDANE = flags[2]; // 0x2

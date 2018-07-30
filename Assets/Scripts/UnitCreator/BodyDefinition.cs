@@ -159,6 +159,8 @@ public class BodyDefinition : ScriptableObject
 
     public static string GetCorrectedCreatureID(CreatureRaw race, CasteRaw caste = null)
     {
+        if(race.flags.Count == 0)
+            return race.creature_id;
         if (!race.flags[(int)CreatureRawFlags.RawFlags.GENERATED])
             return race.creature_id;
         if (caste == null)
