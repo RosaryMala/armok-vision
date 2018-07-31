@@ -118,3 +118,8 @@ MonoBehaviour:
     token: 
     tokenRegex: 0
     model: {fileID: 114221642601311524, guid: af7bd3bf468ca4f4fb61602b1f26b73e, type: 2}
+  - category: GROWTH
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114268696615276090, guid: 5472006060002634dbea44481700d40b, type: 2}

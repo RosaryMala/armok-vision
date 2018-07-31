@@ -43,3 +43,8 @@ MonoBehaviour:
     token: 
     tokenRegex: 0
     model: {fileID: 114231134507148498, guid: d636ac743c20be14c92855879c8aea2e, type: 2}
+  - category: BEAK
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114528496381897852, guid: a3d820a8052063f458c4a6a3a74a5683, type: 2}

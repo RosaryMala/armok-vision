@@ -58,6 +58,8 @@ ModelImporter:
     100104: Wing
     100106: Single Arm
     100108: Single Leg
+    100110: Beak
+    100112: Growth
     400000: Box001
     400002: Box002
     400004: HD
@@ -113,6 +115,8 @@ ModelImporter:
     400104: Wing
     400106: Single Arm
     400108: Single Leg
+    400110: Beak
+    400112: Growth
     2100000: 'Material #25'
     2100002: No Name
     2100004: 03 - Default
@@ -170,6 +174,8 @@ ModelImporter:
     2300102: Wing
     2300104: Single Arm
     2300106: Single Leg
+    2300108: Beak
+    2300110: Growth
     3300000: Box001
     3300002: Box002
     3300004: HD
@@ -224,6 +230,8 @@ ModelImporter:
     3300102: Wing
     3300104: Single Arm
     3300106: Single Leg
+    3300108: Beak
+    3300110: Growth
     4300000: Plane001
     4300002: Plane002
     4300004: HD
@@ -275,6 +283,8 @@ ModelImporter:
     4300096: Wing
     4300098: Single Leg
     4300100: Single Arm
+    4300102: Beak
+    4300104: Growth
   externalObjects: {}
   materials:
     importMaterials: 1
