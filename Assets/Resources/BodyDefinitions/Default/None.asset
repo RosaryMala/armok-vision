@@ -38,3 +38,8 @@ MonoBehaviour:
     token: 
     tokenRegex: 0
     model: {fileID: 114099320514993820, guid: e1655830feaa2594cba498a0fc85ae7a, type: 2}
+  - category: WING
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114231134507148498, guid: d636ac743c20be14c92855879c8aea2e, type: 2}
