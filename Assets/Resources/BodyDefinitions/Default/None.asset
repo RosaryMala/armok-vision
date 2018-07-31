@@ -28,3 +28,13 @@ MonoBehaviour:
     token: 
     tokenRegex: 0
     model: {fileID: 114166233480067596, guid: 49daf0786f614ec41bdf851bf59fa376, type: 2}
+  - category: PROBOSCIS
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114519033035899968, guid: c865da2daf02c6d459314bf1c3ab9ef6, type: 2}
+  - category: SHELL
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114099320514993820, guid: e1655830feaa2594cba498a0fc85ae7a, type: 2}
