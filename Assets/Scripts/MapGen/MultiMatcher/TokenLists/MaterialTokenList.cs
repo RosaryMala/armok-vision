@@ -6,8 +6,11 @@ namespace TokenLists
 {
     public static class MaterialTokenList
     {
+
         static EventHandler rawUpdateEvent;
         static List<MaterialDefinition> _matTokenList;
+        private static Dictionary<string, Dictionary<string, Dictionary<string, MaterialDefinition>>> s_tripleWords;
+
         public static List<MaterialDefinition> MaterialTokens
         {
             set
@@ -19,7 +22,15 @@ namespace TokenLists
                 }
             }
         }
-        public static Dictionary<string, Dictionary<string, Dictionary<string, MaterialDefinition>>> TripleWords { get; private set; }
+        public static Dictionary<string, Dictionary<string, Dictionary<string, MaterialDefinition>>> TripleWords {
+            get
+            {
+                if (s_tripleWords == null)
+                    s_tripleWords = new Dictionary<string, Dictionary<string, Dictionary<string, MaterialDefinition>>>();
+                return s_tripleWords;
+            }
+            private set => s_tripleWords = value;
+        }
 
         static void AddMat(string prefix, string word, string suffix, MaterialDefinition token)
         {
@@ -34,6 +45,8 @@ namespace TokenLists
 
         static void PopulateWordLists()
         {
+            if (TripleWords != null)
+                TripleWords.Clear();
             foreach (MaterialDefinition token in _matTokenList)
             {
                 var parts = token.id.Split(':');
