@@ -30,7 +30,7 @@ If you're an artist and want to contribute 3D models, sounds, concept art:
 #### Developers
 If you know how to code and want to hack on the engine:
 
-1. Install [Unity 5](http://unity3d.com/get-unity). (We're using the Personal Edition, and either the classic installer or Unity Hub is fine.)
+1. Install [Unity 2018.2.0f2](http://unity3d.com/get-unity). (We're using the Personal Edition, and either the classic installer or Unity Hub is fine.)
 2. Non-Windows users: install the [Git LFS](https://git-lfs.github.com/) extension if you haven't already (testable with `git lfs version`).
 3. `$ git clone --recurse-submodules --depth 1 https://github.com/JapaMala/armok-vision.git` (or without `--depth 1` if you want the full history, but it's pretty big).
 4. Load the `armok-vision` folder in the Unity editor.
