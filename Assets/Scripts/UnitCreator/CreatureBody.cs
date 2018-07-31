@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using MaterialStore;
+using System;
 using RemoteFortressReader;
 using UnityEngine;
 
@@ -76,24 +76,9 @@ public class CreatureBody : MonoBehaviour
             spawnedPart.category = part.category;
             spawnedPart.flags = new BodyPartFlags(part.flags);
             spawnedPart.volume = part.relsize * scale;
+            spawnedPart.layers = part.layers;
 
             bodyScale = BodyDefinition.GetBodyScale(bodyCategory, race, caste);
-
-            BodyPartLayerRaw usedLayer = null;
-            foreach (var layer in part.layers)
-            {
-                if (usedLayer == null || usedLayer.layer_depth >= layer.layer_depth)
-                    usedLayer = layer;
-            }
-
-            var tissue = race.tissues[usedLayer.tissue_id];
-
-            var color = ContentLoader.GetColor(tissue.material);
-            var index = ContentLoader.GetPatternIndex(tissue.material);
-            spawnedPart.material = MaterialRaws.Instance[tissue.material];
-
-            propertyBlock.SetColor("_MatColor", color);
-            propertyBlock.SetFloat("_MatIndex", index);
 
             var model = BodyDefinition.GetPart(bodyCategory, race, caste, part);
             if (model != null)
@@ -101,10 +86,6 @@ public class CreatureBody : MonoBehaviour
                 var placedModel = Instantiate(model);
                 placedModel.transform.SetParent(spawnedPart.transform);
                 spawnedPart.modeledPart = placedModel;
-                foreach (var renderer in placedModel.GetComponentsInChildren<MeshRenderer>())
-                {
-                    renderer.SetPropertyBlock(propertyBlock);
-                }
             }
 
             if (spawnedPart.modeledPart == null)
@@ -114,41 +95,105 @@ public class CreatureBody : MonoBehaviour
                 cube.transform.SetParent(spawnedPart.transform);
                 cube.volume = spawnedPart.volume;
                 cube.FixVolume();
+                cube.gameObject.AddComponent<BodyLayer>();
                 spawnedPart.placeholder = cube;
-                foreach (var renderer in cube.GetComponentsInChildren<MeshRenderer>())
+                if (skinMat == null)
+                    skinMat = Resources.Load<Material>("Skin");
+                cube.GetComponent<MeshRenderer>().sharedMaterial = skinMat;
+            }
+
+            var modeledLayers = spawnedPart.GetComponentsInChildren<BodyLayer>();
+            foreach (var layer in part.layers)
+            {
+                var matchedLayers = Array.FindAll(modeledLayers, x => x.layerName == layer.layer_name);
+                if (matchedLayers.Length == 0)
                 {
-                    if (skinMat == null)
-                        skinMat = Resources.Load<Material>("Skin");
-                    renderer.sharedMaterial = skinMat;
+                    matchedLayers = Array.FindAll(modeledLayers, x => string.IsNullOrEmpty(x.layerName));
+                    if (matchedLayers.Length < 0)
+                        spawnedPart.layerModels.Add(null);
+                    else
+                    {
+                        bool matchedAny = false;
+                        foreach (var matchedLayer in matchedLayers)
+                        {
+                            if (!matchedLayer.placed)
+                            {
+                                matchedLayer.layerRaw = layer;
+                                spawnedPart.layerModels.Add(matchedLayer);
+                                matchedLayer.placed = true;
+                                matchedAny = true;
+                                break;
+                            }
+                        }
+                        if (!matchedAny)
+                            spawnedPart.layerModels.Add(null);
+                    }
+                }
+                else
+                {
+                    bool matchedAny = false;
+                    foreach (var matchedLayer in matchedLayers)
+                    {
+                        if (!matchedLayer.placed)
+                        {
+                            matchedLayer.layerRaw = layer;
+                            spawnedPart.layerModels.Add(matchedLayer);
+                            matchedLayer.placed = true;
+                            matchedAny = true;
+                            break;
+                        }
+                    }
+                    if (!matchedAny)
+                        spawnedPart.layerModels.Add(null);
+                }
+            }
+            foreach (var modeledLayer in modeledLayers)
+            {
+                if (!modeledLayer.placed)
+                    modeledLayer.gameObject.SetActive(false);
+            }
+
+
+            foreach (var layerModel in spawnedPart.layerModels)
+            {
+                if (layerModel == null)
+                    continue;
+                var renderer = layerModel.GetComponentInChildren<MeshRenderer>();
+                if(renderer != null)
+                {
+                    var tissue = race.tissues[layerModel.layerRaw.tissue_id];
+                    var color = ContentLoader.GetColor(tissue.material);
+                    var index = ContentLoader.GetPatternIndex(tissue.material);
+                    propertyBlock.SetColor("_MatColor", color);
+                    propertyBlock.SetFloat("_MatIndex", index);
                     renderer.SetPropertyBlock(propertyBlock);
                 }
             }
             spawnedParts[i] = spawnedPart;
         }
-        foreach (var mod in caste.color_modifiers)
+        for(int modNum = 0; modNum < caste.color_modifiers.Count; modNum++)
         {
-            foreach (var partID in mod.body_part_id)
+            var mod = caste.color_modifiers[modNum];
+            //Temp fix until actual creatures are being read.
+            if (mod.start_date > 0)
+                continue;
+            int seed = Mathf.Abs(GetInstanceID() * modNum) % mod.patterns.Count;
+            for (int i = 0; i < mod.body_part_id.Count; i++)
             {
-                var part = spawnedParts[partID];
-                var colorMod = mod.patterns[Mathf.Abs(GetInstanceID()) % mod.patterns.Count].colors[0];
-                var color = new Color32((byte)colorMod.red, (byte)colorMod.green, (byte)colorMod.blue, 128);
-                var index = ContentLoader.GetPatternIndex(part.material.mat_pair);
+                var part = spawnedParts[mod.body_part_id[i]];
+                if (part == null || !part.gameObject.activeSelf)
+                    continue;
+                var layer = part.layerModels[mod.tissue_layer_id[i]];
+                if (layer == null || !layer.gameObject.activeSelf)
+                    continue;
+                var colorDef = mod.patterns[seed].colors[0];
+                var color = new Color32((byte)colorDef.red, (byte)colorDef.green, (byte)colorDef.blue, 128);
+                var index = ContentLoader.GetPatternIndex(race.tissues[layer.layerRaw.tissue_id].material);
                 propertyBlock.SetColor("_MatColor", color);
                 propertyBlock.SetFloat("_MatIndex", index);
-                if (part.modeledPart != null)
-                {
-                    foreach (var renderer in part.modeledPart.GetComponentsInChildren<MeshRenderer>())
-                    {
-                        renderer.SetPropertyBlock(propertyBlock);
-                    }
-                }
-                if (part.placeholder != null)
-                {
-                    foreach (var renderer in part.placeholder.GetComponentsInChildren<MeshRenderer>())
-                    {
-                        renderer.SetPropertyBlock(propertyBlock);
-                    }
-                }
+                var renderer = layer.GetComponentInChildren<MeshRenderer>();
+                if (renderer != null)
+                    renderer.SetPropertyBlock(propertyBlock);
             }
         }
         for (int i = 0; i < caste.body_parts.Count; i++)

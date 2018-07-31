@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
+[SelectionBase]
 public class BodyPart : MonoBehaviour
 {
     public string token;
@@ -13,8 +14,8 @@ public class BodyPart : MonoBehaviour
     [SerializeField]
     private Bounds bounds;
     public float volume;
-
-    public MaterialDefinition material;
+    public List<BodyPartLayerRaw> layers = new List<BodyPartLayerRaw>();
+    public List<BodyLayer> layerModels = new List<BodyLayer>();
 
     internal BodyPartModel modeledPart;
 
@@ -315,7 +316,7 @@ public class BodyPart : MonoBehaviour
                         case CreatureBody.BodyCategory.Bug:
                         case CreatureBody.BodyCategory.Fish:
                             childPart.transform.localPosition = new Vector3(bounds.center.x, bounds.center.y, bounds.max.z);
-                            childPart.transform.localRotation = Quaternion.LookRotation(Vector3.forward, Vector3.up);
+                            childPart.transform.localRotation = Quaternion.LookRotation(Vector3.down, Vector3.forward);
                             break;
                         case CreatureBody.BodyCategory.Quadruped:
                         case CreatureBody.BodyCategory.Avian:
@@ -350,13 +351,13 @@ public class BodyPart : MonoBehaviour
                         switch (body.bodyCategory)
                         {
                             case CreatureBody.BodyCategory.Fish:
-                                childPart.transform.localPosition = new Vector3(0, bounds.center.y - childPart.bounds.center.y, bounds.max.z + childPart.bounds.extents.z);
-                                childPart.transform.localRotation = Quaternion.LookRotation(Vector3.forward, Vector3.up);
+                            case CreatureBody.BodyCategory.Bug:
+                                childPart.transform.localPosition = new Vector3(0, bounds.max.y + childPart.bounds.extents.z, bounds.center.z + childPart.bounds.center.y);
+                                childPart.transform.localRotation = Quaternion.LookRotation(Vector3.up, Vector3.back);
                                 break;
                             case CreatureBody.BodyCategory.Humanoid:
                             case CreatureBody.BodyCategory.Quadruped:
                             case CreatureBody.BodyCategory.Avian:
-                            case CreatureBody.BodyCategory.Bug:
                             default:
                                 childPart.transform.localPosition = new Vector3(0, bounds.max.y, 0);
                                 break;
@@ -422,7 +423,7 @@ public class BodyPart : MonoBehaviour
                     break;
                 case "WING":
                     childPart.transform.localPosition = new Vector3(bounds.extents.x * (childPart.flags.left ? -1 : 1), bounds.max.y, bounds.center.z);
-                    childPart.transform.localRotation = Quaternion.LookRotation(new Vector3(0, 1, -1), new Vector3(child.transform.localPosition.x, 0, 0));
+                    childPart.transform.localRotation = Quaternion.Euler(-30,0,0);
                     break;
                 case "TAIL":
                     if(body.bodyCategory == CreatureBody.BodyCategory.Humanoid)

@@ -37,6 +37,7 @@ GameObject:
   - component: {fileID: 4210670556540312}
   - component: {fileID: 33429391786202764}
   - component: {fileID: 23969676576640210}
+  - component: {fileID: 114708472920889918}
   m_Layer: 0
   m_Name: Ribs_True
   m_TagString: Untagged
@@ -126,3 +127,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canonVolume: 60
   volume: 0
+--- !u!114 &114708472920889918
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1484186691458744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85ce3b0f14f4d314d9ea79d3c51485de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  layerName: 
+  placed: 0

@@ -36,6 +36,8 @@ public class DFRawReader : EditorWindow
     bool filterToken = true;
     [SerializeField]
     bool filterDescription = true;
+    [SerializeField]
+    bool filterParts = true;
 
     class ChildCount
     {
@@ -45,7 +47,7 @@ public class DFRawReader : EditorWindow
 
     bool FitsFilter(CreatureRaw creature)
     {
-        if (!string.IsNullOrEmpty(filter) && (filterName || filterDescription || filterToken))
+        if (!string.IsNullOrEmpty(filter) && (filterName || filterDescription || filterToken || filterParts))
         {
             bool matched = false;
             if (filterToken && creature.creature_id.ToUpper().Contains(filter.ToUpper()))
@@ -59,6 +61,17 @@ public class DFRawReader : EditorWindow
                         matched = true;
                     if (filterDescription && caste.description.ToUpper().Contains(filter.ToUpper()))
                         matched = true;
+                    if(filterParts)
+                    {
+                        foreach (var part in caste.body_parts)
+                        {
+                            if (part.category.ToUpper().Contains(filter.ToUpper()))
+                            {
+                                matched = true;
+                                break;
+                            }
+                        }
+                    }
                 }
             if (!matched)
                 return false;
@@ -108,6 +121,7 @@ public class DFRawReader : EditorWindow
             filterToken = EditorGUILayout.Toggle("Token", filterToken);
             filterName = EditorGUILayout.Toggle("Name", filterName);
             filterDescription = EditorGUILayout.Toggle("Description", filterDescription);
+            filterParts = EditorGUILayout.Toggle("Parts", filterParts);
 
             bodyCategoryFilter = (CreatureBody.BodyCategory)EditorGUILayout.EnumPopup(bodyCategoryFilter);
 

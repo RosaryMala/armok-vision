@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4286282665372824}
   - component: {fileID: 33208095837885324}
   - component: {fileID: 23052354916578126}
+  - component: {fileID: 114664822425074720}
   m_Layer: 0
   m_Name: Ribs_Floating
   m_TagString: Untagged
@@ -126,3 +127,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canonVolume: 40
   volume: 0
+--- !u!114 &114664822425074720
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1399369920517832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85ce3b0f14f4d314d9ea79d3c51485de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  layerName: 
+  placed: 0

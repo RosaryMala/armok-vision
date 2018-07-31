@@ -56,6 +56,8 @@ ModelImporter:
     100100: Proboscis
     100102: Shell
     100104: Wing
+    100106: Single Arm
+    100108: Single Leg
     400000: Box001
     400002: Box002
     400004: HD
@@ -109,6 +111,8 @@ ModelImporter:
     400100: Proboscis
     400102: Shell
     400104: Wing
+    400106: Single Arm
+    400108: Single Leg
     2100000: 'Material #25'
     2100002: No Name
     2100004: 03 - Default
@@ -164,6 +168,8 @@ ModelImporter:
     2300098: Proboscis
     2300100: Shell
     2300102: Wing
+    2300104: Single Arm
+    2300106: Single Leg
     3300000: Box001
     3300002: Box002
     3300004: HD
@@ -216,6 +222,8 @@ ModelImporter:
     3300098: Proboscis
     3300100: Shell
     3300102: Wing
+    3300104: Single Arm
+    3300106: Single Leg
     4300000: Plane001
     4300002: Plane002
     4300004: HD
@@ -265,6 +273,8 @@ ModelImporter:
     4300092: Proboscis
     4300094: Shell
     4300096: Wing
+    4300098: Single Leg
+    4300100: Single Arm
   externalObjects: {}
   materials:
     importMaterials: 1

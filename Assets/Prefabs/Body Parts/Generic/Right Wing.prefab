@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4797309078970484}
   - component: {fileID: 33417192394082134}
   - component: {fileID: 23614680999993804}
+  - component: {fileID: 114952003159707944}
   m_Layer: 0
   m_Name: Wing
   m_TagString: Untagged
@@ -126,3 +127,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canonVolume: 5082.94
   volume: 0
+--- !u!114 &114952003159707944
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000726338935276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85ce3b0f14f4d314d9ea79d3c51485de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  layerName: 
+  placed: 0
+  layerRaw:
+    _layer_name: 
+    _tissue_id: 0
+    _layer_depth: 0
+    _bp_modifiers: 

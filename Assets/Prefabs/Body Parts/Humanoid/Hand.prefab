@@ -101,6 +101,7 @@ GameObject:
   - component: {fileID: 4988992186356140}
   - component: {fileID: 33481905772572600}
   - component: {fileID: 23154162903089198}
+  - component: {fileID: 114443984544858174}
   m_Layer: 0
   m_Name: Hand
   m_TagString: Untagged
@@ -278,6 +279,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canonVolume: 200
   volume: 0
+--- !u!114 &114443984544858174
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1911429218488124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85ce3b0f14f4d314d9ea79d3c51485de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  layerName: 
+  placed: 0
 --- !u!114 &114623324019630456
 MonoBehaviour:
   m_ObjectHideFlags: 1
