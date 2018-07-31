@@ -80,6 +80,8 @@ namespace MaterialStore
 
         public void Refresh()
         {
+            if (Resources.Load<Texture2DArray>("patternTextures") == null)
+                return;
             if (MaterialRaws.Instance != null)
             {
                 PopulateMatTextures();

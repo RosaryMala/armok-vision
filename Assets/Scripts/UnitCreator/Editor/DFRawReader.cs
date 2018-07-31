@@ -106,6 +106,8 @@ public class DFRawReader : EditorWindow
                 AssetDatabase.CreateAsset(MaterialRaws.Instance, "Assets/Resources/MaterialRaws.asset");
             AssetDatabase.SaveAssets();
             Debug.Log(string.Format("Pulled {0} creature raws from DF.", creatureRaws.Count));
+            if (MaterialCollection.Instance == null)
+                MaterialCollector.BuildMaterialCollection();
             MaterialCollection.Instance.PopulateMatTextures();
             client.Disconnect();
             //foreach (var raw in creatureRaws)
