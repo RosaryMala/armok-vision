@@ -109,6 +109,7 @@ public class GameSettings : MonoBehaviour
     {
         public bool drawUnits = true;
         public bool scaleUnits = true;
+        public bool spriteUnits = false;
     }
 
     public enum AnalyticsChoice

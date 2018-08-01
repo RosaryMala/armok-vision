@@ -1,15 +1,14 @@
 ﻿using RemoteFortressReader;
+using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Threading;
 using UnitFlags;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class CreatureManager : MonoBehaviour
 {
 
-    Dictionary<int, Creature> creatureList;
+    Dictionary<int, Creature> creatureList = new Dictionary<int, Creature>();
+    Dictionary<int, CreatureBody> creatureList3D = new Dictionary<int, CreatureBody>();
     public Creature creatureTemplate;
 
     public List<UnitDefinition> Units { get; set; }
@@ -73,17 +72,65 @@ public class CreatureManager : MonoBehaviour
         var watch = System.Diagnostics.Stopwatch.StartNew();
         for(;updateIndex < Units.Count; updateIndex++)
         {
-            UpdateItem(Units[updateIndex], ref creatureCount);
+            if (GameSettings.Instance.units.spriteUnits)
+                UpdateItem(Units[updateIndex], ref creatureCount);
+            else
+                Update3DUnit(Units[updateIndex], ref creatureCount);
             if (watch.ElapsedMilliseconds > 2)
                 break;
         }
         UnityEngine.Profiling.Profiler.EndSample();
     }
 
+    private void Update3DUnit(UnitDefinition unit, ref int creatureCount)
+    {
+        UnitFlags1 flags1 = (UnitFlags1)unit.flags1;
+        //UnitFlags2 flags2 = (UnitFlags2)unit.flags2;
+        //UnitFlags3 flags3 = (UnitFlags3)unit.flags3;
+        if (((flags1 & UnitFlags1.dead) == UnitFlags1.dead)
+             || ((flags1 & UnitFlags1.left) == UnitFlags1.left)
+             || ((flags1 & UnitFlags1.caged) == UnitFlags1.caged)
+             || ((flags1 & UnitFlags1.forest) == UnitFlags1.forest)
+             )
+        {
+            if (creatureList3D.ContainsKey(unit.id))
+            {
+                Destroy(creatureList3D[unit.id].gameObject);
+                creatureList3D.Remove(unit.id);
+            }
+            return;
+        }
+        MapDataStore.Tile tile = null;
+        if (MapDataStore.Main != null)
+            tile = MapDataStore.Main[unit.pos_x, unit.pos_y, unit.pos_z];
+
+        if (!ShouldRender(unit.pos_x, unit.pos_y, unit.pos_z, tile) && !singleRow)
+        {
+            if (creatureList3D.ContainsKey(unit.id))
+                creatureList3D[unit.id].gameObject.SetActive(false);
+            return;
+        }
+        else if (creatureList3D.ContainsKey(unit.id))
+            creatureList3D[unit.id].gameObject.SetActive(true);
+
+        if (!creatureList3D.ContainsKey(unit.id))
+        {
+            var creatureBase = new GameObject().AddComponent<CreatureBody>();
+            creatureBase.name = unit.name;
+            creatureBase.race = DFConnection.Instance.CreatureRaws[unit.race.mat_type];
+            creatureBase.caste = creatureBase.race.caste[unit.race.mat_index];
+            creatureBase.unit = unit;
+            creatureBase.MakeBody();
+            creatureList3D[unit.id] = creatureBase;
+        }
+        var placedUnit = creatureList3D[unit.id];
+        if (!placedUnit.gameObject.activeSelf)
+            return;
+        placedUnit.transform.position = GameMap.DFtoUnityCoord(unit.pos_x + unit.subpos_x, unit.pos_y + unit.subpos_y, unit.pos_z + unit.subpos_z) + new Vector3(0, GameMap.floorHeight, 0);
+    }
+
     void UpdateItem(UnitDefinition unit, ref int creatureCount)
     {
-        if (creatureList == null)
-            creatureList = new Dictionary<int, Creature>();
         UnitFlags1 flags1 = (UnitFlags1)unit.flags1;
         //UnitFlags2 flags2 = (UnitFlags2)unit.flags2;
         //UnitFlags3 flags3 = (UnitFlags3)unit.flags3;
@@ -173,5 +220,10 @@ public class CreatureManager : MonoBehaviour
             }
             creatureList.Clear();
         }
+        foreach (var item in creatureList3D)
+        {
+            Destroy(item.Value.gameObject);
+        }
+        creatureList3D.Clear();
     }
 }
