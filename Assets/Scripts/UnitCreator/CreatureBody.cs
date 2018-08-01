@@ -17,7 +17,7 @@ public class CreatureBody : MonoBehaviour
         Fish
     }
     public BodyCategory bodyCategory;
-
+    public UnitDefinition unit;
     public CreatureRaw race;
     public CasteRaw caste;
     public BodyPart rootPart;
@@ -64,6 +64,36 @@ public class CreatureBody : MonoBehaviour
         var spawnedParts = new Dictionary<int, BodyPart>();
         float scale = caste.adult_size / (float)caste.total_relsize * 10;
         MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
+
+        bodyScale = BodyDefinition.GetBodyScale(bodyCategory, race, caste);
+
+        Vector3 unitShape = Vector3.one;
+        for (int i = 0; i < caste.body_appearance_modifiers.Count; i++)
+        {
+            var mod = caste.body_appearance_modifiers[i];
+            int value = 100;
+            if (unit != null)
+                value = unit.appearance.body_modifiers[i];
+            else
+                value = UnityEngine.Random.Range(mod.mod_min, mod.mod_max);
+            switch (mod.type)
+            {
+                case "BROADNESS":
+                    unitShape.x = value / 100f;
+                    break;
+                case "HEIGHT":
+                    unitShape.y = value / 100f;
+                    break;
+                case "LENGTH":
+                    unitShape.z = value / 100f;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        bodyScale = BodyPart.MultiplyScales(bodyScale, unitShape);
+
         for (int i = 0; i < caste.body_parts.Count; i++)
         {
             var part = caste.body_parts[i];
@@ -78,7 +108,6 @@ public class CreatureBody : MonoBehaviour
             spawnedPart.volume = part.relsize * scale;
             spawnedPart.layers = part.layers;
 
-            bodyScale = BodyDefinition.GetBodyScale(bodyCategory, race, caste);
 
             var model = BodyDefinition.GetPart(bodyCategory, race, caste, part);
             if (model != null)
@@ -153,7 +182,6 @@ public class CreatureBody : MonoBehaviour
                     modeledLayer.gameObject.SetActive(false);
             }
 
-
             foreach (var layerModel in spawnedPart.layerModels)
             {
                 if (layerModel == null)
@@ -171,7 +199,27 @@ public class CreatureBody : MonoBehaviour
             }
             spawnedParts[i] = spawnedPart;
         }
-        for(int modNum = 0; modNum < caste.color_modifiers.Count; modNum++)
+        for (int modNum = 0; modNum < caste.modifier_idx.Count; modNum++)
+        {
+            if (!spawnedParts.ContainsKey(caste.part_idx[modNum]))
+                continue;
+            var mod = caste.modifiers[caste.modifier_idx[modNum]];
+            var part = spawnedParts[caste.part_idx[modNum]];
+            if(caste.layer_idx[modNum] >= 0)
+            {
+                var layer = part.layerModels[caste.layer_idx[modNum]];
+                if (layer != null)
+                {
+                    layer.mods.Add(new BodyPart.ModValue(mod, modNum));
+                }
+            }
+            else
+            {
+                part.mods.Add(new BodyPart.ModValue(mod, modNum));
+            }
+        }
+
+        for (int modNum = 0; modNum < caste.color_modifiers.Count; modNum++)
         {
             var mod = caste.color_modifiers[modNum];
             //Temp fix until actual creatures are being read.
@@ -186,7 +234,11 @@ public class CreatureBody : MonoBehaviour
                 var layer = part.layerModels[mod.tissue_layer_id[i]];
                 if (layer == null || !layer.gameObject.activeSelf)
                     continue;
-                var colorDef = mod.patterns[seed].colors[0];
+                ColorDefinition colorDef;
+                if (unit != null)
+                    colorDef = mod.patterns[unit.appearance.colors[modNum]].colors[0];
+                else
+                    colorDef = mod.patterns[seed].colors[0];
                 var color = new Color32((byte)colorDef.red, (byte)colorDef.green, (byte)colorDef.blue, 128);
                 var index = ContentLoader.GetPatternIndex(race.tissues[layer.layerRaw.tissue_id].material);
                 propertyBlock.SetColor("_MatColor", color);

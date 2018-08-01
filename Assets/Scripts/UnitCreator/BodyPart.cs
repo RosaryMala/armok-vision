@@ -18,6 +18,24 @@ public class BodyPart : MonoBehaviour
     public List<BodyLayer> layerModels = new List<BodyLayer>();
 
     internal BodyPartModel modeledPart;
+    [Serializable]
+    public struct ModValue
+    {
+        public ModValue(BpAppearanceModifier mod, int index)
+        {
+            this.type = mod.type;
+            this.index = index;
+        }
+        public string type;
+        public int index;
+
+        public override string ToString()
+        {
+            return type;
+        }
+    }
+
+    public List<ModValue> mods = new List<ModValue>();
 
     internal BodyPart FindChild(string category)
     {
@@ -189,10 +207,34 @@ public class BodyPart : MonoBehaviour
     {
         if (modeledPart == null)
             return;
+
+        var partSize = Vector3.one;
+
+        foreach (var mod in mods)
+        {
+            var value = 100;
+            if (body.unit != null)
+                value = body.unit.appearance.bp_modifiers[mod.index];
+            switch (mod.type)
+            {
+                case "BROADNESS":
+                    partSize.x = value / 100f;
+                    break;
+                case "HEIGHT":
+                    partSize.y = value / 100f;
+                    break;
+                case "LENGTH":
+                    partSize.z = value / 100f;
+                    break;
+                default:
+                    break;
+            }
+        }
+
         //If the're flagged as small, they don't need to worry about volume. Just need to scale according to the parent.
         if (!flags.small)
         {
-            modeledPart.transform.localScale = body.bodyScale;
+            modeledPart.transform.localScale = MultiplyScales(body.bodyScale, partSize);
             modeledPart.volume = volume;
             modeledPart.FixVolume();
         }
@@ -909,7 +951,7 @@ public class BodyPart : MonoBehaviour
         bounds = new Bounds(placeholder.transform.localPosition, placeholder.transform.localScale);
     }
 
-    static Vector3 MultiplyScales(Vector3 a, Vector3 b)
+    public static Vector3 MultiplyScales(Vector3 a, Vector3 b)
     {
         return new Vector3(a.x * b.x, a.y * b.y, a.z * b.z);
     }
