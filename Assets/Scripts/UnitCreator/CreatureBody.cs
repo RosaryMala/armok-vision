@@ -300,7 +300,7 @@ public class CreatureBody : MonoBehaviour
         }
         else
         {
-            if (!onGround)
+            if (onGround)
             {
                 rootPart.transform.localRotation = Quaternion.identity;
                 rootPart.transform.localPosition = new Vector3(0, -bounds.min.y, 0);
