@@ -116,17 +116,21 @@ public class CreatureManager : MonoBehaviour
         if (!creatureList3D.ContainsKey(unit.id))
         {
             var creatureBase = new GameObject().AddComponent<CreatureBody>();
-            creatureBase.name = unit.name;
             creatureBase.race = DFConnection.Instance.CreatureRaws[unit.race.mat_type];
             creatureBase.caste = creatureBase.race.caste[unit.race.mat_index];
             creatureBase.unit = unit;
             creatureBase.MakeBody();
+            if (string.IsNullOrEmpty(unit.name))
+                creatureBase.name = creatureBase.race.name[0];
+            creatureBase.name = unit.name;
             creatureList3D[unit.id] = creatureBase;
+            creatureBase.transform.parent = transform;
         }
         var placedUnit = creatureList3D[unit.id];
         if (!placedUnit.gameObject.activeSelf)
             return;
         placedUnit.transform.position = GameMap.DFtoUnityCoord(unit.pos_x + unit.subpos_x, unit.pos_y + unit.subpos_y, unit.pos_z + unit.subpos_z) + new Vector3(0, GameMap.floorHeight, 0);
+        placedUnit.UpdateUnit(unit);
     }
 
     void UpdateItem(UnitDefinition unit, ref int creatureCount)

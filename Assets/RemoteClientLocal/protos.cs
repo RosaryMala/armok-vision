@@ -1359,6 +1359,15 @@ namespace RemoteFortressReader
       get { return _item; }
       set { _item = value; }
     }
+    [UnityEngine.SerializeField]
+    private int _body_part_id = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"body_part_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int body_part_id
+    {
+      get { return _body_part_id; }
+      set { _body_part_id = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -1572,6 +1581,15 @@ namespace RemoteFortressReader
     {
       get { return _subpos_z; }
       set { _subpos_z = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.Coord _facing = null;
+    [global::ProtoBuf.ProtoMember(24, IsRequired = false, Name=@"facing", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Coord facing
+    {
+      get { return _facing; }
+      set { _facing = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)

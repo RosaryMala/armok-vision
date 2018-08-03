@@ -11,5 +11,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6cf81176ac46bd4787c356dc567f950, type: 3}
   m_Name: Default
   m_EditorClassIdentifier: 
-  bodyScale: {x: 1.118034, y: 0.8, z: 1.118034}
-  bodyParts: []
+  bodyScale: {x: 1, y: 1, z: 1}
+  bodyParts:
+  - category: BODY_UPPER
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114825987299675514, guid: 75fa26e2dfc4caa468c0d7dbe5580bbd, type: 2}

@@ -2,6 +2,7 @@
 using System;
 using RemoteFortressReader;
 using UnityEngine;
+using UnitFlags;
 
 public class CreatureBody : MonoBehaviour
 {
@@ -282,6 +283,32 @@ public class CreatureBody : MonoBehaviour
         }
         rootPart.transform.localPosition = new Vector3(0, -bounds.min.y, 0);
 
+    }
+
+    public bool onGround;
+
+    internal void UpdateUnit(UnitDefinition unit)
+    {
+        if (((UnitFlags1)unit.flags1 & UnitFlags1.on_ground) == UnitFlags1.on_ground)
+        {
+            if (!onGround)
+            {
+                rootPart.transform.localRotation = Quaternion.Euler(90, 0, 0);
+                rootPart.transform.localPosition = new Vector3(0, bounds.max.z, 0);
+                onGround = true;
+            }
+        }
+        else
+        {
+            if (!onGround)
+            {
+                rootPart.transform.localRotation = Quaternion.identity;
+                rootPart.transform.localPosition = new Vector3(0, -bounds.min.y, 0);
+                onGround = false;
+            }
+        }
+        if (unit.facing != null && GameMap.DFtoUnityDirection(unit.facing).sqrMagnitude > 0)
+            transform.rotation = Quaternion.LookRotation(GameMap.DFtoUnityDirection(unit.facing));
     }
 
     private void OnDrawGizmos()

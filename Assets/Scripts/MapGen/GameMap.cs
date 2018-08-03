@@ -126,6 +126,10 @@ public class GameMap : MonoBehaviour
         Vector3 outCoord = new Vector3(input.x * tileWidth, (input.z + MapZOffset) * tileHeight, input.y * (-tileWidth));
         return outCoord;
     }
+    public static Vector3 DFtoUnityDirection(DFCoord input)
+    {
+        return DFtoUnityDirection(input.x, input.y, input.z);
+    }
     public static Vector3 DFtoUnityTileCenter(DFCoord input)
     {
         Vector3 result = DFtoUnityCoord(input);
