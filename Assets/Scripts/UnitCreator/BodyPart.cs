@@ -17,6 +17,11 @@ public class BodyPart : MonoBehaviour
     public List<BodyPartLayerRaw> layers = new List<BodyPartLayerRaw>();
     public List<BodyLayer> layerModels = new List<BodyLayer>();
 
+    [NonSerialized]
+    public BodyPart parent;
+    [NonSerialized]
+    public List<BodyPart> children = new List<BodyPart>();
+
     internal BodyPartModel modeledPart;
     [Serializable]
     public struct ModValue
@@ -36,6 +41,7 @@ public class BodyPart : MonoBehaviour
     }
 
     public List<ModValue> mods = new List<ModValue>();
+    public List<InventoryItem> inventory = new List<InventoryItem>();
 
     internal BodyPart FindChild(string category)
     {

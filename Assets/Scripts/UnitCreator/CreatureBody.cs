@@ -58,12 +58,23 @@ public class CreatureBody : MonoBehaviour
 
     }
 
+    Dictionary<int, BodyPart> spawnedParts = new Dictionary<int, BodyPart>();
+
     public void MakeBody()
     {
         flags = new CreatureRawFlags(race.flags);
         bodyCategory = FindBodyCategory(caste);
-        var spawnedParts = new Dictionary<int, BodyPart>();
+        if(spawnedParts.Count > 0)
+        {
+            foreach (var part in spawnedParts)
+            {
+                Destroy(part.Value.gameObject);
+            }
+            spawnedParts.Clear();
+        }
         float scale = caste.adult_size / (float)caste.total_relsize * 10;
+        if(unit != null && unit.size_info != null)
+            scale = unit.size_info.size_cur / (float)caste.total_relsize * 10;
         MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
 
         bodyScale = BodyDefinition.GetBodyScale(bodyCategory, race, caste);
@@ -109,6 +120,10 @@ public class CreatureBody : MonoBehaviour
             spawnedPart.volume = part.relsize * scale;
             spawnedPart.layers = part.layers;
 
+            if (spawnedPart.flags.upperbody)
+                upperBody = spawnedPart;
+            if (spawnedPart.flags.lowerbody)
+                lowerBody = spawnedPart;
 
             var model = BodyDefinition.GetPart(bodyCategory, race, caste, part);
             if (model != null)
@@ -121,6 +136,7 @@ public class CreatureBody : MonoBehaviour
             if (spawnedPart.modeledPart == null)
             {
                 var cube = GameObject.CreatePrimitive(PrimitiveType.Cube).AddComponent<VolumeKeeper>();
+                Destroy(cube.GetComponent<BoxCollider>());
                 cube.name = spawnedPart.name + " cube";
                 cube.transform.SetParent(spawnedPart.transform);
                 cube.volume = spawnedPart.volume;
@@ -257,7 +273,11 @@ public class CreatureBody : MonoBehaviour
             if (!spawnedParts.ContainsKey(part.parent))
                 spawnedParts[i].transform.SetParent(transform);
             else
+            {
                 spawnedParts[i].transform.SetParent(spawnedParts[part.parent].transform);
+                spawnedParts[i].parent = spawnedParts[part.parent];
+                spawnedParts[part.parent].children.Add(spawnedParts[i]);
+            }
             if (part.parent < 0)
                 rootPart = spawnedParts[i];
             if (spawnedParts[i].flags.stance)
@@ -286,6 +306,9 @@ public class CreatureBody : MonoBehaviour
     }
 
     public bool onGround;
+    public int inventoryCount = 0;
+    private BodyPart upperBody;
+    private BodyPart lowerBody;
 
     internal void UpdateUnit(UnitDefinition unit)
     {
@@ -309,6 +332,22 @@ public class CreatureBody : MonoBehaviour
         }
         if (unit.facing != null && GameMap.DFtoUnityDirection(unit.facing).sqrMagnitude > 0)
             transform.rotation = Quaternion.LookRotation(GameMap.DFtoUnityDirection(unit.facing));
+
+        if (inventoryCount != unit.inventory.Count)
+        {
+            foreach (var part in spawnedParts)
+            {
+                part.Value.inventory.Clear();
+            }
+            foreach (var item in unit.inventory)
+            {
+                if (spawnedParts.ContainsKey(item.body_part_id))
+                {
+                    spawnedParts[item.body_part_id].inventory.Add(item);
+                }
+            }
+            inventoryCount = unit.inventory.Count;
+        }
     }
 
     private void OnDrawGizmos()

@@ -131,6 +131,10 @@ public class CreatureManager : MonoBehaviour
             return;
         placedUnit.transform.position = GameMap.DFtoUnityCoord(unit.pos_x + unit.subpos_x, unit.pos_y + unit.subpos_y, unit.pos_z + unit.subpos_z) + new Vector3(0, GameMap.floorHeight, 0);
         placedUnit.UpdateUnit(unit);
+        if (unit.rider_id >= 0 && creatureList3D.ContainsKey(unit.rider_id))
+        {
+            creatureList3D[unit.id].transform.position += new Vector3(0, creatureList3D[unit.rider_id].rootPart.transform.localPosition.y, 0);
+        }
     }
 
     void UpdateItem(UnitDefinition unit, ref int creatureCount)

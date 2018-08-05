@@ -1054,6 +1054,33 @@ namespace RemoteFortressReader
       get { return _instrument; }
       set { _instrument = value; }
     }
+    [UnityEngine.SerializeField]
+    private int _up_step = default(int);
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"up_step", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int up_step
+    {
+      get { return _up_step; }
+      set { _up_step = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _down_step = default(int);
+    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"down_step", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int down_step
+    {
+      get { return _down_step; }
+      set { _down_step = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.ArmorLayer _layer = RemoteFortressReader.ArmorLayer.LAYER_UNDER;
+    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"layer", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.ArmorLayer.LAYER_UNDER)]
+    public RemoteFortressReader.ArmorLayer layer
+    {
+      get { return _layer; }
+      set { _layer = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -4934,6 +4961,23 @@ namespace RemoteFortressReader
             
       [global::ProtoBuf.ProtoEnum(Name=@"Strapped", Value=10)]
       Strapped = 10
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"ArmorLayer")]
+    public enum ArmorLayer
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"LAYER_UNDER", Value=0)]
+      LAYER_UNDER = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"LAYER_OVER", Value=1)]
+      LAYER_OVER = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"LAYER_ARMOR", Value=2)]
+      LAYER_ARMOR = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"LAYER_COVER", Value=3)]
+      LAYER_COVER = 3
     }
   
     [global::ProtoBuf.ProtoContract(Name=@"MatterState")]

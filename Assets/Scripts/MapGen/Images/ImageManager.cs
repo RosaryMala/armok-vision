@@ -225,6 +225,8 @@ public class ImageManager : MonoBehaviour
         Rect[][] imagePattern = GetFullPattern(artImage);
         for (int i = 0; i < imagePattern.Length; i++)
         {
+            if (i < 0 || i >= artImage.elements.Count)
+                continue;
             int tile = GetElementTile(artImage.elements[i]);
             foreach (var item in imagePattern[i])
             {
@@ -406,6 +408,8 @@ public class ImageManager : MonoBehaviour
         //We use the mainpattern length because it may have less than the full amount of elements, if the pattern is very large.
         for (int i = 0; i < mainPattern.Length; i++)
         {
+            if (i < 0 || i >= artImage.elements.Count)
+                continue;
             var element = artImage.elements[i];
             outPut[i] = GetPattern(element.count);
             for(int j = 0; j < outPut[i].Length;j++)
