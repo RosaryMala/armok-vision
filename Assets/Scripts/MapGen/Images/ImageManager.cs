@@ -509,7 +509,7 @@ public class ImageManager : MonoBehaviour
         //IMAGE_TREE:
         //IMAGE_SHAPE:
         //IMAGE_ITEM:
-        foreach (var item in DFConnection.Instance.NetItemList.material_list)
+        foreach (var item in ItemRaws.Instance.ItemList)
         {
             string token = item.id;
             Texture2D sprite = Resources.Load<Texture2D>("Images/Items/" + token);

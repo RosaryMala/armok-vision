@@ -5,9 +5,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class ItemManager : MonoBehaviour
 {
-    public static ItemManager Instance { get; private set; }
+    static ItemManager _instance;
+    public static ItemManager Instance {
+        get
+        {
+            if (_instance == null)
+                _instance = GameObject.FindObjectOfType<ItemManager>();
+            if (_instance == null)
+                _instance = Instantiate(Resources.Load<ItemManager>("ItemManager"));
+            return _instance;
+        }
+    }
 
     static Dictionary<MatPairStruct, ItemModel> itemPrefabs = new Dictionary<MatPairStruct, ItemModel>();
 
@@ -15,10 +26,8 @@ public class ItemManager : MonoBehaviour
 
     IEnumerator LoadItems()
     {
-        if (DFConnection.Instance.NetItemList == null)
-            yield break;
         var stopWatch = System.Diagnostics.Stopwatch.StartNew();
-        var itemList = DFConnection.Instance.NetItemList.material_list;
+        var itemList = ItemRaws.Instance.ItemList;
 
         foreach (var item in itemList)
         {
@@ -48,7 +57,25 @@ public class ItemManager : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if(_instance != null)
+        {
+            if (_instance != this)
+                Destroy(this);
+        }
+        else
+        {
+            _instance = this;
+        }
+
+        if(!Application.isPlaying)
+        {
+            var loader = LoadItems();
+            while(loader.MoveNext())
+            {
+
+            }
+            Debug.Log("Loaded item models.");
+        }
     }
 
     private void Start()

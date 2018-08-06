@@ -45,16 +45,20 @@ public class BodyPart : MonoBehaviour
     {
         public InventoryItem item;
         public MaterialDefinition itemDef;
+        public MaterialDefinition material;
 
-        public Equip(InventoryItem item, MaterialDefinition itemDef)
+        public Equip(InventoryItem item, MaterialDefinition itemDef, MaterialDefinition material)
         {
             this.item = item;
             this.itemDef = itemDef;
+            this.material = material;
         }
     }
 
     public List<ModValue> mods = new List<ModValue>();
     public List<Equip> inventory = new List<Equip>();
+    private MatPair heldItemType;
+    private ItemModel heldItemModel;
 
     internal BodyPart FindChild(string category)
     {
@@ -743,6 +747,53 @@ public class BodyPart : MonoBehaviour
             new Vector3(bounds.center.x - bounds.extents.x, bounds.center.y + bounds.extents.y / 2, bounds.max.z),
             Quaternion.identity,
             0.5f);
+    }
+
+    internal void UpdateItems()
+    {
+        var heldItemIndex = inventory.FindLastIndex(x => x.item.mode == InventoryMode.Hauled || x.item.mode == InventoryMode.Weapon);
+        if(heldItemIndex >= 0)
+        {
+            var heldItem = inventory[heldItemIndex];
+            if(heldItem.item.item.type != heldItemType)
+            {
+                if (heldItemModel != null)
+                    Destroy(heldItemModel);
+                heldItemModel = ItemManager.InstantiateItem(heldItem.item.item, transform, false);
+                heldItemModel.transform.localRotation = Quaternion.Euler(0, 0, -90);
+            }
+            else
+            {
+                if (heldItemModel != null)
+                    Destroy(heldItemModel);
+                heldItemModel = null;
+            }
+        }
+        //Temporary fix until I get proper clothing meshes.
+        var wornIndex = inventory.FindLastIndex(x => x.item.mode == InventoryMode.Worn);
+        if(wornIndex >= 0)
+        {
+            //We leave the head uncovered, for now.
+            if (flags.head)
+                return;
+            MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
+            var wornItem = inventory[wornIndex];
+            var color = ContentLoader.GetColor(wornItem.item.item);
+            var index = ContentLoader.GetPatternIndex(wornItem.item.item.material);
+            propertyBlock.SetColor("_MatColor", color);
+            propertyBlock.SetFloat("_MatIndex", index);
+            foreach (var layerModel in layerModels)
+            {
+                if (layerModel == null)
+                    continue;
+                var renderer = layerModel.GetComponentInChildren<MeshRenderer>();
+                if (renderer != null)
+                {
+                    renderer.SetPropertyBlock(propertyBlock);
+                }
+            }
+
+        }
     }
 
     void AlignManyParts(List<BodyPart> parts, Vector3 pos1, Quaternion rot1, Vector3 pos2, Quaternion rot2, float singlePos)

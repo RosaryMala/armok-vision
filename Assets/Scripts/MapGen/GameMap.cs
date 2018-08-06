@@ -236,11 +236,8 @@ public class GameMap : MonoBehaviour
         if (GameSettings.Instance.debug.saveMaterialList)
             SaveMaterialList(MaterialRaws.Instance, Path.Combine(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), Application.productName), "MaterialList.csv"));
         // Initialize items, if available
-        if (DFConnection.Instance.NetItemList != null)
-        {
             if (GameSettings.Instance.debug.saveItemList)
                 SaveMaterialList(ItemRaws.Instance, Path.Combine(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), Application.productName), "ItemList.csv"));
-        }
         if (DFConnection.Instance.NetBuildingList != null)
         {
             if (buildings == null)
