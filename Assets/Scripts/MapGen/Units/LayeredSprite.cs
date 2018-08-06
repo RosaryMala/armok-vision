@@ -174,7 +174,7 @@ public class LayeredSprite : MonoBehaviour
                     switch (spriteLayerDef.hairType)
                     {
                         case CreatureSpriteLayer.HairType.Hair:
-                            if (unit.inventory.FindIndex(x => x.item.type.mat_type == (int)item_type.HELM) >= 0)
+                            if (unit.inventory.FindIndex(x => x.item.type.mat_type == (int)ItemType.Helm) >= 0)
                             {
                                 sprite.gameObject.SetActive(false);
                                 break;
@@ -235,7 +235,7 @@ public class LayeredSprite : MonoBehaviour
                     int inventoryIndex = unit.inventory.FindIndex(
                         x =>
                         (x.mode == InventoryMode.Weapon || x.mode == InventoryMode.Worn)
-                        && spriteLayerDef.token == GameMap.items[x.item.type].id
+                        && spriteLayerDef.token == ItemRaws.Instance[x.item.type].id
                         );
                     if (inventoryIndex < 0)
                     {

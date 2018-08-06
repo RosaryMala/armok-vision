@@ -78,7 +78,6 @@ public class GameMap : MonoBehaviour
     DFCoord mapPosition;
 
     // Stuff to let the material list & various meshes & whatnot be loaded from xml specs at runtime.
-    public static Dictionary<MatPairStruct, MaterialDefinition> items;
     public static Dictionary<BuildingStruct, BuildingDefinition> buildings;
     public static Dictionary<MatPairStruct, MaterialDefinition> creatures;
 
@@ -239,15 +238,8 @@ public class GameMap : MonoBehaviour
         // Initialize items, if available
         if (DFConnection.Instance.NetItemList != null)
         {
-            if (items == null)
-                items = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
-            items.Clear();
-            foreach (MaterialDefinition material in DFConnection.Instance.NetItemList.material_list)
-            {
-                items[material.mat_pair] = material;
-            }
             if (GameSettings.Instance.debug.saveItemList)
-                SaveMaterialList(items, Path.Combine(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), Application.productName), "ItemList.csv"));
+                SaveMaterialList(ItemRaws.Instance, Path.Combine(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), Application.productName), "ItemList.csv"));
         }
         if (DFConnection.Instance.NetBuildingList != null)
         {
@@ -1378,10 +1370,10 @@ public class GameMap : MonoBehaviour
                 statusText.Append("Construction Item: ");
                 statusText.Append(cons);
 
-                if (items.ContainsKey(cons))
+                if (ItemRaws.Instance.ContainsKey(cons))
                 {
                     statusText.Append(", ");
-                    statusText.Append(items[cons].id).AppendLine();
+                    statusText.Append(ItemRaws.Instance[cons].id).AppendLine();
                 }
                 else
                     statusText.Append("Unknown Construction Item\n");
@@ -1403,10 +1395,10 @@ public class GameMap : MonoBehaviour
                             {
                                 item = DFConnection.Instance.NetPlantRawList.plant_raws[spatter.material.mat_index].growths[spatter.item.mat_index].id;
                             }
-                            else if (items.ContainsKey(spatter.item))
-                                item = items[spatter.item].id;
-                            else if (items.ContainsKey(new MatPairStruct(spatter.item.mat_type, -1)))
-                                item = items[new MatPairStruct(spatter.item.mat_type, -1)].id;
+                            else if (ItemRaws.Instance.ContainsKey(spatter.item))
+                                item = ItemRaws.Instance[spatter.item].id;
+                            else if (ItemRaws.Instance.ContainsKey(new MatPairStruct(spatter.item.mat_type, -1)))
+                                item = ItemRaws.Instance[new MatPairStruct(spatter.item.mat_type, -1)].id;
                             statusText.AppendFormat("{0} {1}: {2}", matString, item, spatter.amount).AppendLine();
                         }
                         else

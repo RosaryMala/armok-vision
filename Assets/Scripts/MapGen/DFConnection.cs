@@ -839,7 +839,7 @@ public sealed class DFConnection : MonoBehaviour
         }
         if (netItemList != null)
         {
-            ItemTokenList.ItemTokens = netItemList.material_list;
+            ItemRaws.Instance.ItemList = netItemList.material_list;
             Debug.Log("Itemtypes fetched: " + netItemList.material_list.Count);
         }
         else

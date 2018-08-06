@@ -3,6 +3,7 @@ using System;
 using RemoteFortressReader;
 using UnityEngine;
 using UnitFlags;
+using DF.Enums;
 
 public class CreatureBody : MonoBehaviour
 {
@@ -136,7 +137,11 @@ public class CreatureBody : MonoBehaviour
             if (spawnedPart.modeledPart == null)
             {
                 var cube = GameObject.CreatePrimitive(PrimitiveType.Cube).AddComponent<VolumeKeeper>();
-                Destroy(cube.GetComponent<BoxCollider>());
+                if ((Application.isPlaying))
+                    Destroy(cube.GetComponent<BoxCollider>());
+                else
+                    DestroyImmediate(cube.GetComponent<BoxCollider>());
+
                 cube.name = spawnedPart.name + " cube";
                 cube.transform.SetParent(spawnedPart.transform);
                 cube.volume = spawnedPart.volume;
@@ -310,7 +315,7 @@ public class CreatureBody : MonoBehaviour
     private BodyPart upperBody;
     private BodyPart lowerBody;
 
-    internal void UpdateUnit(UnitDefinition unit)
+    public void UpdateUnit(UnitDefinition unit)
     {
         if (((UnitFlags1)unit.flags1 & UnitFlags1.on_ground) == UnitFlags1.on_ground)
         {
@@ -343,7 +348,209 @@ public class CreatureBody : MonoBehaviour
             {
                 if (spawnedParts.ContainsKey(item.body_part_id))
                 {
-                    spawnedParts[item.body_part_id].inventory.Add(item);
+                    var itemDef = ItemRaws.Instance[item.item.type];
+                    //If it's any item at all, it'll at least be on the body part itself, either carried or worn.
+                    spawnedParts[item.body_part_id].inventory.Add(new BodyPart.Equip(item, itemDef));
+                    //If it's worn, then coverage rules apply.
+                    if (item.mode == InventoryMode.Worn)
+                    {
+                        switch ((ItemType)item.item.type.mat_type)
+                        {
+                            case ItemType.Armor:
+                                {
+                                    var SpecifiedPart = spawnedParts[item.body_part_id];
+                                    if (upperBody != SpecifiedPart)
+                                        upperBody.inventory.Add(new BodyPart.Equip(item, itemDef));
+                                    if(lowerBody != SpecifiedPart)
+                                        lowerBody.inventory.Add(new BodyPart.Equip(item, itemDef));
+                                }
+                                break;
+                            case ItemType.None:
+                                break;
+                            case ItemType.Bar:
+                                break;
+                            case ItemType.Smallgem:
+                                break;
+                            case ItemType.Blocks:
+                                break;
+                            case ItemType.Rough:
+                                break;
+                            case ItemType.Boulder:
+                                break;
+                            case ItemType.Wood:
+                                break;
+                            case ItemType.Door:
+                                break;
+                            case ItemType.Floodgate:
+                                break;
+                            case ItemType.Bed:
+                                break;
+                            case ItemType.Chair:
+                                break;
+                            case ItemType.Chain:
+                                break;
+                            case ItemType.Flask:
+                                break;
+                            case ItemType.Goblet:
+                                break;
+                            case ItemType.Instrument:
+                                break;
+                            case ItemType.Toy:
+                                break;
+                            case ItemType.Window:
+                                break;
+                            case ItemType.Cage:
+                                break;
+                            case ItemType.Barrel:
+                                break;
+                            case ItemType.Bucket:
+                                break;
+                            case ItemType.Animaltrap:
+                                break;
+                            case ItemType.Table:
+                                break;
+                            case ItemType.Coffin:
+                                break;
+                            case ItemType.Statue:
+                                break;
+                            case ItemType.Corpse:
+                                break;
+                            case ItemType.Weapon:
+                                break;
+                            case ItemType.Shoes:
+                                break;
+                            case ItemType.Shield:
+                                break;
+                            case ItemType.Helm:
+                                break;
+                            case ItemType.Gloves:
+                                break;
+                            case ItemType.Box:
+                                break;
+                            case ItemType.Bin:
+                                break;
+                            case ItemType.Armorstand:
+                                break;
+                            case ItemType.Weaponrack:
+                                break;
+                            case ItemType.Cabinet:
+                                break;
+                            case ItemType.Figurine:
+                                break;
+                            case ItemType.Amulet:
+                                break;
+                            case ItemType.Scepter:
+                                break;
+                            case ItemType.Ammo:
+                                break;
+                            case ItemType.Crown:
+                                break;
+                            case ItemType.Ring:
+                                break;
+                            case ItemType.Earring:
+                                break;
+                            case ItemType.Bracelet:
+                                break;
+                            case ItemType.Gem:
+                                break;
+                            case ItemType.Anvil:
+                                break;
+                            case ItemType.Corpsepiece:
+                                break;
+                            case ItemType.Remains:
+                                break;
+                            case ItemType.Meat:
+                                break;
+                            case ItemType.Fish:
+                                break;
+                            case ItemType.FishRaw:
+                                break;
+                            case ItemType.Vermin:
+                                break;
+                            case ItemType.Pet:
+                                break;
+                            case ItemType.Seeds:
+                                break;
+                            case ItemType.Plant:
+                                break;
+                            case ItemType.SkinTanned:
+                                break;
+                            case ItemType.PlantGrowth:
+                                break;
+                            case ItemType.Thread:
+                                break;
+                            case ItemType.Cloth:
+                                break;
+                            case ItemType.Totem:
+                                break;
+                            case ItemType.Pants:
+                                break;
+                            case ItemType.Backpack:
+                                break;
+                            case ItemType.Quiver:
+                                break;
+                            case ItemType.Catapultparts:
+                                break;
+                            case ItemType.Ballistaparts:
+                                break;
+                            case ItemType.Siegeammo:
+                                break;
+                            case ItemType.Ballistaarrowhead:
+                                break;
+                            case ItemType.Trapparts:
+                                break;
+                            case ItemType.Trapcomp:
+                                break;
+                            case ItemType.Drink:
+                                break;
+                            case ItemType.PowderMisc:
+                                break;
+                            case ItemType.Cheese:
+                                break;
+                            case ItemType.Food:
+                                break;
+                            case ItemType.LiquidMisc:
+                                break;
+                            case ItemType.Coin:
+                                break;
+                            case ItemType.Glob:
+                                break;
+                            case ItemType.Rock:
+                                break;
+                            case ItemType.PipeSection:
+                                break;
+                            case ItemType.HatchCover:
+                                break;
+                            case ItemType.Grate:
+                                break;
+                            case ItemType.Quern:
+                                break;
+                            case ItemType.Millstone:
+                                break;
+                            case ItemType.Splint:
+                                break;
+                            case ItemType.Crutch:
+                                break;
+                            case ItemType.TractionBench:
+                                break;
+                            case ItemType.OrthopedicCast:
+                                break;
+                            case ItemType.Tool:
+                                break;
+                            case ItemType.Slab:
+                                break;
+                            case ItemType.Egg:
+                                break;
+                            case ItemType.Book:
+                                break;
+                            case ItemType.Sheet:
+                                break;
+                            case ItemType.Branch:
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                 }
             }
             inventoryCount = unit.inventory.Count;

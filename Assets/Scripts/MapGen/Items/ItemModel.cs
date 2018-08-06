@@ -153,9 +153,9 @@ public class ItemModel : MonoBehaviour, IClickable
         if (MaterialRaws.Instance.ContainsKey(item.material))
             mat = MaterialRaws.Instance[item.material].id;
         if (item.stack_size > 1)
-            Debug.Log(string.Format("{0} {1} [{2}]", mat, GameMap.items[item.type].id, item.stack_size));
+            Debug.Log(string.Format("{0} {1} [{2}]", mat, ItemRaws.Instance[item.type].id, item.stack_size));
         else
-            Debug.Log(string.Format("{0} {1}", mat, GameMap.items[item.type].id));
+            Debug.Log(string.Format("{0} {1}", mat, ItemRaws.Instance[item.type].id));
         Debug.Log(((ItemFlags)item.flags1));
 
         foreach (var imp in item.improvements)

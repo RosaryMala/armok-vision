@@ -288,8 +288,8 @@ namespace Building
                     var item = building.items[i];
                     if (MaterialRaws.Instance.ContainsKey(item.item.material))
                         statusText.Append(MaterialRaws.Instance[item.item.material].id).Append(" ");
-                    if (GameMap.items.ContainsKey(item.item.type))
-                        statusText.Append(GameMap.items[item.item.type].id);
+                    if (ItemRaws.Instance.ContainsKey(item.item.type))
+                        statusText.Append(ItemRaws.Instance[item.item.type].id);
                     else
                         statusText.Append(item.item.type);
                     statusText.Append(" [").Append(item.mode).Append("]").AppendLine();

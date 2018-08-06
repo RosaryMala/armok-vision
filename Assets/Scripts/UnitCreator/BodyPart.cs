@@ -40,8 +40,21 @@ public class BodyPart : MonoBehaviour
         }
     }
 
+    [Serializable]
+    public struct Equip
+    {
+        public InventoryItem item;
+        public MaterialDefinition itemDef;
+
+        public Equip(InventoryItem item, MaterialDefinition itemDef)
+        {
+            this.item = item;
+            this.itemDef = itemDef;
+        }
+    }
+
     public List<ModValue> mods = new List<ModValue>();
-    public List<InventoryItem> inventory = new List<InventoryItem>();
+    public List<Equip> inventory = new List<Equip>();
 
     internal BodyPart FindChild(string category)
     {
