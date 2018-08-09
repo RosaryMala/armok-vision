@@ -131,6 +131,7 @@ public class CreatureBody : MonoBehaviour
             {
                 var placedModel = Instantiate(model);
                 placedModel.transform.SetParent(spawnedPart.transform);
+                placedModel.CollectEquipment();
                 spawnedPart.modeledPart = placedModel;
             }
 

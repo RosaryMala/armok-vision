@@ -18,7 +18,7 @@ public class DFRawReader : EditorWindow
     [SerializeField]
     private List<CreatureRaw> filteredRaws;
 
-    [MenuItem("Mytools/DF Raw Reader")]
+    [MenuItem("Window/DF Raw Reader")]
     public static void ShowWindow()
     {
         GetWindow<DFRawReader>();
@@ -279,6 +279,25 @@ public class DFRawReader : EditorWindow
                     string name = unit.name;
                     if (string.IsNullOrEmpty(name))
                         name = creatureRaws[unit.race.mat_type].caste[unit.race.mat_index].caste_name[0];
+                    if(!string.IsNullOrEmpty(filter) && (filterParts|| filterName))
+                    {
+                        bool matched = false;
+                        if (filterName)
+                            matched = name.ToUpper().Contains(filter.ToUpper());
+                        if (filterParts)
+                        {
+                            foreach (var item in unit.inventory)
+                            {
+                                if (!ItemRaws.Instance.ContainsKey(item.item.type))
+                                    continue;
+                                matched = ItemRaws.Instance[item.item.type].id.ToUpper().Contains(filter.ToUpper());
+                                if (matched)
+                                    break;
+                            }
+                        }
+                        if (!matched)
+                            continue;
+                    }
                     if(GUILayout.Button(name))
                     {
                         var creatureBase = new GameObject().AddComponent<CreatureBody>();

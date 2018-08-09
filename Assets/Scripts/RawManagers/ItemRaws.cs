@@ -11,6 +11,7 @@ public class ItemRaws : ScriptableObject, IReadOnlyDictionary<MatPairStruct, Mat
     List<MaterialDefinition> _itemList = new List<MaterialDefinition>();
 
     Dictionary<MatPairStruct, MaterialDefinition> itemLookup = new Dictionary<MatPairStruct, MaterialDefinition>();
+    Dictionary<string, MaterialDefinition> stringLookup = new Dictionary<string, MaterialDefinition>();
 
     private void PopulateLookupTable()
     {
@@ -19,7 +20,13 @@ public class ItemRaws : ScriptableObject, IReadOnlyDictionary<MatPairStruct, Mat
         foreach (var item in _itemList)
         {
             itemLookup[item.mat_pair] = item;
+            stringLookup[item.id] = item;
         }
+    }
+
+    public MaterialDefinition FromToken(string token)
+    {
+        return stringLookup[token];
     }
 
     static ItemRaws _instance = null;

@@ -217,13 +217,14 @@ public class ContentLoader : MonoBehaviour
     {
         var color = GetColor(item.type, item.material);
         var dye = item.dye;
-        if(!Application.isPlaying)
+        if (dye == null)
+            return color;
+        if (!Application.isPlaying)
         {
             if (dye.red + dye.green + dye.blue == 0)
                 return color;
         }
-        if (dye != null)
-            color *= (Color)new Color32((byte)dye.red, (byte)dye.green, (byte)dye.blue, 255);
+        color *= (Color)new Color32((byte)dye.red, (byte)dye.green, (byte)dye.blue, 255);
         return color;
     }
 

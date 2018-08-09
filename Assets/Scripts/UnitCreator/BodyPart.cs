@@ -770,16 +770,25 @@ public class BodyPart : MonoBehaviour
             }
         }
         //Temporary fix until I get proper clothing meshes.
-        var wornIndex = inventory.FindLastIndex(x => x.item.mode == InventoryMode.Worn);
-        if(wornIndex >= 0)
+        foreach (var item in inventory)
         {
-            //We leave the head uncovered, for now.
+            if (item.item.mode != InventoryMode.Worn)
+                continue;
+            if(modeledPart != null)
+            {
+                if(modeledPart.Equipment.ContainsKey(item.item.item.type))
+                {
+                    var model = modeledPart.Equipment[item.item.item.type];
+                    model.gameObject.SetActive(true);
+                    model.UpdateMaterial(item.item.item);
+                    continue;
+                }
+            }
             if (flags.head)
-                return;
+                continue;
             MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
-            var wornItem = inventory[wornIndex];
-            var color = ContentLoader.GetColor(wornItem.item.item);
-            var index = ContentLoader.GetPatternIndex(wornItem.item.item.material);
+            var color = ContentLoader.GetColor(item.item.item);
+            var index = ContentLoader.GetPatternIndex(item.item.item.material);
             propertyBlock.SetColor("_MatColor", color);
             propertyBlock.SetFloat("_MatIndex", index);
             foreach (var layerModel in layerModels)
@@ -792,7 +801,6 @@ public class BodyPart : MonoBehaviour
                     renderer.SetPropertyBlock(propertyBlock);
                 }
             }
-
         }
     }
 
