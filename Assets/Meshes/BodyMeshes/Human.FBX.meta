@@ -60,6 +60,20 @@ ModelImporter:
     100108: Single Leg
     100110: Beak
     100112: Growth
+    100114: Long Skirt
+    100116: Short Skirt
+    100118: Skirt
+    100120: ITEM_ARMOR_DRESS
+    100122: Dress Upper Body
+    100124: Dress Lower Arm
+    100126: Dress Upper Arm
+    100128: Shirt
+    100130: Shirt Lower
+    100132: Shirt Lower Arm
+    100134: Shirt Upper Arm
+    100136: Tunic
+    100138: Tunic Lower
+    100140: Tunic Upper Arm
     400000: Box001
     400002: Box002
     400004: HD
@@ -117,6 +131,20 @@ ModelImporter:
     400108: Single Leg
     400110: Beak
     400112: Growth
+    400114: Long Skirt
+    400116: Short Skirt
+    400118: Skirt
+    400120: ITEM_ARMOR_DRESS
+    400122: Dress Upper Body
+    400124: Dress Lower Arm
+    400126: Dress Upper Arm
+    400128: Shirt
+    400130: Shirt Lower
+    400132: Shirt Lower Arm
+    400134: Shirt Upper Arm
+    400136: Tunic
+    400138: Tunic Lower
+    400140: Tunic Upper Arm
     2100000: 'Material #25'
     2100002: No Name
     2100004: 03 - Default
@@ -176,6 +204,20 @@ ModelImporter:
     2300106: Single Leg
     2300108: Beak
     2300110: Growth
+    2300112: Long Skirt
+    2300114: Short Skirt
+    2300116: Skirt
+    2300118: ITEM_ARMOR_DRESS
+    2300120: Dress Upper Body
+    2300122: Dress Lower Arm
+    2300124: Dress Upper Arm
+    2300126: Shirt
+    2300128: Shirt Lower
+    2300130: Shirt Lower Arm
+    2300132: Shirt Upper Arm
+    2300134: Tunic
+    2300136: Tunic Lower
+    2300138: Tunic Upper Arm
     3300000: Box001
     3300002: Box002
     3300004: HD
@@ -232,6 +274,20 @@ ModelImporter:
     3300106: Single Leg
     3300108: Beak
     3300110: Growth
+    3300112: Long Skirt
+    3300114: Short Skirt
+    3300116: Skirt
+    3300118: ITEM_ARMOR_DRESS
+    3300120: Dress Upper Body
+    3300122: Dress Lower Arm
+    3300124: Dress Upper Arm
+    3300126: Shirt
+    3300128: Shirt Lower
+    3300130: Shirt Lower Arm
+    3300132: Shirt Upper Arm
+    3300134: Tunic
+    3300136: Tunic Lower
+    3300138: Tunic Upper Arm
     4300000: Plane001
     4300002: Plane002
     4300004: HD
@@ -285,6 +341,20 @@ ModelImporter:
     4300100: Single Arm
     4300102: Beak
     4300104: Growth
+    4300106: Long Skirt
+    4300108: Skirt
+    4300110: Short Skirt
+    4300112: ITEM_ARMOR_DRESS
+    4300114: Dress Upper Body
+    4300116: Dress Lower Arm
+    4300118: Dress Upper Arm
+    4300120: Shirt Lower
+    4300122: Tunic Lower
+    4300124: Shirt Lower Arm
+    4300126: Tunic Upper Arm
+    4300128: Shirt Upper Arm
+    4300130: Shirt
+    4300132: Tunic
   externalObjects: {}
   materials:
     importMaterials: 1

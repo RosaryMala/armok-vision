@@ -23,13 +23,22 @@ public class ItemModel : MonoBehaviour, IClickable
         }
     }
 
+    bool phantom = false;
+
     public void UpdateMaterial(Item itemInput)
     {
         originalItem = itemInput;
-
+        if (phantom)
+            return;
         if (meshRenderer == null)
             meshRenderer = GetComponentInChildren<MeshRenderer>();
 
+        //This means that it's just a placeholder on a body part.
+        if (meshRenderer == null)
+        {
+            phantom = true;
+            return;
+        }
         if (originalMaterial == null)
             originalMaterial = meshRenderer.sharedMaterial;
 

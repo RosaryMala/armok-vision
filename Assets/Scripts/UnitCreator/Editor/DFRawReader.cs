@@ -311,6 +311,53 @@ public class DFRawReader : EditorWindow
                     }
                 }
                 EditorGUILayout.EndScrollView();
+                if (GUILayout.Button("Place all units"))
+                {
+                    var watch = System.Diagnostics.Stopwatch.StartNew();
+                    CreatureBody prevCreature = null;
+                    foreach (var unit in units)
+                    {
+                        string name = unit.name;
+                        if (string.IsNullOrEmpty(name))
+                            name = creatureRaws[unit.race.mat_type].caste[unit.race.mat_index].caste_name[0];
+                        if (!string.IsNullOrEmpty(filter) && (filterParts || filterName))
+                        {
+                            bool matched = false;
+                            if(filterToken)
+                                matched = creatureRaws[unit.race.mat_type].creature_id.ToUpper().Contains(filter.ToUpper());
+                            if (filterName)
+                                matched = name.ToUpper().Contains(filter.ToUpper());
+                            if (filterParts)
+                            {
+                                foreach (var item in unit.inventory)
+                                {
+                                    if (!ItemRaws.Instance.ContainsKey(item.item.type))
+                                        continue;
+                                    matched = ItemRaws.Instance[item.item.type].id.ToUpper().Contains(filter.ToUpper());
+                                    if (matched)
+                                        break;
+                                }
+                            }
+                            if (!matched)
+                                continue;
+                        }
+                        var creatureBase = new GameObject().AddComponent<CreatureBody>();
+                        creatureBase.name = name;
+                        creatureBase.race = creatureRaws[unit.race.mat_type];
+                        creatureBase.caste = creatureRaws[unit.race.mat_type].caste[unit.race.mat_index];
+                        creatureBase.unit = unit;
+                        creatureBase.MakeBody();
+                        creatureBase.UpdateUnit(unit);
+                        creatureBase.transform.localRotation = Quaternion.identity;
+                        if (prevCreature != null)
+                        {
+                            creatureBase.transform.position = new Vector3(prevCreature.transform.position.x + prevCreature.bounds.max.x - creatureBase.bounds.min.x, 0, 0);
+                        }
+                        prevCreature = creatureBase;
+                    }
+                    watch.Stop();
+                    Debug.Log(string.Format("Took {0}ms to create {1} creatures, averaging {2}ms per creature.", watch.ElapsedMilliseconds, filteredRaws.Count, (float)watch.ElapsedMilliseconds / filteredRaws.Count));
+                }
             }
         }
     }

@@ -1,7 +1,7 @@
 ﻿using RemoteFortressReader;
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TokenLists;
 using UnityEngine;
 
@@ -21,6 +21,10 @@ public class ItemRaws : ScriptableObject, IReadOnlyDictionary<MatPairStruct, Mat
         {
             itemLookup[item.mat_pair] = item;
             stringLookup[item.id] = item;
+            if(item.id.Contains("/")) //It's a sub-item.
+            {
+                stringLookup[item.id.Split('/').Last()] = item;
+            }
         }
     }
 
