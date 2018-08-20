@@ -52,7 +52,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4570005600335078}
-  - component: {fileID: 95757319338736718}
   m_Layer: 0
   m_Name: bow
   m_TagString: Untagged
@@ -216,24 +215,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1603212284256866}
   m_Mesh: {fileID: 4300002, guid: 391a473d074435843b5e831622d81897, type: 3}
---- !u!95 &95757319338736718
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1712937271966680}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 391a473d074435843b5e831622d81897, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 1
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &114232385584181228
 MonoBehaviour:
   m_ObjectHideFlags: 1

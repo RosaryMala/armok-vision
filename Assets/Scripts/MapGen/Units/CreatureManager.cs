@@ -129,11 +129,25 @@ public class CreatureManager : MonoBehaviour
         var placedUnit = creatureList3D[unit.id];
         if (!placedUnit.gameObject.activeSelf)
             return;
-        placedUnit.transform.position = GameMap.DFtoUnityCoord(unit.pos_x + unit.subpos_x, unit.pos_y + unit.subpos_y, unit.pos_z + unit.subpos_z) + new Vector3(0, GameMap.floorHeight, 0);
         placedUnit.UpdateUnit(unit);
         if (unit.rider_id >= 0 && creatureList3D.ContainsKey(unit.rider_id))
         {
-            creatureList3D[unit.id].transform.position += new Vector3(0, creatureList3D[unit.rider_id].rootPart.transform.localPosition.y, 0);
+            placedUnit.transform.parent = creatureList3D[unit.rider_id].transform;
+            if (creatureList3D[unit.rider_id].riderPosition == null)
+            {
+                placedUnit.transform.position = creatureList3D[unit.rider_id].rootPart.transform.position;
+                placedUnit.transform.rotation = creatureList3D[unit.rider_id].rootPart.transform.rotation;
+            }
+            else
+            {
+                placedUnit.transform.position = creatureList3D[unit.rider_id].riderPosition.transform.position;
+                placedUnit.transform.rotation = creatureList3D[unit.rider_id].riderPosition.transform.rotation;
+            }
+        }
+        else
+        {
+            placedUnit.transform.parent = transform;
+            placedUnit.transform.position = GameMap.DFtoUnityCoord(unit.pos_x + unit.subpos_x, unit.pos_y + unit.subpos_y, unit.pos_z + unit.subpos_z) + new Vector3(0, GameMap.floorHeight, 0);
         }
     }
 

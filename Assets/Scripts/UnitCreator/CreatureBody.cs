@@ -27,6 +27,7 @@ public class CreatureBody : MonoBehaviour
     public Bounds bounds;
     public Vector3 bodyScale;
     public CreatureRawFlags flags;
+    public Transform riderPosition;
 
     public static BodyCategory FindBodyCategory(CasteRaw caste)
     {
@@ -121,10 +122,7 @@ public class CreatureBody : MonoBehaviour
             spawnedPart.volume = part.relsize * scale;
             spawnedPart.layers = part.layers;
 
-            if (spawnedPart.flags.upperbody)
-                upperBody = spawnedPart;
-            if (spawnedPart.flags.lowerbody)
-                lowerBody = spawnedPart;
+
 
             var model = BodyDefinition.GetPart(bodyCategory, race, caste, part);
             if (model != null)
@@ -153,7 +151,20 @@ public class CreatureBody : MonoBehaviour
                     skinMat = Resources.Load<Material>("Skin");
                 cube.GetComponent<MeshRenderer>().sharedMaterial = skinMat;
             }
-
+            if (spawnedPart.flags.upperbody)
+            {
+                upperBody = spawnedPart;
+                foreach (var item in spawnedPart.GetComponentsInChildren<BodyPartChildPlaceholder>())
+                {
+                    if (item.category == ":ATTACH:")
+                    {
+                        riderPosition = item.transform;
+                        break;
+                    }
+                }
+            }
+            if (spawnedPart.flags.lowerbody)
+                lowerBody = spawnedPart;
             var modeledLayers = spawnedPart.GetComponentsInChildren<BodyLayer>();
             foreach (var layer in part.layers)
             {
@@ -336,8 +347,10 @@ public class CreatureBody : MonoBehaviour
                 onGround = false;
             }
         }
-        if (unit.facing != null && GameMap.DFtoUnityDirection(unit.facing).sqrMagnitude > 0)
+        if (unit.facing != null && GameMap.DFtoUnityDirection(unit.facing).sqrMagnitude > 0 && unit.rider_id < 0)
             transform.rotation = Quaternion.LookRotation(GameMap.DFtoUnityDirection(unit.facing));
+        else if (unit.rider_id >= 0)
+            transform.rotation = Quaternion.identity;
 
         if (inventoryCount != unit.inventory.Count)
         {
