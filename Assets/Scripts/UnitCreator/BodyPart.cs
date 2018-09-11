@@ -236,7 +236,7 @@ public class BodyPart : MonoBehaviour
         foreach (var mod in mods)
         {
             var value = 100;
-            if (body.unit != null)
+            if (body.unit != null && body.unit.appearance != null)
                 value = body.unit.appearance.bp_modifiers[mod.index];
             switch (mod.type)
             {

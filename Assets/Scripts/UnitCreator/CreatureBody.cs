@@ -86,7 +86,7 @@ public class CreatureBody : MonoBehaviour
         {
             var mod = caste.body_appearance_modifiers[i];
             int value = 100;
-            if (unit != null)
+            if (unit != null && unit.appearance != null)
                 value = unit.appearance.body_modifiers[i];
             else
                 value = UnityEngine.Random.Range(mod.mod_min, mod.mod_max);
@@ -269,7 +269,7 @@ public class CreatureBody : MonoBehaviour
                 if (layer == null || !layer.gameObject.activeSelf)
                     continue;
                 ColorDefinition colorDef;
-                if (unit != null)
+                if (unit != null && unit.appearance != null)
                     colorDef = mod.patterns[unit.appearance.colors[modNum]].colors[0];
                 else
                     colorDef = mod.patterns[seed].colors[0];

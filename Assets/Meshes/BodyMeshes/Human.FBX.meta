@@ -74,6 +74,18 @@ ModelImporter:
     100136: Tunic
     100138: Tunic Lower
     100140: Tunic Upper Arm
+    100142: Dress UB Female
+    100144: NK001
+    100146: Plane004
+    100148: Shirt Female
+    100150: Tunic Top Female
+    100152: UB Female
+    100154: Robe Lower
+    100156: Robe Lower Arm
+    100158: Robe Top
+    100160: Robe Top Female
+    100162: Robe Upper Arm
+    100164: Shirt Lower Arm001
     400000: Box001
     400002: Box002
     400004: HD
@@ -145,6 +157,18 @@ ModelImporter:
     400136: Tunic
     400138: Tunic Lower
     400140: Tunic Upper Arm
+    400142: Dress UB Female
+    400144: NK001
+    400146: Plane004
+    400148: Shirt Female
+    400150: Tunic Top Female
+    400152: UB Female
+    400154: Robe Lower
+    400156: Robe Lower Arm
+    400158: Robe Top
+    400160: Robe Top Female
+    400162: Robe Upper Arm
+    400164: Shirt Lower Arm001
     2100000: 'Material #25'
     2100002: No Name
     2100004: 03 - Default
@@ -218,6 +242,18 @@ ModelImporter:
     2300134: Tunic
     2300136: Tunic Lower
     2300138: Tunic Upper Arm
+    2300140: Dress UB Female
+    2300142: NK001
+    2300144: Plane004
+    2300146: Shirt Female
+    2300148: Tunic Top Female
+    2300150: UB Female
+    2300152: Robe Lower
+    2300154: Robe Lower Arm
+    2300156: Robe Top
+    2300158: Robe Top Female
+    2300160: Robe Upper Arm
+    2300162: Shirt Lower Arm001
     3300000: Box001
     3300002: Box002
     3300004: HD
@@ -288,6 +324,18 @@ ModelImporter:
     3300134: Tunic
     3300136: Tunic Lower
     3300138: Tunic Upper Arm
+    3300140: Dress UB Female
+    3300142: NK001
+    3300144: Plane004
+    3300146: Shirt Female
+    3300148: Tunic Top Female
+    3300150: UB Female
+    3300152: Robe Lower
+    3300154: Robe Lower Arm
+    3300156: Robe Top
+    3300158: Robe Top Female
+    3300160: Robe Upper Arm
+    3300162: Shirt Lower Arm001
     4300000: Plane001
     4300002: Plane002
     4300004: HD
@@ -355,6 +403,18 @@ ModelImporter:
     4300128: Shirt Upper Arm
     4300130: Shirt
     4300132: Tunic
+    4300134: NK001
+    4300136: UB Female
+    4300138: Plane004
+    4300140: Dress UB Female
+    4300142: Shirt Female
+    4300144: Tunic Top Female
+    4300146: Robe Lower
+    4300148: Shirt Lower Arm001
+    4300150: Robe Upper Arm
+    4300152: Robe Lower Arm
+    4300154: Robe Top
+    4300156: Robe Top Female
   externalObjects: {}
   materials:
     importMaterials: 1

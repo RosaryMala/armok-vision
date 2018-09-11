@@ -39,6 +39,13 @@ public class BodyDefinition : ScriptableObject
     "CAT",         "ASS",             "ELK"
     };
 
+    enum Gender
+    {
+        Neuter = -1,
+        Female = 0,
+        Male = 1
+    }
+
 
     [System.Serializable]
     public class BodyPartSelection
@@ -88,7 +95,7 @@ public class BodyDefinition : ScriptableObject
         return null;
     }
 
-    static Dictionary<CreatureBody.BodyCategory, BodyDefinition> categoryParts = new Dictionary<CreatureBody.BodyCategory, BodyDefinition>();
+    static Dictionary<CreatureBody.BodyCategory, Dictionary<Gender, BodyDefinition>> categoryParts = new Dictionary<CreatureBody.BodyCategory, Dictionary<Gender, BodyDefinition>>();
     static Dictionary<string, BodyDefinition> raceParts = new Dictionary<string, BodyDefinition>();
     static Dictionary<string, Dictionary<string, BodyDefinition>> casteParts = new Dictionary<string, Dictionary<string, BodyDefinition>>();
 
@@ -96,6 +103,9 @@ public class BodyDefinition : ScriptableObject
 
     public static BodyPartModel GetPart(CreatureBody.BodyCategory category, CreatureRaw race, CasteRaw caste, BodyPartRaw part)
     {
+        Gender gender = Gender.Neuter;
+        if (caste != null)
+            gender = (Gender)caste.gender;
         BodyPartModel partModel = null;
         var bodyDef = GetBodyDefinition(race, caste);
         if (bodyDef != null)
@@ -107,7 +117,12 @@ public class BodyDefinition : ScriptableObject
             partModel = bodyDef.GetPart(part);
         if (partModel != null)
             return partModel;
-        bodyDef = GetBodyDefinition(category);
+        bodyDef = GetBodyDefinition(category, gender);
+        if (bodyDef != null)
+            partModel = bodyDef.GetPart(part);
+        if (partModel != null)
+            return partModel;
+        bodyDef = GetBodyDefinition(category, Gender.Neuter);
         if (bodyDef != null)
             partModel = bodyDef.GetPart(part);
         if (partModel != null)
@@ -128,12 +143,17 @@ public class BodyDefinition : ScriptableObject
 
     static BodyDefinition GetBodyDefinition(CreatureBody.BodyCategory category, CreatureRaw race, CasteRaw caste)
     {
+        Gender gender = Gender.Neuter;
+        if (caste != null)
+            gender = (Gender)caste.gender;
         BodyDefinition body = null;
         body = GetBodyDefinition(race, caste);
         if (body == null)
             body = GetBodyDefinition(race);
         if (body == null)
-            body = GetBodyDefinition(category);
+            body = GetBodyDefinition(category, gender);
+        if (body == null)
+            body = GetBodyDefinition(category, Gender.Neuter);
         return body;
     }
     static BodyDefinition GetBodyDefinition(CreatureRaw race, CasteRaw caste)
@@ -150,11 +170,16 @@ public class BodyDefinition : ScriptableObject
             raceParts[race.creature_id] = Resources.Load<BodyDefinition>("BodyDefinitions/" + race.creature_id + "/Default");
         return raceParts[race.creature_id];
     }
-    static BodyDefinition GetBodyDefinition(CreatureBody.BodyCategory category)
+    static BodyDefinition GetBodyDefinition(CreatureBody.BodyCategory category, Gender gender = Gender.Neuter)
     {
+        string genderString = "";
+        if (gender != Gender.Neuter)
+            genderString = "_" + gender.ToString();
         if (!categoryParts.ContainsKey(category))
-            categoryParts[category] = Resources.Load<BodyDefinition>("BodyDefinitions/Default/" + category);
-        return categoryParts[category];
+            categoryParts[category] = new Dictionary<Gender, BodyDefinition>();
+        if (!categoryParts[category].ContainsKey(gender))
+            categoryParts[category][gender] = Resources.Load<BodyDefinition>("BodyDefinitions/Default/" + category + genderString);
+        return categoryParts[category][gender];
     }
 
     public static string GetCorrectedCreatureID(CreatureRaw race, CasteRaw caste = null)

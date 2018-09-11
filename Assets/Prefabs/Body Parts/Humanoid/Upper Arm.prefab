@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 23331093348015304}
   - component: {fileID: 114695777260816262}
   m_Layer: 0
-  m_Name: ITEM_ARMOR_TUNIC
+  m_Name: ITEM_ARMOR_ROBE
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -358,7 +358,7 @@ MeshFilter:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1391117789869602}
-  m_Mesh: {fileID: 4300126, guid: 2621930fd4d4e814db9dc869b571b87f, type: 3}
+  m_Mesh: {fileID: 4300150, guid: 2621930fd4d4e814db9dc869b571b87f, type: 3}
 --- !u!33 &33772861143856282
 MeshFilter:
   m_ObjectHideFlags: 1
