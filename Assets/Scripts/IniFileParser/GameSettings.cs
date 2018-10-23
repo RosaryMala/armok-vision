@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.PostProcessing;
 using UnityEngine.UI;
+using UnityEngine.Rendering.PostProcessing;
 
 public class GameSettings : MonoBehaviour
 {
@@ -279,7 +279,7 @@ public class GameSettings : MonoBehaviour
     {
         foreach (Camera camera in mainCameras)
         {
-            PostProcessingBehaviour ppb = camera.GetComponent<PostProcessingBehaviour>();
+            PostProcessLayer ppb = camera.GetComponent<PostProcessLayer>();
             if (ppb != null)
             {
                 if (Instance.camera.deferredRendering)

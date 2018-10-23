@@ -123,7 +123,8 @@ public class MaterialMatcher<T> : IEnumerable <KeyValuePair<MatPairStruct, T>>, 
     {
         get
         {
-            if (!TryGetValue(mat, out T output))
+            T output;
+            if (!TryGetValue(mat, out output))
                 throw new KeyNotFoundException();
             return output;
         }

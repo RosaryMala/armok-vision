@@ -85,7 +85,7 @@ public class GameMap : MonoBehaviour
     public const float tileHeight = 3.0f;
     public const float floorHeight = 0.5f;
     public const float tileWidth = 2.0f;
-    public const int blockSize = 48;
+    public const int blockSize = 16;
 
     static object mapZOffsetLock = new object();
     static int _mapZoffset = 0;
