@@ -186,17 +186,19 @@ public class GameSettings : MonoBehaviour
     // Awake is called when the script instance is being ßloaded
     public void Awake()
     {
-        Instance.camera.fieldOfView = mainCameras[0].fieldOfView;
+        if (mainCameras.Count > 0)
+            Instance.camera.fieldOfView = mainCameras[0].fieldOfView;
         string configDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Application.productName);
-		UnityEngine.Debug.Log ("Loading config from " + configDir);
+        UnityEngine.Debug.Log("Loading config from " + configDir);
         if (!Directory.Exists(configDir))
             Directory.CreateDirectory(configDir);
         filename = Path.Combine(configDir, filename);
         DeserializeIni(filename);
-        foreach (Camera camera in mainCameras)
-        {
-            camera.fieldOfView = Instance.camera.fieldOfView;
-        }
+        if (mainCameras.Count > 0)
+            foreach (Camera camera in mainCameras)
+            {
+                camera.fieldOfView = Instance.camera.fieldOfView;
+            }
         Application.targetFrameRate = Instance.rendering.targetFrameRate;
         QualitySettings.vSyncCount = Instance.rendering.vSyncCount;
         if (Instance.game.analytics == AnalyticsChoice.Yes)

@@ -5,6 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Map Mode.unity
     guid: eb0b853da2a60f540a81dc515bab1875
+  - enabled: 1
+    path: Assets/Scenes/VR Map.unity
+    guid: 064b7f6a110980f4abc0b0a34dac2ee9
+  m_configObjects: {}

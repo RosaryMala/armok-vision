@@ -59,9 +59,6 @@ public class GameMap : MonoBehaviour
     public int PosYTile { get; private set; }
     public int PosZ { get; private set; }
 
-    // Stored view information
-    ViewInfo view;
-
     BlockMesher mesher;
 
     public BlockMeshSet[,,] mapMeshes;
@@ -184,8 +181,8 @@ public class GameMap : MonoBehaviour
 #if DEVELOPMENT_BUILD
         Debug.Log("Dev build");
 #endif
-
-        dfScreen.SetActive(GameSettings.Instance.game.showDFScreen);
+        if (dfScreen != null)
+            dfScreen.SetActive(GameSettings.Instance.game.showDFScreen);
     }
 
     public static GameMap Instance { get; private set; }
@@ -299,8 +296,7 @@ public class GameMap : MonoBehaviour
             dfScreen.SetActive(GameSettings.Instance.game.showDFScreen);
         }
 
-        if ((cameraMovement != null && cameraMovement.following) || GameSettings.Instance.game.showDFScreen)
-            UpdateView();
+        UpdateView();
 
 
         if (!GameSettings.Instance.game.showDFScreen && EventSystem.current.currentSelectedGameObject == null && DFConnection.Instance.WorldMode != dfproto.GetWorldInfoOut.Mode.MODE_ADVENTURE)
@@ -721,17 +717,14 @@ public class GameMap : MonoBehaviour
         Application.OpenURL(url);
     }
 
+    public DFCoord FollowPos { get; private set; }
+
     void UpdateView()
     {
-        RemoteFortressReader.ViewInfo newView = DFConnection.Instance.PopViewInfoUpdate();
-        if (newView == null) return;
-
-        if(!cameraMovement.following)
-            return;
-
+        ViewInfo view = DFConnection.Instance.PopViewInfoUpdate();
+        if (view == null) return;
         UnityEngine.Profiling.Profiler.BeginSample("UpdateView", this);
         //Debug.Log("Got view");
-        view = newView;
 
         if (view.follow_unit_id != -1 && CreatureManager.Instance.Units != null)
         {
@@ -739,16 +732,11 @@ public class GameMap : MonoBehaviour
             if (unitIndex >= 0)
             {
                 var unit = CreatureManager.Instance.Units[unitIndex];
-                PosXTile = unit.pos_x;
-                PosYTile = unit.pos_y;
-                PosZ = unit.pos_z + 1;
+                FollowPos = new DFCoord(unit.pos_x, unit.pos_y, unit.pos_z);
                 return;
             }
         }
-
-        PosXTile = (view.view_pos_x + (view.view_size_x / 2));
-        PosYTile = (view.view_pos_y + (view.view_size_y / 2));
-        PosZ = view.view_pos_z + 1;
+        FollowPos = new DFCoord(view.view_pos_x + (view.view_size_x / 2), view.view_pos_y + (view.view_size_y / 2), view.view_pos_z);
         UnityEngine.Profiling.Profiler.EndSample();
     }
     // Update the region we're requesting
@@ -1487,7 +1475,7 @@ public class GameMap : MonoBehaviour
 
     public void UpdateCenter(Vector3 pos)
     {
-        if(cameraMovement.following)
+        if(cameraMovement != null && cameraMovement.following)
             return;
         DFCoord dfPos = UnityToDFCoord(pos);
         PosXTile = dfPos.x;
