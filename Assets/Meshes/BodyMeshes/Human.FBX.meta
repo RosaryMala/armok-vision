@@ -86,6 +86,11 @@ ModelImporter:
     100160: Robe Top Female
     100162: Robe Upper Arm
     100164: Shirt Lower Arm001
+    100166: Dress Top
+    100168: Female Top Clothing
+    100170: LB Cover
+    100172: RLL001
+    100174: RUL001
     400000: Box001
     400002: Box002
     400004: HD
@@ -169,6 +174,11 @@ ModelImporter:
     400160: Robe Top Female
     400162: Robe Upper Arm
     400164: Shirt Lower Arm001
+    400166: Dress Top
+    400168: Female Top Clothing
+    400170: LB Cover
+    400172: RLL001
+    400174: RUL001
     2100000: 'Material #25'
     2100002: No Name
     2100004: 03 - Default
@@ -254,6 +264,11 @@ ModelImporter:
     2300158: Robe Top Female
     2300160: Robe Upper Arm
     2300162: Shirt Lower Arm001
+    2300164: Dress Top
+    2300166: Female Top Clothing
+    2300168: LB Cover
+    2300170: RLL001
+    2300172: RUL001
     3300000: Box001
     3300002: Box002
     3300004: HD
@@ -336,6 +351,11 @@ ModelImporter:
     3300158: Robe Top Female
     3300160: Robe Upper Arm
     3300162: Shirt Lower Arm001
+    3300164: Dress Top
+    3300166: Female Top Clothing
+    3300168: LB Cover
+    3300170: RLL001
+    3300172: RUL001
     4300000: Plane001
     4300002: Plane002
     4300004: HD
@@ -415,6 +435,11 @@ ModelImporter:
     4300152: Robe Lower Arm
     4300154: Robe Top
     4300156: Robe Top Female
+    4300158: RLL001
+    4300160: RUL001
+    4300162: LB Cover
+    4300164: Dress Top
+    4300166: Female Top Clothing
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -487,7 +512,6 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
