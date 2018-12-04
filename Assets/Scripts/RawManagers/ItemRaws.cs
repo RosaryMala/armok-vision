@@ -5,7 +5,7 @@ using System.Linq;
 using TokenLists;
 using UnityEngine;
 
-public class ItemRaws : ScriptableObject, IReadOnlyDictionary<MatPairStruct, MaterialDefinition>
+public class ItemRaws : ScriptableObject, IReadOnlyDictionary<MatPairStruct, MaterialDefinition>, IReadOnlyDictionary<string, MaterialDefinition>
 {
     [SerializeField]
     List<MaterialDefinition> _itemList = new List<MaterialDefinition>();
@@ -26,11 +26,6 @@ public class ItemRaws : ScriptableObject, IReadOnlyDictionary<MatPairStruct, Mat
                 stringLookup[item.id.Split('/').Last()] = item;
             }
         }
-    }
-
-    public MaterialDefinition FromToken(string token)
-    {
-        return stringLookup[token];
     }
 
     static ItemRaws _instance = null;
@@ -70,6 +65,10 @@ public class ItemRaws : ScriptableObject, IReadOnlyDictionary<MatPairStruct, Mat
 
     public int Count => ((IReadOnlyDictionary<MatPairStruct, MaterialDefinition>)itemLookup).Count;
 
+    IEnumerable<string> IReadOnlyDictionary<string, MaterialDefinition>.Keys => ((IReadOnlyDictionary<string, MaterialDefinition>)stringLookup).Keys;
+
+    public MaterialDefinition this[string key] => ((IReadOnlyDictionary<string, MaterialDefinition>)stringLookup)[key];
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -99,6 +98,21 @@ public class ItemRaws : ScriptableObject, IReadOnlyDictionary<MatPairStruct, Mat
     IEnumerator IEnumerable.GetEnumerator()
     {
         return ((IReadOnlyDictionary<MatPairStruct, MaterialDefinition>)itemLookup).GetEnumerator();
+    }
+
+    public bool ContainsKey(string key)
+    {
+        return ((IReadOnlyDictionary<string, MaterialDefinition>)stringLookup).ContainsKey(key);
+    }
+
+    public bool TryGetValue(string key, out MaterialDefinition value)
+    {
+        return ((IReadOnlyDictionary<string, MaterialDefinition>)stringLookup).TryGetValue(key, out value);
+    }
+
+    IEnumerator<KeyValuePair<string, MaterialDefinition>> IEnumerable<KeyValuePair<string, MaterialDefinition>>.GetEnumerator()
+    {
+        return ((IReadOnlyDictionary<string, MaterialDefinition>)stringLookup).GetEnumerator();
     }
 
     public MaterialDefinition this[MatPairStruct mat]

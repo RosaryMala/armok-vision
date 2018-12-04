@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using System.Linq;
 
 [SelectionBase]
 public class BodyPart : MonoBehaviour
@@ -43,12 +44,17 @@ public class BodyPart : MonoBehaviour
     [Serializable]
     public struct Equip
     {
+        public string itemType;
         public InventoryItem item;
         public MaterialDefinition itemDef;
         public MaterialDefinition material;
 
         public Equip(InventoryItem item, MaterialDefinition itemDef, MaterialDefinition material)
         {
+            if (itemDef != null)
+                itemType = itemDef.id.Split('/').Last();
+            else
+                itemType = item.item.type.ToString();
             this.item = item;
             this.itemDef = itemDef;
             this.material = material;
@@ -770,38 +776,33 @@ public class BodyPart : MonoBehaviour
             }
         }
         //Temporary fix until I get proper clothing meshes.
-        foreach (var item in inventory)
+        if (modeledPart != null)
         {
-            if (item.item.mode != InventoryMode.Worn)
-                continue;
-            if(modeledPart != null)
-            {
-                if(modeledPart.Equipment.ContainsKey(item.item.item.type))
-                {
-                    var model = modeledPart.Equipment[item.item.item.type];
-                    model.gameObject.SetActive(true);
-                    model.UpdateMaterial(item.item.item);
-                    continue;
-                }
-            }
-            if (flags.head)
-                continue;
-            MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
-            var color = ContentLoader.GetColor(item.item.item);
-            var index = ContentLoader.GetPatternIndex(item.item.item.material);
-            propertyBlock.SetColor("_MatColor", color);
-            propertyBlock.SetFloat("_MatIndex", index);
-            foreach (var layerModel in layerModels)
-            {
-                if (layerModel == null)
-                    continue;
-                var renderer = layerModel.GetComponentInChildren<MeshRenderer>();
-                if (renderer != null)
-                {
-                    renderer.SetPropertyBlock(propertyBlock);
-                }
-            }
+            modeledPart.ApplyEquipment(inventory);
         }
+        else
+            foreach (var item in inventory)
+            {
+                if (item.item.mode != InventoryMode.Worn)
+                    continue;
+                if (flags.head)
+                    continue;
+                MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
+                var color = ContentLoader.GetColor(item.item.item);
+                var index = ContentLoader.GetPatternIndex(item.item.item.material);
+                propertyBlock.SetColor("_MatColor", color);
+                propertyBlock.SetFloat("_MatIndex", index);
+                foreach (var layerModel in layerModels)
+                {
+                    if (layerModel == null)
+                        continue;
+                    var renderer = layerModel.GetComponentInChildren<MeshRenderer>();
+                    if (renderer != null)
+                    {
+                        renderer.SetPropertyBlock(propertyBlock);
+                    }
+                }
+            }
     }
 
     void AlignManyParts(List<BodyPart> parts, Vector3 pos1, Quaternion rot1, Vector3 pos2, Quaternion rot2, float singlePos)
