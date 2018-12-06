@@ -24,13 +24,15 @@
   
         [Enum(UV0,0,UV1,1)] _UVSec("UV Set for secondary textures", Float) = 0
 
-        [PerRendererData] _MatColor("DF Material Color", Color) = (0.5,0.5,0.5,1)
+        [PerRendererData] _MatColor("DF Material Color", Color) = (1,1,1,1)
         [PerRendererData] _MatIndex("DF Material Array Index", int) = 0
+		[PerRendererData] _JobColor("DF Job Color", Color) = (1,1,1,1)
 
         // Blending state
         [HideInInspector] _Mode("__mode", Float) = 0.0
         _SpecColor("Standard Specular Color", Color) = (0.220916301, 0.220916301, 0.220916301, 0.779083699)
-    }
+		[HideInInspector]_MatTexArray("__MatTexArray", 2DArray) = "white" {}
+	}
     SubShader {
         Tags { "RenderType"="Opaque" }
         LOD 200

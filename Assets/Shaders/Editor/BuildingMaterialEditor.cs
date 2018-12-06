@@ -62,6 +62,7 @@ public class BuildingMaterialEditor : ShaderGUI
 
     MaterialProperty blendMode = null;
     MaterialProperty albedoMap = null;
+    MaterialProperty dfTextureMap = null;
     MaterialProperty albedoColor = null;
     MaterialProperty alphaCutoff = null;
     MaterialProperty specularMap = null;
@@ -90,6 +91,7 @@ public class BuildingMaterialEditor : ShaderGUI
     {
         blendMode = FindProperty("_Mode", props, false);
         albedoMap = FindProperty("_MainTex", props);
+        dfTextureMap = FindProperty("_MatTexArray", props);
         albedoColor = FindProperty("_Color", props);
         alphaCutoff = FindProperty("_Cutoff", props, false);
         specularMap = FindProperty("_SpecGlossMap", props, false);
@@ -144,12 +146,10 @@ public class BuildingMaterialEditor : ShaderGUI
             // Primary properties
             GUILayout.Label(Styles.primaryMapsText, EditorStyles.boldLabel);
             m_MaterialEditor.TexturePropertySingleLine(Styles.detailMaskText, detailMask);
+            DoAlbedoArea(material);
             if (detailMask.textureValue != null)
-            {
-                DoAlbedoArea(material);
                 DoSpecularMetallicArea();
-            }
-            if(specularColor != null)
+            if (specularColor != null)
                 m_MaterialEditor.ColorProperty(specularColor, Styles.specularColorText.text);
             m_MaterialEditor.TexturePropertySingleLine(Styles.normalMapText, bumpMap, bumpMap.textureValue != null ? bumpScale : null);
             m_MaterialEditor.TexturePropertySingleLine(Styles.occlusionText, occlusionMap, occlusionMap.textureValue != null ? occlusionStrength : null);
@@ -164,6 +164,7 @@ public class BuildingMaterialEditor : ShaderGUI
             // Secondary properties
             GUILayout.Label(Styles.secondaryMapsText, EditorStyles.boldLabel);
             m_MaterialEditor.ShaderProperty(uvSetSecondary, Styles.uvSetLabel.text);
+            m_MaterialEditor.TextureScaleOffsetProperty(dfTextureMap);
 
             //// Third properties
             //GUILayout.Label(Styles.forwardText, EditorStyles.boldLabel);
@@ -375,13 +376,11 @@ public class BuildingMaterialEditor : ShaderGUI
     {
         // Note: keywords must be based on Material value not on MaterialProperty due to multi-edit & material animation
         // (MaterialProperty value might come from renderer material property block)
-        SetKeyword(material, "_NORMALMAP", material.GetTexture("_BumpMap") || material.GetTexture("_DetailNormalMap"));
+        SetKeyword(material, "_NORMALMAP", material.GetTexture("_BumpMap"));
         if (workflowMode == WorkflowMode.Specular)
             SetKeyword(material, "_SPECGLOSSMAP", material.GetTexture("_SpecGlossMap"));
         else if (workflowMode == WorkflowMode.Metallic)
             SetKeyword(material, "_METALLICGLOSSMAP", material.GetTexture("_MetallicGlossMap"));
-        SetKeyword(material, "_PARALLAXMAP", material.GetTexture("_ParallaxMap"));
-        SetKeyword(material, "_DETAIL_MULX2", material.GetTexture("_DetailAlbedoMap") || material.GetTexture("_DetailNormalMap"));
 
         bool shouldEmissionBeEnabled = ShouldEmissionBeEnabled(material, material.GetColor("_EmissionColor"));
         SetKeyword(material, "_EMISSION", shouldEmissionBeEnabled);

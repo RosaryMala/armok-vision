@@ -32,6 +32,8 @@ UNITY_DEFINE_INSTANCED_PROP(fixed4, _MatColor)
 #define _MatColor_arr MyProperties
 UNITY_DEFINE_INSTANCED_PROP(int, _MatIndex)
 #define _MatIndex_arr MyProperties
+UNITY_DEFINE_INSTANCED_PROP(fixed4, _JobColor)
+#define _JobColor_arr MyProperties
 UNITY_INSTANCING_BUFFER_END(MyProperties)
 
 struct Input {

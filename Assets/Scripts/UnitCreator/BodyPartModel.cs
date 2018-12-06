@@ -96,16 +96,25 @@ public class BodyPartModel : MonoBehaviour
             }
             else
             {
-                if (dressClothing == null)
+                var clothingTexture = ClothingTexture.GetTexture(item.item.item.type);
+                if (clothingTexture == null || clothingTexture.baseMat == null)
+                {
+                    Debug.Log("Could not load texture for " + ItemRaws.Instance[item.item.item.type].id);
+                    continue;
+                }
+                GenericClothingLayer clothing;
+                if (clothingTexture.isDress)
+                    clothing = dressClothing;
+                else
+                    clothing = pantClothing;
+                if (clothing == null)
                     continue;
                 if (i >= instantiatedClothingLayers.Count)
                 {
-                    instantiatedClothingLayers.AddRange(Enumerable.Repeat<ItemModel>(null, instantiatedClothingLayers.Count - i + 1));
+                    instantiatedClothingLayers.AddRange(Enumerable.Repeat<ItemModel>(null, i - instantiatedClothingLayers.Count + 1));
                 }
                 if (instantiatedClothingLayers[i] == null)
                 {
-                    //TODO: Check which one to actually use.
-                    var clothing = dressClothing;
                     GameObject newLayer = new GameObject();
                     newLayer.transform.parent = transform;
                     newLayer.transform.localPosition = clothing.pos;
@@ -114,7 +123,7 @@ public class BodyPartModel : MonoBehaviour
                     var mf = newLayer.AddComponent<MeshFilter>();
                     mf.sharedMesh = clothing.mesh;
                     var mr = newLayer.AddComponent<MeshRenderer>();
-                    mr.sharedMaterial = new Material(Shader.Find("Building/Cutout"));
+                    mr.sharedMaterial = clothingTexture.GetMaterial(i);
                     var im = newLayer.AddComponent<ItemModel>();
                     instantiatedClothingLayers[i] = im;
                 }
