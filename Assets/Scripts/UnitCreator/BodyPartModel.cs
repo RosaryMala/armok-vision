@@ -123,7 +123,8 @@ public class BodyPartModel : MonoBehaviour
                     var mf = newLayer.AddComponent<MeshFilter>();
                     mf.sharedMesh = clothing.mesh;
                     var mr = newLayer.AddComponent<MeshRenderer>();
-                    mr.sharedMaterial = clothingTexture.GetMaterial(i);
+                    var mat = clothingTexture.GetMaterial(i);
+                    mr.sharedMaterial = mat;
                     var im = newLayer.AddComponent<ItemModel>();
                     instantiatedClothingLayers[i] = im;
                 }
@@ -131,6 +132,8 @@ public class BodyPartModel : MonoBehaviour
                     continue;
                 instantiatedClothingLayers[i].gameObject.SetActive(true);
                 instantiatedClothingLayers[i].UpdateMaterial(item.item.item);
+                if (Application.isEditor)
+                    instantiatedClothingLayers[i].name = item.itemDef.id;
             }
         }
     }

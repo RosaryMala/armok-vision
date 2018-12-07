@@ -1,6 +1,6 @@
 // Upgrade NOTE: upgraded instancing buffer 'MyProperties' to new syntax.
 
-
+float _Amount;
 
 half4       _Color;
 

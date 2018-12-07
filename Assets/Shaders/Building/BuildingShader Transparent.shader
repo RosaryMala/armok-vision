@@ -33,6 +33,7 @@
 		[HideInInspector]_MatTexArray("__MatTexArray", 2DArray) = "white" {}
 
         _SpecColor("Standard Specular Color", Color) = (0.220916301, 0.220916301, 0.220916301, 0.779083699)
+		_Amount("Extrusion Amount", Range(-1,1)) = 0
     }
     SubShader{
         Tags { "Queue" = "Transparent" "RenderType" = "Opaque" }
@@ -61,6 +62,7 @@
         void vert (inout appdata_full v) 
         {
             v.normal *= -1;
+			v.vertex.xyz -= v.normal * _Amount;
         }
         void surf (Input IN, inout SurfaceOutputStandardSpecular o)
         {
@@ -78,7 +80,7 @@
         }
         CGPROGRAM
         // Physically based Standard lighting model, and enable shadows on all light types
-        #pragma surface surf StandardSpecular alpha
+        #pragma surface surf StandardSpecular alpha vertex:vert
 
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 4.0
@@ -93,7 +95,9 @@
 #include "buildingInputs.cginc"
 
 #include "CustomMetallic.cginc"
-
+	  void vert(inout appdata_full v) {
+		  v.vertex.xyz += v.normal * _Amount;
+	  }
         void surf (Input IN, inout SurfaceOutputStandardSpecular o)
         {
 #include "BuildingSurf.cginc"

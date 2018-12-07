@@ -279,18 +279,20 @@ public class DFRawReader : EditorWindow
                     string name = unit.name;
                     if (string.IsNullOrEmpty(name))
                         name = creatureRaws[unit.race.mat_type].caste[unit.race.mat_index].caste_name[0];
-                    if(!string.IsNullOrEmpty(filter) && (filterParts|| filterName))
+                    if (!string.IsNullOrEmpty(filter))
                     {
-                        bool matched = false;
+                        bool matched = true;
+                        if (filterToken)
+                            matched &= creatureRaws[unit.race.mat_type].creature_id.ToUpper().Contains(filter.ToUpper());
                         if (filterName)
-                            matched = name.ToUpper().Contains(filter.ToUpper());
+                            matched &= name.ToUpper().Contains(filter.ToUpper());
                         if (filterParts)
                         {
                             foreach (var item in unit.inventory)
                             {
                                 if (!ItemRaws.Instance.ContainsKey(item.item.type))
                                     continue;
-                                matched = ItemRaws.Instance[item.item.type].id.ToUpper().Contains(filter.ToUpper());
+                                matched &= ItemRaws.Instance[item.item.type].id.ToUpper().Contains(filter.ToUpper());
                                 if (matched)
                                     break;
                             }
@@ -298,7 +300,7 @@ public class DFRawReader : EditorWindow
                         if (!matched)
                             continue;
                     }
-                    if(GUILayout.Button(name))
+                    if (GUILayout.Button(name))
                     {
                         var creatureBase = new GameObject().AddComponent<CreatureBody>();
                         creatureBase.name = name;
@@ -315,25 +317,26 @@ public class DFRawReader : EditorWindow
                 {
                     var watch = System.Diagnostics.Stopwatch.StartNew();
                     CreatureBody prevCreature = null;
+                    int creatureCount = 0;
                     foreach (var unit in units)
                     {
                         string name = unit.name;
                         if (string.IsNullOrEmpty(name))
                             name = creatureRaws[unit.race.mat_type].caste[unit.race.mat_index].caste_name[0];
-                        if (!string.IsNullOrEmpty(filter) && (filterParts || filterName))
+                        if (!string.IsNullOrEmpty(filter))
                         {
-                            bool matched = false;
+                            bool matched = true;
                             if(filterToken)
-                                matched = creatureRaws[unit.race.mat_type].creature_id.ToUpper().Contains(filter.ToUpper());
+                                matched &= creatureRaws[unit.race.mat_type].creature_id.ToUpper().Contains(filter.ToUpper());
                             if (filterName)
-                                matched = name.ToUpper().Contains(filter.ToUpper());
+                                matched &= name.ToUpper().Contains(filter.ToUpper());
                             if (filterParts)
                             {
                                 foreach (var item in unit.inventory)
                                 {
                                     if (!ItemRaws.Instance.ContainsKey(item.item.type))
                                         continue;
-                                    matched = ItemRaws.Instance[item.item.type].id.ToUpper().Contains(filter.ToUpper());
+                                    matched &= ItemRaws.Instance[item.item.type].id.ToUpper().Contains(filter.ToUpper());
                                     if (matched)
                                         break;
                                 }
@@ -354,9 +357,10 @@ public class DFRawReader : EditorWindow
                             creatureBase.transform.position = new Vector3(prevCreature.transform.position.x + prevCreature.bounds.max.x - creatureBase.bounds.min.x, 0, 0);
                         }
                         prevCreature = creatureBase;
+                        creatureCount++;
                     }
                     watch.Stop();
-                    Debug.Log(string.Format("Took {0}ms to create {1} creatures, averaging {2}ms per creature.", watch.ElapsedMilliseconds, filteredRaws.Count, (float)watch.ElapsedMilliseconds / filteredRaws.Count));
+                    Debug.Log(string.Format("Took {0}ms to create {1} creatures, averaging {2}ms per creature.", watch.ElapsedMilliseconds, creatureCount, (float)watch.ElapsedMilliseconds / creatureCount));
                 }
             }
         }

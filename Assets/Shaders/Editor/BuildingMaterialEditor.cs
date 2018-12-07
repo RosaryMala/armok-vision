@@ -80,6 +80,7 @@ public class BuildingMaterialEditor : ShaderGUI
     MaterialProperty emissionMap = null;
     MaterialProperty detailMask = null;
     MaterialProperty uvSetSecondary = null;
+    MaterialProperty pushAmount = null;
 
     MaterialEditor m_MaterialEditor;
     WorkflowMode m_WorkflowMode = WorkflowMode.Specular;
@@ -113,6 +114,7 @@ public class BuildingMaterialEditor : ShaderGUI
         emissionMap = FindProperty("_EmissionMap", props);
         detailMask = FindProperty("_DFMask", props);
         uvSetSecondary = FindProperty("_UVSec", props);
+        pushAmount = FindProperty("_Amount", props);
     }
 
     public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] props)
@@ -166,6 +168,8 @@ public class BuildingMaterialEditor : ShaderGUI
             m_MaterialEditor.ShaderProperty(uvSetSecondary, Styles.uvSetLabel.text);
             m_MaterialEditor.TextureScaleOffsetProperty(dfTextureMap);
 
+
+            m_MaterialEditor.ShaderProperty(pushAmount, "Push Amount");
             //// Third properties
             //GUILayout.Label(Styles.forwardText, EditorStyles.boldLabel);
             //if (highlights != null)
