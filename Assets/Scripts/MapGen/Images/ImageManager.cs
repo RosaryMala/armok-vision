@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -546,12 +547,12 @@ public class ImageManager : MonoBehaviour
             if (sprite == null)
             {
                 //Try again without stupid numbers
-                token.TrimEnd('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '_');
+                token = Regex.Replace(token, @"\d", "");
                 sprite = Resources.Load<Texture2D>("Images/Items/" + token);
             }
             if (sprite == null)
             {
-                Debug.LogWarning("Could not find art image for " + token);
+                //Debug.LogWarning("Could not find art image for " + token);
                 continue;
             }
 

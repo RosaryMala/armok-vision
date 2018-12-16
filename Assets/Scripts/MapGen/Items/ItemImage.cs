@@ -12,8 +12,11 @@ public class ItemImage : MonoBehaviour {
 
     internal void UpdateImage(Item itemInput)
     {
+        if (originalItem == itemInput)
+            return;
         originalItem = itemInput;
-
+        if (itemInput.image == null)
+            return;
         if (meshRenderer == null)
             meshRenderer = GetComponent<MeshRenderer>();
 

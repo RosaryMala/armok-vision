@@ -192,7 +192,6 @@ public class GameMap : MonoBehaviour
     public void Awake()
     {
         Instance = this;
-        cameraMovement = FindObjectOfType<CameraMovement>();
         mainThread = Thread.CurrentThread;
     }
 
@@ -284,7 +283,6 @@ public class GameMap : MonoBehaviour
 
 
     GameObject selected;
-    CameraMovement cameraMovement;
 
     // Run once per frame.
     void Update()
@@ -312,14 +310,6 @@ public class GameMap : MonoBehaviour
             if (Input.GetButtonDown("OverheadShadows"))
             {
                 overheadShadows = !overheadShadows;
-            }
-            if (Input.GetButtonDown("FollowDF"))
-            {
-                cameraMovement.following = true;
-            }
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                cameraMovement.following = false;
             }
 
             // take screenshot on up->down transition of F9 key
@@ -1475,8 +1465,6 @@ public class GameMap : MonoBehaviour
 
     public void UpdateCenter(Vector3 pos)
     {
-        if(cameraMovement != null && cameraMovement.following)
-            return;
         DFCoord dfPos = UnityToDFCoord(pos);
         PosXTile = dfPos.x;
         PosYTile = dfPos.y;

@@ -28,6 +28,10 @@ public class CameraMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetButtonDown("FollowDF") && !GameSettings.Instance.game.showDFScreen)
+        {
+            following = true;
+        }
         if ((following || GameSettings.Instance.game.showDFScreen) && gameMap != null)
         {
             Vector3 goal = GameMap.DFtoUnityTileCenter(GameMap.Instance.FollowPos);
