@@ -2,9 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class DecorationManager : MonoBehaviour
 {
-    public static DecorationManager Instance { get; private set; }
+    static DecorationManager _instance;
+    public static DecorationManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+                _instance = FindObjectOfType<DecorationManager>();
+            if (_instance == null)
+                _instance = Instantiate(Resources.Load<DecorationManager>("DecorationManager"));
+            return _instance;
+        }
+    }
 
     public GameObject Image;
     public GameObject Ring;
@@ -16,7 +28,26 @@ public class DecorationManager : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if (_instance != null)
+        {
+            if (_instance != this)
+                Destroy(this);
+        }
+        else
+        {
+            _instance = this;
+        }
+
+        if (!Application.isPlaying)
+        {
+            var loader = LoadShapes();
+            while (loader.MoveNext())
+            {
+
+            }
+            Debug.Log("Loaded shapes.");
+        }
+        else ContentLoader.RegisterLoadCallback(LoadShapes);
     }
 
     private void Start()
@@ -26,6 +57,8 @@ public class DecorationManager : MonoBehaviour
 
     private IEnumerator LoadShapes()
     {
+        if (DFConnection.Instance == null)
+            yield break;
         if (DFConnection.Instance.NetLanguageList == null)
             yield break;
 

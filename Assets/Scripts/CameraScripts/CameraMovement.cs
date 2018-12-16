@@ -30,7 +30,7 @@ public class CameraMovement : MonoBehaviour
     {
         if ((following || GameSettings.Instance.game.showDFScreen) && gameMap != null)
         {
-            Vector3 goal = GameMap.DFtoUnityTileCenter(new DFCoord(gameMap.PosXTile, gameMap.PosYTile, gameMap.PosZ - 1));
+            Vector3 goal = GameMap.DFtoUnityTileCenter(GameMap.Instance.FollowPos);
             Vector3 diff = goal - transform.position;
             if (diff.sqrMagnitude > followSnapDistance * followSnapDistance)
             {

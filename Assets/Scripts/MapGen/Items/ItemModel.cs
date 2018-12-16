@@ -106,9 +106,9 @@ public class ItemModel : MonoBehaviour, IClickable
                 case ImprovementType.ILLUSTRATION:
                 case ImprovementType.INSTRUMENT_PIECE:
                 default:
-#if UNITY_EDITOR
-                    Debug.LogWarning(string.Format("Unhandled improvement {0} on {1}", improvement.type, GO.name));
-#endif
+//#if UNITY_EDITOR
+//                    Debug.LogWarning(string.Format("Unhandled improvement {0} on {1}", improvement.type, GO.name));
+//#endif
                     break;
             }
         }

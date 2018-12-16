@@ -13,7 +13,7 @@ public class ItemManager : MonoBehaviour
         get
         {
             if (_instance == null)
-                _instance = GameObject.FindObjectOfType<ItemManager>();
+                _instance = FindObjectOfType<ItemManager>();
             if (_instance == null)
                 _instance = Instantiate(Resources.Load<ItemManager>("ItemManager"));
             return _instance;
@@ -76,11 +76,7 @@ public class ItemManager : MonoBehaviour
             }
             Debug.Log("Loaded item models.");
         }
-    }
-
-    private void Start()
-    {
-        ContentLoader.RegisterLoadCallback(LoadItems);
+        else ContentLoader.RegisterLoadCallback(LoadItems);
     }
 
     private void LateUpdate()

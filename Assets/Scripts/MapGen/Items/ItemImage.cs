@@ -32,6 +32,6 @@ public class ItemImage : MonoBehaviour {
 
         if (meshFilter == null)
             meshFilter = GetComponent<MeshFilter>();
-        meshFilter.mesh = ImageManager.Instance.CreateMesh(itemInput.image, ImageManager.Direction.Front);
+        meshFilter.sharedMesh = ImageManager.Instance.CreateMesh(itemInput.image, ImageManager.Direction.Front);
     }
 }

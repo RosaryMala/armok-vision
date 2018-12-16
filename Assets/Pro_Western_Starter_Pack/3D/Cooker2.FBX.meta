@@ -1,0 +1,167 @@
+fileFormatVersion: 2
+guid: ac7e4981a09b89e45a3b773581cbfc47
+timeCreated: 1443453581
+licenseType: Store
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: cooker2
+    100004: Cooker2b
+    100006: Axe001
+    100008: Axe_FX001
+    100010: Bones2
+    100012: Boots
+    100014: Dummy001
+    100016: Dummy002
+    100018: Dummy003
+    100020: Dummy004
+    100022: Hat
+    100024: mouth_Bone
+    100026: Omni001
+    100028: Omni002
+    100030: Pick
+    100032: Shovel
+    100034: Skeleton
+    100036: skull
+    100038: Sphere001
+    100040: Wolftrap
+    100042: woodpiece_001
+    100044: woodpiece_002
+    100046: woodpiece_003
+    400000: //RootNode
+    400002: cooker2
+    400004: Cooker2b
+    400006: Axe001
+    400008: Axe_FX001
+    400010: Bones2
+    400012: Boots
+    400014: Dummy001
+    400016: Dummy002
+    400018: Dummy003
+    400020: Dummy004
+    400022: Hat
+    400024: mouth_Bone
+    400026: Omni001
+    400028: Omni002
+    400030: Pick
+    400032: Shovel
+    400034: Skeleton
+    400036: skull
+    400038: Sphere001
+    400040: Wolftrap
+    400042: woodpiece_001
+    400044: woodpiece_002
+    400046: woodpiece_003
+    2300000: cooker2
+    2300002: Cooker2b
+    2300004: Axe001
+    2300006: Axe_FX001
+    2300008: Bones2
+    2300010: Boots
+    2300012: Hat
+    2300014: Pick
+    2300016: Shovel
+    2300018: Skeleton
+    2300020: skull
+    2300022: Sphere001
+    2300024: Wolftrap
+    2300026: woodpiece_001
+    2300028: woodpiece_002
+    2300030: woodpiece_003
+    3300000: cooker2
+    3300002: Cooker2b
+    3300004: Axe001
+    3300006: Axe_FX001
+    3300008: Bones2
+    3300010: Boots
+    3300012: Hat
+    3300014: Pick
+    3300016: Shovel
+    3300018: Skeleton
+    3300020: skull
+    3300022: Sphere001
+    3300024: Wolftrap
+    3300026: woodpiece_001
+    3300028: woodpiece_002
+    3300030: woodpiece_003
+    4300000: Cooker2b
+    4300002: cooker2
+    4300004: Shovel
+    4300006: Pick
+    4300008: Hat
+    4300010: Boots
+    4300012: Skeleton
+    4300014: skull
+    4300016: Bones2
+    4300018: Axe001
+    4300020: Axe_FX001
+    4300022: Sphere001
+    4300024: Wolftrap
+    4300026: woodpiece_001
+    4300028: woodpiece_002
+    4300030: woodpiece_003
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

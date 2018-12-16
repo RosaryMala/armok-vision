@@ -4,27 +4,55 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class ImageManager : MonoBehaviour
 {
-    public static ImageManager Instance { get; private set; }
+    static ImageManager _instance;
+    public static ImageManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+                _instance = FindObjectOfType<ImageManager>();
+            if (_instance == null)
+                _instance = Instantiate(Resources.Load<ImageManager>("ImageManager"));
+            return _instance;
+        }
+    }
     const int indexWidth = 16;
 
     public Material engravingMaterial;
 
     private void Awake()
     {
-        if (Instance == null)
-            Instance = this;
+        if (_instance != null)
+        {
+            if (_instance != this)
+                Destroy(this);
+        }
         else
-            Destroy(gameObject);
+        {
+            _instance = this;
+        }
 
-        ContentLoader.RegisterLoadCallback(LoadImages);
+        if (!Application.isPlaying)
+        {
+            var loader = LoadImages();
+            while (loader.MoveNext())
+            {
+
+            }
+            Debug.Log("Loaded images.");
+        }
+        else ContentLoader.RegisterLoadCallback(LoadImages);
     }
 
     Dictionary<DFHack.DFCoord, MeshRenderer> engravingStore = new Dictionary<DFHack.DFCoord, MeshRenderer>();
 
     private void Update()
     {
+        if (DFConnection.Instance == null)
+            return;
         List<Engraving> engravingList;
         while ((engravingList = DFConnection.Instance.PopEngravingUpdate()) != null)
         {
@@ -478,33 +506,35 @@ public class ImageManager : MonoBehaviour
                 }
         }
         //IMAGE_CREATURE:
-        foreach (var creature in DFConnection.Instance.CreatureRaws)
-        {
-            string token = creature.creature_id;
-            Texture2D sprite = Resources.Load<Texture2D>("Images/Creatures/" + token);
-            if (sprite == null)
+        //Fixme: have a non-volatile creature list
+        if (DFConnection.Instance != null && DFConnection.Instance.CreatureRaws != null)
+            foreach (var creature in DFConnection.Instance.CreatureRaws)
             {
-                //Try again without stupid numbers
-                token.TrimEnd('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '_');
-                sprite = Resources.Load<Texture2D>("Images/Creatures/" + token);
-            }
-            if (sprite == null)
-            {
-                Debug.LogWarning("Could not find art image for " + token);
-                continue;
-            }
-            if (sprite.width != 32 || sprite.height != 32)
-                TextureScale.Bilinear(sprite, 32, 32);
-            CreatureSpriteMap[creature.index] = textureList.Count;
-            textureList.Add(sprite);
+                string token = creature.creature_id;
+                Texture2D sprite = Resources.Load<Texture2D>("Images/Creatures/" + token);
+                if (sprite == null)
+                {
+                    //Try again without stupid numbers
+                    token.TrimEnd('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '_');
+                    sprite = Resources.Load<Texture2D>("Images/Creatures/" + token);
+                }
+                if (sprite == null)
+                {
+                    Debug.LogWarning("Could not find art image for " + token);
+                    continue;
+                }
+                if (sprite.width != 32 || sprite.height != 32)
+                    TextureScale.Bilinear(sprite, 32, 32);
+                CreatureSpriteMap[creature.index] = textureList.Count;
+                textureList.Add(sprite);
 
-            if (stopWatch.ElapsedMilliseconds > ContentLoader.LoadFrameTimeout)
-            {
-                yield return null;
-                stopWatch.Reset();
-                stopWatch.Start();
+                if (stopWatch.ElapsedMilliseconds > ContentLoader.LoadFrameTimeout)
+                {
+                    yield return null;
+                    stopWatch.Reset();
+                    stopWatch.Start();
+                }
             }
-        }
         //IMAGE_PLANT:
         //IMAGE_TREE:
         //IMAGE_SHAPE:

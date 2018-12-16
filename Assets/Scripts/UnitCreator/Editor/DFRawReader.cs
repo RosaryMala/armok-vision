@@ -49,17 +49,17 @@ public class DFRawReader : EditorWindow
         public int max = int.MinValue;
     }
 
-    bool FitsFilter(CreatureRaw creature)
+    bool FitsFilter(CreatureRaw creatureRaw)
     {
         if (!string.IsNullOrEmpty(filter) && (filterName || filterDescription || filterToken || filterParts))
         {
             bool matched = false;
-            if (filterToken && creature.creature_id.ToUpper().Contains(filter.ToUpper()))
+            if (filterToken && creatureRaw.creature_id.ToUpper().Contains(filter.ToUpper()))
                 matched = true;
-            if (filterName && creature.name[0].ToUpper().Contains(filter.ToUpper()))
+            if (filterName && creatureRaw.name[0].ToUpper().Contains(filter.ToUpper()))
                 matched = true;
             if(!matched)
-                foreach (var caste in creature.caste)
+                foreach (var caste in creatureRaw.caste)
                 {
                     if (filterName && caste.caste_name[0].ToUpper().Contains(filter.ToUpper()))
                         matched = true;
@@ -82,9 +82,35 @@ public class DFRawReader : EditorWindow
         }
         if (bodyCategoryFilter != CreatureBody.BodyCategory.None)
         {
-            foreach (var caste in creature.caste)
+            foreach (var caste in creatureRaw.caste)
             {
                 if (bodyCategoryFilter == CreatureBody.FindBodyCategory(caste))
+                    return true;
+            }
+            return false;
+        }
+        return true;
+    }
+
+    bool FitsFilter(UnitDefinition unit)
+    {
+        if (string.IsNullOrEmpty(filter))
+            return true;
+        if (filterToken)
+            if (!creatureRaws[unit.race.mat_type].creature_id.ToUpper().Contains(filter.ToUpper()))
+                return false;
+        if (filterName)
+            if (!name.ToUpper().Contains(filter.ToUpper()))
+                return false;
+        if (filterParts)
+        {
+            if (unit.inventory.Count == 0)
+                return false;
+            foreach (var item in unit.inventory)
+            {
+                if (!ItemRaws.Instance.ContainsKey(item.item.type))
+                    continue;
+                if (ItemRaws.Instance[item.item.type].id.ToUpper().Contains(filter.ToUpper()))
                     return true;
             }
             return false;
@@ -279,27 +305,8 @@ public class DFRawReader : EditorWindow
                     string name = unit.name;
                     if (string.IsNullOrEmpty(name))
                         name = creatureRaws[unit.race.mat_type].caste[unit.race.mat_index].caste_name[0];
-                    if (!string.IsNullOrEmpty(filter))
-                    {
-                        bool matched = true;
-                        if (filterToken)
-                            matched &= creatureRaws[unit.race.mat_type].creature_id.ToUpper().Contains(filter.ToUpper());
-                        if (filterName)
-                            matched &= name.ToUpper().Contains(filter.ToUpper());
-                        if (filterParts)
-                        {
-                            foreach (var item in unit.inventory)
-                            {
-                                if (!ItemRaws.Instance.ContainsKey(item.item.type))
-                                    continue;
-                                matched &= ItemRaws.Instance[item.item.type].id.ToUpper().Contains(filter.ToUpper());
-                                if (matched)
-                                    break;
-                            }
-                        }
-                        if (!matched)
-                            continue;
-                    }
+                    if (!FitsFilter(unit))
+                        continue;
                     if (GUILayout.Button(name))
                     {
                         var creatureBase = new GameObject().AddComponent<CreatureBody>();
@@ -323,27 +330,8 @@ public class DFRawReader : EditorWindow
                         string name = unit.name;
                         if (string.IsNullOrEmpty(name))
                             name = creatureRaws[unit.race.mat_type].caste[unit.race.mat_index].caste_name[0];
-                        if (!string.IsNullOrEmpty(filter))
-                        {
-                            bool matched = true;
-                            if(filterToken)
-                                matched &= creatureRaws[unit.race.mat_type].creature_id.ToUpper().Contains(filter.ToUpper());
-                            if (filterName)
-                                matched &= name.ToUpper().Contains(filter.ToUpper());
-                            if (filterParts)
-                            {
-                                foreach (var item in unit.inventory)
-                                {
-                                    if (!ItemRaws.Instance.ContainsKey(item.item.type))
-                                        continue;
-                                    matched &= ItemRaws.Instance[item.item.type].id.ToUpper().Contains(filter.ToUpper());
-                                    if (matched)
-                                        break;
-                                }
-                            }
-                            if (!matched)
-                                continue;
-                        }
+                        if (!FitsFilter(unit))
+                            continue;
                         var creatureBase = new GameObject().AddComponent<CreatureBody>();
                         creatureBase.name = name;
                         creatureBase.race = creatureRaws[unit.race.mat_type];

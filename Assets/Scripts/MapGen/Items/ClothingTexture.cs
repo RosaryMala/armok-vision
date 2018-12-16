@@ -46,6 +46,13 @@ public class ClothingTexture : ScriptableObject
 
     public static ClothingTexture GetTexture(MatPairStruct item)
     {
+        if(!Application.isPlaying)
+        {
+            var cloth = Resources.Load<ClothingTexture>("Clothing/" + ItemRaws.Instance[item].id);
+            if(cloth == null)
+                cloth = Resources.Load<ClothingTexture>("Clothing/DEFAULT");
+            return cloth;
+        }
         if (clothingLookup == null)
             clothingLookup = new Dictionary<MatPairStruct, ClothingTexture>();
         if (!clothingLookup.ContainsKey(item))

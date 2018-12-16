@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using TokenLists;
 using UnityEngine;
 
@@ -28,13 +29,35 @@ public class ItemRaws : ScriptableObject, IReadOnlyDictionary<MatPairStruct, Mat
         }
     }
 
+    static List<MaterialDefinition> TranslateProceduralNames(List<MaterialDefinition> items)
+    {
+        foreach (var item in items)
+        {
+            if (item.mat_pair.mat_index < 0)
+                continue; //It's a top level category.
+            switch (item.mat_pair.mat_type)
+            {
+                case 13: //Instrument
+                    {
+                        var idParts = item.id.Split('/');
+                        idParts[idParts.Length-1] = Regex.Replace(idParts[idParts.Length - 1].Split(' ').Last(), @"\d", "");
+                        item.id = string.Join("/", idParts);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        return items;
+    }
+
     static ItemRaws _instance = null;
 
     public List<MaterialDefinition> ItemList
     {
         set
         {
-            _itemList = value;
+            _itemList = TranslateProceduralNames(value);
             PopulateLookupTable();
         }
         get
