@@ -201,6 +201,7 @@ public class DFRawReader : EditorWindow
                     {
                         if (GUILayout.Button(string.Format("{0} ({1})", caste.caste_id, caste.caste_name[0])))
                         {
+                            AssetDatabase.Refresh();
                             var creatureBase = new GameObject().AddComponent<CreatureBody>();
                             creatureBase.name = caste.caste_name[0];
                             creatureBase.race = creature;
@@ -277,6 +278,7 @@ public class DFRawReader : EditorWindow
                 }
                 if (GUILayout.Button("Place all races"))
                 {
+                    AssetDatabase.Refresh();
                     var watch = System.Diagnostics.Stopwatch.StartNew();
                     CreatureBody prevCreature = null;
                     foreach (var creature in filteredRaws)
@@ -309,6 +311,7 @@ public class DFRawReader : EditorWindow
                         continue;
                     if (GUILayout.Button(name))
                     {
+                        AssetDatabase.Refresh();
                         var creatureBase = new GameObject().AddComponent<CreatureBody>();
                         creatureBase.name = name;
                         creatureBase.race = creatureRaws[unit.race.mat_type];
@@ -322,6 +325,7 @@ public class DFRawReader : EditorWindow
                 EditorGUILayout.EndScrollView();
                 if (GUILayout.Button("Place all units"))
                 {
+                    AssetDatabase.Refresh();
                     var watch = System.Diagnostics.Stopwatch.StartNew();
                     CreatureBody prevCreature = null;
                     int creatureCount = 0;

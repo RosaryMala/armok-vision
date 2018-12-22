@@ -160,13 +160,13 @@ public class BodyDefinition : ScriptableObject
     {
         if (!casteParts.ContainsKey(race.creature_id))
             casteParts[race.creature_id] = new Dictionary<string, BodyDefinition>();
-        if(!casteParts[race.creature_id].ContainsKey(caste.caste_id))
+        if(!casteParts[race.creature_id].ContainsKey(caste.caste_id) || !Application.isPlaying)
             casteParts[race.creature_id][caste.caste_id] = Resources.Load<BodyDefinition>("BodyDefinitions/" + race.creature_id + "/" + caste.caste_id);
         return casteParts[race.creature_id][caste.caste_id];
     }
     static BodyDefinition GetBodyDefinition(CreatureRaw race)
     {
-        if (!raceParts.ContainsKey(race.creature_id))
+        if (!raceParts.ContainsKey(race.creature_id) || !Application.isPlaying)
             raceParts[race.creature_id] = Resources.Load<BodyDefinition>("BodyDefinitions/" + race.creature_id + "/Default");
         return raceParts[race.creature_id];
     }
@@ -177,7 +177,7 @@ public class BodyDefinition : ScriptableObject
             genderString = "_" + gender.ToString();
         if (!categoryParts.ContainsKey(category))
             categoryParts[category] = new Dictionary<Gender, BodyDefinition>();
-        if (!categoryParts[category].ContainsKey(gender))
+        if (!categoryParts[category].ContainsKey(gender) || !Application.isPlaying)
             categoryParts[category][gender] = Resources.Load<BodyDefinition>("BodyDefinitions/Default/" + category + genderString);
         return categoryParts[category][gender];
     }
