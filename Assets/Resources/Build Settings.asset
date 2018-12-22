@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -24,4 +25,4 @@ MonoBehaviour:
   launch_with_terminal: 0
   readme: Readme.txt
   needs_dfhack: 1
-  build_date: 2018-10-26
+  build_date: 2018-12-21
