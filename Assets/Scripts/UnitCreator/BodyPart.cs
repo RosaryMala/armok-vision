@@ -63,7 +63,7 @@ public class BodyPart : MonoBehaviour
 
     public List<ModValue> mods = new List<ModValue>();
     public List<Equip> inventory = new List<Equip>();
-    private MatPair heldItemType;
+    private MatPairStruct heldItemType = new MatPairStruct(-1,-1);
     private ItemModel heldItemModel;
 
     internal BodyPart FindChild(string category)
@@ -767,15 +767,15 @@ public class BodyPart : MonoBehaviour
                     Destroy(heldItemModel);
                 heldItemModel = ItemManager.InstantiateItem(heldItem.item.item, transform, false);
                 heldItemModel.transform.localRotation = Quaternion.Euler(0, 0, -90);
-            }
-            else
-            {
-                if (heldItemModel != null)
-                    Destroy(heldItemModel);
-                heldItemModel = null;
+                heldItemType = heldItem.item.item.type;
             }
         }
-        //Temporary fix until I get proper clothing meshes.
+        else
+        {
+            if (heldItemModel != null)
+                Destroy(heldItemModel);
+            heldItemModel = null;
+        }
         if (modeledPart != null)
         {
             modeledPart.ApplyEquipment(inventory);

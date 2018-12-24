@@ -54,8 +54,8 @@ public class CameraMovement : MonoBehaviour
             return;
 
         float moveZ = Input.GetAxisRaw("CamUpDown");
-        float moveX = Input.GetAxisRaw("CamLeftRight");
-        float moveY = Input.GetAxisRaw("CamFrontBack");
+        float moveX = Input.GetAxisRaw("Horizontal");
+        float moveY = Input.GetAxisRaw("Vertical");
 
 
         if (moveZ != 0.0f || moveY != 0.0f || moveX != 0.0f)

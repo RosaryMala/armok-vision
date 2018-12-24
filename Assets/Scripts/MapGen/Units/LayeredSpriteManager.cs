@@ -8,6 +8,10 @@ using UnityEngine;
 
 public class LayeredSpriteManager : MonoBehaviour
 {
+    [SerializeField]
+    private ProgressBar mainProgressBar;
+    [SerializeField]
+    private ProgressBar subProgressBar;
     class CasteDictionary : Dictionary<int, CreatureSpriteCollection>
     {
         new public bool TryGetValue(int caste, out CreatureSpriteCollection collection)
@@ -109,16 +113,22 @@ public class LayeredSpriteManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        ContentLoader.RegisterLoadCallback(LoadLayeredSpriteSets);
+        if(GameSettings.Instance.units.spriteUnits)
+            ContentLoader.RegisterLoadCallback(LoadLayeredSpriteSets);
     }
 
     private IEnumerator LoadLayeredSpriteSets()
     {
-        Debug.Log("Loading detailed creature sprites...");
+        if (mainProgressBar != null)
+            mainProgressBar.SetProgress("Loading detailed creature sprites...");
         var spriteSetList = Resources.LoadAll<CreatureSpriteCollection>("Creatures");
         var stopWatch = System.Diagnostics.Stopwatch.StartNew();
+        int spriteNum = 0;
         foreach (var spriteSet in spriteSetList)
         {
+            if (subProgressBar != null)
+                subProgressBar.SetProgress(spriteNum / (float)spriteSetList.Length, spriteSet.race+":"+spriteSet.caste+":"+spriteSet.profession+":"+spriteSet.special);
+            spriteNum++;
             //Correct equipment names with missing prefixes.
             foreach (var layer in spriteSet.spriteLayers)
             {

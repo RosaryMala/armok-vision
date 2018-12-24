@@ -14,9 +14,6 @@ public class AdventureMovement : MonoBehaviour
 
     float nexttick = 0;
     bool initialPress = true;
-    public Mesh movementMesh;
-    public Material movementMat;
-    public Material grabMat;
 
     public MovementOption grabPrefab;
     public MovementOption movePrefab;
@@ -178,7 +175,7 @@ public class AdventureMovement : MonoBehaviour
 
     void HandleMovementInput()
     {
-        Vector3 moveDir = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("CamUpDown"), Input.GetAxis("Vertical"));
+        Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("CamUpDown"), Input.GetAxisRaw("Vertical"));
         if (moveDir.sqrMagnitude > 0.1)
         {
             nexttick -= Time.unscaledDeltaTime;

@@ -13,7 +13,7 @@ public class ClothingTexture : ScriptableObject
 
     private List<Material> _matList = new List<Material>();
 
-    static bool gotMatIDs;
+    static bool gotMatIDs = false;
     static int mainTexID;
     static int maskTexID;
     static int bumpTexID;
@@ -30,7 +30,10 @@ public class ClothingTexture : ScriptableObject
     public Material GetMaterial(int layer)
     {
         if (!gotMatIDs)
+        {
             GetIDs();
+            gotMatIDs = true;
+        }
         if (layer >= _matList.Count)
         {
             _matList.AddRange(Enumerable.Repeat<Material>(null, layer - _matList.Count + 1));

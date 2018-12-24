@@ -23,15 +23,25 @@ public class ItemManager : MonoBehaviour
     static Dictionary<MatPairStruct, ItemModel> itemPrefabs = new Dictionary<MatPairStruct, ItemModel>();
 
     public ItemModel defaultItem;
+    [SerializeField]
+    private ProgressBar mainProgressBar;
+    [SerializeField]
+    private ProgressBar subProgressBar;
 
     IEnumerator LoadItems()
     {
         var stopWatch = System.Diagnostics.Stopwatch.StartNew();
         var itemList = ItemRaws.Instance.ItemList;
+        if (mainProgressBar != null)
+            mainProgressBar.SetProgress("Loading Item prefabs");
 
+        int itemNum = 0;
         foreach (var item in itemList)
         {
             string path = "Items/" + item.id;
+            if (subProgressBar != null)
+                subProgressBar.SetProgress(itemNum / (float)itemList.Count, item.id);
+            itemNum++;
             var loadedItem = Resources.Load<ItemModel>(path);
             if(loadedItem == null)
             {

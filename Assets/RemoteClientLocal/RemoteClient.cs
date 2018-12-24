@@ -24,63 +24,11 @@ distribution.
 
 using dfproto;
 using System;
-using System.Net;
-using System.Net.Sockets;
-using System.IO;
-using System.Text;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Collections.Generic;
 using System.Diagnostics;
 using ProtoBuf;
 
 namespace DFHack
 {
-    public enum DFHackReplyCode
-    {
-        RPC_REPLY_RESULT = -1,
-        RPC_REPLY_FAIL = -2,
-        RPC_REPLY_TEXT = -3,
-        RPC_REQUEST_QUIT = -4
-    }
-
-    class RPCHandshakeHeader
-    {
-        //public string magic;
-        //public int version;
-
-        public static string REQUEST_MAGIC = "DFHack?\n";
-        public static string RESPONSE_MAGIC = "DFHack!\n";
-    }
-
-    struct RPCMessageHeader
-    {
-        public const int MAX_MESSAGE_SIZE = 64 * 1048576;
-
-        public Int16 id;
-        public Int32 size;
-
-        public byte[] ConvertToBtyes()
-        {
-            List<byte> output = new List<byte>();
-            output.AddRange(BitConverter.GetBytes(id));
-            output.AddRange(new byte[2]);
-            output.AddRange(BitConverter.GetBytes(size));
-            return output.ToArray();
-        }
-        string BytesToString(byte[] input)
-        {
-            string output = "";
-            foreach (byte item in input)
-            {
-                if (output.Length > 0)
-                    output += ",";
-                output += item;
-            }
-            return output;
-        }
-    }
-
     public struct DFCoord
     {
         public int x, y, z;

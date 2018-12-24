@@ -323,7 +323,6 @@ public class CreatureBody : MonoBehaviour
     }
 
     public bool onGround;
-    public int inventoryCount = 0;
     private BodyPart upperBody;
     private BodyPart lowerBody;
 
@@ -352,7 +351,7 @@ public class CreatureBody : MonoBehaviour
         else if (unit.rider_id >= 0)
             transform.rotation = Quaternion.identity;
 
-        if (inventoryCount != unit.inventory.Count)
+        if (InventoryChanged(unit.inventory))
         {
             foreach (var part in spawnedParts)
             {
@@ -408,7 +407,32 @@ public class CreatureBody : MonoBehaviour
             {
                 part.Value.UpdateItems();
             }
-            inventoryCount = unit.inventory.Count;
+        }
+    }
+
+    InventoryMode[] inventoryModes = new InventoryMode[0];
+
+    private bool InventoryChanged(List<InventoryItem> inventory)
+    {
+        if(inventory.Count != inventoryModes.Length)
+        {
+            inventoryModes = new InventoryMode[inventory.Count];
+            for(int i = 0; i < inventory.Count; i++)
+            {
+                inventoryModes[i] = inventory[i].mode;
+            }
+            return true;
+        }
+        else
+        {
+            bool changed = false;
+            for (int i = 0; i < inventory.Count; i++)
+            {
+                if (inventoryModes[i] != inventory[i].mode)
+                    changed = true;
+                inventoryModes[i] = inventory[i].mode;
+            }
+            return changed;
         }
     }
 

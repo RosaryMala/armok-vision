@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#pragma warning disable 0649 //Variable not assigned.
 
 [ExecuteInEditMode]
 public class DecorationManager : MonoBehaviour
@@ -23,6 +24,10 @@ public class DecorationManager : MonoBehaviour
     public GameObject Spike;
     [SerializeField]
     private GameObject _shape;
+    [SerializeField]
+    private ProgressBar mainProgressBar;
+    [SerializeField]
+    private ProgressBar subProgressBar;
 
     Dictionary<int, GameObject> shapes = new Dictionary<int, GameObject>();
 
@@ -48,11 +53,6 @@ public class DecorationManager : MonoBehaviour
             Debug.Log("Loaded shapes.");
         }
         else ContentLoader.RegisterLoadCallback(LoadShapes);
-    }
-
-    private void Start()
-    {
-        ContentLoader.RegisterLoadCallback(LoadShapes);
     }
 
     private IEnumerator LoadShapes()

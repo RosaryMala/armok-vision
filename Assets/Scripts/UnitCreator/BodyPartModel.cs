@@ -83,6 +83,11 @@ public class BodyPartModel : MonoBehaviour
 
     internal void ApplyEquipment(List<BodyPart.Equip> inventory)
     {
+        //first of all disable any layers that are not used anymore, but not need to remove them entirely.
+        for(int i = inventory.Count; i < instantiatedClothingLayers.Count; i++)
+        {
+            instantiatedClothingLayers[i].gameObject.SetActive(false);
+        }
         for (int i = 0; i < inventory.Count; i++)
         {
             var item = inventory[i];

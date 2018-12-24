@@ -17,6 +17,10 @@ namespace Building
         public Mesh selectionMesh;
         public Material selectionMaterial;
         public Collider selectionFloor;
+        [SerializeField]
+        private ProgressBar mainProgressBar;
+        [SerializeField]
+        private ProgressBar subProgressBar;
 
         Dictionary<BuildingStruct, BuildingModel> buildingPrefabs = new Dictionary<BuildingStruct, BuildingModel>();
 
@@ -37,10 +41,15 @@ namespace Building
                 yield break;
             var stopWatch = System.Diagnostics.Stopwatch.StartNew();
             var buildingList = DFConnection.Instance.NetBuildingList.building_list;
-
+            if(mainProgressBar != null)
+                mainProgressBar.SetProgress("Loading building prefabs");
+            int buildingNum = 0;
             foreach (var building in buildingList)
             {
                 string path = "Buildings/" + building.id;
+                if (subProgressBar != null)
+                    subProgressBar.SetProgress(buildingNum / (float)buildingList.Count, building.id);
+                buildingNum++;
                 GameMap.BeginSample(path);
                 var loadedBuilding = Resources.Load<BuildingModel>(path);
                 if (loadedBuilding == null)

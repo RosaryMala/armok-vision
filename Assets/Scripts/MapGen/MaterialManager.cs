@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+#pragma warning disable 0649 //Variable not assigned.
 
 public class MaterialManager : MonoBehaviour
 {

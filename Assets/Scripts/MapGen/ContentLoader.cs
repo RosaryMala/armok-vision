@@ -51,6 +51,11 @@ public enum MatBasic
 
 public class ContentLoader : MonoBehaviour
 {
+    [SerializeField]
+    private ProgressBar mainProgressBar;
+    [SerializeField]
+    private ProgressBar subProgressBar;
+
     public void Start()
     {
         DFConnection.RegisterConnectionCallback(Initialize);
@@ -383,39 +388,27 @@ public class ContentLoader : MonoBehaviour
     IEnumerator LoadAssets()
     {
         System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+        mainProgressBar.gameObject.SetActive(true);
+        subProgressBar.gameObject.SetActive(true);
         watch.Start();
         if(GameMap.Instance != null)
             GameMap.Instance.ShowHelp();
         PatternTextureArray = Resources.Load<Texture2DArray>("patternTextures");
         PatternTextureDepth = PatternTextureArray.depth;
         Shader.SetGlobalTexture("_MatTexArray", PatternTextureArray);
-
-
+        float totalItems = LoadCallbacks.Count + 2; //Streaming assets, finalizations, and load callbacks.
+        float doneItems = 0;
+        mainProgressBar.SetProgress(doneItems / totalItems);
         yield return StartCoroutine(ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt"));
+        doneItems++;
+        mainProgressBar.SetProgress(doneItems / totalItems);
         yield return StartCoroutine(FinalizeTextureAtlases());
         Instance = this;
 
-        //FIXME: Put this in a better place.
-        List<Color32> colors = new List<Color32>();
-        //inorganic, non-metallic, non-transparent colors.
-        foreach (var item in MaterialRaws.Instance)
-        {
-            Color32 color = GetColor(item.Key);
-            color.a = 255;
-            colors.Add(color);
-        }
-
-        for (int i = colors.Count % 8; i < 8; i++)
-        {
-            colors.Add(Color.magenta);
-        }
-        var image = new Texture2D(8, colors.Count / 8);
-        image.SetPixels32(colors.ToArray());
-        image.Apply();
-        File.WriteAllBytes("palette.png", image.EncodeToPNG());
-
         foreach (var callback in LoadCallbacks)
         {
+            doneItems++;
+            mainProgressBar.SetProgress(doneItems / totalItems);
             if (callback != null)
                 yield return StartCoroutine(callback());
         }
@@ -428,12 +421,15 @@ public class ContentLoader : MonoBehaviour
         if (GameMap.Instance != null)
             GameMap.Instance.HideHelp();
         DFConnection.Instance.NeedNewBlocks = true;
+        mainProgressBar.gameObject.SetActive(false);
+        subProgressBar.gameObject.SetActive(false);
+
         yield break;
     }
 
     IEnumerator ParseContentIndexFile(string path)
     {
-        Debug.Log("Loading Index File: " + path);
+        mainProgressBar.SetProgress("Loading Index File: " + path);
 
         string line;
         List<string> fileArray = new List<string>(); //This allows us to parse the file in reverse.
@@ -450,6 +446,7 @@ public class ContentLoader : MonoBehaviour
         }
         file.Close();
         string filePath;
+
         for (int i = fileArray.Count - 1; i >= 0; i--)
         {
             try
@@ -460,6 +457,7 @@ public class ContentLoader : MonoBehaviour
             {
                 continue; //Todo: Make an error message here
             }
+            subProgressBar.SetProgress(1.0f - (i / (float)fileArray.Count));
             if (Directory.Exists(filePath)) //if it's a directory, just parse the contents
             {
                 yield return ParseContentDirectory(filePath);
@@ -489,7 +487,7 @@ public class ContentLoader : MonoBehaviour
 
     IEnumerator ParseContentXMLFile(string path)
     {
-            Debug.Log("Loading XML File: " + path);
+        subProgressBar.SetProgress("Loading XML File: " + path);
         XElement doc = XElement.Load(path, LoadOptions.SetBaseUri | LoadOptions.SetLineInfo);
         while (doc != null)
         {
@@ -540,7 +538,7 @@ public class ContentLoader : MonoBehaviour
 
     IEnumerator ParseContentRawFile(string path)
     {
-        Debug.Log("Loading Raw File: " + path);
+        mainProgressBar.SetProgress("Loading Raw File: " + path);
         var tokenList = RawLoader.SplitRawFileText(File.ReadAllText(path));
         var tokenEnumerator = tokenList.GetEnumerator();
         try
@@ -584,14 +582,15 @@ public class ContentLoader : MonoBehaviour
 
     IEnumerator FinalizeTextureAtlases()
     {
-        Debug.Log("Building shape textures...");
+        mainProgressBar.SetProgress("Compacting textures...");
+        subProgressBar.SetProgress(0.0f / 3.0f, "Building shape textures...");
         yield return null;
         shapeTextureStorage.CompileTextures("ShapeTexture", TextureFormat.RGBA32, new Color(1.0f, 0.5f, 0.0f, 0.5f), true);
-        Debug.Log("Building special textures...");
+        subProgressBar.SetProgress(1.0f / 3.0f, "Building special textures...");
         yield return null;
         specialTextureStorage.CompileTextures("SpecialTexture");
 
-        Debug.Log("Updating Material Manager...");
+        subProgressBar.SetProgress(2.0f / 3.0f, "Updating Material Manager...");
         yield return null;
 
         Vector4 arrayCount = new Vector4(PatternTextureDepth, shapeTextureStorage.Count, specialTextureStorage.Count, shapeTextureStorage.Count);
@@ -602,7 +601,8 @@ public class ContentLoader : MonoBehaviour
             MaterialManager.Instance.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
             MaterialManager.Instance.SetVector("_TexArrayCount", arrayCount);
         }
-        Debug.Log("Finalizing low detail creature sprites");
+        mainProgressBar.SetProgress("Finalizing low detail creature sprites");
+        SpriteManager.subProgressBar = subProgressBar;
         yield return StartCoroutine(SpriteManager.FinalizeSprites());
         //get rid of any un-used textures left over.
         Resources.UnloadUnusedAssets();

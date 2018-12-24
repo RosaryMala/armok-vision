@@ -23,6 +23,10 @@ public class ImageManager : MonoBehaviour
     const int indexWidth = 16;
 
     public Material engravingMaterial;
+    [SerializeField]
+    private ProgressBar mainProgressBar;
+    [SerializeField]
+    private ProgressBar subProgressBar;
 
     private void Awake()
     {
@@ -487,9 +491,15 @@ public class ImageManager : MonoBehaviour
     IEnumerator LoadImages()
     {
         var stopWatch = System.Diagnostics.Stopwatch.StartNew();
+        if (mainProgressBar != null)
+            mainProgressBar.SetProgress("Loading images");
 
         List<Texture2D> textureList = new List<Texture2D>();
-
+        int loadedCount = 0;
+        float loadTotal = 0;
+        if (DFConnection.Instance != null && DFConnection.Instance.CreatureRaws != null)
+            loadTotal += DFConnection.Instance.CreatureRaws.Count;
+        loadTotal += ItemRaws.Instance.ItemList.Count;
         //DFTiles:
         {
             int sourceWidth = dfSpriteMap.width / 16;
@@ -512,6 +522,9 @@ public class ImageManager : MonoBehaviour
             foreach (var creature in DFConnection.Instance.CreatureRaws)
             {
                 string token = creature.creature_id;
+                if (subProgressBar != null)
+                    subProgressBar.SetProgress(loadedCount / loadTotal, token);
+                loadedCount++;
                 Texture2D sprite = Resources.Load<Texture2D>("Images/Creatures/" + token);
                 if (sprite == null)
                 {
@@ -544,6 +557,9 @@ public class ImageManager : MonoBehaviour
         {
             string token = item.id;
             Texture2D sprite = Resources.Load<Texture2D>("Images/Items/" + token);
+            if (subProgressBar != null)
+                subProgressBar.SetProgress(loadedCount / loadTotal, token);
+            loadedCount++;
             if (sprite == null)
             {
                 //Try again without stupid numbers
