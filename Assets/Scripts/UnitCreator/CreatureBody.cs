@@ -255,24 +255,24 @@ public class CreatureBody : MonoBehaviour
 
         for (int modNum = 0; modNum < caste.color_modifiers.Count; modNum++)
         {
-            var mod = caste.color_modifiers[modNum];
+            var colorMod = caste.color_modifiers[modNum];
             //Temp fix until actual creatures are being read.
-            if (mod.start_date > 0)
+            if (colorMod.start_date > 0)
                 continue;
-            int seed = Mathf.Abs(GetInstanceID() * modNum) % mod.patterns.Count;
-            for (int i = 0; i < mod.body_part_id.Count; i++)
+            int seed = Mathf.Abs(GetInstanceID() * modNum) % colorMod.patterns.Count;
+            for (int i = 0; i < colorMod.body_part_id.Count; i++)
             {
-                var part = spawnedParts[mod.body_part_id[i]];
+                var part = spawnedParts[colorMod.body_part_id[i]];
                 if (part == null || !part.gameObject.activeSelf)
                     continue;
-                var layer = part.layerModels[mod.tissue_layer_id[i]];
+                var layer = part.layerModels[colorMod.tissue_layer_id[i]];
                 if (layer == null || !layer.gameObject.activeSelf)
                     continue;
                 ColorDefinition colorDef;
                 if (unit != null && unit.appearance != null)
-                    colorDef = mod.patterns[unit.appearance.colors[modNum]].colors[0];
+                    colorDef = colorMod.patterns[unit.appearance.colors[modNum]].colors[0];
                 else
-                    colorDef = mod.patterns[seed].colors[0];
+                    colorDef = colorMod.patterns[seed].colors[0];
                 var color = new Color32((byte)colorDef.red, (byte)colorDef.green, (byte)colorDef.blue, 128);
                 var index = ContentLoader.GetPatternIndex(race.tissues[layer.layerRaw.tissue_id].material);
                 propertyBlock.SetColor("_MatColor", color);
@@ -357,55 +357,67 @@ public class CreatureBody : MonoBehaviour
             {
                 part.Value.inventory.Clear();
             }
+            //Here we add pants first before shirts because otherwise the layering looks bad.
             foreach (var item in unit.inventory)
             {
-                if (spawnedParts.ContainsKey(item.body_part_id))
-                {
-                    var itemDef = ItemRaws.Instance[item.item.type];
-                    var material = MaterialRaws.Instance[item.item.material];
-                    //If it's any item at all, it'll at least be on the body part itself, either carried or worn.
-                    var SpecifiedPart = spawnedParts[item.body_part_id];
-                    SpecifiedPart.inventory.Add(new BodyPart.Equip(item, itemDef, material));
-                    //If it's worn, then coverage rules apply.
-                    if (item.mode == InventoryMode.Worn)
-                    {
-                        switch ((ItemType)item.item.type.mat_type)
-                        {
-                            case ItemType.Armor:
-                                {
-                                    if (upperBody != SpecifiedPart)
-                                        upperBody.inventory.Add(new BodyPart.Equip(item, itemDef, material));
-                                    if(lowerBody != SpecifiedPart)
-                                        lowerBody.inventory.Add(new BodyPart.Equip(item, itemDef, material));
-                                    if (itemDef.down_step > 0)
-                                        ApplyItemDown(lowerBody, item, itemDef, material, itemDef.down_step);
-                                    if (itemDef.up_step > 0)
-                                        ApplyItemDown(upperBody, item, itemDef, material, itemDef.up_step);
-                                }
-                                break;
-                            case ItemType.Gloves:
-                            case ItemType.Shoes:
-                            case ItemType.Shield:
-                                {
-                                    if (itemDef.down_step > 0)
-                                        ApplyItemDown(SpecifiedPart, item, itemDef, material, itemDef.down_step);
-                                    if (itemDef.up_step > 0)
-                                        ApplyItemUp(SpecifiedPart, item, itemDef, material, itemDef.up_step);
-                                }
-                                break;
-                            case ItemType.Pants:
-                                {
-                                    if (itemDef.down_step > 0)
-                                        ApplyItemDown(SpecifiedPart, item, itemDef, material, itemDef.down_step);
-                                }
-                                break;
-                        }
-                    }
-                }
+                if((ItemType)item.item.type.mat_type == ItemType.Pants)
+                AddInventoryItem(item);
+            }
+            foreach (var item in unit.inventory)
+            {
+                if ((ItemType)item.item.type.mat_type != ItemType.Pants)
+                    AddInventoryItem(item);
             }
             foreach (var part in spawnedParts)
             {
                 part.Value.UpdateItems();
+            }
+        }
+    }
+
+    private void AddInventoryItem(InventoryItem item)
+    {
+        if (spawnedParts.ContainsKey(item.body_part_id))
+        {
+            var itemDef = ItemRaws.Instance[item.item.type];
+            var material = MaterialRaws.Instance[item.item.material];
+            //If it's any item at all, it'll at least be on the body part itself, either carried or worn.
+            var SpecifiedPart = spawnedParts[item.body_part_id];
+            SpecifiedPart.inventory.Add(new BodyPart.Equip(item, itemDef, material));
+            //If it's worn, then coverage rules apply.
+            if (item.mode == InventoryMode.Worn)
+            {
+                switch ((ItemType)item.item.type.mat_type)
+                {
+                    case ItemType.Armor:
+                        {
+                            if (upperBody != SpecifiedPart)
+                                upperBody.inventory.Add(new BodyPart.Equip(item, itemDef, material));
+                            if (lowerBody != SpecifiedPart)
+                                lowerBody.inventory.Add(new BodyPart.Equip(item, itemDef, material));
+                            if (itemDef.down_step > 0)
+                                ApplyItemDown(lowerBody, item, itemDef, material, itemDef.down_step - 1);
+                            if (itemDef.up_step > 0)
+                                ApplyItemDown(upperBody, item, itemDef, material, itemDef.up_step - 1);
+                        }
+                        break;
+                    case ItemType.Gloves:
+                    case ItemType.Shoes:
+                    case ItemType.Shield:
+                        {
+                            if (itemDef.down_step > 0)
+                                ApplyItemDown(SpecifiedPart, item, itemDef, material, itemDef.down_step - 1);
+                            if (itemDef.up_step > 0)
+                                ApplyItemUp(SpecifiedPart, item, itemDef, material, itemDef.up_step - 1);
+                        }
+                        break;
+                    case ItemType.Pants:
+                        {
+                            if (itemDef.down_step > 0)
+                                ApplyItemDown(SpecifiedPart, item, itemDef, material, itemDef.down_step - 1);
+                        }
+                        break;
+                }
             }
         }
     }

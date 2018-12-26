@@ -278,6 +278,10 @@ public class BodyPart : MonoBehaviour
             BodyPartChildPlaceholder bodyPartChild = child.GetComponent<BodyPartChildPlaceholder>();
             if (bodyPartChild == null)
                 continue;
+            if(bodyPartChild.category == ":ATTACH:")
+            {
+                heldItemPoint = child;
+            }
             bool placedPart = false;
             foreach (var placement in placements)
             {
@@ -755,6 +759,8 @@ public class BodyPart : MonoBehaviour
             0.5f);
     }
 
+    Transform heldItemPoint = null;
+
     internal void UpdateItems()
     {
         var heldItemIndex = inventory.FindLastIndex(x => x.item.mode == InventoryMode.Hauled || x.item.mode == InventoryMode.Weapon);
@@ -765,8 +771,13 @@ public class BodyPart : MonoBehaviour
             {
                 if (heldItemModel != null)
                     Destroy(heldItemModel);
+                var point = heldItemPoint;
+                if (point == null)
+                    point = transform;
                 heldItemModel = ItemManager.InstantiateItem(heldItem.item.item, transform, false);
-                heldItemModel.transform.localRotation = Quaternion.Euler(0, 0, -90);
+                heldItemModel.transform.position = point.transform.position;
+                heldItemModel.transform.rotation = point.transform.rotation;
+                heldItemModel.transform.localScale *= 1.0f / transform.lossyScale.magnitude;
                 heldItemType = heldItem.item.item.type;
             }
         }

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: ITEM_ARMOR_MAIL_SHIRT
   m_EditorClassIdentifier: 
   isDress: 1
-  baseMat: {fileID: 2100000, guid: 43adb75f768df864084ba0ab73276fdb, type: 2}
+  baseMat: {fileID: 2100000, guid: 58ba9e216130eb54bb4966b9a9ef021a, type: 2}

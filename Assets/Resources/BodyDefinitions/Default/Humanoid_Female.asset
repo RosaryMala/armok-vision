@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -17,4 +18,9 @@ MonoBehaviour:
     categoryRegex: 0
     token: 
     tokenRegex: 0
-    model: {fileID: 114932486835907826, guid: 84fc432f68f515b4c8129df25f348d26, type: 2}
+    model: {fileID: 114932486835907826, guid: 84fc432f68f515b4c8129df25f348d26, type: 3}
+  - category: BODY_LOWER
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114953123022586616, guid: a0050af969e0ba0439165b4f79257a32, type: 3}

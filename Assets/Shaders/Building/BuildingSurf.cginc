@@ -18,7 +18,7 @@ fixed4 c = tex2D(_MainTex, texcoords.xy) * _Color;
 	fixed4 mask = tex2D(_DFMask, texcoords.xy);
 	fixed4 m = tex2D(_MetallicGlossMap, texcoords.xy);
 	albedo = lerp(albedo, c.rgb, mask.r);
-	albedo = lerp(albedo, c.rgb * matColor.rgb, max(mask.g - mask.r, 0));
+	albedo = lerp(albedo, c.rgb * dfTex.rgb * matColor.rgb, max(mask.g - mask.r, 0));
 	albedo = lerp(albedo, UNITY_ACCESS_INSTANCED_PROP(_JobColor_arr, _JobColor), 1 - mask.a);
 	alpha = lerp(c.a * alpha, c.a, mask.r);
 	#ifdef _METALLICGLOSSMAP

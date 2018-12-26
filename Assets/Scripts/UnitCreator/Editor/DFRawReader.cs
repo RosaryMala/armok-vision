@@ -94,23 +94,33 @@ public class DFRawReader : EditorWindow
 
     bool FitsFilter(UnitDefinition unit)
     {
-        if (string.IsNullOrEmpty(filter))
-            return true;
-        if (filterToken)
-            if (!creatureRaws[unit.race.mat_type].creature_id.ToUpper().Contains(filter.ToUpper()))
-                return false;
-        if (filterName)
-            if (!name.ToUpper().Contains(filter.ToUpper()))
-                return false;
-        if (filterParts)
+        if (!string.IsNullOrEmpty(filter))
         {
-            if (unit.inventory.Count == 0)
-                return false;
-            foreach (var item in unit.inventory)
+            if (filterToken)
+                if (!creatureRaws[unit.race.mat_type].creature_id.ToUpper().Contains(filter.ToUpper()))
+                    return false;
+            if (filterName)
+                if (!name.ToUpper().Contains(filter.ToUpper()))
+                    return false;
+            if (filterParts)
             {
-                if (!ItemRaws.Instance.ContainsKey(item.item.type))
-                    continue;
-                if (ItemRaws.Instance[item.item.type].id.ToUpper().Contains(filter.ToUpper()))
+                if (unit.inventory.Count == 0)
+                    return false;
+                foreach (var item in unit.inventory)
+                {
+                    if (!ItemRaws.Instance.ContainsKey(item.item.type))
+                        continue;
+                    if (ItemRaws.Instance[item.item.type].id.ToUpper().Contains(filter.ToUpper()))
+                        return true;
+                }
+                return false;
+            }
+        }
+        if (bodyCategoryFilter != CreatureBody.BodyCategory.None)
+        {
+            foreach (var caste in creatureRaws[unit.race.mat_type].caste)
+            {
+                if (bodyCategoryFilter == CreatureBody.FindBodyCategory(caste))
                     return true;
             }
             return false;
@@ -343,7 +353,7 @@ public class DFRawReader : EditorWindow
                         creatureBase.unit = unit;
                         creatureBase.MakeBody();
                         creatureBase.UpdateUnit(unit);
-                        creatureBase.transform.localRotation = Quaternion.identity;
+                        creatureBase.transform.localRotation = Quaternion.Euler(0,180,0);
                         if (prevCreature != null)
                         {
                             creatureBase.transform.position = new Vector3(prevCreature.transform.position.x + prevCreature.bounds.max.x - creatureBase.bounds.min.x, 0, 0);
