@@ -91,6 +91,19 @@ ModelImporter:
     100170: LB Cover
     100172: RLL001
     100174: RUL001
+    100176: Insect Wing
+    100178: Female Dress
+    100180: LB Female
+    100182: LB Female Clothing
+    100184: LB Female Hipoly
+    100186: UB Female Highpoly
+    100188: LB Cover Female
+    100190: RUL002
+    100192: Cape
+    100194: LB High
+    100196: UB High
+    100198: Right Shoe
+    100200: Toe001
     400000: Box001
     400002: Box002
     400004: HD
@@ -179,9 +192,23 @@ ModelImporter:
     400170: LB Cover
     400172: RLL001
     400174: RUL001
+    400176: Insect Wing
+    400178: Female Dress
+    400180: LB Female
+    400182: LB Female Clothing
+    400184: LB Female Hipoly
+    400186: UB Female Highpoly
+    400188: LB Cover Female
+    400190: RUL002
+    400192: Cape
+    400194: LB High
+    400196: UB High
+    400198: Right Shoe
+    400200: Toe001
     2100000: 'Material #25'
     2100002: No Name
     2100004: 03 - Default
+    2100006: Unwrap Texture Checker Material
     2300000: Box001
     2300002: Box002
     2300004: HD
@@ -269,6 +296,19 @@ ModelImporter:
     2300168: LB Cover
     2300170: RLL001
     2300172: RUL001
+    2300174: Insect Wing
+    2300176: Female Dress
+    2300178: LB Female
+    2300180: LB Female Clothing
+    2300182: LB Female Hipoly
+    2300184: UB Female Highpoly
+    2300186: LB Cover Female
+    2300188: RUL002
+    2300190: Cape
+    2300192: LB High
+    2300194: UB High
+    2300196: Right Shoe
+    2300198: Toe001
     3300000: Box001
     3300002: Box002
     3300004: HD
@@ -356,6 +396,19 @@ ModelImporter:
     3300168: LB Cover
     3300170: RLL001
     3300172: RUL001
+    3300174: Insect Wing
+    3300176: Female Dress
+    3300178: LB Female
+    3300180: LB Female Clothing
+    3300182: LB Female Hipoly
+    3300184: UB Female Highpoly
+    3300186: LB Cover Female
+    3300188: RUL002
+    3300190: Cape
+    3300192: LB High
+    3300194: UB High
+    3300196: Right Shoe
+    3300198: Toe001
     4300000: Plane001
     4300002: Plane002
     4300004: HD
@@ -440,6 +493,19 @@ ModelImporter:
     4300162: LB Cover
     4300164: Dress Top
     4300166: Female Top Clothing
+    4300168: Insect Wing
+    4300170: Female Dress
+    4300172: LB Female
+    4300174: LB Female Hipoly
+    4300176: LB Female Clothing
+    4300178: UB Female Highpoly
+    4300180: LB Cover Female
+    4300182: RUL002
+    4300184: Cape
+    4300186: LB High
+    4300188: UB High
+    4300190: Right Shoe
+    4300192: Toe001
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -474,6 +540,7 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -498,6 +565,9 @@ ModelImporter:
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
