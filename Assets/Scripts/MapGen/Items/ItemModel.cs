@@ -25,7 +25,7 @@ public class ItemModel : MonoBehaviour, IClickable
 
     bool phantom = false;
 
-    public void UpdateMaterial(Item itemInput)
+    public void UpdateMaterial(Item itemInput, UnitDefinition unit = null)
     {
         originalItem = itemInput;
         if (phantom)
@@ -58,7 +58,9 @@ public class ItemModel : MonoBehaviour, IClickable
         MaterialPropertyBlock prop = new MaterialPropertyBlock();
         prop.SetColor("_MatColor", partColor);
         prop.SetFloat("_MatIndex", textureIndex);
-        if(ImageManager.Instance != null)
+        if(unit != null)
+            prop.SetColor("_JobColor", unit.profession_color);
+        if (ImageManager.Instance != null)
             prop.SetFloat("_SpriteIndex", ImageManager.Instance.GetItemTile(itemInput.type));
         meshRenderer.SetPropertyBlock(prop);
 

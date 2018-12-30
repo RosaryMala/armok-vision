@@ -761,7 +761,7 @@ public class BodyPart : MonoBehaviour
 
     Transform heldItemPoint = null;
 
-    internal void UpdateItems()
+    internal void UpdateItems(UnitDefinition unit)
     {
         var heldItemIndex = inventory.FindLastIndex(x => x.item.mode == InventoryMode.Hauled || x.item.mode == InventoryMode.Weapon);
         if(heldItemIndex >= 0)
@@ -789,7 +789,7 @@ public class BodyPart : MonoBehaviour
         }
         if (modeledPart != null)
         {
-            modeledPart.ApplyEquipment(inventory);
+            modeledPart.ApplyEquipment(inventory, unit);
         }
         else
             foreach (var item in inventory)
@@ -803,6 +803,7 @@ public class BodyPart : MonoBehaviour
                 var index = ContentLoader.GetPatternIndex(item.item.item.material);
                 propertyBlock.SetColor("_MatColor", color);
                 propertyBlock.SetFloat("_MatIndex", index);
+                propertyBlock.SetColor("_JobColor", unit.profession_color);
                 foreach (var layerModel in layerModels)
                 {
                     if (layerModel == null)

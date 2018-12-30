@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Breastplate
   m_Shader: {fileID: 4800000, guid: c6d19faea6537fe45a9d3aba14cf976d, type: 3}
-  m_ShaderKeywords: _TEXTURE_MASK
+  m_ShaderKeywords: _NORMALMAP _TEXTURE_MASK
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -20,11 +20,11 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BumpMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 21dc23714bb94ec4fa911da28cbafdab, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DFMask:
-        m_Texture: {fileID: 2800000, guid: f94dec1cbf971f64c9cfcf9b1468f43e, type: 3}
+        m_Texture: {fileID: 2800000, guid: 31dea5c4a695ca84e8506a1de4fe2dbd, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -44,7 +44,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 3dc9fcef5d412e5439c4b221dfdc1e40, type: 3}
+        m_Texture: {fileID: 2800000, guid: dd43c1d597b2a6641ab5622181012b1e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MatTexArray:

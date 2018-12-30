@@ -370,7 +370,7 @@ public class CreatureBody : MonoBehaviour
             }
             foreach (var part in spawnedParts)
             {
-                part.Value.UpdateItems();
+                part.Value.UpdateItems(unit);
             }
         }
     }

@@ -81,7 +81,7 @@ public class BodyPartModel : MonoBehaviour
 
     List<ItemModel> instantiatedClothingLayers = new List<ItemModel>();
 
-    internal void ApplyEquipment(List<BodyPart.Equip> inventory)
+    internal void ApplyEquipment(List<BodyPart.Equip> inventory, RemoteFortressReader.UnitDefinition unit)
     {
         //first of all disable any layers that are not used anymore, but not need to remove them entirely.
         for(int i = inventory.Count; i < instantiatedClothingLayers.Count; i++)
@@ -101,7 +101,7 @@ public class BodyPartModel : MonoBehaviour
             {
                 var model = specialEquipment[item.item.item.type];
                 model.gameObject.SetActive(true);
-                model.UpdateMaterial(item.item.item);
+                model.UpdateMaterial(item.item.item, unit);
             }
             else if (item.item.mode == RemoteFortressReader.InventoryMode.Worn)
             {
@@ -140,7 +140,7 @@ public class BodyPartModel : MonoBehaviour
                 if (instantiatedClothingLayers[i] == null)
                     continue;
                 instantiatedClothingLayers[i].gameObject.SetActive(true);
-                instantiatedClothingLayers[i].UpdateMaterial(item.item.item);
+                instantiatedClothingLayers[i].UpdateMaterial(item.item.item, unit);
                 if (Application.isEditor)
                     instantiatedClothingLayers[i].name = item.itemDef.id;
             }

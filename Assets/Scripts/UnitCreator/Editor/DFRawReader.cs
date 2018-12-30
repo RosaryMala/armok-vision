@@ -217,6 +217,7 @@ public class DFRawReader : EditorWindow
                             creatureBase.race = creature;
                             creatureBase.caste = caste;
                             creatureBase.MakeBody();
+                            creatureBase.transform.localRotation = Quaternion.Euler(0, 180, 0);
                             Selection.SetActiveObjectWithContext(creatureBase, null);
                         }
                     }
@@ -302,6 +303,7 @@ public class DFRawReader : EditorWindow
                         {
                             creatureBase.transform.position = new Vector3(prevCreature.transform.position.x + prevCreature.bounds.max.x - creatureBase.bounds.min.x, 0, 0);
                         }
+                        creatureBase.transform.localRotation = Quaternion.Euler(0, 180, 0);
                         prevCreature = creatureBase;
                     }
                     watch.Stop();
@@ -329,6 +331,7 @@ public class DFRawReader : EditorWindow
                         creatureBase.unit = unit;
                         creatureBase.MakeBody();
                         creatureBase.UpdateUnit(unit);
+                        creatureBase.transform.localRotation = Quaternion.Euler(0, 180, 0);
                         Selection.SetActiveObjectWithContext(creatureBase, null);
                     }
                 }
