@@ -17,12 +17,18 @@ public class AdventureMovement : MonoBehaviour
 
     public MovementOption grabPrefab;
     public MovementOption movePrefab;
+    public PanelSlider optionsPanel;
 
     List<MovementOption> movementChoices = new List<MovementOption>();
 
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetButtonDown("Cancel"))
+        {
+            optionsPanel.Slide();
+        }
+
         HandleMovementInput();
         DisplayMovementOptions();
     }

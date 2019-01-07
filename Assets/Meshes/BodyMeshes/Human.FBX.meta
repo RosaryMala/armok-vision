@@ -104,6 +104,8 @@ ModelImporter:
     100196: UB High
     100198: Right Shoe
     100200: Toe001
+    100202: Talon
+    100204: Toenail
     400000: Box001
     400002: Box002
     400004: HD
@@ -205,6 +207,8 @@ ModelImporter:
     400196: UB High
     400198: Right Shoe
     400200: Toe001
+    400202: Talon
+    400204: Toenail
     2100000: 'Material #25'
     2100002: No Name
     2100004: 03 - Default
@@ -309,6 +313,8 @@ ModelImporter:
     2300194: UB High
     2300196: Right Shoe
     2300198: Toe001
+    2300200: Talon
+    2300202: Toenail
     3300000: Box001
     3300002: Box002
     3300004: HD
@@ -409,6 +415,8 @@ ModelImporter:
     3300194: UB High
     3300196: Right Shoe
     3300198: Toe001
+    3300200: Talon
+    3300202: Toenail
     4300000: Plane001
     4300002: Plane002
     4300004: HD
@@ -506,6 +514,8 @@ ModelImporter:
     4300188: UB High
     4300190: Right Shoe
     4300192: Toe001
+    4300194: Talon
+    4300196: Toenail
   externalObjects: {}
   materials:
     importMaterials: 1

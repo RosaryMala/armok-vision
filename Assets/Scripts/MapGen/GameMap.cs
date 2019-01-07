@@ -37,7 +37,7 @@ public class GameMap : MonoBehaviour
 
     public WorldMapMaker worldMap;
 
-    public RectTransform optionsPanel;
+    public PanelSlider optionsPanel;
 
     // Parameters managing the currently visible area of the map.
     // Tracking:
@@ -349,9 +349,9 @@ public class GameMap : MonoBehaviour
             }
             if (Input.GetButtonDown("Cancel"))
             {
-                optionsPanel.gameObject.SetActive(!optionsPanel.gameObject.activeSelf);
+                optionsPanel.Slide();
             }
-            if(Input.GetButtonDown("ToggleMap"))
+            if (Input.GetButtonDown("ToggleMap"))
             {
                 mapWindow.SetActive(!mapWindow.activeSelf);
                 mapCamera.SetActive(!mapCamera.activeSelf);
@@ -376,12 +376,12 @@ public class GameMap : MonoBehaviour
         Shader.SetGlobalVector("_ViewMin", DFtoUnityBottomCorner(new DFCoord(
             Mathf.Max((PosXBlock - GameSettings.Instance.rendering.drawRangeSide + 1) * blockSize, 0),
             Mathf.Min((PosYBlock + GameSettings.Instance.rendering.drawRangeSide) * blockSize, mapSize.y * 16),
-            Mathf.Max(PosZ - GameSettings.Instance.rendering.drawRangeDown, 0)
+            -9999
         )) + new Vector3(0, 0, GameMap.tileWidth));
         Shader.SetGlobalVector("_ViewMax", DFtoUnityBottomCorner(new DFCoord(
             Mathf.Min((PosXBlock + GameSettings.Instance.rendering.drawRangeSide) * blockSize, mapSize.x * 16),
             Mathf.Max((PosYBlock - GameSettings.Instance.rendering.drawRangeSide + 1) * blockSize, 0),
-            Mathf.Min(PosZ + (firstPerson ? GameSettings.Instance.rendering.drawRangeUp : 0), mapSize.z)
+            9999
         )) + new Vector3(0, 0, GameMap.tileWidth));
 
         for (int z = 0; z < mapMeshes.GetLength(2); z++)

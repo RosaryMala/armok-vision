@@ -36,13 +36,19 @@ public class CreatureManager : MonoBehaviour
 
     bool ShouldRender(int x, int y, int z, MapDataStore.Tile tile)
     {
-        if (!(z < (GameMap.Instance.firstPerson ? GameMap.Instance.PosZ + GameSettings.Instance.rendering.drawRangeUp : GameMap.Instance.PosZ))
-                        && z >= (GameMap.Instance.PosZ - GameSettings.Instance.rendering.drawRangeDown)
-                        && (x / GameMap.blockSize > (GameMap.Instance.PosXBlock - GameSettings.Instance.rendering.drawRangeSide))
-                        && (x / GameMap.blockSize < (GameMap.Instance.PosXBlock + GameSettings.Instance.rendering.drawRangeSide))
-                        && (y / GameMap.blockSize > (GameMap.Instance.PosYBlock - GameSettings.Instance.rendering.drawRangeSide))
-                        && (y / GameMap.blockSize < (GameMap.Instance.PosYBlock + GameSettings.Instance.rendering.drawRangeSide))
-                        && (tile != null ? !tile.Hidden : true))
+        if (z >= (GameMap.Instance.firstPerson ? GameMap.Instance.PosZ + GameSettings.Instance.rendering.drawRangeUp : GameMap.Instance.PosZ))
+            return false;
+        if (z < GameMap.Instance.PosZ - GameSettings.Instance.rendering.drawRangeDown)
+            return false;
+        if (x / GameMap.blockSize < (GameMap.Instance.PosXBlock - GameSettings.Instance.rendering.drawRangeSide))
+            return false;
+        if (x / GameMap.blockSize > (GameMap.Instance.PosXBlock + GameSettings.Instance.rendering.drawRangeSide))
+            return false;
+        if (y / GameMap.blockSize < (GameMap.Instance.PosYBlock - GameSettings.Instance.rendering.drawRangeSide))
+            return false;
+        if (y / GameMap.blockSize > (GameMap.Instance.PosYBlock + GameSettings.Instance.rendering.drawRangeSide))
+            return false;
+        if (tile != null && tile.Hidden)
             return false;
         if ((Camera.main.transform.position - GameMap.DFtoUnityCoord(x, y, z)).sqrMagnitude > GameSettings.Instance.rendering.creatureDrawDistance * GameSettings.Instance.rendering.creatureDrawDistance)
             return false;
