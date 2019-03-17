@@ -13,45 +13,7 @@ MonoBehaviour:
   m_Name: Global Post Process Profile
   m_EditorClassIdentifier: 
   settings:
-  - {fileID: 114099805036959120}
   - {fileID: 114866549222172816}
---- !u!114 &114099805036959120
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a34fa72bd4185749832024e9c8010bf, type: 3}
-  m_Name: ScreenSpaceReflections
-  m_EditorClassIdentifier: 
-  active: 1
-  enabled:
-    overrideState: 1
-    value: 1
-  preset:
-    overrideState: 0
-    value: 2
-  maximumIterationCount:
-    overrideState: 0
-    value: 16
-  resolution:
-    overrideState: 0
-    value: 0
-  thickness:
-    overrideState: 0
-    value: 8
-  maximumMarchDistance:
-    overrideState: 0
-    value: 100
-  distanceFade:
-    overrideState: 0
-    value: 0.5
-  vignette:
-    overrideState: 0
-    value: 0.5
 --- !u!114 &114866549222172816
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -72,7 +34,7 @@ MonoBehaviour:
     overrideState: 0
     value: 1
   intensity:
-    overrideState: 1
+    overrideState: 0
     value: 1
   color:
     overrideState: 0

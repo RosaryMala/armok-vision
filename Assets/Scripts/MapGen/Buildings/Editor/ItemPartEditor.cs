@@ -27,6 +27,23 @@ namespace Building
                     serial.ApplyModifiedProperties();
                 }
             }
+            if (GUILayout.Button("Apply Random"))
+            {
+                List<int> shuffle = new List<int>(targets.Length);
+                for (int i = 0; i < targets.Length; i++)
+                {
+                    shuffle.Add(i);
+                }
+                shuffle.Shuffle();
+                for (int i = 0; i < targets.Length; i++)
+                {
+                    var serial = new SerializedObject(targets[i]);
+                    serial.Update();
+                    var index = serial.FindProperty("itemIndex");
+                    index.intValue = shuffle[i] + startIndex;
+                    serial.ApplyModifiedProperties();
+                }
+            }
             serializedObject.ApplyModifiedProperties();
         }
     }
