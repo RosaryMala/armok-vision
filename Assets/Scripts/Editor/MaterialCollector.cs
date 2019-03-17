@@ -34,6 +34,7 @@ namespace MaterialStore
             int normalID = Shader.PropertyToID("_Normal");
             int occlusionID = Shader.PropertyToID("_Occlusion");
             int heightID = Shader.PropertyToID("_Height");
+            int useDFColorID = Shader.PropertyToID("_useDFColor");
 
             MaterialCollection matCollection = ScriptableObject.CreateInstance<MaterialCollection>();
 
@@ -66,7 +67,8 @@ namespace MaterialStore
                     (Texture2D)mat.GetTexture(specularID),
                     (Texture2D)mat.GetTexture(normalID),
                     (Texture2D)mat.GetTexture(occlusionID),
-                    (Texture2D)mat.GetTexture(heightID)));
+                    (Texture2D)mat.GetTexture(heightID),
+                    mat.GetInt(useDFColorID) != 0));
             }
 
             Texture2DArray patternArray = new Texture2DArray(256, 256, albedoList.Count, TextureFormat.ARGB32, true, false);
@@ -135,7 +137,7 @@ namespace MaterialStore
             MaterialCollection.Instance.Refresh();
         }
 
-        private static MaterialTextureSet CreateTextureSet(MaterialTag materialTag, Color color, Texture2D albedo = null, Texture2D specular = null, Texture2D normal = null, Texture2D occlusion = null, Texture2D alpha = null)
+        private static MaterialTextureSet CreateTextureSet(MaterialTag materialTag, Color color, Texture2D albedo = null, Texture2D specular = null, Texture2D normal = null, Texture2D occlusion = null, Texture2D alpha = null, bool useDFColor = false)
         {
             if (albedo == null)
                 albedo = defaultAlbedo;
@@ -152,6 +154,7 @@ namespace MaterialStore
 
             set.tag = materialTag;
             set.color = color;
+            set.useDFColor = useDFColor;
 
             string patternID = albedo.GetInstanceID().ToString() + "," + specular.GetInstanceID().ToString();
 

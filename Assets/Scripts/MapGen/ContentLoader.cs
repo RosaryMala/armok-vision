@@ -130,7 +130,8 @@ public class ContentLoader : MonoBehaviour
         MaterialTextureSet textureSet;
         if (MaterialCollection.Instance.TryGetValue(mat, out textureSet))
         {
-            return textureSet.color;
+            if(!textureSet.useDFColor)
+                return textureSet.color;
         }
         if (!MaterialRaws.Instance.ContainsKey(mat))
             return new Color32(128, 128, 128, 128);

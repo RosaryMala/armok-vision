@@ -48,7 +48,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MatTexArray:
-        m_Texture: {fileID: 18700000, guid: 1fa9dbefb2f009042ac8ac511ea8bc4e, type: 2}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -87,4 +87,5 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _JobColor: {r: 1, g: 1, b: 1, a: 1}
     - _MatColor: {r: 1, g: 1, b: 1, a: 1}
+    - _MatTexTile: {r: 4, g: 4, b: 0, a: 0}
     - _SpecColor: {r: 0.22091627, g: 0.22091627, b: 0.22091627, a: 0.7790837}
