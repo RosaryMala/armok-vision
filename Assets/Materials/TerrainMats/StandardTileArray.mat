@@ -4,10 +4,11 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: StandardTileArray
-  m_Shader: {fileID: 4800000, guid: f88bd4b0ecea646439a5a808e046fab4, type: 3}
+  m_Shader: {fileID: 4800000, guid: e4f33ade1689fba4a9c205c69be546c0, type: 3}
   m_ShaderKeywords: _NORMALMAP
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 0

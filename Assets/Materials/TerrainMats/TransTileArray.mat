@@ -4,10 +4,11 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: TransTileArray
-  m_Shader: {fileID: 4800000, guid: f4b23652fd7f97d4baf2e089ec7f98e0, type: 3}
+  m_Shader: {fileID: 4800000, guid: de41e61ea4273de4d8792dfc8c8f48a6, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 0

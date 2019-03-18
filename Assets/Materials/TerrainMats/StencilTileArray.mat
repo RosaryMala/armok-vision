@@ -4,10 +4,11 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: StencilTileArray
-  m_Shader: {fileID: 4800000, guid: 89168cec8a877544983d6052eb125da4, type: 3}
+  m_Shader: {fileID: 4800000, guid: 3574908a7439cba488d60a66ed89a6eb, type: 3}
   m_ShaderKeywords: DIFFCUBE_ON LUX_AO_OFF SPECCUBE_ON _ALPHATEST_ON _NORMALMAP
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 0
