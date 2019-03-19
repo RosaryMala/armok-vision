@@ -130,7 +130,8 @@ public class ContentLoader : MonoBehaviour
         MaterialTextureSet textureSet;
         if (MaterialCollection.Instance.TryGetValue(mat, out textureSet))
         {
-            return textureSet.color;
+            if(!textureSet.useDFColor)
+                return textureSet.color;
         }
         if (!MaterialRaws.Instance.ContainsKey(mat))
             return new Color32(128, 128, 128, 128);
@@ -278,30 +279,17 @@ public class ContentLoader : MonoBehaviour
             return shapeTextureStorage.getUVTransform(DefaultShapeTexIndex);
         }
     }
-    public float DefaultShapeTexArrayIndex
-    {
-        get
-        {
-            return (float)DefaultShapeTexIndex / shapeTextureStorage.Count;
-        }
-    }
 
-    int defaultSpecialTexIndex;
+    public int DefaultSpecialTexIndex { get; private set; }
 
     public Matrix4x4 DefaultSpecialTexTransform
     {
         get
         {
-            return specialTextureStorage.getUVTransform(defaultSpecialTexIndex);
+            return specialTextureStorage.getUVTransform(DefaultSpecialTexIndex);
         }
     }
-    public float DefaultSpecialTexArrayIndex
-    {
-        get
-        {
-            return (float)defaultSpecialTexIndex / specialTextureStorage.Count;
-        }
-    }
+
 
     public TileConfiguration<NormalContent> ShapeTextureConfiguration { get; private set; }
     public TileConfiguration<MeshContent> TileMeshConfiguration { get; private set; }
@@ -331,7 +319,7 @@ public class ContentLoader : MonoBehaviour
         shapeTextureStorage.AddTextureArray(Resources.Load<Texture2DArray>("shapeTextures"));
 
         DefaultShapeTexIndex = shapeTextureStorage.AddTexture(CreateFlatTexture(new Color(1f, 0.5f, 1f, 0.5f)));
-        defaultSpecialTexIndex = specialTextureStorage.AddTexture(Texture2D.blackTexture);
+        DefaultSpecialTexIndex = specialTextureStorage.AddTexture(Texture2D.blackTexture);
     }
 
     public static Texture2D CreateFlatTexture(Color color)

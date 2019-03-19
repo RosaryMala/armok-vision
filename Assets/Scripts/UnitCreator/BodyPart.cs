@@ -369,6 +369,9 @@ public class BodyPart : MonoBehaviour
                 case "FOOT":
                 case "FOOT_REAR":
                 case "FOOT_FRONT":
+                case "HOOF":
+                case "HOOF_REAR":
+                case "HOOF_FRONT":
                     childPart.transform.localPosition = new Vector3(bounds.center.x, bounds.min.y, bounds.center.z);
                     break;
                 case "TOE":
@@ -1026,6 +1029,8 @@ public class BodyPart : MonoBehaviour
                 placeholder.transform.localPosition = new Vector3(0, 0, placeholder.transform.localScale.z / 2);
                 break;
             case "HOOF":
+            case "HOOF_FRONT":
+            case "HOOF_REAR":
                 placeholder.transform.localScale = MultiplyScales(body.bodyScale, Vector3.one);
                 placeholder.FixVolume();
                 placeholder.transform.localPosition = new Vector3(0, -placeholder.transform.localScale.y / 2, 0);

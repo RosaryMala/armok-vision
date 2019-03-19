@@ -9,6 +9,7 @@ Shader "Custom/MaterialStore" {
         _Occlusion("occlusion", 2D) = "white" {}
         _Height("height/alpha", 2D) = "white" {}
         _HeightPreview("height preview cutoff", Range(0,1)) = 0
+        [MaterialToggle] _useDFColor("Use DF Color", Float) = 0
     }
 	SubShader {
         Tags{ 

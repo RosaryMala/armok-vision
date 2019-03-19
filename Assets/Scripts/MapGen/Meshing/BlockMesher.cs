@@ -498,16 +498,16 @@ abstract class BlockMesher {
             buffer.meshData = meshContent.MeshData[layer];
             buffer.transform = Matrix4x4.TRS(pos, meshContent.GetRotation(tile), Vector3.one);
 
-            index1.x = ContentLoader.GetPatternIndex(tile.DesignationMat) / ContentLoader.Instance.PatternTextureDepth;
+            index1.x = ContentLoader.GetPatternIndex(tile.DesignationMat);
             buffer.color = ContentLoader.GetColor(tile.DesignationMat);
             if (meshContent.ShapeTexture != null)
-                index1.y = meshContent.ShapeTexture.ArrayIndex;
+                index1.y = meshContent.ShapeTexture.StorageIndex;
             else
-                index1.y = ContentLoader.Instance.DefaultShapeTexArrayIndex;
+                index1.y = ContentLoader.Instance.DefaultShapeTexIndex;
             if (meshContent.SpecialTexture != null)
                 index2.x = meshContent.SpecialTexture.ArrayIndex;
             else
-                index2.x = ContentLoader.Instance.DefaultSpecialTexArrayIndex;
+                index2.x = ContentLoader.Instance.DefaultSpecialTexIndex;
 
             buffer.uv1Transform = Matrix4x4.identity;
             buffer.uv2Force = index1;
@@ -649,16 +649,16 @@ abstract class BlockMesher {
             if (ContentLoader.Instance.ShapeTextureConfiguration.GetValue(tile, layer, out tileTexContent))
             {
                 shapeTextTransform = tileTexContent.UVTransform;
-                index1.y = tileTexContent.ArrayIndex;
+                index1.y = tileTexContent.StorageIndex;
             }
         }
         else
         {
             shapeTextTransform = meshContent.ShapeTexture.UVTransform;
-            index1.y = meshContent.ShapeTexture.ArrayIndex;
+            index1.y = meshContent.ShapeTexture.StorageIndex;
         }
 
-        index1.x = matPatternIndex / ContentLoader.Instance.PatternTextureDepth;
+        index1.x = matPatternIndex;
 
 
 
@@ -670,7 +670,7 @@ abstract class BlockMesher {
         else
         {
             specialTexTransform = ContentLoader.Instance.DefaultSpecialTexTransform;
-            index2.x = ContentLoader.Instance.DefaultSpecialTexArrayIndex;
+            index2.x = ContentLoader.Instance.DefaultSpecialTexIndex;
         }
 
         buffer.color = matColor;
