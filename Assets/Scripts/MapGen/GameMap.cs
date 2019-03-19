@@ -246,11 +246,11 @@ public class GameMap : MonoBehaviour
             if (GameSettings.Instance.debug.saveBuildingList)
                 SaveBuildingList();
         }
-        if (DFConnection.Instance.CreatureRaws != null)
+        if (CreatureRaws.Instance != null)
         {
             if (creatures == null)
                 creatures = new Dictionary<MatPairStruct, MaterialDefinition>();
-            foreach (CreatureRaw creatureRaw in DFConnection.Instance.CreatureRaws)
+            foreach (CreatureRaw creatureRaw in CreatureRaws.Instance)
             {
                 foreach (var caste in creatureRaw.caste)
                 {
@@ -1409,8 +1409,8 @@ public class GameMap : MonoBehaviour
                     UnitFlags2 flags2 = (UnitFlags2)foundUnit.flags2;
 
                     CreatureRaw creatureRaw = null;
-                    if (DFConnection.Instance.CreatureRaws != null)
-                        creatureRaw = DFConnection.Instance.CreatureRaws[foundUnit.race.mat_type];
+                    if (CreatureRaws.Instance != null)
+                        creatureRaw = CreatureRaws.Instance[foundUnit.race.mat_type];
 
                     if (creatureRaw != null)
                     {

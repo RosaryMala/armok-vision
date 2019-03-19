@@ -108,8 +108,8 @@ public class ImageManager : MonoBehaviour
                     return CreatureSpriteMap[element.creature_item.mat_type];
                 else
                 {
-                    if (element.creature_item.mat_type >= 0 && element.creature_item.mat_type < DFConnection.Instance.CreatureRaws.Count)
-                        return DFConnection.Instance.CreatureRaws[element.creature_item.mat_type].creature_tile;
+                    if (element.creature_item.mat_type >= 0 && element.creature_item.mat_type < CreatureRaws.Instance.Count)
+                        return CreatureRaws.Instance[element.creature_item.mat_type].creature_tile;
                     else
                         return 7;
                 }
@@ -497,8 +497,8 @@ public class ImageManager : MonoBehaviour
         List<Texture2D> textureList = new List<Texture2D>();
         int loadedCount = 0;
         float loadTotal = 0;
-        if (DFConnection.Instance != null && DFConnection.Instance.CreatureRaws != null)
-            loadTotal += DFConnection.Instance.CreatureRaws.Count;
+        if (DFConnection.Instance != null && CreatureRaws.Instance != null)
+            loadTotal += CreatureRaws.Instance.Count;
         loadTotal += ItemRaws.Instance.ItemList.Count;
         //DFTiles:
         {
@@ -518,8 +518,8 @@ public class ImageManager : MonoBehaviour
         }
         //IMAGE_CREATURE:
         //Fixme: have a non-volatile creature list
-        if (DFConnection.Instance != null && DFConnection.Instance.CreatureRaws != null)
-            foreach (var creature in DFConnection.Instance.CreatureRaws)
+        if (DFConnection.Instance != null && CreatureRaws.Instance != null)
+            foreach (var creature in CreatureRaws.Instance)
             {
                 string token = creature.creature_id;
                 if (subProgressBar != null)

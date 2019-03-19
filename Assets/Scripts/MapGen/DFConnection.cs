@@ -173,7 +173,6 @@ public sealed class DFConnection : MonoBehaviour
     private MaterialList netItemList;
     private TiletypeList netTiletypeList;
     private BuildingList netBuildingList;
-    private List<CreatureRaw> creatureRaws;
     private PlantRawList netPlantRawList;
     private Language netLanguageList;
 
@@ -339,11 +338,6 @@ public sealed class DFConnection : MonoBehaviour
     public BuildingList NetBuildingList
     {
         get { return netBuildingList; }
-    }
-
-    public List<CreatureRaw> CreatureRaws
-    {
-        get { return creatureRaws; }
     }
 
     public PlantRawList NetPlantRawList
@@ -791,7 +785,7 @@ public sealed class DFConnection : MonoBehaviour
             buildingListCall.TryExecute(null, out netBuildingList);
         if (partialCreatureRawListCall != null)
         {
-            creatureRaws = new List<CreatureRaw>();
+            var creatureRaws = new List<CreatureRaw>();
             int returnedItems = int.MaxValue;
             CreatureRawList netCreatureRawList;
             int count = 0;
@@ -807,13 +801,14 @@ public sealed class DFConnection : MonoBehaviour
                 creatureRaws.AddRange(netCreatureRawList.creature_raws);
                 count++;
             }
+            CreatureRaws.Instance.CreatureList = creatureRaws;
             Debug.LogFormat("Got {0} creatures raws in {1} batches", creatureRaws.Count, count);
         }
         else if (creatureRawListCall != null)
         {
             CreatureRawList netCreatureRawList;
             creatureRawListCall.TryExecute(null, out netCreatureRawList);
-            creatureRaws = netCreatureRawList.creature_raws;
+            CreatureRaws.Instance.CreatureList = netCreatureRawList.creature_raws;
         }
         if (plantRawListCall != null)
             plantRawListCall.TryExecute(null, out netPlantRawList);
@@ -879,10 +874,10 @@ public sealed class DFConnection : MonoBehaviour
             Debug.Log("Plant Raws fetched: " + netPlantRawList.plant_raws.Count);
         }
 
-        if(creatureRaws != null)
+        if(CreatureRaws.Instance.CreatureList != null)
         {
-            CreatureTokenList.CreatureRawList = creatureRaws;
-            Debug.Log("Creature Raws fetched: " + creatureRaws.Count);
+            CreatureTokenList.CreatureRawList = CreatureRaws.Instance.CreatureList;
+            Debug.Log("Creature Raws fetched: " + CreatureRaws.Instance.CreatureList.Count);
         }
 
         //Debug.Log("Buildingtypes fetched: " + netBuildingList.building_list.Count);

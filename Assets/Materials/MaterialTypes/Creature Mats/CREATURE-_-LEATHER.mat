@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: CREATURE-_-HAIR
+  m_Name: CREATURE-_-LEATHER
   m_Shader: {fileID: 4800000, guid: 0d849fe31a0566441aadf5b3171b7ad4, type: 3}
   m_ShaderKeywords: _USEDFCOLOR_ON
   m_LightmapFlags: 4
@@ -40,11 +40,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Height:
-        m_Texture: {fileID: 2800000, guid: 3e1358fdb8233bc4db48c9d2da111632, type: 3}
+        m_Texture: {fileID: 2800000, guid: 41ba67c144fa3874382483ba13630764, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 24937fea33b893749be0821b80b12123, type: 3}
+        m_Texture: {fileID: 2800000, guid: b1b53b7d37e27a943b2ffcb09a48253f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -52,7 +52,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal:
-        m_Texture: {fileID: 2800000, guid: e9c623126b119454d9c4c39245664462, type: 3}
+        m_Texture: {fileID: 2800000, guid: 94922ee84c208a14cafc20cfa4ebede2, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Occlusion:
@@ -68,7 +68,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Specular:
-        m_Texture: {fileID: 2800000, guid: 10cc7fc5cc94f6647a46954380782631, type: 3}
+        m_Texture: {fileID: 2800000, guid: ebd05d60d0675e3449bd933d2ba23ea5, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:

@@ -140,8 +140,8 @@ public class ItemModel : MonoBehaviour, IClickable
                 Random.InitState(i);
                 imp.UpdateImprovement(covereds[Random.Range(0, covereds.Count)]);
             }
-            else
-                imp.gameObject.SetActive(false);
+            //else
+            //    imp.gameObject.SetActive(false);
         }
         foreach (var sub in GO.GetComponentsInChildren<ItemSubPart>())
         {

@@ -122,7 +122,7 @@ public class CreatureManager : MonoBehaviour
         if (!creatureList3D.ContainsKey(unit.id))
         {
             var creatureBase = new GameObject().AddComponent<CreatureBody>();
-            creatureBase.race = DFConnection.Instance.CreatureRaws[unit.race.mat_type];
+            creatureBase.race = CreatureRaws.Instance[unit.race.mat_type];
             creatureBase.caste = creatureBase.race.caste[unit.race.mat_index];
             creatureBase.unit = unit;
             creatureBase.MakeBody();

@@ -14,8 +14,6 @@ public class DFRawReader : EditorWindow
     private Vector2 raceScroll;
     private Vector2 unitScroll;
     [SerializeField]
-    private List<CreatureRaw> creatureRaws;
-    [SerializeField]
     private List<CreatureRaw> filteredRaws;
 
     [MenuItem("Window/DF Raw Reader")]
@@ -97,7 +95,7 @@ public class DFRawReader : EditorWindow
         if (!string.IsNullOrEmpty(filter))
         {
             if (filterToken)
-                if (!creatureRaws[unit.race.mat_type].creature_id.ToUpper().Contains(filter.ToUpper()))
+                if (!CreatureRaws.Instance[unit.race.mat_type].creature_id.ToUpper().Contains(filter.ToUpper()))
                     return false;
             if (filterName)
                 if (!name.ToUpper().Contains(filter.ToUpper()))
@@ -118,7 +116,7 @@ public class DFRawReader : EditorWindow
         }
         if (bodyCategoryFilter != CreatureBody.BodyCategory.None)
         {
-            foreach (var caste in creatureRaws[unit.race.mat_type].caste)
+            foreach (var caste in CreatureRaws.Instance[unit.race.mat_type].caste)
             {
                 if (bodyCategoryFilter == CreatureBody.FindBodyCategory(caste))
                     return true;
@@ -141,29 +139,32 @@ public class DFRawReader : EditorWindow
             var itemListCall = new RemoteFunction<EmptyMessage, MaterialList>(client, "GetItemList", "RemoteFortressReader");
             var unitListCall = new RemoteFunction<EmptyMessage, UnitList>(client, "GetUnitList", "RemoteFortressReader");
             client.ResumeGame();
-            creatureRaws = getCreatureRaws.Execute().creature_raws;
             var ExistingMatList = AssetDatabase.LoadAssetAtPath<MaterialRaws>("Assets/Resources/MaterialRaws.asset");
+            var ExistingCreatureList = AssetDatabase.LoadAssetAtPath<MaterialRaws>("Assets/Resources/CreatureRaws.asset");
             var ExistingItemList = AssetDatabase.LoadAssetAtPath<ItemRaws>("Assets/Resources/ItemRaws.asset");
             MaterialRaws.Instance.MaterialList = materialListCall.Execute().material_list;
             ItemRaws.Instance.ItemList = itemListCall.Execute().material_list;
+            CreatureRaws.Instance.CreatureList = getCreatureRaws.Execute().creature_raws;
             units = unitListCall.Execute().creature_list;
             if (ExistingMatList == null)
                 AssetDatabase.CreateAsset(MaterialRaws.Instance, "Assets/Resources/MaterialRaws.asset");
+            if (ExistingCreatureList == null)
+                AssetDatabase.CreateAsset(CreatureRaws.Instance, "Assets/Resources/CreatureRaws.asset");
             if (ExistingItemList == null)
                 AssetDatabase.CreateAsset(ItemRaws.Instance, "Assets/Resources/ItemRaws.asset");
             AssetDatabase.SaveAssets();
-            Debug.Log(string.Format("Pulled {0} creature raws from DF.", creatureRaws.Count));
+            Debug.Log(string.Format("Pulled {0} creature raws from DF.", CreatureRaws.Instance.Count));
             if (MaterialCollection.Instance == null)
                 MaterialCollector.BuildMaterialCollection();
             MaterialCollection.Instance.PopulateMatTextures();
             client.Disconnect();
-            //foreach (var raw in creatureRaws)
+            //foreach (var raw in CreatureRaws.Instance)
             //{
             //    raw.creature_id = BodyDefinition.GetCorrectedCreatureID(raw);
             //}
             RefilterList();
         }
-        if (creatureRaws != null)
+        if (CreatureRaws.Instance != null)
         {
             EditorGUI.BeginChangeCheck();
             filter = EditorGUILayout.TextField(filter);
@@ -181,21 +182,21 @@ public class DFRawReader : EditorWindow
             EditorGUILayout.Space();
 
             GUILayout.BeginHorizontal();
-            if(GUILayout.Button("Sort by name"))
-            {
-                creatureRaws.Sort((x, y) => x.creature_id.CompareTo(y.creature_id));
-                RefilterList();
-            }
-            if (GUILayout.Button("Sort by size"))
-            {
-                creatureRaws.Sort((x, y) => x.adultsize.CompareTo(y.adultsize));
-                RefilterList();
-            }
-            if (GUILayout.Button("Sort by index"))
-            {
-                creatureRaws.Sort((x, y) => x.index.CompareTo(y.index));
-                RefilterList();
-            }
+            //if(GUILayout.Button("Sort by name"))
+            //{
+            //    CreatureRaws.Instance.Sort((x, y) => x.creature_id.CompareTo(y.creature_id));
+            //    RefilterList();
+            //}
+            //if (GUILayout.Button("Sort by size"))
+            //{
+            //    CreatureRaws.Instance.Sort((x, y) => x.adultsize.CompareTo(y.adultsize));
+            //    RefilterList();
+            //}
+            //if (GUILayout.Button("Sort by index"))
+            //{
+            //    CreatureRaws.Instance.Sort((x, y) => x.index.CompareTo(y.index));
+            //    RefilterList();
+            //}
             GUILayout.EndHorizontal();
 
             showRaces = EditorGUILayout.Foldout(showRaces, "Races");
@@ -318,7 +319,7 @@ public class DFRawReader : EditorWindow
                 {
                     string name = unit.name;
                     if (string.IsNullOrEmpty(name))
-                        name = creatureRaws[unit.race.mat_type].caste[unit.race.mat_index].caste_name[0];
+                        name = CreatureRaws.Instance[unit.race.mat_type].caste[unit.race.mat_index].caste_name[0];
                     if (!FitsFilter(unit))
                         continue;
                     if (GUILayout.Button(name))
@@ -326,8 +327,8 @@ public class DFRawReader : EditorWindow
                         AssetDatabase.Refresh();
                         var creatureBase = new GameObject().AddComponent<CreatureBody>();
                         creatureBase.name = name;
-                        creatureBase.race = creatureRaws[unit.race.mat_type];
-                        creatureBase.caste = creatureRaws[unit.race.mat_type].caste[unit.race.mat_index];
+                        creatureBase.race = CreatureRaws.Instance[unit.race.mat_type];
+                        creatureBase.caste = CreatureRaws.Instance[unit.race.mat_type].caste[unit.race.mat_index];
                         creatureBase.unit = unit;
                         creatureBase.MakeBody();
                         creatureBase.UpdateUnit(unit);
@@ -346,13 +347,13 @@ public class DFRawReader : EditorWindow
                     {
                         string name = unit.name;
                         if (string.IsNullOrEmpty(name))
-                            name = creatureRaws[unit.race.mat_type].caste[unit.race.mat_index].caste_name[0];
+                            name = CreatureRaws.Instance[unit.race.mat_type].caste[unit.race.mat_index].caste_name[0];
                         if (!FitsFilter(unit))
                             continue;
                         var creatureBase = new GameObject().AddComponent<CreatureBody>();
                         creatureBase.name = name;
-                        creatureBase.race = creatureRaws[unit.race.mat_type];
-                        creatureBase.caste = creatureRaws[unit.race.mat_type].caste[unit.race.mat_index];
+                        creatureBase.race = CreatureRaws.Instance[unit.race.mat_type];
+                        creatureBase.caste = CreatureRaws.Instance[unit.race.mat_type].caste[unit.race.mat_index];
                         creatureBase.unit = unit;
                         creatureBase.MakeBody();
                         creatureBase.UpdateUnit(unit);
@@ -373,7 +374,7 @@ public class DFRawReader : EditorWindow
 
     private void RefilterList()
     {
-        if (creatureRaws == null)
+        if (CreatureRaws.Instance == null)
         {
             filteredRaws = null;
             return;
@@ -381,7 +382,7 @@ public class DFRawReader : EditorWindow
         if (filteredRaws == null)
             filteredRaws = new List<CreatureRaw>();
         filteredRaws.Clear();
-        foreach (var creature in creatureRaws)
+        foreach (var creature in CreatureRaws.Instance)
         {
             if (FitsFilter(creature))
                 filteredRaws.Add(creature);

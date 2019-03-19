@@ -56,8 +56,8 @@ public class Creature : MonoBehaviour
         if (!localInited)
             InitLocal();
         this.unit = unit;
-        if (DFConnection.Instance.CreatureRaws != null)
-            creatureRaw = DFConnection.Instance.CreatureRaws[unit.race.mat_type];
+        if (CreatureRaws.Instance != null)
+            creatureRaw = CreatureRaws.Instance[unit.race.mat_type];
         else
             return; //can't work without raws
         casteRaw = creatureRaw.caste[unit.race.mat_index];
