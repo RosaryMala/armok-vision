@@ -85,14 +85,25 @@ public class CreatureBody : MonoBehaviour
             GetShaderIDs();
         flags = new CreatureRawFlags(race.flags);
         bodyCategory = FindBodyCategory(caste);
+        //If there's already any spawned parts, we need to clear them so we can remake the body from scratch.
         if(spawnedParts.Count > 0)
         {
             foreach (var part in spawnedParts)
             {
-                Destroy(part.Value.gameObject);
+                if (part.Value != null)
+                {
+                    if (Application.isPlaying)
+                        Destroy(part.Value.gameObject);
+                    else
+                        DestroyImmediate(part.Value.gameObject);
+                }
             }
             spawnedParts.Clear();
         }
+        //Clearing this will serve the purpose of resetting the inventory.
+        inventoryModes = new InventoryMode[0];
+        //They're made standing, so the current state should reflect that.
+        onGround = false;
         float scale = caste.adult_size / (float)caste.total_relsize * 10;
         if(unit != null && unit.size_info != null)
             scale = unit.size_info.size_cur / (float)caste.total_relsize * 10;
@@ -370,8 +381,19 @@ public class CreatureBody : MonoBehaviour
     private BodyPart upperBody;
     private BodyPart lowerBody;
 
+    MatPairStruct oldRace = new MatPairStruct(-1, -1);
+    float oldChibiSize = -1;
+
     public void UpdateUnit(UnitDefinition unit)
     {
+        this.unit = unit;
+        if(oldRace != unit.race || oldChibiSize != GameSettings.Instance.units.chibiness)
+        {
+            oldRace = unit.race;
+            oldChibiSize = GameSettings.Instance.units.chibiness;
+            MakeBody();
+        }
+
         if (((UnitFlags1)unit.flags1 & UnitFlags1.on_ground) == UnitFlags1.on_ground)
         {
             if (!onGround)
@@ -418,6 +440,7 @@ public class CreatureBody : MonoBehaviour
             }
         }
     }
+
 
     private void AddInventoryItem(InventoryItem item)
     {
@@ -466,8 +489,10 @@ public class CreatureBody : MonoBehaviour
         }
     }
 
+
     InventoryMode[] inventoryModes = new InventoryMode[0];
 
+    //Any addition or removal of inventory items will trigger this, as well as changing items from worn to held.
     private bool InventoryChanged(List<InventoryItem> inventory)
     {
         if(inventory.Count != inventoryModes.Length)

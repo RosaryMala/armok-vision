@@ -125,7 +125,6 @@ public class CreatureManager : MonoBehaviour
             creatureBase.race = CreatureRaws.Instance[unit.race.mat_type];
             creatureBase.caste = creatureBase.race.caste[unit.race.mat_index];
             creatureBase.unit = unit;
-            creatureBase.MakeBody();
             if (string.IsNullOrEmpty(unit.name))
                 creatureBase.name = creatureBase.race.name[0];
             creatureBase.name = unit.name;
