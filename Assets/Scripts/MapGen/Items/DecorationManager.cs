@@ -103,6 +103,8 @@ public class DecorationManager : MonoBehaviour
             return _shape;
         if (shapes.ContainsKey(shapeIndex))
             return shapes[shapeIndex];
+        if (DFConnection.Instance == null)
+            return _shape;
         if (DFConnection.Instance.NetLanguageList != null && shapeIndex >= 0 && shapeIndex < DFConnection.Instance.NetLanguageList.shapes.Count)
             Debug.LogWarning("No model defined for shape: " + DFConnection.Instance.NetLanguageList.shapes[shapeIndex].id);
         else

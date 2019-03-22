@@ -116,12 +116,20 @@ public class ImageManager : MonoBehaviour
             case ArtImageElementType.IMAGE_PLANT:
                 if (PlantSpriteMap.ContainsKey(element.id))
                     return PlantSpriteMap[element.id];
-                else
+                else if (DFConnection.Instance)
                     return DFConnection.Instance.NetPlantRawList.plant_raws[element.id].tile;
+                else
+                    return 7;
             case ArtImageElementType.IMAGE_TREE:
-                return DFConnection.Instance.NetPlantRawList.plant_raws[element.id].tile;
+                if (DFConnection.Instance)
+                    return DFConnection.Instance.NetPlantRawList.plant_raws[element.id].tile;
+                else
+                    return 7;
             case ArtImageElementType.IMAGE_SHAPE:
-                return DFConnection.Instance.NetLanguageList.shapes[element.id].tile;
+                if (DFConnection.Instance)
+                    return DFConnection.Instance.NetLanguageList.shapes[element.id].tile;
+                else
+                    return 7;
             case ArtImageElementType.IMAGE_ITEM:
                 return GetItemTile(element.creature_item);
             default:

@@ -62,8 +62,27 @@ public class CreatureBody : MonoBehaviour
 
     Dictionary<int, BodyPart> spawnedParts = new Dictionary<int, BodyPart>();
 
+    static bool gotShaderIds = false;
+    static int _MatColorProperty;
+    static int _MatIndexProperty;
+    static int _Color1Property;
+    static int _Color2Property;
+    static int _Color3Property;
+
+    static void GetShaderIDs()
+    {
+        gotShaderIds = true;
+        _MatColorProperty = Shader.PropertyToID("_MatColor");
+        _MatIndexProperty = Shader.PropertyToID("_MatIndex");
+        _Color1Property = Shader.PropertyToID("_Color1");
+        _Color2Property = Shader.PropertyToID("_Color2");
+        _Color3Property = Shader.PropertyToID("_Color3");
+    }
+
     public void MakeBody()
     {
+        if (!gotShaderIds)
+            GetShaderIDs();
         flags = new CreatureRawFlags(race.flags);
         bodyCategory = FindBodyCategory(caste);
         if(spawnedParts.Count > 0)
@@ -119,7 +138,7 @@ public class CreatureBody : MonoBehaviour
             spawnedPart.token = part.token;
             spawnedPart.category = part.category;
             spawnedPart.flags = new BodyPartFlags(part.flags);
-            spawnedPart.volume = part.relsize * scale;
+            spawnedPart.volume = part.relsize * scale * (spawnedPart.flags.head ? GameSettings.Instance.units.chibiness : 1);
             spawnedPart.layers = part.layers;
 
 
@@ -244,12 +263,12 @@ public class CreatureBody : MonoBehaviour
                 var layer = part.layerModels[caste.layer_idx[modNum]];
                 if (layer != null)
                 {
-                    layer.mods.Add(new BodyPart.ModValue(mod, modNum));
+                    layer.mods.Add(new BodyPart.ModValue(mod, unit != null ? unit.appearance.bp_modifiers[modNum] : 100));
                 }
             }
             else
             {
-                part.mods.Add(new BodyPart.ModValue(mod, modNum));
+                part.mods.Add(new BodyPart.ModValue(mod, unit != null ? unit.appearance.bp_modifiers[modNum] : 100));
             }
         }
 
@@ -269,14 +288,39 @@ public class CreatureBody : MonoBehaviour
                 if (layer == null || !layer.gameObject.activeSelf)
                     continue;
                 ColorDefinition colorDef;
+                PatternDescriptor pattern;
                 if (unit != null && unit.appearance != null)
-                    colorDef = colorMod.patterns[unit.appearance.colors[modNum]].colors[0];
+                {
+                    pattern = colorMod.patterns[unit.appearance.colors[modNum]];
+                }
                 else
-                    colorDef = colorMod.patterns[seed].colors[0];
+                    pattern = colorMod.patterns[seed];
+                colorDef = pattern.colors[0];
                 var color = new Color32((byte)colorDef.red, (byte)colorDef.green, (byte)colorDef.blue, 128);
                 var index = ContentLoader.GetPatternIndex(race.tissues[layer.layerRaw.tissue_id].material);
-                propertyBlock.SetColor("_MatColor", color);
-                propertyBlock.SetFloat("_MatIndex", index);
+                propertyBlock.SetColor(_MatColorProperty, color);
+                propertyBlock.SetFloat(_MatIndexProperty, index);
+                switch (pattern.colors.Count)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        propertyBlock.SetColor(_Color1Property, pattern.colors[0]);
+                        propertyBlock.SetColor(_Color2Property, pattern.colors[0]);
+                        propertyBlock.SetColor(_Color3Property, pattern.colors[0]);
+                        break;
+                    case 2:
+                        propertyBlock.SetColor(_Color1Property, pattern.colors[0]);
+                        propertyBlock.SetColor(_Color2Property, pattern.colors[0]);
+                        propertyBlock.SetColor(_Color3Property, pattern.colors[1]);
+                        break;
+                    case 3:
+                    default:
+                        propertyBlock.SetColor(_Color1Property, pattern.colors[0]);
+                        propertyBlock.SetColor(_Color2Property, pattern.colors[2]);
+                        propertyBlock.SetColor(_Color3Property, pattern.colors[1]);
+                        break;
+                }
                 var renderer = layer.GetComponentInChildren<MeshRenderer>();
                 if (renderer != null)
                     renderer.SetPropertyBlock(propertyBlock);

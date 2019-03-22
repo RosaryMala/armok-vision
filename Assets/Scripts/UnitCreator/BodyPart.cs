@@ -27,13 +27,13 @@ public class BodyPart : MonoBehaviour
     [Serializable]
     public struct ModValue
     {
-        public ModValue(BpAppearanceModifier mod, int index)
+        public ModValue(BpAppearanceModifier mod, int value)
         {
-            this.type = mod.type;
-            this.index = index;
+            type = mod.type;
+            this.value = value;
         }
         public string type;
-        public int index;
+        public int value;
 
         public override string ToString()
         {
@@ -242,18 +242,24 @@ public class BodyPart : MonoBehaviour
         foreach (var mod in mods)
         {
             var value = 100;
-            if (body.unit != null && body.unit.appearance != null)
-                value = body.unit.appearance.bp_modifiers[mod.index];
+                value = mod.value;
             switch (mod.type)
             {
                 case "BROADNESS":
                     partSize.x = value / 100f;
                     break;
                 case "HEIGHT":
+                case "ROUND_VS_NARROW":
                     partSize.y = value / 100f;
                     break;
                 case "LENGTH":
                     partSize.z = value / 100f;
+                    break;
+                case "CLOSE_SET":
+                    modeledPart.transform.localPosition = new Vector3(Mathf.Abs(transform.localPosition.x * (value / 100f - 1)) / 2.0f, 0, 0);
+                    break;
+                case "SPLAYED_OUT":
+                    modeledPart.transform.localRotation = Quaternion.Euler(0, -value / 200f * 90, 0);
                     break;
                 default:
                     break;
@@ -261,6 +267,10 @@ public class BodyPart : MonoBehaviour
         }
 
         //If the're flagged as small, they don't need to worry about volume. Just need to scale according to the parent.
+        if(flags.small)
+        {
+            modeledPart.transform.localScale = partSize;
+        }
         if (!flags.small)
         {
             modeledPart.transform.localScale = MultiplyScales(body.bodyScale, partSize);
@@ -320,11 +330,14 @@ public class BodyPart : MonoBehaviour
                     break;
                 }
             }
-            childPart.Arrange(body);
         }
         foreach (var placement in placements)
         {
             placement.Arrange();
+        }
+        foreach (var childPart in childParts)
+        {
+            childPart.Arrange(body);
         }
     }
 

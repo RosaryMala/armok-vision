@@ -110,6 +110,7 @@ public class GameSettings : MonoBehaviour
         public bool drawUnits = true;
         public bool scaleUnits = true;
         public bool spriteUnits = false;
+        public float chibiness = 50;
     }
 
     public enum AnalyticsChoice
@@ -156,7 +157,17 @@ public class GameSettings : MonoBehaviour
         public UpdateTimers updateTimers = new UpdateTimers();
     }
 
-    public static Settings Instance = new Settings();
+    static Settings _instance;
+
+    public static Settings Instance
+    {
+        get
+        {
+            if (_instance == null)
+                Init();
+            return _instance;
+        }
+    }
 
     public List<Camera> mainCameras;
 
@@ -167,7 +178,7 @@ public class GameSettings : MonoBehaviour
         if (!File.Exists(filename))
             return;
 
-        Instance = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(filename));
+        _instance = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(filename));
     }
 
     static void SerializeIni(string filename)
@@ -175,7 +186,7 @@ public class GameSettings : MonoBehaviour
         File.WriteAllText(filename, JsonConvert.SerializeObject(Instance, Formatting.Indented));
     }
 
-    string filename = "Config.json";
+    const string filename = "Config.json";
 
     // This function is called when the MonoBehaviour will be destroyed
     public void OnDestroy()
@@ -183,27 +194,30 @@ public class GameSettings : MonoBehaviour
         SerializeIni(filename);
     }
 
-    // Awake is called when the script instance is being ßloaded
+    // Awake is called when the script instance is being loaded
     public void Awake()
     {
         if (mainCameras.Count > 0)
             Instance.camera.fieldOfView = mainCameras[0].fieldOfView;
-        string configDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Application.productName);
-        UnityEngine.Debug.Log("Loading config from " + configDir);
-        if (!Directory.Exists(configDir))
-            Directory.CreateDirectory(configDir);
-        filename = Path.Combine(configDir, filename);
-        DeserializeIni(filename);
+        Init();
+        Application.targetFrameRate = Instance.rendering.targetFrameRate;
+        QualitySettings.vSyncCount = Instance.rendering.vSyncCount;
         if (mainCameras.Count > 0)
             foreach (Camera camera in mainCameras)
             {
                 camera.fieldOfView = Instance.camera.fieldOfView;
             }
-        Application.targetFrameRate = Instance.rendering.targetFrameRate;
-        QualitySettings.vSyncCount = Instance.rendering.vSyncCount;
         if (Instance.game.analytics == AnalyticsChoice.Yes)
             analytics.gameObject.SetActive(true);
         UpdatePostProcessing();
+    }
+
+    static void Init()
+    {
+        string configDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Application.productName);
+        if (!Directory.Exists(configDir))
+            Directory.CreateDirectory(configDir);
+        DeserializeIni(Path.Combine(configDir, filename));
     }
 
     void SetShadows(bool input)
