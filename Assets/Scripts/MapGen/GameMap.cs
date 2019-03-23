@@ -498,19 +498,22 @@ public class GameMap : MonoBehaviour
 
     public void Refresh()
     {
-        for (int z = 0; z < blockDirtyBits.GetLength(2); z++)
-            for (int x = 0; x < blockDirtyBits.GetLength(0); x++)
-                for (int y = 0; y < blockDirtyBits.GetLength(1); y++)
-                {
-                    if (blockContentBits[x, y, z])
+        if (blockDirtyBits != null)
+        {
+            for (int z = 0; z < blockDirtyBits.GetLength(2); z++)
+                for (int x = 0; x < blockDirtyBits.GetLength(0); x++)
+                    for (int y = 0; y < blockDirtyBits.GetLength(1); y++)
                     {
-                        SplatManager.Instance.DirtyLayer(x, y, z);
-                        SplatManager.Instance.DirtyGrass(x, y, z);
-                        SplatManager.Instance.DirtySpatter(x, y, z);
+                        if (blockContentBits[x, y, z])
+                        {
+                            SplatManager.Instance.DirtyLayer(x, y, z);
+                            SplatManager.Instance.DirtyGrass(x, y, z);
+                            SplatManager.Instance.DirtySpatter(x, y, z);
+                        }
+                        blockDirtyBits[x, y, z] = blockContentBits[x, y, z];
+                        liquidBlockDirtyBits[x, y, z] = blockContentBits[x, y, z];
                     }
-                    blockDirtyBits[x, y, z] = blockContentBits[x, y, z];
-                    liquidBlockDirtyBits[x, y, z] = blockContentBits[x, y, z];
-                }
+        }
     }
 
     public Mesh testMesh;

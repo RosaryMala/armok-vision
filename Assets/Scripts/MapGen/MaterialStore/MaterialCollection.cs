@@ -33,7 +33,10 @@ namespace MaterialStore
         {
             if(_instance != null && _instance != this)
             {
-                Destroy(this);
+                if (Application.isPlaying)
+                    Destroy(this);
+                else
+                    DestroyImmediate(this);
                 return;
             }
             if (_instance == null)

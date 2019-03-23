@@ -127,7 +127,8 @@ public class CreatureManager : MonoBehaviour
             creatureBase.unit = unit;
             if (string.IsNullOrEmpty(unit.name))
                 creatureBase.name = creatureBase.race.name[0];
-            creatureBase.name = unit.name;
+            else
+                creatureBase.name = unit.name;
             creatureList3D[unit.id] = creatureBase;
             creatureBase.transform.parent = transform;
         }

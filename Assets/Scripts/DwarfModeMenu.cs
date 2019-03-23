@@ -54,6 +54,8 @@ public class DwarfModeMenu : MonoBehaviour
 
     private void DrawBuildLocation(BuildSelector prevBuildSelector)
     {
+        if (!Application.isFocused)
+            return;
         if (!(prevBuildSelector.stage == BuildSelectorStage.StagePlace || prevBuildSelector.stage == BuildSelectorStage.StageItemSelect))
             return;
 

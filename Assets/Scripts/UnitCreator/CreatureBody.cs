@@ -381,15 +381,20 @@ public class CreatureBody : MonoBehaviour
     private BodyPart upperBody;
     private BodyPart lowerBody;
 
-    MatPairStruct oldRace = new MatPairStruct(-1, -1);
     float oldChibiSize = -1;
 
     public void UpdateUnit(UnitDefinition unit)
     {
-        this.unit = unit;
-        if(oldRace != unit.race || oldChibiSize != GameSettings.Instance.units.chibiness)
+        bool needsRegen = false;
+        if((MatPairStruct)this.unit.race != unit.race)
         {
-            oldRace = unit.race;
+            race = CreatureRaws.Instance[unit.race.mat_type];
+            caste = race.caste[unit.race.mat_index];
+            needsRegen = true;
+        }
+        this.unit = unit;
+        if(needsRegen || oldChibiSize != GameSettings.Instance.units.chibiness)
+        {
             oldChibiSize = GameSettings.Instance.units.chibiness;
             MakeBody();
         }
