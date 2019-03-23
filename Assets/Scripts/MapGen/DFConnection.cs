@@ -95,6 +95,7 @@ public sealed class DFConnection : MonoBehaviour
     private RemoteFunction<EmptyMessage, MenuContents> menuQueryCall;
     private RemoteFunction<IntMessage> movementSelectCommandCall;
     private RemoteFunction<MiscMoveParams> miscMoveCall;
+    private RemoteFunction<EmptyMessage, SingleBool> gameValidityCall;
 
     #region Dwarf Mode Control
     private RemoteFunction<EmptyMessage, SidebarState> getSideMenuCall;
@@ -161,6 +162,7 @@ public sealed class DFConnection : MonoBehaviour
         languageCall = new RemoteFunction<EmptyMessage, Language>(networkClient, "GetLanguage", "RemoteFortressReader");
         getSideMenuCall = new RemoteFunction<EmptyMessage, SidebarState>(networkClient, "GetSideMenu", "RemoteFortressReader");
         setSideMenuCall = new RemoteFunction<SidebarCommand>(networkClient, "SetSideMenu", "RemoteFortressReader");
+        gameValidityCall = new RemoteFunction<EmptyMessage, SingleBool>(networkClient, "GetGameValidity", "RemoteFortressReader");
     }
 
     #endregion
@@ -1019,6 +1021,16 @@ public sealed class DFConnection : MonoBehaviour
     {
         //pause df here, so it doesn't try to resume while we're working.
         networkClient.SuspendGame();
+
+        if(gameValidityCall != null)
+        {
+            var valid = gameValidityCall.Execute();
+            if(!valid.Value)
+            {
+                networkClient.ResumeGame();
+                return;
+            }
+        }
 
         //everything that controls DF.
         #region DF Control
