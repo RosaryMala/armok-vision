@@ -786,7 +786,7 @@ public class BodyPart : MonoBehaviour
             if(heldItem.item.item.type != heldItemType)
             {
                 if (heldItemModel != null)
-                    Destroy(heldItemModel);
+                    Destroy(heldItemModel.gameObject);
                 var point = heldItemPoint;
                 if (point == null)
                     point = transform;
@@ -800,7 +800,7 @@ public class BodyPart : MonoBehaviour
         else
         {
             if (heldItemModel != null)
-                Destroy(heldItemModel);
+                Destroy(heldItemModel.gameObject);
             heldItemModel = null;
         }
         if (modeledPart != null)

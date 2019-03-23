@@ -140,7 +140,7 @@ public class DFRawReader : EditorWindow
             var unitListCall = new RemoteFunction<EmptyMessage, UnitList>(client, "GetUnitList", "RemoteFortressReader");
             client.ResumeGame();
             var ExistingMatList = AssetDatabase.LoadAssetAtPath<MaterialRaws>("Assets/Resources/MaterialRaws.asset");
-            var ExistingCreatureList = AssetDatabase.LoadAssetAtPath<MaterialRaws>("Assets/Resources/CreatureRaws.asset");
+            var ExistingCreatureList = AssetDatabase.LoadAssetAtPath<CreatureRaws>("Assets/Resources/CreatureRaws.asset");
             var ExistingItemList = AssetDatabase.LoadAssetAtPath<ItemRaws>("Assets/Resources/ItemRaws.asset");
             MaterialRaws.Instance.MaterialList = materialListCall.Execute().material_list;
             ItemRaws.Instance.ItemList = itemListCall.Execute().material_list;
