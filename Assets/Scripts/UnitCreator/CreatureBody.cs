@@ -250,16 +250,7 @@ public class CreatureBody : MonoBehaviour
             {
                 if (layerModel == null)
                     continue;
-                var renderer = layerModel.GetComponentInChildren<MeshRenderer>();
-                if(renderer != null)
-                {
-                    var tissue = race.tissues[layerModel.layerRaw.tissue_id];
-                    var color = ContentLoader.GetColor(tissue.material);
-                    var index = ContentLoader.GetPatternIndex(tissue.material);
-                    propertyBlock.SetColor("_MatColor", color);
-                    propertyBlock.SetFloat("_MatIndex", index);
-                    renderer.SetPropertyBlock(propertyBlock);
-                }
+                layerModel.ApplyMaterials(race, propertyBlock);
             }
             spawnedParts[i] = spawnedPart;
         }
@@ -286,9 +277,7 @@ public class CreatureBody : MonoBehaviour
         for (int modNum = 0; modNum < caste.color_modifiers.Count; modNum++)
         {
             var colorMod = caste.color_modifiers[modNum];
-            //Temp fix until actual creatures are being read.
-            if (colorMod.start_date > 0)
-                continue;
+
             int seed = Mathf.Abs(GetInstanceID() * modNum) % colorMod.patterns.Count;
             for (int i = 0; i < colorMod.body_part_id.Count; i++)
             {
@@ -309,6 +298,11 @@ public class CreatureBody : MonoBehaviour
                 colorDef = pattern.colors[0];
                 var color = new Color32((byte)colorDef.red, (byte)colorDef.green, (byte)colorDef.blue, 128);
                 var index = ContentLoader.GetPatternIndex(race.tissues[layer.layerRaw.tissue_id].material);
+                if(colorMod.start_date > 0 && unit != null)
+                {
+                    color = Color.Lerp(layer.layerColor, color, Mathf.InverseLerp(colorMod.start_date * 1200, colorMod.end_date * 1200, unit.age));
+                }
+                layer.layerColor = color;
                 propertyBlock.SetColor(_MatColorProperty, color);
                 propertyBlock.SetFloat(_MatIndexProperty, index);
                 switch (pattern.colors.Count)
@@ -335,6 +329,9 @@ public class CreatureBody : MonoBehaviour
                 var renderer = layer.GetComponentInChildren<MeshRenderer>();
                 if (renderer != null)
                     renderer.SetPropertyBlock(propertyBlock);
+                var skinRenderer = layer.GetComponentInChildren<SkinnedMeshRenderer>();
+                if (skinRenderer != null)
+                    skinRenderer.SetPropertyBlock(propertyBlock);
             }
         }
         for (int i = 0; i < caste.body_parts.Count; i++)
@@ -354,6 +351,15 @@ public class CreatureBody : MonoBehaviour
                 rootPart = spawnedParts[i];
             if (spawnedParts[i].flags.stance)
                 stanceCount++;
+        }
+
+        foreach (var part in spawnedParts)
+        {
+            foreach (var layer in part.Value.layerModels)
+            {
+                if (layer != null)
+                    layer.ApplyMods();
+            }
         }
 
         if (rootPart == null)

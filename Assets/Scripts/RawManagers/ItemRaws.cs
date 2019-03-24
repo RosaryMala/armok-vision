@@ -76,9 +76,16 @@ public class ItemRaws : ScriptableObject, IReadOnlyDictionary<MatPairStruct, Mat
                 _instance = Resources.Load<ItemRaws>("ItemRaws");
                 if (_instance == null)
                     _instance = CreateInstance<ItemRaws>();
-                Instance.PopulateLookupTable();
+                _instance.PopulateLookupTable();
             }
             return _instance;
+        }
+        set
+        {
+            if (_instance != null && _instance != value)
+                DestroyImmediate(_instance);
+            _instance = value;
+            _instance.PopulateLookupTable();
         }
     }
 
@@ -92,16 +99,6 @@ public class ItemRaws : ScriptableObject, IReadOnlyDictionary<MatPairStruct, Mat
 
     public MaterialDefinition this[string key] => ((IReadOnlyDictionary<string, MaterialDefinition>)stringLookup)[key];
 
-    private void Awake()
-    {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this);
-            return;
-        }
-        if (_instance == null)
-            _instance = this;
-    }
 
     public bool ContainsKey(MatPairStruct key)
     {

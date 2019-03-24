@@ -695,6 +695,152 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"PlantTile")]
+  public partial class PlantTile : global::ProtoBuf.IExtensible
+  {
+    public PlantTile() {}
+    
+    [UnityEngine.SerializeField]
+    private bool _trunk = default(bool);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"trunk", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool trunk
+    {
+      get { return _trunk; }
+      set { _trunk = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _connection_east = default(bool);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"connection_east", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool connection_east
+    {
+      get { return _connection_east; }
+      set { _connection_east = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _connection_south = default(bool);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"connection_south", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool connection_south
+    {
+      get { return _connection_south; }
+      set { _connection_south = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _connection_west = default(bool);
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"connection_west", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool connection_west
+    {
+      get { return _connection_west; }
+      set { _connection_west = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _connection_north = default(bool);
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"connection_north", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool connection_north
+    {
+      get { return _connection_north; }
+      set { _connection_north = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _branches = default(bool);
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"branches", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool branches
+    {
+      get { return _branches; }
+      set { _branches = value; }
+    }
+    [UnityEngine.SerializeField]
+    private bool _twigs = default(bool);
+    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"twigs", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool twigs
+    {
+      get { return _twigs; }
+      set { _twigs = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.TiletypeSpecial _tile_type = RemoteFortressReader.TiletypeSpecial.NO_SPECIAL;
+    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"tile_type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.TiletypeSpecial.NO_SPECIAL)]
+    public RemoteFortressReader.TiletypeSpecial tile_type
+    {
+      get { return _tile_type; }
+      set { _tile_type = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"TreeInfo")]
+  public partial class TreeInfo : global::ProtoBuf.IExtensible
+  {
+    public TreeInfo() {}
+    
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.Coord _size = null;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"size", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Coord size
+    {
+      get { return _size; }
+      set { _size = value; }
+    }
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.PlantTile> _tiles = new global::System.Collections.Generic.List<RemoteFortressReader.PlantTile>();
+    [global::ProtoBuf.ProtoMember(2, Name=@"tiles", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.PlantTile> tiles
+    {
+      get { return _tiles; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"PlantInstance")]
+  public partial class PlantInstance : global::ProtoBuf.IExtensible
+  {
+    public PlantInstance() {}
+    
+    [UnityEngine.SerializeField]
+    private int _plant_type = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"plant_type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int plant_type
+    {
+      get { return _plant_type; }
+      set { _plant_type = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.Coord _pos = null;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"pos", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.Coord pos
+    {
+      get { return _pos; }
+      set { _pos = value; }
+    }
+    [UnityEngine.SerializeField]
+    private RemoteFortressReader.TreeInfo _tree_info = null;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"tree_info", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.TreeInfo tree_info
+    {
+      get { return _tree_info; }
+      set { _tree_info = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MapBlock")]
   public partial class MapBlock : global::ProtoBuf.IExtensible
   {
@@ -1617,6 +1763,15 @@ namespace RemoteFortressReader
     {
       get { return _facing; }
       set { _facing = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _age = default(int);
+    [global::ProtoBuf.ProtoMember(25, IsRequired = false, Name=@"age", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int age
+    {
+      get { return _age; }
+      set { _age = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)

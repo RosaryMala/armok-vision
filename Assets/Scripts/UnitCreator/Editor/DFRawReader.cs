@@ -142,16 +142,28 @@ public class DFRawReader : EditorWindow
             var ExistingMatList = AssetDatabase.LoadAssetAtPath<MaterialRaws>("Assets/Resources/MaterialRaws.asset");
             var ExistingCreatureList = AssetDatabase.LoadAssetAtPath<CreatureRaws>("Assets/Resources/CreatureRaws.asset");
             var ExistingItemList = AssetDatabase.LoadAssetAtPath<ItemRaws>("Assets/Resources/ItemRaws.asset");
+            if (ExistingMatList == null)
+            {
+                ExistingMatList = CreateInstance<MaterialRaws>();
+                MaterialRaws.Instance = ExistingMatList;
+                AssetDatabase.CreateAsset(ExistingMatList, "Assets/Resources/MaterialRaws.asset");
+            }
+            if (ExistingCreatureList == null)
+            {
+                ExistingCreatureList = CreateInstance<CreatureRaws>();
+                CreatureRaws.Instance = ExistingCreatureList;
+                AssetDatabase.CreateAsset(ExistingCreatureList, "Assets/Resources/CreatureRaws.asset");
+            }
+            if (ExistingItemList == null)
+            {
+                ExistingItemList = CreateInstance<ItemRaws>();
+                ItemRaws.Instance = ExistingItemList;
+                AssetDatabase.CreateAsset(ExistingItemList, "Assets/Resources/ItemRaws.asset");
+            }
             MaterialRaws.Instance.MaterialList = materialListCall.Execute().material_list;
             ItemRaws.Instance.ItemList = itemListCall.Execute().material_list;
             CreatureRaws.Instance.CreatureList = getCreatureRaws.Execute().creature_raws;
             units = unitListCall.Execute().creature_list;
-            if (ExistingMatList == null)
-                AssetDatabase.CreateAsset(MaterialRaws.Instance, "Assets/Resources/MaterialRaws.asset");
-            if (ExistingCreatureList == null)
-                AssetDatabase.CreateAsset(CreatureRaws.Instance, "Assets/Resources/CreatureRaws.asset");
-            if (ExistingItemList == null)
-                AssetDatabase.CreateAsset(ItemRaws.Instance, "Assets/Resources/ItemRaws.asset");
             AssetDatabase.SaveAssets();
             Debug.Log(string.Format("Pulled {0} creature raws from DF.", CreatureRaws.Instance.Count));
             if (MaterialCollection.Instance == null)

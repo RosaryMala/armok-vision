@@ -38,22 +38,18 @@ public class CreatureRaws : ScriptableObject, IReadOnlyList<CreatureRaw>
             }
             return _instance;
         }
+        set
+        {
+            if (_instance != null && _instance != value)
+                DestroyImmediate(_instance);
+            _instance = value;
+        }
     }
 
     public int Count => ((IReadOnlyList<CreatureRaw>)_creatureList).Count;
 
     public CreatureRaw this[int index] => ((IReadOnlyList<CreatureRaw>)_creatureList)[index];
 
-    private void Awake()
-    {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this);
-            return;
-        }
-        if (_instance == null)
-            _instance = this;
-    }
 
     public IEnumerator<CreatureRaw> GetEnumerator()
     {

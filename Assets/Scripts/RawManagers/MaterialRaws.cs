@@ -51,6 +51,13 @@ public class MaterialRaws : ScriptableObject, IReadOnlyDictionary<MatPairStruct,
             }
             return _instance;
         }
+        set
+        {
+            if (_instance != null && _instance != value)
+                DestroyImmediate(_instance);
+            _instance = value;
+            _instance.PopulateLookupTable();
+        }
     }
 
     public IEnumerable<MatPairStruct> Keys => ((IReadOnlyDictionary<MatPairStruct, MaterialDefinition>)materialLookup).Keys;
@@ -59,16 +66,6 @@ public class MaterialRaws : ScriptableObject, IReadOnlyDictionary<MatPairStruct,
 
     public int Count => ((IReadOnlyDictionary<MatPairStruct, MaterialDefinition>)materialLookup).Count;
 
-    private void Awake()
-    {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this);
-            return;
-        }
-        if (_instance == null)
-            _instance = this;
-    }
 
     public bool ContainsKey(MatPairStruct key)
     {
