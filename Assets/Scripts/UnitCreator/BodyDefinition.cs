@@ -100,7 +100,6 @@ public class BodyDefinition : ScriptableObject
     static Dictionary<string, Dictionary<string, BodyDefinition>> casteParts = new Dictionary<string, Dictionary<string, BodyDefinition>>();
 
 
-
     public static BodyPartModel GetPart(CreatureBody.BodyCategory category, CreatureRaw race, CasteRaw caste, BodyPartRaw part)
     {
         Gender gender = Gender.Neuter;
@@ -158,17 +157,17 @@ public class BodyDefinition : ScriptableObject
     }
     static BodyDefinition GetBodyDefinition(CreatureRaw race, CasteRaw caste)
     {
-        if (!casteParts.ContainsKey(race.creature_id))
-            casteParts[race.creature_id] = new Dictionary<string, BodyDefinition>();
-        if(!casteParts[race.creature_id].ContainsKey(caste.caste_id) || !Application.isPlaying)
-            casteParts[race.creature_id][caste.caste_id] = Resources.Load<BodyDefinition>("BodyDefinitions/" + race.creature_id + "/" + caste.caste_id);
-        return casteParts[race.creature_id][caste.caste_id];
+        if (!casteParts.ContainsKey(GetCorrectedCreatureID(race, caste)))
+            casteParts[GetCorrectedCreatureID(race)] = new Dictionary<string, BodyDefinition>();
+        if(!casteParts[GetCorrectedCreatureID(race)].ContainsKey(caste.caste_id) || !Application.isPlaying)
+            casteParts[GetCorrectedCreatureID(race)][caste.caste_id] = Resources.Load<BodyDefinition>("BodyDefinitions/" + GetCorrectedCreatureID(race) + "/" + caste.caste_id);
+        return casteParts[GetCorrectedCreatureID(race)][caste.caste_id];
     }
     static BodyDefinition GetBodyDefinition(CreatureRaw race)
     {
-        if (!raceParts.ContainsKey(race.creature_id) || !Application.isPlaying)
-            raceParts[race.creature_id] = Resources.Load<BodyDefinition>("BodyDefinitions/" + race.creature_id + "/Default");
-        return raceParts[race.creature_id];
+        if (!raceParts.ContainsKey(GetCorrectedCreatureID(race)) || !Application.isPlaying)
+            raceParts[GetCorrectedCreatureID(race)] = Resources.Load<BodyDefinition>("BodyDefinitions/" + GetCorrectedCreatureID(race) + "/Default");
+        return raceParts[GetCorrectedCreatureID(race)];
     }
     static BodyDefinition GetBodyDefinition(CreatureBody.BodyCategory category, Gender gender = Gender.Neuter)
     {
@@ -182,12 +181,16 @@ public class BodyDefinition : ScriptableObject
         return categoryParts[category][gender];
     }
 
+    static Dictionary<int, string> usableRaceNames = new Dictionary<int, string>();
+
     public static string GetCorrectedCreatureID(CreatureRaw race, CasteRaw caste = null)
     {
         if(race.flags.Count == 0)
             return race.creature_id;
         if (!race.flags[(int)CreatureRawFlags.RawFlags.GENERATED])
             return race.creature_id;
+        if (usableRaceNames.ContainsKey(race.index))
+            return usableRaceNames[race.index];
         if (caste == null)
             caste = race.caste[0];
         var descParts = caste.description.Split('.');
@@ -196,13 +199,13 @@ public class BodyDefinition : ScriptableObject
             if(Regex.IsMatch(descParts[0], @"\b" + type + @"\b", RegexOptions.IgnoreCase))
             {
                 if (Regex.IsMatch(descParts[0], @"\bHUMANOID\b", RegexOptions.IgnoreCase))
-                    return type + "_MAN";
+                    return usableRaceNames[race.index] = type + "_MAN";
                 else
-                    return type;
+                    return usableRaceNames[race.index] = type;
             }
         }
         if (Regex.IsMatch(descParts[0], @"\bHUMANOID\b", RegexOptions.IgnoreCase))
-            return "HUMANOID";
-        return race.creature_id;
+            return usableRaceNames[race.index] = "HUMANOID";
+        return usableRaceNames[race.index] = race.creature_id;
     }
 }
