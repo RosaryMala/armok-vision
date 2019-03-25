@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TokenLists;
 using UnityEngine;
+using System.Linq;
 
 public class MaterialRaws : ScriptableObject, IReadOnlyDictionary<MatPairStruct, MaterialDefinition>
 {
@@ -44,7 +45,7 @@ public class MaterialRaws : ScriptableObject, IReadOnlyDictionary<MatPairStruct,
         {
             if (_instance == null)
             {
-                _instance = Resources.Load<MaterialRaws>("MaterialRaws");
+                _instance = Resources.FindObjectsOfTypeAll<MaterialRaws>().FirstOrDefault();
                 if (_instance == null)
                     _instance = CreateInstance<MaterialRaws>();
                 _instance.PopulateLookupTable();
