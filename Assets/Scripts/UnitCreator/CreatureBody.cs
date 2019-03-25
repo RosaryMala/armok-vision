@@ -149,7 +149,7 @@ public class CreatureBody : MonoBehaviour
             spawnedPart.token = part.token;
             spawnedPart.category = part.category;
             spawnedPart.flags = new BodyPartFlags(part.flags);
-            spawnedPart.volume = part.relsize * scale * (spawnedPart.flags.head ? GameSettings.Instance.units.chibiness : 1);
+            spawnedPart.volume = part.relsize * scale; 
             spawnedPart.layers = part.layers;
 
 
@@ -380,7 +380,13 @@ public class CreatureBody : MonoBehaviour
             bounds.Encapsulate(item.bounds);
         }
         rootPart.transform.localPosition = new Vector3(0, -bounds.min.y, 0);
-
+        foreach (var part in spawnedParts)
+        {
+            if(part.Value.flags.head)
+            {
+                part.Value.transform.localScale *= GameSettings.Instance.units.chibiness;
+            }
+        }
     }
 
     public bool onGround;

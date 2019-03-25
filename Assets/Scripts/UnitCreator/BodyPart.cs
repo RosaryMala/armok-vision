@@ -302,7 +302,9 @@ public class BodyPart : MonoBehaviour
                 }
             }
             if (!placedPart)
+            {
                 placements.Add(new ChildPlacement(bodyPartChild));
+            }
         }
 
         List<BodyPart> childParts = new List<BodyPart>();
@@ -322,14 +324,18 @@ public class BodyPart : MonoBehaviour
                 //Also, this only applies to parts that actually have models defined. Procedural parts still use the old system.
                 childPart.transform.SetParent(modeledPart.transform, false);
             }
+            bool placed = false;
             foreach (var placement in placements)
             {
                 if (placement.Matches(childPart))
                 {
                     placement.Add(childPart);
+                    placed = true;
                     break;
                 }
             }
+            if (!placed)
+                childPart.gameObject.SetActive(false);
         }
         foreach (var placement in placements)
         {

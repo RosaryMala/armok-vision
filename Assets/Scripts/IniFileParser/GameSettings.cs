@@ -110,7 +110,7 @@ public class GameSettings : MonoBehaviour
         public bool drawUnits = true;
         public bool scaleUnits = true;
         public bool spriteUnits = false;
-        public float chibiness = 50;
+        public float chibiness = 3.5f;
     }
 
     public enum AnalyticsChoice
@@ -176,7 +176,10 @@ public class GameSettings : MonoBehaviour
     static void DeserializeIni(string filename)
     {
         if (!File.Exists(filename))
+        {
+            _instance = new Settings();
             return;
+        }
 
         _instance = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(filename));
     }
