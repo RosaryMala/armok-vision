@@ -265,12 +265,12 @@ public class CreatureBody : MonoBehaviour
                 var layer = part.layerModels[caste.layer_idx[modNum]];
                 if (layer != null)
                 {
-                    layer.mods.Add(new BodyPart.ModValue(mod, unit != null ? unit.appearance.bp_modifiers[modNum] : 100));
+                    layer.mods.Add(new BodyPart.ModValue(mod, (unit != null && unit.appearance != null) ? unit.appearance.bp_modifiers[modNum] : 100));
                 }
             }
             else
             {
-                part.mods.Add(new BodyPart.ModValue(mod, unit != null ? unit.appearance.bp_modifiers[modNum] : 100));
+                    part.mods.Add(new BodyPart.ModValue(mod, (unit != null && unit.appearance != null) ? unit.appearance.bp_modifiers[modNum] : 100));
             }
         }
 

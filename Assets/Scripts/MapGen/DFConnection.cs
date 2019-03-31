@@ -900,14 +900,15 @@ public sealed class DFConnection : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        if (instance != null && instance != this)
+            DestroyImmediate(this);
+        instance = this;
+    }
+
     void Start()
     {
-        if (instance != null)
-        {
-            throw new UnityException("Can't have multiple dwarf fortress connections!");
-        }
-        instance = this;
-
         try
         {
             Connect();

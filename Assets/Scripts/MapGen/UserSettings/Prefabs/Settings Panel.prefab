@@ -3202,7 +3202,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1000012621621584, guid: f80361a40d9d2ae44ac46b581f971be5, type: 3}
       propertyPath: m_Name
-      value: UnitDistanceSlider
+      value: ItemDistanceSlider
       objectReference: {fileID: 0}
     - target: {fileID: 224000011072112960, guid: f80361a40d9d2ae44ac46b581f971be5,
         type: 3}
@@ -3554,7 +3554,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1000012621621584, guid: f80361a40d9d2ae44ac46b581f971be5, type: 3}
       propertyPath: m_Name
-      value: ItemDistanceSlider
+      value: UnitDistanceSlider
       objectReference: {fileID: 0}
     - target: {fileID: 224000011072112960, guid: f80361a40d9d2ae44ac46b581f971be5,
         type: 3}

@@ -42,8 +42,8 @@ public class GameSettings : MonoBehaviour
         public bool showHiddenTiles = false;
         public bool fog = true;
         public int maxItemsPerTile = 10;
-        internal float itemDrawDistance = 50;
-        internal float creatureDrawDistance = 50;
+        public float itemDrawDistance = 50;
+        public float creatureDrawDistance = 50;
     }
 
     public static void ClampToMaxSize(Texture2D texture)
@@ -189,12 +189,29 @@ public class GameSettings : MonoBehaviour
         File.WriteAllText(filename, JsonConvert.SerializeObject(Instance, Formatting.Indented));
     }
 
-    const string filename = "Config.json";
+
+
+    static string filename;
 
     // This function is called when the MonoBehaviour will be destroyed
     public void OnDestroy()
     {
+        Save();
+    }
+
+    void Save()
+    {
+        if (string.IsNullOrWhiteSpace(filename))
+            SetupFileName();
         SerializeIni(filename);
+    }
+
+    static void SetupFileName()
+    {
+        string configDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Application.productName);
+        if (!Directory.Exists(configDir))
+            Directory.CreateDirectory(configDir);
+        filename = Path.Combine(configDir, "Config.json");
     }
 
     // Awake is called when the script instance is being loaded
@@ -217,10 +234,9 @@ public class GameSettings : MonoBehaviour
 
     static void Init()
     {
-        string configDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Application.productName);
-        if (!Directory.Exists(configDir))
-            Directory.CreateDirectory(configDir);
-        DeserializeIni(Path.Combine(configDir, filename));
+        if (string.IsNullOrWhiteSpace(filename))
+            SetupFileName();
+        DeserializeIni(filename);
     }
 
     void SetShadows(bool input)
