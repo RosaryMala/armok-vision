@@ -3,12 +3,15 @@
 float _Amount;
 
 half4       _Color;
+half4 _Color1;
+half4 _Color2;
+half4 _Color3;
+sampler2D   _PatternMask;
 
 sampler2D   _MainTex;
 
 sampler2D   _BumpMap;
 half        _BumpScale;
-
 sampler2D _DFMask;
 UNITY_DECLARE_TEX2DARRAY(_MatTexArray);
 

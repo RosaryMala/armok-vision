@@ -287,7 +287,6 @@ public class CreatureBody : MonoBehaviour
                 var layer = part.layerModels[colorMod.tissue_layer_id[i]];
                 if (layer == null || !layer.gameObject.activeSelf)
                     continue;
-                ColorDefinition colorDef;
                 PatternDescriptor pattern;
                 if (unit != null && unit.appearance != null)
                 {
@@ -295,43 +294,11 @@ public class CreatureBody : MonoBehaviour
                 }
                 else
                     pattern = colorMod.patterns[seed];
-                colorDef = pattern.colors[0];
-                var color = new Color32((byte)colorDef.red, (byte)colorDef.green, (byte)colorDef.blue, 128);
-                var index = ContentLoader.GetPatternIndex(race.tissues[layer.layerRaw.tissue_id].material);
-                if(colorMod.start_date > 0 && unit != null)
-                {
-                    color = Color.Lerp(layer.layerColor, color, Mathf.InverseLerp(colorMod.start_date * 1200, colorMod.end_date * 1200, unit.age));
-                }
-                layer.layerColor = color;
-                propertyBlock.SetColor(_MatColorProperty, color);
-                propertyBlock.SetFloat(_MatIndexProperty, index);
-                switch (pattern.colors.Count)
-                {
-                    case 0:
-                        break;
-                    case 1:
-                        propertyBlock.SetColor(_Color1Property, pattern.colors[0]);
-                        propertyBlock.SetColor(_Color2Property, pattern.colors[0]);
-                        propertyBlock.SetColor(_Color3Property, pattern.colors[0]);
-                        break;
-                    case 2:
-                        propertyBlock.SetColor(_Color1Property, pattern.colors[0]);
-                        propertyBlock.SetColor(_Color2Property, pattern.colors[0]);
-                        propertyBlock.SetColor(_Color3Property, pattern.colors[1]);
-                        break;
-                    case 3:
-                    default:
-                        propertyBlock.SetColor(_Color1Property, pattern.colors[0]);
-                        propertyBlock.SetColor(_Color2Property, pattern.colors[2]);
-                        propertyBlock.SetColor(_Color3Property, pattern.colors[1]);
-                        break;
-                }
-                var renderer = layer.GetComponentInChildren<MeshRenderer>();
-                if (renderer != null)
-                    renderer.SetPropertyBlock(propertyBlock);
-                var skinRenderer = layer.GetComponentInChildren<SkinnedMeshRenderer>();
-                if (skinRenderer != null)
-                    skinRenderer.SetPropertyBlock(propertyBlock);
+                var matIndex = ContentLoader.GetPatternIndex(race.tissues[layer.layerRaw.tissue_id].material);
+                if (colorMod.start_date > 0 && unit != null)
+                    layer.ApplyPattern(pattern, Mathf.InverseLerp(colorMod.start_date * 1200, colorMod.end_date * 1200, unit.age), propertyBlock, matIndex);
+                else
+                    layer.ApplyPattern(pattern, 1, propertyBlock, matIndex);
             }
         }
         for (int i = 0; i < caste.body_parts.Count; i++)

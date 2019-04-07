@@ -27,6 +27,10 @@
         [PerRendererData] _MatColor("DF Material Color", Color) = (1,1,1,1)
         [PerRendererData] _MatIndex("DF Material Array Index", int) = 0
 		[PerRendererData] _JobColor("DF Job Color", Color) = (1,1,1,1)
+        [PerRendererData] _Color1("Color Mod 1", Color) = (1,1,1,1)
+        [PerRendererData] _Color2("Color Mod 2", Color) = (1,1,1,1)
+        [PerRendererData] _Color3("Color Mod 3", Color) = (1,1,1,1)
+        [PerRendererData] _PatternMask("Pattern Mask", 2D) = "black" {}
 
         // Blending state
         [HideInInspector] _Mode("__mode", Float) = 0.0
@@ -50,6 +54,7 @@
         #pragma shader_feature _SECOND_UV
         #pragma shader_feature _EMISSION
         #pragma shader_feature _METALLICGLOSSMAP
+        #pragma shader_feature _PATTERN_MASK
 #pragma multi_compile _ _BOUNDING_BOX_ENABLED
 
 #include "buildingInputs.cginc"

@@ -7,7 +7,16 @@ float4 texcoords = TexCoords(IN);
 //get the mask 
 fixed4 dfTex = UNITY_SAMPLE_TEX2DARRAY(_MatTexArray, float3(texcoords.zw, UNITY_ACCESS_INSTANCED_PROP(_MatIndex_arr, _MatIndex)));
 fixed4 matColor = UNITY_ACCESS_INSTANCED_PROP(_MatColor_arr, _MatColor);
-fixed3 albedo = dfTex.rgb * matColor.rgb;
+fixed3 albedo = matColor.rgb;
+
+#ifdef _PATTERN_MASK
+fixed4 pattern_mask = tex2D(_PatternMask, texcoords.zw);
+albedo = lerp(albedo, _Color1.rgb, pattern_mask.r);
+albedo = lerp(albedo, _Color2.rgb, pattern_mask.g);
+albedo = lerp(albedo, _Color3.rgb, pattern_mask.b);
+#endif
+
+albedo = dfTex.rgb * albedo;
 half smoothness = dfTex.a;
 half metallic = max((matColor.a * 2) - 1, 0);
 fixed alpha = min(matColor.a * 2, 1);

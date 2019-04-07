@@ -48,6 +48,7 @@ public class BuildingMaterialEditor : ShaderGUI
         public static GUIContent materialTextureText = new GUIContent("Material Texture Array", "Texture array for DF-set materials");
         public static GUIContent detailNormalMapText = new GUIContent("Normal Map", "Normal Map");
         public static GUIContent specularColorText = new GUIContent("Specular Color", "Specular Color for Non-Metallic materials");
+        public static GUIContent maskEnabledText = new GUIContent("Pattern Mask", "Allow material to use optional pattern texture from pattern descriptors");
 
         public static string whiteSpaceString = " ";
         public static string primaryMapsText = "Main Maps";
@@ -138,7 +139,7 @@ public class BuildingMaterialEditor : ShaderGUI
     {
         // Use default labelWidth
         EditorGUIUtility.labelWidth = 0f;
-
+        bool maskEnabled = material.IsKeywordEnabled("_PATTERN_MASK");
         // Detect any changes to the material
         EditorGUI.BeginChangeCheck();
         {
@@ -164,6 +165,7 @@ public class BuildingMaterialEditor : ShaderGUI
 
             // Secondary properties
             GUILayout.Label(Styles.secondaryMapsText, EditorStyles.boldLabel);
+            maskEnabled = EditorGUILayout.Toggle(Styles.maskEnabledText, maskEnabled);
             m_MaterialEditor.ShaderProperty(uvSetSecondary, Styles.uvSetLabel.text);
             m_MaterialEditor.TextureScaleOffsetProperty(dfTextureMap);
 
@@ -180,8 +182,12 @@ public class BuildingMaterialEditor : ShaderGUI
         {
             foreach (var obj in blendMode.targets)
                 MaterialChanged((Material)obj, m_WorkflowMode);
-        }
+            if (maskEnabled)
+                material.EnableKeyword("_PATTERN_MASK");
+            else
+                material.DisableKeyword("_PATTERN_MASK");
 
+        }
 
         EditorGUILayout.Space();
 
