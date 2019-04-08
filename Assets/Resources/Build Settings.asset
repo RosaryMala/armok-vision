@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Build Settings
   m_EditorClassIdentifier: 
   author: Japa, Justin Partain, Kazimuth, Lethosor
-  content_version: 0.19.1
-  df_min_version: 0.34.11
+  content_version: 0.20.0
+  df_min_version: 0.44.12
   df_max_version: 
   title: Armok Vision
   tooltip: A full 3D visualiser - shows off Dwarf Fortress with unprecedented detail
