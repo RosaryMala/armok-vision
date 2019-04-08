@@ -65,6 +65,7 @@ public class CreatureBody : MonoBehaviour
     static bool gotShaderIds = false;
     static int _MatColorProperty;
     static int _MatIndexProperty;
+    static int _ShapeIndexProperty;
     static int _Color1Property;
     static int _Color2Property;
     static int _Color3Property;
@@ -74,6 +75,7 @@ public class CreatureBody : MonoBehaviour
         gotShaderIds = true;
         _MatColorProperty = Shader.PropertyToID("_MatColor");
         _MatIndexProperty = Shader.PropertyToID("_MatIndex");
+        _ShapeIndexProperty = Shader.PropertyToID("_ShapeIndex");
         _Color1Property = Shader.PropertyToID("_Color1");
         _Color2Property = Shader.PropertyToID("_Color2");
         _Color3Property = Shader.PropertyToID("_Color3");
@@ -295,10 +297,11 @@ public class CreatureBody : MonoBehaviour
                 else
                     pattern = colorMod.patterns[seed];
                 var matIndex = ContentLoader.GetPatternIndex(race.tissues[layer.layerRaw.tissue_id].material);
+                var shapeIndex = ContentLoader.GetShapeIndex(race.tissues[layer.layerRaw.tissue_id].material);
                 if (colorMod.start_date > 0 && unit != null)
-                    layer.ApplyPattern(pattern, Mathf.InverseLerp(colorMod.start_date * 1200, colorMod.end_date * 1200, unit.age), propertyBlock, matIndex);
+                    layer.ApplyPattern(pattern, Mathf.InverseLerp(colorMod.start_date * 1200, colorMod.end_date * 1200, unit.age), propertyBlock, matIndex, shapeIndex);
                 else
-                    layer.ApplyPattern(pattern, 1, propertyBlock, matIndex);
+                    layer.ApplyPattern(pattern, 1, propertyBlock, matIndex, shapeIndex);
             }
         }
         for (int i = 0; i < caste.body_parts.Count; i++)

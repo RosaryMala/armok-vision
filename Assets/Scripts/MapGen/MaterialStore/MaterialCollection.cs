@@ -65,6 +65,8 @@ namespace MaterialStore
 
         MaterialMatcher<MaterialTextureSet> matTextures = new MaterialMatcher<MaterialTextureSet>();
         private Texture2DArray PatternTextureArray;
+        private Texture2DArray ShapeTextureArray;
+        private int ShapeTextureDepth;
         private int PatternTextureDepth;
 
         public void PopulateMatTextures()
@@ -89,9 +91,12 @@ namespace MaterialStore
             {
                 PopulateMatTextures();
                 PatternTextureArray = Resources.Load<Texture2DArray>("patternTextures");
+                ShapeTextureArray = Resources.Load<Texture2DArray>("shapeTextures");
                 PatternTextureDepth = PatternTextureArray.depth;
+                ShapeTextureDepth = ShapeTextureArray.depth;
                 Shader.SetGlobalTexture("_MatTexArray", PatternTextureArray);
-                Vector4 arrayCount = new Vector4(PatternTextureDepth, 1, 1, 1);
+                Shader.SetGlobalTexture("_ShapeMap", ShapeTextureArray);
+                Vector4 arrayCount = new Vector4(PatternTextureDepth, ShapeTextureDepth, 1, 1);
                 Shader.SetGlobalVector("_TexArrayCount", arrayCount);
             }
         }

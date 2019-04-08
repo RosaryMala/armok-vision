@@ -30,6 +30,7 @@ public class BodyLayer : MonoBehaviour
     static bool gotShaderIds = false;
     static int _MatColorProperty;
     static int _MatIndexProperty;
+    static int _ShapeIndexProperty;
     static int _Color1Property;
     static int _Color2Property;
     static int _Color3Property;
@@ -44,6 +45,7 @@ public class BodyLayer : MonoBehaviour
         _Color2Property = Shader.PropertyToID("_Color2");
         _Color3Property = Shader.PropertyToID("_Color3");
         _PatternMaskProperty = Shader.PropertyToID("_PatternMask");
+        _ShapeIndexProperty = Shader.PropertyToID("_ShapeIndex");
     }
 
     public List<BodyModTarget> bodyModTargets;
@@ -59,11 +61,13 @@ public class BodyLayer : MonoBehaviour
             var tissue = race.tissues[layerRaw.tissue_id];
             var color = ContentLoader.GetColor(tissue.material);
             var index = ContentLoader.GetPatternIndex(tissue.material);
+            var shapeIndex = ContentLoader.GetShapeIndex(tissue.material);
             propertyBlock.SetColor(_MatColorProperty, color);
             propertyBlock.SetColor(_Color1Property, color);
             propertyBlock.SetColor(_Color2Property, color);
             propertyBlock.SetColor(_Color3Property, color);
-            propertyBlock.SetFloat(_MatIndexProperty, index);
+            propertyBlock.SetInt(_MatIndexProperty, index);
+            propertyBlock.SetInt(_ShapeIndexProperty, shapeIndex);
             if (renderer != null)
             {
                 renderer.SetPropertyBlock(propertyBlock);
@@ -129,7 +133,7 @@ public class BodyLayer : MonoBehaviour
         return new Color(c.r, c.g, c.b, a);
     }
 
-    internal void ApplyPattern(PatternDescriptor pattern, float t, MaterialPropertyBlock propertyBlock, int materialIndex)
+    internal void ApplyPattern(PatternDescriptor pattern, float t, MaterialPropertyBlock propertyBlock, int materialIndex, int shapeIndex)
     {
         if (!gotShaderIds)
             GetShaderIDs();
@@ -190,6 +194,7 @@ public class BodyLayer : MonoBehaviour
             }
 
             propertyBlock.SetInt(_MatIndexProperty, materialIndex);
+            propertyBlock.SetInt(_ShapeIndexProperty, shapeIndex);
             switch (layerColors.Count)
             {
                 case 0:

@@ -7,11 +7,11 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PLANT-_-THREAD
+  m_Name: CREATURE-_-SCALE
   m_Shader: {fileID: 4800000, guid: 0d849fe31a0566441aadf5b3171b7ad4, type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: _USEDFCOLOR_ON
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 1
+  m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -40,11 +40,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Height:
-        m_Texture: {fileID: 2800000, guid: 8e4754a6efe164a4ebd8a2f3791c573f, type: 3}
+        m_Texture: {fileID: 2800000, guid: 86e98effc9d599c4ab6e7dc1c02887ee, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 8e4754a6efe164a4ebd8a2f3791c573f, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -52,11 +52,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal:
-        m_Texture: {fileID: 2800000, guid: 67ea1b7046191724291b6c5843712596, type: 3}
+        m_Texture: {fileID: 2800000, guid: a690d09c7f4aca24a98d6c09872db715, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Occlusion:
-        m_Texture: {fileID: 2800000, guid: 5fa2198329fadba4393c5fb8bf532ddf, type: 3}
+        m_Texture: {fileID: 2800000, guid: 1616847f879476a48a77f2d7400fb8c7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -68,7 +68,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Specular:
-        m_Texture: {fileID: 2800000, guid: 36654882e2a7b674cab19de9244c435e, type: 3}
+        m_Texture: {fileID: 2800000, guid: b586fafa237df8a4ab5234a84c42941e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
@@ -89,7 +89,7 @@ Material:
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
-    - _useDFColor: 0
+    - _useDFColor: 1
     m_Colors:
-    - _Color: {r: 0.98529404, g: 0.9786988, b: 0.9418253, a: 0.5019608}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

@@ -40,12 +40,14 @@ namespace Building
         {
             Color partColor = new Color32(128,128,128,128);
             float textureIndex = 0;
+            float shapeIndex = 0;
             if (string.IsNullOrEmpty(item) || ItemTokenList.ItemLookup == null)
             {
                 if (index < 0)
                 {
                     partColor = ContentLoader.GetColor(buildingInput.material);
                     textureIndex = ContentLoader.GetPatternIndex(buildingInput.material);
+                    shapeIndex = ContentLoader.GetShapeIndex(buildingInput.material);
                 }
                 else if (index >= buildingInput.items.Count - endOffset)
                 {
@@ -64,6 +66,7 @@ namespace Building
                     }
                     partColor = ContentLoader.GetColor(buildingItem.item);
                     textureIndex = ContentLoader.GetPatternIndex(buildingItem.item.material);
+                    shapeIndex = ContentLoader.GetShapeIndex(buildingItem.item.material);
                     ItemModel.UpdateImprovements(gameObject, buildingItem.item);
                 }
             }
@@ -88,6 +91,7 @@ namespace Building
                     {
                         partColor = ContentLoader.GetColor(buildingItem.item);
                         textureIndex = ContentLoader.GetPatternIndex(buildingItem.item.material);
+                        shapeIndex = ContentLoader.GetShapeIndex(buildingItem.item.material);
                         ItemModel.UpdateImprovements(gameObject, buildingItem.item);
                         set = true;
                         break;
@@ -113,6 +117,7 @@ namespace Building
             MaterialPropertyBlock prop = new MaterialPropertyBlock();
             prop.SetColor("_MatColor", partColor);
             prop.SetFloat("_MatIndex", textureIndex);
+            prop.SetFloat("_ShapeIndex", shapeIndex);
             meshRenderer.SetPropertyBlock(prop);
         }
     }

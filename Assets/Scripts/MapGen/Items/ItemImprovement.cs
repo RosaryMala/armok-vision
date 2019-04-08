@@ -20,7 +20,7 @@ public class ItemImprovement : MonoBehaviour
     {
         Color matColor = ContentLoader.GetColor(improvement.material);
         float textureIndex = ContentLoader.GetPatternIndex(improvement.material);
-
+        float shapeIndex = ContentLoader.GetShapeIndex(improvement.material);
         image = improvement.image;
 
         if (actualModel != null)
@@ -74,6 +74,7 @@ public class ItemImprovement : MonoBehaviour
         MaterialPropertyBlock prop = new MaterialPropertyBlock();
         prop.SetColor("_MatColor", matColor);
         prop.SetFloat("_MatIndex", textureIndex);
+        prop.SetFloat("_ShapeIndex", shapeIndex);
         meshRenderer.SetPropertyBlock(prop);
         gameObject.SetActive(true);
     }
