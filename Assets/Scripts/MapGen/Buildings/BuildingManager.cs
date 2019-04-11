@@ -1,5 +1,6 @@
 ﻿using DFHack;
 using RemoteFortressReader;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -94,6 +95,27 @@ namespace Building
         private void OnDisable()
         {
             Shader.DisableKeyword("_BOUNDING_BOX_ENABLED");
+        }
+
+        DFCoord lastMapPos = new DFCoord(-3000, -3000, -3000);
+
+        private void Update()
+        {
+            if(DFConnection.Instance.EmbarkMapPosition != lastMapPos)
+            {
+                lastMapPos = DFConnection.Instance.EmbarkMapPosition;
+                ClearAllBuildings();
+            }
+        }
+
+        private void ClearAllBuildings()
+        {
+            foreach (var building in sceneBuildings)
+            {
+                Destroy(building.Value.gameObject);
+            }
+            sceneBuildings.Clear();
+            removedBuildings.Clear();
         }
 
         private void LateUpdate()

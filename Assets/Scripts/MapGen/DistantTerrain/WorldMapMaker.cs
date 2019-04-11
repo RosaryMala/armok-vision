@@ -208,15 +208,19 @@ public class WorldMapMaker : MonoBehaviour
     {
         if (ContentLoader.Instance == null)
             return;
-        regionMaps = DFConnection.Instance.PopRegionMapUpdate();
-        worldMap = DFConnection.Instance.PopWorldMapUpdate();
-        if (regionMaps != null && worldMap != null)
+        var tempRegionMaps = DFConnection.Instance.PopRegionMapUpdate();
+        var tempWorldMap = DFConnection.Instance.PopWorldMapUpdate();
+        if (tempRegionMaps != null && worldMap != null)
         {
+            regionMaps = tempRegionMaps;
+            if (tempWorldMap != null)
+                worldMap = tempWorldMap;
             GenerateRegionMeshes();
             GenerateMesh();
         }
-        if (worldMap != null)
+        if (tempWorldMap != null)
         {
+            worldMap = tempWorldMap;
             if (DFConnection.Instance.HasWorldMapPositionChanged())
             {
                 CopyFromRemote(worldMap);
