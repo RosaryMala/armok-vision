@@ -704,6 +704,11 @@ public sealed class DFConnection : MonoBehaviour
     {
         Version pluginVersion = new Version(0,0,0);
         Version avVersion = new Version(BuildSettings.Instance.content_version);
+        StringMessage dfHackVersion = new StringMessage();
+        StringMessage dfVersion = new StringMessage();
+
+        dfhackVersionCall.TryExecute(null, out dfHackVersion);
+        dfVersionCall.TryExecute(null, out dfVersion);
 
         DFStringStream tempStream = new DFStringStream();
         networkClient.RunCommand(tempStream, "RemoteFortressReader_version", new List<string>());
@@ -725,7 +730,8 @@ public sealed class DFConnection : MonoBehaviour
                 ModalPanel.Instance.Choice(string.Format(
                     "You appear to be running on an out-dated version of the RemoteFortressReader plugin.\n\n" +
                     "You're running version {0} of the plugin, while Armok Vision expects a plugin versioned {1} or above.\n\n" +
-                    "A compatible version of the plugin has not been found. Please let the developers know which version of DFHack and DF you are running, so they can make one.", pluginVersion, avVersion), Init, DisableUpdate, "Okay.", "Don't ask again");
+                    "A compatible version of the plugin has not been found. Please let the developers know which version of DFHack and DF you are running, so they can make one.\n\n" +
+                    "Please include the following info:\n\n Dwarf Fortress Version: {2}\n\n DFHack Version: {3}", pluginVersion, avVersion, dfVersion.value, dfHackVersion.value), Init, DisableUpdate, "Okay.", "Don't ask again");
                 return; //We don't have a compatible plugin
             }
             else
