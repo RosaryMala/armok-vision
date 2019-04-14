@@ -1,12 +1,10 @@
 ﻿using RemoteFortressReader;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using TokenLists;
 using UnityEngine;
-using System.Linq;
 
-public class MaterialRaws : ScriptableObject, IReadOnlyDictionary<MatPairStruct, MaterialDefinition>
+public class MaterialRaws : IReadOnlyDictionary<MatPairStruct, MaterialDefinition>
 {
     [SerializeField]
     List<MaterialDefinition> _materialList = new List<MaterialDefinition>();
@@ -45,19 +43,10 @@ public class MaterialRaws : ScriptableObject, IReadOnlyDictionary<MatPairStruct,
         {
             if (_instance == null)
             {
-                _instance = Resources.FindObjectsOfTypeAll<MaterialRaws>().FirstOrDefault();
-                if (_instance == null)
-                    _instance = CreateInstance<MaterialRaws>();
+                _instance = new MaterialRaws();
                 _instance.PopulateLookupTable();
             }
             return _instance;
-        }
-        set
-        {
-            if (_instance != null && _instance != value)
-                DestroyImmediate(_instance);
-            _instance = value;
-            _instance.PopulateLookupTable();
         }
     }
 

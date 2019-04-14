@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using TokenLists;
 using UnityEngine;
 
-public class CreatureRaws : ScriptableObject, IReadOnlyList<CreatureRaw>
+public class CreatureRaws : IReadOnlyList<CreatureRaw>
 {
     [SerializeField]
     List<CreatureRaw> _creatureList = new List<CreatureRaw>();
@@ -32,17 +32,9 @@ public class CreatureRaws : ScriptableObject, IReadOnlyList<CreatureRaw>
         {
             if (_instance == null)
             {
-                _instance = Resources.Load<CreatureRaws>("CreatureRaws");
-                if (_instance == null)
-                    _instance = CreateInstance<CreatureRaws>();
+                _instance = new CreatureRaws();
             }
             return _instance;
-        }
-        set
-        {
-            if (_instance != null && _instance != value)
-                DestroyImmediate(_instance);
-            _instance = value;
         }
     }
 

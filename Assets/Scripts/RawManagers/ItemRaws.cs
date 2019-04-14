@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using TokenLists;
 using UnityEngine;
 
-public class ItemRaws : ScriptableObject, IReadOnlyDictionary<MatPairStruct, MaterialDefinition>, IReadOnlyDictionary<string, MaterialDefinition>
+public class ItemRaws : IReadOnlyDictionary<MatPairStruct, MaterialDefinition>, IReadOnlyDictionary<string, MaterialDefinition>
 {
     [SerializeField]
     List<MaterialDefinition> _itemList = new List<MaterialDefinition>();
@@ -73,19 +73,10 @@ public class ItemRaws : ScriptableObject, IReadOnlyDictionary<MatPairStruct, Mat
         {
             if (_instance == null)
             {
-                _instance = Resources.Load<ItemRaws>("ItemRaws");
-                if (_instance == null)
-                    _instance = CreateInstance<ItemRaws>();
+                _instance = new ItemRaws();
                 _instance.PopulateLookupTable();
             }
             return _instance;
-        }
-        set
-        {
-            if (_instance != null && _instance != value)
-                DestroyImmediate(_instance);
-            _instance = value;
-            _instance.PopulateLookupTable();
         }
     }
 

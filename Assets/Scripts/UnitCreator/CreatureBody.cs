@@ -106,9 +106,9 @@ public class CreatureBody : MonoBehaviour
         inventoryModes = new InventoryMode[0];
         //They're made standing, so the current state should reflect that.
         onGround = false;
-        float scale = caste.adult_size / (float)caste.total_relsize * 10;
+        float scale = Mathf.Max(caste.adult_size, 1) / (float)caste.total_relsize * 10;
         if(unit != null && unit.size_info != null)
-            scale = unit.size_info.size_cur / (float)caste.total_relsize * 10;
+            scale = Mathf.Max(unit.size_info.size_cur, 1) / (float)caste.total_relsize * 10;
         MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
 
         bodyScale = BodyDefinition.GetBodyScale(bodyCategory, race, caste);

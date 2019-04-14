@@ -19,6 +19,8 @@ public class BodyPartModel : MonoBehaviour
         transform.localScale *= Mathf.Pow(factor, 1 / 3.0f);
     }
 
+    Transform censorField;
+
     Dictionary<MatPairStruct, ItemModel> specialEquipment;
 
     class GenericClothingLayer
@@ -36,6 +38,7 @@ public class BodyPartModel : MonoBehaviour
 
     internal void CollectEquipment()
     {
+        censorField = transform.Find("[CENSOR]");
         specialEquipment = new Dictionary<MatPairStruct, ItemModel>();
         foreach (var item in GetComponentsInChildren<ItemModel>())
         {
@@ -83,6 +86,7 @@ public class BodyPartModel : MonoBehaviour
 
     internal void ApplyEquipment(List<BodyPart.Equip> inventory, RemoteFortressReader.UnitDefinition unit)
     {
+        int wornItems = 0;
         //first of all disable any layers that are not used anymore, but not need to remove them entirely.
         for (int i = inventory.Count; i < instantiatedClothingLayers.Count; i++)
         {
@@ -97,6 +101,7 @@ public class BodyPartModel : MonoBehaviour
             {
                 if (instantiatedClothingLayers.Count > i && instantiatedClothingLayers[i] != null)
                     instantiatedClothingLayers[i].gameObject.SetActive(false);
+                wornItems++;
             }
             if (specialEquipment.ContainsKey(item.item.item.type))
             {
@@ -146,5 +151,7 @@ public class BodyPartModel : MonoBehaviour
                     instantiatedClothingLayers[i].name = item.itemDef.id;
             }
         }
+        if (censorField != null)
+            censorField.gameObject.SetActive(wornItems == 0);
     }
 }

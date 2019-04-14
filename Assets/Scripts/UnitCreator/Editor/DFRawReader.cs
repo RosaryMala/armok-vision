@@ -13,7 +13,6 @@ public class DFRawReader : EditorWindow
 {
     private Vector2 raceScroll;
     private Vector2 unitScroll;
-    [SerializeField]
     private List<CreatureRaw> filteredRaws;
 
     [MenuItem("Window/DF Raw Reader")]
@@ -38,7 +37,6 @@ public class DFRawReader : EditorWindow
     bool filterParts = true;
     private bool showRaces;
     private bool showUnits;
-    [SerializeField]
     private List<UnitDefinition> units;
 
     class ChildCount
@@ -139,27 +137,6 @@ public class DFRawReader : EditorWindow
             var itemListCall = new RemoteFunction<EmptyMessage, MaterialList>(client, "GetItemList", "RemoteFortressReader");
             var unitListCall = new RemoteFunction<EmptyMessage, UnitList>(client, "GetUnitList", "RemoteFortressReader");
             client.ResumeGame();
-            var ExistingMatList = AssetDatabase.LoadAssetAtPath<MaterialRaws>("Assets/Resources/MaterialRaws.asset");
-            var ExistingCreatureList = AssetDatabase.LoadAssetAtPath<CreatureRaws>("Assets/Resources/CreatureRaws.asset");
-            var ExistingItemList = AssetDatabase.LoadAssetAtPath<ItemRaws>("Assets/Resources/ItemRaws.asset");
-            if (ExistingMatList == null)
-            {
-                ExistingMatList = CreateInstance<MaterialRaws>();
-                MaterialRaws.Instance = ExistingMatList;
-                AssetDatabase.CreateAsset(ExistingMatList, "Assets/Resources/MaterialRaws.asset");
-            }
-            if (ExistingCreatureList == null)
-            {
-                ExistingCreatureList = CreateInstance<CreatureRaws>();
-                CreatureRaws.Instance = ExistingCreatureList;
-                AssetDatabase.CreateAsset(ExistingCreatureList, "Assets/Resources/CreatureRaws.asset");
-            }
-            if (ExistingItemList == null)
-            {
-                ExistingItemList = CreateInstance<ItemRaws>();
-                ItemRaws.Instance = ExistingItemList;
-                AssetDatabase.CreateAsset(ExistingItemList, "Assets/Resources/ItemRaws.asset");
-            }
             MaterialRaws.Instance.MaterialList = materialListCall.Execute().material_list;
             ItemRaws.Instance.ItemList = itemListCall.Execute().material_list;
             CreatureRaws.Instance.CreatureList = getCreatureRaws.Execute().creature_raws;
@@ -176,7 +153,14 @@ public class DFRawReader : EditorWindow
             //}
             RefilterList();
         }
-        if (CreatureRaws.Instance != null)
+        if (CreatureRaws.Instance.Count == 0)
+        {
+            if (filteredRaws != null)
+                filteredRaws.Clear();
+            if (units != null)
+                units.Clear();
+        }
+        if (CreatureRaws.Instance.Count > 0)
         {
             EditorGUI.BeginChangeCheck();
             filter = EditorGUILayout.TextField(filter);
@@ -187,7 +171,7 @@ public class DFRawReader : EditorWindow
 
             bodyCategoryFilter = (CreatureBody.BodyCategory)EditorGUILayout.EnumPopup(bodyCategoryFilter);
 
-            if (EditorGUI.EndChangeCheck())
+            if (EditorGUI.EndChangeCheck() || filteredRaws == null)
             {
                 RefilterList();
             }
