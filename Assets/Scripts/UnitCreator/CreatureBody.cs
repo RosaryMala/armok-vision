@@ -344,19 +344,29 @@ public class CreatureBody : MonoBehaviour
 
 
         rootPart.Arrange(this);
+        foreach (var part in spawnedParts)
+        {
+            if (part.Value.flags.head)
+            {
+                part.Value.transform.localScale *= GameSettings.Instance.units.chibiness;
+            }
+        }
+
+        foreach (var wound in unit.wounds)
+        {
+            foreach (var woundPart in wound.parts)
+            {
+                if (spawnedParts.ContainsKey(woundPart.body_part_id))
+                    spawnedParts[woundPart.body_part_id].gameObject.SetActive(!wound.severed_part);
+            }
+        }
+
         bounds = rootPart.GetComponentInChildren<MeshRenderer>().bounds;
         foreach (var item in rootPart.GetComponentsInChildren<MeshRenderer>())
         {
             bounds.Encapsulate(item.bounds);
         }
         rootPart.transform.localPosition = new Vector3(0, -bounds.min.y, 0);
-        foreach (var part in spawnedParts)
-        {
-            if(part.Value.flags.head)
-            {
-                part.Value.transform.localScale *= GameSettings.Instance.units.chibiness;
-            }
-        }
     }
 
     public bool onGround;
@@ -364,6 +374,8 @@ public class CreatureBody : MonoBehaviour
     private BodyPart lowerBody;
 
     float oldChibiSize = -1;
+
+    List<UnitWound> oldWounds;
 
     public void UpdateUnit(UnitDefinition unit)
     {
@@ -374,6 +386,32 @@ public class CreatureBody : MonoBehaviour
             caste = race.caste[unit.race.mat_index];
             needsRegen = true;
         }
+        if (oldWounds != null || unit.wounds != null)
+        {
+            if (oldWounds == null && unit.wounds != null)
+                needsRegen = true;
+            else if (oldWounds != null && unit.wounds == null)
+                needsRegen = true;
+            else if (oldWounds.Count != unit.wounds.Count)
+                needsRegen = true;
+            else
+            {
+                for (int i = 0; i < unit.wounds.Count; i++)
+                {
+                    if (oldWounds[i].severed_part != unit.wounds[i].severed_part)
+                    {
+                        needsRegen = true;
+                        break;
+                    }
+                    if (oldWounds[i].parts.Count != unit.wounds[i].parts.Count)
+                    {
+                        needsRegen = true;
+                        break;
+                    }
+                }
+            }
+        }
+        oldWounds = unit.wounds;
         this.unit = unit;
         if(needsRegen || oldChibiSize != GameSettings.Instance.units.chibiness)
         {
@@ -433,6 +471,8 @@ public class CreatureBody : MonoBehaviour
     {
         if (spawnedParts.ContainsKey(item.body_part_id))
         {
+            if (!ItemRaws.Instance.ContainsKey(item.item.type) || !MaterialRaws.Instance.ContainsKey(item.item.material))
+                return;
             var itemDef = ItemRaws.Instance[item.item.type];
             var material = MaterialRaws.Instance[item.item.material];
             //If it's any item at all, it'll at least be on the body part itself, either carried or worn.

@@ -8,6 +8,7 @@ using RemoteFortressReader;
 using TokenLists;
 using UnityEditor;
 using UnityEngine;
+using UnitFlags;
 
 public class DFRawReader : EditorWindow
 {
@@ -90,6 +91,8 @@ public class DFRawReader : EditorWindow
 
     bool FitsFilter(UnitDefinition unit)
     {
+        if (((UnitFlags1)unit.flags1 & UnitFlags1.dead) == UnitFlags1.dead)
+            return false;
         if (!string.IsNullOrEmpty(filter))
         {
             if (filterToken)
