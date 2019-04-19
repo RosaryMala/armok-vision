@@ -4,7 +4,7 @@ using UnityEngine;
 public class UnitScaler : MonoBehaviour {
 
     const int HumanSize = 7000;
-    static float logMultiplier = HumanSize / Mathf.Log(HumanSize);
+    static float logMultiplier = HumanSize / Mathf.Pow(HumanSize, 1/2f);
 
     public static float GetAdjustedUnitSize(float unitSize)
     {
@@ -13,7 +13,7 @@ public class UnitScaler : MonoBehaviour {
             case GameSettings.UnitScale.Fixed:
                 return HumanSize;
             case GameSettings.UnitScale.Logarithmic:
-                return Mathf.Log(Mathf.Max(unitSize, 10)) * logMultiplier;
+                return Mathf.Pow(Mathf.Max(unitSize, 1), 1/2f) * logMultiplier;
             case GameSettings.UnitScale.Real:
             default:
                 return Mathf.Max(unitSize, 1);
