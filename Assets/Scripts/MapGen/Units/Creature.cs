@@ -96,7 +96,7 @@ public class Creature : MonoBehaviour
         Material mat;
         int index;
         bool colored;
-        if (GameSettings.Instance.units.unitDetail == GameSettings.UnitDetail.SDSprites && ContentLoader.Instance.SpriteManager.getCreatureSprite(unit, out mat, out index, out colored))
+        if (GameSettings.Instance.units.unitDetail != GameSettings.UnitDetail.ASCII && ContentLoader.Instance.SpriteManager.getCreatureSprite(unit, out mat, out index, out colored))
         {
             legacySprite.material = mat;
             creatureMaterialProperties.SetFloat(layerIndexID, index);

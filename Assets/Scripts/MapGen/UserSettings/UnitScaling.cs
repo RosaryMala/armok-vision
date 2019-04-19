@@ -37,6 +37,7 @@ namespace UserSettings
         {
             if (GameSettings.Instance.units.scaleUnits != oldUnitScale)
             {
+                slider.value = (int)GameSettings.Instance.units.scaleUnits;
                 OnValueChanged((float)GameSettings.Instance.units.scaleUnits);
             }
         }

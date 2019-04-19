@@ -60,7 +60,10 @@ public class CreatureManager : MonoBehaviour
     void UpdateCreatures()
     {
         if (GameSettings.Instance.units.unitDetail == GameSettings.UnitDetail.None)
+        {
+            Clear();
             return;
+        }
         if (creatureTemplate == null)
             return;
         if (ContentLoader.Instance == null)
@@ -79,9 +82,15 @@ public class CreatureManager : MonoBehaviour
         for(;updateIndex < Units.Count; updateIndex++)
         {
             if (GameSettings.Instance.units.unitDetail == GameSettings.UnitDetail.Models)
+            {
+                ClearCreatureList();
                 Update3DUnit(Units[updateIndex], ref creatureCount);
+            }
             else
+            {
+                ClearCreatureList3D();
                 UpdateSpriteUnit(Units[updateIndex], ref creatureCount);
+            }
             if (watch.ElapsedMilliseconds > 2)
                 break;
         }
@@ -238,7 +247,7 @@ public class CreatureManager : MonoBehaviour
         }
     }
 
-    internal void Clear()
+    void ClearCreatureList()
     {
         if (creatureList != null)
         {
@@ -248,10 +257,23 @@ public class CreatureManager : MonoBehaviour
             }
             creatureList.Clear();
         }
-        foreach (var item in creatureList3D)
+    }
+
+    void ClearCreatureList3D()
+    {
+        if (creatureList != null)
         {
-            Destroy(item.Value.gameObject);
+            foreach (var item in creatureList3D)
+            {
+                Destroy(item.Value.gameObject);
+            }
+            creatureList3D.Clear();
         }
-        creatureList3D.Clear();
+    }
+
+    internal void Clear()
+    {
+        ClearCreatureList();
+        ClearCreatureList3D();
     }
 }
