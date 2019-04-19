@@ -41,3 +41,12 @@ ItemList\.txt
 Assets/Resources/materialDefinitions.asset
 Assets/Resources/materialDefinitions.asset.meta
 palette.png
+*.kra-autosave.kra
+*.kra~
+/ProtoPath.txt
+Assets/Resources/MaterialRaws.asset
+Assets/Resources/MaterialRaws.asset.meta
+Assets/Resources/ItemRaws.asset
+Assets/Resources/ItemRaws.asset.meta
+Assets/Resources/CreatureRaws.asset.meta
+Assets/Resources/CreatureRaws.asset

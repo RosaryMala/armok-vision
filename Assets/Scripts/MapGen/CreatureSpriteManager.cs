@@ -14,6 +14,7 @@ public class CreatureSpriteManager
     [SerializeField]
     List<TilePage> tilePages = new List<TilePage>();
     List<Material> mats = new List<Material>();
+    public ProgressBar subProgressBar = null;
 
     CreatureRaceMatcher<ProfessionMatcher<TileDef>> creatureMatcher = new CreatureRaceMatcher<ProfessionMatcher<TileDef>>();
 
@@ -78,7 +79,7 @@ public class CreatureSpriteManager
                     break;
             }
             GameMap.EndSample();
-            if (stopWatch.ElapsedMilliseconds > 100)
+            if (stopWatch.ElapsedMilliseconds > ContentLoader.LoadFrameTimeout)
             {
                 yield return null;
                 stopWatch.Reset();
@@ -192,6 +193,7 @@ public class CreatureSpriteManager
     {
         int count = 0;
         var stopWatch = System.Diagnostics.Stopwatch.StartNew();
+        int pageNum = 0;
         foreach (var page in tilePages)
         {
             yield return GameMap.Instance.StartCoroutine(page.FinalizeTextures(stopWatch));
@@ -200,8 +202,10 @@ public class CreatureSpriteManager
             mat.SetTexture("_MatTex", page.TileArray);
             mat.SetTexture("_BumpMap", page.NormalArray);
             mats.Add(mat);
-            Debug.Log("Finalized " + page.Name);
-            if (stopWatch.ElapsedMilliseconds > 100)
+            if (subProgressBar != null)
+                subProgressBar.SetProgress(pageNum / (float)tilePages.Count, "Finalized " + page.Name);
+            pageNum++;
+            if (stopWatch.ElapsedMilliseconds > ContentLoader.LoadFrameTimeout)
             {
                 yield return null;
                 stopWatch.Reset();

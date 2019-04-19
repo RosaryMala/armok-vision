@@ -93,12 +93,12 @@ public class OnscreenConsole : MonoBehaviour
 
     private void OnEnable()
     {
-        Application.logMessageReceivedThreaded += HandleLog;
+        //Application.logMessageReceivedThreaded += HandleLog;
     }
 
     private void OnDisable()
     {
-        Application.logMessageReceivedThreaded -= HandleLog;
+        //Application.logMessageReceivedThreaded -= HandleLog;
     }
 
     void HandleLog(string logString, string stackTrace, LogType type)

@@ -18,15 +18,8 @@ namespace TokenLists
             }
         }
 
-        private static Dictionary<string, Dictionary<string, MatPairStruct>> _casteIds;
+        public static Dictionary<string, Dictionary<string, MatPairStruct>> CasteIDs { get; private set; }
 
-        public static Dictionary<string, Dictionary<string, MatPairStruct>> CasteIDs
-        {
-            get
-            {
-                return _casteIds;
-            }
-        }
 
         public static bool TryGetCasteID(string token, out MatPairStruct id)
         {
@@ -50,11 +43,11 @@ namespace TokenLists
 
         static void AddCreature(string race, string caste, MatPairStruct id)
         {
-            if (_casteIds == null)
-                _casteIds = new Dictionary<string, Dictionary<string, MatPairStruct>>();
-            if (!_casteIds.ContainsKey(race))
-                _casteIds[race] = new Dictionary<string, MatPairStruct>();
-            _casteIds[race][caste] = id;
+            if (CasteIDs == null)
+                CasteIDs = new Dictionary<string, Dictionary<string, MatPairStruct>>();
+            if (!CasteIDs.ContainsKey(race))
+                CasteIDs[race] = new Dictionary<string, MatPairStruct>();
+            CasteIDs[race][caste] = id;
         }
 
         static private void PopulateWordLists()
@@ -64,19 +57,19 @@ namespace TokenLists
                 foreach (var caste in race.caste)
                 {
                     MatPairStruct id = new MatPairStruct(race.index, caste.index);
-                    if (_casteIds == null)
-                        _casteIds = new Dictionary<string, Dictionary<string, MatPairStruct>>();
-                    if (!_casteIds.ContainsKey(race.creature_id))
-                        _casteIds[race.creature_id] = new Dictionary<string, MatPairStruct>();
-                    _casteIds[race.creature_id][caste.caste_id] = id;
+                    if (CasteIDs == null)
+                        CasteIDs = new Dictionary<string, Dictionary<string, MatPairStruct>>();
+                    if (!CasteIDs.ContainsKey(race.creature_id))
+                        CasteIDs[race.creature_id] = new Dictionary<string, MatPairStruct>();
+                    CasteIDs[race.creature_id][caste.caste_id] = id;
                 }
                 {
                     MatPairStruct id = new MatPairStruct(race.index, -1);
-                    if (_casteIds == null)
-                        _casteIds = new Dictionary<string, Dictionary<string, MatPairStruct>>();
-                    if (!_casteIds.ContainsKey(race.creature_id))
-                        _casteIds[race.creature_id] = new Dictionary<string, MatPairStruct>();
-                    _casteIds[race.creature_id]["*"] = id;
+                    if (CasteIDs == null)
+                        CasteIDs = new Dictionary<string, Dictionary<string, MatPairStruct>>();
+                    if (!CasteIDs.ContainsKey(race.creature_id))
+                        CasteIDs[race.creature_id] = new Dictionary<string, MatPairStruct>();
+                    CasteIDs[race.creature_id]["*"] = id;
                 }
             }
         }

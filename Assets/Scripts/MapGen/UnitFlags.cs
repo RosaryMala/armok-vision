@@ -3,7 +3,7 @@
 namespace UnitFlags
 {
     [Flags]
-    enum UnitFlags1 : uint
+    public enum UnitFlags1 : uint
     {
         move_state = 0x1U,
         dead = 0x2U,
@@ -40,7 +40,7 @@ namespace UnitFlags
     }
 
     [Flags]
-    enum UnitFlags2 : uint
+    public enum UnitFlags2 : uint
     {
         swimming = 0x1U,
         sparring = 0x2U,
@@ -77,7 +77,7 @@ namespace UnitFlags
     }
 
     [Flags]
-    enum UnitFlags3 : uint
+    public enum UnitFlags3 : uint
     {
         body_part_relsize_computed = 0x1U,
         size_modifier_computed = 0x2U,

@@ -3,8 +3,9 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -12,8 +13,8 @@ MonoBehaviour:
   m_Name: Build Settings
   m_EditorClassIdentifier: 
   author: Japa, Justin Partain, Kazimuth, Lethosor
-  content_version: 0.19.1
-  df_min_version: 0.34.11
+  content_version: 0.20.1
+  df_min_version: 0.44.12
   df_max_version: 
   title: Armok Vision
   tooltip: A full 3D visualiser - shows off Dwarf Fortress with unprecedented detail
@@ -24,4 +25,4 @@ MonoBehaviour:
   launch_with_terminal: 0
   readme: Readme.txt
   needs_dfhack: 1
-  build_date: 2018-03-29
+  build_date: 2019-04-07

@@ -23,18 +23,28 @@ public class ItemModel : MonoBehaviour, IClickable
         }
     }
 
-    public void UpdateMaterial(Item itemInput)
+    bool phantom = false;
+
+    public void UpdateMaterial(Item itemInput, UnitDefinition unit = null)
     {
         originalItem = itemInput;
-
+        if (phantom)
+            return;
         if (meshRenderer == null)
             meshRenderer = GetComponentInChildren<MeshRenderer>();
 
+        //This means that it's just a placeholder on a body part.
+        if (meshRenderer == null)
+        {
+            phantom = true;
+            return;
+        }
         if (originalMaterial == null)
             originalMaterial = meshRenderer.sharedMaterial;
 
         Color partColor = ContentLoader.GetColor(itemInput);
         float textureIndex = ContentLoader.GetPatternIndex(itemInput.material);
+        float shapeIndex = ContentLoader.GetShapeIndex(itemInput.material);
 
         meshRenderer.sharedMaterial = ContentLoader.getFinalMaterial(originalMaterial, partColor.a);
 
@@ -49,7 +59,11 @@ public class ItemModel : MonoBehaviour, IClickable
         MaterialPropertyBlock prop = new MaterialPropertyBlock();
         prop.SetColor("_MatColor", partColor);
         prop.SetFloat("_MatIndex", textureIndex);
-        prop.SetFloat("_SpriteIndex", ImageManager.Instance.GetItemTile(itemInput.type));
+        prop.SetFloat("_ShapeIndex", shapeIndex);
+        if (unit != null)
+            prop.SetColor("_JobColor", unit.profession_color);
+        if (ImageManager.Instance != null)
+            prop.SetFloat("_SpriteIndex", ImageManager.Instance.GetItemTile(itemInput.type));
         meshRenderer.SetPropertyBlock(prop);
 
 
@@ -96,9 +110,9 @@ public class ItemModel : MonoBehaviour, IClickable
                 case ImprovementType.ILLUSTRATION:
                 case ImprovementType.INSTRUMENT_PIECE:
                 default:
-#if UNITY_EDITOR
-                    Debug.LogWarning(string.Format("Unhandled improvement {0} on {1}", improvement.type, GO.name));
-#endif
+//#if UNITY_EDITOR
+//                    Debug.LogWarning(string.Format("Unhandled improvement {0} on {1}", improvement.type, GO.name));
+//#endif
                     break;
             }
         }
@@ -128,8 +142,8 @@ public class ItemModel : MonoBehaviour, IClickable
                 Random.InitState(i);
                 imp.UpdateImprovement(covereds[Random.Range(0, covereds.Count)]);
             }
-            else
-                imp.gameObject.SetActive(false);
+            //else
+            //    imp.gameObject.SetActive(false);
         }
         foreach (var sub in GO.GetComponentsInChildren<ItemSubPart>())
         {
@@ -150,19 +164,19 @@ public class ItemModel : MonoBehaviour, IClickable
     public static void PrintItemInfo(Item item)
     {
         string mat = ((MatPairStruct)(item.material)).ToString();
-        if (GameMap.materials.ContainsKey(item.material))
-            mat = GameMap.materials[item.material].id;
+        if (MaterialRaws.Instance.ContainsKey(item.material))
+            mat = MaterialRaws.Instance[item.material].id;
         if (item.stack_size > 1)
-            Debug.Log(string.Format("{0} {1} [{2}]", mat, GameMap.items[item.type].id, item.stack_size));
+            Debug.Log(string.Format("{0} {1} [{2}]", mat, ItemRaws.Instance[item.type].id, item.stack_size));
         else
-            Debug.Log(string.Format("{0} {1}", mat, GameMap.items[item.type].id));
+            Debug.Log(string.Format("{0} {1}", mat, ItemRaws.Instance[item.type].id));
         Debug.Log(((ItemFlags)item.flags1));
 
         foreach (var imp in item.improvements)
         {
             mat = ((MatPairStruct)(imp.material)).ToString();
-            if (GameMap.materials.ContainsKey(imp.material))
-                mat = GameMap.materials[imp.material].id;
+            if (MaterialRaws.Instance.ContainsKey(imp.material))
+                mat = MaterialRaws.Instance[imp.material].id;
             Debug.Log(string.Format("    {0} {1}", mat, imp.type));
         }
     }

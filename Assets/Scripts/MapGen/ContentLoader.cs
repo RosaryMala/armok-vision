@@ -51,6 +51,11 @@ public enum MatBasic
 
 public class ContentLoader : MonoBehaviour
 {
+    [SerializeField]
+    private ProgressBar mainProgressBar;
+    [SerializeField]
+    private ProgressBar subProgressBar;
+
     public void Start()
     {
         DFConnection.RegisterConnectionCallback(Initialize);
@@ -114,7 +119,6 @@ public class ContentLoader : MonoBehaviour
 
     public TextureStorage shapeTextureStorage { get; private set; }
     public TextureStorage specialTextureStorage { get; private set; }
-    private MaterialMatcher<MaterialTextureSet> MaterialTextures { get; set; }
 
     /// <summary>
     /// Get the color associated with a material, falling back to DF state color.
@@ -124,13 +128,14 @@ public class ContentLoader : MonoBehaviour
     public static Color GetColor(MatPairStruct mat)
     {
         MaterialTextureSet textureSet;
-        if (Instance.MaterialTextures.TryGetValue(mat, out textureSet))
+        if (MaterialCollection.Instance.TryGetValue(mat, out textureSet))
         {
-            return textureSet.color;
+            if(!textureSet.useDFColor)
+                return textureSet.color;
         }
-        if (!GameMap.materials.ContainsKey(mat))
+        if (!MaterialRaws.Instance.ContainsKey(mat))
             return new Color32(128, 128, 128, 128);
-        var stateColor = GameMap.materials[mat].state_color;
+        var stateColor = MaterialRaws.Instance[mat].state_color;
         if (stateColor == null)
             return new Color32(128, 128, 128, 128);
         return new Color32((byte)stateColor.red, (byte)stateColor.green, (byte)stateColor.blue, 128);
@@ -218,28 +223,38 @@ public class ContentLoader : MonoBehaviour
     {
         var color = GetColor(item.type, item.material);
         var dye = item.dye;
-        if (dye != null)
-            color *= (Color)new Color32((byte)dye.red, (byte)dye.green, (byte)dye.blue, 255);
+        if (dye == null)
+            return color;
+        if (!Application.isPlaying)
+        {
+            if (dye.red + dye.green + dye.blue == 0)
+                return color;
+        }
+        color *= (Color)new Color32((byte)dye.red, (byte)dye.green, (byte)dye.blue, 255);
         return color;
     }
 
     public static int GetPatternIndex(MatPairStruct mat)
     {
         MaterialTextureSet textureSet;
-        if (Instance.MaterialTextures.TryGetValue(mat, out textureSet))
+        if (MaterialCollection.Instance.TryGetValue(mat, out textureSet))
         {
             return textureSet.patternIndex;
         }
+        if (Instance == null)
+            return 0;
         return Instance.DefaultMatTexIndex;
     }
 
     public static int GetShapeIndex(MatPairStruct mat)
     {
         MaterialTextureSet textureSet;
-        if (Instance.MaterialTextures.TryGetValue(mat, out textureSet))
+        if (MaterialCollection.Instance.TryGetValue(mat, out textureSet))
         {
             return textureSet.shapeIndex;
         }
+        if (Instance == null)
+            return 0;
         return Instance.DefaultShapeTexIndex;
     }
 
@@ -264,30 +279,17 @@ public class ContentLoader : MonoBehaviour
             return shapeTextureStorage.getUVTransform(DefaultShapeTexIndex);
         }
     }
-    public float DefaultShapeTexArrayIndex
-    {
-        get
-        {
-            return (float)DefaultShapeTexIndex / shapeTextureStorage.Count;
-        }
-    }
 
-    int defaultSpecialTexIndex;
+    public int DefaultSpecialTexIndex { get; private set; }
 
     public Matrix4x4 DefaultSpecialTexTransform
     {
         get
         {
-            return specialTextureStorage.getUVTransform(defaultSpecialTexIndex);
+            return specialTextureStorage.getUVTransform(DefaultSpecialTexIndex);
         }
     }
-    public float DefaultSpecialTexArrayIndex
-    {
-        get
-        {
-            return (float)defaultSpecialTexIndex / specialTextureStorage.Count;
-        }
-    }
+
 
     public TileConfiguration<NormalContent> ShapeTextureConfiguration { get; private set; }
     public TileConfiguration<MeshContent> TileMeshConfiguration { get; private set; }
@@ -312,13 +314,12 @@ public class ContentLoader : MonoBehaviour
 
         shapeTextureStorage = new TextureStorage();
         specialTextureStorage = new TextureStorage();
-        MaterialTextures = new MaterialMatcher<MaterialTextureSet>();
 
         Debug.Log("Compiling material shape textures.");
         shapeTextureStorage.AddTextureArray(Resources.Load<Texture2DArray>("shapeTextures"));
 
         DefaultShapeTexIndex = shapeTextureStorage.AddTexture(CreateFlatTexture(new Color(1f, 0.5f, 1f, 0.5f)));
-        defaultSpecialTexIndex = specialTextureStorage.AddTexture(Texture2D.blackTexture);
+        DefaultSpecialTexIndex = specialTextureStorage.AddTexture(Texture2D.blackTexture);
     }
 
     public static Texture2D CreateFlatTexture(Color color)
@@ -375,40 +376,28 @@ public class ContentLoader : MonoBehaviour
     IEnumerator LoadAssets()
     {
         System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+        mainProgressBar.gameObject.SetActive(true);
+        subProgressBar.gameObject.SetActive(true);
         watch.Start();
         if(GameMap.Instance != null)
             GameMap.Instance.ShowHelp();
         PatternTextureArray = Resources.Load<Texture2DArray>("patternTextures");
         PatternTextureDepth = PatternTextureArray.depth;
         Shader.SetGlobalTexture("_MatTexArray", PatternTextureArray);
-        PopulateMatDefinitions();
-
-
+        float totalItems = LoadCallbacks.Count + 2; //Streaming assets, finalizations, and load callbacks.
+        float doneItems = 0;
+        mainProgressBar.SetProgress(doneItems / totalItems);
         yield return StartCoroutine(ParseContentIndexFile(Application.streamingAssetsPath + "/index.txt"));
+        doneItems++;
+        mainProgressBar.SetProgress(doneItems / totalItems);
         yield return StartCoroutine(FinalizeTextureAtlases());
+        MaterialCollection.Init();
         Instance = this;
-
-        //FIXME: Put this in a better place.
-        List<Color32> colors = new List<Color32>();
-        //inorganic, non-metallic, non-transparent colors.
-        foreach (var item in DFConnection.Instance.NetMaterialList.material_list)
-        {
-            Color32 color = GetColor(item.mat_pair);
-            color.a = 255;
-            colors.Add(color);
-        }
-
-        for (int i = colors.Count % 8; i < 8; i++)
-        {
-            colors.Add(Color.magenta);
-        }
-        var image = new Texture2D(8, colors.Count / 8);
-        image.SetPixels32(colors.ToArray());
-        image.Apply();
-        File.WriteAllBytes("palette.png", image.EncodeToPNG());
 
         foreach (var callback in LoadCallbacks)
         {
+            doneItems++;
+            mainProgressBar.SetProgress(doneItems / totalItems);
             if (callback != null)
                 yield return StartCoroutine(callback());
         }
@@ -417,25 +406,19 @@ public class ContentLoader : MonoBehaviour
         Debug.Log("Took a total of " + watch.ElapsedMilliseconds + "ms to load all XML files.");
         Debug.Log(string.Format("loaded {0} meshes, and {1} shape textures.", MeshContent.NumCreated, shapeTextureStorage.AtlasTexture.depth));
         Debug.Log("Loading Complete. Press ESC to change settings or leave feedback. Have a nice day!");
+        Debug.Log("Screen is " + Screen.dpi + "dpi.");
         if (GameMap.Instance != null)
             GameMap.Instance.HideHelp();
         DFConnection.Instance.NeedNewBlocks = true;
+        mainProgressBar.gameObject.SetActive(false);
+        subProgressBar.gameObject.SetActive(false);
+
         yield break;
-    }
-
-    private void PopulateMatDefinitions()
-    {
-        MaterialCollection matCollection = Resources.Load<MaterialCollection>("materialDefinitions");
-
-        foreach (var texture in matCollection.textures)
-        {
-            MaterialTextures[texture.tag.ToString()] = texture;
-        }
     }
 
     IEnumerator ParseContentIndexFile(string path)
     {
-        Debug.Log("Loading Index File: " + path);
+        mainProgressBar.SetProgress("Loading Index File: " + path);
 
         string line;
         List<string> fileArray = new List<string>(); //This allows us to parse the file in reverse.
@@ -452,6 +435,7 @@ public class ContentLoader : MonoBehaviour
         }
         file.Close();
         string filePath;
+
         for (int i = fileArray.Count - 1; i >= 0; i--)
         {
             try
@@ -462,6 +446,7 @@ public class ContentLoader : MonoBehaviour
             {
                 continue; //Todo: Make an error message here
             }
+            subProgressBar.SetProgress(1.0f - (i / (float)fileArray.Count));
             if (Directory.Exists(filePath)) //if it's a directory, just parse the contents
             {
                 yield return ParseContentDirectory(filePath);
@@ -491,7 +476,7 @@ public class ContentLoader : MonoBehaviour
 
     IEnumerator ParseContentXMLFile(string path)
     {
-            Debug.Log("Loading XML File: " + path);
+        subProgressBar.SetProgress("Loading XML File: " + path);
         XElement doc = XElement.Load(path, LoadOptions.SetBaseUri | LoadOptions.SetLineInfo);
         while (doc != null)
         {
@@ -542,7 +527,7 @@ public class ContentLoader : MonoBehaviour
 
     IEnumerator ParseContentRawFile(string path)
     {
-        Debug.Log("Loading Raw File: " + path);
+        mainProgressBar.SetProgress("Loading Raw File: " + path);
         var tokenList = RawLoader.SplitRawFileText(File.ReadAllText(path));
         var tokenEnumerator = tokenList.GetEnumerator();
         try
@@ -586,14 +571,15 @@ public class ContentLoader : MonoBehaviour
 
     IEnumerator FinalizeTextureAtlases()
     {
-        Debug.Log("Building shape textures...");
+        mainProgressBar.SetProgress("Compacting textures...");
+        subProgressBar.SetProgress(0.0f / 3.0f, "Building shape textures...");
         yield return null;
         shapeTextureStorage.CompileTextures("ShapeTexture", TextureFormat.RGBA32, new Color(1.0f, 0.5f, 0.0f, 0.5f), true);
-        Debug.Log("Building special textures...");
+        subProgressBar.SetProgress(1.0f / 3.0f, "Building special textures...");
         yield return null;
         specialTextureStorage.CompileTextures("SpecialTexture");
 
-        Debug.Log("Updating Material Manager...");
+        subProgressBar.SetProgress(2.0f / 3.0f, "Updating Material Manager...");
         yield return null;
 
         Vector4 arrayCount = new Vector4(PatternTextureDepth, shapeTextureStorage.Count, specialTextureStorage.Count, shapeTextureStorage.Count);
@@ -604,7 +590,8 @@ public class ContentLoader : MonoBehaviour
             MaterialManager.Instance.SetTexture("_SpecialTex", specialTextureStorage.AtlasTexture);
             MaterialManager.Instance.SetVector("_TexArrayCount", arrayCount);
         }
-        Debug.Log("Finalizing low detail creature sprites");
+        mainProgressBar.SetProgress("Finalizing low detail creature sprites");
+        SpriteManager.subProgressBar = subProgressBar;
         yield return StartCoroutine(SpriteManager.FinalizeSprites());
         //get rid of any un-used textures left over.
         Resources.UnloadUnusedAssets();
@@ -613,6 +600,7 @@ public class ContentLoader : MonoBehaviour
     }
 
     static Dictionary<int, Material> transparentMaterialVersions = new Dictionary<int, Material>();
+    public const long LoadFrameTimeout = 16;
 
     public static Material getFinalMaterial(Material material, float alpha)
     {

@@ -2,29 +2,62 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class ImageManager : MonoBehaviour
 {
-    public static ImageManager Instance { get; private set; }
+    static ImageManager _instance;
+    public static ImageManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+                _instance = FindObjectOfType<ImageManager>();
+            if (_instance == null)
+                _instance = Instantiate(Resources.Load<ImageManager>("ImageManager"));
+            return _instance;
+        }
+    }
     const int indexWidth = 16;
 
     public Material engravingMaterial;
+    [SerializeField]
+    private ProgressBar mainProgressBar;
+    [SerializeField]
+    private ProgressBar subProgressBar;
 
     private void Awake()
     {
-        if (Instance == null)
-            Instance = this;
+        if (_instance != null)
+        {
+            if (_instance != this)
+                Destroy(this);
+        }
         else
-            Destroy(gameObject);
+        {
+            _instance = this;
+        }
 
-        ContentLoader.RegisterLoadCallback(LoadImages);
+        if (!Application.isPlaying)
+        {
+            var loader = LoadImages();
+            while (loader.MoveNext())
+            {
+
+            }
+            Debug.Log("Loaded images.");
+        }
+        else ContentLoader.RegisterLoadCallback(LoadImages);
     }
 
     Dictionary<DFHack.DFCoord, MeshRenderer> engravingStore = new Dictionary<DFHack.DFCoord, MeshRenderer>();
 
     private void Update()
     {
+        if (DFConnection.Instance == null)
+            return;
         List<Engraving> engravingList;
         while ((engravingList = DFConnection.Instance.PopEngravingUpdate()) != null)
         {
@@ -75,20 +108,28 @@ public class ImageManager : MonoBehaviour
                     return CreatureSpriteMap[element.creature_item.mat_type];
                 else
                 {
-                    if (element.creature_item.mat_type >= 0 && element.creature_item.mat_type < DFConnection.Instance.CreatureRaws.Count)
-                        return DFConnection.Instance.CreatureRaws[element.creature_item.mat_type].creature_tile;
+                    if (element.creature_item.mat_type >= 0 && element.creature_item.mat_type < CreatureRaws.Instance.Count)
+                        return CreatureRaws.Instance[element.creature_item.mat_type].creature_tile;
                     else
                         return 7;
                 }
             case ArtImageElementType.IMAGE_PLANT:
                 if (PlantSpriteMap.ContainsKey(element.id))
                     return PlantSpriteMap[element.id];
-                else
+                else if (DFConnection.Instance)
                     return DFConnection.Instance.NetPlantRawList.plant_raws[element.id].tile;
+                else
+                    return 7;
             case ArtImageElementType.IMAGE_TREE:
-                return DFConnection.Instance.NetPlantRawList.plant_raws[element.id].tile;
+                if (DFConnection.Instance)
+                    return DFConnection.Instance.NetPlantRawList.plant_raws[element.id].tile;
+                else
+                    return 7;
             case ArtImageElementType.IMAGE_SHAPE:
-                return DFConnection.Instance.NetLanguageList.shapes[element.id].tile;
+                if (DFConnection.Instance)
+                    return DFConnection.Instance.NetLanguageList.shapes[element.id].tile;
+                else
+                    return 7;
             case ArtImageElementType.IMAGE_ITEM:
                 return GetItemTile(element.creature_item);
             default:
@@ -225,6 +266,8 @@ public class ImageManager : MonoBehaviour
         Rect[][] imagePattern = GetFullPattern(artImage);
         for (int i = 0; i < imagePattern.Length; i++)
         {
+            if (i < 0 || i >= artImage.elements.Count)
+                continue;
             int tile = GetElementTile(artImage.elements[i]);
             foreach (var item in imagePattern[i])
             {
@@ -406,6 +449,8 @@ public class ImageManager : MonoBehaviour
         //We use the mainpattern length because it may have less than the full amount of elements, if the pattern is very large.
         for (int i = 0; i < mainPattern.Length; i++)
         {
+            if (i < 0 || i >= artImage.elements.Count)
+                continue;
             var element = artImage.elements[i];
             outPut[i] = GetPattern(element.count);
             for(int j = 0; j < outPut[i].Length;j++)
@@ -454,9 +499,15 @@ public class ImageManager : MonoBehaviour
     IEnumerator LoadImages()
     {
         var stopWatch = System.Diagnostics.Stopwatch.StartNew();
+        if (mainProgressBar != null)
+            mainProgressBar.SetProgress("Loading images");
 
         List<Texture2D> textureList = new List<Texture2D>();
-
+        int loadedCount = 0;
+        float loadTotal = 0;
+        if (DFConnection.Instance != null && CreatureRaws.Instance != null)
+            loadTotal += CreatureRaws.Instance.Count;
+        loadTotal += ItemRaws.Instance.ItemList.Count;
         //DFTiles:
         {
             int sourceWidth = dfSpriteMap.width / 16;
@@ -474,50 +525,58 @@ public class ImageManager : MonoBehaviour
                 }
         }
         //IMAGE_CREATURE:
-        foreach (var creature in DFConnection.Instance.CreatureRaws)
-        {
-            string token = creature.creature_id;
-            Texture2D sprite = Resources.Load<Texture2D>("Images/Creatures/" + token);
-            if (sprite == null)
+        //Fixme: have a non-volatile creature list
+        if (DFConnection.Instance != null && CreatureRaws.Instance != null)
+            foreach (var creature in CreatureRaws.Instance)
             {
-                //Try again without stupid numbers
-                token.TrimEnd('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '_');
-                sprite = Resources.Load<Texture2D>("Images/Creatures/" + token);
-            }
-            if (sprite == null)
-            {
-                Debug.LogWarning("Could not find art image for " + token);
-                continue;
-            }
-            if (sprite.width != 32 || sprite.height != 32)
-                TextureScale.Bilinear(sprite, 32, 32);
-            CreatureSpriteMap[creature.index] = textureList.Count;
-            textureList.Add(sprite);
+                string token = creature.creature_id;
+                if (subProgressBar != null)
+                    subProgressBar.SetProgress(loadedCount / loadTotal, token);
+                loadedCount++;
+                Texture2D sprite = Resources.Load<Texture2D>("Images/Creatures/" + token);
+                if (sprite == null)
+                {
+                    //Try again without stupid numbers
+                    token.TrimEnd('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '_');
+                    sprite = Resources.Load<Texture2D>("Images/Creatures/" + token);
+                }
+                if (sprite == null)
+                {
+                    Debug.LogWarning("Could not find art image for " + token);
+                    continue;
+                }
+                if (sprite.width != 32 || sprite.height != 32)
+                    TextureScale.Bilinear(sprite, 32, 32);
+                CreatureSpriteMap[creature.index] = textureList.Count;
+                textureList.Add(sprite);
 
-            if (stopWatch.ElapsedMilliseconds > 100)
-            {
-                yield return null;
-                stopWatch.Reset();
-                stopWatch.Start();
+                if (stopWatch.ElapsedMilliseconds > ContentLoader.LoadFrameTimeout)
+                {
+                    yield return null;
+                    stopWatch.Reset();
+                    stopWatch.Start();
+                }
             }
-        }
         //IMAGE_PLANT:
         //IMAGE_TREE:
         //IMAGE_SHAPE:
         //IMAGE_ITEM:
-        foreach (var item in DFConnection.Instance.NetItemList.material_list)
+        foreach (var item in ItemRaws.Instance.ItemList)
         {
             string token = item.id;
             Texture2D sprite = Resources.Load<Texture2D>("Images/Items/" + token);
+            if (subProgressBar != null)
+                subProgressBar.SetProgress(loadedCount / loadTotal, token);
+            loadedCount++;
             if (sprite == null)
             {
                 //Try again without stupid numbers
-                token.TrimEnd('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '_');
+                token = Regex.Replace(token, @"\d", "");
                 sprite = Resources.Load<Texture2D>("Images/Items/" + token);
             }
             if (sprite == null)
             {
-                Debug.LogWarning("Could not find art image for " + token);
+                //Debug.LogWarning("Could not find art image for " + token);
                 continue;
             }
 
@@ -529,7 +588,7 @@ public class ImageManager : MonoBehaviour
                 PlantSpriteMap[item.mat_pair.mat_index] = textureList.Count;
             textureList.Add(sprite);
 
-            if (stopWatch.ElapsedMilliseconds > 100)
+            if (stopWatch.ElapsedMilliseconds > ContentLoader.LoadFrameTimeout)
             {
                 yield return null;
                 stopWatch.Reset();

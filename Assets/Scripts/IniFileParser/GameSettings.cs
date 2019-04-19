@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.PostProcessing;
 using UnityEngine.UI;
+using UnityEngine.Rendering.PostProcessing;
 
 public class GameSettings : MonoBehaviour
 {
@@ -21,7 +21,7 @@ public class GameSettings : MonoBehaviour
     public class Meshing
     {
         public int meshingThreads = 4;
-        public int queueLimit = 4;
+        public int queueLimit = 1;
         public VoxelGenerator.CornerType cornerType = VoxelGenerator.CornerType.Rounded;
     }
 
@@ -38,10 +38,12 @@ public class GameSettings : MonoBehaviour
         public bool drawClouds = true;
         public LandscapeDetail distantTerrainDetail = LandscapeDetail.High;
         public int vSyncCount = 0;
-        public int targetFrameRate = 60;
+        public int targetFrameRate = -1;
         public bool showHiddenTiles = false;
         public bool fog = true;
         public int maxItemsPerTile = 10;
+        public float itemDrawDistance = 50;
+        public float creatureDrawDistance = 50;
     }
 
     public static void ClampToMaxSize(Texture2D texture)
@@ -102,11 +104,28 @@ public class GameSettings : MonoBehaviour
         public bool postProcessing = true;
     }
 
+    public enum UnitDetail
+    {
+        None,
+        ASCII,
+        SDSprites,
+        HDSprites,
+        Models
+    }
+
+    public enum UnitScale
+    {
+        Fixed,
+        Logarithmic,
+        Real
+    }
+
     [Serializable]
     public class Units
     {
-        public bool drawUnits = true;
-        public bool scaleUnits = true;
+        public UnitScale scaleUnits = UnitScale.Real;
+        public float chibiness = 3.5f;
+        public UnitDetail unitDetail = UnitDetail.Models;
     }
 
     public enum AnalyticsChoice
@@ -153,7 +172,17 @@ public class GameSettings : MonoBehaviour
         public UpdateTimers updateTimers = new UpdateTimers();
     }
 
-    public static Settings Instance = new Settings();
+    static Settings _instance;
+
+    public static Settings Instance
+    {
+        get
+        {
+            if (_instance == null)
+                Init();
+            return _instance;
+        }
+    }
 
     public List<Camera> mainCameras;
 
@@ -162,9 +191,12 @@ public class GameSettings : MonoBehaviour
     static void DeserializeIni(string filename)
     {
         if (!File.Exists(filename))
+        {
+            _instance = new Settings();
             return;
+        }
 
-        Instance = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(filename));
+        _instance = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(filename));
     }
 
     static void SerializeIni(string filename)
@@ -172,33 +204,54 @@ public class GameSettings : MonoBehaviour
         File.WriteAllText(filename, JsonConvert.SerializeObject(Instance, Formatting.Indented));
     }
 
-    string filename = "Config.json";
+
+
+    static string filename;
 
     // This function is called when the MonoBehaviour will be destroyed
     public void OnDestroy()
     {
+        Save();
+    }
+
+    void Save()
+    {
+        if (string.IsNullOrWhiteSpace(filename))
+            SetupFileName();
         SerializeIni(filename);
     }
 
-    // Awake is called when the script instance is being ßloaded
-    public void Awake()
+    static void SetupFileName()
     {
-        Instance.camera.fieldOfView = mainCameras[0].fieldOfView;
         string configDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Application.productName);
-		UnityEngine.Debug.Log ("Loading config from " + configDir);
         if (!Directory.Exists(configDir))
             Directory.CreateDirectory(configDir);
-        filename = Path.Combine(configDir, filename);
-        DeserializeIni(filename);
-        foreach (Camera camera in mainCameras)
-        {
-            camera.fieldOfView = Instance.camera.fieldOfView;
-        }
+        filename = Path.Combine(configDir, "Config.json");
+    }
+
+    // Awake is called when the script instance is being loaded
+    public void Awake()
+    {
+        if (mainCameras.Count > 0)
+            Instance.camera.fieldOfView = mainCameras[0].fieldOfView;
+        Init();
         Application.targetFrameRate = Instance.rendering.targetFrameRate;
         QualitySettings.vSyncCount = Instance.rendering.vSyncCount;
+        if (mainCameras.Count > 0)
+            foreach (Camera camera in mainCameras)
+            {
+                camera.fieldOfView = Instance.camera.fieldOfView;
+            }
         if (Instance.game.analytics == AnalyticsChoice.Yes)
             analytics.gameObject.SetActive(true);
         UpdatePostProcessing();
+    }
+
+    static void Init()
+    {
+        if (string.IsNullOrWhiteSpace(filename))
+            SetupFileName();
+        DeserializeIni(filename);
     }
 
     void SetShadows(bool input)
@@ -276,7 +329,7 @@ public class GameSettings : MonoBehaviour
     {
         foreach (Camera camera in mainCameras)
         {
-            PostProcessingBehaviour ppb = camera.GetComponent<PostProcessingBehaviour>();
+            PostProcessLayer ppb = camera.GetComponent<PostProcessLayer>();
             if (ppb != null)
             {
                 if (Instance.camera.deferredRendering)

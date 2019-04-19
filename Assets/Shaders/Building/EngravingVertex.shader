@@ -48,7 +48,6 @@ UNITY_DEFINE_INSTANCED_PROP(int, _MatIndex)
 #define _MatIndex_arr MyProperties
 UNITY_INSTANCING_BUFFER_END(MyProperties)
 
-#include "blend.cginc"
 #include "CustomMetallic.cginc"
 
         half _ContributionAlbedo;

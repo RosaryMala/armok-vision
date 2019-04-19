@@ -11,7 +11,10 @@ public class TimeHolder : MonoBehaviour {
     static long _displayedTimeTicks;
 
     DFTime realTime = new DFTime();
-    
+    private int lastTicks;
+    private float lastSeconds;
+    const float CanonFPS = 10;
+
     public static DFTime DisplayedTime
     {
         get
@@ -49,6 +52,23 @@ public class TimeHolder : MonoBehaviour {
             fixedHour += 24;
 
         realTime = DFConnection.Instance.DFTime;
+
+        if(DFConnection.Instance.DfPauseState)
+        {
+            Time.timeScale = 0;
+            lastSeconds = Time.realtimeSinceStartup;
+            lastTicks = realTime.CurrentYearTicks;
+        }
+        if (realTime.CurrentYearTicks != lastTicks)
+        {
+            float currentSeconds = Time.realtimeSinceStartup;
+            var tickDifference = realTime.CurrentYearTicks - lastTicks;
+            var secondDifference = currentSeconds - lastSeconds;
+            Time.timeScale = Mathf.Clamp((tickDifference / secondDifference) / CanonFPS, 0, 100);
+            lastSeconds = currentSeconds;
+            lastTicks = realTime.CurrentYearTicks;
+        }
+        lastTicks = realTime.CurrentYearTicks;
 
         if (useFixedTime)
             DisplayedTime = new DFTime(realTime.Year, realTime.Month, realTime.Day, fixedHour, 0);

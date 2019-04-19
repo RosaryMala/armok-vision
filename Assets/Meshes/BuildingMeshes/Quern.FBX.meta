@@ -1,0 +1,240 @@
+fileFormatVersion: 2
+guid: 57f04e3c127f37047920da69d3a84d3c
+timeCreated: 1519537944
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: Gem000
+    100002: Gem001
+    100004: Gem002
+    100006: Gem003
+    100008: Gem004
+    100010: Gem005
+    100012: Gem006
+    100014: Gem007
+    100016: Gem008
+    100018: Gem009
+    100020: Gem010
+    100022: Gem011
+    100024: Gem012
+    100026: Gem013
+    100028: Gem014
+    100030: Gem015
+    100032: Gem016
+    100034: Gem017
+    100036: Gem018
+    100038: Gem019
+    100040: Gem020
+    100042: Gem021
+    100044: Gem022
+    100046: Gem023
+    100048: Gem024
+    100050: Gem025
+    100052: Gem026
+    100054: Gem027
+    100056: Gem028
+    100058: Gem029
+    100060: Gem030
+    100062: Gem031
+    100064: Gem032
+    100066: Gem033
+    100068: Gem034
+    100070: Gem035
+    100072: Gem036
+    100074: Gem037
+    100076: Gem038
+    100078: Gem039
+    100080: Gem040
+    100082: Gem041
+    100084: Gem042
+    100086: Gem043
+    100088: Gem044
+    100090: Gem045
+    100092: Gem046
+    100094: Gem047
+    100096: Gem048
+    100098: Gem049
+    100100: Gem050
+    100102: Gem051
+    100104: Gem052
+    100106: Gem053
+    100108: Gem054
+    100110: Gem055
+    100112: Image00
+    100114: Image001
+    100116: Image002
+    100118: Image003
+    100120: Image004
+    100122: Image005
+    100124: Image006
+    100126: //RootNode
+    100128: Quern Full
+    100130: Quern Handle
+    100132: Quern Stone
+    100134: Ring
+    100136: Ring 004
+    100138: Ring 2
+    100140: Ring 3
+    400000: Gem000
+    400002: Gem001
+    400004: Gem002
+    400006: Gem003
+    400008: Gem004
+    400010: Gem005
+    400012: Gem006
+    400014: Gem007
+    400016: Gem008
+    400018: Gem009
+    400020: Gem010
+    400022: Gem011
+    400024: Gem012
+    400026: Gem013
+    400028: Gem014
+    400030: Gem015
+    400032: Gem016
+    400034: Gem017
+    400036: Gem018
+    400038: Gem019
+    400040: Gem020
+    400042: Gem021
+    400044: Gem022
+    400046: Gem023
+    400048: Gem024
+    400050: Gem025
+    400052: Gem026
+    400054: Gem027
+    400056: Gem028
+    400058: Gem029
+    400060: Gem030
+    400062: Gem031
+    400064: Gem032
+    400066: Gem033
+    400068: Gem034
+    400070: Gem035
+    400072: Gem036
+    400074: Gem037
+    400076: Gem038
+    400078: Gem039
+    400080: Gem040
+    400082: Gem041
+    400084: Gem042
+    400086: Gem043
+    400088: Gem044
+    400090: Gem045
+    400092: Gem046
+    400094: Gem047
+    400096: Gem048
+    400098: Gem049
+    400100: Gem050
+    400102: Gem051
+    400104: Gem052
+    400106: Gem053
+    400108: Gem054
+    400110: Gem055
+    400112: Image00
+    400114: Image001
+    400116: Image002
+    400118: Image003
+    400120: Image004
+    400122: Image005
+    400124: Image006
+    400126: //RootNode
+    400128: Quern Full
+    400130: Quern Handle
+    400132: Quern Stone
+    400134: Ring
+    400136: Ring 004
+    400138: Ring 2
+    400140: Ring 3
+    2100000: No Name
+    2300000: Quern Full
+    2300002: Quern Handle
+    2300004: Quern Stone
+    3300000: Quern Full
+    3300002: Quern Handle
+    3300004: Quern Stone
+    4300000: Quern Stone
+    4300002: Quern Handle
+    4300004: Quern Full
+    9500000: //RootNode
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

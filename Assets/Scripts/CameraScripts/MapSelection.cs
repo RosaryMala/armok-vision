@@ -31,8 +31,8 @@ public class MapSelection : MonoBehaviour
             Ray mouseRay = GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
 
             DFCoord currentTarget;
-            Vector3 currentTargetCoords;
-            if (DFConnection.Connected && GameMap.Instance.enabled && MapDataStore.FindCurrentTarget(mouseRay, out currentTarget, out currentTargetCoords))
+            RaycastHit currentTargetCoords;
+            if (DFConnection.Connected && GameMap.Instance.enabled && MapDataStore.Raycast(mouseRay, out currentTarget, out currentTargetCoords))
             {
                 GameMap.Instance.cursX = currentTarget.x;
                 GameMap.Instance.cursY = currentTarget.y;
@@ -92,22 +92,22 @@ public class MapSelection : MonoBehaviour
     Vector3 GetMouseWorldPosition(Vector3 mousePosition)
     {
         DFCoord dfTarget; //dummy coord to hold things for now.
-        Vector3 WorldPos;
+        RaycastHit WorldPos;
         Ray mouseRay = GetComponent<Camera>().ScreenPointToRay(mousePosition);
-        if (!MapDataStore.FindCurrentTarget(mouseRay, out dfTarget, out WorldPos))
+        if (!MapDataStore.Raycast(mouseRay, out dfTarget, out WorldPos))
         {
             Plane currentPlane = new Plane(Vector3.up, GameMap.DFtoUnityCoord(0, 0, GameMap.Instance.PosZ));
             float distance;
             if (currentPlane.Raycast(mouseRay, out distance))
             {
-                WorldPos = mouseRay.GetPoint(distance);
+                WorldPos.point = mouseRay.GetPoint(distance);
             }
             else
             {
-                WorldPos = Vector3.zero;
+                WorldPos.point = Vector3.zero;
             }
         }
-        return WorldPos;
+        return WorldPos.point;
     }
 
     //// If we're attached to a camera, highlight the cube we're pointing at

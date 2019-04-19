@@ -232,8 +232,8 @@ public class MapExport : MonoBehaviour
                 Array.Sort(matList);
                 foreach (var mat in matList)
                 {
-                    if (GameMap.materials.ContainsKey(mat))
-                        output.Append(GameMap.materials[mat].id).Append("; ");
+                    if (MaterialRaws.Instance.ContainsKey(mat))
+                        output.Append(MaterialRaws.Instance[mat].id).Append("; ");
                     else
                         output.Append(mat).Append("; ");
                 }

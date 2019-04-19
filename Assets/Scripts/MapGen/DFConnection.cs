@@ -1,5 +1,7 @@
 using AdventureControl;
 using DFHack;
+using dfproto;
+using DwarfControl;
 using RemoteFortressReader;
 using System;
 using System.Collections;
@@ -58,88 +60,57 @@ public sealed class DFConnection : MonoBehaviour
     #region RPC Bindings
 
     //Static bindings
-    private RemoteFunction<dfproto.EmptyMessage, dfproto.StringMessage> dfhackVersionCall;
-    private RemoteFunction<dfproto.EmptyMessage, dfproto.StringMessage> dfVersionCall;
-    private RemoteFunction<dfproto.EmptyMessage, dfproto.GetWorldInfoOut> dfWorldInfoCall;
+    private RemoteFunction<EmptyMessage, StringMessage> dfhackVersionCall;
+    private RemoteFunction<EmptyMessage, StringMessage> dfVersionCall;
+    private RemoteFunction<EmptyMessage, GetWorldInfoOut> dfWorldInfoCall;
 
     // Plugin bindings
-    private RemoteFunction<dfproto.EmptyMessage, Language> languageCall;
-    private RemoteFunction<dfproto.EmptyMessage, MaterialList> materialListCall;
-    private RemoteFunction<dfproto.EmptyMessage, MaterialList> itemListCall;
-    private RemoteFunction<dfproto.EmptyMessage, TiletypeList> tiletypeListCall;
+    private RemoteFunction<EmptyMessage, Language> languageCall;
+    private RemoteFunction<EmptyMessage, MaterialList> materialListCall;
+    private RemoteFunction<EmptyMessage, MaterialList> itemListCall;
+    private RemoteFunction<EmptyMessage, TiletypeList> tiletypeListCall;
     private TimedRemoteFunction<BlockRequest, BlockList> blockListCall;
     private RemoteFunction<BlockRequest, UnitList> unitListCall;
-    private RemoteFunction<dfproto.EmptyMessage, UnitList> unitListCallLegacy;
-    private RemoteFunction<dfproto.EmptyMessage, ViewInfo> viewInfoCall;
-    private RemoteFunction<dfproto.EmptyMessage, MapInfo> mapInfoCall;
-    private RemoteFunction<dfproto.EmptyMessage> mapResetCall;
-    private RemoteFunction<dfproto.EmptyMessage, BuildingList> buildingListCall;
-    private RemoteFunction<dfproto.EmptyMessage, WorldMap> worldMapCall;
-    private RemoteFunction<dfproto.EmptyMessage, WorldMap> worldMapCenterCall;
-    private RemoteFunction<dfproto.EmptyMessage, RegionMaps> regionMapCall;
-    private RemoteFunction<dfproto.EmptyMessage, CreatureRawList> creatureRawListCall;
+    private RemoteFunction<EmptyMessage, UnitList> unitListCallLegacy;
+    private RemoteFunction<EmptyMessage, ViewInfo> viewInfoCall;
+    private RemoteFunction<EmptyMessage, MapInfo> mapInfoCall;
+    private RemoteFunction<EmptyMessage> mapResetCall;
+    private RemoteFunction<EmptyMessage, BuildingList> buildingListCall;
+    private RemoteFunction<EmptyMessage, WorldMap> worldMapCall;
+    private RemoteFunction<EmptyMessage, WorldMap> worldMapCenterCall;
+    private RemoteFunction<EmptyMessage, RegionMaps> regionMapCall;
+    private RemoteFunction<EmptyMessage, CreatureRawList> creatureRawListCall;
     private RemoteFunction<ListRequest, CreatureRawList> partialCreatureRawListCall;
-    private RemoteFunction<dfproto.EmptyMessage, PlantRawList> plantRawListCall;
+    private RemoteFunction<EmptyMessage, PlantRawList> plantRawListCall;
     private RemoteFunction<KeyboardEvent> keyboardEventCall;
-    private RemoteFunction<dfproto.EmptyMessage, RemoteFortressReader.ScreenCapture> copyScreenCall;
+    private RemoteFunction<EmptyMessage, RemoteFortressReader.ScreenCapture> copyScreenCall;
     private RemoteFunction<DigCommand> digCommandCall;
     private RemoteFunction<SingleBool> pauseCommandCall;
-    private RemoteFunction<dfproto.EmptyMessage, SingleBool> pauseStatusCall;
-    private RemoteFunction<dfproto.EmptyMessage, VersionInfo> versionInfoCall;
-    private RemoteFunction<dfproto.EmptyMessage, Status> reportsCall;
+    private RemoteFunction<EmptyMessage, SingleBool> pauseStatusCall;
+    private RemoteFunction<EmptyMessage, VersionInfo> versionInfoCall;
+    private RemoteFunction<EmptyMessage, Status> reportsCall;
 
     private RemoteFunction<MoveCommandParams> moveCommandCall;
     private RemoteFunction<MoveCommandParams> jumpCommandCall;
-    private RemoteFunction<dfproto.EmptyMessage, MenuContents> menuQueryCall;
-    private RemoteFunction<dfproto.IntMessage> movementSelectCommandCall;
+    private RemoteFunction<EmptyMessage, MenuContents> menuQueryCall;
+    private RemoteFunction<IntMessage> movementSelectCommandCall;
     private RemoteFunction<MiscMoveParams> miscMoveCall;
+    private RemoteFunction<EmptyMessage, SingleBool> gameValidityCall;
 
-    private color_ostream dfNetworkOut = new color_ostream();
+    #region Dwarf Mode Control
+    private RemoteFunction<EmptyMessage, SidebarState> getSideMenuCall;
+    private RemoteFunction<SidebarCommand> setSideMenuCall;
+    #endregion
+
+    private readonly ColorOstream dfNetworkOut = new ColorOstream();
     private RemoteClient networkClient;
-
-    /// <summary>
-    /// Tries to bind an RPC function, leaving returning null if it fails.
-    /// </summary>
-    /// <typeparam name="Input">Protobuf class used as an input</typeparam>
-    /// <param name="client">Connection to Dwarf Fortress</param>
-    /// <param name="name">Name of the RPC function to bind to</param>
-    /// <param name="proto">Name of the protobuf file to use</param>
-    /// <returns>Bound remote function on success, otherwise null.</returns>
-    RemoteFunction<Input> CreateAndBind<Input>(RemoteClient client, string name, string proto = "") where Input : class, ProtoBuf.IExtensible, new()
-    {
-        RemoteFunction<Input> output = new RemoteFunction<Input>();
-        if (output.bind(client, name, proto))
-            return output;
-        else
-            return null;
-    }
-
-    /// <summary>
-    /// Tries to bind an RPC function, returning null if it fails.
-    /// </summary>
-    /// <typeparam name="Input">Protobuf class used as an input</typeparam>
-    /// <typeparam name="Output">Protobuf class to use as an output</typeparam>
-    /// <param name="client">Connection to Dwarf Fortress</param>
-    /// <param name="name">Name of the RPC function to bind to</param>
-    /// <param name="proto">Name of the protobuf file to use</param>
-    /// <returns>Bound remote function on success, otherwise null.</returns>
-    RemoteFunction<Input, Output> CreateAndBind<Input, Output>(RemoteClient client, string name, string proto = "")
-        where Input : class, ProtoBuf.IExtensible, new()
-        where Output : class, ProtoBuf.IExtensible, new()
-    {
-        RemoteFunction<Input, Output> output = new RemoteFunction<Input, Output>();
-        if (output.bind(client, name, proto))
-            return output;
-        else
-            return null;
-    }
 
     TimedRemoteFunction<Input, Output> CreateAndBindTimed<Input, Output>(float interval, RemoteClient client, string name, string proto = "")
     where Input : class, ProtoBuf.IExtensible, new()
     where Output : class, ProtoBuf.IExtensible, new()
     {
         RemoteFunction<Input, Output> output = new RemoteFunction<Input, Output>();
-        if (output.bind(client, name, proto))
+        if (output.Bind(client, name, proto))
             return new TimedRemoteFunction<Input, Output>(interval, output);
         else
             return null;
@@ -150,9 +121,9 @@ public sealed class DFConnection : MonoBehaviour
     /// </summary>
     void BindStaticMethods()
     {
-        dfhackVersionCall = CreateAndBind<dfproto.EmptyMessage, dfproto.StringMessage>(networkClient, "GetVersion");
-        dfVersionCall = CreateAndBind<dfproto.EmptyMessage, dfproto.StringMessage>(networkClient, "GetDFVersion");
-        dfWorldInfoCall = CreateAndBind<dfproto.EmptyMessage, dfproto.GetWorldInfoOut>(networkClient, "GetWorldInfo");
+        dfhackVersionCall = new RemoteFunction<EmptyMessage, StringMessage>(networkClient, "GetVersion");
+        dfVersionCall = new RemoteFunction<EmptyMessage, StringMessage>(networkClient, "GetDFVersion");
+        dfWorldInfoCall = new RemoteFunction<EmptyMessage, GetWorldInfoOut>(networkClient, "GetWorldInfo");
     }
 
     /// <summary>
@@ -160,48 +131,50 @@ public sealed class DFConnection : MonoBehaviour
     /// </summary>
     void BindMethods()
     {
-        materialListCall = CreateAndBind<dfproto.EmptyMessage, MaterialList>(networkClient, "GetMaterialList", "RemoteFortressReader");
-        itemListCall = CreateAndBind<dfproto.EmptyMessage, MaterialList>(networkClient, "GetItemList", "RemoteFortressReader");
-        tiletypeListCall = CreateAndBind<dfproto.EmptyMessage, TiletypeList>(networkClient, "GetTiletypeList", "RemoteFortressReader");
+        materialListCall = new RemoteFunction<EmptyMessage, MaterialList>(networkClient, "GetMaterialList", "RemoteFortressReader");
+        itemListCall = new RemoteFunction<EmptyMessage, MaterialList>(networkClient, "GetItemList", "RemoteFortressReader");
+        tiletypeListCall = new RemoteFunction<EmptyMessage, TiletypeList>(networkClient, "GetTiletypeList", "RemoteFortressReader");
         blockListCall = CreateAndBindTimed<BlockRequest, BlockList>(GameSettings.Instance.updateTimers.blockUpdate, networkClient, "GetBlockList", "RemoteFortressReader");
-        unitListCall = CreateAndBind<BlockRequest, UnitList>(networkClient, "GetUnitListInside", "RemoteFortressReader");
-        unitListCallLegacy = CreateAndBind<dfproto.EmptyMessage, UnitList>(networkClient, "GetUnitList", "RemoteFortressReader");
-        viewInfoCall = CreateAndBind<dfproto.EmptyMessage, ViewInfo>(networkClient, "GetViewInfo", "RemoteFortressReader");
-        mapInfoCall = CreateAndBind<dfproto.EmptyMessage, MapInfo>(networkClient, "GetMapInfo", "RemoteFortressReader");
-        mapResetCall = CreateAndBind<dfproto.EmptyMessage>(networkClient, "ResetMapHashes", "RemoteFortressReader");
-        buildingListCall = CreateAndBind<dfproto.EmptyMessage, BuildingList>(networkClient, "GetBuildingDefList", "RemoteFortressReader");
-        worldMapCall = CreateAndBind<dfproto.EmptyMessage, WorldMap>(networkClient, "GetWorldMapNew", "RemoteFortressReader");
-        worldMapCenterCall = CreateAndBind<dfproto.EmptyMessage, WorldMap>(networkClient, "GetWorldMapCenter", "RemoteFortressReader");
-        regionMapCall = CreateAndBind<dfproto.EmptyMessage, RegionMaps>(networkClient, "GetRegionMapsNew", "RemoteFortressReader");
-        creatureRawListCall = CreateAndBind<dfproto.EmptyMessage, CreatureRawList>(networkClient, "GetCreatureRaws", "RemoteFortressReader");
-        partialCreatureRawListCall = CreateAndBind<ListRequest, CreatureRawList>(networkClient, "GetPartialCreatureRaws", "RemoteFortressReader");
-        plantRawListCall = CreateAndBind<dfproto.EmptyMessage, PlantRawList>(networkClient, "GetPlantRaws", "RemoteFortressReader");
-        keyboardEventCall = CreateAndBind<KeyboardEvent>(networkClient, "PassKeyboardEvent", "RemoteFortressReader");
-        copyScreenCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.ScreenCapture>(networkClient, "CopyScreen", "RemoteFortressReader");
-        digCommandCall = CreateAndBind<DigCommand>(networkClient, "SendDigCommand", "RemoteFortressReader");
-        pauseCommandCall = CreateAndBind<SingleBool>(networkClient, "SetPauseState", "RemoteFortressReader");
-        pauseStatusCall = CreateAndBind<dfproto.EmptyMessage, SingleBool>(networkClient, "GetPauseState", "RemoteFortressReader");
-        versionInfoCall = CreateAndBind<dfproto.EmptyMessage, VersionInfo>(networkClient, "GetVersionInfo", "RemoteFortressReader");
-        reportsCall = CreateAndBind<dfproto.EmptyMessage, Status>(networkClient, "GetReports", "RemoteFortressReader");
-        moveCommandCall = CreateAndBind<MoveCommandParams>(networkClient, "MoveCommand", "RemoteFortressReader");
-        jumpCommandCall = CreateAndBind<MoveCommandParams>(networkClient, "JumpCommand", "RemoteFortressReader");
-        menuQueryCall = CreateAndBind<dfproto.EmptyMessage, MenuContents>(networkClient, "MenuQuery", "RemoteFortressReader");
-        movementSelectCommandCall = CreateAndBind<dfproto.IntMessage>(networkClient, "MovementSelectCommand", "RemoteFortressReader");
-        miscMoveCall = CreateAndBind<MiscMoveParams>(networkClient, "MiscMoveCommand", "RemoteFortressReader");
-        languageCall = CreateAndBind<dfproto.EmptyMessage, Language>(networkClient, "GetLanguage", "RemoteFortressReader");
+        unitListCall = new RemoteFunction<BlockRequest, UnitList>(networkClient, "GetUnitListInside", "RemoteFortressReader");
+        unitListCallLegacy = new RemoteFunction<EmptyMessage, UnitList>(networkClient, "GetUnitList", "RemoteFortressReader");
+        viewInfoCall = new RemoteFunction<EmptyMessage, ViewInfo>(networkClient, "GetViewInfo", "RemoteFortressReader");
+        mapInfoCall = new RemoteFunction<EmptyMessage, MapInfo>(networkClient, "GetMapInfo", "RemoteFortressReader");
+        mapResetCall = new RemoteFunction<EmptyMessage>(networkClient, "ResetMapHashes", "RemoteFortressReader");
+        buildingListCall = new RemoteFunction<EmptyMessage, BuildingList>(networkClient, "GetBuildingDefList", "RemoteFortressReader");
+        worldMapCall = new RemoteFunction<EmptyMessage, WorldMap>(networkClient, "GetWorldMapNew", "RemoteFortressReader");
+        worldMapCenterCall = new RemoteFunction<EmptyMessage, WorldMap>(networkClient, "GetWorldMapCenter", "RemoteFortressReader");
+        regionMapCall = new RemoteFunction<EmptyMessage, RegionMaps>(networkClient, "GetRegionMapsNew", "RemoteFortressReader");
+        creatureRawListCall = new RemoteFunction<EmptyMessage, CreatureRawList>(networkClient, "GetCreatureRaws", "RemoteFortressReader");
+        partialCreatureRawListCall = new RemoteFunction<ListRequest, CreatureRawList>(networkClient, "GetPartialCreatureRaws", "RemoteFortressReader");
+        plantRawListCall = new RemoteFunction<EmptyMessage, PlantRawList>(networkClient, "GetPlantRaws", "RemoteFortressReader");
+        keyboardEventCall = new RemoteFunction<KeyboardEvent>(networkClient, "PassKeyboardEvent", "RemoteFortressReader");
+        copyScreenCall = new RemoteFunction<EmptyMessage, RemoteFortressReader.ScreenCapture>(networkClient, "CopyScreen", "RemoteFortressReader");
+        digCommandCall = new RemoteFunction<DigCommand>(networkClient, "SendDigCommand", "RemoteFortressReader");
+        pauseCommandCall = new RemoteFunction<SingleBool>(networkClient, "SetPauseState", "RemoteFortressReader");
+        pauseStatusCall = new RemoteFunction<EmptyMessage, SingleBool>(networkClient, "GetPauseState", "RemoteFortressReader");
+        versionInfoCall = new RemoteFunction<EmptyMessage, VersionInfo>(networkClient, "GetVersionInfo", "RemoteFortressReader");
+        reportsCall = new RemoteFunction<EmptyMessage, Status>(networkClient, "GetReports", "RemoteFortressReader");
+        moveCommandCall = new RemoteFunction<MoveCommandParams>(networkClient, "MoveCommand", "RemoteFortressReader");
+        jumpCommandCall = new RemoteFunction<MoveCommandParams>(networkClient, "JumpCommand", "RemoteFortressReader");
+        menuQueryCall = new RemoteFunction<EmptyMessage, MenuContents>(networkClient, "MenuQuery", "RemoteFortressReader");
+        movementSelectCommandCall = new RemoteFunction<IntMessage>(networkClient, "MovementSelectCommand", "RemoteFortressReader");
+        miscMoveCall = new RemoteFunction<MiscMoveParams>(networkClient, "MiscMoveCommand", "RemoteFortressReader");
+        languageCall = new RemoteFunction<EmptyMessage, Language>(networkClient, "GetLanguage", "RemoteFortressReader");
+        getSideMenuCall = new RemoteFunction<EmptyMessage, SidebarState>(networkClient, "GetSideMenu", "RemoteFortressReader");
+        setSideMenuCall = new RemoteFunction<SidebarCommand>(networkClient, "SetSideMenu", "RemoteFortressReader");
+        gameValidityCall = new RemoteFunction<EmptyMessage, SingleBool>(networkClient, "GetGameValidity", "RemoteFortressReader");
     }
 
     #endregion
 
     // Things we read from DF
-    dfproto.GetWorldInfoOut netWorldInfo;
+    GetWorldInfoOut netWorldInfo;
 
     // Unchanging
     private MaterialList netMaterialList;
     private MaterialList netItemList;
     private TiletypeList netTiletypeList;
     private BuildingList netBuildingList;
-    private List<CreatureRaw> creatureRaws;
     private PlantRawList netPlantRawList;
     private Language netLanguageList;
 
@@ -223,8 +196,9 @@ public sealed class DFConnection : MonoBehaviour
 
     #region Command DF
 
-    private RingBuffer<DigCommand> netDigCommands 
+    private readonly RingBuffer<DigCommand> netDigCommands 
         = new RingBuffer<DigCommand>(8);
+
 
     /// <summary>
     /// Enqueue's a digging designation command to send to DF
@@ -238,14 +212,26 @@ public sealed class DFConnection : MonoBehaviour
             netDigCommands.Enqueue(command);
     }
 
+    private readonly RingBuffer<SidebarCommand> netSidebarSets
+    = new RingBuffer<SidebarCommand>(8);
+
+    public void EnqueueSidebarSet(SidebarCommand sidebar)
+    {
+        if (setSideMenuCall == null)
+            return;
+        if (!netSidebarSets.Full)
+            netSidebarSets.Enqueue(sidebar);
+    }
+
     private RingBuffer<SingleBool> pauseCommands
         = new RingBuffer<SingleBool>(8);
 
     public void SendPauseCommand(bool state)
     {
-        SingleBool command = new SingleBool();
-
-        command.Value = state;
+        SingleBool command = new SingleBool
+        {
+            Value = state
+        };
         if (pauseCommands.Count < pauseCommands.Capacity)
             pauseCommands.Enqueue(command);
     }
@@ -255,9 +241,10 @@ public sealed class DFConnection : MonoBehaviour
 
     public void SendMoveCommand(DFCoord direction)
     {
-        MoveCommandParams command = new MoveCommandParams();
-
-        command.direction = direction;
+        MoveCommandParams command = new MoveCommandParams
+        {
+            direction = direction
+        };
         if (moveCommands.Count < moveCommands.Capacity)
             moveCommands.Enqueue(command);
     }
@@ -267,20 +254,23 @@ public sealed class DFConnection : MonoBehaviour
 
     public void SendJumpCommand(DFCoord direction)
     {
-        MoveCommandParams command = new MoveCommandParams();
-
-        command.direction = direction;
+        MoveCommandParams command = new MoveCommandParams
+        {
+            direction = direction
+        };
         if (jumpCommands.Count < jumpCommands.Capacity)
             jumpCommands.Enqueue(command);
     }
 
-    private RingBuffer<dfproto.IntMessage> carefulMoveCommands
-        = new RingBuffer<dfproto.IntMessage>(8);
+    private RingBuffer<IntMessage> carefulMoveCommands
+        = new RingBuffer<IntMessage>(8);
 
     public void SendCarefulMoveCommand(int option)
     {
-        dfproto.IntMessage message = new dfproto.IntMessage();
-        message.value = option;
+        IntMessage message = new IntMessage
+        {
+            value = option
+        };
         if (carefulMoveCommands.Count < carefulMoveCommands.Capacity)
             carefulMoveCommands.Enqueue(message);
     }
@@ -289,14 +279,18 @@ public sealed class DFConnection : MonoBehaviour
         = new RingBuffer<MiscMoveParams>(8);
     public void SendMiscMoveCommand(MiscMoveType type)
     {
-        MiscMoveParams command = new MiscMoveParams();
-        command.type = type;
+        MiscMoveParams command = new MiscMoveParams
+        {
+            type = type
+        };
         if (miscMoveCommands.Count < miscMoveCommands.Capacity)
             miscMoveCommands.Enqueue(command);
     }
 
 
     public MenuContents AdventureMenuContents { get; private set; }
+
+    public SidebarState SidebarState { get; private set; }
 
     #endregion
 
@@ -319,7 +313,7 @@ public sealed class DFConnection : MonoBehaviour
     private DFCoord embarkMapPosition = new DFCoord(-1, -1, -1);
 
     // Mutexes for changing / nullable objects
-    private UnityEngine.Object mapInfoLock = new UnityEngine.Object();
+    private readonly UnityEngine.Object mapInfoLock = new UnityEngine.Object();
 
     // Cached block request
     private readonly BlockRequest blockRequest
@@ -346,11 +340,6 @@ public sealed class DFConnection : MonoBehaviour
     public BuildingList NetBuildingList
     {
         get { return netBuildingList; }
-    }
-
-    public List<CreatureRaw> CreatureRaws
-    {
-        get { return creatureRaws; }
     }
 
     public PlantRawList NetPlantRawList
@@ -483,7 +472,7 @@ public sealed class DFConnection : MonoBehaviour
         }
     }
 
-    public dfproto.GetWorldInfoOut.Mode WorldMode { get; private set; }
+    public GetWorldInfoOut.Mode WorldMode { get; private set; }
 
     [NonSerialized]
     public List<Wave> waves;
@@ -515,11 +504,11 @@ public sealed class DFConnection : MonoBehaviour
     void Connect()
     {
         blockRequest.blocks_needed = BlocksToFetch;
-        networkClient = new DFHack.RemoteClient(dfNetworkOut);
-        bool success = networkClient.connect();
+        networkClient = new RemoteClient(dfNetworkOut);
+        bool success = networkClient.Connect();
         if (!success)
         {
-            networkClient.disconnect();
+            networkClient.Disconnect();
             networkClient = null;
             ModalPanel.Instance.Choice(
                 "Armok Vision could not find a running instance of Dwarf Fortress!\n\n" +
@@ -571,7 +560,7 @@ public sealed class DFConnection : MonoBehaviour
         if (versionInfoCall != null && dfVersionCall != null)
         {
             VersionInfo versionInfo;
-            dfproto.StringMessage dfVersion = new dfproto.StringMessage();
+            StringMessage dfVersion = new StringMessage();
             versionInfoCall.TryExecute(null, out versionInfo);
             dfVersionCall.TryExecute(null, out dfVersion);
             Debug.LogFormat("Connected to DF version {0}, running DFHack version {1}, and RemoteFortressReader version {2}", versionInfo.dwarf_fortress_version, versionInfo.dfhack_version, versionInfo.remote_fortress_reader_version);
@@ -580,8 +569,8 @@ public sealed class DFConnection : MonoBehaviour
         }
         else if(dfVersionCall != null)
         {
-            dfproto.StringMessage dfVersion = new dfproto.StringMessage();
-            dfproto.StringMessage dfHackVersion = new dfproto.StringMessage();
+            StringMessage dfVersion = new StringMessage();
+            StringMessage dfHackVersion = new StringMessage();
             dfVersionCall.TryExecute(null, out dfVersion);
             dfhackVersionCall.TryExecute(null, out dfHackVersion);
             Debug.LogFormat("Connected to DF version {0}, , running DFHack version {1}, and an old RemoteFortressReader plugin.", dfVersion.value, dfHackVersion.value);
@@ -600,7 +589,7 @@ public sealed class DFConnection : MonoBehaviour
 
         // Get some initial stuff
         // Necessary for initialization, apparently.
-        networkClient.suspend_game();
+        networkClient.SuspendGame();
         if (viewInfoCall != null)
         {
             ViewInfo viewInfo;
@@ -635,7 +624,7 @@ public sealed class DFConnection : MonoBehaviour
             regionMapCall.TryExecute(null, out regionMaps);
             netRegionMaps.Set(regionMaps);
         }
-        networkClient.resume_game();
+        networkClient.ResumeGame();
 
         if (mapResetCall != null)
             mapResetCall.TryExecute();
@@ -668,7 +657,7 @@ public sealed class DFConnection : MonoBehaviour
             if(string.IsNullOrEmpty(_dfhackPluginDir))
             {
             DFStringStream tempStream = new DFStringStream();
-            networkClient.run_command(tempStream, "lua", new List<string>(new string[] { "!dfhack.getHackPath()" }));
+            networkClient.RunCommand(tempStream, "lua", new List<string>(new string[] { "!dfhack.getHackPath()" }));
 
             _dfhackPluginDir = tempStream.Value.Trim() + "/plugins/";
             }
@@ -685,8 +674,8 @@ public sealed class DFConnection : MonoBehaviour
             {
             if (dfhackVersionCall == null || dfVersionCall == null)
                 return "";
-            dfproto.StringMessage dfHackVersion = new dfproto.StringMessage();
-            dfproto.StringMessage dfVersion = new dfproto.StringMessage();
+            StringMessage dfHackVersion = new StringMessage();
+            StringMessage dfVersion = new StringMessage();
 
             dfhackVersionCall.TryExecute(null, out dfHackVersion);
             dfVersionCall.TryExecute(null, out dfVersion);
@@ -702,22 +691,27 @@ public sealed class DFConnection : MonoBehaviour
     }
 
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
-    string pluginName = "RemoteFortressReader.plug.dll";
+    readonly string pluginName = "RemoteFortressReader.plug.dll";
 #elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
-    string pluginName = "RemoteFortressReader.plug.dylib";
+    readonly string pluginName = "RemoteFortressReader.plug.dylib";
 #elif UNITY_STANDALONE_LINUX
-    string pluginName = "RemoteFortressReader.plug.so";
+    readonly string pluginName = "RemoteFortressReader.plug.so";
 #else
-    string pluginName = "INVALID";
+    readonly string pluginName = "INVALID";
 #endif
 
     private void CheckPlugin()
     {
         Version pluginVersion = new Version(0,0,0);
         Version avVersion = new Version(BuildSettings.Instance.content_version);
+        StringMessage dfHackVersion = new StringMessage();
+        StringMessage dfVersion = new StringMessage();
+
+        dfhackVersionCall.TryExecute(null, out dfHackVersion);
+        dfVersionCall.TryExecute(null, out dfVersion);
 
         DFStringStream tempStream = new DFStringStream();
-        networkClient.run_command(tempStream, "RemoteFortressReader_version", new List<string>());
+        networkClient.RunCommand(tempStream, "RemoteFortressReader_version", new List<string>());
         var results = tempStream.Value.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
         string versionString = results[0].Trim();
         try
@@ -736,7 +730,8 @@ public sealed class DFConnection : MonoBehaviour
                 ModalPanel.Instance.Choice(string.Format(
                     "You appear to be running on an out-dated version of the RemoteFortressReader plugin.\n\n" +
                     "You're running version {0} of the plugin, while Armok Vision expects a plugin versioned {1} or above.\n\n" +
-                    "A compatible version of the plugin has not been found. Please let the developers know which version of DFHack and DF you are running, so they can make one.", pluginVersion, avVersion), Init, DisableUpdate, "Okay.", "Don't ask again");
+                    "A compatible version of the plugin has not been found. Please let the developers know which version of DFHack and DF you are running, so they can make one.\n\n" +
+                    "Please include the following info:\n\n Dwarf Fortress Version: {2}\n\n DFHack Version: {3}", pluginVersion, avVersion, dfVersion.value, dfHackVersion.value), Init, DisableUpdate, "Okay.", "Don't ask again");
                 return; //We don't have a compatible plugin
             }
             else
@@ -763,9 +758,9 @@ public sealed class DFConnection : MonoBehaviour
     void UpdatePlugin()
     {
 
-        networkClient.run_command("unload", new List<string>(new string[] { "RemoteFortressReader" }));
+        networkClient.RunCommand("unload", new List<string>(new string[] { "RemoteFortressReader" }));
     File.Copy(AVPluginDirectory + pluginName, DFHackPluginDirectory + pluginName, true);
-        networkClient.run_command("load", new List<string>(new string[] { "RemoteFortressReader" }));
+        networkClient.RunCommand("load", new List<string>(new string[] { "RemoteFortressReader" }));
         Init();
     }
 
@@ -784,6 +779,10 @@ public sealed class DFConnection : MonoBehaviour
     /// </summary>
     void FetchUnchangingInfo()
     {
+        if (getSideMenuCall != null)
+        {
+            SidebarState = getSideMenuCall.Execute();
+        }
         if (materialListCall != null)
             materialListCall.TryExecute(null, out netMaterialList);
         if (itemListCall != null)
@@ -794,27 +793,30 @@ public sealed class DFConnection : MonoBehaviour
             buildingListCall.TryExecute(null, out netBuildingList);
         if (partialCreatureRawListCall != null)
         {
-            creatureRaws = new List<CreatureRaw>();
+            var creatureRaws = new List<CreatureRaw>();
             int returnedItems = int.MaxValue;
             CreatureRawList netCreatureRawList;
             int count = 0;
             for (int start = 0; returnedItems != 0; start += 50)
             {
-                ListRequest request = new ListRequest();
-                request.list_start = start;
-                request.list_end = start + 50;
+                ListRequest request = new ListRequest
+                {
+                    list_start = start,
+                    list_end = start + 50
+                };
                 partialCreatureRawListCall.TryExecute(request, out netCreatureRawList);
                 returnedItems = netCreatureRawList.creature_raws.Count;
                 creatureRaws.AddRange(netCreatureRawList.creature_raws);
                 count++;
             }
+            CreatureRaws.Instance.CreatureList = creatureRaws;
             Debug.LogFormat("Got {0} creatures raws in {1} batches", creatureRaws.Count, count);
         }
         else if (creatureRawListCall != null)
         {
             CreatureRawList netCreatureRawList;
             creatureRawListCall.TryExecute(null, out netCreatureRawList);
-            creatureRaws = netCreatureRawList.creature_raws;
+            CreatureRaws.Instance.CreatureList = netCreatureRawList.creature_raws;
         }
         if (plantRawListCall != null)
             plantRawListCall.TryExecute(null, out netPlantRawList);
@@ -830,7 +832,7 @@ public sealed class DFConnection : MonoBehaviour
         if (netMaterialList != null)
         {
             AddFakeMaterials(netMaterialList);
-            MaterialTokenList.MaterialTokens = netMaterialList.material_list;
+            MaterialRaws.Instance.MaterialList = netMaterialList.material_list;
             Debug.Log("Materials fetched: " + netMaterialList.material_list.Count);
         }
         if (netTiletypeList != null)
@@ -840,19 +842,25 @@ public sealed class DFConnection : MonoBehaviour
         }
         if (netItemList != null)
         {
-            ItemTokenList.ItemTokens = netItemList.material_list;
+            ItemRaws.Instance.ItemList = netItemList.material_list;
             Debug.Log("Itemtypes fetched: " + netItemList.material_list.Count);
         }
         else
         {
-            MaterialDefinition blankMaterial = new MaterialDefinition();
-            blankMaterial.id = "NONE";
-            blankMaterial.name = "NONE";
-            blankMaterial.mat_pair = new MatPair();
-            blankMaterial.mat_pair.mat_type = -1;
-            blankMaterial.mat_pair.mat_index = -1;
-            List<MaterialDefinition> blankItemList = new List<MaterialDefinition>();
-            blankItemList.Add(blankMaterial);
+            MaterialDefinition blankMaterial = new MaterialDefinition
+            {
+                id = "NONE",
+                name = "NONE",
+                mat_pair = new MatPair
+                {
+                    mat_type = -1,
+                    mat_index = -1
+                }
+            };
+            List<MaterialDefinition> blankItemList = new List<MaterialDefinition>
+            {
+                blankMaterial
+            };
             ItemTokenList.ItemTokens = blankItemList;
             Debug.Log("Created dummy Itemtype list.");
         }
@@ -874,10 +882,10 @@ public sealed class DFConnection : MonoBehaviour
             Debug.Log("Plant Raws fetched: " + netPlantRawList.plant_raws.Count);
         }
 
-        if(creatureRaws != null)
+        if(CreatureRaws.Instance.CreatureList != null)
         {
-            CreatureTokenList.CreatureRawList = creatureRaws;
-            Debug.Log("Creature Raws fetched: " + creatureRaws.Count);
+            CreatureTokenList.CreatureRawList = CreatureRaws.Instance.CreatureList;
+            Debug.Log("Creature Raws fetched: " + CreatureRaws.Instance.CreatureList.Count);
         }
 
         //Debug.Log("Buildingtypes fetched: " + netBuildingList.building_list.Count);
@@ -888,22 +896,25 @@ public sealed class DFConnection : MonoBehaviour
     {
         for (int i = 0; i <= (int)DesignationType.UpStairs; i++)
         {
-            MaterialDefinition item = new MaterialDefinition();
-            item.id = "DESIGNATION:" + ((DesignationType)i).ToString();
-            item.name = ((DesignationType)i).ToString() + " Designation";
-            item.mat_pair = new MatPairStruct((int)MatBasic.DESIGNATION, i);
+            MaterialDefinition item = new MaterialDefinition
+            {
+                id = "DESIGNATION:" + ((DesignationType)i).ToString(),
+                name = ((DesignationType)i).ToString() + " Designation",
+                mat_pair = new MatPairStruct((int)MatBasic.DESIGNATION, i)
+            };
             netMaterialList.material_list.Add(item);
         }
     }
 
+    private void Awake()
+    {
+        if (instance != null && instance != this)
+            DestroyImmediate(this);
+        instance = this;
+    }
+
     void Start()
     {
-        if (instance != null)
-        {
-            throw new UnityException("Can't have multiple dwarf fortress connections!");
-        }
-        instance = this;
-
         try
         {
             Connect();
@@ -949,17 +960,17 @@ public sealed class DFConnection : MonoBehaviour
                         dfEvent.state = 0;
                         break;
                 }
-                SDL.Mod mod = SDL.Mod.KMOD_NONE;
+                SDL.Mod mod = SDL.Mod.KmodNone;
                 if (e.shift)
-                    mod |= SDL.Mod.KMOD_SHIFT;
+                    mod |= SDL.Mod.KmodShift;
                 if (e.control)
-                    mod |= SDL.Mod.KMOD_CTRL;
+                    mod |= SDL.Mod.KmodCtrl;
                 if (e.alt)
-                    mod |= SDL.Mod.KMOD_ALT;
+                    mod |= SDL.Mod.KmodAlt;
                 if (e.command)
-                    mod |= SDL.Mod.KMOD_META;
+                    mod |= SDL.Mod.KmodMeta;
                 if (e.capsLock)
-                    mod |= SDL.Mod.KMOD_CAPS;
+                    mod |= SDL.Mod.KmodCaps;
 
                 dfEvent.mod = (uint)mod;
                 dfEvent.scancode = (uint)e.keyCode;
@@ -967,14 +978,14 @@ public sealed class DFConnection : MonoBehaviour
                 dfEvent.unicode = e.character;
 
                 if (e.keyCode == KeyCode.None && e.character != '\0')
-                    StartCoroutine(delayedKeyboardEvent(dfEvent)); // Unity doesn't give any keyboard events for character up, but DF expect it.
+                    StartCoroutine(DelayedKeyboardEvent(dfEvent)); // Unity doesn't give any keyboard events for character up, but DF expect it.
                 else
                     keyPresses.Enqueue(dfEvent);
             }
         }
     }
 
-    public IEnumerator delayedKeyboardEvent(KeyboardEvent dfEvent)
+    public IEnumerator DelayedKeyboardEvent(KeyboardEvent dfEvent)
     {
         keyPresses.Enqueue(dfEvent);
         yield return new WaitForSeconds(0.1f);
@@ -1001,6 +1012,7 @@ public sealed class DFConnection : MonoBehaviour
             Interlocked.Exchange(ref _timeTicks, value.Ticks);
         }
     }
+
     DateTime nextRegionUpdate = DateTime.MaxValue;
 
     public bool fetchMap;
@@ -1015,7 +1027,17 @@ public sealed class DFConnection : MonoBehaviour
     void PerformSingleUpdate()
     {
         //pause df here, so it doesn't try to resume while we're working.
-        networkClient.suspend_game();
+        networkClient.SuspendGame();
+
+        if(gameValidityCall != null)
+        {
+            var valid = gameValidityCall.Execute();
+            if(!valid.Value)
+            {
+                networkClient.ResumeGame();
+                return;
+            }
+        }
 
         //everything that controls DF.
         #region DF Control
@@ -1030,6 +1052,13 @@ public sealed class DFConnection : MonoBehaviour
             while (netDigCommands.Count > 0)
             {
                 digCommandCall.TryExecute(netDigCommands.Dequeue());
+            }
+        }
+        if(setSideMenuCall != null)
+        {
+            while(netSidebarSets.Count > 0)
+            {
+                setSideMenuCall.TryExecute(netSidebarSets.Dequeue());
             }
         }
         if(pauseCommandCall != null)
@@ -1064,13 +1093,13 @@ public sealed class DFConnection : MonoBehaviour
         if(movementSelectCommandCall != null)
         {
             while (carefulMoveCommands.Count > 0)
-                movementSelectCommandCall.Execute(carefulMoveCommands.Dequeue());
+                movementSelectCommandCall.TryExecute(carefulMoveCommands.Dequeue());
         }
 
         if(miscMoveCall != null)
         {
             while (miscMoveCommands.Count > 0)
-                miscMoveCall.Execute(miscMoveCommands.Dequeue());
+                miscMoveCall.TryExecute(miscMoveCommands.Dequeue());
         }
 
         #endregion
@@ -1080,6 +1109,11 @@ public sealed class DFConnection : MonoBehaviour
         if (menuQueryCall != null)
         {
             AdventureMenuContents = menuQueryCall.Execute();
+        }
+
+        if(getSideMenuCall != null)
+        {
+            SidebarState = getSideMenuCall.Execute();
         }
 
         if (fetchMap)
@@ -1141,11 +1175,11 @@ public sealed class DFConnection : MonoBehaviour
 
         if (requestRangeUpdate != null)
         {
-            blockRequest.min_x = requestRangeUpdate.Value.Min.x;
-            blockRequest.min_y = requestRangeUpdate.Value.Min.y;
+            blockRequest.min_x = requestRangeUpdate.Value.Min.x * GameMap.blockSize / 16;
+            blockRequest.min_y = requestRangeUpdate.Value.Min.y * GameMap.blockSize / 16;
             blockRequest.min_z = requestRangeUpdate.Value.Min.z;
-            blockRequest.max_x = requestRangeUpdate.Value.Max.x;
-            blockRequest.max_y = requestRangeUpdate.Value.Max.y;
+            blockRequest.max_x = requestRangeUpdate.Value.Max.x * GameMap.blockSize / 16;
+            blockRequest.max_y = requestRangeUpdate.Value.Max.y * GameMap.blockSize / 16;
             blockRequest.max_z = requestRangeUpdate.Value.Max.z;
         }
 
@@ -1246,7 +1280,7 @@ public sealed class DFConnection : MonoBehaviour
         #endregion
 
         //All communication with DF should be before this.
-        networkClient.resume_game();
+        networkClient.ResumeGame();
 
         if (resultList != null)
         {
@@ -1270,7 +1304,7 @@ public sealed class DFConnection : MonoBehaviour
 
     internal void ResumeGame()
     {
-        networkClient.resume_game();
+        networkClient.ResumeGame();
     }
 
     /// <summary>
@@ -1325,9 +1359,9 @@ public sealed class DFConnection : MonoBehaviour
 
             public override void Poll()
             {
-                if (Time.time - prevTime < Instance.refreshDelay)
+                if (Time.realtimeSinceStartup - prevTime < Instance.refreshDelay)
                     return;
-                prevTime = Time.time;
+                prevTime = Time.realtimeSinceStartup;
                 if (ContentLoader.Instance != null)
                 {
                     try
@@ -1343,7 +1377,7 @@ public sealed class DFConnection : MonoBehaviour
 
             public override void Terminate()
             {
-                connection.networkClient.disconnect();
+                connection.networkClient.Disconnect();
                 connection.networkClient = null;
             }
         }
@@ -1404,7 +1438,7 @@ public sealed class DFConnection : MonoBehaviour
                     Thread.Sleep((int)(Instance.refreshDelay * 1000));
                 }
                 // finished
-                connection.networkClient.disconnect();
+                connection.networkClient.Disconnect();
                 connection.networkClient = null;
             }
         }

@@ -72,11 +72,6 @@ abstract class BlockMesher {
         heights = new float[2, 2];
     }
 
-    // Stuff for runtime configuration.
-    // These will be accessed from multiple threads, but DON'T need to be
-    // locked, since they don't change after being loaded.
-    protected readonly Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition> materials;
-
     // Some queues.
     // All of these need to be locked before access.
     // In general, NEVER LOCK MORE THAN ONE at the same time - 
@@ -91,13 +86,7 @@ abstract class BlockMesher {
         recycledBlocks = new Stack<MapDataStore>();
         resultQueue = new Queue<Result>();
 
-        // Load materials
-        materials = new Dictionary<MatPairStruct, MaterialDefinition>();
-        foreach (MaterialDefinition material in DFConnection.Instance.NetMaterialList.material_list)
-        {
-            materials[material.mat_pair] = material;
-        }
-        System.GC.Collect(); //force a garbage collect after initial load.
+        GC.Collect(); //force a garbage collect after initial load.
     }
 
     // Needs to be run frequently.
@@ -393,8 +382,7 @@ abstract class BlockMesher {
 
                     if (i < (int)MeshLayer.StaticCutout)
                     {
-                        FillMeshBuffer(
-                            out meshBuffer[bufferIndex],
+                        FillMeshBuffer(out meshBuffer[bufferIndex],
                             (MeshLayer)i,
                             data[xx, yy, block_z],
                             GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize),
@@ -404,8 +392,7 @@ abstract class BlockMesher {
                     }
                     else if (i < (int)MeshLayer.StaticTransparent)
                     {
-                        FillMeshBuffer(
-                            out stencilMeshBuffer[stencilBufferIndex],
+                        FillMeshBuffer(out stencilMeshBuffer[stencilBufferIndex],
                             (MeshLayer)i,
                             data[xx, yy, block_z],
                             GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize),
@@ -415,8 +402,7 @@ abstract class BlockMesher {
                     }
                     else if (i < (int)MeshLayer.Collision)
                     {
-                        FillMeshBuffer(
-                            out transparentMeshBuffer[transparentBufferIndex],
+                        FillMeshBuffer(out transparentMeshBuffer[transparentBufferIndex],
                             (MeshLayer)i,
                             data[xx, yy, block_z],
                             GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize),
@@ -426,8 +412,7 @@ abstract class BlockMesher {
                     }
                     else if (i < (int)MeshLayer.NaturalTerrain)
                     {
-                        FillMeshBuffer(
-                            out collisionMeshBuffer[collisionIndex],
+                        FillMeshBuffer(out collisionMeshBuffer[collisionIndex],
                             (MeshLayer)i,
                             data[xx, yy, block_z],
                             GameMap.DFtoUnityCoord(xx - (block_x * GameMap.blockSize),
@@ -456,15 +441,15 @@ abstract class BlockMesher {
          var naturalTerrain = voxelGen.Triangulate(data);
         GameMap.EndSample();
         GameMap.BeginSample("Combine Meshes");
-        terrainTiles = MeshCombineUtility.ColorCombine(terrainMeshBuffer, out dontCare, false, naturalTerrain);
-        topTerrainTiles = MeshCombineUtility.ColorCombine(terrainMeshBuffer, out dontCare, true);
-        stencilTiles = MeshCombineUtility.ColorCombine(stencilMeshBuffer, out dontCare, false);
-        topStencilTiles = MeshCombineUtility.ColorCombine(stencilMeshBuffer, out dontCare, true);
-        transparentTiles = MeshCombineUtility.ColorCombine(transparentMeshBuffer, out dontCare, false);
-        topTransparentTiles = MeshCombineUtility.ColorCombine(transparentMeshBuffer, out dontCare, true);
-        topTiles = MeshCombineUtility.ColorCombine(meshBuffer, out dontCare, true);
-        tiles = MeshCombineUtility.ColorCombine(meshBuffer, out success, false);
-        collisionTiles = MeshCombineUtility.ColorCombine(collisionMeshBuffer, out dontCare, false, naturalTerrain);
+        terrainTiles = MeshCombineUtility.ColorCombine(terrainMeshBuffer, terrainIndex, out dontCare, false, naturalTerrain);
+        topTerrainTiles = MeshCombineUtility.ColorCombine(terrainMeshBuffer, terrainIndex, out dontCare, true);
+        stencilTiles = MeshCombineUtility.ColorCombine(stencilMeshBuffer, stencilBufferIndex, out dontCare, false);
+        topStencilTiles = MeshCombineUtility.ColorCombine(stencilMeshBuffer, stencilBufferIndex, out dontCare, true);
+        transparentTiles = MeshCombineUtility.ColorCombine(transparentMeshBuffer, transparentBufferIndex, out dontCare, false);
+        topTransparentTiles = MeshCombineUtility.ColorCombine(transparentMeshBuffer, transparentBufferIndex, out dontCare, true);
+        topTiles = MeshCombineUtility.ColorCombine(meshBuffer, bufferIndex, out dontCare, true);
+        tiles = MeshCombineUtility.ColorCombine(meshBuffer, bufferIndex, out success, false);
+        collisionTiles = MeshCombineUtility.ColorCombine(collisionMeshBuffer, collisionIndex, out dontCare, false, naturalTerrain);
         GameMap.EndSample();
 
         return success;
@@ -513,16 +498,16 @@ abstract class BlockMesher {
             buffer.meshData = meshContent.MeshData[layer];
             buffer.transform = Matrix4x4.TRS(pos, meshContent.GetRotation(tile), Vector3.one);
 
-            index1.x = ContentLoader.GetPatternIndex(tile.DesignationMat) / ContentLoader.Instance.PatternTextureDepth;
+            index1.x = ContentLoader.GetPatternIndex(tile.DesignationMat);
             buffer.color = ContentLoader.GetColor(tile.DesignationMat);
             if (meshContent.ShapeTexture != null)
-                index1.y = meshContent.ShapeTexture.ArrayIndex;
+                index1.y = meshContent.ShapeTexture.StorageIndex;
             else
-                index1.y = ContentLoader.Instance.DefaultShapeTexArrayIndex;
+                index1.y = ContentLoader.Instance.DefaultShapeTexIndex;
             if (meshContent.SpecialTexture != null)
                 index2.x = meshContent.SpecialTexture.ArrayIndex;
             else
-                index2.x = ContentLoader.Instance.DefaultSpecialTexArrayIndex;
+                index2.x = ContentLoader.Instance.DefaultSpecialTexIndex;
 
             buffer.uv1Transform = Matrix4x4.identity;
             buffer.uv2Force = index1;
@@ -664,16 +649,16 @@ abstract class BlockMesher {
             if (ContentLoader.Instance.ShapeTextureConfiguration.GetValue(tile, layer, out tileTexContent))
             {
                 shapeTextTransform = tileTexContent.UVTransform;
-                index1.y = tileTexContent.ArrayIndex;
+                index1.y = tileTexContent.StorageIndex;
             }
         }
         else
         {
             shapeTextTransform = meshContent.ShapeTexture.UVTransform;
-            index1.y = meshContent.ShapeTexture.ArrayIndex;
+            index1.y = meshContent.ShapeTexture.StorageIndex;
         }
 
-        index1.x = matPatternIndex / ContentLoader.Instance.PatternTextureDepth;
+        index1.x = matPatternIndex;
 
 
 
@@ -685,7 +670,7 @@ abstract class BlockMesher {
         else
         {
             specialTexTransform = ContentLoader.Instance.DefaultSpecialTexTransform;
-            index2.x = ContentLoader.Instance.DefaultSpecialTexArrayIndex;
+            index2.x = ContentLoader.Instance.DefaultSpecialTexIndex;
         }
 
         buffer.color = matColor;

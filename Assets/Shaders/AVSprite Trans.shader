@@ -51,8 +51,6 @@ Shader "Custom/AVSprite Trans" {
 			// put more per-instance properties here
 		UNITY_INSTANCING_BUFFER_END(Props)
 
-#include "blend.cginc"
-
         void surf(Input IN, inout SurfaceOutputStandard o) {
             fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
             clip(c.a - _Cutoff + 1 - IN.color.a);
@@ -73,7 +71,7 @@ Shader "Custom/AVSprite Trans" {
             //#endif //ETC1_EXTERNAL_ALPHA
             float metal = max((IN.color.a * 2) - 1, 0);
             o.Normal = normal;
-            c.rgb = overlay(c.rgb, IN.color.rgb);
+            c.rgb = c.rgb * IN.color.rgb;
             o.Albedo = c.rgb;
             o.Metallic = metal;
             o.Alpha = c.a; // *min((IN.color.a * 2), 1);

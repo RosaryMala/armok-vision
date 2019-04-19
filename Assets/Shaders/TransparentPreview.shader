@@ -44,13 +44,11 @@
             fixed4 _Color;
             fixed4 _Rect;
 
-#include "blend.cginc"
-
 			fixed4 frag (v2f i) : SV_Target
 			{
 				fixed4 col = tex2D(_MainTex, (i.uv* _Rect.zw) + _Rect.xy);
                 //clip(col.a - 0.5);
-				col.rgb = overlay(col.rgb, _Color.rgb);
+				col.rgb = col.rgb * _Color.rgb;
                 col.a = col.a * min((_Color.a * 2), 1);
                 return col;
 			}

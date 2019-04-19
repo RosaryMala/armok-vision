@@ -45,7 +45,6 @@ UNITY_DEFINE_INSTANCED_PROP(int, _MatIndex)
 #define _MatIndex_arr MyProperties
 UNITY_INSTANCING_BUFFER_END(MyProperties)
 
-#include "blend.cginc"
 #include "CustomMetallic.cginc"
 
         void vert (inout appdata_full v, out Input o) 
@@ -66,14 +65,14 @@ UNITY_INSTANCING_BUFFER_END(MyProperties)
 
             fixed4 dfTex = UNITY_SAMPLE_TEX2DARRAY(_MatTexArray, float3(IN.uv_MatTexArray, UNITY_ACCESS_INSTANCED_PROP(_MatIndex_arr, _MatIndex)));
             fixed4 matColor = UNITY_ACCESS_INSTANCED_PROP(_MatColor_arr, _MatColor);
-            fixed3 albedo = overlay(dfTex.rgb, matColor.rgb);
+            fixed3 albedo = dfTex.rgb * matColor.rgb;
             half smoothness = dfTex.a;
             half metallic = max((matColor.a * 2) - 1, 0);
             fixed alpha = min(matColor.a * 2, 1);
             half3 specColor;
             half oneMinusReflectivity;
 
-            albedo = lerp(albedo, overlay(c.rgb, albedo), _ContributionAlbedo);
+            albedo = lerp(albedo, c.rgb * albedo, _ContributionAlbedo);
 
             albedo = DiffuseAndSpecularFromMetallicCustom(albedo, metallic, specColor, oneMinusReflectivity);
 

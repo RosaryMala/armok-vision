@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6cf81176ac46bd4787c356dc567f950, type: 3}
+  m_Name: None
+  m_EditorClassIdentifier: 
+  bodyScale: {x: 1, y: 1, z: 1}
+  bodyParts:
+  - category: ANTENNA
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114939153277095072, guid: 516fa2e69c6eb554a8a55a62cb2a439d, type: 2}
+  - category: HORN
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114287033591201510, guid: a8ff0751837b62c4296995b6bcdd9f81, type: 2}
+  - category: TUSK
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114166233480067596, guid: 49daf0786f614ec41bdf851bf59fa376, type: 2}
+  - category: PROBOSCIS
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114519033035899968, guid: c865da2daf02c6d459314bf1c3ab9ef6, type: 2}
+  - category: SHELL
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114099320514993820, guid: e1655830feaa2594cba498a0fc85ae7a, type: 2}
+  - category: WING
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114231134507148498, guid: d636ac743c20be14c92855879c8aea2e, type: 2}
+  - category: BEAK
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114528496381897852, guid: a3d820a8052063f458c4a6a3a74a5683, type: 2}

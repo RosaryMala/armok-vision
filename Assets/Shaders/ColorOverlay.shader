@@ -41,13 +41,11 @@
 			sampler2D _MainTex;
             half4       _Color;
 
-#include "blend.cginc"
-
 			fixed4 frag (v2f i) : SV_Target
 			{
 				fixed4 col = tex2D(_MainTex, i.uv);
 				// just invert the colors
-                col = overlay(col, _Color.rgb);
+                col = col * _Color;
 				return col;
 			}
 			ENDCG

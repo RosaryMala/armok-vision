@@ -22,15 +22,6 @@ public class NormalContent : IContent
         }
     }
 
-    public float ArrayIndex
-    {
-        get
-        {
-            return (float)StorageIndex / store.Count;
-        }
-    }
-
-
     public bool AddTypeElement(XElement elemtype)
     {
         XAttribute normalAtt = elemtype.Attribute("normal");

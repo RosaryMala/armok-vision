@@ -59,7 +59,7 @@ public class CameraRotateVertical : MonoBehaviour
             //horizontal rotation
             if (verticalRotationEnabled && Input.mousePosition.y != mouseY)
             {
-                float cameraRotationX = (mouseY - Input.mousePosition.y) * mouseSpeed * Time.deltaTime;
+                float cameraRotationX = (mouseY - Input.mousePosition.y) * mouseSpeed * Time.unscaledDeltaTime;
                 rotationX = rotationX + cameraRotationX;
                 if (rotationX < RotationMin)
                     rotationX = RotationMin;

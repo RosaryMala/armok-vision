@@ -77,19 +77,6 @@ public class TilePage : ICollection
             yield break; 
         }
         int scaleFactor = 1;
-        if (tileWidth * 4 <= GameSettings.Instance.rendering.maxTextureSize && tileHeight * 4 <= GameSettings.Instance.rendering.maxTextureSize)
-        {
-            scaleFactor = 4;
-        }
-        else if (tileWidth * 3 <= GameSettings.Instance.rendering.maxTextureSize && tileHeight * 3 <= GameSettings.Instance.rendering.maxTextureSize)
-        {
-            scaleFactor = 3;
-        }
-        else if (tileWidth * 2 <= GameSettings.Instance.rendering.maxTextureSize && tileHeight * 2 <= GameSettings.Instance.rendering.maxTextureSize)
-        {
-            scaleFactor = 2;
-        }
-
 
 
         tileArray = new Texture2DArray(Mathf.ClosestPowerOfTwo(tileWidth * scaleFactor), Mathf.ClosestPowerOfTwo(tileHeight * scaleFactor), coordList.Count, TextureFormat.ARGB32, true);
@@ -125,7 +112,7 @@ public class TilePage : ICollection
             TextureScale.Bilinear(texture, Mathf.ClosestPowerOfTwo(tileWidth * scaleFactor), Mathf.ClosestPowerOfTwo(tileHeight * scaleFactor));
             tileArray.SetPixels(texture.GetPixels(), i);
             normalArray.SetPixels(TextureTools.Bevel(texture.GetPixels(), texture.width, texture.height), i);
-            if (stopWatch.ElapsedMilliseconds > 100)
+            if (stopWatch.ElapsedMilliseconds > ContentLoader.LoadFrameTimeout)
             {
                 yield return null;
                 stopWatch.Reset();

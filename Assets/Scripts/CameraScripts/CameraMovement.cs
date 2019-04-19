@@ -28,9 +28,13 @@ public class CameraMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetButtonDown("FollowDF") && !GameSettings.Instance.game.showDFScreen)
+        {
+            following = true;
+        }
         if ((following || GameSettings.Instance.game.showDFScreen) && gameMap != null)
         {
-            Vector3 goal = GameMap.DFtoUnityTileCenter(new DFCoord(gameMap.PosXTile, gameMap.PosYTile, gameMap.PosZ - 1));
+            Vector3 goal = GameMap.DFtoUnityTileCenter(GameMap.Instance.FollowPos);
             Vector3 diff = goal - transform.position;
             if (diff.sqrMagnitude > followSnapDistance * followSnapDistance)
             {
@@ -38,7 +42,7 @@ public class CameraMovement : MonoBehaviour
             }
             else
             {
-                float interp = Time.deltaTime * diff.magnitude * followSpeed;
+                float interp = Time.unscaledDeltaTime * diff.magnitude * followSpeed;
                 if (interp > 1)
                 {
                     interp = 1;
@@ -49,9 +53,9 @@ public class CameraMovement : MonoBehaviour
         if (GameSettings.Instance.game.showDFScreen || EventSystem.current.currentSelectedGameObject != null || DFConnection.Instance.WorldMode == dfproto.GetWorldInfoOut.Mode.MODE_ADVENTURE)
             return;
 
-        float moveZ = Input.GetAxis("CamUpDown");
-        float moveX = Input.GetAxis("CamLeftRight");
-        float moveY = Input.GetAxis("CamFrontBack");
+        float moveZ = Input.GetAxisRaw("CamUpDown");
+        float moveX = Input.GetAxisRaw("Horizontal");
+        float moveY = Input.GetAxisRaw("Vertical");
 
 
         if (moveZ != 0.0f || moveY != 0.0f || moveX != 0.0f)
@@ -63,7 +67,7 @@ public class CameraMovement : MonoBehaviour
             if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
                 cameraDistance *= fasterMultiplier;
             Vector3 movement = new Vector3(moveX, moveZ, moveY);
-            transform.Translate(movement * Time.deltaTime * speed * cameraDistance, Space.Self);
+            transform.Translate(movement * Time.unscaledDeltaTime * speed * cameraDistance, Space.Self);
         }
     }
 

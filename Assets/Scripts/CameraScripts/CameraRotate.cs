@@ -25,7 +25,7 @@ public class CameraRotate : MonoBehaviour {
             //horizontal rotation
             if(Input.mousePosition.x != mouseX)
             {
-                float cameraRotationY = (Input.mousePosition.x - mouseX) * rotateSpeed * Time.deltaTime;
+                float cameraRotationY = (Input.mousePosition.x - mouseX) * rotateSpeed * Time.unscaledDeltaTime;
                 this.transform.Rotate(0, cameraRotationY, 0);
             }
         }

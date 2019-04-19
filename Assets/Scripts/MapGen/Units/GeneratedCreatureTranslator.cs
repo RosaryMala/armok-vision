@@ -43,26 +43,26 @@ public class GeneratedCreatureTranslator
 
     internal static CreatureRaw[] GetCreatureRaw(string race)
     {
-        var creatureRaw = DFConnection.Instance.CreatureRaws.FindAll(x => x.creature_id == race);
+        var creatureRaw = CreatureRaws.Instance.CreatureList.FindAll(x => x.creature_id == race);
         if (creatureRaw == null)
             creatureRaw = new List<CreatureRaw>();
         var tokenParts = race.Split('_');
         switch (tokenParts[0])
         {
             case "ANGEL":
-                creatureRaw.AddRange( DFConnection.Instance.CreatureRaws.FindAll(x => x.creature_id.StartsWith("HF") && Regex.IsMatch(x.caste[0].description.Split('.')[0], "\\b" + tokenParts[1] + "\\b", RegexOptions.IgnoreCase)));
+                creatureRaw.AddRange( CreatureRaws.Instance.CreatureList.FindAll(x => x.creature_id.StartsWith("HF") && Regex.IsMatch(x.caste[0].description.Split('.')[0], "\\b" + tokenParts[1] + "\\b", RegexOptions.IgnoreCase)));
                 break;
             case "DEMON":
-                creatureRaw.AddRange(DFConnection.Instance.CreatureRaws.FindAll(x => x.creature_id.StartsWith("DEMON") && Regex.IsMatch(x.caste[0].description.Split('.')[0], "\\b" + tokenParts[1] + "\\b", RegexOptions.IgnoreCase)));
+                creatureRaw.AddRange(CreatureRaws.Instance.CreatureList.FindAll(x => x.creature_id.StartsWith("DEMON") && Regex.IsMatch(x.caste[0].description.Split('.')[0], "\\b" + tokenParts[1] + "\\b", RegexOptions.IgnoreCase)));
                 break;
             case "FB":
-                creatureRaw.AddRange(DFConnection.Instance.CreatureRaws.FindAll(x => x.creature_id.StartsWith("FORGOTTEN_BEAST") && Regex.IsMatch(x.caste[0].description.Split('.')[0], "\\b" + tokenParts[1] + "\\b", RegexOptions.IgnoreCase)));
+                creatureRaw.AddRange(CreatureRaws.Instance.CreatureList.FindAll(x => x.creature_id.StartsWith("FORGOTTEN_BEAST") && Regex.IsMatch(x.caste[0].description.Split('.')[0], "\\b" + tokenParts[1] + "\\b", RegexOptions.IgnoreCase)));
                 break;
             case "TITAN":
-                creatureRaw.AddRange(DFConnection.Instance.CreatureRaws.FindAll(x => x.creature_id.StartsWith("TITAN") && Regex.IsMatch(x.caste[0].description.Split('.')[0], "\\b" + tokenParts[1] + "\\b", RegexOptions.IgnoreCase)));
+                creatureRaw.AddRange(CreatureRaws.Instance.CreatureList.FindAll(x => x.creature_id.StartsWith("TITAN") && Regex.IsMatch(x.caste[0].description.Split('.')[0], "\\b" + tokenParts[1] + "\\b", RegexOptions.IgnoreCase)));
                 break;
             case "WERE":
-                creatureRaw.AddRange(DFConnection.Instance.CreatureRaws.FindAll(x => x.name[0].ToUpper() == ("were" + tokenParts[1]).ToUpper()));
+                creatureRaw.AddRange(CreatureRaws.Instance.CreatureList.FindAll(x => x.name[0].ToUpper() == ("were" + tokenParts[1]).ToUpper()));
                 break;
             default:
                 break;

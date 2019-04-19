@@ -52,7 +52,7 @@ public class DisplayManager : MonoBehaviour
         while (displayText.color.a > 0)
         {
             Color displayColor = displayText.color;
-            displayColor.a -= Time.deltaTime / fadeTime;
+            displayColor.a -= Time.unscaledDeltaTime / fadeTime;
             displayText.color = displayColor;
             yield return null;
         }

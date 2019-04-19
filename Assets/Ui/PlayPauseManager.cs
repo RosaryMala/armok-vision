@@ -1,19 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class PlayPauseManager : MonoBehaviour
 {
 
     public GameObject playButton;
-    public GameObject pauseButton;
 
     bool paused = false;
-
-    void Start()
-    {
-        playButton.SetActive(paused);
-        pauseButton.SetActive(!paused);
-    }
 
     // Update is called once per frame
     void Update()
@@ -21,8 +15,8 @@ public class PlayPauseManager : MonoBehaviour
         if (paused != DFConnection.Instance.DfPauseState)
         {
             paused = DFConnection.Instance.DfPauseState;
-            playButton.SetActive(paused);
-            pauseButton.SetActive(!paused);
+            if (playButton != null)
+                playButton.GetComponentInChildren<Text>().text = paused ? "Resume" : "Pause";
         }
     }
 }

@@ -39,7 +39,7 @@ public class MapPositionUpdater : MonoBehaviour
 
     public void OnEnable()
     {
-        if(firstPerson != FirstPerson.DontCare)
+        if(firstPerson == FirstPerson.Yes)
             gameMap.firstPerson = firstPerson == FirstPerson.Yes;
     }
 }

@@ -1,3 +1,5 @@
+#pragma warning disable 0618
+
 /*
   Copyright 2014 Google Inc. All rights reserved.
 

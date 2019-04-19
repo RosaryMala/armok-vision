@@ -8,6 +8,7 @@ public class ItemImprovement : MonoBehaviour
 {
     public int index;
     private MeshRenderer meshRenderer;
+    private MeshFilter meshFilter;
     private Material originalMaterial;
     private GameObject actualModel = null;
 
@@ -19,7 +20,7 @@ public class ItemImprovement : MonoBehaviour
     {
         Color matColor = ContentLoader.GetColor(improvement.material);
         float textureIndex = ContentLoader.GetPatternIndex(improvement.material);
-
+        float shapeIndex = ContentLoader.GetShapeIndex(improvement.material);
         image = improvement.image;
 
         if (actualModel != null)
@@ -58,10 +59,11 @@ public class ItemImprovement : MonoBehaviour
 
         actualModel = Instantiate(prefab, transform, false);
 
+        meshFilter = actualModel.GetComponentInChildren<MeshFilter>();
         meshRenderer = actualModel.GetComponentInChildren<MeshRenderer>();
         if (improvement.type == ImprovementType.ART_IMAGE)
         {
-            meshRenderer.material.SetTexture("_TileIndex", ImageManager.Instance.CreateImage(improvement.image));
+            meshFilter.sharedMesh = ImageManager.Instance.CreateMesh(improvement.image, ImageManager.Direction.Front);
         }
         else
         {
@@ -72,7 +74,9 @@ public class ItemImprovement : MonoBehaviour
         MaterialPropertyBlock prop = new MaterialPropertyBlock();
         prop.SetColor("_MatColor", matColor);
         prop.SetFloat("_MatIndex", textureIndex);
+        prop.SetFloat("_ShapeIndex", shapeIndex);
         meshRenderer.SetPropertyBlock(prop);
+        gameObject.SetActive(true);
     }
 
     private void OnDrawGizmos()

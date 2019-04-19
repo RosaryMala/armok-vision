@@ -14,18 +14,21 @@ public class AdventureMovement : MonoBehaviour
 
     float nexttick = 0;
     bool initialPress = true;
-    public Mesh movementMesh;
-    public Material movementMat;
-    public Material grabMat;
 
     public MovementOption grabPrefab;
     public MovementOption movePrefab;
+    public PanelSlider optionsPanel;
 
     List<MovementOption> movementChoices = new List<MovementOption>();
 
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetButtonDown("Cancel"))
+        {
+            optionsPanel.Slide();
+        }
+
         HandleMovementInput();
         DisplayMovementOptions();
     }
@@ -178,10 +181,10 @@ public class AdventureMovement : MonoBehaviour
 
     void HandleMovementInput()
     {
-        Vector3 moveDir = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("CamUpDown"), Input.GetAxis("Vertical"));
+        Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("CamUpDown"), Input.GetAxisRaw("Vertical"));
         if (moveDir.sqrMagnitude > 0.1)
         {
-            nexttick -= Time.deltaTime;
+            nexttick -= Time.unscaledDeltaTime;
             if (nexttick <= 0 || initialPress)
             {
                 moveDir = cameraCenter.TransformDirection(moveDir);

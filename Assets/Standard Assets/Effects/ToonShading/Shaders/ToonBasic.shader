@@ -1,5 +1,3 @@
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
 Shader "Toon/Basic" {
 	Properties {
 		_Color ("Main Color", Color) = (.5,.5,.5,1)
@@ -42,7 +40,7 @@ Shader "Toon/Basic" {
 			v2f vert (appdata v)
 			{
 				v2f o;
-				o.pos = UnityObjectToClipPos (v.vertex);
+				o.pos = UnityObjectToClipPos(v.vertex);
 				o.texcoord = TRANSFORM_TEX(v.texcoord, _MainTex);
 				o.cubenormal = mul (UNITY_MATRIX_MV, float4(v.normal,0));
 				UNITY_TRANSFER_FOG(o,o.pos);

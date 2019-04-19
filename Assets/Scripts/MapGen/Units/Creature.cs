@@ -56,8 +56,8 @@ public class Creature : MonoBehaviour
         if (!localInited)
             InitLocal();
         this.unit = unit;
-        if (DFConnection.Instance.CreatureRaws != null)
-            creatureRaw = DFConnection.Instance.CreatureRaws[unit.race.mat_type];
+        if (CreatureRaws.Instance != null)
+            creatureRaw = CreatureRaws.Instance[unit.race.mat_type];
         else
             return; //can't work without raws
         casteRaw = creatureRaw.caste[unit.race.mat_index];
@@ -71,20 +71,12 @@ public class Creature : MonoBehaviour
         var layers = LayeredSpriteManager.Instance.GetCreatureSprite(unit);
 
         //no size info indicates that the unit was only given the most basic data.
-        if (layers != null && unit.size_info != null)
+        if (layers != null && unit.size_info != null && GameSettings.Instance.units.unitDetail == GameSettings.UnitDetail.HDSprites)
         {
             layeredSprite.SpriteCollection = layers;
             layeredSprite.enabled = true;
             legacySprite.gameObject.SetActive(false);
             layeredSprite.UpdateLayers(unit, creatureRaw, casteRaw);
-            var group = GetComponentInChildren<LODGroup>();
-            if (group != null)
-            {
-                var lods = new LOD[1];
-                lods[0] = new LOD(0.05f, GetComponentsInChildren<SpriteRenderer>());
-                group.SetLODs(lods);
-                group.RecalculateBounds();
-            }
         }
         else
         {
@@ -92,14 +84,6 @@ public class Creature : MonoBehaviour
             layeredSprite.enabled = false;
             legacySprite.gameObject.SetActive(true);
             UpdateTileCreature();
-            var group = GetComponentInChildren<LODGroup>();
-            if (group != null)
-            {
-                var lods = new LOD[1];
-                lods[0] = new LOD(0.05f, GetComponentsInChildren<MeshRenderer>());
-                group.SetLODs(lods);
-                group.RecalculateBounds();
-            }
         }
 
     }
@@ -112,7 +96,7 @@ public class Creature : MonoBehaviour
         Material mat;
         int index;
         bool colored;
-        if (ContentLoader.Instance.SpriteManager.getCreatureSprite(unit, out mat, out index, out colored))
+        if (GameSettings.Instance.units.unitDetail != GameSettings.UnitDetail.ASCII && ContentLoader.Instance.SpriteManager.getCreatureSprite(unit, out mat, out index, out colored))
         {
             legacySprite.material = mat;
             creatureMaterialProperties.SetFloat(layerIndexID, index);

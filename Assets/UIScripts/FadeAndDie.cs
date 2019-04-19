@@ -21,13 +21,13 @@ public class FadeAndDie : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        startTime = Time.time;
+        startTime = Time.realtimeSinceStartup;
     }
 
     // Update is called once per frame
     void Update()
     {
-        float relTime = Time.time - startTime;
+        float relTime = Time.realtimeSinceStartup - startTime;
         if (relTime > (startfade + fadelength))
             Destroy(gameObject);
         else if(relTime > startfade)

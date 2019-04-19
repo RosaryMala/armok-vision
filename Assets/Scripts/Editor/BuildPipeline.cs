@@ -121,7 +121,13 @@ public class BuildFactory
             File.WriteAllText("ProtoPath.txt", tempPath);
         }
         string path = File.ReadAllText("ProtoPath.txt");
-        CompileProtoFile(path, "RemoteFortressReader.proto",  "AdventureControl.proto", "ItemdefInstrument.proto");
+        CompileProtoFile(path,
+            "RemoteFortressReader.proto", 
+            "AdventureControl.proto", 
+            "ItemdefInstrument.proto",
+            "DwarfControl.proto",
+            "ui_sidebar_mode.proto"
+            );
         UnityEngine.Debug.Log("Finished compiling protos");
         AssetDatabase.Refresh();
     }
@@ -130,12 +136,11 @@ public class BuildFactory
     {
         foreach (var proto in protos)
         {
-            File.Copy(Path.Combine(folder, proto), Path.Combine("Assets/RemoteClientDF/", proto), true);
+            File.Copy(Path.Combine(folder, proto), Path.Combine("Assets/RemoteClientLocal/", proto), true);
         }
         Process protogen = new Process();
-
-        protogen.StartInfo.WorkingDirectory = "Assets/RemoteClientDF/";
-        protogen.StartInfo.FileName = "ProtoGen/protogen.exe";
+        protogen.StartInfo.WorkingDirectory = "Assets/RemoteClientLocal/";
+        protogen.StartInfo.FileName = Path.Combine(Directory.GetCurrentDirectory(), "ProtoGen/protogen.exe");
         string arguments = "";
         foreach (var proto in protos)
         {
@@ -155,6 +160,8 @@ public class BuildFactory
 
         protogen.StartInfo.UseShellExecute = false;
         protogen.StartInfo.CreateNoWindow = true;
+
+        UnityEngine.Debug.Log("Running " + protogen.StartInfo.FileName + " " + protogen.StartInfo.Arguments);
 
         protogen.Start();
 

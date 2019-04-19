@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Utility;
 using Random = UnityEngine.Random;
+#pragma warning disable 0649 //Variable not assigned.
 
 namespace UnityStandardAssets.Characters.FirstPerson
 {

@@ -1,5 +1,3 @@
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
 Shader "Toon/Basic Outline" {
 	Properties {
 		_Color ("Main Color", Color) = (.5,.5,.5,1)

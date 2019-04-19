@@ -11,5 +11,6 @@ namespace MaterialStore
         public Color color = Color.grey;
         public int patternIndex;
         public int shapeIndex;
+        public bool useDFColor = false;
     }
 }

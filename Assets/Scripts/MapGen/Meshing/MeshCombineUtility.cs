@@ -33,9 +33,9 @@ public class MeshCombineUtility
         public HiddenFaces hiddenFaces;
     }
 
-    public static CPUMesh ColorCombine(MeshInstance[] combines, out bool success, bool topLayer = false, CPUMesh sourceMesh = null)
+    public static CPUMesh ColorCombine(MeshInstance[] combines, int maxItems, out bool success, bool topLayer = false, CPUMesh sourceMesh = null)
     {
-        int length = combines.Length;
+        int length = Mathf.Min(combines.Length, maxItems);
         int vertexCount = 0;
         int triangleCount = 0;
         int maxVertices = 0;

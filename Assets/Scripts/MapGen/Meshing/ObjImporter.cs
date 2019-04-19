@@ -8,7 +8,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
- 
+#pragma warning disable 0649 //Variable not assigned.
+
 public class ObjImporter {
  
     private struct meshStruct

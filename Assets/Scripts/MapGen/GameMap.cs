@@ -1,18 +1,17 @@
+using Building;
 using DF.Enums;
 using DFHack;
 using MapGen;
 using RemoteFortressReader;
+using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
 using UnitFlags;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections;
-using Building;
+using UnityEngine.UI;
 
 // The class responsible for talking to DF and meshing the data it gets.
 // Relevant vocabulary: A "map tile" is an individual square on the map.
@@ -38,7 +37,7 @@ public class GameMap : MonoBehaviour
 
     public WorldMapMaker worldMap;
 
-    public RectTransform optionsPanel;
+    public PanelSlider optionsPanel;
 
     // Parameters managing the currently visible area of the map.
     // Tracking:
@@ -46,46 +45,19 @@ public class GameMap : MonoBehaviour
     {
         get
         {
-            return posXTile / blockSize;
+            return PosXTile / blockSize;
         }
     }
     public int PosYBlock
     {
         get
         {
-            return posYTile / blockSize;
+            return PosYTile / blockSize;
         }
     }
-    [SerializeField]
-    int posXTile = 0;
-    [SerializeField]
-    int posYTile = 0;
-    [SerializeField]
-    int posZ = 0;
-    public int PosZ
-    { // Public accessor; used from MapSelection
-        get
-        {
-            return posZ;
-        }
-    }
-    public int PosXTile
-    {
-        get
-        {
-            return posXTile;
-        }
-    }
-    public int PosYTile
-    {
-        get
-        {
-            return posYTile;
-        }
-    }
-
-    // Stored view information
-    ViewInfo view;
+    public int PosXTile { get; private set; }
+    public int PosYTile { get; private set; }
+    public int PosZ { get; private set; }
 
     BlockMesher mesher;
 
@@ -103,8 +75,6 @@ public class GameMap : MonoBehaviour
     DFCoord mapPosition;
 
     // Stuff to let the material list & various meshes & whatnot be loaded from xml specs at runtime.
-    public static Dictionary<MatPairStruct, MaterialDefinition> materials;
-    public static Dictionary<MatPairStruct, MaterialDefinition> items;
     public static Dictionary<BuildingStruct, BuildingDefinition> buildings;
     public static Dictionary<MatPairStruct, MaterialDefinition> creatures;
 
@@ -151,6 +121,10 @@ public class GameMap : MonoBehaviour
     {
         Vector3 outCoord = new Vector3(input.x * tileWidth, (input.z + MapZOffset) * tileHeight, input.y * (-tileWidth));
         return outCoord;
+    }
+    public static Vector3 DFtoUnityDirection(DFCoord input)
+    {
+        return DFtoUnityDirection(input.x, input.y, input.z);
     }
     public static Vector3 DFtoUnityTileCenter(DFCoord input)
     {
@@ -207,8 +181,8 @@ public class GameMap : MonoBehaviour
 #if DEVELOPMENT_BUILD
         Debug.Log("Dev build");
 #endif
-
-        dfScreen.SetActive(GameSettings.Instance.game.showDFScreen);
+        if (dfScreen != null)
+            dfScreen.SetActive(GameSettings.Instance.game.showDFScreen);
     }
 
     public static GameMap Instance { get; private set; }
@@ -218,7 +192,6 @@ public class GameMap : MonoBehaviour
     public void Awake()
     {
         Instance = this;
-        cameraMovement = FindObjectOfType<CameraMovement>();
         mainThread = Thread.CurrentThread;
     }
 
@@ -256,31 +229,11 @@ public class GameMap : MonoBehaviour
         enabled = true;
         mesher = BlockMesher.GetMesher(GameSettings.Instance.meshing.meshingThreads);
         // Initialize materials, if available
-        if (DFConnection.Instance.NetMaterialList != null)
-        {
-            if (materials == null)
-                materials = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
-            materials.Clear();
-            foreach (RemoteFortressReader.MaterialDefinition material in DFConnection.Instance.NetMaterialList.material_list)
-            {
-                materials[material.mat_pair] = material;
-            }
-            if (GameSettings.Instance.debug.saveMaterialList)
-                SaveMaterialList(materials, Path.Combine(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), Application.productName), "MaterialList.csv"));
-        }
+        if (GameSettings.Instance.debug.saveMaterialList)
+            SaveMaterialList(MaterialRaws.Instance, Path.Combine(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), Application.productName), "MaterialList.csv"));
         // Initialize items, if available
-        if (DFConnection.Instance.NetItemList != null)
-        {
-            if (items == null)
-                items = new Dictionary<MatPairStruct, RemoteFortressReader.MaterialDefinition>();
-            items.Clear();
-            foreach (MaterialDefinition material in DFConnection.Instance.NetItemList.material_list)
-            {
-                items[material.mat_pair] = material;
-            }
             if (GameSettings.Instance.debug.saveItemList)
-                SaveMaterialList(items, Path.Combine(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), Application.productName), "ItemList.csv"));
-        }
+                SaveMaterialList(ItemRaws.Instance, Path.Combine(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), Application.productName), "ItemList.csv"));
         if (DFConnection.Instance.NetBuildingList != null)
         {
             if (buildings == null)
@@ -293,11 +246,11 @@ public class GameMap : MonoBehaviour
             if (GameSettings.Instance.debug.saveBuildingList)
                 SaveBuildingList();
         }
-        if (DFConnection.Instance.CreatureRaws != null)
+        if (CreatureRaws.Instance != null)
         {
             if (creatures == null)
                 creatures = new Dictionary<MatPairStruct, MaterialDefinition>();
-            foreach (CreatureRaw creatureRaw in DFConnection.Instance.CreatureRaws)
+            foreach (CreatureRaw creatureRaw in CreatureRaws.Instance)
             {
                 foreach (var caste in creatureRaw.caste)
                 {
@@ -330,7 +283,6 @@ public class GameMap : MonoBehaviour
 
 
     GameObject selected;
-    CameraMovement cameraMovement;
 
     // Run once per frame.
     void Update()
@@ -342,8 +294,7 @@ public class GameMap : MonoBehaviour
             dfScreen.SetActive(GameSettings.Instance.game.showDFScreen);
         }
 
-        if ((cameraMovement != null && cameraMovement.following) || GameSettings.Instance.game.showDFScreen)
-            UpdateView();
+        UpdateView();
 
 
         if (!GameSettings.Instance.game.showDFScreen && EventSystem.current.currentSelectedGameObject == null && DFConnection.Instance.WorldMode != dfproto.GetWorldInfoOut.Mode.MODE_ADVENTURE)
@@ -354,15 +305,23 @@ public class GameMap : MonoBehaviour
             }
             if (Input.GetButtonDown("ScaleUnits"))
             {
-                GameSettings.Instance.units.scaleUnits = !GameSettings.Instance.units.scaleUnits;
+                switch (GameSettings.Instance.units.scaleUnits)
+                {
+                    case GameSettings.UnitScale.Fixed:
+                        GameSettings.Instance.units.scaleUnits = GameSettings.UnitScale.Logarithmic;
+                        break;
+                    case GameSettings.UnitScale.Logarithmic:
+                        GameSettings.Instance.units.scaleUnits = GameSettings.UnitScale.Real;
+                        break;
+                    case GameSettings.UnitScale.Real:
+                    default:
+                        GameSettings.Instance.units.scaleUnits = GameSettings.UnitScale.Fixed;
+                        break;
+                }
             }
             if (Input.GetButtonDown("OverheadShadows"))
             {
                 overheadShadows = !overheadShadows;
-            }
-            if (Input.GetButtonDown("FollowDF"))
-            {
-                cameraMovement.following = true;
             }
 
             // take screenshot on up->down transition of F9 key
@@ -402,9 +361,9 @@ public class GameMap : MonoBehaviour
             }
             if (Input.GetButtonDown("Cancel"))
             {
-                optionsPanel.gameObject.SetActive(!optionsPanel.gameObject.activeSelf);
+                optionsPanel.Slide();
             }
-            if(Input.GetButtonDown("ToggleMap"))
+            if (Input.GetButtonDown("ToggleMap"))
             {
                 mapWindow.SetActive(!mapWindow.activeSelf);
                 mapCamera.SetActive(!mapCamera.activeSelf);
@@ -427,14 +386,14 @@ public class GameMap : MonoBehaviour
     private void UpdateBlockVisibility()
     {
         Shader.SetGlobalVector("_ViewMin", DFtoUnityBottomCorner(new DFCoord(
-            (PosXBlock - GameSettings.Instance.rendering.drawRangeSide + 1) * blockSize,
-            (PosYBlock + GameSettings.Instance.rendering.drawRangeSide) * blockSize,
-            PosZ - GameSettings.Instance.rendering.drawRangeDown
+            Mathf.Max((PosXBlock - GameSettings.Instance.rendering.drawRangeSide + 1) * blockSize, 0),
+            Mathf.Min((PosYBlock + GameSettings.Instance.rendering.drawRangeSide) * blockSize, mapSize.y * 16),
+            -9999
         )) + new Vector3(0, 0, GameMap.tileWidth));
         Shader.SetGlobalVector("_ViewMax", DFtoUnityBottomCorner(new DFCoord(
-            (PosXBlock + GameSettings.Instance.rendering.drawRangeSide) * blockSize,
-            (PosYBlock - GameSettings.Instance.rendering.drawRangeSide + 1) * blockSize,
-            PosZ + (firstPerson ? GameSettings.Instance.rendering.drawRangeUp : 0)
+            Mathf.Min((PosXBlock + GameSettings.Instance.rendering.drawRangeSide) * blockSize, mapSize.x * 16),
+            Mathf.Max((PosYBlock - GameSettings.Instance.rendering.drawRangeSide + 1) * blockSize, 0),
+            9999
         )) + new Vector3(0, 0, GameMap.tileWidth));
 
         for (int z = 0; z < mapMeshes.GetLength(2); z++)
@@ -526,7 +485,7 @@ public class GameMap : MonoBehaviour
     IEnumerator DisableHelp()
     {
         helpEnabled = false;
-        for (float f = helpOverlay.alpha; f >= 0; f -= (Time.deltaTime / helpFadeLength))
+        for (float f = helpOverlay.alpha; f >= 0; f -= (Time.unscaledDeltaTime / helpFadeLength))
         {
             helpOverlay.alpha = f;
             yield return null;
@@ -538,7 +497,7 @@ public class GameMap : MonoBehaviour
     {
         helpEnabled = true;
         helpOverlay.gameObject.SetActive(true);
-        for (float f = helpOverlay.alpha; f <= 1; f += (Time.deltaTime / helpFadeLength))
+        for (float f = helpOverlay.alpha; f <= 1; f += (Time.unscaledDeltaTime / helpFadeLength))
         {
             helpOverlay.alpha = f;
             yield return null;
@@ -551,19 +510,22 @@ public class GameMap : MonoBehaviour
 
     public void Refresh()
     {
-        for (int z = 0; z < blockDirtyBits.GetLength(2); z++)
-            for (int x = 0; x < blockDirtyBits.GetLength(0); x++)
-                for (int y = 0; y < blockDirtyBits.GetLength(1); y++)
-                {
-                    if (blockContentBits[x, y, z])
+        if (blockDirtyBits != null)
+        {
+            for (int z = 0; z < blockDirtyBits.GetLength(2); z++)
+                for (int x = 0; x < blockDirtyBits.GetLength(0); x++)
+                    for (int y = 0; y < blockDirtyBits.GetLength(1); y++)
                     {
-                        SplatManager.Instance.DirtyLayer(x, y, z);
-                        SplatManager.Instance.DirtyGrass(x, y, z);
-                        SplatManager.Instance.DirtySpatter(x, y, z);
+                        if (blockContentBits[x, y, z])
+                        {
+                            SplatManager.Instance.DirtyLayer(x, y, z);
+                            SplatManager.Instance.DirtyGrass(x, y, z);
+                            SplatManager.Instance.DirtySpatter(x, y, z);
+                        }
+                        blockDirtyBits[x, y, z] = blockContentBits[x, y, z];
+                        liquidBlockDirtyBits[x, y, z] = blockContentBits[x, y, z];
                     }
-                    blockDirtyBits[x, y, z] = blockContentBits[x, y, z];
-                    liquidBlockDirtyBits[x, y, z] = blockContentBits[x, y, z];
-                }
+        }
     }
 
     public Mesh testMesh;
@@ -760,34 +722,26 @@ public class GameMap : MonoBehaviour
         Application.OpenURL(url);
     }
 
+    public DFCoord FollowPos { get; private set; }
+
     void UpdateView()
     {
-        RemoteFortressReader.ViewInfo newView = DFConnection.Instance.PopViewInfoUpdate();
-        if (newView == null) return;
-
-        if(!cameraMovement.following)
-            return;
-
+        ViewInfo view = DFConnection.Instance.PopViewInfoUpdate();
+        if (view == null) return;
         UnityEngine.Profiling.Profiler.BeginSample("UpdateView", this);
         //Debug.Log("Got view");
-        view = newView;
 
         if (view.follow_unit_id != -1 && CreatureManager.Instance.Units != null)
         {
-            int unitIndex = CreatureManager.Instance.Units.creature_list.FindIndex(x => x.id == view.follow_unit_id);
+            int unitIndex = CreatureManager.Instance.Units.FindIndex(x => x.id == view.follow_unit_id);
             if (unitIndex >= 0)
             {
-                var unit = CreatureManager.Instance.Units.creature_list[unitIndex];
-                posXTile = unit.pos_x;
-                posYTile = unit.pos_y;
-                posZ = unit.pos_z + 1;
+                var unit = CreatureManager.Instance.Units[unitIndex];
+                FollowPos = new DFCoord(unit.pos_x, unit.pos_y, unit.pos_z);
                 return;
             }
         }
-
-        posXTile = (view.view_pos_x + (view.view_size_x / 2));
-        posYTile = (view.view_pos_y + (view.view_size_y / 2));
-        posZ = view.view_pos_z + 1;
+        FollowPos = new DFCoord(view.view_pos_x + (view.view_size_x / 2), view.view_pos_y + (view.view_size_y / 2), view.view_pos_z);
         UnityEngine.Profiling.Profiler.EndSample();
     }
     // Update the region we're requesting
@@ -798,15 +752,19 @@ public class GameMap : MonoBehaviour
             new BlockCoord(
                 PosXBlock - GameSettings.Instance.rendering.drawRangeSide,
                 PosYBlock - GameSettings.Instance.rendering.drawRangeSide,
-                posZ - GameSettings.Instance.rendering.drawRangeDown
+                PosZ - GameSettings.Instance.rendering.drawRangeDown
             ),
             new BlockCoord(
                 PosXBlock + GameSettings.Instance.rendering.drawRangeSide,
                 PosYBlock + GameSettings.Instance.rendering.drawRangeSide,
-                posZ + GameSettings.Instance.rendering.drawRangeUp
+                PosZ + GameSettings.Instance.rendering.drawRangeUp
             ));
         UnityEngine.Profiling.Profiler.EndSample();
     }
+
+    const double timeout = 15;
+    System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+
     void UpdateBlocks()
     {
         if (DFConnection.Instance.EmbarkMapSize != mapSize)
@@ -826,6 +784,7 @@ public class GameMap : MonoBehaviour
         if (MapDataStore.MapSize.x < 48)
             return;
 
+        stopwatch.Restart();
         BuildingManager.Instance.BeginExistenceCheck();
         ItemManager.Instance.BeginExistenceCheck();
         UnityEngine.Profiling.Profiler.BeginSample("UpdateBlocks", this);
@@ -1006,21 +965,6 @@ public class GameMap : MonoBehaviour
 
 #region Debug Data Saving
 
-    void PrintFullMaterialList()
-    {
-        int totalCount = DFConnection.Instance.NetMaterialList.material_list.Count;
-        int limit = totalCount;
-        if (limit >= 100)
-            limit = 100;
-        //Don't ever do this.
-        for (int i = totalCount - limit; i < totalCount; i++)
-        {
-            //no really, don't.
-            RemoteFortressReader.MaterialDefinition material = DFConnection.Instance.NetMaterialList.material_list[i];
-            Debug.Log("{" + material.mat_pair.mat_index + "," + material.mat_pair.mat_type + "}, " + material.id + ", " + material.name);
-        }
-    }
-
     void SaveTileTypeList()
     {
         if (DFConnection.Instance.NetTiletypeList == null)
@@ -1171,8 +1115,8 @@ public class GameMap : MonoBehaviour
         int xmax = Mathf.Clamp(PosXBlock + GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(0));
         int ymin = Mathf.Clamp(PosYBlock - GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(1));
         int ymax = Mathf.Clamp(PosYBlock + GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(1));
-        int zmin = Mathf.Clamp(posZ - GameSettings.Instance.rendering.drawRangeDown, 0, mapMeshes.GetLength(2));
-        int zmax = Mathf.Clamp(posZ + GameSettings.Instance.rendering.drawRangeUp, 0, mapMeshes.GetLength(2));
+        int zmin = Mathf.Clamp(PosZ - GameSettings.Instance.rendering.drawRangeDown, 0, mapMeshes.GetLength(2));
+        int zmax = Mathf.Clamp(PosZ + GameSettings.Instance.rendering.drawRangeUp, 0, mapMeshes.GetLength(2));
         for (int zz = zmin; zz < zmax; zz++)
             for (int yy = ymin; yy < ymax; yy++)
                 for (int xx = xmin; xx < xmax; xx++)
@@ -1187,15 +1131,17 @@ public class GameMap : MonoBehaviour
     // Have the mesher mesh all dirty tiles in the region
     void EnqueueMeshUpdates()
     {
+        if (stopwatch.ElapsedMilliseconds > timeout)
+            return;
         int queueCount = 0;
         int xmin = Mathf.Clamp(PosXBlock - GameSettings.Instance.rendering.drawRangeSide + 1, 0, mapMeshes.GetLength(0));
         int xmax = Mathf.Clamp(PosXBlock + GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(0));
         int ymin = Mathf.Clamp(PosYBlock - GameSettings.Instance.rendering.drawRangeSide + 1, 0, mapMeshes.GetLength(1));
         int ymax = Mathf.Clamp(PosYBlock + GameSettings.Instance.rendering.drawRangeSide, 0, mapMeshes.GetLength(1));
-        int zmin = Mathf.Clamp(posZ - GameSettings.Instance.rendering.drawRangeDown, 0, mapMeshes.GetLength(2));
-        int zmax = Mathf.Clamp(posZ + GameSettings.Instance.rendering.drawRangeUp, 0, mapMeshes.GetLength(2));
+        int zmin = Mathf.Clamp(PosZ - GameSettings.Instance.rendering.drawRangeDown, 0, mapMeshes.GetLength(2));
+        int zmax = Mathf.Clamp(PosZ + GameSettings.Instance.rendering.drawRangeUp, 0, mapMeshes.GetLength(2));
         if (PosXBlock >= 0 && PosXBlock < mapMeshes.GetLength(0) && PosYBlock >= 0 && PosYBlock < mapMeshes.GetLength(1))
-            for (int zz = posZ - 1; zz >= zmin; zz--)
+            for (int zz = PosZ - 1; zz >= zmin; zz--)
             {
                 if (zz >= mapMeshes.GetLength(2))
                     continue;
@@ -1203,18 +1149,18 @@ public class GameMap : MonoBehaviour
                 {
                     continue;
                 }
-                if (!(zz == posZ - 1) && MapDataStore.IsFullyHidden(PosXBlock, PosYBlock, zz))
-                    continue;
                 //If we were not able to add it to the queue, don't try any more till next fame.
-                if (!mesher.Enqueue(new DFCoord(PosXBlock * 16, PosYBlock * 16, zz), blockDirtyBits[PosXBlock, PosYBlock, zz], liquidBlockDirtyBits[PosXBlock, PosYBlock, zz]))
+                if (!mesher.Enqueue(new DFCoord(PosXBlock * blockSize, PosYBlock * blockSize, zz), blockDirtyBits[PosXBlock, PosYBlock, zz], liquidBlockDirtyBits[PosXBlock, PosYBlock, zz]))
                     return;
                 blockDirtyBits[PosXBlock, PosYBlock, zz] = false;
                 liquidBlockDirtyBits[PosXBlock, PosYBlock, zz] = false;
                 queueCount++;
                 if (queueCount > GameSettings.Instance.meshing.queueLimit)
                     return;
+                if (stopwatch.ElapsedMilliseconds > timeout)
+                    return;
             }
-        for (int zz = posZ - 1; zz >= zmin; zz--)
+        for (int zz = PosZ - 1; zz >= zmin; zz--)
         {
             if (zz >= mapMeshes.GetLength(2))
                 continue;
@@ -1226,20 +1172,20 @@ public class GameMap : MonoBehaviour
                     {
                         continue;
                     }
-                    if (!(zz == posZ - 1) && MapDataStore.IsFullyHidden(PosXBlock, PosYBlock, zz))
-                        continue;
 
                     //If we were not able to add it to the queue, don't try any more till next fame.
-                    if (!mesher.Enqueue(new DFCoord(xx * 16, yy * 16, zz), blockDirtyBits[xx, yy, zz], liquidBlockDirtyBits[xx, yy, zz]))
+                    if (!mesher.Enqueue(new DFCoord(xx * blockSize, yy * blockSize, zz), blockDirtyBits[xx, yy, zz], liquidBlockDirtyBits[xx, yy, zz]))
                         return;
                     blockDirtyBits[xx, yy, zz] = false;
                     liquidBlockDirtyBits[xx, yy, zz] = false;
                     queueCount++;
                     if (queueCount > GameSettings.Instance.meshing.queueLimit)
                         return;
+                    if (stopwatch.ElapsedMilliseconds > timeout)
+                        return;
                 }
         }
-        for (int zz = posZ; zz < zmax; zz++)
+        for (int zz = PosZ; zz < zmax; zz++)
         {
             if (zz < 0)
                 continue;
@@ -1250,16 +1196,16 @@ public class GameMap : MonoBehaviour
                     {
                         continue;
                     }
-                    if (MapDataStore.IsFullyHidden(PosXBlock, PosYBlock, zz))
-                        continue;
 
                     //If we were not able to add it to the queue, don't try any more till next fame.
-                    if (!mesher.Enqueue(new DFCoord(xx * 16, yy * 16, zz), blockDirtyBits[xx, yy, zz], liquidBlockDirtyBits[xx, yy, zz]))
+                    if (!mesher.Enqueue(new DFCoord(xx * blockSize, yy * blockSize, zz), blockDirtyBits[xx, yy, zz], liquidBlockDirtyBits[xx, yy, zz]))
                         return;
                     blockDirtyBits[xx, yy, zz] = false;
                     liquidBlockDirtyBits[xx, yy, zz] = false;
                     queueCount++;
                     if (queueCount > GameSettings.Instance.meshing.queueLimit)
+                        return;
+                    if (stopwatch.ElapsedMilliseconds > timeout)
                         return;
                 }
         }
@@ -1296,15 +1242,15 @@ public class GameMap : MonoBehaviour
             meshSet.LoadMeshes(newMeshes, string.Format("{0}_{1}_{2}", block_x, block_y, block_z));
             meshSet.UpdateVisibility(GetVisibility(block_z));
 
-            if (newMeshes.collisionMesh != null)
-            {
+            //if (newMeshes.collisionMesh != null)
+            //{
 
-                Mesh collisionMesh = new Mesh();
-                collisionMesh.name = string.Format("block_collision_{0}_{1}_{2}", block_x, block_y, block_z);
-                newMeshes.collisionMesh.CopyToMesh(collisionMesh);
-                meshSet.collisionBlocks.sharedMesh = null;
-                meshSet.collisionBlocks.sharedMesh = collisionMesh;
-            }
+            //    Mesh collisionMesh = new Mesh();
+            //    collisionMesh.name = string.Format("block_collision_{0}_{1}_{2}", block_x, block_y, block_z);
+            //    newMeshes.collisionMesh.CopyToMesh(collisionMesh);
+            //    meshSet.collisionBlocks.sharedMesh = null;
+            //    meshSet.collisionBlocks.sharedMesh = collisionMesh;
+            //}
         }
         UnityEngine.Profiling.Profiler.EndSample();
     }
@@ -1366,10 +1312,10 @@ public class GameMap : MonoBehaviour
                 statusText.Append("Material: ");
                 statusText.Append(mat);
 
-                if (materials.ContainsKey(mat))
+                if (MaterialRaws.Instance.ContainsKey(mat))
                 {
                     statusText.Append(", ");
-                    statusText.Append(materials[mat].id).AppendLine();
+                    statusText.Append(MaterialRaws.Instance[mat].id).AppendLine();
                 }
                 else
                     statusText.AppendLine();
@@ -1378,10 +1324,10 @@ public class GameMap : MonoBehaviour
                 statusText.Append("Base Material: ");
                 statusText.Append(basemat);
 
-                if (materials.ContainsKey(basemat))
+                if (MaterialRaws.Instance.ContainsKey(basemat))
                 {
                     statusText.Append(", ");
-                    statusText.Append(materials[basemat].id).AppendLine();
+                    statusText.Append(MaterialRaws.Instance[basemat].id).AppendLine();
                 }
                 else
                     statusText.Append("Unknown Base Material\n");
@@ -1390,10 +1336,10 @@ public class GameMap : MonoBehaviour
                 statusText.Append("Layer Material: ");
                 statusText.Append(layermat);
 
-                if (materials.ContainsKey(layermat))
+                if (MaterialRaws.Instance.ContainsKey(layermat))
                 {
                     statusText.Append(", ");
-                    statusText.Append(materials[layermat].id).AppendLine();
+                    statusText.Append(MaterialRaws.Instance[layermat].id).AppendLine();
                 }
                 else
                     statusText.Append("Unknown Layer Material\n");
@@ -1402,10 +1348,10 @@ public class GameMap : MonoBehaviour
                 statusText.Append("Vein Material: ");
                 statusText.Append(veinmat);
 
-                if (materials.ContainsKey(veinmat))
+                if (MaterialRaws.Instance.ContainsKey(veinmat))
                 {
                     statusText.Append(", ");
-                    statusText.Append(materials[veinmat].id).AppendLine();
+                    statusText.Append(MaterialRaws.Instance[veinmat].id).AppendLine();
                 }
                 else
                     statusText.Append("Unknown Vein Material\n");
@@ -1414,10 +1360,10 @@ public class GameMap : MonoBehaviour
                 statusText.Append("Construction Item: ");
                 statusText.Append(cons);
 
-                if (items.ContainsKey(cons))
+                if (ItemRaws.Instance.ContainsKey(cons))
                 {
                     statusText.Append(", ");
-                    statusText.Append(items[cons].id).AppendLine();
+                    statusText.Append(ItemRaws.Instance[cons].id).AppendLine();
                 }
                 else
                     statusText.Append("Unknown Construction Item\n");
@@ -1430,8 +1376,8 @@ public class GameMap : MonoBehaviour
                     foreach (var spatter in tile.spatters)
                     {
                         string matString = ((MatPairStruct)spatter.material).ToString();
-                        if (materials.ContainsKey(spatter.material))
-                            matString = materials[spatter.material].id;
+                        if (MaterialRaws.Instance.ContainsKey(spatter.material))
+                            matString = MaterialRaws.Instance[spatter.material].id;
                         if (spatter.item != null)
                         {
                             string item = ((MatPairStruct)spatter.item).ToString();
@@ -1439,10 +1385,10 @@ public class GameMap : MonoBehaviour
                             {
                                 item = DFConnection.Instance.NetPlantRawList.plant_raws[spatter.material.mat_index].growths[spatter.item.mat_index].id;
                             }
-                            else if (items.ContainsKey(spatter.item))
-                                item = items[spatter.item].id;
-                            else if (items.ContainsKey(new MatPairStruct(spatter.item.mat_type, -1)))
-                                item = items[new MatPairStruct(spatter.item.mat_type, -1)].id;
+                            else if (ItemRaws.Instance.ContainsKey(spatter.item))
+                                item = ItemRaws.Instance[spatter.item].id;
+                            else if (ItemRaws.Instance.ContainsKey(new MatPairStruct(spatter.item.mat_type, -1)))
+                                item = ItemRaws.Instance[new MatPairStruct(spatter.item.mat_type, -1)].id;
                             statusText.AppendFormat("{0} {1}: {2}", matString, item, spatter.amount).AppendLine();
                         }
                         else
@@ -1453,7 +1399,7 @@ public class GameMap : MonoBehaviour
             if (CreatureManager.Instance.Units != null)
             {
                 UnitDefinition foundUnit = null;
-                foreach (UnitDefinition unit in CreatureManager.Instance.Units.creature_list)
+                foreach (UnitDefinition unit in CreatureManager.Instance.Units)
                 {
                     UnitFlags1 flags1 = (UnitFlags1)unit.flags1;
 
@@ -1478,8 +1424,8 @@ public class GameMap : MonoBehaviour
                     UnitFlags2 flags2 = (UnitFlags2)foundUnit.flags2;
 
                     CreatureRaw creatureRaw = null;
-                    if (DFConnection.Instance.CreatureRaws != null)
-                        creatureRaw = DFConnection.Instance.CreatureRaws[foundUnit.race.mat_type];
+                    if (CreatureRaws.Instance != null)
+                        creatureRaw = CreatureRaws.Instance[foundUnit.race.mat_type];
 
                     if (creatureRaw != null)
                     {
@@ -1534,15 +1480,10 @@ public class GameMap : MonoBehaviour
 
     public void UpdateCenter(Vector3 pos)
     {
-        if(cameraMovement.following)
-            return;
         DFCoord dfPos = UnityToDFCoord(pos);
-        posXTile = dfPos.x;
-        posYTile = dfPos.y;
-        if (posZ != dfPos.z + 1)
-        {
-            posZ = dfPos.z + 1;
-        }
+        PosXTile = dfPos.x;
+        PosYTile = dfPos.y;
+        PosZ = dfPos.z + 1;
     }
 
 

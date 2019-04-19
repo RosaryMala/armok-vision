@@ -24,11 +24,15 @@
   
         [Enum(UV0,0,UV1,1)] _UVSec("UV Set for secondary textures", Float) = 0
 
-        [PerRendererData] _MatColor("DF Material Color", Color) = (0.5,0.5,0.5,1)
-        [PerRendererData] _MatIndex("DF Material Array Index", int) = 0
+		[PerRendererData] _MatColor("DF Material Color", Color) = (1,1,1,1)
+		[PerRendererData] _MatIndex("DF Material Array Index", int) = 0
+		[PerRendererData] _JobColor("DF Job Color", Color) = (1,1,1,1)
 
         // Blending state
         [HideInInspector] _Mode("__mode", Float) = 0.0
+		_SpecColor("Standard Specular Color", Color) = (0.220916301, 0.220916301, 0.220916301, 0.779083699)
+		[HideInInspector]_MatTexArray("__MatTexArray", 2DArray) = "white" {}
+		_Amount("Extrusion Amount", Range(-1,1)) = 0
     }
     SubShader {
         Tags { "Queue" = "AlphaTest" "RenderType"="TransparentCutout" }
@@ -36,7 +40,7 @@
         
         CGPROGRAM
         // Physically based Standard lighting model, and enable shadows on all light types
-        #pragma surface surf StandardSpecular fullforwardshadows alphatest:_Cutoff
+        #pragma surface surf StandardSpecular fullforwardshadows alphatest:_Cutoff vertex:vert
 
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 4.0
@@ -46,14 +50,14 @@
         #pragma shader_feature _SECOND_UV
         #pragma shader_feature _EMISSION
         #pragma shader_feature _METALLICGLOSSMAP
-#pragma multi_compile _ _BOUNDING_BOX_ENABLED
+        #pragma multi_compile _ _BOUNDING_BOX_ENABLED
 
 #include "buildingInputs.cginc"
 
-#include "blend.cginc"
-
 #include "CustomMetallic.cginc"
-
+	  void vert(inout appdata_full v) {
+		  v.vertex.xyz += v.normal * _Amount;
+	  }
         void surf(Input IN, inout SurfaceOutputStandardSpecular o)
         {
 #include "BuildingSurf.cginc"

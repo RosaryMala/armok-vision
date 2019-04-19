@@ -1,0 +1,3 @@
+[submodule "Assets/RemoteClientDF-Net"]
+	path = Assets/RemoteClientDF-Net
+	url = https://github.com/JapaMala/RemoteClientDF-Net.git

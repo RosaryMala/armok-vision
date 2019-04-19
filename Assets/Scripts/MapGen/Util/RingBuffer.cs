@@ -125,7 +125,13 @@ namespace Util
             return result;
         }
 
-
+        public bool Full
+        {
+            get
+            {
+                return Count >= Capacity;
+            }
+        }
     }
     public static class Volatile
     {

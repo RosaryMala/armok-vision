@@ -49,8 +49,6 @@ Shader "Custom/AVSprite" {
 			// put more per-instance properties here
 		UNITY_INSTANCING_BUFFER_END(Props)
 
-#include "blend.cginc"
-
         void surf(Input IN, inout SurfaceOutputStandard o) {
             float4 c = tex2D(_MainTex, IN.uv_MainTex);
 
@@ -72,7 +70,7 @@ Shader "Custom/AVSprite" {
 
             float metal = max((IN.color.a * 2) - 1, 0);
             o.Normal = normal;
-            c.rgb = overlay(c.rgb, IN.color.rgb);
+            c.rgb = c.rgb * IN.color.rgb;
             o.Albedo = c.rgb;
             o.Metallic = metal;
             o.Alpha = c.a; // *min((IN.color.a * 2), 1);

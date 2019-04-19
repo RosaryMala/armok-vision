@@ -44,10 +44,11 @@ public class BuildingMaterialEditor : ShaderGUI
         public static GUIContent normalMapText = new GUIContent("Normal Map", "Normal Map");
         public static GUIContent occlusionText = new GUIContent("Occlusion", "Occlusion (G)");
         public static GUIContent emissionText = new GUIContent("Emission", "Emission (RGB)");
-        public static GUIContent detailMaskText = new GUIContent("Texture Mask", "Mask for Albedo (R), Color (G), and Smoothness (B)");
+        public static GUIContent detailMaskText = new GUIContent("Texture Mask", "Mask for Albedo (R), Mixed (G), Smoothness (B), and Job Color (A)");
         public static GUIContent materialTextureText = new GUIContent("Material Texture Array", "Texture array for DF-set materials");
         public static GUIContent detailNormalMapText = new GUIContent("Normal Map", "Normal Map");
         public static GUIContent specularColorText = new GUIContent("Specular Color", "Specular Color for Non-Metallic materials");
+        public static GUIContent maskEnabledText = new GUIContent("Pattern Mask", "Allow material to use optional pattern texture from pattern descriptors");
 
         public static string whiteSpaceString = " ";
         public static string primaryMapsText = "Main Maps";
@@ -62,6 +63,7 @@ public class BuildingMaterialEditor : ShaderGUI
 
     MaterialProperty blendMode = null;
     MaterialProperty albedoMap = null;
+    MaterialProperty dfTextureMap = null;
     MaterialProperty albedoColor = null;
     MaterialProperty alphaCutoff = null;
     MaterialProperty specularMap = null;
@@ -79,10 +81,10 @@ public class BuildingMaterialEditor : ShaderGUI
     MaterialProperty emissionMap = null;
     MaterialProperty detailMask = null;
     MaterialProperty uvSetSecondary = null;
+    MaterialProperty pushAmount = null;
 
     MaterialEditor m_MaterialEditor;
     WorkflowMode m_WorkflowMode = WorkflowMode.Specular;
-    ColorPickerHDRConfig m_ColorPickerHDRConfig = new ColorPickerHDRConfig(0f, 99f, 1 / 99f, 3f);
 
     bool m_FirstTimeApply = true;
 
@@ -90,6 +92,7 @@ public class BuildingMaterialEditor : ShaderGUI
     {
         blendMode = FindProperty("_Mode", props, false);
         albedoMap = FindProperty("_MainTex", props);
+        dfTextureMap = FindProperty("_MatTexArray", props);
         albedoColor = FindProperty("_Color", props);
         alphaCutoff = FindProperty("_Cutoff", props, false);
         specularMap = FindProperty("_SpecGlossMap", props, false);
@@ -111,6 +114,7 @@ public class BuildingMaterialEditor : ShaderGUI
         emissionMap = FindProperty("_EmissionMap", props);
         detailMask = FindProperty("_DFMask", props);
         uvSetSecondary = FindProperty("_UVSec", props);
+        pushAmount = FindProperty("_Amount", props);
     }
 
     public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] props)
@@ -135,7 +139,7 @@ public class BuildingMaterialEditor : ShaderGUI
     {
         // Use default labelWidth
         EditorGUIUtility.labelWidth = 0f;
-
+        bool maskEnabled = material.IsKeywordEnabled("_PATTERN_MASK");
         // Detect any changes to the material
         EditorGUI.BeginChangeCheck();
         {
@@ -144,12 +148,10 @@ public class BuildingMaterialEditor : ShaderGUI
             // Primary properties
             GUILayout.Label(Styles.primaryMapsText, EditorStyles.boldLabel);
             m_MaterialEditor.TexturePropertySingleLine(Styles.detailMaskText, detailMask);
+            DoAlbedoArea(material);
             if (detailMask.textureValue != null)
-            {
-                DoAlbedoArea(material);
                 DoSpecularMetallicArea();
-            }
-            if(specularColor != null)
+            if (specularColor != null)
                 m_MaterialEditor.ColorProperty(specularColor, Styles.specularColorText.text);
             m_MaterialEditor.TexturePropertySingleLine(Styles.normalMapText, bumpMap, bumpMap.textureValue != null ? bumpScale : null);
             m_MaterialEditor.TexturePropertySingleLine(Styles.occlusionText, occlusionMap, occlusionMap.textureValue != null ? occlusionStrength : null);
@@ -163,8 +165,12 @@ public class BuildingMaterialEditor : ShaderGUI
 
             // Secondary properties
             GUILayout.Label(Styles.secondaryMapsText, EditorStyles.boldLabel);
+            maskEnabled = EditorGUILayout.Toggle(Styles.maskEnabledText, maskEnabled);
             m_MaterialEditor.ShaderProperty(uvSetSecondary, Styles.uvSetLabel.text);
+            m_MaterialEditor.TextureScaleOffsetProperty(dfTextureMap);
 
+
+            m_MaterialEditor.ShaderProperty(pushAmount, "Push Amount");
             //// Third properties
             //GUILayout.Label(Styles.forwardText, EditorStyles.boldLabel);
             //if (highlights != null)
@@ -176,8 +182,12 @@ public class BuildingMaterialEditor : ShaderGUI
         {
             foreach (var obj in blendMode.targets)
                 MaterialChanged((Material)obj, m_WorkflowMode);
-        }
+            if (maskEnabled)
+                material.EnableKeyword("_PATTERN_MASK");
+            else
+                material.DisableKeyword("_PATTERN_MASK");
 
+        }
 
         EditorGUILayout.Space();
 
@@ -263,7 +273,7 @@ public class BuildingMaterialEditor : ShaderGUI
         bool hadEmissionTexture = emissionMap.textureValue != null;
 
         // Texture and HDR color controls
-        m_MaterialEditor.TexturePropertyWithHDRColor(Styles.emissionText, emissionMap, emissionColorForRendering, m_ColorPickerHDRConfig, false);
+        m_MaterialEditor.TexturePropertyWithHDRColor(Styles.emissionText, emissionMap, emissionColorForRendering, false);
 
         // If texture was assigned and color was black set color to white
         float brightness = emissionColorForRendering.colorValue.maxColorComponent;
@@ -375,13 +385,11 @@ public class BuildingMaterialEditor : ShaderGUI
     {
         // Note: keywords must be based on Material value not on MaterialProperty due to multi-edit & material animation
         // (MaterialProperty value might come from renderer material property block)
-        SetKeyword(material, "_NORMALMAP", material.GetTexture("_BumpMap") || material.GetTexture("_DetailNormalMap"));
+        SetKeyword(material, "_NORMALMAP", material.GetTexture("_BumpMap"));
         if (workflowMode == WorkflowMode.Specular)
             SetKeyword(material, "_SPECGLOSSMAP", material.GetTexture("_SpecGlossMap"));
         else if (workflowMode == WorkflowMode.Metallic)
             SetKeyword(material, "_METALLICGLOSSMAP", material.GetTexture("_MetallicGlossMap"));
-        SetKeyword(material, "_PARALLAXMAP", material.GetTexture("_ParallaxMap"));
-        SetKeyword(material, "_DETAIL_MULX2", material.GetTexture("_DetailAlbedoMap") || material.GetTexture("_DetailNormalMap"));
 
         bool shouldEmissionBeEnabled = ShouldEmissionBeEnabled(material, material.GetColor("_EmissionColor"));
         SetKeyword(material, "_EMISSION", shouldEmissionBeEnabled);
