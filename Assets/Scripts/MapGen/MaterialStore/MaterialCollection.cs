@@ -21,6 +21,11 @@ namespace MaterialStore
             }
         }
 
+        public static void Init()
+        {
+            _instance = Resources.Load<MaterialCollection>("materialDefinitions");
+        }
+
         public IEnumerable<MatPairStruct> Keys => ((IReadOnlyDictionary<MatPairStruct, MaterialTextureSet>)matTextures).Keys;
 
         public IEnumerable<MaterialTextureSet> Values => ((IReadOnlyDictionary<MatPairStruct, MaterialTextureSet>)matTextures).Values;

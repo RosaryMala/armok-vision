@@ -391,6 +391,7 @@ public class ContentLoader : MonoBehaviour
         doneItems++;
         mainProgressBar.SetProgress(doneItems / totalItems);
         yield return StartCoroutine(FinalizeTextureAtlases());
+        MaterialCollection.Init();
         Instance = this;
 
         foreach (var callback in LoadCallbacks)
