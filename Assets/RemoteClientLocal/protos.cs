@@ -1546,6 +1546,70 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"WoundPart")]
+  public partial class WoundPart : global::ProtoBuf.IExtensible
+  {
+    public WoundPart() {}
+    
+    [UnityEngine.SerializeField]
+    private int _global_layer_idx = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"global_layer_idx", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int global_layer_idx
+    {
+      get { return _global_layer_idx; }
+      set { _global_layer_idx = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _body_part_id = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"body_part_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int body_part_id
+    {
+      get { return _body_part_id; }
+      set { _body_part_id = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _layer_idx = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"layer_idx", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int layer_idx
+    {
+      get { return _layer_idx; }
+      set { _layer_idx = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"UnitWound")]
+  public partial class UnitWound : global::ProtoBuf.IExtensible
+  {
+    public UnitWound() {}
+    
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.WoundPart> _parts = new global::System.Collections.Generic.List<RemoteFortressReader.WoundPart>();
+    [global::ProtoBuf.ProtoMember(1, Name=@"parts", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.WoundPart> parts
+    {
+      get { return _parts; }
+    }
+  
+    [UnityEngine.SerializeField]
+    private bool _severed_part = default(bool);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"severed_part", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool severed_part
+    {
+      get { return _severed_part; }
+      set { _severed_part = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"UnitDefinition")]
   public partial class UnitDefinition : global::ProtoBuf.IExtensible
   {
@@ -1773,6 +1837,14 @@ namespace RemoteFortressReader
       get { return _age; }
       set { _age = value; }
     }
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.UnitWound> _wounds = new global::System.Collections.Generic.List<RemoteFortressReader.UnitWound>();
+    [global::ProtoBuf.ProtoMember(26, Name=@"wounds", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.UnitWound> wounds
+    {
+      get { return _wounds; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
