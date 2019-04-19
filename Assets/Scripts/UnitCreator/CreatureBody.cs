@@ -106,9 +106,13 @@ public class CreatureBody : MonoBehaviour
         inventoryModes = new InventoryMode[0];
         //They're made standing, so the current state should reflect that.
         onGround = false;
-        float scale = Mathf.Max(caste.adult_size, 1) / (float)caste.total_relsize * 10;
-        if(unit != null && unit.size_info != null)
-            scale = Mathf.Max(unit.size_info.size_cur, 1) / (float)caste.total_relsize * 10;
+        float unitVolume = caste.adult_size;
+        if (unit != null && unit.size_info != null)
+            unitVolume = unit.size_info.size_cur;
+        unitVolume = UnitScaler.GetAdjustedUnitSize(unitVolume);
+
+        float scale = unitVolume / caste.total_relsize * 10;
+
         MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
 
         bodyScale = BodyDefinition.GetBodyScale(bodyCategory, race, caste);
@@ -374,6 +378,7 @@ public class CreatureBody : MonoBehaviour
     private BodyPart lowerBody;
 
     float oldChibiSize = -1;
+    private GameSettings.UnitScale oldScaleUnits = GameSettings.UnitScale.Real;
 
     List<UnitWound> oldWounds;
 
@@ -413,8 +418,9 @@ public class CreatureBody : MonoBehaviour
         }
         oldWounds = unit.wounds;
         this.unit = unit;
-        if(needsRegen || oldChibiSize != GameSettings.Instance.units.chibiness)
+        if(needsRegen || oldChibiSize != GameSettings.Instance.units.chibiness || oldScaleUnits != GameSettings.Instance.units.scaleUnits)
         {
+            oldScaleUnits = GameSettings.Instance.units.scaleUnits;
             oldChibiSize = GameSettings.Instance.units.chibiness;
             MakeBody();
         }

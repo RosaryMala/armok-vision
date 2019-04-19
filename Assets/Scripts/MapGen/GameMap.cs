@@ -305,7 +305,19 @@ public class GameMap : MonoBehaviour
             }
             if (Input.GetButtonDown("ScaleUnits"))
             {
-                GameSettings.Instance.units.scaleUnits = !GameSettings.Instance.units.scaleUnits;
+                switch (GameSettings.Instance.units.scaleUnits)
+                {
+                    case GameSettings.UnitScale.Fixed:
+                        GameSettings.Instance.units.scaleUnits = GameSettings.UnitScale.Logarithmic;
+                        break;
+                    case GameSettings.UnitScale.Logarithmic:
+                        GameSettings.Instance.units.scaleUnits = GameSettings.UnitScale.Real;
+                        break;
+                    case GameSettings.UnitScale.Real:
+                    default:
+                        GameSettings.Instance.units.scaleUnits = GameSettings.UnitScale.Fixed;
+                        break;
+                }
             }
             if (Input.GetButtonDown("OverheadShadows"))
             {

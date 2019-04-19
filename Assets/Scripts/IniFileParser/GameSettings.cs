@@ -113,10 +113,17 @@ public class GameSettings : MonoBehaviour
         Models
     }
 
+    public enum UnitScale
+    {
+        Fixed,
+        Logarithmic,
+        Real
+    }
+
     [Serializable]
     public class Units
     {
-        public bool scaleUnits = true;
+        public UnitScale scaleUnits = UnitScale.Real;
         public float chibiness = 3.5f;
         public UnitDetail unitDetail = UnitDetail.Models;
     }
