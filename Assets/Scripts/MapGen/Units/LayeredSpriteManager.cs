@@ -113,7 +113,7 @@ public class LayeredSpriteManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        if(GameSettings.Instance.units.spriteUnits)
+        if(GameSettings.Instance.units.unitDetail == GameSettings.UnitDetail.HDSprites)
             ContentLoader.RegisterLoadCallback(LoadLayeredSpriteSets);
     }
 

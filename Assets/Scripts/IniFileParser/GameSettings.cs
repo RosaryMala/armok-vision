@@ -104,13 +104,21 @@ public class GameSettings : MonoBehaviour
         public bool postProcessing = true;
     }
 
+    public enum UnitDetail
+    {
+        None,
+        ASCII,
+        SDSprites,
+        HDSprites,
+        Models
+    }
+
     [Serializable]
     public class Units
     {
-        public bool drawUnits = true;
         public bool scaleUnits = true;
-        public bool spriteUnits = false;
         public float chibiness = 3.5f;
+        public UnitDetail unitDetail = UnitDetail.Models;
     }
 
     public enum AnalyticsChoice

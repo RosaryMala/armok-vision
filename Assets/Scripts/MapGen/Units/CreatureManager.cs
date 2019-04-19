@@ -59,7 +59,7 @@ public class CreatureManager : MonoBehaviour
 
     void UpdateCreatures()
     {
-        if (!GameSettings.Instance.units.drawUnits)
+        if (GameSettings.Instance.units.unitDetail == GameSettings.UnitDetail.None)
             return;
         if (creatureTemplate == null)
             return;
@@ -78,10 +78,10 @@ public class CreatureManager : MonoBehaviour
         var watch = System.Diagnostics.Stopwatch.StartNew();
         for(;updateIndex < Units.Count; updateIndex++)
         {
-            if (GameSettings.Instance.units.spriteUnits)
-                UpdateItem(Units[updateIndex], ref creatureCount);
-            else
+            if (GameSettings.Instance.units.unitDetail == GameSettings.UnitDetail.Models)
                 Update3DUnit(Units[updateIndex], ref creatureCount);
+            else
+                UpdateSpriteUnit(Units[updateIndex], ref creatureCount);
             if (watch.ElapsedMilliseconds > 2)
                 break;
         }
@@ -157,7 +157,7 @@ public class CreatureManager : MonoBehaviour
         }
     }
 
-    void UpdateItem(UnitDefinition unit, ref int creatureCount)
+    void UpdateSpriteUnit(UnitDefinition unit, ref int creatureCount)
     {
         UnitFlags1 flags1 = (UnitFlags1)unit.flags1;
         //UnitFlags2 flags2 = (UnitFlags2)unit.flags2;

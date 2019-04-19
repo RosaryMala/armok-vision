@@ -71,7 +71,7 @@ public class Creature : MonoBehaviour
         var layers = LayeredSpriteManager.Instance.GetCreatureSprite(unit);
 
         //no size info indicates that the unit was only given the most basic data.
-        if (layers != null && unit.size_info != null)
+        if (layers != null && unit.size_info != null && GameSettings.Instance.units.unitDetail == GameSettings.UnitDetail.HDSprites)
         {
             layeredSprite.SpriteCollection = layers;
             layeredSprite.enabled = true;
@@ -96,7 +96,7 @@ public class Creature : MonoBehaviour
         Material mat;
         int index;
         bool colored;
-        if (ContentLoader.Instance.SpriteManager.getCreatureSprite(unit, out mat, out index, out colored))
+        if (GameSettings.Instance.units.unitDetail == GameSettings.UnitDetail.SDSprites && ContentLoader.Instance.SpriteManager.getCreatureSprite(unit, out mat, out index, out colored))
         {
             legacySprite.material = mat;
             creatureMaterialProperties.SetFloat(layerIndexID, index);
