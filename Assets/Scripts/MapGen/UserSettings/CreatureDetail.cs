@@ -9,6 +9,7 @@ namespace UserSettings
         protected override void InitValue()
         {
             slider.value = (int)GameSettings.Instance.units.unitDetail;
+            OnValueChanged(slider.value);
         }
 
         protected override void OnValueChanged(float value)

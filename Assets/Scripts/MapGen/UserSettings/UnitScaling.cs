@@ -4,8 +4,6 @@ using UnityEngine;
 
 namespace UserSettings
 {
-
-
     public class UnitScaling : SliderBase
     {
         private GameSettings.UnitScale oldUnitScale;
@@ -13,6 +11,7 @@ namespace UserSettings
         protected override void InitValue()
         {
             slider.value = (int)GameSettings.Instance.units.scaleUnits;
+            OnValueChanged(slider.value);
         }
 
         protected override void OnValueChanged(float value)
@@ -36,7 +35,7 @@ namespace UserSettings
 
         private void Update()
         {
-            if(GameSettings.Instance.units.scaleUnits != oldUnitScale)
+            if (GameSettings.Instance.units.scaleUnits != oldUnitScale)
             {
                 OnValueChanged((float)GameSettings.Instance.units.scaleUnits);
             }
