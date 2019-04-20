@@ -99,7 +99,7 @@ public class DFRawReader : EditorWindow
                 if (!CreatureRaws.Instance[unit.race.mat_type].creature_id.ToUpper().Contains(filter.ToUpper()))
                     return false;
             if (filterName)
-                if (!name.ToUpper().Contains(filter.ToUpper()))
+                if (!unit.name.ToUpper().Contains(filter.ToUpper()))
                     return false;
             if (filterParts)
             {

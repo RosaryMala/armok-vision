@@ -605,7 +605,7 @@ public class ContentLoader : MonoBehaviour
     public static Material getFinalMaterial(Material material, float alpha)
     {
         int instanceID = material.GetInstanceID();
-        if (!transparentMaterialVersions.ContainsKey(instanceID))
+        if (!transparentMaterialVersions.ContainsKey(instanceID) || transparentMaterialVersions[instanceID] == null)
         {
             switch(material.shader.name)
             {
@@ -616,9 +616,21 @@ public class ContentLoader : MonoBehaviour
                 case "Art/ArtImageVertexOpaque":
                     transparentMaterialVersions[instanceID] = material;
                     break;
+                case "Art/SingleImage":
+                    {
+                        var mat = new Material(material);
+                        mat.shader = Shader.Find("Art/SingleImage Transparent");
+                        mat.name += " Transparent";
+                        transparentMaterialVersions[instanceID] = mat;
+                    }
+                    break;
                 default:
-                    transparentMaterialVersions[instanceID] = new Material(material);
-                    transparentMaterialVersions[instanceID].shader = Shader.Find("Building/Transparent");
+                    {
+                        var mat = new Material(material);
+                        mat.shader = Shader.Find("Building/Transparent");
+                        mat.name += " Transparent";
+                        transparentMaterialVersions[instanceID] = mat; 
+                    }
                     break;
             }
         }

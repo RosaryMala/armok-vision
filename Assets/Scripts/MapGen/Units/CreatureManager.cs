@@ -31,7 +31,8 @@ public class CreatureManager : MonoBehaviour
     {
         if (ContentLoader.Instance == null)
             return;
-        UpdateCreatures();
+        if(ItemManager.Instance.loaded)
+            UpdateCreatures();
     }
 
     bool ShouldRender(int x, int y, int z, MapDataStore.Tile tile)
@@ -67,6 +68,8 @@ public class CreatureManager : MonoBehaviour
         if (creatureTemplate == null)
             return;
         if (ContentLoader.Instance == null)
+            return;
+        if (!ItemManager.Instance.loaded)
             return;
 
         var tempUnitList = DFConnection.Instance.PopUnitListUpdate();

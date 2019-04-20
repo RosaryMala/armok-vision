@@ -386,7 +386,11 @@ MonoBehaviour:
     _layer_depth: 0
     _bp_modifiers: 
   mods: []
-  layerColor: {r: 1, g: 1, b: 1, a: 1}
+  layerColors: []
+  pattern:
+    _id: 
+    _colors: []
+    _pattern: 0
   bodyModTargets: []
 --- !u!1 &1215409635737726
 GameObject:
@@ -734,7 +738,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4740854689175456}
   - component: {fileID: 33873173910750102}
-  - component: {fileID: 23352347080957840}
+  - component: {fileID: 5042515041470931793}
   - component: {fileID: 114432722212869388}
   m_Layer: 0
   m_Name: Hair
@@ -750,13 +754,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1414576083337000}
-  m_LocalRotation: {x: -0.11160221, y: -0, z: -0, w: 0.99375296}
-  m_LocalPosition: {x: 0, y: 0.137, z: -0.0149}
-  m_LocalScale: {x: 0.16675654, y: 0.101236515, z: 0.18822387}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4259126892442996}
   m_RootOrder: 29
-  m_LocalEulerAnglesHint: {x: -12.815001, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &33873173910750102
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -764,9 +768,9 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1414576083337000}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &23352347080957840
-MeshRenderer:
+  m_Mesh: {fileID: 4300000, guid: 9d83a920890cafc4487de1519eee1023, type: 3}
+--- !u!137 &5042515041470931793
+SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -779,7 +783,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RenderingLayerMask: 4294967295
+  m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 5a16ae476760f7a4f897b8d7d6ea4794, type: 2}
@@ -802,6 +806,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  serializedVersion: 2
+  m_Quality: 0
+  m_UpdateWhenOffscreen: 0
+  m_SkinnedMotionVectors: 1
+  m_Mesh: {fileID: 4300000, guid: 9d83a920890cafc4487de1519eee1023, type: 3}
+  m_Bones: []
+  m_BlendShapeWeights:
+  - 0
+  m_RootBone: {fileID: 0}
+  m_AABB:
+    m_Center: {x: 0, y: 0.018701646, z: -0.027815044}
+    m_Extent: {x: 0.11761373, y: 0.12948473, z: 0.21664834}
+  m_DirtyAABB: 0
 --- !u!114 &114432722212869388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -822,8 +839,21 @@ MonoBehaviour:
     _layer_depth: 0
     _bp_modifiers: 
   mods: []
-  layerColor: {r: 1, g: 1, b: 1, a: 1}
-  bodyModTargets: []
+  layerColors: []
+  pattern:
+    _id: 
+    _colors: []
+    _pattern: 0
+  bodyModTargets:
+  - modToken: LENGTH
+    useSmall: 0
+    useMinimum: 1
+    minimumValue: 30
+    smallIndex: 0
+    smallValue: 0
+    medValue: 0
+    largeIndex: 0
+    largeValue: 100
 --- !u!1 &1536486741071154
 GameObject:
   m_ObjectHideFlags: 0
@@ -1450,7 +1480,11 @@ MonoBehaviour:
     _layer_depth: 0
     _bp_modifiers: 
   mods: []
-  layerColor: {r: 1, g: 1, b: 1, a: 1}
+  layerColors: []
+  pattern:
+    _id: 
+    _colors: []
+    _pattern: 0
   bodyModTargets: []
 --- !u!1 &1923699934286252
 GameObject:
@@ -1777,7 +1811,11 @@ MonoBehaviour:
     _layer_depth: 0
     _bp_modifiers: 
   mods: []
-  layerColor: {r: 1, g: 1, b: 1, a: 1}
+  layerColors: []
+  pattern:
+    _id: 
+    _colors: []
+    _pattern: 0
   bodyModTargets: []
 --- !u!1 &1963187716596948
 GameObject:
@@ -1939,7 +1977,11 @@ MonoBehaviour:
     _layer_depth: 0
     _bp_modifiers: 
   mods: []
-  layerColor: {r: 1, g: 1, b: 1, a: 1}
+  layerColors: []
+  pattern:
+    _id: 
+    _colors: []
+    _pattern: 0
   bodyModTargets:
   - modToken: LENGTH
     useSmall: 1
@@ -2053,7 +2095,11 @@ MonoBehaviour:
     _layer_depth: 0
     _bp_modifiers: 
   mods: []
-  layerColor: {r: 1, g: 1, b: 1, a: 1}
+  layerColors: []
+  pattern:
+    _id: 
+    _colors: []
+    _pattern: 0
   bodyModTargets:
   - modToken: LENGTH
     useSmall: 1
@@ -2167,7 +2213,11 @@ MonoBehaviour:
     _layer_depth: 0
     _bp_modifiers: 
   mods: []
-  layerColor: {r: 1, g: 1, b: 1, a: 1}
+  layerColors: []
+  pattern:
+    _id: 
+    _colors: []
+    _pattern: 0
   bodyModTargets:
   - modToken: LENGTH
     useSmall: 1
@@ -2280,7 +2330,11 @@ MonoBehaviour:
     _layer_depth: 0
     _bp_modifiers: 
   mods: []
-  layerColor: {r: 1, g: 1, b: 1, a: 1}
+  layerColors: []
+  pattern:
+    _id: 
+    _colors: []
+    _pattern: 0
   bodyModTargets:
   - modToken: LENGTH
     useSmall: 0
@@ -2389,7 +2443,11 @@ MonoBehaviour:
     _layer_depth: 0
     _bp_modifiers: 
   mods: []
-  layerColor: {r: 1, g: 1, b: 1, a: 1}
+  layerColors: []
+  pattern:
+    _id: 
+    _colors: []
+    _pattern: 0
   bodyModTargets: []
 --- !u!1001 &6753480509513919389
 PrefabInstance:
@@ -2404,15 +2462,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4410006989615734, guid: 1dcfd33eb0cc164438aca1e00a28feb6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4410006989615734, guid: 1dcfd33eb0cc164438aca1e00a28feb6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.1084
+      value: 0.1304
       objectReference: {fileID: 0}
     - target: {fileID: 4410006989615734, guid: 1dcfd33eb0cc164438aca1e00a28feb6, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.0029
+      value: -0.0149
       objectReference: {fileID: 0}
     - target: {fileID: 4410006989615734, guid: 1dcfd33eb0cc164438aca1e00a28feb6, type: 3}
       propertyPath: m_LocalRotation.x
@@ -2448,11 +2506,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4410006989615734, guid: 1dcfd33eb0cc164438aca1e00a28feb6, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.100001
+      value: 1.0851492
       objectReference: {fileID: 0}
     - target: {fileID: 4410006989615734, guid: 1dcfd33eb0cc164438aca1e00a28feb6, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.8654308
+      value: 0.85129696
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1dcfd33eb0cc164438aca1e00a28feb6, type: 3}

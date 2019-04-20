@@ -97,11 +97,10 @@ public class BodyPartModel : MonoBehaviour
         {
             var item = inventory[i];
             //If it's not a worn clothing item, hide the respective layers.
-            if (item.item.mode == RemoteFortressReader.InventoryMode.Worn)
+            if (item.item.mode != RemoteFortressReader.InventoryMode.Worn)
             {
                 if (instantiatedClothingLayers.Count > i && instantiatedClothingLayers[i] != null)
                     instantiatedClothingLayers[i].gameObject.SetActive(false);
-                wornItems++;
             }
             if (specialEquipment.ContainsKey(item.item.item.type))
             {
@@ -111,6 +110,7 @@ public class BodyPartModel : MonoBehaviour
             }
             else if (item.item.mode == RemoteFortressReader.InventoryMode.Worn)
             {
+                wornItems++;
                 var clothingTexture = ClothingTexture.GetTexture(item.item.item.type);
                 if (clothingTexture == null || clothingTexture.baseMat == null)
                 {
