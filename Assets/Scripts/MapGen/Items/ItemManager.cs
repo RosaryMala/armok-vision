@@ -20,6 +20,8 @@ public class ItemManager : MonoBehaviour
         }
     }
 
+    public bool loaded = false;
+
     static Dictionary<MatPairStruct, ItemModel> itemPrefabs = new Dictionary<MatPairStruct, ItemModel>();
 
     public ItemModel defaultItem;
@@ -30,6 +32,7 @@ public class ItemManager : MonoBehaviour
 
     IEnumerator LoadItems()
     {
+        loaded = false;
         var stopWatch = System.Diagnostics.Stopwatch.StartNew();
         var itemList = ItemRaws.Instance.ItemList;
         if (mainProgressBar != null)
@@ -63,6 +66,7 @@ public class ItemManager : MonoBehaviour
                 stopWatch.Start();
             }
         }
+        loaded = true;
     }
 
     private void Awake()
@@ -79,14 +83,19 @@ public class ItemManager : MonoBehaviour
 
         if(!Application.isPlaying)
         {
-            var loader = LoadItems();
-            while(loader.MoveNext())
-            {
-
-            }
-            Debug.Log("Loaded item models.");
+            ForceLoadItems();
         }
         else ContentLoader.RegisterLoadCallback(LoadItems);
+    }
+
+    private void ForceLoadItems()
+    {
+        var loader = LoadItems();
+        while (loader.MoveNext())
+        {
+
+        }
+        Debug.Log("Loaded item models.");
     }
 
     private void LateUpdate()
@@ -225,7 +234,10 @@ public class ItemManager : MonoBehaviour
         ItemModel placedItem;
 
         var prefab = Instance.defaultItem;
-        
+
+        if (itemPrefabs.Count == 0)
+            Instance.ForceLoadItems();
+
         if (!itemPrefabs.ContainsKey(type))
             type = new MatPairStruct(type.mat_type, -1);
         if (!itemPrefabs.ContainsKey(type))
