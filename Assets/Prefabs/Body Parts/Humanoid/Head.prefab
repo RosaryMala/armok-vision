@@ -813,7 +813,7 @@ SkinnedMeshRenderer:
   m_Mesh: {fileID: 4300000, guid: 9d83a920890cafc4487de1519eee1023, type: 3}
   m_Bones: []
   m_BlendShapeWeights:
-  - 100
+  - 0
   m_RootBone: {fileID: 0}
   m_AABB:
     m_Center: {x: 0, y: 0.018701646, z: -0.027815044}
@@ -2462,15 +2462,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4410006989615734, guid: 1dcfd33eb0cc164438aca1e00a28feb6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4410006989615734, guid: 1dcfd33eb0cc164438aca1e00a28feb6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.1247
+      value: 0.1304
       objectReference: {fileID: 0}
     - target: {fileID: 4410006989615734, guid: 1dcfd33eb0cc164438aca1e00a28feb6, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.0205
+      value: -0.0149
       objectReference: {fileID: 0}
     - target: {fileID: 4410006989615734, guid: 1dcfd33eb0cc164438aca1e00a28feb6, type: 3}
       propertyPath: m_LocalRotation.x
@@ -2506,11 +2506,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4410006989615734, guid: 1dcfd33eb0cc164438aca1e00a28feb6, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.3725812
+      value: 1.0851492
       objectReference: {fileID: 0}
     - target: {fileID: 4410006989615734, guid: 1dcfd33eb0cc164438aca1e00a28feb6, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.0262277
+      value: 0.85129696
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1dcfd33eb0cc164438aca1e00a28feb6, type: 3}
