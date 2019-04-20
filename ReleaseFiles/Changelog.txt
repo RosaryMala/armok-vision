@@ -1,3 +1,8 @@
+v0.21.1
+ * Dismemberment now happens.
+ * Improved some clothing.
+ * Added instruments.
+
 v0.20.0
  * Changes the shaders to use a bit faster color blending
  * Use larger blocks from DF, to reduce the number of draw calls, resulting in better render speed at the expense of load speed.
