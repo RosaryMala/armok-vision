@@ -1,28 +1,3 @@
-# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 30.10.2016 16:47:46
-
-#
-# object NoMaterialCutout
-#
-
-v  1.0000 0.1000 -1.0000
-v  -1.0000 0.1000 1.0000
-v  1.0000 0.1000 1.0000
-v  -1.0000 0.1000 -1.0000
-# 4 vertices
-
-vn 0.0000 1.0000 -0.0000
-# 1 vertex normals
-
-vt 0.9995 0.0005 0.5625
-vt 0.0005 0.9995 0.5625
-vt 0.9995 0.9995 0.5625
-vt 0.0005 0.0005 0.5625
-# 4 texture coords
-
-g NoMaterialCutout
-s 1
-f 1/1/1 2/2/1 3/3/1 
-f 2/2/1 1/1/1 4/4/1 
-# 2 faces
-
+version https://git-lfs.github.com/spec/v1
+oid sha256:f18705d242c38d8013b2c28286cf374b7f27eca15501a3b090c17008ed32dbef
+size 506

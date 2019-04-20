@@ -8,6 +8,7 @@ using UnityEngine;
 public class ItemModel : MonoBehaviour, IClickable
 {
     public Item originalItem;
+    public MaterialDefinition itemRaw;
     private MeshRenderer meshRenderer;
     private Material originalMaterial;
 
@@ -28,6 +29,7 @@ public class ItemModel : MonoBehaviour, IClickable
     public void UpdateMaterial(Item itemInput, UnitDefinition unit = null)
     {
         originalItem = itemInput;
+        itemRaw = ItemRaws.Instance[itemInput.type];
         if (phantom)
             return;
         if (meshRenderer == null)
