@@ -163,7 +163,11 @@ public class CreatureBody : MonoBehaviour
             var model = BodyDefinition.GetPart(bodyCategory, race, caste, part);
             if (model != null)
             {
+#if UNITY_EDITOR                
+                var placedModel = (BodyPartModel)UnityEditor.PrefabUtility.InstantiatePrefab(model);
+#else
                 var placedModel = Instantiate(model);
+#endif
                 placedModel.transform.SetParent(spawnedPart.transform);
                 placedModel.CollectEquipment();
                 spawnedPart.modeledPart = placedModel;
@@ -356,14 +360,16 @@ public class CreatureBody : MonoBehaviour
             }
         }
 
-        foreach (var wound in unit.wounds)
-        {
-            foreach (var woundPart in wound.parts)
+
+        if (unit != null && unit.wounds != null)
+            foreach (var wound in unit.wounds)
             {
-                if (spawnedParts.ContainsKey(woundPart.body_part_id))
-                    spawnedParts[woundPart.body_part_id].gameObject.SetActive(!wound.severed_part);
+                foreach (var woundPart in wound.parts)
+                {
+                    if (spawnedParts.ContainsKey(woundPart.body_part_id))
+                        spawnedParts[woundPart.body_part_id].gameObject.SetActive(!wound.severed_part);
+                }
             }
-        }
 
         bounds = rootPart.GetComponentInChildren<MeshRenderer>().bounds;
         foreach (var item in rootPart.GetComponentsInChildren<MeshRenderer>())

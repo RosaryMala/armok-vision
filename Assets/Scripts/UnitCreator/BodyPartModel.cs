@@ -74,10 +74,11 @@ public class BodyPartModel : MonoBehaviour
                         pantClothing = layer;
                         break;
                 }
-                if (Application.isPlaying)
-                    Destroy(item.gameObject);
-                else
-                    DestroyImmediate(item.gameObject);
+                item.gameObject.SetActive(false);
+                //if (Application.isPlaying)
+                //    Destroy(item.gameObject);
+                //else
+                //    DestroyImmediate(item.gameObject);
             }
         }
     }
