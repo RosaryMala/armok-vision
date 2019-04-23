@@ -10,7 +10,8 @@ fixed4 matColor = UNITY_ACCESS_INSTANCED_PROP(_MatColor_arr, _MatColor);
 fixed3 albedo = matColor.rgb;
 fixed4 shape = UNITY_SAMPLE_TEX2DARRAY(_ShapeMap, float3(texcoords.zw, UNITY_ACCESS_INSTANCED_PROP(_ShapeIndex_arr, _ShapeIndex)));
 
-fixed3 normal = UnpackNormal(shape.ggga);
+fixed3 matNormal = UnpackNormal(shape.ggga);
+fixed3 normal = matNormal;
 
 #ifdef _PATTERN_MASK
 fixed4 pattern_mask = tex2D(_PatternMask, texcoords.zw);
@@ -32,7 +33,7 @@ fixed4 c = tex2D(_MainTex, texcoords.xy) * _Color;
 #ifdef _TEXTURE_MASK
 	fixed4 mask = tex2D(_DFMask, texcoords.xy);
 #ifdef _NORMALMAP
-    normal = lerp(BlendNormals(normal, customNormal), customNormal, mask.r);
+    normal = lerp(BlendNormals(matNormal, customNormal), customNormal, mask.r);
 #endif
     albedo = lerp(albedo, c.rgb, mask.r);
 	albedo = lerp(albedo, c.rgb * dfTex.rgb * matColor.rgb, max(mask.g - mask.r, 0));
@@ -49,7 +50,7 @@ fixed4 c = tex2D(_MainTex, texcoords.xy) * _Color;
 #else
     alpha = c.a * alpha;
     #ifdef _NORMALMAP
-        normal = BlendNormals(normal, customNormal);
+        normal = BlendNormals(matNormal, customNormal);
     #endif
 #endif
 

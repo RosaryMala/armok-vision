@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6cf81176ac46bd4787c356dc567f950, type: 3}
+  m_Name: Default
+  m_EditorClassIdentifier: 
+  bodyScale: {x: 1, y: 1, z: 1}
+  bodyParts:
+  - category: HEAD
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 5953518522528603336, guid: 202468aaeffa6664a84e915b8e8aff04, type: 3}
+  - category: EAR
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 8750540346039685476, guid: ca1f8c0620118ac489bf0986ab0fe596, type: 3}
+  - category: NOSE
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 8325227838654498921, guid: c3333cb75e9111145a81aec29dd2a007, type: 3}
