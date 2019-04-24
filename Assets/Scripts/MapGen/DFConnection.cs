@@ -505,7 +505,7 @@ public sealed class DFConnection : MonoBehaviour
     {
         blockRequest.blocks_needed = BlocksToFetch;
         networkClient = new RemoteClient(dfNetworkOut);
-        bool success = networkClient.Connect();
+        bool success = networkClient.Connect(GameSettings.Instance.game.serverAddress, GameSettings.Instance.game.serverPort);
         if (!success)
         {
             networkClient.Disconnect();
@@ -557,22 +557,28 @@ public sealed class DFConnection : MonoBehaviour
         inited = true;
         BindMethods();
 
-        if (versionInfoCall != null && dfVersionCall != null)
+        if (versionInfoCall != null)
         {
-            VersionInfo versionInfo;
-            StringMessage dfVersion = new StringMessage();
-            versionInfoCall.TryExecute(null, out versionInfo);
-            dfVersionCall.TryExecute(null, out dfVersion);
+            var versionInfo = versionInfoCall.Execute();
+            if (versionInfo == null)
+                versionInfo = new VersionInfo
+                {
+                    dfhack_version = "[UNKNOWN]",
+                    dwarf_fortress_version = "[UNKNOWN]",
+                    remote_fortress_reader_version = "[UNKNOWN]"
+                };
             Debug.LogFormat("Connected to DF version {0}, running DFHack version {1}, and RemoteFortressReader version {2}", versionInfo.dwarf_fortress_version, versionInfo.dfhack_version, versionInfo.remote_fortress_reader_version);
             if (GoogleAnalyticsV4.instance != null)
                 GoogleAnalyticsV4.instance.SendDeviceData(versionInfo.dwarf_fortress_version, versionInfo.remote_fortress_reader_version);
         }
-        else if(dfVersionCall != null)
+        else if (dfVersionCall != null)
         {
-            StringMessage dfVersion = new StringMessage();
-            StringMessage dfHackVersion = new StringMessage();
-            dfVersionCall.TryExecute(null, out dfVersion);
-            dfhackVersionCall.TryExecute(null, out dfHackVersion);
+            var dfVersion = dfVersionCall.Execute();
+            var dfHackVersion = dfhackVersionCall.Execute();
+            if (dfVersion == null)
+                dfVersion = new StringMessage { value = "[UNKNOWN]" };
+            if (dfHackVersion == null)
+                dfHackVersion = new StringMessage { value = "[UNKNOWN]" };
             Debug.LogFormat("Connected to DF version {0}, , running DFHack version {1}, and an old RemoteFortressReader plugin.", dfVersion.value, dfHackVersion.value);
             if (GoogleAnalyticsV4.instance != null)
                 GoogleAnalyticsV4.instance.SendDeviceData(dfVersion.value, "old");
@@ -670,20 +676,20 @@ public sealed class DFConnection : MonoBehaviour
     {
         get
         {
-            if(string.IsNullOrEmpty(_AVPluginDir))
+            if (string.IsNullOrEmpty(_AVPluginDir))
             {
-            if (dfhackVersionCall == null || dfVersionCall == null)
-                return "";
-            StringMessage dfHackVersion = new StringMessage();
-            StringMessage dfVersion = new StringMessage();
+                if (dfhackVersionCall == null || dfVersionCall == null)
+                    return "";
+                var dfHackVersion = dfhackVersionCall.Execute();
+                var dfVersion = dfVersionCall.Execute();
 
-            dfhackVersionCall.TryExecute(null, out dfHackVersion);
-            dfVersionCall.TryExecute(null, out dfVersion);
+                if (dfHackVersion == null || dfVersion == null)
+                    return "";
 
-            _AVPluginDir = "Plugins/" + dfVersion.value + "/" + dfHackVersion.value + "/";
+                _AVPluginDir = "Plugins/" + dfVersion.value + "/" + dfHackVersion.value + "/";
 #if UNITY_EDITOR
-            _AVPluginDir = "ReleaseFiles/" + _AVPluginDir;
-            Directory.CreateDirectory(_AVPluginDir);
+                _AVPluginDir = "ReleaseFiles/" + _AVPluginDir;
+                Directory.CreateDirectory(_AVPluginDir);
 #endif
             }
             return _AVPluginDir;
@@ -704,14 +710,17 @@ public sealed class DFConnection : MonoBehaviour
     {
         Version pluginVersion = new Version(0,0,0);
         Version avVersion = new Version(BuildSettings.Instance.content_version);
-        StringMessage dfHackVersion = new StringMessage();
-        StringMessage dfVersion = new StringMessage();
-
-        dfhackVersionCall.TryExecute(null, out dfHackVersion);
-        dfVersionCall.TryExecute(null, out dfVersion);
+        var dfHackVersion = dfhackVersionCall.Execute();
+        var dfVersion = dfVersionCall.Execute();
 
         DFStringStream tempStream = new DFStringStream();
-        networkClient.RunCommand(tempStream, "RemoteFortressReader_version", new List<string>());
+
+        if(dfHackVersion == null || dfVersion == null || networkClient.RunCommand(tempStream, "RemoteFortressReader_version", new List<string>()) != CommandResult.CrOk)
+        {
+            Debug.Log("Cannot get version info, continuing onwards.");
+            Init();
+            return;
+        }
         var results = tempStream.Value.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
         string versionString = results[0].Trim();
         try

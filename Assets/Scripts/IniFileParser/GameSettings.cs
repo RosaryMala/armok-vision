@@ -141,6 +141,8 @@ public class GameSettings : MonoBehaviour
         public bool showDFScreen = false;
         public AnalyticsChoice analytics = AnalyticsChoice.Unknown;
         public bool askToUpdatePlugin = true;
+        public string serverAddress = "localhost";
+        public int serverPort = 5000;
     }
     [Serializable]
     public class Debug
