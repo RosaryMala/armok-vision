@@ -522,7 +522,13 @@ public sealed class DFConnection : MonoBehaviour
         {
             dfWorldInfoCall.TryExecute(null, out netWorldInfo);
             if (netWorldInfo == null)
+            {
+                ModalPanel.Instance.Choice(
+                  "You appear not to have a loaded save in Dwarf Fortress!\n\n" +
+                  "Armok Vision cannot run without a save loaded.", QuitGame, "Quit");
                 Debug.Log("World not loaded.");
+                QuitGame();
+            }
             else
             {
                 Debug.Log("World Mode: " + netWorldInfo.mode);
