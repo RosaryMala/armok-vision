@@ -81,7 +81,7 @@ public class ItemImprovement : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.white;
+        Gizmos.color = Color.HSVToRGB(index / 20f, 1, 1);
         Gizmos.DrawSphere(transform.position, (isImage ? 0.05f : 0.025f) * transform.lossyScale.x);
         Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position, transform.right * 0.025f);
@@ -89,5 +89,11 @@ public class ItemImprovement : MonoBehaviour
         Gizmos.DrawRay(transform.position, transform.up * 0.025f);
         Gizmos.color = Color.blue;
         Gizmos.DrawRay(transform.position, transform.forward * 0.025f);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.HSVToRGB(index / 20f, 1, 1);
+        Gizmos.DrawSphere(transform.position, (isImage ? 0.05f : 0.025f) * transform.lossyScale.x * 1.1f);
     }
 }

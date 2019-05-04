@@ -106,6 +106,7 @@ ModelImporter:
     100200: Toe001
     100202: Talon
     100204: Toenail
+    100206: Glove
     400000: Box001
     400002: Box002
     400004: HD
@@ -209,6 +210,7 @@ ModelImporter:
     400200: Toe001
     400202: Talon
     400204: Toenail
+    400206: Glove
     2100000: 'Material #25'
     2100002: No Name
     2100004: 03 - Default
@@ -315,6 +317,7 @@ ModelImporter:
     2300198: Toe001
     2300200: Talon
     2300202: Toenail
+    2300204: Glove
     3300000: Box001
     3300002: Box002
     3300004: HD
@@ -417,6 +420,7 @@ ModelImporter:
     3300198: Toe001
     3300200: Talon
     3300202: Toenail
+    3300204: Glove
     4300000: Plane001
     4300002: Plane002
     4300004: HD
@@ -516,6 +520,7 @@ ModelImporter:
     4300192: Toe001
     4300194: Talon
     4300196: Toenail
+    4300198: Glove
   externalObjects: {}
   materials:
     importMaterials: 1
