@@ -33,7 +33,9 @@ fixed4 c = tex2D(_MainTex, texcoords.xy) * _Color;
 #ifdef _TEXTURE_MASK
 	fixed4 mask = tex2D(_DFMask, texcoords.xy);
 #ifdef _NORMALMAP
-    normal = lerp(BlendNormals(matNormal, customNormal), customNormal, mask.r);
+    normal = lerp(BlendNormals(matNormal, customNormal), customNormal, mask.b);
+#else
+    normal = lerp(matNormal, fixed3(0, 1, 0), mask.b);
 #endif
     albedo = lerp(albedo, c.rgb, mask.r);
 	albedo = lerp(albedo, c.rgb * dfTex.rgb * matColor.rgb, max(mask.g - mask.r, 0));
