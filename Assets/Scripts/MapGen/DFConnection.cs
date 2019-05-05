@@ -131,38 +131,38 @@ public sealed class DFConnection : MonoBehaviour
     /// </summary>
     void BindMethods()
     {
-        materialListCall = new RemoteFunction<EmptyMessage, MaterialList>(networkClient, "GetMaterialList", "RemoteFortressReader");
-        itemListCall = new RemoteFunction<EmptyMessage, MaterialList>(networkClient, "GetItemList", "RemoteFortressReader");
-        tiletypeListCall = new RemoteFunction<EmptyMessage, TiletypeList>(networkClient, "GetTiletypeList", "RemoteFortressReader");
+        materialListCall = RemoteFunction<EmptyMessage, MaterialList>.BindNew(networkClient, "GetMaterialList", "RemoteFortressReader");
+        itemListCall = RemoteFunction<EmptyMessage, MaterialList>.BindNew(networkClient, "GetItemList", "RemoteFortressReader");
+        tiletypeListCall = RemoteFunction<EmptyMessage, TiletypeList>.BindNew(networkClient, "GetTiletypeList", "RemoteFortressReader");
         blockListCall = CreateAndBindTimed<BlockRequest, BlockList>(GameSettings.Instance.updateTimers.blockUpdate, networkClient, "GetBlockList", "RemoteFortressReader");
-        unitListCall = new RemoteFunction<BlockRequest, UnitList>(networkClient, "GetUnitListInside", "RemoteFortressReader");
-        unitListCallLegacy = new RemoteFunction<EmptyMessage, UnitList>(networkClient, "GetUnitList", "RemoteFortressReader");
-        viewInfoCall = new RemoteFunction<EmptyMessage, ViewInfo>(networkClient, "GetViewInfo", "RemoteFortressReader");
-        mapInfoCall = new RemoteFunction<EmptyMessage, MapInfo>(networkClient, "GetMapInfo", "RemoteFortressReader");
-        mapResetCall = new RemoteFunction<EmptyMessage>(networkClient, "ResetMapHashes", "RemoteFortressReader");
-        buildingListCall = new RemoteFunction<EmptyMessage, BuildingList>(networkClient, "GetBuildingDefList", "RemoteFortressReader");
-        worldMapCall = new RemoteFunction<EmptyMessage, WorldMap>(networkClient, "GetWorldMapNew", "RemoteFortressReader");
-        worldMapCenterCall = new RemoteFunction<EmptyMessage, WorldMap>(networkClient, "GetWorldMapCenter", "RemoteFortressReader");
-        regionMapCall = new RemoteFunction<EmptyMessage, RegionMaps>(networkClient, "GetRegionMapsNew", "RemoteFortressReader");
-        creatureRawListCall = new RemoteFunction<EmptyMessage, CreatureRawList>(networkClient, "GetCreatureRaws", "RemoteFortressReader");
-        partialCreatureRawListCall = new RemoteFunction<ListRequest, CreatureRawList>(networkClient, "GetPartialCreatureRaws", "RemoteFortressReader");
-        plantRawListCall = new RemoteFunction<EmptyMessage, PlantRawList>(networkClient, "GetPlantRaws", "RemoteFortressReader");
-        keyboardEventCall = new RemoteFunction<KeyboardEvent>(networkClient, "PassKeyboardEvent", "RemoteFortressReader");
-        copyScreenCall = new RemoteFunction<EmptyMessage, RemoteFortressReader.ScreenCapture>(networkClient, "CopyScreen", "RemoteFortressReader");
-        digCommandCall = new RemoteFunction<DigCommand>(networkClient, "SendDigCommand", "RemoteFortressReader");
-        pauseCommandCall = new RemoteFunction<SingleBool>(networkClient, "SetPauseState", "RemoteFortressReader");
-        pauseStatusCall = new RemoteFunction<EmptyMessage, SingleBool>(networkClient, "GetPauseState", "RemoteFortressReader");
-        versionInfoCall = new RemoteFunction<EmptyMessage, VersionInfo>(networkClient, "GetVersionInfo", "RemoteFortressReader");
-        reportsCall = new RemoteFunction<EmptyMessage, Status>(networkClient, "GetReports", "RemoteFortressReader");
-        moveCommandCall = new RemoteFunction<MoveCommandParams>(networkClient, "MoveCommand", "RemoteFortressReader");
-        jumpCommandCall = new RemoteFunction<MoveCommandParams>(networkClient, "JumpCommand", "RemoteFortressReader");
-        menuQueryCall = new RemoteFunction<EmptyMessage, MenuContents>(networkClient, "MenuQuery", "RemoteFortressReader");
-        movementSelectCommandCall = new RemoteFunction<IntMessage>(networkClient, "MovementSelectCommand", "RemoteFortressReader");
-        miscMoveCall = new RemoteFunction<MiscMoveParams>(networkClient, "MiscMoveCommand", "RemoteFortressReader");
-        languageCall = new RemoteFunction<EmptyMessage, Language>(networkClient, "GetLanguage", "RemoteFortressReader");
-        getSideMenuCall = new RemoteFunction<EmptyMessage, SidebarState>(networkClient, "GetSideMenu", "RemoteFortressReader");
-        setSideMenuCall = new RemoteFunction<SidebarCommand>(networkClient, "SetSideMenu", "RemoteFortressReader");
-        gameValidityCall = new RemoteFunction<EmptyMessage, SingleBool>(networkClient, "GetGameValidity", "RemoteFortressReader");
+        unitListCall = RemoteFunction<BlockRequest, UnitList>.BindNew(networkClient, "GetUnitListInside", "RemoteFortressReader");
+        unitListCallLegacy = RemoteFunction<EmptyMessage, UnitList>.BindNew(networkClient, "GetUnitList", "RemoteFortressReader");
+        viewInfoCall = RemoteFunction<EmptyMessage, ViewInfo>.BindNew(networkClient, "GetViewInfo", "RemoteFortressReader");
+        mapInfoCall = RemoteFunction<EmptyMessage, MapInfo>.BindNew(networkClient, "GetMapInfo", "RemoteFortressReader");
+        mapResetCall = RemoteFunction<EmptyMessage>.BindNew(networkClient, "ResetMapHashes", "RemoteFortressReader");
+        buildingListCall = RemoteFunction<EmptyMessage, BuildingList>.BindNew(networkClient, "GetBuildingDefList", "RemoteFortressReader");
+        worldMapCall = RemoteFunction<EmptyMessage, WorldMap>.BindNew(networkClient, "GetWorldMapNew", "RemoteFortressReader");
+        worldMapCenterCall = RemoteFunction<EmptyMessage, WorldMap>.BindNew(networkClient, "GetWorldMapCenter", "RemoteFortressReader");
+        regionMapCall = RemoteFunction<EmptyMessage, RegionMaps>.BindNew(networkClient, "GetRegionMapsNew", "RemoteFortressReader");
+        creatureRawListCall = RemoteFunction<EmptyMessage, CreatureRawList>.BindNew(networkClient, "GetCreatureRaws", "RemoteFortressReader");
+        partialCreatureRawListCall = RemoteFunction<ListRequest, CreatureRawList>.BindNew(networkClient, "GetPartialCreatureRaws", "RemoteFortressReader");
+        plantRawListCall = RemoteFunction<EmptyMessage, PlantRawList>.BindNew(networkClient, "GetPlantRaws", "RemoteFortressReader");
+        keyboardEventCall = RemoteFunction<KeyboardEvent>.BindNew(networkClient, "PassKeyboardEvent", "RemoteFortressReader");
+        copyScreenCall = RemoteFunction<EmptyMessage, RemoteFortressReader.ScreenCapture>.BindNew(networkClient, "CopyScreen", "RemoteFortressReader");
+        digCommandCall = RemoteFunction<DigCommand>.BindNew(networkClient, "SendDigCommand", "RemoteFortressReader");
+        pauseCommandCall = RemoteFunction<SingleBool>.BindNew(networkClient, "SetPauseState", "RemoteFortressReader");
+        pauseStatusCall = RemoteFunction<EmptyMessage, SingleBool>.BindNew(networkClient, "GetPauseState", "RemoteFortressReader");
+        versionInfoCall = RemoteFunction<EmptyMessage, VersionInfo>.BindNew(networkClient, "GetVersionInfo", "RemoteFortressReader");
+        reportsCall = RemoteFunction<EmptyMessage, Status>.BindNew(networkClient, "GetReports", "RemoteFortressReader");
+        moveCommandCall = RemoteFunction<MoveCommandParams>.BindNew(networkClient, "MoveCommand", "RemoteFortressReader");
+        jumpCommandCall = RemoteFunction<MoveCommandParams>.BindNew(networkClient, "JumpCommand", "RemoteFortressReader");
+        menuQueryCall = RemoteFunction<EmptyMessage, MenuContents>.BindNew(networkClient, "MenuQuery", "RemoteFortressReader");
+        movementSelectCommandCall = RemoteFunction<IntMessage>.BindNew(networkClient, "MovementSelectCommand", "RemoteFortressReader");
+        miscMoveCall = RemoteFunction<MiscMoveParams>.BindNew(networkClient, "MiscMoveCommand", "RemoteFortressReader");
+        languageCall = RemoteFunction<EmptyMessage, Language>.BindNew(networkClient, "GetLanguage", "RemoteFortressReader");
+        getSideMenuCall = RemoteFunction<EmptyMessage, SidebarState>.BindNew(networkClient, "GetSideMenu", "RemoteFortressReader");
+        setSideMenuCall = RemoteFunction<SidebarCommand>.BindNew(networkClient, "SetSideMenu", "RemoteFortressReader");
+        gameValidityCall = RemoteFunction<EmptyMessage, SingleBool>.BindNew(networkClient, "GetGameValidity", "RemoteFortressReader");
     }
 
     #endregion
@@ -527,7 +527,7 @@ public sealed class DFConnection : MonoBehaviour
                   "You appear not to have a loaded save in Dwarf Fortress!\n\n" +
                   "Armok Vision cannot run without a save loaded.", QuitGame, "Quit");
                 Debug.Log("World not loaded.");
-                QuitGame();
+                throw new UnityException("No Game Loaded");
             }
             else
             {
@@ -692,9 +692,8 @@ public sealed class DFConnection : MonoBehaviour
                 if (dfHackVersion == null || dfVersion == null)
                     return "";
 
-                _AVPluginDir = "Plugins/" + dfVersion.value + "/" + dfHackVersion.value + "/";
+                _AVPluginDir = Application.streamingAssetsPath + "/Plugins/" + dfVersion.value + "/" + dfHackVersion.value + "/";
 #if UNITY_EDITOR
-                _AVPluginDir = "ReleaseFiles/" + _AVPluginDir;
                 Directory.CreateDirectory(_AVPluginDir);
 #endif
             }
