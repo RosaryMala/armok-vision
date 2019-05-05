@@ -744,10 +744,10 @@ public sealed class DFConnection : MonoBehaviour
             {
                 Debug.Log ("Cannot find " + AVPluginDirectory + pluginName);
                 ModalPanel.Instance.Choice(string.Format(
-                    "You appear to be running on an out-dated version of the RemoteFortressReader plugin.\n\n" +
+                    "You appear to be running on an out-dated version of the RemoteFortressReader plugin. This can result in undefined behavior.\n\n" +
                     "You're running version {0} of the plugin, while Armok Vision expects a plugin versioned {1} or above.\n\n" +
                     "A compatible version of the plugin has not been found. Please let the developers know which version of DFHack and DF you are running, so they can make one.\n\n" +
-                    "Please include the following info:\n\n Dwarf Fortress Version: {2}\n\n DFHack Version: {3}", pluginVersion, avVersion, dfVersion.value, dfHackVersion.value), Init, DisableUpdate, "Okay.", "Don't ask again");
+                    "Please include the following info:\n\n Dwarf Fortress Version: {2}\n\n DFHack Version: {3}", pluginVersion, avVersion, dfVersion.value, dfHackVersion.value), QuitGame, Init, DisableUpdate, "Quit", "Continue Anyway.", "Don't ask again");
                 return; //We don't have a compatible plugin
             }
             else
