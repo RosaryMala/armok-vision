@@ -143,6 +143,7 @@ public class GameSettings : MonoBehaviour
         public bool askToUpdatePlugin = true;
         public string serverAddress = "localhost";
         public int serverPort = 5000;
+        public bool checkForUpdates = true;
     }
     [Serializable]
     public class Debug

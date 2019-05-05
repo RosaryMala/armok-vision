@@ -525,19 +525,20 @@ public sealed class DFConnection : MonoBehaviour
             {
                 ModalPanel.Instance.Choice(
                   "You appear not to have a loaded save in Dwarf Fortress!\n\n" +
-                  "Armok Vision cannot run without a save loaded.", QuitGame, "Quit");
+                  "Armok Vision cannot run without either a save loaded, or the test arena open.", QuitGame, RunPluginCheck, "Quit", "I am in arena mode, continue.");
                 Debug.Log("World not loaded.");
-                throw new UnityException("No Game Loaded");
             }
             else
             {
                 Debug.Log("World Mode: " + netWorldInfo.mode);
                 WorldMode = netWorldInfo.mode;
+                RunPluginCheck();
             }
         }
+    }
 
-
-
+    void RunPluginCheck()
+    {
         if (GameSettings.Instance.game.askToUpdatePlugin)
         {
             CheckPlugin();
@@ -546,7 +547,6 @@ public sealed class DFConnection : MonoBehaviour
         {
             Init();
         }
-
     }
 
 
@@ -722,8 +722,10 @@ public sealed class DFConnection : MonoBehaviour
 
         if(dfHackVersion == null || dfVersion == null || networkClient.RunCommand(tempStream, "RemoteFortressReader_version", new List<string>()) != CommandResult.CrOk)
         {
-            Debug.Log("Cannot get version info, continuing onwards.");
-            Init();
+            Debug.LogError("Cannot get version info.");
+            ModalPanel.Instance.Choice("Cannot find the DFHack version, and/or RemoteFortressReader version.\r\n" +
+                "This can happen when running over a network or in a VM.\r\n" +
+                "Only continue if you have updated the RemoteFortressReader plugin in your Dwarf Fortress folder.", Init, QuitGame, "Okay", "Quit");
             return;
         }
         var results = tempStream.Value.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
