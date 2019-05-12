@@ -1,4 +1,14 @@
-v0.21.1
+v0.20.2
+ * Added nightwing model
+ * Allow setting an IP address for connecting to DF on another computer or VM
+ * Show a warning if a fort isn't loaded.
+ * Added models for gloves and blucklers.
+ * Added models for helmets.
+ * Hopefully fix plugin updates for mac.
+ * Check online for updates.
+ * Fix screen following with TWBT enabled.
+
+v0.20.1
  * Dismemberment now happens.
  * Improved some clothing.
  * Added instruments.
