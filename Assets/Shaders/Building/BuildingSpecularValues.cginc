@@ -11,5 +11,5 @@ o.Normal = normal;
 o.Emission = tex2D(_EmissionMap, texcoords.xy) * _EmissionColor;
 #endif
 o.Smoothness = smoothness;
-o.Occlusion = lerp(1, tex2D(_OcclusionMap, texcoords.xy), _OcclusionStrength) * shape.r;
+o.Occlusion = occlusion;
 o.Alpha = alpha;

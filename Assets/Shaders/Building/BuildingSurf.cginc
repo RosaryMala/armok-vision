@@ -13,6 +13,8 @@ fixed4 shape = UNITY_SAMPLE_TEX2DARRAY(_ShapeMap, float3(texcoords.zw, UNITY_ACC
 fixed3 matNormal = UnpackNormal(shape.ggga);
 fixed3 normal = matNormal;
 
+fixed occlusion = lerp(1, tex2D(_OcclusionMap, texcoords.xy), _OcclusionStrength);
+
 #ifdef _PATTERN_MASK
 fixed4 pattern_mask = tex2D(_PatternMask, texcoords.zw);
 albedo = lerp(albedo, _Color1.rgb, pattern_mask.r);
@@ -49,10 +51,12 @@ fixed4 c = tex2D(_MainTex, texcoords.xy) * _Color;
 		metallic = lerp(metallic, _Metallic, mask.r);
 		smoothness = lerp(smoothness, _Glossiness, mask.b);
 	#endif
+        occlusion = lerp(occlusion * shape.r, occlusion, mask.b);
 #else
     alpha = c.a * alpha;
     #ifdef _NORMALMAP
         normal = BlendNormals(matNormal, customNormal);
     #endif
+        occlusion *= shape.r;
 #endif
 
