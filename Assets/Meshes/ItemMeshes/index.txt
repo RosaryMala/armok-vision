@@ -1,2 +1,0 @@
-ItemMeshes.xml
-Meph Items/Meph_Items.xml
