@@ -66,8 +66,8 @@ public class CameraMovement : MonoBehaviour
                 cameraDistance = minDistance;
             if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
                 cameraDistance *= fasterMultiplier;
-            Vector3 movement = new Vector3(moveX, moveZ, moveY);
-            transform.Translate(movement * Time.unscaledDeltaTime * speed * cameraDistance, Space.Self);
+            Vector3 movement = new Vector3(moveX * cameraDistance, moveZ * cameraDistance, moveY);
+            transform.Translate(movement * Time.unscaledDeltaTime * speed, Space.Self);
         }
     }
 
