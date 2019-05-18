@@ -12,6 +12,7 @@ ModelImporter:
     100012: Scroll Roller
     100014: Scroll Roller001
     100016: Scroll Roller002
+    100018: Bookbinding High
     400000: Crappy Scroll
     400002: //RootNode
     400004: Quire
@@ -21,6 +22,7 @@ ModelImporter:
     400012: Scroll Roller
     400014: Scroll Roller001
     400016: Scroll Roller002
+    400018: Bookbinding High
     2100000: No Name
     2300000: Crappy Scroll
     2300002: Quire
@@ -30,6 +32,7 @@ ModelImporter:
     2300010: Scroll Roller
     2300012: Scroll Roller001
     2300014: Scroll Roller002
+    2300016: Bookbinding High
     3300000: Crappy Scroll
     3300002: Quire
     3300004: Book
@@ -38,6 +41,7 @@ ModelImporter:
     3300010: Scroll Roller
     3300012: Scroll Roller001
     3300014: Scroll Roller002
+    3300016: Bookbinding High
     4300000: Quire
     4300002: Crappy Scroll
     4300004: Book
@@ -46,6 +50,7 @@ ModelImporter:
     4300010: Scroll
     4300012: Scroll Roller001
     4300014: Scroll Roller002
+    4300016: Bookbinding High
     9500000: //RootNode
   externalObjects:
   - first:
