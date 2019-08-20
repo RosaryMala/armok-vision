@@ -463,12 +463,12 @@ public class CreatureBody : MonoBehaviour
             //Here we add pants first before shirts because otherwise the layering looks bad.
             foreach (var item in unit.inventory)
             {
-                if((ItemType)item.item.type.mat_type == ItemType.Pants)
+                if(!ClothingTexture.GetTexture(item.item.type).isDress)
                 AddInventoryItem(item);
             }
             foreach (var item in unit.inventory)
             {
-                if ((ItemType)item.item.type.mat_type != ItemType.Pants)
+                if (ClothingTexture.GetTexture(item.item.type).isDress)
                     AddInventoryItem(item);
             }
             foreach (var part in spawnedParts)
