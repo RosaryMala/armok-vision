@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -17,109 +18,114 @@ MonoBehaviour:
     categoryRegex: 0
     token: 
     tokenRegex: 0
-    model: {fileID: 114691561578710464, guid: 8999fc690db13dd49ae4224fa7411a1d, type: 2}
+    model: {fileID: 114691561578710464, guid: 8999fc690db13dd49ae4224fa7411a1d, type: 3}
   - category: BODY_LOWER
     categoryRegex: 0
     token: 
     tokenRegex: 0
-    model: {fileID: 114953123022586616, guid: 30671cd45fc26564ea444d1bd4a6777a, type: 2}
+    model: {fileID: 114953123022586616, guid: 30671cd45fc26564ea444d1bd4a6777a, type: 3}
   - category: NECK
     categoryRegex: 0
     token: 
     tokenRegex: 0
-    model: {fileID: 114117451483890954, guid: fd99b98f233c52a4f9030fccda0fef85, type: 2}
+    model: {fileID: 114117451483890954, guid: fd99b98f233c52a4f9030fccda0fef85, type: 3}
   - category: EAR
     categoryRegex: 0
     token: 
     tokenRegex: 0
-    model: {fileID: 114734084299114382, guid: 184c8b791d318b64b8de24d1ff317459, type: 2}
+    model: {fileID: 114734084299114382, guid: 184c8b791d318b64b8de24d1ff317459, type: 3}
   - category: NOSE
     categoryRegex: 0
     token: 
     tokenRegex: 0
-    model: {fileID: 114969915012405212, guid: dcdeb1c58b701eb47b1f1e73308f16b4, type: 2}
+    model: {fileID: 114969915012405212, guid: dcdeb1c58b701eb47b1f1e73308f16b4, type: 3}
   - category: HEAD
     categoryRegex: 0
     token: 
     tokenRegex: 0
-    model: {fileID: 114804328168084632, guid: 9ed28659692abd84f9df5252e1d1dc25, type: 2}
+    model: {fileID: 114804328168084632, guid: 9ed28659692abd84f9df5252e1d1dc25, type: 3}
   - category: ARM_UPPER
     categoryRegex: 0
     token: 
     tokenRegex: 0
-    model: {fileID: 114170322383671874, guid: 30815856fcb49774abd864b89917b875, type: 2}
+    model: {fileID: 114170322383671874, guid: 30815856fcb49774abd864b89917b875, type: 3}
   - category: ARM_LOWER
     categoryRegex: 0
     token: 
     tokenRegex: 0
-    model: {fileID: 114768097348945934, guid: aff341ab7944b0a49931011fd20341b9, type: 2}
+    model: {fileID: 114768097348945934, guid: aff341ab7944b0a49931011fd20341b9, type: 3}
   - category: ARM
     categoryRegex: 0
     token: 
     tokenRegex: 0
-    model: {fileID: 114786286765057488, guid: 7c7061750182a254ca470c8f61c228d4, type: 2}
+    model: {fileID: 114786286765057488, guid: 7c7061750182a254ca470c8f61c228d4, type: 3}
   - category: LEG_UPPER
     categoryRegex: 0
     token: 
     tokenRegex: 0
-    model: {fileID: 114969142043065572, guid: fa508f471d7033a408d98318371da4ea, type: 2}
+    model: {fileID: 114969142043065572, guid: fa508f471d7033a408d98318371da4ea, type: 3}
   - category: LEG_LOWER
     categoryRegex: 0
     token: 
     tokenRegex: 0
-    model: {fileID: 114042711827524434, guid: 6f08b12c35fc39b488137f81a95600a8, type: 2}
+    model: {fileID: 114042711827524434, guid: 6f08b12c35fc39b488137f81a95600a8, type: 3}
   - category: LEG
     categoryRegex: 0
     token: 
     tokenRegex: 0
-    model: {fileID: 114826970097127382, guid: 64524ccfc545e0d479d23729bc91460f, type: 2}
+    model: {fileID: 114826970097127382, guid: 64524ccfc545e0d479d23729bc91460f, type: 3}
   - category: FOOT
     categoryRegex: 0
     token: 
     tokenRegex: 0
-    model: {fileID: 114753468451499174, guid: cb465413b37969b4caddfd9a49e69b39, type: 2}
+    model: {fileID: 114753468451499174, guid: cb465413b37969b4caddfd9a49e69b39, type: 3}
   - category: EYE
     categoryRegex: 0
     token: 
     tokenRegex: 0
-    model: {fileID: 114021459532079582, guid: 0171f5ff3746e5e4db59763d3e4db434, type: 2}
+    model: {fileID: 114021459532079582, guid: 0171f5ff3746e5e4db59763d3e4db434, type: 3}
   - category: HAND
     categoryRegex: 0
     token: 
     tokenRegex: 0
-    model: {fileID: 114406356298729122, guid: 2a7ddc8d982187b48990e52f79da5c72, type: 2}
+    model: {fileID: 114406356298729122, guid: 2a7ddc8d982187b48990e52f79da5c72, type: 3}
   - category: FINGER
     categoryRegex: 0
     token: 1$
     tokenRegex: 1
-    model: {fileID: 114354694556385798, guid: c69654a77fba1d04493ed1a18df1b465, type: 2}
+    model: {fileID: 114354694556385798, guid: c69654a77fba1d04493ed1a18df1b465, type: 3}
   - category: FINGER
     categoryRegex: 0
     token: 
     tokenRegex: 0
-    model: {fileID: 114477310374771898, guid: 6942b6a692917304495b41782db9792a, type: 2}
+    model: {fileID: 114477310374771898, guid: 6942b6a692917304495b41782db9792a, type: 3}
   - category: TOE
     categoryRegex: 0
     token: 
     tokenRegex: 0
-    model: {fileID: 114064974233655170, guid: ab1c0a999dc99ae4ab333c47181b64f0, type: 2}
+    model: {fileID: 114064974233655170, guid: ab1c0a999dc99ae4ab333c47181b64f0, type: 3}
   - category: RIB_TRUE
     categoryRegex: 0
     token: 
     tokenRegex: 0
-    model: {fileID: 114433678884629108, guid: 1793f09995f47254aabd74542ad6a799, type: 2}
+    model: {fileID: 114433678884629108, guid: 1793f09995f47254aabd74542ad6a799, type: 3}
   - category: RIB_FALSE
     categoryRegex: 0
     token: 
     tokenRegex: 0
-    model: {fileID: 114290082651677378, guid: cbd2252357d48da44ae607b8f4a2b6bd, type: 2}
+    model: {fileID: 114290082651677378, guid: cbd2252357d48da44ae607b8f4a2b6bd, type: 3}
   - category: RIB_FLOATING
     categoryRegex: 0
     token: 
     tokenRegex: 0
-    model: {fileID: 114221642601311524, guid: af7bd3bf468ca4f4fb61602b1f26b73e, type: 2}
+    model: {fileID: 114221642601311524, guid: af7bd3bf468ca4f4fb61602b1f26b73e, type: 3}
   - category: GROWTH
     categoryRegex: 0
     token: 
     tokenRegex: 0
-    model: {fileID: 114268696615276090, guid: 5472006060002634dbea44481700d40b, type: 2}
+    model: {fileID: 114268696615276090, guid: 5472006060002634dbea44481700d40b, type: 3}
+  - category: HOOF
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 114753468451499174, guid: 4c0e8e37b97343f48a2bfb5b86a04917, type: 3}
