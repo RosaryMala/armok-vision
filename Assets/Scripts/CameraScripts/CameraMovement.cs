@@ -12,6 +12,7 @@ public class CameraMovement : MonoBehaviour
     public float speed = 10;
     public float minDistance = 5;
     public float fasterMultiplier = 10;
+    public float upDownSpeed = 5;
 
     public CameraScale cameraScale;
 
@@ -66,7 +67,7 @@ public class CameraMovement : MonoBehaviour
                 cameraDistance = minDistance;
             if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
                 cameraDistance *= fasterMultiplier;
-            Vector3 movement = new Vector3(moveX * cameraDistance, moveZ * cameraDistance, moveY);
+            Vector3 movement = new Vector3(moveX * cameraDistance, moveZ * upDownSpeed, moveY * cameraDistance);
             transform.Translate(movement * Time.unscaledDeltaTime * speed, Space.Self);
         }
     }
