@@ -129,3 +129,8 @@ MonoBehaviour:
     token: 
     tokenRegex: 0
     model: {fileID: 114753468451499174, guid: 4c0e8e37b97343f48a2bfb5b86a04917, type: 3}
+  - category: TAIL
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 8494926335106276681, guid: 0eee47b579af3264383a0b65a2c0d335, type: 3}

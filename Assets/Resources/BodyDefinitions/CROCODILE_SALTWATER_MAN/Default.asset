@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6cf81176ac46bd4787c356dc567f950, type: 3}
+  m_Name: Default
+  m_EditorClassIdentifier: 
+  bodyScale: {x: 1, y: 1, z: 1}
+  bodyParts:
+  - category: NECK
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 2732151217828262011, guid: 61c9a0623ffd40a4abe4efe0ac161ad8, type: 3}
+  - category: HEAD
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: -5090528944854154653, guid: 9252927321092b3499ea95ec4ec7e16d,
+      type: 3}
+  - category: MOUTH
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: -7649425445199253281, guid: 35dac86c8f2714a4ebf3f3ffb6b69fbe,
+      type: 3}
+  - category: NOSE
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 9066030796932556123, guid: c3a5ab55bae59304a81876810b343162, type: 3}
+  - category: TOOTH
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 4757818432166898966, guid: c955d75d50b71144aa37b983ca50790a, type: 3}
+  - category: TONGUE
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 2962972952015684327, guid: 909383871be65db4e843da6851791de7, type: 3}
