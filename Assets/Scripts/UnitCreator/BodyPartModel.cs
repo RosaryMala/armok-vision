@@ -152,7 +152,7 @@ public class BodyPartModel : MonoBehaviour
                     instantiatedClothingLayers[i].name = item.itemDef.id;
             }
         }
-        if (censorField != null)
+        if (censorField != null && GameSettings.Instance.units.censorField)
             censorField.gameObject.SetActive(wornItems == 0);
     }
 }

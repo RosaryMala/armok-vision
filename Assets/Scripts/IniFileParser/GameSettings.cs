@@ -124,8 +124,9 @@ public class GameSettings : MonoBehaviour
     public class Units
     {
         public UnitScale scaleUnits = UnitScale.Real;
-        public float chibiness = 3.5f;
+        public float chibiness = 2f;
         public UnitDetail unitDetail = UnitDetail.Models;
+        public bool censorField = true;
     }
 
     public enum AnalyticsChoice
