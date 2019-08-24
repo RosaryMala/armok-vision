@@ -123,7 +123,7 @@ namespace MaterialStore
 
                 for (int j = 0; j < normalArray.Length; j++)
                 {
-                    normalArray[j] = new Color(occlusionArray[j].r, normalArray[j].b, alphaArray[j].r, normalArray[j].a);
+                    normalArray[j] = new Color(occlusionArray[j].r, normalArray[j].g, alphaArray[j].r, normalArray[j].a);
                 }
 
                 shapeArray.SetPixels(normalArray, i);

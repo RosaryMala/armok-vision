@@ -30,7 +30,7 @@ void surf(Input IN, inout SurfaceOutputStandard o) {
 	fixed4 spatter = tex2D(_SpatterTex, (IN.worldPos.xz - _WorldBounds.xy) / (_WorldBounds.zw - _WorldBounds.xy));
 	fixed4 noise = tex2D(_SpatterNoise, TRANSFORM_TEX(IN.worldPos.xz, _SpatterNoise));
 	//o.Albedo = c.rgb * IN.color.rgb;
-	o.Normal = UnpackNormal(bump.ggga);
+	o.Normal = UnpackNormal(fixed4(1, bump.g, 1, bump.a));
 	o.Alpha = min((IN.color.a * 2), 1) *bump.b;
     o.Metallic = max((IN.color.a * 2) - 1, 0);
 #ifdef CONTAMINANTS

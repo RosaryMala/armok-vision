@@ -10,7 +10,7 @@ fixed4 matColor = UNITY_ACCESS_INSTANCED_PROP(_MatColor_arr, _MatColor);
 fixed3 albedo = matColor.rgb;
 fixed4 shape = UNITY_SAMPLE_TEX2DARRAY(_ShapeMap, float3(texcoords.zw, UNITY_ACCESS_INSTANCED_PROP(_ShapeIndex_arr, _ShapeIndex)));
 
-fixed3 matNormal = UnpackNormal(shape.ggga);
+fixed3 matNormal = UnpackNormal(float4(1, shape.g, 1, shape.a));
 fixed3 normal = matNormal;
 
 fixed occlusion = lerp(1, tex2D(_OcclusionMap, texcoords.xy), _OcclusionStrength);
@@ -59,4 +59,4 @@ fixed4 c = tex2D(_MainTex, texcoords.xy) * _Color;
     #endif
         occlusion *= shape.r;
 #endif
-
+        normal = matNormal;
