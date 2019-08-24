@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5484157484123034246
+--- !u!1 &259237000712154647
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,46 +8,46 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 98586835362451736}
-  - component: {fileID: 956738958249657288}
-  - component: {fileID: 2379852818444552673}
-  - component: {fileID: 8068551152259604240}
+  - component: {fileID: 3630245264916043395}
+  - component: {fileID: 2740699861079831769}
+  - component: {fileID: 1677781846931492892}
+  - component: {fileID: 3360728882637519714}
   m_Layer: 0
-  m_Name: Tail
+  m_Name: Back Leg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &98586835362451736
+--- !u!4 &3630245264916043395
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5484157484123034246}
-  m_LocalRotation: {x: 0.39058834, y: -0.5884941, z: 0.39201728, w: -0.5894387}
+  m_GameObject: {fileID: 259237000712154647}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 64.398384, y: 64.39837, z: 64.39839}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1614039640091987121}
+  m_Father: {fileID: 8359296132386831321}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 179.946, y: -90.12799, z: 112.800995}
---- !u!33 &956738958249657288
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &2740699861079831769
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5484157484123034246}
-  m_Mesh: {fileID: 5590088527756992369, guid: caf768afe0f74e841888c31714701087, type: 3}
---- !u!23 &2379852818444552673
+  m_GameObject: {fileID: 259237000712154647}
+  m_Mesh: {fileID: -5902319897832906286, guid: 90151e7d243b34c4f8c34d3c2a1a9c5d, type: 3}
+--- !u!23 &1677781846931492892
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5484157484123034246}
+  m_GameObject: {fileID: 259237000712154647}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -78,13 +78,13 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &8068551152259604240
+--- !u!114 &3360728882637519714
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5484157484123034246}
+  m_GameObject: {fileID: 259237000712154647}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85ce3b0f14f4d314d9ea79d3c51485de, type: 3}
@@ -104,7 +104,7 @@ MonoBehaviour:
     _colors: []
     _pattern: 0
   bodyModTargets: []
---- !u!1 &8928275079839722783
+--- !u!1 &2158206010071226567
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -112,41 +112,90 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1614039640091987121}
-  - component: {fileID: 8494926335106276681}
+  - component: {fileID: 8359296132386831321}
+  - component: {fileID: 2349744704322306276}
   m_Layer: 0
-  m_Name: Tail
+  m_Name: Rear Leg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1614039640091987121
+--- !u!4 &8359296132386831321
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8928275079839722783}
+  m_GameObject: {fileID: 2158206010071226567}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 98586835362451736}
+  - {fileID: 3630245264916043395}
+  - {fileID: 1788208627514944553}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8494926335106276681
+--- !u!114 &2349744704322306276
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8928275079839722783}
+  m_GameObject: {fileID: 2158206010071226567}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3066aaadb7b047449ad3b993502d84f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canonVolume: 7678.729
+  canonVolume: 6024
   volume: 0
+--- !u!1 &3640195590254014039
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1788208627514944553}
+  - component: {fileID: 6403146288285058915}
+  m_Layer: 0
+  m_Name: Foot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1788208627514944553
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3640195590254014039}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0.7071068, w: 0}
+  m_LocalPosition: {x: -0.01, y: 0.166, z: 0.551}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8359296132386831321}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 180}
+--- !u!114 &6403146288285058915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3640195590254014039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61557350f9ef13446a33d376169a686c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  category: FOOT*
+  categoryRegex: 1
+  token: 
+  tokenRegex: 0
+  placement: 0
