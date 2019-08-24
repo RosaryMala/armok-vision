@@ -100,16 +100,24 @@ public class CreatureManager : MonoBehaviour
         UnityEngine.Profiling.Profiler.EndSample();
     }
 
-    private void Update3DUnit(UnitDefinition unit, ref int creatureCount)
+    public static bool IsValidCreature(UnitDefinition unit)
     {
         UnitFlags1 flags1 = (UnitFlags1)unit.flags1;
-        //UnitFlags2 flags2 = (UnitFlags2)unit.flags2;
-        //UnitFlags3 flags3 = (UnitFlags3)unit.flags3;
         if (((flags1 & UnitFlags1.dead) == UnitFlags1.dead)
              || ((flags1 & UnitFlags1.left) == UnitFlags1.left)
              || ((flags1 & UnitFlags1.caged) == UnitFlags1.caged)
              || ((flags1 & UnitFlags1.forest) == UnitFlags1.forest)
              )
+            return false;
+        return true;
+    }
+
+    private void Update3DUnit(UnitDefinition unit, ref int creatureCount)
+    {
+        UnitFlags1 flags1 = (UnitFlags1)unit.flags1;
+        //UnitFlags2 flags2 = (UnitFlags2)unit.flags2;
+        //UnitFlags3 flags3 = (UnitFlags3)unit.flags3;
+        if (!IsValidCreature(unit))
         {
             if (creatureList3D.ContainsKey(unit.id))
             {
@@ -174,11 +182,7 @@ public class CreatureManager : MonoBehaviour
         UnitFlags1 flags1 = (UnitFlags1)unit.flags1;
         //UnitFlags2 flags2 = (UnitFlags2)unit.flags2;
         //UnitFlags3 flags3 = (UnitFlags3)unit.flags3;
-        if (((flags1 & UnitFlags1.dead) == UnitFlags1.dead)
-             || ((flags1 & UnitFlags1.left) == UnitFlags1.left)
-             || ((flags1 & UnitFlags1.caged) == UnitFlags1.caged)
-             || ((flags1 & UnitFlags1.forest) == UnitFlags1.forest)
-             )
+        if (!IsValidCreature(unit))
         {
             if (creatureList.ContainsKey(unit.id))
             {
