@@ -108,7 +108,6 @@ public class BuildFactory
         FileUtil.ReplaceFile("ReleaseFiles/Changelog.txt", path + "Changelog.txt");
         FileUtil.ReplaceFile("ReleaseFiles/Credits.txt", path + "Credits.txt");
         FileUtil.ReplaceFile("ReleaseFiles/Readme.txt", path + "Readme.txt");
-        FileUtil.ReplaceDirectory("ReleaseFiles/Plugins/", path + "Plugins");
         File.WriteAllText(path + "manifest.json", JsonConvert.SerializeObject(buildSettings, Formatting.Indented));
     }
 
