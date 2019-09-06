@@ -175,6 +175,9 @@ public struct DFTime : IComparable, IFormattable,
         }
     }
 
+    /// <summary>
+    /// Angle of the day since midnight.
+    /// </summary>
     public float SunAngle
     {
         get
@@ -313,6 +316,9 @@ public struct DFTime : IComparable, IFormattable,
         return t1.Ticks >= t2.Ticks;
     }
 
+    /// <summary>
+    /// angle in degrees since the last winter solstice.
+    /// </summary>
     public float SolsticeAngle
     {
         get
