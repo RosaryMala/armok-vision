@@ -29,7 +29,14 @@ public class ItemModel : MonoBehaviour, IClickable
     public void UpdateMaterial(Item itemInput, UnitDefinition unit = null)
     {
         originalItem = itemInput;
-        itemRaw = ItemRaws.Instance[itemInput.type];
+        if(ItemRaws.Instance.ContainsKey(itemInput.type))
+        {
+            itemRaw = ItemRaws.Instance[itemInput.type];
+        }
+        else
+        {
+            itemRaw = ItemRaws.Instance[new MatPairStruct(itemInput.type.mat_type, -1)];
+        }
         if (phantom)
             return;
         if (meshRenderer == null)

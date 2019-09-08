@@ -6,7 +6,7 @@ public struct MatPairStruct : IComparable
     public readonly int mat_index;
     public readonly int mat_type;
 
-    public int Type { get { return mat_type; } }
+    public DF.Enums.ItemType Type { get { return (DF.Enums.ItemType)mat_type; } }
     public int SubType { get { return mat_index; } }
 
     public int Race { get { return mat_type; } }
@@ -52,6 +52,13 @@ public struct MatPairStruct : IComparable
         mat_index = index;
         mat_type = type;
     }
+
+    public MatPairStruct(DF.Enums.ItemType type, int index)
+    {
+        mat_index = index;
+        mat_type = (int)type;
+    }
+
 
     public override string ToString()
     {

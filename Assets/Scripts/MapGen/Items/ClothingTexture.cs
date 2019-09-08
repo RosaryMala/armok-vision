@@ -59,8 +59,13 @@ public class ClothingTexture : ScriptableObject
         if (clothingLookup == null)
             clothingLookup = new Dictionary<MatPairStruct, ClothingTexture>();
         if (!clothingLookup.ContainsKey(item))
-            clothingLookup[item] = Resources.Load<ClothingTexture>("Clothing/" + ItemRaws.Instance[item].id);
-        if(clothingLookup[item] == null)
+        {
+            if(ItemRaws.Instance.ContainsKey(item))
+                clothingLookup[item] = Resources.Load<ClothingTexture>("Clothing/" + ItemRaws.Instance[item].id);
+            else
+                clothingLookup[item] = Resources.Load<ClothingTexture>("Clothing/" + ItemRaws.Instance[new MatPairStruct(item.Type, -1)].id);
+        }
+        if (clothingLookup[item] == null)
             clothingLookup[item] = Resources.Load<ClothingTexture>("Clothing/DEFAULT");
         return clothingLookup[item];
     }

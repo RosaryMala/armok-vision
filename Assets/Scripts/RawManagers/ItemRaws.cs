@@ -126,11 +126,19 @@ public class ItemRaws : IReadOnlyDictionary<MatPairStruct, MaterialDefinition>, 
         return ((IReadOnlyDictionary<string, MaterialDefinition>)stringLookup).GetEnumerator();
     }
 
-    public MaterialDefinition this[MatPairStruct mat]
+    public MaterialDefinition this[MatPairStruct itemIndex]
     {
         get
         {
-            return itemLookup[mat];
+            try
+            {
+                return itemLookup[itemIndex];
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError(itemIndex.SubType + " is not a valid sub-item of " + itemIndex.Type);
+                throw e;
+            }
         }
     }
 }
