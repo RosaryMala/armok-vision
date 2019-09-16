@@ -90,7 +90,7 @@ Shader "Unlit/TerrainSplatShadowFallback"
                 fixed4 noise = tex2D(_SpatterNoise, TRANSFORM_TEX(float2(i.tspace0.w, i.tspace1.w), _SpatterNoise));
                 
                 // sample the normal map, and decode from the Unity encoding
-                half3 tnormal = UnpackNormal(bump.ggga);
+                half3 tnormal = UnpackNormal(fixed4(1, bump.g, 1, bump.a));
                 // transform normal from tangent to world space
                 half3 worldNormal;
                 worldNormal.x = dot(i.tspace0, tnormal);

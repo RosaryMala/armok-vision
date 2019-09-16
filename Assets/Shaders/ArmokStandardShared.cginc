@@ -32,7 +32,7 @@ void surf(Input IN, inout SurfaceOutputStandard o) {
 	fixed4 spatter = tex2D(_SpatterTex, (IN.worldPos.xz - _WorldBounds.xy) / (_WorldBounds.zw - _WorldBounds.xy));
 	fixed4 noise = tex2D(_SpatterNoise, TRANSFORM_TEX(IN.worldPos.xz, _SpatterNoise));
 	//o.Albedo = c.rgb * IN.color.rgb;
-	o.Normal = UnpackNormal(bump.ggga);
+	o.Normal = UnpackNormal(fixed4(1, bump.g, 1, bump.a));
 	o.Alpha = bump.b;
 	if (dot(WorldNormalVector(IN, o.Normal), _SpatterDirection.xyz) >= lerp(1, -1, (spatter.a - noise.r)))
 	{

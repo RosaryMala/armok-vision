@@ -160,7 +160,7 @@
             float4 abcd_n = MixColor(ab_n, ab_n.b, 1 - controlFraction.y, cd_n, cd_n.b, controlFraction.y);
             float4 abcd_tint = MixColor(ab_tint, ab_n.b, 1 - controlFraction.y, cd_tint, cd_n.b, controlFraction.y);
 
-            o.Normal = UnpackNormal(abcd_n.ggga);
+            o.Normal = UnpackNormal(fixed4(1, abcd_n.g, 1, abcd_n.a));
 
 #ifdef CONTAMINANTS
             if (dot(WorldNormalVector(IN, o.Normal), _SpatterDirection.xyz) >= lerp(1, -1, (spatter.a - noise.r)))

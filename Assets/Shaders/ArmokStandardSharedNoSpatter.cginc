@@ -21,7 +21,7 @@ void surf(Input IN, inout SurfaceOutputStandard o) {
 	fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
 	fixed4 bump = tex2D(_BumpMap, IN.uv2_BumpMap);
 	//o.Albedo = c.rgb * IN.color.rgb;
-	o.Normal = UnpackNormal(bump.ggga);
+	o.Normal = UnpackNormal(fixed4(1, bump.g, 1, bump.a));
 	o.Alpha = bump.b;
 	fixed3 albedo = c.rgb < 0.5 ? (2.0 * c.rgb * IN.color.rgb) : (1.0 - 2.0 * (1.0 - c.rgb) * (1.0 - IN.color.rgb));
 	o.Albedo = albedo;

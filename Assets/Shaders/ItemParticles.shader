@@ -37,7 +37,7 @@
             fixed4 bump = tex2D(_BumpMap, IN.uv_BumpMap);
             fixed4 special = tex2D(_SpecialTex, IN.uv_SpecialTex);
             //o.Albedo = c.rgb * IN.color.rgb;
-            o.Normal = UnpackNormal(bump.ggga);
+            o.Normal = UnpackNormal(fixed4(1, bump.g, 1, bump.a));
             o.Alpha = bump.b;
             fixed3 albedo = c.rgb < 0.5 ? (2.0 * c.rgb * IN.color.rgb) : (1.0 - 2.0 * (1.0 - c.rgb) * (1.0 - IN.color.rgb));
             o.Albedo = albedo *(1 - special.g);

@@ -44,7 +44,7 @@
         // Albedo comes from a texture tinted by color
         fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
         fixed4 b = tex2D(_BumpMap, IN.uv2_BumpMap);
-        o.Normal = UnpackNormal(b.ggga);
+        o.Normal = UnpackNormal(fixed4(1, b.g, 1, b.a));
         if (dot(WorldNormalVector(IN, o.Normal), _SnowDirection.xyz) >= lerp(1, -1, _Snow))
         {
             o.Albedo = _SnowColor.rgb;

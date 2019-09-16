@@ -44,7 +44,7 @@
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
             o.Alpha = a.r;
-            o.Normal = UnpackNormal(bump.ggga);
+            o.Normal = UnpackNormal(fixed4(1, bump.g, 1, bump.a));
         }
         ENDCG
     }
