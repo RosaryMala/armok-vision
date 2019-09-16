@@ -39,3 +39,8 @@ MonoBehaviour:
     token: 
     tokenRegex: 0
     model: {fileID: 1513885483193806097, guid: a2104d1d5467f08468a8c04d042c5ff5, type: 3}
+  - category: NECK
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 5709470079047563909, guid: a4f08e0f536c335499a9cec967be2b72, type: 3}

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6cf81176ac46bd4787c356dc567f950, type: 3}
+  m_Name: Default
+  m_EditorClassIdentifier: 
+  bodyScale: {x: 1, y: 1, z: 1}
+  bodyParts:
+  - category: HEAD
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 4688451094157441358, guid: 8e9b7dc027a59a64f8751c9381020dca, type: 3}
+  - category: MOUTH
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 6569431076545288385, guid: 737e1eb20731caa4885f7173f24640d2, type: 3}
