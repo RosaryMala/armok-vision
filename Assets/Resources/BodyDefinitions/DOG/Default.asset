@@ -24,3 +24,13 @@ MonoBehaviour:
     token: 
     tokenRegex: 0
     model: {fileID: 6569431076545288385, guid: 737e1eb20731caa4885f7173f24640d2, type: 3}
+  - category: NOSE
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 8325227838654498921, guid: c3333cb75e9111145a81aec29dd2a007, type: 3}
+  - category: EAR
+    categoryRegex: 0
+    token: 
+    tokenRegex: 0
+    model: {fileID: 8750540346039685476, guid: 766ec1bf379e9394a92d7dd1d7eb63a0, type: 3}
