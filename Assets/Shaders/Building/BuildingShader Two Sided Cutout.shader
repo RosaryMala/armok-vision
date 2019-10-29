@@ -96,6 +96,6 @@
 					ENDCG
 			}
 				FallBack "Diffuse"
-						CustomEditor "BuildingMaterialEditor"
+			CustomEditor "BuildingMaterialEditor"
 
 }

@@ -59,4 +59,3 @@ fixed4 c = tex2D(_MainTex, texcoords.xy) * _Color;
     #endif
         occlusion *= shape.r;
 #endif
-        normal = matNormal;
