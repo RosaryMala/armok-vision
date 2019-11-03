@@ -130,6 +130,9 @@ public class ItemRaws : IReadOnlyDictionary<MatPairStruct, MaterialDefinition>, 
     {
         get
         {
+            //FIXME: MAKE THIS ACTUALLY WORK RIGHT
+            if (itemIndex.Type == DF.Enums.ItemType.PlantGrowth)
+                itemIndex = new MatPairStruct(itemIndex.Type, -1);
             try
             {
                 return itemLookup[itemIndex];
