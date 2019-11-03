@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using RemoteFortressReader;
 using UnityEngine;
 
-public class BodyLayer : MonoBehaviour
+public class BodyLayer : MonoBehaviour, IBodyLayer
 {
     public string layerName;
     public bool placed = false;
     public BodyPartLayerRaw layerRaw;
-    public List<BodyPart.ModValue> mods = new List<BodyPart.ModValue>();
+    private readonly List<BodyPart.ModValue> mods = new List<BodyPart.ModValue>();
     public List<Color> layerColors = new List<Color>();
     public PatternDescriptor pattern;
-
+    public bool IsActive { get { return gameObject.activeSelf; } }
+    public int TissueID { get { return layerRaw.tissue_id; } }
+    public string RawLayerName { get { return layerRaw.layer_name; } }
     [System.Serializable]
     public class BodyModTarget
     {
@@ -27,7 +29,7 @@ public class BodyLayer : MonoBehaviour
         public int largeValue;
     }
 
-    static bool gotShaderIds = false;
+    static bool inited = false;
     static int _MatColorProperty;
     static int _MatIndexProperty;
     static int _ShapeIndexProperty;
@@ -38,7 +40,6 @@ public class BodyLayer : MonoBehaviour
 
     static void GetShaderIDs()
     {
-        gotShaderIds = true;
         _MatColorProperty = Shader.PropertyToID("_MatColor");
         _MatIndexProperty = Shader.PropertyToID("_MatIndex");
         _Color1Property = Shader.PropertyToID("_Color1");
@@ -50,13 +51,24 @@ public class BodyLayer : MonoBehaviour
 
     public List<BodyModTarget> bodyModTargets;
 
-    internal void ApplyMaterials(CreatureRaw race, MaterialPropertyBlock propertyBlock)
+    new Renderer renderer;
+    SkinnedMeshRenderer skinnedRenderer;
+
+    private void Init()
     {
-        if (!gotShaderIds)
-            GetShaderIDs();
-        var renderer = GetComponentInChildren<MeshRenderer>();
-        var skinnedRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
-        if (renderer != null || skinnedRenderer != null)
+        inited = true;
+        GetShaderIDs();
+        renderer = GetComponentInChildren<MeshRenderer>();
+        skinnedRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+        if (renderer == null)
+            renderer = skinnedRenderer;
+    }
+
+    public void ApplyMaterials(CreatureRaw race, MaterialPropertyBlock propertyBlock)
+    {
+        if (!inited)
+            Init();
+        if (renderer != null)
         {
             var tissue = race.tissues[layerRaw.tissue_id];
             var color = ContentLoader.GetColor(tissue.material);
@@ -68,18 +80,11 @@ public class BodyLayer : MonoBehaviour
             propertyBlock.SetColor(_Color3Property, color);
             propertyBlock.SetInt(_MatIndexProperty, index);
             propertyBlock.SetInt(_ShapeIndexProperty, shapeIndex);
-            if (renderer != null)
-            {
-                renderer.SetPropertyBlock(propertyBlock);
-            }
-            if (skinnedRenderer != null)
-            {
-                skinnedRenderer.SetPropertyBlock(propertyBlock);
-            }
+            renderer.SetPropertyBlock(propertyBlock);
         }
     }
 
-    internal void ApplyMods()
+    public void ApplyMods()
     {
         if (bodyModTargets == null || bodyModTargets.Count == 0)
             return;
@@ -88,10 +93,10 @@ public class BodyLayer : MonoBehaviour
         {
             foreach (var bodyModTarget in bodyModTargets)
             {
-                int modIndex = mods.FindIndex(x => x.type == bodyModTarget.modToken);
-                if(modIndex >= 0)
+                BodyPart.ModValue mod;
+                bool modFound = TryFindMod(bodyModTarget.modToken, out mod);
+                if(modFound)
                 {
-                    var mod = mods[modIndex];
                     if (bodyModTarget.useMinimum && mod.value < bodyModTarget.minimumValue)
                     {
                         gameObject.SetActive(false);
@@ -125,18 +130,35 @@ public class BodyLayer : MonoBehaviour
         }
     }
 
+    public bool TryFindMod(string modToken, out BodyPart.ModValue mod)
+    {
+        if (modToken.Contains("/"))
+            return parentPart.TryFindModTree(modToken, out mod);
+        int modIndex = mods.FindIndex(x => x.type == modToken);
+        if(modIndex >= 0)
+        {
+            mod = mods[modIndex];
+            return true;
+        }
+        else
+        {
+            return parentPart.TryFindMod(modToken, out mod);
+        }
+    }
+
     static Texture2D SpotsTexture = null;
     static Texture2D StripesTexture = null;
+    internal BodyPart parentPart;
 
     static Color SetAlpha(Color c, float a)
     {
         return new Color(c.r, c.g, c.b, a);
     }
 
-    internal void ApplyPattern(PatternDescriptor pattern, float t, MaterialPropertyBlock propertyBlock, int materialIndex, int shapeIndex)
+    public void ApplyPattern(PatternDescriptor pattern, float t, MaterialPropertyBlock propertyBlock, int materialIndex, int shapeIndex)
     {
-        if (!gotShaderIds)
-            GetShaderIDs();
+        if (!inited || renderer == null)
+            Init();
         this.pattern = pattern;
         if (pattern.colors.Count == 0)
             return;
@@ -163,10 +185,7 @@ public class BodyLayer : MonoBehaviour
             }
         }
 
-
-        var renderer = GetComponentInChildren<MeshRenderer>();
-        var skinnedRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
-        if (renderer != null || skinnedRenderer != null)
+        if (renderer != null)
         {
             propertyBlock.Clear();
             switch (pattern.pattern)
@@ -220,14 +239,20 @@ public class BodyLayer : MonoBehaviour
                     break;
             }
 
-            if (renderer != null)
-            {
-                renderer.SetPropertyBlock(propertyBlock);
-            }
-            if (skinnedRenderer != null)
-            {
-                skinnedRenderer.SetPropertyBlock(propertyBlock);
-            }
+            renderer.SetPropertyBlock(propertyBlock);
         }
+    }
+
+    public void SetPropertyBlock(MaterialPropertyBlock propertyBlock)
+    {
+        if (!inited)
+            Init();
+        if(renderer != null)
+            renderer.SetPropertyBlock(propertyBlock);
+    }
+
+    public void AddMod(BodyPart.ModValue modValue)
+    {
+        mods.Add(modValue);
     }
 }

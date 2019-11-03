@@ -49,14 +49,14 @@ public class CreatureBody : MonoBehaviour
             return BodyCategory.Bug;
         else if (stanceCount > 2)
             return BodyCategory.Quadruped;
-        else if(stanceCount == 2)
+        else if (stanceCount == 2)
         {
             if (hasArms)
                 return BodyCategory.Humanoid;
             else
                 return BodyCategory.Avian;
         }
-            return BodyCategory.Fish;
+        return BodyCategory.Fish;
 
     }
 
@@ -88,7 +88,7 @@ public class CreatureBody : MonoBehaviour
         flags = new CreatureRawFlags(race.flags);
         bodyCategory = FindBodyCategory(caste);
         //If there's already any spawned parts, we need to clear them so we can remake the body from scratch.
-        if(spawnedParts.Count > 0)
+        if (spawnedParts.Count > 0)
         {
             foreach (var part in spawnedParts)
             {
@@ -155,7 +155,7 @@ public class CreatureBody : MonoBehaviour
             spawnedPart.token = part.token;
             spawnedPart.category = part.category;
             spawnedPart.flags = new BodyPartFlags(part.flags);
-            spawnedPart.volume = part.relsize * scale; 
+            spawnedPart.volume = part.relsize * scale;
             spawnedPart.layers = part.layers;
 
 
@@ -206,14 +206,18 @@ public class CreatureBody : MonoBehaviour
             if (spawnedPart.flags.lowerbody)
                 lowerBody = spawnedPart;
             var modeledLayers = spawnedPart.GetComponentsInChildren<BodyLayer>();
+            foreach (var modeledLayer in modeledLayers)
+            {
+                modeledLayer.parentPart = spawnedPart;
+            }
             foreach (var layer in part.layers)
             {
                 var matchedLayers = Array.FindAll(modeledLayers, x => x.layerName == layer.layer_name);
                 if (matchedLayers.Length == 0)
                 {
                     matchedLayers = Array.FindAll(modeledLayers, x => string.IsNullOrEmpty(x.layerName));
-                    if (matchedLayers.Length < 0)
-                        spawnedPart.layerModels.Add(null);
+                    if (matchedLayers.Length == 0)
+                        spawnedPart.layerModels.Add(new BodyLayerPlaceholder(layer));
                     else
                     {
                         bool matchedAny = false;
@@ -229,7 +233,7 @@ public class CreatureBody : MonoBehaviour
                             }
                         }
                         if (!matchedAny)
-                            spawnedPart.layerModels.Add(null);
+                            spawnedPart.layerModels.Add(new BodyLayerPlaceholder(layer));
                     }
                 }
                 else
@@ -247,7 +251,7 @@ public class CreatureBody : MonoBehaviour
                         }
                     }
                     if (!matchedAny)
-                        spawnedPart.layerModels.Add(null);
+                        spawnedPart.layerModels.Add(new BodyLayerPlaceholder(layer));
                 }
             }
             foreach (var modeledLayer in modeledLayers)
@@ -258,9 +262,9 @@ public class CreatureBody : MonoBehaviour
 
             foreach (var layerModel in spawnedPart.layerModels)
             {
-                if (layerModel == null)
+                if (layerModel == null || !(layerModel is BodyLayer))
                     continue;
-                layerModel.ApplyMaterials(race, propertyBlock);
+                ((BodyLayer)layerModel).ApplyMaterials(race, propertyBlock);
             }
             spawnedParts[i] = spawnedPart;
         }
@@ -270,17 +274,17 @@ public class CreatureBody : MonoBehaviour
                 continue;
             var mod = caste.modifiers[caste.modifier_idx[modNum]];
             var part = spawnedParts[caste.part_idx[modNum]];
-            if(caste.layer_idx[modNum] >= 0)
+            if (caste.layer_idx[modNum] >= 0)
             {
                 var layer = part.layerModels[caste.layer_idx[modNum]];
                 if (layer != null)
                 {
-                    layer.mods.Add(new BodyPart.ModValue(mod, (unit != null && unit.appearance != null) ? unit.appearance.bp_modifiers[modNum] : 100));
+                    layer.AddMod(new BodyPart.ModValue(mod, (unit != null && unit.appearance != null) ? unit.appearance.bp_modifiers[modNum] : 100));
                 }
             }
             else
             {
-                    part.mods.Add(new BodyPart.ModValue(mod, (unit != null && unit.appearance != null) ? unit.appearance.bp_modifiers[modNum] : 100));
+                part.mods.Add(new BodyPart.ModValue(mod, (unit != null && unit.appearance != null) ? unit.appearance.bp_modifiers[modNum] : 100));
             }
         }
 
@@ -295,7 +299,7 @@ public class CreatureBody : MonoBehaviour
                 if (part == null || !part.gameObject.activeSelf)
                     continue;
                 var layer = part.layerModels[colorMod.tissue_layer_id[i]];
-                if (layer == null || !layer.gameObject.activeSelf)
+                if (layer == null || !layer.IsActive || !(layer is BodyLayer))
                     continue;
                 PatternDescriptor pattern;
                 if (unit != null && unit.appearance != null)
@@ -304,12 +308,12 @@ public class CreatureBody : MonoBehaviour
                 }
                 else
                     pattern = colorMod.patterns[seed];
-                var matIndex = ContentLoader.GetPatternIndex(race.tissues[layer.layerRaw.tissue_id].material);
-                var shapeIndex = ContentLoader.GetShapeIndex(race.tissues[layer.layerRaw.tissue_id].material);
+                var matIndex = ContentLoader.GetPatternIndex(race.tissues[layer.TissueID].material);
+                var shapeIndex = ContentLoader.GetShapeIndex(race.tissues[layer.TissueID].material);
                 if (colorMod.start_date > 0 && unit != null)
-                    layer.ApplyPattern(pattern, Mathf.InverseLerp(colorMod.start_date * 1200, colorMod.end_date * 1200, unit.age), propertyBlock, matIndex, shapeIndex);
+                    ((BodyLayer)layer).ApplyPattern(pattern, Mathf.InverseLerp(colorMod.start_date * 1200, colorMod.end_date * 1200, unit.age), propertyBlock, matIndex, shapeIndex);
                 else
-                    layer.ApplyPattern(pattern, 1, propertyBlock, matIndex, shapeIndex);
+                    ((BodyLayer)layer).ApplyPattern(pattern, 1, propertyBlock, matIndex, shapeIndex);
             }
         }
         for (int i = 0; i < caste.body_parts.Count; i++)
@@ -335,8 +339,8 @@ public class CreatureBody : MonoBehaviour
         {
             foreach (var layer in part.Value.layerModels)
             {
-                if (layer != null)
-                    layer.ApplyMods();
+                if (layer != null && (layer is BodyLayer))
+                    ((BodyLayer)layer).ApplyMods();
             }
         }
 
@@ -391,7 +395,7 @@ public class CreatureBody : MonoBehaviour
     public void UpdateUnit(UnitDefinition unit)
     {
         bool needsRegen = false;
-        if((MatPairStruct)this.unit.race != unit.race)
+        if ((MatPairStruct)this.unit.race != unit.race)
         {
             race = CreatureRaws.Instance[unit.race.mat_type];
             caste = race.caste[unit.race.mat_index];
@@ -424,7 +428,7 @@ public class CreatureBody : MonoBehaviour
         }
         oldWounds = unit.wounds;
         this.unit = unit;
-        if(needsRegen || oldChibiSize != GameSettings.Instance.units.chibiness || oldScaleUnits != GameSettings.Instance.units.scaleUnits)
+        if (needsRegen || oldChibiSize != GameSettings.Instance.units.chibiness || oldScaleUnits != GameSettings.Instance.units.scaleUnits)
         {
             oldScaleUnits = GameSettings.Instance.units.scaleUnits;
             oldChibiSize = GameSettings.Instance.units.chibiness;
@@ -463,8 +467,8 @@ public class CreatureBody : MonoBehaviour
             //Here we add pants first before shirts because otherwise the layering looks bad.
             foreach (var item in unit.inventory)
             {
-                if(!ClothingTexture.GetTexture(item.item.type).isDress)
-                AddInventoryItem(item);
+                if (!ClothingTexture.GetTexture(item.item.type).isDress)
+                    AddInventoryItem(item);
             }
             foreach (var item in unit.inventory)
             {
@@ -534,10 +538,10 @@ public class CreatureBody : MonoBehaviour
     //Any addition or removal of inventory items will trigger this, as well as changing items from worn to held.
     private bool InventoryChanged(List<InventoryItem> inventory)
     {
-        if(inventory.Count != inventoryModes.Length)
+        if (inventory.Count != inventoryModes.Length)
         {
             inventoryModes = new InventoryMode[inventory.Count];
-            for(int i = 0; i < inventory.Count; i++)
+            for (int i = 0; i < inventory.Count; i++)
             {
                 inventoryModes[i] = inventory[i].mode;
             }
@@ -582,6 +586,6 @@ public class CreatureBody : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        
+
     }
 }

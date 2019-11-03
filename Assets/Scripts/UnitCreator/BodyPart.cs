@@ -16,7 +16,7 @@ public class BodyPart : MonoBehaviour
     private Bounds bounds;
     public float volume;
     public List<BodyPartLayerRaw> layers = new List<BodyPartLayerRaw>();
-    public List<BodyLayer> layerModels = new List<BodyLayer>();
+    public List<IBodyLayer> layerModels = new List<IBodyLayer>();
 
     [NonSerialized]
     public BodyPart parent;
@@ -230,6 +230,45 @@ public class BodyPart : MonoBehaviour
             trans.rotation = Quaternion.Lerp(tempStart.rotation, tempEnd.rotation, t);
             trans.localScale = Vector3.Lerp(tempStart.localScale, tempEnd.localScale, t);
         }
+    }
+
+    internal bool TryFindMod(string modToken, out ModValue mod)
+    {
+        int modIndex = mods.FindIndex(x => x.type == modToken);
+        if(modIndex >= 0)
+        {
+            mod = mods[modIndex];
+            return true;
+        }
+        mod = default;
+        return false;
+    }
+
+    internal bool TryFindModTree(string modToken, out ModValue mod)
+    {
+        if(modToken.Contains('/')) //Eg HEAD/HAIR/LENGTH
+        {
+            var tree = modToken.Split(new char[] { '/' }, 2);
+            if(tree[1].Contains('/'))
+            {
+                int childPartIndex = children.FindIndex(x => x.category == tree[0]);
+                if(childPartIndex >= 0)
+                {
+                    return children[childPartIndex].TryFindModTree(tree[1], out mod);
+                }
+            }
+            else
+            {
+                int layerIndex = layerModels.FindIndex(x => x.RawLayerName == tree[0]);
+                if (layerIndex >= 0)
+                {
+                    var layer = layerModels[layerIndex];
+                    return layer.TryFindMod(tree[1], out mod);
+                }
+            }
+        }
+        mod = default;
+        return false;
     }
 
     void ArrangeModeledPart(CreatureBody body)
@@ -828,13 +867,8 @@ public class BodyPart : MonoBehaviour
                 propertyBlock.SetColor("_JobColor", unit.profession_color);
                 foreach (var layerModel in layerModels)
                 {
-                    if (layerModel == null)
-                        continue;
-                    var renderer = layerModel.GetComponentInChildren<MeshRenderer>();
-                    if (renderer != null)
-                    {
-                        renderer.SetPropertyBlock(propertyBlock);
-                    }
+                    if (layerModel == null || !(layerModel is BodyLayer))
+                        ((BodyLayer)layerModel).SetPropertyBlock(propertyBlock);
                 }
             }
     }
