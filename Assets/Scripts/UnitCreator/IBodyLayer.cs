@@ -10,4 +10,5 @@ public interface IBodyLayer
     string RawLayerName { get; }
     void AddMod(BodyPart.ModValue modValue);
     bool TryFindMod(string modToken, out BodyPart.ModValue mod);
+    List<BodyPart.ModValue> Mods { get; }
 }

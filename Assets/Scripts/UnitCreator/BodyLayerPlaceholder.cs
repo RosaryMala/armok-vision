@@ -17,6 +17,8 @@ public class BodyLayerPlaceholder : IBodyLayer
     public int TissueID { get { return layerRaw.tissue_id; } }
     public string RawLayerName { get { return layerRaw.layer_name; } }
 
+    public List<BodyPart.ModValue> Mods { get { return mods; } }
+
     private readonly List<BodyPart.ModValue> mods = new List<BodyPart.ModValue>();
     public void AddMod(BodyPart.ModValue modValue)
     {

@@ -15,6 +15,8 @@ public class BodyLayer : MonoBehaviour, IBodyLayer
     public bool IsActive { get { return gameObject.activeSelf; } }
     public int TissueID { get { return layerRaw.tissue_id; } }
     public string RawLayerName { get { return layerRaw.layer_name; } }
+    public List<BodyPart.ModValue> Mods { get { return mods; } }
+
     [System.Serializable]
     public class BodyModTarget
     {
