@@ -4,6 +4,7 @@ using RemoteFortressReader;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityExtension;
+using DF.Enums;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
@@ -267,20 +268,20 @@ public class RegionMaker : MonoBehaviour
 
                         Vector3 min, max;
 
-                        switch (building.type)
+                        switch ((SiteRealizationBuildingType)building.type)
                         {
-                            case SiteRealizationBuildingType.cottage_plot:
-                            case SiteRealizationBuildingType.castle_courtyard:
-                            case SiteRealizationBuildingType.house:
-                            case SiteRealizationBuildingType.temple:
-                            case SiteRealizationBuildingType.shop_house:
-                            case SiteRealizationBuildingType.warehouse:
-                            case SiteRealizationBuildingType.well:
-                            case SiteRealizationBuildingType.hillock_house:
-                            case SiteRealizationBuildingType.mead_hall:
-                            case SiteRealizationBuildingType.fortress_entrance:
-                            case SiteRealizationBuildingType.library:
-                            case SiteRealizationBuildingType.tavern:
+                            case SiteRealizationBuildingType.CottagePlot:
+                            case SiteRealizationBuildingType.CastleCourtyard:
+                            case SiteRealizationBuildingType.House:
+                            case SiteRealizationBuildingType.Temple:
+                            case SiteRealizationBuildingType.ShopHouse:
+                            case SiteRealizationBuildingType.Warehouse:
+                            case SiteRealizationBuildingType.Well:
+                            case SiteRealizationBuildingType.HillockHouse:
+                            case SiteRealizationBuildingType.MeadHall:
+                            case SiteRealizationBuildingType.FortressEntrance:
+                            case SiteRealizationBuildingType.Library:
+                            case SiteRealizationBuildingType.Tavern:
                                 {
                                     Color buildingColor = ContentLoader.GetColor(building.material);
                                     min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
@@ -288,23 +289,23 @@ public class RegionMaker : MonoBehaviour
                                     AddBlock(vert1 + min, vert1 + max, biome, buildingColor, snow);
                                     break;
                                 }
-                            case SiteRealizationBuildingType.courtyard:
-                            case SiteRealizationBuildingType.market_square:
-                            case SiteRealizationBuildingType.waste:
+                            case SiteRealizationBuildingType.Courtyard:
+                            case SiteRealizationBuildingType.MarketSquare:
+                            case SiteRealizationBuildingType.Waste:
                                 {
                                     min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
                                     max = new Vector3((building.max_x + 1) * GameMap.tileWidth, 1 * GameMap.tileHeight / 6.0f, -(building.max_y + 1) * GameMap.tileWidth);
                                     AddBlock(vert1 + min, vert1 + max, biome, terrainColor, snow);
                                     break;
                                 }
-                            case SiteRealizationBuildingType.pasture:
+                            case SiteRealizationBuildingType.Pasture:
                                 {
                                     min = new Vector3(building.min_x * GameMap.tileWidth, 0, -building.min_y * GameMap.tileWidth);
                                     max = new Vector3((building.max_x + 1) * GameMap.tileWidth, 1 * GameMap.tileHeight / 6.0f, -(building.max_y + 1) * GameMap.tileWidth);
                                     AddBlock(vert1 + min, vert1 + max, biome, plantColor, snow);
                                     break;
                                 }
-                            case SiteRealizationBuildingType.trenches:
+                            case SiteRealizationBuildingType.Trenches:
                                 {
                                     int mid_x = (building.min_x + building.max_x) / 2;
                                     int mid_y = (building.min_y + building.max_y) / 2;
@@ -316,8 +317,8 @@ public class RegionMaker : MonoBehaviour
                                     AddBlock(vert1 + min, vert1 + max, biome, Color.black, snow);
                                     break;
                                 }
-                            case SiteRealizationBuildingType.vault:
-                            case SiteRealizationBuildingType.great_tower:
+                            case SiteRealizationBuildingType.Vault:
+                            case SiteRealizationBuildingType.GreatTower:
                                 {
                                     Color buildingColor = ContentLoader.GetColor(building.material);
                                     min = new Vector3((building.min_x + 5) * GameMap.tileWidth, 0, -(building.min_y + 5) * GameMap.tileWidth);
@@ -325,7 +326,7 @@ public class RegionMaker : MonoBehaviour
                                     AddCylinder(vert1 + min, vert1 + max, biome, buildingColor, snow);
                                     break;
                                 }
-                            case SiteRealizationBuildingType.castle_tower:
+                            case SiteRealizationBuildingType.CastleTower:
                                 {
                                     Color buildingColor = ContentLoader.GetColor(building.material);
                                     Color roofColor = buildingColor;
@@ -350,7 +351,7 @@ public class RegionMaker : MonoBehaviour
                                         AddBlock(vert1 + min, vert1 + max, biome, buildingColor, snow, roofColor);
                                     break;
                                 }
-                            case SiteRealizationBuildingType.castle_wall:
+                            case SiteRealizationBuildingType.CastleWall:
                                 {
                                     Color buildingColor = ContentLoader.GetColor(building.material);
                                     if (building.wall_info != null)
@@ -367,7 +368,7 @@ public class RegionMaker : MonoBehaviour
                                     }
                                     break;
                                 }
-                            case SiteRealizationBuildingType.tomb:
+                            case SiteRealizationBuildingType.Tomb:
                                 {
                                     var mat = building.material;
                                     if (mat.mat_type < 0)
@@ -379,7 +380,7 @@ public class RegionMaker : MonoBehaviour
                                     AddPyramid(vert1 + min, vert1 + max, biome, buildingColor, snow);
                                     break;
                                 }
-                            case SiteRealizationBuildingType.tree_house:
+                            case SiteRealizationBuildingType.TreeHouse:
                                 {
                                     var tree = building.material;
                                     int plantIndex = tree.mat_index;

@@ -867,7 +867,7 @@ public class BodyPart : MonoBehaviour
                 propertyBlock.SetColor("_JobColor", unit.profession_color);
                 foreach (var layerModel in layerModels)
                 {
-                    if (layerModel == null || !(layerModel is BodyLayer))
+                    if (layerModel != null && (layerModel is BodyLayer))
                         ((BodyLayer)layerModel).SetPropertyBlock(propertyBlock);
                 }
             }
