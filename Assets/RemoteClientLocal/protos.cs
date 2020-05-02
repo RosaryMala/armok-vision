@@ -4417,15 +4417,6 @@ namespace RemoteFortressReader
       set { _material = value; }
     }
     [UnityEngine.SerializeField]
-    private RemoteFortressReader.ImprovementType _type = RemoteFortressReader.ImprovementType.ART_IMAGE;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.ImprovementType.ART_IMAGE)]
-    public RemoteFortressReader.ImprovementType type
-    {
-      get { return _type; }
-      set { _type = value; }
-    }
-    [UnityEngine.SerializeField]
     private int _shape = default(int);
     [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"shape", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     [global::System.ComponentModel.DefaultValue(default(int))]
@@ -4451,6 +4442,15 @@ namespace RemoteFortressReader
     {
       get { return _image; }
       set { _image = value; }
+    }
+    [UnityEngine.SerializeField]
+    private int _type = default(int);
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int type
+    {
+      get { return _type; }
+      set { _type = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
@@ -5328,50 +5328,6 @@ namespace RemoteFortressReader
             
       [global::ProtoBuf.ProtoEnum(Name=@"MOTTLED", Value=5)]
       MOTTLED = 5
-    }
-  
-    [global::ProtoBuf.ProtoContract(Name=@"ImprovementType")]
-    public enum ImprovementType
-    {
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"ART_IMAGE", Value=0)]
-      ART_IMAGE = 0,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"COVERED", Value=1)]
-      COVERED = 1,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"RINGS_HANGING", Value=2)]
-      RINGS_HANGING = 2,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"BANDS", Value=3)]
-      BANDS = 3,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"SPIKES", Value=4)]
-      SPIKES = 4,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"ITEMSPECIFIC", Value=5)]
-      ITEMSPECIFIC = 5,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"THREAD", Value=6)]
-      THREAD = 6,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"CLOTH", Value=7)]
-      CLOTH = 7,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"SEWN_IMAGE", Value=8)]
-      SEWN_IMAGE = 8,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"PAGES", Value=9)]
-      PAGES = 9,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"ILLUSTRATION", Value=10)]
-      ILLUSTRATION = 10,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"INSTRUMENT_PIECE", Value=11)]
-      INSTRUMENT_PIECE = 11,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"WRITING", Value=12)]
-      WRITING = 12
     }
   
     [global::ProtoBuf.ProtoContract(Name=@"ArtImageElementType")]

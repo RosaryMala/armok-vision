@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using DF.Enums;
 using RemoteFortressReader;
 using UnityEngine;
 
@@ -32,19 +30,19 @@ public class ItemImprovement : MonoBehaviour
 
         GameObject prefab = null;
 
-        switch (improvement.type)
+        switch ((ImprovementType)improvement.type)
         {
-            case ImprovementType.ART_IMAGE:
+            case ImprovementType.ArtImage:
                 prefab = DecorationManager.Instance.Image;
                 break;
-            case ImprovementType.BANDS:
-            case ImprovementType.COVERED:
+            case ImprovementType.Bands:
+            case ImprovementType.Covered:
                 prefab = DecorationManager.Instance.GetShape(improvement.shape);
                 break;
-            case ImprovementType.RINGS_HANGING:
+            case ImprovementType.RingsHanging:
                 prefab = DecorationManager.Instance.Ring;
                 break;
-            case ImprovementType.SPIKES:
+            case ImprovementType.Spikes:
                 prefab = DecorationManager.Instance.Spike;
                 break;
             default:
@@ -61,7 +59,7 @@ public class ItemImprovement : MonoBehaviour
 
         meshFilter = actualModel.GetComponentInChildren<MeshFilter>();
         meshRenderer = actualModel.GetComponentInChildren<MeshRenderer>();
-        if (improvement.type == ImprovementType.ART_IMAGE)
+        if ((ImprovementType)improvement.type == ImprovementType.ArtImage)
         {
             meshFilter.sharedMesh = ImageManager.Instance.CreateMesh(improvement.image, ImageManager.Direction.Front);
         }

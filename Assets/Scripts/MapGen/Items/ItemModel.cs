@@ -4,6 +4,7 @@ using RemoteFortressReader;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DF.Enums;
 
 public class ItemModel : MonoBehaviour, IClickable
 {
@@ -92,32 +93,32 @@ public class ItemModel : MonoBehaviour, IClickable
 
         foreach (var improvement in itemInput.improvements)
         {
-            switch (improvement.type)
+            switch ((ImprovementType)improvement.type)
             {
-                case ImprovementType.ART_IMAGE:
+                case ImprovementType.ArtImage:
                     images.Add(improvement);
                     break;
-                case ImprovementType.COVERED:
+                case ImprovementType.Covered:
                     covereds.Add(improvement);
                     break;
-                case ImprovementType.RINGS_HANGING:
-                case ImprovementType.BANDS:
-                case ImprovementType.SPIKES:
+                case ImprovementType.RingsHanging:
+                case ImprovementType.Bands:
+                case ImprovementType.Spikes:
                     ringSpikeBands.Add(improvement);
                     break;
-                case ImprovementType.THREAD:
-                case ImprovementType.CLOTH:
+                case ImprovementType.Thread:
+                case ImprovementType.Cloth:
                     //Handled already, in various ways.
                     break;
-                case ImprovementType.WRITING:
+                case ImprovementType.Writing:
                     break; //Not rendered, currently.
-                case ImprovementType.ITEMSPECIFIC:
-                case ImprovementType.PAGES:
+                case ImprovementType.Itemspecific:
+                case ImprovementType.Pages:
                     specifics.Add(improvement);
                     break;
-                case ImprovementType.SEWN_IMAGE:
-                case ImprovementType.ILLUSTRATION:
-                case ImprovementType.INSTRUMENT_PIECE:
+                case ImprovementType.SewnImage:
+                case ImprovementType.Illustration:
+                case ImprovementType.InstrumentPiece:
                 default:
 //#if UNITY_EDITOR
 //                    Debug.LogWarning(string.Format("Unhandled improvement {0} on {1}", improvement.type, GO.name));
@@ -134,15 +135,15 @@ public class ItemModel : MonoBehaviour, IClickable
             {
                 imp.UpdateImprovement(images[imp.index]);
             }
-            else if (!imp.isImage && imp.index < ringSpikeBands.Count && ringSpikeBands[imp.index].type == ImprovementType.RINGS_HANGING)
+            else if (!imp.isImage && imp.index < ringSpikeBands.Count && (ImprovementType)ringSpikeBands[imp.index].type == ImprovementType.RingsHanging)
             {
                 imp.UpdateImprovement(ringSpikeBands[imp.index]);
             }
-            else if (!imp.isImage && imp.index < ringSpikeBands.Count && ringSpikeBands[imp.index].type == ImprovementType.SPIKES)
+            else if (!imp.isImage && imp.index < ringSpikeBands.Count && (ImprovementType)ringSpikeBands[imp.index].type == ImprovementType.Spikes)
             {
                 imp.UpdateImprovement(ringSpikeBands[imp.index]);
             }
-            else if (!imp.isImage && imp.index < ringSpikeBands.Count && ringSpikeBands[imp.index].type == ImprovementType.BANDS)
+            else if (!imp.isImage && imp.index < ringSpikeBands.Count && (ImprovementType)ringSpikeBands[imp.index].type == ImprovementType.Bands)
             {
                 imp.UpdateImprovement(ringSpikeBands[imp.index]);
             }
