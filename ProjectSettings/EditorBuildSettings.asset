@@ -11,4 +11,8 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/VR Map.unity
     guid: 064b7f6a110980f4abc0b0a34dac2ee9
-  m_configObjects: {}
+  m_configObjects:
+    Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: d110386986d3de340bd49294641cf700,
+      type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: e08af89b0c1f9254f81f7d161dcd881c,
+      type: 2}
