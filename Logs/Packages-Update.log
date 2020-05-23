@@ -96,3 +96,11 @@ Update Mode: updateDependencies
 
 The following packages were updated:
   com.unity.ide.vscode from version 1.1.4 to 1.2.0
+
+=== Fri May 22 23:38:02 2020
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.test-framework from version 1.1.13 to 1.1.14
