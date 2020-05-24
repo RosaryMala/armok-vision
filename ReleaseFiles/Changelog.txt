@@ -1,3 +1,18 @@
+v0.21.0
+ * Fixed compatibility with DF 0.47.04 and upwards.
+ * Fixed some shader errors that probably only I care about.
+ * Added skirts, stockings, and corsets, for the succubus mod.
+ * Tweaked the camera movement speeds.
+ * Added digitigrade legs for humanoids with hooves.
+ * Added models for saltwater crocodile men.
+ * Mozaic censor field can now be turned off if desired.
+ * Fix a longstanding shader bug that would cause normal maps to look... off.
+ * added a very basic 4-legged animal body. Not nearly finished, but possibly better than blocks?
+ * Improved the sky shader. Have proper moon phases now.
+ * added some dog body parts, but not enough to make a complete dog.
+ * Added a system to allow modelers to just have a single model for multiple body parts, if desired.
+ * Changed the way jewelry is displayed to show every single item of jewelry on a person.
+
 v0.20.2
  * Added nightwing model
  * Allow setting an IP address for connecting to DF on another computer or VM
