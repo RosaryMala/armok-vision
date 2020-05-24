@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ItemMatcher<T>
 {
-    Dictionary<MatPairStruct, T> itemList;
     public T this[string token]
     {
         set
@@ -14,32 +13,28 @@ public class ItemMatcher<T>
                 Debug.Log("Invalid item: " + token);
                 return;
             }
-            if (itemList == null)
-                itemList = new Dictionary<MatPairStruct, T>();
-            itemList[ItemTokenList.ItemLookup[token].mat_pair] = value;
+            BaseContainer[ItemTokenList.ItemLookup[token].mat_pair] = value;
         }
     }
     public T this[MatPairStruct mat]
     {
         set
         {
-            if (itemList == null)
-                itemList = new Dictionary<MatPairStruct, T>();
-            itemList[mat] = value;
+            BaseContainer[mat] = value;
         }
     }
     public bool Get(MatPairStruct mat, out T value)
     {
-        if(itemList != null)
+        if(BaseContainer != null)
         {
             T output;
-            if (itemList.TryGetValue(mat, out output))
+            if (BaseContainer.TryGetValue(mat, out output))
             {
                 value = output;
                 return true;
             }
             mat = new MatPairStruct(mat.Type, -1); //Try once more with a more generic value.
-            if (itemList.TryGetValue(mat, out output))
+            if (BaseContainer.TryGetValue(mat, out output))
             {
                 value = output;
                 return true;
@@ -51,6 +46,7 @@ public class ItemMatcher<T>
     }
     public void Clear()
     {
-        itemList.Clear();
+        BaseContainer.Clear();
     }
+    public Dictionary<MatPairStruct, T> BaseContainer { get; } = new Dictionary<MatPairStruct, T>();
 }

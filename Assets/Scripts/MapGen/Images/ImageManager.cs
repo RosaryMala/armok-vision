@@ -65,7 +65,8 @@ public class ImageManager : MonoBehaviour
             {
                 if (engravingStore.ContainsKey(engraving.pos))
                     continue;
-
+                if (engraving.image == null)
+                    continue;
                 var engravingObject = new GameObject("Engraving " + ((DFHack.DFCoord)engraving.pos));
                 var renderer = engravingObject.AddComponent<MeshRenderer>();
                 var filter = engravingObject.AddComponent<MeshFilter>();

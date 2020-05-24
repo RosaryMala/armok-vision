@@ -59,7 +59,7 @@ public class ItemImprovement : MonoBehaviour
 
         meshFilter = actualModel.GetComponentInChildren<MeshFilter>();
         meshRenderer = actualModel.GetComponentInChildren<MeshRenderer>();
-        if ((ImprovementType)improvement.type == ImprovementType.ArtImage)
+        if ((ImprovementType)improvement.type == ImprovementType.ArtImage && improvement.image != null)
         {
             meshFilter.sharedMesh = ImageManager.Instance.CreateMesh(improvement.image, ImageManager.Direction.Front);
         }

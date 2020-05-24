@@ -36,8 +36,11 @@ public class BodyPartModel : MonoBehaviour
 
     public List<ItemModel> ClothingLayers { get; private set; }
 
+    ItemMatcher<ItemAttachmentPoint> itemAttachmentPoints = new ItemMatcher<ItemAttachmentPoint>();
+
     internal void CollectEquipment()
     {
+        itemAttachmentPoints.Clear();
         censorField = transform.Find("[CENSOR]");
         specialEquipment = new Dictionary<MatPairStruct, ItemModel>();
         foreach (var item in GetComponentsInChildren<ItemModel>())
@@ -81,6 +84,10 @@ public class BodyPartModel : MonoBehaviour
                 //    DestroyImmediate(item.gameObject);
             }
         }
+        foreach(var attachpoint in GetComponentsInChildren<ItemAttachmentPoint>())
+        {
+            itemAttachmentPoints[attachpoint.ItemToken] = attachpoint;
+        }
     }
 
     List<ItemModel> instantiatedClothingLayers = new List<ItemModel>();
@@ -94,6 +101,11 @@ public class BodyPartModel : MonoBehaviour
             if (instantiatedClothingLayers[i] != null)
                 instantiatedClothingLayers[i].gameObject.SetActive(false);
         }
+        //also remove any attached items.
+        foreach (var item in itemAttachmentPoints.BaseContainer)
+        {
+            item.Value.Clear();
+        }
         for (int i = 0; i < inventory.Count; i++)
         {
             var item = inventory[i];
@@ -103,11 +115,16 @@ public class BodyPartModel : MonoBehaviour
                 if (instantiatedClothingLayers.Count > i && instantiatedClothingLayers[i] != null)
                     instantiatedClothingLayers[i].gameObject.SetActive(false);
             }
+            ItemAttachmentPoint attachmentPoint;
             if (specialEquipment.ContainsKey(item.item.item.type))
             {
                 var model = specialEquipment[item.item.item.type];
                 model.gameObject.SetActive(true);
                 model.UpdateMaterial(item.item.item, unit);
+            }
+            else if (itemAttachmentPoints.Get(item.item.item.type, out attachmentPoint))
+            {
+                attachmentPoint.Add(item.item.item);
             }
             else if (item.item.mode == RemoteFortressReader.InventoryMode.Worn)
             {
