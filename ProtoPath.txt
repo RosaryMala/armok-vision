@@ -1,1 +1,1 @@
-C:/Users/japam/source/repos/dfhack/plugins/proto
+D:/Home/Documents/GitHub/dfhack/plugins/proto
