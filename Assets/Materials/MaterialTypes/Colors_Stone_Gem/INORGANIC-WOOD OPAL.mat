@@ -4,10 +4,12 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: INORGANIC-WOOD OPAL
-  m_Shader: {fileID: 4800000, guid: 0d849fe31a0566441aadf5b3171b7ad4, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 1091082d04caddc4bb9626d8a12b4c01,
+    type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -40,5 +42,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _HeightPreview: 0
+    - _useDFColor: 0
     m_Colors:
     - _Color: {r: 0.63235295, g: 0.40451995, b: 0.17668687, a: 0.5019608}
+  m_BuildTextureStacks: []
