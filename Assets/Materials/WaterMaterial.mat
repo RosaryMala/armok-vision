@@ -4,12 +4,14 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: WaterMaterial
-  m_Shader: {fileID: 4800000, guid: 580c4b1f7c61c294dbb4c07058bffa88, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 09a26db7686f43242ac6c407409a726c,
+    type: 3}
   m_ShaderKeywords: _DETAIL_MULX2 _NORMALMAP
-  m_LightmapFlags: 5
+  m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -108,6 +110,8 @@ Material:
     - _WaveScale: 0.07
     - _ZWrite: 1
     m_Colors:
+    - Vector2_A8E9BF2E: {r: 0.1, g: 0.1, b: 0, a: 0}
+    - Vector2_DA7D54A1: {r: 0.1, g: 0.1, b: 0, a: 0}
     - WaveSpeed: {r: 19, g: 9, b: -16, a: -7}
     - _Color: {r: 0.05098428, g: 0.38431987, b: 0.63922036, a: 0.5019608}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
@@ -116,3 +120,4 @@ Material:
     - _ShapeAdj: {r: 0.98039216, g: 1, b: 1, a: 1}
     - _SubColor: {r: 1, g: 1, b: 1, a: 1}
     - _horizonColor: {r: 0.172, g: 0.463, b: 0.435, a: 0}
+  m_BuildTextureStacks: []
