@@ -627,7 +627,7 @@ public class ContentLoader : MonoBehaviour
                 default:
                     {
                         var mat = new Material(material);
-                        mat.shader = Shader.Find("Building/Transparent");
+                        mat.shader = Shader.Find("Shader Graphs/Objects Transparent");
                         mat.name += " Transparent";
                         transparentMaterialVersions[instanceID] = mat; 
                     }

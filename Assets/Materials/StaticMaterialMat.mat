@@ -11,7 +11,7 @@ Material:
   m_Shader: {fileID: -6465566751694194690, guid: 5de5d93b0484c6e4eba12a3b0f21df80,
     type: 3}
   m_ShaderKeywords: _EMISSION _NORMALMAP _TEXTURE_MASK
-  m_LightmapFlags: 1
+  m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -82,7 +82,7 @@ Material:
     - _Glossiness: 1
     - _GlossyReflections: 1
     - _MatIndex: 0
-    - _Metallic: 0
+    - _Metallic: 1
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.08
