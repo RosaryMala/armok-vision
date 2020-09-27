@@ -1131,6 +1131,14 @@ namespace RemoteFortressReader
       get { return _flows; }
     }
   
+    [UnityEngine.SerializeField]
+    private global::System.Collections.Generic.List<RemoteFortressReader.Coord> _fluid_flow_direction = new global::System.Collections.Generic.List<RemoteFortressReader.Coord>();
+    [global::ProtoBuf.ProtoMember(31, Name=@"fluid_flow_direction", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.Coord> fluid_flow_direction
+    {
+      get { return _fluid_flow_direction; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

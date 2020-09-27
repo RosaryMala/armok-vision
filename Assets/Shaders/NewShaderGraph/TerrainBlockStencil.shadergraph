@@ -25,7 +25,14 @@
             "JSONnodeData": "{\n    \"m_Guid\": {\n        \"m_GuidSerialized\": \"291cdab5-0b16-49f2-9b23-f0de619dc283\"\n    },\n    \"m_Name\": \"World Bounds\",\n    \"m_DefaultReferenceName\": \"Vector4_F77A1C80\",\n    \"m_OverrideReferenceName\": \"_WorldBounds\",\n    \"m_GeneratePropertyBlock\": false,\n    \"m_Precision\": 0,\n    \"m_GPUInstanced\": false,\n    \"m_Hidden\": false,\n    \"m_Value\": {\n        \"x\": 0.0,\n        \"y\": 0.0,\n        \"z\": 1.0,\n        \"w\": 1.0\n    }\n}"
         }
     ],
-    "m_SerializedKeywords": [],
+    "m_SerializedKeywords": [
+        {
+            "typeInfo": {
+                "fullName": "UnityEditor.ShaderGraph.ShaderKeyword"
+            },
+            "JSONnodeData": "{\n    \"m_Guid\": {\n        \"m_GuidSerialized\": \"947241ee-6e83-4389-8c8e-ea2ff844257e\"\n    },\n    \"m_Name\": \"Contaminants\",\n    \"m_DefaultReferenceName\": \"BOOLEAN_193E0C23_ON\",\n    \"m_OverrideReferenceName\": \"CONTAMINANTS\",\n    \"m_GeneratePropertyBlock\": true,\n    \"m_KeywordType\": 0,\n    \"m_KeywordDefinition\": 1,\n    \"m_KeywordScope\": 0,\n    \"m_Entries\": [],\n    \"m_Value\": 0,\n    \"m_IsEditable\": true,\n    \"m_IsExposable\": true\n}"
+        }
+    ],
     "m_SerializableNodes": [
         {
             "typeInfo": {

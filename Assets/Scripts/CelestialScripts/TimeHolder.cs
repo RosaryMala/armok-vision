@@ -55,7 +55,7 @@ public class TimeHolder : MonoBehaviour {
 
         if(DFConnection.Instance.DfPauseState)
         {
-            Time.timeScale = 0;
+            //Time.timeScale = 0;
             lastSeconds = Time.realtimeSinceStartup;
             lastTicks = realTime.CurrentYearTicks;
         }
@@ -64,7 +64,7 @@ public class TimeHolder : MonoBehaviour {
             float currentSeconds = Time.realtimeSinceStartup;
             var tickDifference = realTime.CurrentYearTicks - lastTicks;
             var secondDifference = currentSeconds - lastSeconds;
-            Time.timeScale = Mathf.Clamp((tickDifference / secondDifference) / CanonFPS, 0, 100);
+            //Time.timeScale = Mathf.Clamp((tickDifference / secondDifference) / CanonFPS, 0, 100);
             lastSeconds = currentSeconds;
             lastTicks = realTime.CurrentYearTicks;
         }

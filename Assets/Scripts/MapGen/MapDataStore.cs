@@ -224,6 +224,13 @@ public class MapDataStore {
                             setTiles = true;
                         }
                     }
+                    if(block.fluid_flow_direction != null && block.fluid_flow_direction.Count > netIndex)
+                    {
+                        Vector2 dir = new Vector2(block.fluid_flow_direction[netIndex].x, block.fluid_flow_direction[netIndex].y);
+                        //if (dir.sqrMagnitude > 1)
+                        //    dir.Normalize();
+                        tile.fluidFlow = new Vector2(-dir.x, dir.y);
+                    }
                 }
                 if(setSpatters)
                 {
@@ -748,6 +755,7 @@ public class MapDataStore {
             digDesignation = TileDigDesignation.NO_DIG;
             spatters = null;
             grassPercent = 100;
+            fluidFlow = new Vector2(0, 0);
         }
 
         public Tile(Tile orig)
@@ -773,6 +781,7 @@ public class MapDataStore {
             positionOnTree = orig.positionOnTree;
             digDesignation = orig.digDesignation;
             spatters = orig.spatters;
+            fluidFlow = orig.fluidFlow;
         }
 
         public MapDataStore container;
@@ -813,6 +822,8 @@ public class MapDataStore {
         public string direction { get { return tiletypeTokenList [tileType].direction; } }
 
         public int grassPercent;
+
+        public Vector2 fluidFlow;
 
         public int RampType
         {

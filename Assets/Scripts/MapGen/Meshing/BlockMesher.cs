@@ -1,5 +1,6 @@
 ﻿using DFHack;
 using MaterialStore;
+using Newtonsoft.Json.Linq;
 using RemoteFortressReader;
 using System;
 using System.Collections.Generic;
@@ -56,6 +57,8 @@ abstract class BlockMesher {
     static MeshCombineUtility.MeshInstance[] terrainMeshBuffer;
     [ThreadStatic]
     static float[,] heights;
+    [ThreadStatic]
+    static Vector2[,] directions;
 
     static protected void InitBuffers()
     {
@@ -70,6 +73,7 @@ abstract class BlockMesher {
         terrainMeshBuffer =
             new MeshCombineUtility.MeshInstance[GameMap.blockSize * GameMap.blockSize];
         heights = new float[2, 2];
+        directions = new Vector2[2, 2];
     }
 
     // Some queues.
@@ -243,13 +247,14 @@ abstract class BlockMesher {
         Vector3[] finalVertices = new Vector3[(GameMap.blockSize + 1) * (GameMap.blockSize + 1)];
         Vector3[] finalNormals = new Vector3[(GameMap.blockSize + 1) * (GameMap.blockSize + 1)];
         Vector2[] finalUVs = new Vector2[(GameMap.blockSize + 1) * (GameMap.blockSize + 1)];
+        Vector2[] finalDirection = new Vector2[(GameMap.blockSize + 1) * (GameMap.blockSize + 1)];
         List<int> finalFaces = new List<int>();
 
-        // Is this necessary?
-        heights[0,0] = 0;
-        heights[0,1] = 0;
-        heights[1,0] = 0;
-        heights[1,1] = 0;
+        //// Is this necessary?
+        //heights[0,0] = 0;
+        //heights[0,1] = 0;
+        //heights[1,0] = 0;
+        //heights[1,1] = 0;
 
         for (int xx = 0; xx <= GameMap.blockSize; xx++)
             for (int yy = 0; yy <= GameMap.blockSize; yy++)
@@ -263,22 +268,32 @@ abstract class BlockMesher {
                         if (x < 0 || y < 0 || x >= MapDataStore.MapSize.x || y >= MapDataStore.MapSize.y)
                         {
                             heights[xxx, yyy] = -1;
+                            directions[xxx, yyy] = new Vector2(0, 0);
                             continue;
                         }
                         var maybeTile = data[x, y, block_z];
                         if (maybeTile == null)
                         {
                             heights[xxx, yyy] = -1;
+                            directions[xxx, yyy] = new Vector2(0, 0);
                             continue;
                         }
                         var tile = maybeTile;
                         if (tile.isWall)
                         {
                             heights[xxx, yyy] = -1;
+                            directions[xxx, yyy] = new Vector2(0, 0);
+                            continue;
+                        }
+                        if(data.GetLiquidLevel(new DFCoord(x, y, block_z), liquid_select) == 7 && data.GetLiquidLevel(new DFCoord(x, y, block_z+1), liquid_select) > 0)
+                        {
+                            heights[xxx, yyy] = -1;
+                            directions[xxx, yyy] = new Vector2(0, 0);
                             continue;
                         }
                         heights[xxx, yyy] = data.GetLiquidLevel(new DFCoord(x,y,block_z), liquid_select);
                         heights[xxx, yyy] /= 7.0f;
+                        directions[xxx, yyy] = data[x, y, block_z].fluidFlow;
                         if (tile.isFloor)
                         {
                             heights[xxx, yyy] *= (GameMap.tileHeight - GameMap.floorHeight);
@@ -292,15 +307,21 @@ abstract class BlockMesher {
                 //now find their average, discaring invalid ones.
                 float height = 0;
                 float total = 0;
-                foreach (var item in heights)
-                {
-                    if (item < 0)
-                        continue;
-                    height += item;
-                    total++;
-                }
+                Vector2 dir = new Vector2(0,0);
+                for (int i = 0; i < heights.GetLength(0); i++)
+                    for (int j = 0; j < heights.GetLength(1); j++)
+                    {
+                        if (heights[i,j] < 0)
+                            continue;
+                        height += heights[i, j];
+                        dir += directions[i, j];
+                        total++;
+                    }
                 if (total >= 1)
+                {
                     height /= total;
+                    dir /= total;
+                }
                 //find the slopes.
                 float sx = ((
                     (heights[0, 0] < 0 ? height : heights[0, 0]) +
@@ -320,6 +341,7 @@ abstract class BlockMesher {
                 finalVertices[coord2Index(xx, yy)].z += GameMap.tileWidth / 2.0f;
                 finalVertices[coord2Index(xx, yy)].y += height;
                 finalUVs[coord2Index(xx, yy)] = new Vector2(xx, yy);
+                finalDirection[coord2Index(xx, yy)] = new Vector2((dir.x + 1) / 2, (dir.y + 1) / 2);
             }
         for (int xx = 0; xx < GameMap.blockSize; xx++)
             for (int yy = 0; yy < GameMap.blockSize; yy++)
@@ -342,7 +364,7 @@ abstract class BlockMesher {
                                 normals: finalNormals,
                                 tangents: null,
                                 uv: finalUVs,
-                                uv2: null,
+                                uv2: finalDirection,
                                 uv3: null,
                                 colors: null,
                                 triangles: finalFaces.ToArray());
