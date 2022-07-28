@@ -38,9 +38,6 @@ If you know how to code and want to hack on the engine:
 6. Hack around. Check out the [issues](https://github.com/JapaMala/armok-vision/issues) to find things that need fixing / ideas that could be implemented.
 7. Submit a [pull request](https://github.com/JapaMala/armok-vision/pulls) with your changes!
 
-#### Financially
-If you want to buy the lead programmer a snack, you can donate on his [Patreon Page](https://www.patreon.com/japamala)
-
 ##### Structural Notes
 (Some short notes for anyone getting started with the codebase.)
 
