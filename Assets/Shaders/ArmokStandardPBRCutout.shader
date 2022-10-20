@@ -3,7 +3,7 @@
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "grey" {}
 		_BumpMap ("Normalmap (RGB) Occlusion (A)", 2D) = "bump" {}
-        _SpecialTex("Metallic (R)", 2D) = "black" {}
+        _MetalGlossMap("Metallic", 2D) = "white" {}
 		[PerRendererData]_SpatterTex("Spatter", 2D) = "" {}
 		_SpatterDirection("Spatter Direction", Vector) = (0,1,0)
 		_SpatterSmoothness("Spatter Smoothness", Range(0,1)) = 0

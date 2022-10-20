@@ -20,7 +20,7 @@
         _OcclusionMap("Occlusion", 2D) = "white" {}
 
     _EmissionColor("Color", Color) = (0,0,0)
-        _EmissionMap("Emission", 2D) = "white" {}
+        _EmissionMap("Emission", 2D) = "black" {}
 
     _DFMask("DF Material Splat", 2D) = "black" {}
 

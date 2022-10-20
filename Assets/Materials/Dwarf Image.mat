@@ -2,26 +2,31 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Dwarf Image
-  m_Shader: {fileID: -6465566751694194690, guid: ae474651430b87c458a5257c1089f5cc,
-    type: 3}
-  m_ShaderKeywords: _NORMALMAP _TEXTURE_MASK
+  m_Shader: {fileID: 4800000, guid: fae4592dd1b303b43ad5176e2cdb142b, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _NORMALMAP
+  - _TEXTURE_MASK
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: 20572e58b8f58fd408ebb53586771c88, type: 3}
+        m_Texture: {fileID: 18700000, guid: bd2b876762dd5804f9be4c94e8bbeb5c, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DFMask:
@@ -48,6 +53,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: d57e1ad97b15e43a187111ec757683de, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _MatTex:
+        m_Texture: {fileID: 18700000, guid: 6fcc78502286209408f46548a4f8827b, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MatTexArray:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -68,6 +77,7 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - Vector1_35ED2078: 0.5
     - _Amount: 0

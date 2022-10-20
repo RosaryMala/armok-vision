@@ -5,8 +5,10 @@ public class SunRotate : MonoBehaviour
     public float rotationSpeed = 1.0f;
     public float longitude;
     public float axialTilt;
-    private int starMatrix;
-    private int moonMatrix;
+    private int CubemapPosition;
+    private float skyTransitionTime;
+
+    //private int moonMatrix;
 
     public float GetLongitudeFromWorld(RemoteFortressReader.WorldMap world)
     {
@@ -32,8 +34,8 @@ public class SunRotate : MonoBehaviour
 
     private void Awake()
     {
-        starMatrix = Shader.PropertyToID("_StarRotationMatrix");
-        moonMatrix = Shader.PropertyToID("_MoonRotationMatrix");
+        CubemapPosition = Shader.PropertyToID("_CubemapPosition");
+        //moonMatrix = Shader.PropertyToID("_MoonRotationMatrix");
     }
 
     // Update is called once per frame
@@ -44,7 +46,10 @@ public class SunRotate : MonoBehaviour
         var yearRotation = Quaternion.AngleAxis(TimeHolder.DisplayedTime.SolsticeAngle, Vector3.back) * Quaternion.Euler(0, 90, 0);
         var moonRotation = Quaternion.AngleAxis(-((TimeHolder.DisplayedTime.SolsticeAngle * 13) + 111.923076923076f), Vector3.back) * Quaternion.Euler(0, 90, 0);
         transform.rotation = planetRotation * seasonRotation * Quaternion.Euler(0, 90, 0);
-        RenderSettings.skybox.SetMatrix(starMatrix, Matrix4x4.Rotate(planetRotation * yearRotation * seasonRotation));
-        RenderSettings.skybox.SetMatrix(moonMatrix, Matrix4x4.Rotate(planetRotation * moonRotation * seasonRotation));
+        //RenderSettings.skybox.SetMatrix(CubemapPosition, Matrix4x4.Rotate(planetRotation * yearRotation * seasonRotation));
+        //RenderSettings.skybox.SetMatrix(moonMatrix, Matrix4x4.Rotate(planetRotation * moonRotation * seasonRotation));
+        var skyTransitionTime = this.transform.rotation.eulerAngles.x / 360;
+        RenderSettings.skybox.SetFloat("_CubemapTransition", skyTransitionTime);
+        Debug.Log(skyTransitionTime);
     }
 }

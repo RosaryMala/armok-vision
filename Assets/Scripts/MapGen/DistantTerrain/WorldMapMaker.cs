@@ -27,16 +27,7 @@ public class WorldMapMaker : MonoBehaviour
 
     RegionMaps regionMaps;
     WorldMap worldMap;
-
-    public CloudMaker cloudPrafab;
-
-    CloudMaker cumulusMediumClouds;
-    CloudMaker cumulusMultiClouds;
-    Dictionary<int, CloudMaker> cumulusNimbusClouds;
-    CloudMaker stratusAltoClouds;
-    CloudMaker stratusProperClouds;
-    Dictionary<int, CloudMaker> stratusNimbusClouds;
-    CloudMaker cirrusClouds;
+    public Material SkyMaterial;
 
     Dictionary<DFCoord2d, RegionMaker> DetailRegions = new Dictionary<DFCoord2d, RegionMaker>();
     public RegionMaker regionPrefab;
@@ -92,7 +83,7 @@ public class WorldMapMaker : MonoBehaviour
             for (int y = 0; y < height; y++)
             {
                 int index = y * remoteMap.world_width + x;
-                regionTiles[x,y] = remoteMap.region_tiles[index];
+                regionTiles[x, y] = remoteMap.region_tiles[index];
                 if (GameSettings.Instance.rendering.drawClouds)
                 {
                     cumulusMedium[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_MEDIUM;
@@ -107,43 +98,14 @@ public class WorldMapMaker : MonoBehaviour
                     fogThick[x, y] = remoteMap.clouds[index].fog == FogType.F0G_THICK;
                 }
             }
-        if(ContentLoader.Instance != null)
+        if (ContentLoader.Instance != null)
             GenerateMesh();
-
-
-        if (GameSettings.Instance.rendering.drawClouds)
-            GenerateClouds();
         //Debug.Log("Loaded World: " + worldNameEnglish);
     }
 
     DFTime lastUpdateTime;
     private int chunkIndex;
     private int waterChunkIndex;
-
-    void CopyClouds(WorldMap remoteMap)
-    {
-        if (remoteMap == null)
-        {
-            Debug.Log("Didn't get world map!");
-            return;
-        }
-        for (int x = 0; x < width; x++)
-            for (int y = 0; y < height; y++)
-            {
-                int index = y * remoteMap.world_width + x;
-                cumulusMedium[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_MEDIUM;
-                cumulusMulti[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_MULTI;
-                cumulusNimbus[x, y] = remoteMap.clouds[index].cumulus == CumulusType.CUMULUS_NIMBUS;
-                stratusAlto[x, y] = remoteMap.clouds[index].stratus == StratusType.STRATUS_ALTO;
-                stratusProper[x, y] = remoteMap.clouds[index].stratus == StratusType.STRATUS_PROPER;
-                stratusNimbus[x, y] = remoteMap.clouds[index].stratus == StratusType.STRATUS_NIMBUS;
-                cirrus[x, y] = remoteMap.clouds[index].cirrus;
-                fogMist[x, y] = remoteMap.clouds[index].fog == FogType.FOG_MIST;
-                fogNormal[x, y] = remoteMap.clouds[index].fog == FogType.FOG_NORMAL;
-                fogThick[x, y] = remoteMap.clouds[index].fog == FogType.F0G_THICK;
-            }
-        GenerateClouds();
-    }
 
     void InitArrays()
     {
@@ -225,11 +187,6 @@ public class WorldMapMaker : MonoBehaviour
             {
                 CopyFromRemote(worldMap);
             }
-            else
-            {
-                if(GameSettings.Instance.rendering.drawClouds)
-                    CopyClouds(worldMap);
-            }
         }
     }
 
@@ -281,12 +238,12 @@ public class WorldMapMaker : MonoBehaviour
         List<Vector2> waterUvs = new List<Vector2>();
         List<int> waterTris = new List<int>();
 
-        foreach(MeshFilter mf in terrainChunks)
+        foreach (MeshFilter mf in terrainChunks)
         {
             if (mf.mesh != null)
                 mf.mesh.Clear();
         }
-        foreach(MeshFilter mf in waterChunks)
+        foreach (MeshFilter mf in waterChunks)
         {
             if (mf.mesh != null)
                 mf.mesh.Clear();
@@ -332,7 +289,7 @@ public class WorldMapMaker : MonoBehaviour
 
                 Color treeColor = Color.black;
                 int treeCount = 0;
-                foreach (var tree in regionTiles[x,y].tree_materials)
+                foreach (var tree in regionTiles[x, y].tree_materials)
                 {
                     int plantIndex = tree.mat_index;
                     if (tree.mat_type != 419
@@ -503,36 +460,5 @@ public class WorldMapMaker : MonoBehaviour
         {
             colors[i] = colors[i].linear;
         }
-    }
-
-    void GenerateClouds()
-    {
-        cumulusMediumClouds = MakeCloud(cumulusMediumClouds, 1250, cumulusMedium, "cumulusMedium");
-        cumulusMultiClouds = MakeCloud(cumulusMultiClouds, 5000, cumulusMulti, "cumulusMulti");
-        if (cumulusNimbusClouds == null) cumulusNimbusClouds = new Dictionary<int, CloudMaker>();
-        for (int i = 1875; i <= 6250; i += 300)
-            cumulusNimbusClouds[i] = MakeCloud(cumulusNimbusClouds.ContainsKey(i) ? cumulusNimbusClouds[i] : null, i, cumulusNimbus, "cumulusNimbus");
-        stratusAltoClouds = MakeCloud(stratusAltoClouds, 6250, stratusAlto, "stratusAlto");
-        stratusProperClouds = MakeCloud(stratusProperClouds, 1875, stratusProper, "stratusProper");
-        if (stratusNimbusClouds == null) stratusNimbusClouds = new Dictionary<int, CloudMaker>();
-        for (int i = 625; i <= 1875; i += 300)
-            stratusNimbusClouds[i] = MakeCloud(stratusNimbusClouds.ContainsKey(i) ? stratusNimbusClouds[i] : null, i, stratusNimbus, "stratusNimbus");
-        cirrusClouds = MakeCloud(cirrusClouds, 6250, cirrus, "cirrus");
-    }
-
-    CloudMaker MakeCloud(CloudMaker original, float height, bool[,] cloudMap, string name)
-    {
-        if (original == null)
-        {
-            original = Instantiate(cloudPrafab);
-            original.scale = scale;
-            original.GenerateMesh(cloudMap);
-            original.name = name;
-            original.transform.parent = transform;
-            original.transform.localPosition = new Vector3(0, height * GameMap.tileHeight * scale);
-        }
-        else
-            original.UpdateClouds(cloudMap);
-        return original;
     }
 }

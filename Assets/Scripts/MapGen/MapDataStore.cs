@@ -224,9 +224,9 @@ public class MapDataStore {
                             setTiles = true;
                         }
                     }
-                    if(block.fluid_flow_direction != null && block.fluid_flow_direction.Count > netIndex)
+                    if(block.flows != null && block.flows.Count > netIndex)
                     {
-                        Vector2 dir = new Vector2(block.fluid_flow_direction[netIndex].x, block.fluid_flow_direction[netIndex].y);
+                        Vector2 dir = new Vector2(block.flows[netIndex].pos.x, block.flows[netIndex].pos.y);
                         //if (dir.sqrMagnitude > 1)
                         //    dir.Normalize();
                         tile.fluidFlow = new Vector2(-dir.x, dir.y);

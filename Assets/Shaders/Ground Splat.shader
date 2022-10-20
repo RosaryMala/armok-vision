@@ -10,6 +10,8 @@
         [PerRendererData]_SpatterTex("Spatter", 2D) = "" {}
         _SpatterDirection("Spatter Direction", Vector) = (0,1,0)
         _SpatterSmoothness("Spatter Smoothness", Range(0,1)) = 0
+		_MetalLevel("Metallic", Range(0.0, 1.0)) = 0.0
+		_Rough("Roughness", Range(0.0, 1.0)) = 0.5
         _WorldBounds("World Bounds", Vector) = (0,0,1,1)
         _SpatterNoise("Spatter Noise", 2D) = "white" {}
     }
@@ -30,6 +32,8 @@
         sampler2D _Control;
         sampler2D _GrassControl;
         float4 _Control_TexelSize;
+		float _MetalLevel;
+		float _Rough;
         sampler2D _Tint;
         sampler2D _GrassTint;
         UNITY_DECLARE_TEX2DARRAY(_MatTexArray);
@@ -167,14 +171,14 @@
             {
                 o.Albedo = (spatter.rgb / spatter.a);
                 o.Smoothness = _SpatterSmoothness;
-                o.Metallic = 0;
+                o.Metallic = _MetalLevel;
             }
             else
 #endif
             {
                 o.Albedo = abcd_c.rgb * abcd_tint.rgb;
-                o.Smoothness = abcd_c.a;
-                o.Metallic = max((abcd_tint.a * 2) - 1, 0);
+                o.Smoothness = abcd_c.a * _Rough;
+                o.Metallic = max((abcd_tint.a * 2) - 1, 0) * _MetalLevel;
             }
             o.Occlusion = abcd_n.r;
         }

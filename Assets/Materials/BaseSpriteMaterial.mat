@@ -2,24 +2,32 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: BaseSpriteMaterial
   m_Shader: {fileID: 4800000, guid: fae4592dd1b303b43ad5176e2cdb142b, type: 3}
-  m_ShaderKeywords: ETC1_EXTERNAL_ALPHA _ALPHATEST_ON layer_1
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - ETC1_EXTERNAL_ALPHA
+  - _ALPHATEST_ON
+  - layer_1
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
     - _BumpMap:
-        m_Texture: {fileID: 18700000, guid: bd2b876762dd5804f9be4c94e8bbeb5c, type: 2}
+        m_Texture: {fileID: 18700000, guid: 099059a42f9cb254da95f4cd814d0e0e, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -27,7 +35,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MatTex:
-        m_Texture: {fileID: 18700000, guid: 6fcc78502286209408f46548a4f8827b, type: 2}
+        m_Texture: {fileID: 18700000, guid: 77be5b320c93d894684c6f2cfebf210b, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalArray:
@@ -38,6 +46,7 @@ Material:
         m_Texture: {fileID: 18700000, guid: 6fcc78502286209408f46548a4f8827b, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _Cutoff: 0.5
     - _Glossiness: 0
@@ -45,3 +54,4 @@ Material:
     - _SpriteIndex: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []

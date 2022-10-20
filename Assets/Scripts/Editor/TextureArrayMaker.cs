@@ -140,7 +140,7 @@ public class TextureArrayMaker : EditorWindow
             if (previewTexture == null)
                 previewTexture = new Texture2D(texArray.width, texArray.height, TextureFormat.ARGB32, false);
             if (previewTexture.width != texArray.width || previewTexture.height != texArray.height)
-                previewTexture.Resize(texArray.width, texArray.height);
+                previewTexture.Reinitialize(texArray.width, texArray.height);
 
             var previewPixels = texArray.GetPixels(previewIndex);
 
@@ -176,7 +176,7 @@ public class TextureArrayMaker : EditorWindow
             if (normalPreviewTexture == null)
                 normalPreviewTexture = new Texture2D(normalArray.width, normalArray.height, TextureFormat.ARGB32, false);
             if (normalPreviewTexture.width != normalArray.width || normalPreviewTexture.height != normalArray.height)
-                normalPreviewTexture.Resize(normalArray.width, normalArray.height);
+                normalPreviewTexture.Reinitialize(normalArray.width, normalArray.height);
 
             var previewPixels = normalArray.GetPixels(previewIndex);
 

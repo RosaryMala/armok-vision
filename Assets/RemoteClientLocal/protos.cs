@@ -524,43 +524,6 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"FoodIngredient")]
-  public partial class FoodIngredient : global::ProtoBuf.IExtensible
-  {
-    public FoodIngredient() {}
-    
-    [UnityEngine.SerializeField]
-    private int _item_type = default(int);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"item_type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int item_type
-    {
-      get { return _item_type; }
-      set { _item_type = value; }
-    }
-    [UnityEngine.SerializeField]
-    private RemoteFortressReader.MatPair _material = null;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"material", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public RemoteFortressReader.MatPair material
-    {
-      get { return _material; }
-      set { _material = value; }
-    }
-    [UnityEngine.SerializeField]
-    private int _quality = default(int);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"quality", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int quality
-    {
-      get { return _quality; }
-      set { _quality = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Item")]
   public partial class Item : global::ProtoBuf.IExtensible
   {
@@ -727,14 +690,6 @@ namespace RemoteFortressReader
       get { return _image; }
       set { _image = value; }
     }
-    [UnityEngine.SerializeField]
-    private global::System.Collections.Generic.List<RemoteFortressReader.FoodIngredient> _ingredients = new global::System.Collections.Generic.List<RemoteFortressReader.FoodIngredient>();
-    [global::ProtoBuf.ProtoMember(19, Name=@"ingredients", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.FoodIngredient> ingredients
-    {
-      get { return _ingredients; }
-    }
-  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -1129,14 +1084,6 @@ namespace RemoteFortressReader
     public global::System.Collections.Generic.List<RemoteFortressReader.FlowInfo> flows
     {
       get { return _flows; }
-    }
-  
-    [UnityEngine.SerializeField]
-    private global::System.Collections.Generic.List<RemoteFortressReader.Coord> _fluid_flow_direction = new global::System.Collections.Generic.List<RemoteFortressReader.Coord>();
-    [global::ProtoBuf.ProtoMember(31, Name=@"fluid_flow_direction", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<RemoteFortressReader.Coord> fluid_flow_direction
-    {
-      get { return _fluid_flow_direction; }
     }
   
     private global::ProtoBuf.IExtension extensionObject;

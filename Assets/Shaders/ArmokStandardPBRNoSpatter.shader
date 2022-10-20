@@ -3,11 +3,11 @@
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "grey" {}
 		_BumpMap ("Normalmap (RGB) Occlusion (A)", 2D) = "bump" {}
-        _SpecialTex("Metallic (R)", 2D) = "black" {}
+        _MetalGlossMap("Metallic", 2D) = "white" {}
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
-		LOD 200
+		LOD 300
 		
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types

@@ -1,7 +1,7 @@
 ﻿Shader "Custom/ArmokStandardPBRTransparent_Array" {
 	Properties {
 		_BumpMap ("Normalmap (RGB) Occlusion (A)", 2DArray) = "bump" {}
-        _SpecialTex("Metallic (R)", 2DArray) = "black" {}
+        _MetalGlossMap("Metallic", 2DArray) = "white" {}
 		[PerRendererData]_SpatterTex("Spatter", 2D) = "" {}
 		_SpatterDirection("Spatter Direction", Vector) = (0,1,0)
 		_SpatterSmoothness("Spatter Smoothness", Range(0,1)) = 0

@@ -1,0 +1,103 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: LowPoly - TreeTrunk
+  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _Bottom: 0
+    - _BottomColorPos: 0
+    - _BumpScale: 1
+    - _Cutoff: 0.5
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 0
+    - _Float0: 0.18
+    - _Float1: 1
+    - _Float3: 0.2
+    - _GlossMapScale: 1
+    - _Glossiness: 0.2
+    - _GlossyReflections: 1
+    - _Metallic: 0
+    - _Mode: 0
+    - _MotionSpeed: 10
+    - _ObjectHeight: 20
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _Smoothness: 0.2
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _Top: 10
+    - _TopColorPos: 10
+    - _UVSec: 0
+    - _WaveDirectionZX: 0
+    - _WaveHeight: 0.5
+    - _WaveMagnitude: 1
+    - _WaveSpeed: 400
+    - _WindAmplitude: 2
+    - _WindSpeed: 100
+    - _ZWrite: 1
+    - __dirty: 0
+    m_Colors:
+    - _BottomColor: {r: 0.43382335, g: 0.2423427, b: 0, a: 1}
+    - _Color: {r: 0.41911763, g: 0.29521018, b: 0.24962153, a: 1}
+    - _Color1: {r: 1, g: 0, b: 0, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SpecColor: {r: 1, g: 1, b: 1, a: 1}
+    - _TopColor: {r: 0.8088235, g: 0.70054287, b: 0.41630623, a: 1}
+    - _Vector0: {r: 0, g: 0, b: 0.2, a: 0}
+    - _Vector1: {r: 0, g: 0, b: 0, a: 0}
+    - _WindCycles: {r: 0, g: 0, b: 0.5, a: 0}
+    - _WindDirection: {r: 0, g: 0, b: 0, a: 0}
+    - _WindDirectionandMagnitude: {r: 0, g: 0, b: 0, a: 0}
+    - _WindMagnitude: {r: 0, g: 0, b: 0.1, a: 0}
