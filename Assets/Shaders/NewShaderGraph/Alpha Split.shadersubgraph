@@ -1,7 +1,7 @@
 {
     "m_SGVersion": 3,
     "m_Type": "UnityEditor.ShaderGraph.GraphData",
-    "m_ObjectId": "1b8e6045122c4fc8a4c9f72f4aaafe7d",
+    "m_ObjectId": "ec8a196f74d2418b8d9f716e985151cb",
     "m_Properties": [
         {
             "m_Id": "9f5af0ba8cdda089b492316b633777d8"
@@ -11,7 +11,7 @@
     "m_Dropdowns": [],
     "m_CategoryData": [
         {
-            "m_Id": "28b2719c49204e63b892580e087c6c87"
+            "m_Id": "83e9770850244bcab1ccb0018958f9d8"
         }
     ],
     "m_Nodes": [
@@ -171,18 +171,6 @@
 
 {
     "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
-    "m_ObjectId": "28b2719c49204e63b892580e087c6c87",
-    "m_Name": "",
-    "m_ChildObjectList": [
-        {
-            "m_Id": "9f5af0ba8cdda089b492316b633777d8"
-        }
-    ]
-}
-
-{
-    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.SubtractNode",
     "m_ObjectId": "3a1c12cc1de00b8cb8a46ceca65b5a35",
     "m_Group": {
@@ -336,6 +324,18 @@
         "z": 0.0,
         "w": 0.0
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
+    "m_ObjectId": "83e9770850244bcab1ccb0018958f9d8",
+    "m_Name": "",
+    "m_ChildObjectList": [
+        {
+            "m_Id": "9f5af0ba8cdda089b492316b633777d8"
+        }
+    ]
 }
 
 {

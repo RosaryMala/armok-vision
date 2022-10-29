@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 0a1173d88ba68db4b8d69bdbb4a9726e
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures:
+  - _SpatterNoise: {fileID: 2800000, guid: 14e8ef81985b3e040a0065d14e34ad3b, type: 3}
+  - _MatTexArray: {fileID: 18700000, guid: 507d82b7de2c9404cb0a71f3cdb0331f, type: 2}
+  - _ShapeMap: {fileID: 18700000, guid: 9eea02fcbbb4cc24aaf9072337d93cd4, type: 2}
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

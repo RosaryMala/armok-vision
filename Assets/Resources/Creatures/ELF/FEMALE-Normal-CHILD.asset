@@ -3,8 +3,9 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -16,7 +17,7 @@ MonoBehaviour:
   spriteLayers:
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_ARMOR_CLOAK
+    token: ARMOR/ITEM_ARMOR_CLOAK
     spriteTexture: {fileID: 21300000, guid: 29024fa01d5369643bd56da2161effb2, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -29,7 +30,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_ARMOR_CAPE
+    token: ARMOR/ITEM_ARMOR_CAPE
     spriteTexture: {fileID: 21300000, guid: ddc13e02625aea2448f874acc098ac57, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -55,7 +56,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_PANTS_THONG
+    token: PANTS/ITEM_PANTS_THONG
     spriteTexture: {fileID: 21300000, guid: 13d8f8c26aa4d2242a5ba6c5a2bddfee, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -68,7 +69,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_PANTS_LEGGINGS
+    token: PANTS/ITEM_PANTS_LEGGINGS
     spriteTexture: {fileID: 21300000, guid: 4a4001334178fca438161aecac4574f2, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -81,7 +82,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_SHOES_SOCKS
+    token: SHOES/ITEM_SHOES_SOCKS
     spriteTexture: {fileID: 21300000, guid: 15deca72c8a683547818040b3b5477d8, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -94,20 +95,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_SHOES_SOCKS
-    spriteTexture: {fileID: 21300000, guid: ba6c81ed712675f4391bf8dd6ef693d0, type: 3}
-    preview: 1
-    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
-    hairType: 0
-    hairStyle: 0
-    hairMin: -1
-    hairMax: -1
-    patternIndex: 1
-    metal: 0
-    positionOffset: {x: 0, y: -0.27}
-  - spriteSource: 2
-    colorSource: 2
-    token: ITEM_SHOES_CHAUSSE
+    token: SHOES/ITEM_SHOES_CHAUSSE
     spriteTexture: {fileID: 21300000, guid: 7442865d478ae6941b1092043fe1c54d, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -120,20 +108,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_SHOES_CHAUSSE
-    spriteTexture: {fileID: 21300000, guid: 682fc02f42e6c6b4a8ee6dd0fc426123, type: 3}
-    preview: 1
-    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
-    hairType: 0
-    hairStyle: 0
-    hairMin: -1
-    hairMax: -1
-    patternIndex: 1
-    metal: 0
-    positionOffset: {x: 0, y: -0.27}
-  - spriteSource: 2
-    colorSource: 2
-    token: ITEM_SHOES_SANDAL
+    token: SHOES/ITEM_SHOES_SANDAL
     spriteTexture: {fileID: 21300000, guid: 91da50dd0327e394aaf4ba085c6ecdb7, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -146,20 +121,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_SHOES_SANDAL
-    spriteTexture: {fileID: 21300000, guid: dcbb7515ac4f2194eb4e7dc15a9e4b17, type: 3}
-    preview: 1
-    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
-    hairType: 0
-    hairStyle: 0
-    hairMin: -1
-    hairMax: -1
-    patternIndex: 1
-    metal: 0
-    positionOffset: {x: 0, y: -0.27}
-  - spriteSource: 2
-    colorSource: 2
-    token: ITEM_SHOES_SHOES
+    token: SHOES/ITEM_SHOES_SHOES
     spriteTexture: {fileID: 21300000, guid: 3bf160b27baab85409b19d046abccc0e, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -172,20 +134,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_SHOES_SHOES
-    spriteTexture: {fileID: 21300000, guid: 506bb7690837fd14db9a619b87a262c1, type: 3}
-    preview: 1
-    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
-    hairType: 0
-    hairStyle: 0
-    hairMin: -1
-    hairMax: -1
-    patternIndex: 1
-    metal: 0
-    positionOffset: {x: 0, y: -0.27}
-  - spriteSource: 2
-    colorSource: 2
-    token: ITEM_PANTS_BRAIES
+    token: PANTS/ITEM_PANTS_BRAIES
     spriteTexture: {fileID: 21300000, guid: 04b4cbc8df40a5a44862ef3f738e54be, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -198,7 +147,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_PANTS_PANTS
+    token: PANTS/ITEM_PANTS_PANTS
     spriteTexture: {fileID: 21300000, guid: 07aefe2b5a0ad54448c441195990a7ba, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -211,7 +160,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_PANTS_LOINCLOTH
+    token: PANTS/ITEM_PANTS_LOINCLOTH
     spriteTexture: {fileID: 21300000, guid: da88dccb5d0b7f64c881298925464c29, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -237,7 +186,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_PANTS_SKIRT
+    token: PANTS/ITEM_PANTS_SKIRT
     spriteTexture: {fileID: 21300000, guid: c91dc3a8219268d41a3a85a0b561e3b0, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -263,7 +212,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_ARMOR_SHIRT
+    token: ARMOR/ITEM_ARMOR_SHIRT
     spriteTexture: {fileID: 21300000, guid: c95347d3069eaff4c82fb88366e1546b, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -276,7 +225,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_ARMOR_VEST
+    token: ARMOR/ITEM_ARMOR_VEST
     spriteTexture: {fileID: 21300000, guid: cba1c18de6e7e1749b6f29bc9fee7799, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -289,7 +238,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_ARMOR_DRESS
+    token: ARMOR/ITEM_ARMOR_DRESS
     spriteTexture: {fileID: 21300000, guid: 56d36afad7e1bf24a99f4eba903b1127, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -302,7 +251,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_GLOVES_GLOVES
+    token: GLOVES/ITEM_GLOVES_GLOVES
     spriteTexture: {fileID: 21300000, guid: 3cbd3bf80e8874f48bb448d73f9f524c, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -315,20 +264,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_GLOVES_GLOVES
-    spriteTexture: {fileID: 21300000, guid: d508e2ab15b984e4c9c82c8c168d79f3, type: 3}
-    preview: 1
-    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
-    hairType: 0
-    hairStyle: 0
-    hairMin: -1
-    hairMax: -1
-    patternIndex: 1
-    metal: 0
-    positionOffset: {x: 0, y: -0.27}
-  - spriteSource: 2
-    colorSource: 2
-    token: ITEM_GLOVES_MITTENS
+    token: GLOVES/ITEM_GLOVES_MITTENS
     spriteTexture: {fileID: 21300000, guid: 50d0ee3447360b9479e80ca6378f5061, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -341,20 +277,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_GLOVES_MITTENS
-    spriteTexture: {fileID: 21300000, guid: 7504c10551052f54faed24683e62bef8, type: 3}
-    preview: 1
-    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
-    hairType: 0
-    hairStyle: 0
-    hairMin: -1
-    hairMax: -1
-    patternIndex: 1
-    metal: 0
-    positionOffset: {x: 0, y: -0.27}
-  - spriteSource: 2
-    colorSource: 2
-    token: ITEM_ARMOR_TUNIC
+    token: ARMOR/ITEM_ARMOR_TUNIC
     spriteTexture: {fileID: 21300000, guid: 8e5151255b5a94f4f8e21a3de72e8828, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -367,7 +290,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_ARMOR_TOGA
+    token: ARMOR/ITEM_ARMOR_TOGA
     spriteTexture: {fileID: 21300000, guid: cb82ad811a1518d4eb3b63cbf6ef54dd, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -380,7 +303,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_ARMOR_COAT
+    token: ARMOR/ITEM_ARMOR_COAT
     spriteTexture: {fileID: 21300000, guid: b506cc139285e98438b09adb63da1838, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -393,34 +316,8 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_ARMOR_CAPE
-    spriteTexture: {fileID: 21300000, guid: ed1e6c057e89e4646b63e3e524824e3c, type: 3}
-    preview: 1
-    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
-    hairType: 0
-    hairStyle: 0
-    hairMin: -1
-    hairMax: -1
-    patternIndex: 0
-    metal: 0
-    positionOffset: {x: 0, y: -0.27}
-  - spriteSource: 2
-    colorSource: 2
-    token: ITEM_ARMOR_ROBE
+    token: ARMOR/ITEM_ARMOR_ROBE
     spriteTexture: {fileID: 21300000, guid: 730714db344798e4ba0d0e4bff5976b6, type: 3}
-    preview: 1
-    color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
-    hairType: 0
-    hairStyle: 0
-    hairMin: -1
-    hairMax: -1
-    patternIndex: 0
-    metal: 0
-    positionOffset: {x: 0, y: -0.27}
-  - spriteSource: 2
-    colorSource: 2
-    token: ITEM_ARMOR_CLOAK
-    spriteTexture: {fileID: 21300000, guid: 8ea64245fea3ebc40890fb98afb5fe4c, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
     hairType: 0
@@ -653,7 +550,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_HELM_CAP
+    token: HELM/ITEM_HELM_CAP
     spriteTexture: {fileID: 21300000, guid: dbf21a7cf04af774fa780568596c3a05, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -692,7 +589,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_HELM_MASK
+    token: HELM/ITEM_HELM_MASK
     spriteTexture: {fileID: 21300000, guid: 64e95718b54958e42ab9b5a2723a7318, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -705,7 +602,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_HELM_HOOD
+    token: HELM/ITEM_HELM_HOOD
     spriteTexture: {fileID: 21300000, guid: 07f187b372332684a84af6857897d845, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -718,7 +615,7 @@ MonoBehaviour:
     positionOffset: {x: 0, y: -0.27}
   - spriteSource: 2
     colorSource: 2
-    token: ITEM_HELM_TURBAN
+    token: HELM/ITEM_HELM_TURBAN
     spriteTexture: {fileID: 21300000, guid: 24b72ce5e8a3f1943af47a6ccbd519c3, type: 3}
     preview: 1
     color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
@@ -732,4 +629,5 @@ MonoBehaviour:
   special: 0
   profession: 103
   standardSize: 22594
+  standardArea: 799.21234
   standardLength: 282.70343
