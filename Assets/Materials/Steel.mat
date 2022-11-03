@@ -27,6 +27,7 @@ Material:
     MotionVector: User
   disabledShaderPasses:
   - TransparentBackface
+  - MOTIONVECTORS
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -167,7 +168,7 @@ Material:
     - _RenderQueueType: 1
     - _RequireSplitLighting: 0
     - _Rough: 0.5
-    - _Roughness: 0.5
+    - _Roughness: 1
     - _SmoothnessTextureChannel: 0
     - _SpatterSmoothness: 0
     - _SpecularHighlights: 1

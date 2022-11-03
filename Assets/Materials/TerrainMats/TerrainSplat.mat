@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: TerrainSplat
-  m_Shader: {fileID: 4800000, guid: 53f020a6a7eda84438094e3d6b7bd495, type: 3}
+  m_Shader: {fileID: 4800000, guid: 1ac43ac6750e06e488102daeeb4cea12, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
@@ -63,7 +63,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ShapeMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 18700000, guid: 9eea02fcbbb4cc24aaf9072337d93cd4, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ShapeMap1:

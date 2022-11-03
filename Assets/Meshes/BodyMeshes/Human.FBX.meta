@@ -1,529 +1,1565 @@
 fileFormatVersion: 2
 guid: 2621930fd4d4e814db9dc869b571b87f
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: Box001
-    100002: Box002
-    100004: HD
-    100006: //RootNode
-    100008: Plane001
-    100010: Plane002
-    100012: Box003
-    100014: Box004
-    100016: Box005
-    100018: Box006
-    100020: Box007
-    100022: Box008
-    100024: Box009
-    100026: Plane003
-    100028: Box010
-    100030: Box011
-    100032: Box012
-    100034: Box013
-    100036: Box014
-    100038: Box015
-    100040: LB
-    100042: LF
-    100044: LLA
-    100046: LLL
-    100048: LUA
-    100050: LUL
-    100052: RF
-    100054: RLA
-    100056: RLL
-    100058: RUA
-    100060: RUL
-    100062: UB
-    100064: EAR
-    100066: NK
-    100068: NOSE
-    100070: L_EAR
-    100072: R_EAR
-    100074: Elf Ear
-    100076: Goblin Ear
-    100078: Antenna
-    100080: Antenna001
-    100082: Horn
-    100084: Tusk
-    100086: Ribs_False
-    100088: Ribs_Floating
-    100090: Ribs_True
-    100092: Finger
-    100094: Hand
-    100096: Thumb
-    100098: Toe
-    100100: Proboscis
-    100102: Shell
-    100104: Wing
-    100106: Single Arm
-    100108: Single Leg
-    100110: Beak
-    100112: Growth
-    100114: Long Skirt
-    100116: Short Skirt
-    100118: Skirt
-    100120: ITEM_ARMOR_DRESS
-    100122: Dress Upper Body
-    100124: Dress Lower Arm
-    100126: Dress Upper Arm
-    100128: Shirt
-    100130: Shirt Lower
-    100132: Shirt Lower Arm
-    100134: Shirt Upper Arm
-    100136: Tunic
-    100138: Tunic Lower
-    100140: Tunic Upper Arm
-    100142: Dress UB Female
-    100144: NK001
-    100146: Plane004
-    100148: Shirt Female
-    100150: Tunic Top Female
-    100152: UB Female
-    100154: Robe Lower
-    100156: Robe Lower Arm
-    100158: Robe Top
-    100160: Robe Top Female
-    100162: Robe Upper Arm
-    100164: Shirt Lower Arm001
-    100166: Dress Top
-    100168: Female Top Clothing
-    100170: LB Cover
-    100172: RLL001
-    100174: RUL001
-    100176: Insect Wing
-    100178: Female Dress
-    100180: LB Female
-    100182: LB Female Clothing
-    100184: LB Female Hipoly
-    100186: UB Female Highpoly
-    100188: LB Cover Female
-    100190: RUL002
-    100192: Cape
-    100194: LB High
-    100196: UB High
-    100198: Right Shoe
-    100200: Toe001
-    100202: Talon
-    100204: Toenail
-    100206: Glove
-    400000: Box001
-    400002: Box002
-    400004: HD
-    400006: //RootNode
-    400008: Plane001
-    400010: Plane002
-    400012: Box003
-    400014: Box004
-    400016: Box005
-    400018: Box006
-    400020: Box007
-    400022: Box008
-    400024: Box009
-    400026: Plane003
-    400028: Box010
-    400030: Box011
-    400032: Box012
-    400034: Box013
-    400036: Box014
-    400038: Box015
-    400040: LB
-    400042: LF
-    400044: LLA
-    400046: LLL
-    400048: LUA
-    400050: LUL
-    400052: RF
-    400054: RLA
-    400056: RLL
-    400058: RUA
-    400060: RUL
-    400062: UB
-    400064: EAR
-    400066: NK
-    400068: NOSE
-    400070: L_EAR
-    400072: R_EAR
-    400074: Elf Ear
-    400076: Goblin Ear
-    400078: Antenna
-    400080: Antenna001
-    400082: Horn
-    400084: Tusk
-    400086: Ribs_False
-    400088: Ribs_Floating
-    400090: Ribs_True
-    400092: Finger
-    400094: Hand
-    400096: Thumb
-    400098: Toe
-    400100: Proboscis
-    400102: Shell
-    400104: Wing
-    400106: Single Arm
-    400108: Single Leg
-    400110: Beak
-    400112: Growth
-    400114: Long Skirt
-    400116: Short Skirt
-    400118: Skirt
-    400120: ITEM_ARMOR_DRESS
-    400122: Dress Upper Body
-    400124: Dress Lower Arm
-    400126: Dress Upper Arm
-    400128: Shirt
-    400130: Shirt Lower
-    400132: Shirt Lower Arm
-    400134: Shirt Upper Arm
-    400136: Tunic
-    400138: Tunic Lower
-    400140: Tunic Upper Arm
-    400142: Dress UB Female
-    400144: NK001
-    400146: Plane004
-    400148: Shirt Female
-    400150: Tunic Top Female
-    400152: UB Female
-    400154: Robe Lower
-    400156: Robe Lower Arm
-    400158: Robe Top
-    400160: Robe Top Female
-    400162: Robe Upper Arm
-    400164: Shirt Lower Arm001
-    400166: Dress Top
-    400168: Female Top Clothing
-    400170: LB Cover
-    400172: RLL001
-    400174: RUL001
-    400176: Insect Wing
-    400178: Female Dress
-    400180: LB Female
-    400182: LB Female Clothing
-    400184: LB Female Hipoly
-    400186: UB Female Highpoly
-    400188: LB Cover Female
-    400190: RUL002
-    400192: Cape
-    400194: LB High
-    400196: UB High
-    400198: Right Shoe
-    400200: Toe001
-    400202: Talon
-    400204: Toenail
-    400206: Glove
-    2100000: 'Material #25'
-    2100002: No Name
-    2100004: 03 - Default
-    2100006: Unwrap Texture Checker Material
-    2300000: Box001
-    2300002: Box002
-    2300004: HD
-    2300006: Plane001
-    2300008: Plane002
-    2300010: Box003
-    2300012: Box004
-    2300014: Box005
-    2300016: Box006
-    2300018: Box007
-    2300020: Box008
-    2300022: Box009
-    2300024: Plane003
-    2300026: Box010
-    2300028: Box011
-    2300030: Box012
-    2300032: Box013
-    2300034: Box014
-    2300036: Box015
-    2300038: LB
-    2300040: LF
-    2300042: LLA
-    2300044: LLL
-    2300046: LUA
-    2300048: LUL
-    2300050: RF
-    2300052: RLA
-    2300054: RLL
-    2300056: RUA
-    2300058: RUL
-    2300060: UB
-    2300062: EAR
-    2300064: NK
-    2300066: NOSE
-    2300068: L_EAR
-    2300070: R_EAR
-    2300072: Elf Ear
-    2300074: Goblin Ear
-    2300076: Antenna
-    2300078: Antenna001
-    2300080: Horn
-    2300082: Tusk
-    2300084: Ribs_False
-    2300086: Ribs_Floating
-    2300088: Ribs_True
-    2300090: Finger
-    2300092: Hand
-    2300094: Thumb
-    2300096: Toe
-    2300098: Proboscis
-    2300100: Shell
-    2300102: Wing
-    2300104: Single Arm
-    2300106: Single Leg
-    2300108: Beak
-    2300110: Growth
-    2300112: Long Skirt
-    2300114: Short Skirt
-    2300116: Skirt
-    2300118: ITEM_ARMOR_DRESS
-    2300120: Dress Upper Body
-    2300122: Dress Lower Arm
-    2300124: Dress Upper Arm
-    2300126: Shirt
-    2300128: Shirt Lower
-    2300130: Shirt Lower Arm
-    2300132: Shirt Upper Arm
-    2300134: Tunic
-    2300136: Tunic Lower
-    2300138: Tunic Upper Arm
-    2300140: Dress UB Female
-    2300142: NK001
-    2300144: Plane004
-    2300146: Shirt Female
-    2300148: Tunic Top Female
-    2300150: UB Female
-    2300152: Robe Lower
-    2300154: Robe Lower Arm
-    2300156: Robe Top
-    2300158: Robe Top Female
-    2300160: Robe Upper Arm
-    2300162: Shirt Lower Arm001
-    2300164: Dress Top
-    2300166: Female Top Clothing
-    2300168: LB Cover
-    2300170: RLL001
-    2300172: RUL001
-    2300174: Insect Wing
-    2300176: Female Dress
-    2300178: LB Female
-    2300180: LB Female Clothing
-    2300182: LB Female Hipoly
-    2300184: UB Female Highpoly
-    2300186: LB Cover Female
-    2300188: RUL002
-    2300190: Cape
-    2300192: LB High
-    2300194: UB High
-    2300196: Right Shoe
-    2300198: Toe001
-    2300200: Talon
-    2300202: Toenail
-    2300204: Glove
-    3300000: Box001
-    3300002: Box002
-    3300004: HD
-    3300006: Plane001
-    3300008: Plane002
-    3300010: Box003
-    3300012: Box004
-    3300014: Box005
-    3300016: Box006
-    3300018: Box007
-    3300020: Box008
-    3300022: Box009
-    3300024: Plane003
-    3300026: Box010
-    3300028: Box011
-    3300030: Box012
-    3300032: Box013
-    3300034: Box014
-    3300036: Box015
-    3300038: LB
-    3300040: LF
-    3300042: LLA
-    3300044: LLL
-    3300046: LUA
-    3300048: LUL
-    3300050: RF
-    3300052: RLA
-    3300054: RLL
-    3300056: RUA
-    3300058: RUL
-    3300060: UB
-    3300062: EAR
-    3300064: NK
-    3300066: NOSE
-    3300068: L_EAR
-    3300070: R_EAR
-    3300072: Elf Ear
-    3300074: Goblin Ear
-    3300076: Antenna
-    3300078: Antenna001
-    3300080: Horn
-    3300082: Tusk
-    3300084: Ribs_False
-    3300086: Ribs_Floating
-    3300088: Ribs_True
-    3300090: Finger
-    3300092: Hand
-    3300094: Thumb
-    3300096: Toe
-    3300098: Proboscis
-    3300100: Shell
-    3300102: Wing
-    3300104: Single Arm
-    3300106: Single Leg
-    3300108: Beak
-    3300110: Growth
-    3300112: Long Skirt
-    3300114: Short Skirt
-    3300116: Skirt
-    3300118: ITEM_ARMOR_DRESS
-    3300120: Dress Upper Body
-    3300122: Dress Lower Arm
-    3300124: Dress Upper Arm
-    3300126: Shirt
-    3300128: Shirt Lower
-    3300130: Shirt Lower Arm
-    3300132: Shirt Upper Arm
-    3300134: Tunic
-    3300136: Tunic Lower
-    3300138: Tunic Upper Arm
-    3300140: Dress UB Female
-    3300142: NK001
-    3300144: Plane004
-    3300146: Shirt Female
-    3300148: Tunic Top Female
-    3300150: UB Female
-    3300152: Robe Lower
-    3300154: Robe Lower Arm
-    3300156: Robe Top
-    3300158: Robe Top Female
-    3300160: Robe Upper Arm
-    3300162: Shirt Lower Arm001
-    3300164: Dress Top
-    3300166: Female Top Clothing
-    3300168: LB Cover
-    3300170: RLL001
-    3300172: RUL001
-    3300174: Insect Wing
-    3300176: Female Dress
-    3300178: LB Female
-    3300180: LB Female Clothing
-    3300182: LB Female Hipoly
-    3300184: UB Female Highpoly
-    3300186: LB Cover Female
-    3300188: RUL002
-    3300190: Cape
-    3300192: LB High
-    3300194: UB High
-    3300196: Right Shoe
-    3300198: Toe001
-    3300200: Talon
-    3300202: Toenail
-    3300204: Glove
-    4300000: Plane001
-    4300002: Plane002
-    4300004: HD
-    4300006: Box001
-    4300008: Box002
-    4300010: Box003
-    4300012: Box004
-    4300014: Box005
-    4300016: Box006
-    4300018: Box008
-    4300020: Box007
-    4300022: Box009
-    4300024: Plane003
-    4300026: Box012
-    4300028: Box014
-    4300030: Box010
-    4300032: UB
-    4300034: LB
-    4300036: RUL
-    4300038: RLL
-    4300040: RF
-    4300042: LUL
-    4300044: LLL
-    4300046: LF
-    4300048: RUA
-    4300050: RLA
-    4300052: LUA
-    4300054: LLA
-    4300056: NK
-    4300058: EAR
-    4300060: NOSE
-    4300062: R_EAR
-    4300064: L_EAR
-    4300066: Elf Ear
-    4300068: Goblin Ear
-    4300070: Antenna001
-    4300072: Antenna
-    4300074: Horn
-    4300076: Tusk
-    4300078: Ribs_True
-    4300080: Ribs_Floating
-    4300082: Ribs_False
-    4300084: Toe
-    4300086: Hand
-    4300088: Thumb
-    4300090: Finger
-    4300092: Proboscis
-    4300094: Shell
-    4300096: Wing
-    4300098: Single Leg
-    4300100: Single Arm
-    4300102: Beak
-    4300104: Growth
-    4300106: Long Skirt
-    4300108: Skirt
-    4300110: Short Skirt
-    4300112: ITEM_ARMOR_DRESS
-    4300114: Dress Upper Body
-    4300116: Dress Lower Arm
-    4300118: Dress Upper Arm
-    4300120: Shirt Lower
-    4300122: Tunic Lower
-    4300124: Shirt Lower Arm
-    4300126: Tunic Upper Arm
-    4300128: Shirt Upper Arm
-    4300130: Shirt
-    4300132: Tunic
-    4300134: NK001
-    4300136: UB Female
-    4300138: Plane004
-    4300140: Dress UB Female
-    4300142: Shirt Female
-    4300144: Tunic Top Female
-    4300146: Robe Lower
-    4300148: Shirt Lower Arm001
-    4300150: Robe Upper Arm
-    4300152: Robe Lower Arm
-    4300154: Robe Top
-    4300156: Robe Top Female
-    4300158: RLL001
-    4300160: RUL001
-    4300162: LB Cover
-    4300164: Dress Top
-    4300166: Female Top Clothing
-    4300168: Insect Wing
-    4300170: Female Dress
-    4300172: LB Female
-    4300174: LB Female Hipoly
-    4300176: LB Female Clothing
-    4300178: UB Female Highpoly
-    4300180: LB Cover Female
-    4300182: RUL002
-    4300184: Cape
-    4300186: LB High
-    4300188: UB High
-    4300190: Right Shoe
-    4300192: Toe001
-    4300194: Talon
-    4300196: Toenail
-    4300198: Glove
+  serializedVersion: 22103
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: Box001
+  - first:
+      1: 100002
+    second: Box002
+  - first:
+      1: 100004
+    second: HD
+  - first:
+      1: 100006
+    second: //RootNode
+  - first:
+      1: 100008
+    second: Plane001
+  - first:
+      1: 100010
+    second: Plane002
+  - first:
+      1: 100012
+    second: Box003
+  - first:
+      1: 100014
+    second: Box004
+  - first:
+      1: 100016
+    second: Box005
+  - first:
+      1: 100018
+    second: Box006
+  - first:
+      1: 100020
+    second: Box007
+  - first:
+      1: 100022
+    second: Box008
+  - first:
+      1: 100024
+    second: Box009
+  - first:
+      1: 100026
+    second: Plane003
+  - first:
+      1: 100028
+    second: Box010
+  - first:
+      1: 100030
+    second: Box011
+  - first:
+      1: 100032
+    second: Box012
+  - first:
+      1: 100034
+    second: Box013
+  - first:
+      1: 100036
+    second: Box014
+  - first:
+      1: 100038
+    second: Box015
+  - first:
+      1: 100040
+    second: LB
+  - first:
+      1: 100042
+    second: LF
+  - first:
+      1: 100044
+    second: LLA
+  - first:
+      1: 100046
+    second: LLL
+  - first:
+      1: 100048
+    second: LUA
+  - first:
+      1: 100050
+    second: LUL
+  - first:
+      1: 100052
+    second: RF
+  - first:
+      1: 100054
+    second: RLA
+  - first:
+      1: 100056
+    second: RLL
+  - first:
+      1: 100058
+    second: RUA
+  - first:
+      1: 100060
+    second: RUL
+  - first:
+      1: 100062
+    second: UB
+  - first:
+      1: 100064
+    second: EAR
+  - first:
+      1: 100066
+    second: NK
+  - first:
+      1: 100068
+    second: NOSE
+  - first:
+      1: 100070
+    second: L_EAR
+  - first:
+      1: 100072
+    second: R_EAR
+  - first:
+      1: 100074
+    second: Elf Ear
+  - first:
+      1: 100076
+    second: Goblin Ear
+  - first:
+      1: 100078
+    second: Antenna
+  - first:
+      1: 100080
+    second: Antenna001
+  - first:
+      1: 100082
+    second: Horn
+  - first:
+      1: 100084
+    second: Tusk
+  - first:
+      1: 100086
+    second: Ribs_False
+  - first:
+      1: 100088
+    second: Ribs_Floating
+  - first:
+      1: 100090
+    second: Ribs_True
+  - first:
+      1: 100092
+    second: Finger
+  - first:
+      1: 100094
+    second: Hand
+  - first:
+      1: 100096
+    second: Thumb
+  - first:
+      1: 100098
+    second: Toe
+  - first:
+      1: 100100
+    second: Proboscis
+  - first:
+      1: 100102
+    second: Shell
+  - first:
+      1: 100104
+    second: Wing
+  - first:
+      1: 100106
+    second: Single Arm
+  - first:
+      1: 100108
+    second: Single Leg
+  - first:
+      1: 100110
+    second: Beak
+  - first:
+      1: 100112
+    second: Growth
+  - first:
+      1: 100114
+    second: Long Skirt
+  - first:
+      1: 100116
+    second: Short Skirt
+  - first:
+      1: 100118
+    second: Skirt
+  - first:
+      1: 100120
+    second: ITEM_ARMOR_DRESS
+  - first:
+      1: 100122
+    second: Dress Upper Body
+  - first:
+      1: 100124
+    second: Dress Lower Arm
+  - first:
+      1: 100126
+    second: Dress Upper Arm
+  - first:
+      1: 100128
+    second: Shirt
+  - first:
+      1: 100130
+    second: Shirt Lower
+  - first:
+      1: 100132
+    second: Shirt Lower Arm
+  - first:
+      1: 100134
+    second: Shirt Upper Arm
+  - first:
+      1: 100136
+    second: Tunic
+  - first:
+      1: 100138
+    second: Tunic Lower
+  - first:
+      1: 100140
+    second: Tunic Upper Arm
+  - first:
+      1: 100142
+    second: Dress UB Female
+  - first:
+      1: 100144
+    second: NK001
+  - first:
+      1: 100146
+    second: Plane004
+  - first:
+      1: 100148
+    second: Shirt Female
+  - first:
+      1: 100150
+    second: Tunic Top Female
+  - first:
+      1: 100152
+    second: UB Female
+  - first:
+      1: 100154
+    second: Robe Lower
+  - first:
+      1: 100156
+    second: Robe Lower Arm
+  - first:
+      1: 100158
+    second: Robe Top
+  - first:
+      1: 100160
+    second: Robe Top Female
+  - first:
+      1: 100162
+    second: Robe Upper Arm
+  - first:
+      1: 100164
+    second: Shirt Lower Arm001
+  - first:
+      1: 100166
+    second: Dress Top
+  - first:
+      1: 100168
+    second: Female Top Clothing
+  - first:
+      1: 100170
+    second: LB Cover
+  - first:
+      1: 100172
+    second: RLL001
+  - first:
+      1: 100174
+    second: RUL001
+  - first:
+      1: 100176
+    second: Insect Wing
+  - first:
+      1: 100178
+    second: Female Dress
+  - first:
+      1: 100180
+    second: LB Female
+  - first:
+      1: 100182
+    second: LB Female Clothing
+  - first:
+      1: 100184
+    second: LB Female Hipoly
+  - first:
+      1: 100186
+    second: UB Female Highpoly
+  - first:
+      1: 100188
+    second: LB Cover Female
+  - first:
+      1: 100190
+    second: RUL002
+  - first:
+      1: 100192
+    second: Cape
+  - first:
+      1: 100194
+    second: LB High
+  - first:
+      1: 100196
+    second: UB High
+  - first:
+      1: 100198
+    second: Right Shoe
+  - first:
+      1: 100200
+    second: Toe001
+  - first:
+      1: 100202
+    second: Talon
+  - first:
+      1: 100204
+    second: Toenail
+  - first:
+      1: 100206
+    second: Glove
+  - first:
+      4: 400000
+    second: Box001
+  - first:
+      4: 400002
+    second: Box002
+  - first:
+      4: 400004
+    second: HD
+  - first:
+      4: 400006
+    second: //RootNode
+  - first:
+      4: 400008
+    second: Plane001
+  - first:
+      4: 400010
+    second: Plane002
+  - first:
+      4: 400012
+    second: Box003
+  - first:
+      4: 400014
+    second: Box004
+  - first:
+      4: 400016
+    second: Box005
+  - first:
+      4: 400018
+    second: Box006
+  - first:
+      4: 400020
+    second: Box007
+  - first:
+      4: 400022
+    second: Box008
+  - first:
+      4: 400024
+    second: Box009
+  - first:
+      4: 400026
+    second: Plane003
+  - first:
+      4: 400028
+    second: Box010
+  - first:
+      4: 400030
+    second: Box011
+  - first:
+      4: 400032
+    second: Box012
+  - first:
+      4: 400034
+    second: Box013
+  - first:
+      4: 400036
+    second: Box014
+  - first:
+      4: 400038
+    second: Box015
+  - first:
+      4: 400040
+    second: LB
+  - first:
+      4: 400042
+    second: LF
+  - first:
+      4: 400044
+    second: LLA
+  - first:
+      4: 400046
+    second: LLL
+  - first:
+      4: 400048
+    second: LUA
+  - first:
+      4: 400050
+    second: LUL
+  - first:
+      4: 400052
+    second: RF
+  - first:
+      4: 400054
+    second: RLA
+  - first:
+      4: 400056
+    second: RLL
+  - first:
+      4: 400058
+    second: RUA
+  - first:
+      4: 400060
+    second: RUL
+  - first:
+      4: 400062
+    second: UB
+  - first:
+      4: 400064
+    second: EAR
+  - first:
+      4: 400066
+    second: NK
+  - first:
+      4: 400068
+    second: NOSE
+  - first:
+      4: 400070
+    second: L_EAR
+  - first:
+      4: 400072
+    second: R_EAR
+  - first:
+      4: 400074
+    second: Elf Ear
+  - first:
+      4: 400076
+    second: Goblin Ear
+  - first:
+      4: 400078
+    second: Antenna
+  - first:
+      4: 400080
+    second: Antenna001
+  - first:
+      4: 400082
+    second: Horn
+  - first:
+      4: 400084
+    second: Tusk
+  - first:
+      4: 400086
+    second: Ribs_False
+  - first:
+      4: 400088
+    second: Ribs_Floating
+  - first:
+      4: 400090
+    second: Ribs_True
+  - first:
+      4: 400092
+    second: Finger
+  - first:
+      4: 400094
+    second: Hand
+  - first:
+      4: 400096
+    second: Thumb
+  - first:
+      4: 400098
+    second: Toe
+  - first:
+      4: 400100
+    second: Proboscis
+  - first:
+      4: 400102
+    second: Shell
+  - first:
+      4: 400104
+    second: Wing
+  - first:
+      4: 400106
+    second: Single Arm
+  - first:
+      4: 400108
+    second: Single Leg
+  - first:
+      4: 400110
+    second: Beak
+  - first:
+      4: 400112
+    second: Growth
+  - first:
+      4: 400114
+    second: Long Skirt
+  - first:
+      4: 400116
+    second: Short Skirt
+  - first:
+      4: 400118
+    second: Skirt
+  - first:
+      4: 400120
+    second: ITEM_ARMOR_DRESS
+  - first:
+      4: 400122
+    second: Dress Upper Body
+  - first:
+      4: 400124
+    second: Dress Lower Arm
+  - first:
+      4: 400126
+    second: Dress Upper Arm
+  - first:
+      4: 400128
+    second: Shirt
+  - first:
+      4: 400130
+    second: Shirt Lower
+  - first:
+      4: 400132
+    second: Shirt Lower Arm
+  - first:
+      4: 400134
+    second: Shirt Upper Arm
+  - first:
+      4: 400136
+    second: Tunic
+  - first:
+      4: 400138
+    second: Tunic Lower
+  - first:
+      4: 400140
+    second: Tunic Upper Arm
+  - first:
+      4: 400142
+    second: Dress UB Female
+  - first:
+      4: 400144
+    second: NK001
+  - first:
+      4: 400146
+    second: Plane004
+  - first:
+      4: 400148
+    second: Shirt Female
+  - first:
+      4: 400150
+    second: Tunic Top Female
+  - first:
+      4: 400152
+    second: UB Female
+  - first:
+      4: 400154
+    second: Robe Lower
+  - first:
+      4: 400156
+    second: Robe Lower Arm
+  - first:
+      4: 400158
+    second: Robe Top
+  - first:
+      4: 400160
+    second: Robe Top Female
+  - first:
+      4: 400162
+    second: Robe Upper Arm
+  - first:
+      4: 400164
+    second: Shirt Lower Arm001
+  - first:
+      4: 400166
+    second: Dress Top
+  - first:
+      4: 400168
+    second: Female Top Clothing
+  - first:
+      4: 400170
+    second: LB Cover
+  - first:
+      4: 400172
+    second: RLL001
+  - first:
+      4: 400174
+    second: RUL001
+  - first:
+      4: 400176
+    second: Insect Wing
+  - first:
+      4: 400178
+    second: Female Dress
+  - first:
+      4: 400180
+    second: LB Female
+  - first:
+      4: 400182
+    second: LB Female Clothing
+  - first:
+      4: 400184
+    second: LB Female Hipoly
+  - first:
+      4: 400186
+    second: UB Female Highpoly
+  - first:
+      4: 400188
+    second: LB Cover Female
+  - first:
+      4: 400190
+    second: RUL002
+  - first:
+      4: 400192
+    second: Cape
+  - first:
+      4: 400194
+    second: LB High
+  - first:
+      4: 400196
+    second: UB High
+  - first:
+      4: 400198
+    second: Right Shoe
+  - first:
+      4: 400200
+    second: Toe001
+  - first:
+      4: 400202
+    second: Talon
+  - first:
+      4: 400204
+    second: Toenail
+  - first:
+      4: 400206
+    second: Glove
+  - first:
+      21: 2100000
+    second: Material #25
+  - first:
+      21: 2100002
+    second: No Name
+  - first:
+      21: 2100004
+    second: 03 - Default
+  - first:
+      21: 2100006
+    second: Unwrap Texture Checker Material
+  - first:
+      23: 2300000
+    second: Box001
+  - first:
+      23: 2300002
+    second: Box002
+  - first:
+      23: 2300004
+    second: HD
+  - first:
+      23: 2300006
+    second: Plane001
+  - first:
+      23: 2300008
+    second: Plane002
+  - first:
+      23: 2300010
+    second: Box003
+  - first:
+      23: 2300012
+    second: Box004
+  - first:
+      23: 2300014
+    second: Box005
+  - first:
+      23: 2300016
+    second: Box006
+  - first:
+      23: 2300018
+    second: Box007
+  - first:
+      23: 2300020
+    second: Box008
+  - first:
+      23: 2300022
+    second: Box009
+  - first:
+      23: 2300024
+    second: Plane003
+  - first:
+      23: 2300026
+    second: Box010
+  - first:
+      23: 2300028
+    second: Box011
+  - first:
+      23: 2300030
+    second: Box012
+  - first:
+      23: 2300032
+    second: Box013
+  - first:
+      23: 2300034
+    second: Box014
+  - first:
+      23: 2300036
+    second: Box015
+  - first:
+      23: 2300038
+    second: LB
+  - first:
+      23: 2300040
+    second: LF
+  - first:
+      23: 2300042
+    second: LLA
+  - first:
+      23: 2300044
+    second: LLL
+  - first:
+      23: 2300046
+    second: LUA
+  - first:
+      23: 2300048
+    second: LUL
+  - first:
+      23: 2300050
+    second: RF
+  - first:
+      23: 2300052
+    second: RLA
+  - first:
+      23: 2300054
+    second: RLL
+  - first:
+      23: 2300056
+    second: RUA
+  - first:
+      23: 2300058
+    second: RUL
+  - first:
+      23: 2300060
+    second: UB
+  - first:
+      23: 2300062
+    second: EAR
+  - first:
+      23: 2300064
+    second: NK
+  - first:
+      23: 2300066
+    second: NOSE
+  - first:
+      23: 2300068
+    second: L_EAR
+  - first:
+      23: 2300070
+    second: R_EAR
+  - first:
+      23: 2300072
+    second: Elf Ear
+  - first:
+      23: 2300074
+    second: Goblin Ear
+  - first:
+      23: 2300076
+    second: Antenna
+  - first:
+      23: 2300078
+    second: Antenna001
+  - first:
+      23: 2300080
+    second: Horn
+  - first:
+      23: 2300082
+    second: Tusk
+  - first:
+      23: 2300084
+    second: Ribs_False
+  - first:
+      23: 2300086
+    second: Ribs_Floating
+  - first:
+      23: 2300088
+    second: Ribs_True
+  - first:
+      23: 2300090
+    second: Finger
+  - first:
+      23: 2300092
+    second: Hand
+  - first:
+      23: 2300094
+    second: Thumb
+  - first:
+      23: 2300096
+    second: Toe
+  - first:
+      23: 2300098
+    second: Proboscis
+  - first:
+      23: 2300100
+    second: Shell
+  - first:
+      23: 2300102
+    second: Wing
+  - first:
+      23: 2300104
+    second: Single Arm
+  - first:
+      23: 2300106
+    second: Single Leg
+  - first:
+      23: 2300108
+    second: Beak
+  - first:
+      23: 2300110
+    second: Growth
+  - first:
+      23: 2300112
+    second: Long Skirt
+  - first:
+      23: 2300114
+    second: Short Skirt
+  - first:
+      23: 2300116
+    second: Skirt
+  - first:
+      23: 2300118
+    second: ITEM_ARMOR_DRESS
+  - first:
+      23: 2300120
+    second: Dress Upper Body
+  - first:
+      23: 2300122
+    second: Dress Lower Arm
+  - first:
+      23: 2300124
+    second: Dress Upper Arm
+  - first:
+      23: 2300126
+    second: Shirt
+  - first:
+      23: 2300128
+    second: Shirt Lower
+  - first:
+      23: 2300130
+    second: Shirt Lower Arm
+  - first:
+      23: 2300132
+    second: Shirt Upper Arm
+  - first:
+      23: 2300134
+    second: Tunic
+  - first:
+      23: 2300136
+    second: Tunic Lower
+  - first:
+      23: 2300138
+    second: Tunic Upper Arm
+  - first:
+      23: 2300140
+    second: Dress UB Female
+  - first:
+      23: 2300142
+    second: NK001
+  - first:
+      23: 2300144
+    second: Plane004
+  - first:
+      23: 2300146
+    second: Shirt Female
+  - first:
+      23: 2300148
+    second: Tunic Top Female
+  - first:
+      23: 2300150
+    second: UB Female
+  - first:
+      23: 2300152
+    second: Robe Lower
+  - first:
+      23: 2300154
+    second: Robe Lower Arm
+  - first:
+      23: 2300156
+    second: Robe Top
+  - first:
+      23: 2300158
+    second: Robe Top Female
+  - first:
+      23: 2300160
+    second: Robe Upper Arm
+  - first:
+      23: 2300162
+    second: Shirt Lower Arm001
+  - first:
+      23: 2300164
+    second: Dress Top
+  - first:
+      23: 2300166
+    second: Female Top Clothing
+  - first:
+      23: 2300168
+    second: LB Cover
+  - first:
+      23: 2300170
+    second: RLL001
+  - first:
+      23: 2300172
+    second: RUL001
+  - first:
+      23: 2300174
+    second: Insect Wing
+  - first:
+      23: 2300176
+    second: Female Dress
+  - first:
+      23: 2300178
+    second: LB Female
+  - first:
+      23: 2300180
+    second: LB Female Clothing
+  - first:
+      23: 2300182
+    second: LB Female Hipoly
+  - first:
+      23: 2300184
+    second: UB Female Highpoly
+  - first:
+      23: 2300186
+    second: LB Cover Female
+  - first:
+      23: 2300188
+    second: RUL002
+  - first:
+      23: 2300190
+    second: Cape
+  - first:
+      23: 2300192
+    second: LB High
+  - first:
+      23: 2300194
+    second: UB High
+  - first:
+      23: 2300196
+    second: Right Shoe
+  - first:
+      23: 2300198
+    second: Toe001
+  - first:
+      23: 2300200
+    second: Talon
+  - first:
+      23: 2300202
+    second: Toenail
+  - first:
+      23: 2300204
+    second: Glove
+  - first:
+      33: 3300000
+    second: Box001
+  - first:
+      33: 3300002
+    second: Box002
+  - first:
+      33: 3300004
+    second: HD
+  - first:
+      33: 3300006
+    second: Plane001
+  - first:
+      33: 3300008
+    second: Plane002
+  - first:
+      33: 3300010
+    second: Box003
+  - first:
+      33: 3300012
+    second: Box004
+  - first:
+      33: 3300014
+    second: Box005
+  - first:
+      33: 3300016
+    second: Box006
+  - first:
+      33: 3300018
+    second: Box007
+  - first:
+      33: 3300020
+    second: Box008
+  - first:
+      33: 3300022
+    second: Box009
+  - first:
+      33: 3300024
+    second: Plane003
+  - first:
+      33: 3300026
+    second: Box010
+  - first:
+      33: 3300028
+    second: Box011
+  - first:
+      33: 3300030
+    second: Box012
+  - first:
+      33: 3300032
+    second: Box013
+  - first:
+      33: 3300034
+    second: Box014
+  - first:
+      33: 3300036
+    second: Box015
+  - first:
+      33: 3300038
+    second: LB
+  - first:
+      33: 3300040
+    second: LF
+  - first:
+      33: 3300042
+    second: LLA
+  - first:
+      33: 3300044
+    second: LLL
+  - first:
+      33: 3300046
+    second: LUA
+  - first:
+      33: 3300048
+    second: LUL
+  - first:
+      33: 3300050
+    second: RF
+  - first:
+      33: 3300052
+    second: RLA
+  - first:
+      33: 3300054
+    second: RLL
+  - first:
+      33: 3300056
+    second: RUA
+  - first:
+      33: 3300058
+    second: RUL
+  - first:
+      33: 3300060
+    second: UB
+  - first:
+      33: 3300062
+    second: EAR
+  - first:
+      33: 3300064
+    second: NK
+  - first:
+      33: 3300066
+    second: NOSE
+  - first:
+      33: 3300068
+    second: L_EAR
+  - first:
+      33: 3300070
+    second: R_EAR
+  - first:
+      33: 3300072
+    second: Elf Ear
+  - first:
+      33: 3300074
+    second: Goblin Ear
+  - first:
+      33: 3300076
+    second: Antenna
+  - first:
+      33: 3300078
+    second: Antenna001
+  - first:
+      33: 3300080
+    second: Horn
+  - first:
+      33: 3300082
+    second: Tusk
+  - first:
+      33: 3300084
+    second: Ribs_False
+  - first:
+      33: 3300086
+    second: Ribs_Floating
+  - first:
+      33: 3300088
+    second: Ribs_True
+  - first:
+      33: 3300090
+    second: Finger
+  - first:
+      33: 3300092
+    second: Hand
+  - first:
+      33: 3300094
+    second: Thumb
+  - first:
+      33: 3300096
+    second: Toe
+  - first:
+      33: 3300098
+    second: Proboscis
+  - first:
+      33: 3300100
+    second: Shell
+  - first:
+      33: 3300102
+    second: Wing
+  - first:
+      33: 3300104
+    second: Single Arm
+  - first:
+      33: 3300106
+    second: Single Leg
+  - first:
+      33: 3300108
+    second: Beak
+  - first:
+      33: 3300110
+    second: Growth
+  - first:
+      33: 3300112
+    second: Long Skirt
+  - first:
+      33: 3300114
+    second: Short Skirt
+  - first:
+      33: 3300116
+    second: Skirt
+  - first:
+      33: 3300118
+    second: ITEM_ARMOR_DRESS
+  - first:
+      33: 3300120
+    second: Dress Upper Body
+  - first:
+      33: 3300122
+    second: Dress Lower Arm
+  - first:
+      33: 3300124
+    second: Dress Upper Arm
+  - first:
+      33: 3300126
+    second: Shirt
+  - first:
+      33: 3300128
+    second: Shirt Lower
+  - first:
+      33: 3300130
+    second: Shirt Lower Arm
+  - first:
+      33: 3300132
+    second: Shirt Upper Arm
+  - first:
+      33: 3300134
+    second: Tunic
+  - first:
+      33: 3300136
+    second: Tunic Lower
+  - first:
+      33: 3300138
+    second: Tunic Upper Arm
+  - first:
+      33: 3300140
+    second: Dress UB Female
+  - first:
+      33: 3300142
+    second: NK001
+  - first:
+      33: 3300144
+    second: Plane004
+  - first:
+      33: 3300146
+    second: Shirt Female
+  - first:
+      33: 3300148
+    second: Tunic Top Female
+  - first:
+      33: 3300150
+    second: UB Female
+  - first:
+      33: 3300152
+    second: Robe Lower
+  - first:
+      33: 3300154
+    second: Robe Lower Arm
+  - first:
+      33: 3300156
+    second: Robe Top
+  - first:
+      33: 3300158
+    second: Robe Top Female
+  - first:
+      33: 3300160
+    second: Robe Upper Arm
+  - first:
+      33: 3300162
+    second: Shirt Lower Arm001
+  - first:
+      33: 3300164
+    second: Dress Top
+  - first:
+      33: 3300166
+    second: Female Top Clothing
+  - first:
+      33: 3300168
+    second: LB Cover
+  - first:
+      33: 3300170
+    second: RLL001
+  - first:
+      33: 3300172
+    second: RUL001
+  - first:
+      33: 3300174
+    second: Insect Wing
+  - first:
+      33: 3300176
+    second: Female Dress
+  - first:
+      33: 3300178
+    second: LB Female
+  - first:
+      33: 3300180
+    second: LB Female Clothing
+  - first:
+      33: 3300182
+    second: LB Female Hipoly
+  - first:
+      33: 3300184
+    second: UB Female Highpoly
+  - first:
+      33: 3300186
+    second: LB Cover Female
+  - first:
+      33: 3300188
+    second: RUL002
+  - first:
+      33: 3300190
+    second: Cape
+  - first:
+      33: 3300192
+    second: LB High
+  - first:
+      33: 3300194
+    second: UB High
+  - first:
+      33: 3300196
+    second: Right Shoe
+  - first:
+      33: 3300198
+    second: Toe001
+  - first:
+      33: 3300200
+    second: Talon
+  - first:
+      33: 3300202
+    second: Toenail
+  - first:
+      33: 3300204
+    second: Glove
+  - first:
+      43: 4300000
+    second: Plane001
+  - first:
+      43: 4300002
+    second: Plane002
+  - first:
+      43: 4300004
+    second: HD
+  - first:
+      43: 4300006
+    second: Box001
+  - first:
+      43: 4300008
+    second: Box002
+  - first:
+      43: 4300010
+    second: Box003
+  - first:
+      43: 4300012
+    second: Box004
+  - first:
+      43: 4300014
+    second: Box005
+  - first:
+      43: 4300016
+    second: Box006
+  - first:
+      43: 4300018
+    second: Box008
+  - first:
+      43: 4300020
+    second: Box007
+  - first:
+      43: 4300022
+    second: Box009
+  - first:
+      43: 4300024
+    second: Plane003
+  - first:
+      43: 4300026
+    second: Box012
+  - first:
+      43: 4300028
+    second: Box014
+  - first:
+      43: 4300030
+    second: Box010
+  - first:
+      43: 4300032
+    second: UB
+  - first:
+      43: 4300034
+    second: LB
+  - first:
+      43: 4300036
+    second: RUL
+  - first:
+      43: 4300038
+    second: RLL
+  - first:
+      43: 4300040
+    second: RF
+  - first:
+      43: 4300042
+    second: LUL
+  - first:
+      43: 4300044
+    second: LLL
+  - first:
+      43: 4300046
+    second: LF
+  - first:
+      43: 4300048
+    second: RUA
+  - first:
+      43: 4300050
+    second: RLA
+  - first:
+      43: 4300052
+    second: LUA
+  - first:
+      43: 4300054
+    second: LLA
+  - first:
+      43: 4300056
+    second: NK
+  - first:
+      43: 4300058
+    second: EAR
+  - first:
+      43: 4300060
+    second: NOSE
+  - first:
+      43: 4300062
+    second: R_EAR
+  - first:
+      43: 4300064
+    second: L_EAR
+  - first:
+      43: 4300066
+    second: Elf Ear
+  - first:
+      43: 4300068
+    second: Goblin Ear
+  - first:
+      43: 4300070
+    second: Antenna001
+  - first:
+      43: 4300072
+    second: Antenna
+  - first:
+      43: 4300074
+    second: Horn
+  - first:
+      43: 4300076
+    second: Tusk
+  - first:
+      43: 4300078
+    second: Ribs_True
+  - first:
+      43: 4300080
+    second: Ribs_Floating
+  - first:
+      43: 4300082
+    second: Ribs_False
+  - first:
+      43: 4300084
+    second: Toe
+  - first:
+      43: 4300086
+    second: Hand
+  - first:
+      43: 4300088
+    second: Thumb
+  - first:
+      43: 4300090
+    second: Finger
+  - first:
+      43: 4300092
+    second: Proboscis
+  - first:
+      43: 4300094
+    second: Shell
+  - first:
+      43: 4300096
+    second: Wing
+  - first:
+      43: 4300098
+    second: Single Leg
+  - first:
+      43: 4300100
+    second: Single Arm
+  - first:
+      43: 4300102
+    second: Beak
+  - first:
+      43: 4300104
+    second: Growth
+  - first:
+      43: 4300106
+    second: Long Skirt
+  - first:
+      43: 4300108
+    second: Skirt
+  - first:
+      43: 4300110
+    second: Short Skirt
+  - first:
+      43: 4300112
+    second: ITEM_ARMOR_DRESS
+  - first:
+      43: 4300114
+    second: Dress Upper Body
+  - first:
+      43: 4300116
+    second: Dress Lower Arm
+  - first:
+      43: 4300118
+    second: Dress Upper Arm
+  - first:
+      43: 4300120
+    second: Shirt Lower
+  - first:
+      43: 4300122
+    second: Tunic Lower
+  - first:
+      43: 4300124
+    second: Shirt Lower Arm
+  - first:
+      43: 4300126
+    second: Tunic Upper Arm
+  - first:
+      43: 4300128
+    second: Shirt Upper Arm
+  - first:
+      43: 4300130
+    second: Shirt
+  - first:
+      43: 4300132
+    second: Tunic
+  - first:
+      43: 4300134
+    second: NK001
+  - first:
+      43: 4300136
+    second: UB Female
+  - first:
+      43: 4300138
+    second: Plane004
+  - first:
+      43: 4300140
+    second: Dress UB Female
+  - first:
+      43: 4300142
+    second: Shirt Female
+  - first:
+      43: 4300144
+    second: Tunic Top Female
+  - first:
+      43: 4300146
+    second: Robe Lower
+  - first:
+      43: 4300148
+    second: Shirt Lower Arm001
+  - first:
+      43: 4300150
+    second: Robe Upper Arm
+  - first:
+      43: 4300152
+    second: Robe Lower Arm
+  - first:
+      43: 4300154
+    second: Robe Top
+  - first:
+      43: 4300156
+    second: Robe Top Female
+  - first:
+      43: 4300158
+    second: RLL001
+  - first:
+      43: 4300160
+    second: RUL001
+  - first:
+      43: 4300162
+    second: LB Cover
+  - first:
+      43: 4300164
+    second: Dress Top
+  - first:
+      43: 4300166
+    second: Female Top Clothing
+  - first:
+      43: 4300168
+    second: Insect Wing
+  - first:
+      43: 4300170
+    second: Female Dress
+  - first:
+      43: 4300172
+    second: LB Female
+  - first:
+      43: 4300174
+    second: LB Female Hipoly
+  - first:
+      43: 4300176
+    second: LB Female Clothing
+  - first:
+      43: 4300178
+    second: UB Female Highpoly
+  - first:
+      43: 4300180
+    second: LB Cover Female
+  - first:
+      43: 4300182
+    second: RUL002
+  - first:
+      43: 4300184
+    second: Cape
+  - first:
+      43: 4300186
+    second: LB High
+  - first:
+      43: 4300188
+    second: UB High
+  - first:
+      43: 4300190
+    second: Right Shoe
+  - first:
+      43: 4300192
+    second: Toe001
+  - first:
+      43: 4300194
+    second: Talon
+  - first:
+      43: 4300196
+    second: Toenail
+  - first:
+      43: 4300198
+    second: Glove
   externalObjects: {}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -532,6 +1568,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -556,25 +1593,35 @@ ModelImporter:
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -583,10 +1630,10 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
-  importAnimation: 1
-  copyAvatar: 0
+  referencedClips: []
+  importAnimation: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -596,13 +1643,19 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

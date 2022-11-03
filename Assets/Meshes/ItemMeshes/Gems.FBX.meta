@@ -1,171 +1,485 @@
 fileFormatVersion: 2
 guid: e9d3fc86d70d461449bbe2bc1622f9bb
-timeCreated: 1515264915
-licenseType: Free
 ModelImporter:
-  serializedVersion: 22
-  fileIDToRecycleName:
-    100000: //RootNode
-    100002: Rose Cut
-    100004: SMALLGEM
-    100006: BOULDER
-    100008: Box001
-    100010: Rough Gem
-    100012: SunPositioner001
-    100014: Gizzard
-    100016: Oval Cabochon
-    100018: Round Cabochon
-    100020: Cushion Cabochon
-    100022: Rectangular Cabochon
-    100024: Point Cut
-    100026: Single Cut
-    100028: Table Cut
-    100030: Briolette
-    100032: Emerald
-    100034: Plane001
-    100036: marquise_0
-    100038: oval_dxf_6
-    100040: pear_dxf_7
-    100042: Square Brilliant
-    100044: Radiant
-    100046: Cushion
-    100048: Octagon
-    100050: Square
-    100052: Trillian
-    100054: Baguette
-    100056: Tapered Baguette
-    100058: MenacingSpike
-    100060: Rings
-    100062: Band
-    400000: //RootNode
-    400002: Rose Cut
-    400004: SMALLGEM
-    400006: BOULDER
-    400008: Box001
-    400010: Rough Gem
-    400012: SunPositioner001
-    400014: Gizzard
-    400016: Oval Cabochon
-    400018: Round Cabochon
-    400020: Cushion Cabochon
-    400022: Rectangular Cabochon
-    400024: Point Cut
-    400026: Single Cut
-    400028: Table Cut
-    400030: Briolette
-    400032: Emerald
-    400034: Plane001
-    400036: marquise_0
-    400038: oval_dxf_6
-    400040: pear_dxf_7
-    400042: Square Brilliant
-    400044: Radiant
-    400046: Cushion
-    400048: Octagon
-    400050: Square
-    400052: Trillian
-    400054: Baguette
-    400056: Tapered Baguette
-    400058: MenacingSpike
-    400060: Rings
-    400062: Band
-    2100000: default
-    2100002: No Name
-    2100004: 08 - Default
-    2300000: Rose Cut
-    2300002: SMALLGEM
-    2300004: BOULDER
-    2300006: Box001
-    2300008: Rough Gem
-    2300010: Gizzard
-    2300012: Oval Cabochon
-    2300014: Round Cabochon
-    2300016: Cushion Cabochon
-    2300018: Rectangular Cabochon
-    2300020: Point Cut
-    2300022: Single Cut
-    2300024: Table Cut
-    2300026: Briolette
-    2300028: Emerald
-    2300030: Plane001
-    2300032: marquise_0
-    2300034: oval_dxf_6
-    2300036: pear_dxf_7
-    2300038: Square Brilliant
-    2300040: Radiant
-    2300042: Cushion
-    2300044: Octagon
-    2300046: Square
-    2300048: Trillian
-    2300050: Baguette
-    2300052: Tapered Baguette
-    2300054: MenacingSpike
-    2300056: Rings
-    2300058: Band
-    3300000: Rose Cut
-    3300002: SMALLGEM
-    3300004: BOULDER
-    3300006: Box001
-    3300008: Rough Gem
-    3300010: Gizzard
-    3300012: Oval Cabochon
-    3300014: Round Cabochon
-    3300016: Cushion Cabochon
-    3300018: Rectangular Cabochon
-    3300020: Point Cut
-    3300022: Single Cut
-    3300024: Table Cut
-    3300026: Briolette
-    3300028: Emerald
-    3300030: Plane001
-    3300032: marquise_0
-    3300034: oval_dxf_6
-    3300036: pear_dxf_7
-    3300038: Square Brilliant
-    3300040: Radiant
-    3300042: Cushion
-    3300044: Octagon
-    3300046: Square
-    3300048: Trillian
-    3300050: Baguette
-    3300052: Tapered Baguette
-    3300054: MenacingSpike
-    3300056: Rings
-    3300058: Band
-    4300000: SMALLGEM
-    4300002: Rose Cut
-    4300004: Box001
-    4300006: BOULDER
-    4300008: Rough Gem
-    4300010: Gizzard
-    4300012: Oval Cabochon
-    4300014: Round Cabochon
-    4300016: Cushion Cabochon
-    4300018: Rectangular Cabochon
-    4300020: Point Cut
-    4300022: Table Cut
-    4300024: Single Cut
-    4300026: Briolette
-    4300028: Plane001
-    4300030: Emerald
-    4300032: marquise_0
-    4300034: oval_dxf_6
-    4300036: pear_dxf_7
-    4300038: Square Brilliant
-    4300040: Radiant
-    4300042: Trillian
-    4300044: Cushion
-    4300046: Octagon
-    4300048: Square
-    4300050: Baguette
-    4300052: Tapered Baguette
-    4300054: MenacingSpike
-    4300056: Rings
-    4300058: Band
-    9500000: //RootNode
+  serializedVersion: 22103
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: //RootNode
+  - first:
+      1: 100002
+    second: Rose Cut
+  - first:
+      1: 100004
+    second: SMALLGEM
+  - first:
+      1: 100006
+    second: BOULDER
+  - first:
+      1: 100008
+    second: Box001
+  - first:
+      1: 100010
+    second: Rough Gem
+  - first:
+      1: 100012
+    second: SunPositioner001
+  - first:
+      1: 100014
+    second: Gizzard
+  - first:
+      1: 100016
+    second: Oval Cabochon
+  - first:
+      1: 100018
+    second: Round Cabochon
+  - first:
+      1: 100020
+    second: Cushion Cabochon
+  - first:
+      1: 100022
+    second: Rectangular Cabochon
+  - first:
+      1: 100024
+    second: Point Cut
+  - first:
+      1: 100026
+    second: Single Cut
+  - first:
+      1: 100028
+    second: Table Cut
+  - first:
+      1: 100030
+    second: Briolette
+  - first:
+      1: 100032
+    second: Emerald
+  - first:
+      1: 100034
+    second: Plane001
+  - first:
+      1: 100036
+    second: marquise_0
+  - first:
+      1: 100038
+    second: oval_dxf_6
+  - first:
+      1: 100040
+    second: pear_dxf_7
+  - first:
+      1: 100042
+    second: Square Brilliant
+  - first:
+      1: 100044
+    second: Radiant
+  - first:
+      1: 100046
+    second: Cushion
+  - first:
+      1: 100048
+    second: Octagon
+  - first:
+      1: 100050
+    second: Square
+  - first:
+      1: 100052
+    second: Trillian
+  - first:
+      1: 100054
+    second: Baguette
+  - first:
+      1: 100056
+    second: Tapered Baguette
+  - first:
+      1: 100058
+    second: MenacingSpike
+  - first:
+      1: 100060
+    second: Rings
+  - first:
+      1: 100062
+    second: Band
+  - first:
+      4: 400000
+    second: //RootNode
+  - first:
+      4: 400002
+    second: Rose Cut
+  - first:
+      4: 400004
+    second: SMALLGEM
+  - first:
+      4: 400006
+    second: BOULDER
+  - first:
+      4: 400008
+    second: Box001
+  - first:
+      4: 400010
+    second: Rough Gem
+  - first:
+      4: 400012
+    second: SunPositioner001
+  - first:
+      4: 400014
+    second: Gizzard
+  - first:
+      4: 400016
+    second: Oval Cabochon
+  - first:
+      4: 400018
+    second: Round Cabochon
+  - first:
+      4: 400020
+    second: Cushion Cabochon
+  - first:
+      4: 400022
+    second: Rectangular Cabochon
+  - first:
+      4: 400024
+    second: Point Cut
+  - first:
+      4: 400026
+    second: Single Cut
+  - first:
+      4: 400028
+    second: Table Cut
+  - first:
+      4: 400030
+    second: Briolette
+  - first:
+      4: 400032
+    second: Emerald
+  - first:
+      4: 400034
+    second: Plane001
+  - first:
+      4: 400036
+    second: marquise_0
+  - first:
+      4: 400038
+    second: oval_dxf_6
+  - first:
+      4: 400040
+    second: pear_dxf_7
+  - first:
+      4: 400042
+    second: Square Brilliant
+  - first:
+      4: 400044
+    second: Radiant
+  - first:
+      4: 400046
+    second: Cushion
+  - first:
+      4: 400048
+    second: Octagon
+  - first:
+      4: 400050
+    second: Square
+  - first:
+      4: 400052
+    second: Trillian
+  - first:
+      4: 400054
+    second: Baguette
+  - first:
+      4: 400056
+    second: Tapered Baguette
+  - first:
+      4: 400058
+    second: MenacingSpike
+  - first:
+      4: 400060
+    second: Rings
+  - first:
+      4: 400062
+    second: Band
+  - first:
+      21: 2100000
+    second: default
+  - first:
+      21: 2100002
+    second: No Name
+  - first:
+      21: 2100004
+    second: 08 - Default
+  - first:
+      23: 2300000
+    second: Rose Cut
+  - first:
+      23: 2300002
+    second: SMALLGEM
+  - first:
+      23: 2300004
+    second: BOULDER
+  - first:
+      23: 2300006
+    second: Box001
+  - first:
+      23: 2300008
+    second: Rough Gem
+  - first:
+      23: 2300010
+    second: Gizzard
+  - first:
+      23: 2300012
+    second: Oval Cabochon
+  - first:
+      23: 2300014
+    second: Round Cabochon
+  - first:
+      23: 2300016
+    second: Cushion Cabochon
+  - first:
+      23: 2300018
+    second: Rectangular Cabochon
+  - first:
+      23: 2300020
+    second: Point Cut
+  - first:
+      23: 2300022
+    second: Single Cut
+  - first:
+      23: 2300024
+    second: Table Cut
+  - first:
+      23: 2300026
+    second: Briolette
+  - first:
+      23: 2300028
+    second: Emerald
+  - first:
+      23: 2300030
+    second: Plane001
+  - first:
+      23: 2300032
+    second: marquise_0
+  - first:
+      23: 2300034
+    second: oval_dxf_6
+  - first:
+      23: 2300036
+    second: pear_dxf_7
+  - first:
+      23: 2300038
+    second: Square Brilliant
+  - first:
+      23: 2300040
+    second: Radiant
+  - first:
+      23: 2300042
+    second: Cushion
+  - first:
+      23: 2300044
+    second: Octagon
+  - first:
+      23: 2300046
+    second: Square
+  - first:
+      23: 2300048
+    second: Trillian
+  - first:
+      23: 2300050
+    second: Baguette
+  - first:
+      23: 2300052
+    second: Tapered Baguette
+  - first:
+      23: 2300054
+    second: MenacingSpike
+  - first:
+      23: 2300056
+    second: Rings
+  - first:
+      23: 2300058
+    second: Band
+  - first:
+      33: 3300000
+    second: Rose Cut
+  - first:
+      33: 3300002
+    second: SMALLGEM
+  - first:
+      33: 3300004
+    second: BOULDER
+  - first:
+      33: 3300006
+    second: Box001
+  - first:
+      33: 3300008
+    second: Rough Gem
+  - first:
+      33: 3300010
+    second: Gizzard
+  - first:
+      33: 3300012
+    second: Oval Cabochon
+  - first:
+      33: 3300014
+    second: Round Cabochon
+  - first:
+      33: 3300016
+    second: Cushion Cabochon
+  - first:
+      33: 3300018
+    second: Rectangular Cabochon
+  - first:
+      33: 3300020
+    second: Point Cut
+  - first:
+      33: 3300022
+    second: Single Cut
+  - first:
+      33: 3300024
+    second: Table Cut
+  - first:
+      33: 3300026
+    second: Briolette
+  - first:
+      33: 3300028
+    second: Emerald
+  - first:
+      33: 3300030
+    second: Plane001
+  - first:
+      33: 3300032
+    second: marquise_0
+  - first:
+      33: 3300034
+    second: oval_dxf_6
+  - first:
+      33: 3300036
+    second: pear_dxf_7
+  - first:
+      33: 3300038
+    second: Square Brilliant
+  - first:
+      33: 3300040
+    second: Radiant
+  - first:
+      33: 3300042
+    second: Cushion
+  - first:
+      33: 3300044
+    second: Octagon
+  - first:
+      33: 3300046
+    second: Square
+  - first:
+      33: 3300048
+    second: Trillian
+  - first:
+      33: 3300050
+    second: Baguette
+  - first:
+      33: 3300052
+    second: Tapered Baguette
+  - first:
+      33: 3300054
+    second: MenacingSpike
+  - first:
+      33: 3300056
+    second: Rings
+  - first:
+      33: 3300058
+    second: Band
+  - first:
+      43: 4300000
+    second: SMALLGEM
+  - first:
+      43: 4300002
+    second: Rose Cut
+  - first:
+      43: 4300004
+    second: Box001
+  - first:
+      43: 4300006
+    second: BOULDER
+  - first:
+      43: 4300008
+    second: Rough Gem
+  - first:
+      43: 4300010
+    second: Gizzard
+  - first:
+      43: 4300012
+    second: Oval Cabochon
+  - first:
+      43: 4300014
+    second: Round Cabochon
+  - first:
+      43: 4300016
+    second: Cushion Cabochon
+  - first:
+      43: 4300018
+    second: Rectangular Cabochon
+  - first:
+      43: 4300020
+    second: Point Cut
+  - first:
+      43: 4300022
+    second: Table Cut
+  - first:
+      43: 4300024
+    second: Single Cut
+  - first:
+      43: 4300026
+    second: Briolette
+  - first:
+      43: 4300028
+    second: Plane001
+  - first:
+      43: 4300030
+    second: Emerald
+  - first:
+      43: 4300032
+    second: marquise_0
+  - first:
+      43: 4300034
+    second: oval_dxf_6
+  - first:
+      43: 4300036
+    second: pear_dxf_7
+  - first:
+      43: 4300038
+    second: Square Brilliant
+  - first:
+      43: 4300040
+    second: Radiant
+  - first:
+      43: 4300042
+    second: Trillian
+  - first:
+      43: 4300044
+    second: Cushion
+  - first:
+      43: 4300046
+    second: Octagon
+  - first:
+      43: 4300048
+    second: Square
+  - first:
+      43: 4300050
+    second: Baguette
+  - first:
+      43: 4300052
+    second: Tapered Baguette
+  - first:
+      43: 4300054
+    second: MenacingSpike
+  - first:
+      43: 4300056
+    second: Rings
+  - first:
+      43: 4300058
+    second: Band
+  - first:
+      95: 9500000
+    second: //RootNode
   externalObjects: {}
   materials:
-    importMaterials: 0
+    materialImportMode: 0
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -174,6 +488,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -182,6 +497,7 @@ ModelImporter:
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
@@ -196,32 +512,48 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 0
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -231,14 +563,19 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
-    hasExtraRoot: 1
+    hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

@@ -1,60 +1,143 @@
 fileFormatVersion: 2
 guid: 8af3079b5c79b6b4c825cc71e71ef97d
-timeCreated: 1492253362
-licenseType: Store
 ModelImporter:
-  serializedVersion: 19
-  fileIDToRecycleName:
-    100000: Box010
-    100002: Box011
-    100004: Box012
-    100006: Box013
-    100008: Box014
-    100010: Box015
-    100012: Box016
-    100014: //RootNode
-    400000: Box010
-    400002: Box011
-    400004: Box012
-    400006: Box013
-    400008: Box014
-    400010: Box015
-    400012: Box016
-    400014: //RootNode
-    2300000: Box010
-    2300002: Box011
-    2300004: Box012
-    2300006: Box013
-    2300008: Box014
-    2300010: Box015
-    2300012: Box016
-    2300014: //RootNode
-    3300000: Box010
-    3300002: Box011
-    3300004: Box012
-    3300006: Box013
-    3300008: Box014
-    3300010: Box015
-    3300012: Box016
-    3300014: //RootNode
-    4300000: Box010
-    4300002: Box011
-    4300004: Box012
-    4300006: Box013
-    4300008: Box014
-    4300010: Box015
-    4300012: Box016
-    4300014: LowPolyGrass_01
-    9500000: //RootNode
+  serializedVersion: 22103
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: Box010
+  - first:
+      1: 100002
+    second: Box011
+  - first:
+      1: 100004
+    second: Box012
+  - first:
+      1: 100006
+    second: Box013
+  - first:
+      1: 100008
+    second: Box014
+  - first:
+      1: 100010
+    second: Box015
+  - first:
+      1: 100012
+    second: Box016
+  - first:
+      1: 100014
+    second: //RootNode
+  - first:
+      4: 400000
+    second: Box010
+  - first:
+      4: 400002
+    second: Box011
+  - first:
+      4: 400004
+    second: Box012
+  - first:
+      4: 400006
+    second: Box013
+  - first:
+      4: 400008
+    second: Box014
+  - first:
+      4: 400010
+    second: Box015
+  - first:
+      4: 400012
+    second: Box016
+  - first:
+      4: 400014
+    second: //RootNode
+  - first:
+      23: 2300000
+    second: Box010
+  - first:
+      23: 2300002
+    second: Box011
+  - first:
+      23: 2300004
+    second: Box012
+  - first:
+      23: 2300006
+    second: Box013
+  - first:
+      23: 2300008
+    second: Box014
+  - first:
+      23: 2300010
+    second: Box015
+  - first:
+      23: 2300012
+    second: Box016
+  - first:
+      23: 2300014
+    second: //RootNode
+  - first:
+      33: 3300000
+    second: Box010
+  - first:
+      33: 3300002
+    second: Box011
+  - first:
+      33: 3300004
+    second: Box012
+  - first:
+      33: 3300006
+    second: Box013
+  - first:
+      33: 3300008
+    second: Box014
+  - first:
+      33: 3300010
+    second: Box015
+  - first:
+      33: 3300012
+    second: Box016
+  - first:
+      33: 3300014
+    second: //RootNode
+  - first:
+      43: 4300000
+    second: Box010
+  - first:
+      43: 4300002
+    second: Box011
+  - first:
+      43: 4300004
+    second: Box012
+  - first:
+      43: 4300006
+    second: Box013
+  - first:
+      43: 4300008
+    second: Box014
+  - first:
+      43: 4300010
+    second: Box015
+  - first:
+      43: 4300012
+    second: Box016
+  - first:
+      43: 4300014
+    second: LowPolyGrass_01
+  - first:
+      95: 9500000
+    second: //RootNode
+  externalObjects: {}
   materials:
-    importMaterials: 0
+    materialImportMode: 0
     materialName: 0
     materialSearch: 1
+    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -62,12 +145,15 @@ ModelImporter:
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
+    extraUserProperties: []
     clipAnimations: []
     isReadable: 1
   meshes:
@@ -75,26 +161,48 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 0
     importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 1
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
-  importAnimation: 1
-  copyAvatar: 0
+    normalCalculationMode: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -104,14 +212,19 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

@@ -1,6 +1,6 @@
 // Made with Amplify Shader Editor
 // Available at the Unity Asset Store - http://u3d.as/y3X 
-Shader "GroundSplatSimple"
+Shader "DF/GroundSplatSimple"
 {
 	Properties
 	{
@@ -888,52 +888,52 @@ Shader "GroundSplatSimple"
 				float2 break273 = ( temp_output_266_0 - temp_output_270_0 );
 				float temp_output_274_0 = ( 1.0 - break273.x );
 				float temp_output_25_0_g349 = temp_output_274_0;
-				float2 temp_output_12_0_g334 = ( ( temp_output_270_0 + float2( 1,0 ) ) / appendResult265 );
-				float4 tex2DNode6_g334 = tex2D( _Control, temp_output_12_0_g334 );
-				float4 tex2DArrayNode32_g334 = SAMPLE_TEXTURE2D_ARRAY( _ShapeMap, sampler_ShapeMap, uv_ShapeMap,( tex2DNode6_g334.g * 255.0 ) );
-				float4 tex2DNode15_g334 = tex2D( _GrassControl, temp_output_12_0_g334 );
-				float4 tex2DArrayNode35_g334 = SAMPLE_TEXTURE2D_ARRAY( _ShapeMap, sampler_ShapeMap, uv_ShapeMap,( tex2DNode15_g334.g * 255.0 ) );
-				float temp_output_24_0_g335 = tex2DArrayNode35_g334.b;
-				float4 tex2DNode16_g334 = tex2D( _GrassTint, temp_output_12_0_g334 );
-				float temp_output_25_0_g335 = tex2DNode16_g334.a;
-				float temp_output_26_0_g335 = tex2DArrayNode32_g334.b;
-				float temp_output_41_0_g334 = ( 1.0 - tex2DNode16_g334.a );
-				float temp_output_27_0_g335 = temp_output_41_0_g334;
-				float temp_output_1_0_g335 = ( max( ( temp_output_24_0_g335 + temp_output_25_0_g335 ) , ( temp_output_26_0_g335 + temp_output_27_0_g335 ) ) - 0.2 );
-				float temp_output_21_0_g335 = max( ( ( temp_output_24_0_g335 + temp_output_25_0_g335 ) - temp_output_1_0_g335 ) , 0.0 );
-				float temp_output_19_0_g335 = max( ( ( temp_output_26_0_g335 + temp_output_27_0_g335 ) - temp_output_1_0_g335 ) , 0.0 );
+				float2 temp_output_12_0_g355 = ( ( temp_output_270_0 + float2( 1,0 ) ) / appendResult265 );
+				float4 tex2DNode6_g355 = tex2D( _Control, temp_output_12_0_g355 );
+				float4 tex2DArrayNode32_g355 = SAMPLE_TEXTURE2D_ARRAY( _ShapeMap, sampler_ShapeMap, uv_ShapeMap,( tex2DNode6_g355.g * 255.0 ) );
+				float4 tex2DNode15_g355 = tex2D( _GrassControl, temp_output_12_0_g355 );
+				float4 tex2DArrayNode35_g355 = SAMPLE_TEXTURE2D_ARRAY( _ShapeMap, sampler_ShapeMap, uv_ShapeMap,( tex2DNode15_g355.g * 255.0 ) );
+				float temp_output_24_0_g356 = tex2DArrayNode35_g355.b;
+				float4 tex2DNode16_g355 = tex2D( _GrassTint, temp_output_12_0_g355 );
+				float temp_output_25_0_g356 = tex2DNode16_g355.a;
+				float temp_output_26_0_g356 = tex2DArrayNode32_g355.b;
+				float temp_output_41_0_g355 = ( 1.0 - tex2DNode16_g355.a );
+				float temp_output_27_0_g356 = temp_output_41_0_g355;
+				float temp_output_1_0_g356 = ( max( ( temp_output_24_0_g356 + temp_output_25_0_g356 ) , ( temp_output_26_0_g356 + temp_output_27_0_g356 ) ) - 0.2 );
+				float temp_output_21_0_g356 = max( ( ( temp_output_24_0_g356 + temp_output_25_0_g356 ) - temp_output_1_0_g356 ) , 0.0 );
+				float temp_output_19_0_g356 = max( ( ( temp_output_26_0_g356 + temp_output_27_0_g356 ) - temp_output_1_0_g356 ) , 0.0 );
 				#ifdef GRASS
-				float4 staticSwitch31_g334 = ( ( ( tex2DArrayNode35_g334 * temp_output_21_0_g335 ) + ( tex2DArrayNode32_g334 * temp_output_19_0_g335 ) ) / ( temp_output_21_0_g335 + temp_output_19_0_g335 ) );
+				float4 staticSwitch31_g355 = ( ( ( tex2DArrayNode35_g355 * temp_output_21_0_g356 ) + ( tex2DArrayNode32_g355 * temp_output_19_0_g356 ) ) / ( temp_output_21_0_g356 + temp_output_19_0_g356 ) );
 				#else
-				float4 staticSwitch31_g334 = tex2DArrayNode32_g334;
+				float4 staticSwitch31_g355 = tex2DArrayNode32_g355;
 				#endif
-				float temp_output_299_3 = staticSwitch31_g334.b;
+				float temp_output_299_3 = staticSwitch31_g355.b;
 				float temp_output_26_0_g349 = temp_output_299_3;
 				float temp_output_27_0_g349 = break273.x;
 				float temp_output_1_0_g349 = ( max( ( temp_output_24_0_g349 + temp_output_25_0_g349 ) , ( temp_output_26_0_g349 + temp_output_27_0_g349 ) ) - 0.2 );
 				float temp_output_21_0_g349 = max( ( ( temp_output_24_0_g349 + temp_output_25_0_g349 ) - temp_output_1_0_g349 ) , 0.0 );
-				float4 tex2DArrayNode23_g334 = SAMPLE_TEXTURE2D_ARRAY( _MatTexArray, sampler_MatTexArray, uv_MatTexArray,( tex2DNode6_g334.r * 255.0 ) );
-				float temp_output_24_0_g336 = tex2DArrayNode35_g334.b;
-				float temp_output_25_0_g336 = tex2DNode16_g334.a;
-				float temp_output_26_0_g336 = tex2DArrayNode32_g334.b;
-				float temp_output_27_0_g336 = temp_output_41_0_g334;
-				float temp_output_1_0_g336 = ( max( ( temp_output_24_0_g336 + temp_output_25_0_g336 ) , ( temp_output_26_0_g336 + temp_output_27_0_g336 ) ) - 0.2 );
-				float temp_output_21_0_g336 = max( ( ( temp_output_24_0_g336 + temp_output_25_0_g336 ) - temp_output_1_0_g336 ) , 0.0 );
-				float temp_output_19_0_g336 = max( ( ( temp_output_26_0_g336 + temp_output_27_0_g336 ) - temp_output_1_0_g336 ) , 0.0 );
+				float4 tex2DArrayNode23_g355 = SAMPLE_TEXTURE2D_ARRAY( _MatTexArray, sampler_MatTexArray, uv_MatTexArray,( tex2DNode6_g355.r * 255.0 ) );
+				float temp_output_24_0_g357 = tex2DArrayNode35_g355.b;
+				float temp_output_25_0_g357 = tex2DNode16_g355.a;
+				float temp_output_26_0_g357 = tex2DArrayNode32_g355.b;
+				float temp_output_27_0_g357 = temp_output_41_0_g355;
+				float temp_output_1_0_g357 = ( max( ( temp_output_24_0_g357 + temp_output_25_0_g357 ) , ( temp_output_26_0_g357 + temp_output_27_0_g357 ) ) - 0.2 );
+				float temp_output_21_0_g357 = max( ( ( temp_output_24_0_g357 + temp_output_25_0_g357 ) - temp_output_1_0_g357 ) , 0.0 );
+				float temp_output_19_0_g357 = max( ( ( temp_output_26_0_g357 + temp_output_27_0_g357 ) - temp_output_1_0_g357 ) , 0.0 );
 				#ifdef GRASS
-				float4 staticSwitch29_g334 = ( ( ( SAMPLE_TEXTURE2D_ARRAY( _MatTexArray, sampler_MatTexArray, uv_MatTexArray,( tex2DNode15_g334.r * 255.0 ) ) * temp_output_21_0_g336 ) + ( tex2DArrayNode23_g334 * temp_output_19_0_g336 ) ) / ( temp_output_21_0_g336 + temp_output_19_0_g336 ) );
+				float4 staticSwitch29_g355 = ( ( ( SAMPLE_TEXTURE2D_ARRAY( _MatTexArray, sampler_MatTexArray, uv_MatTexArray,( tex2DNode15_g355.r * 255.0 ) ) * temp_output_21_0_g357 ) + ( tex2DArrayNode23_g355 * temp_output_19_0_g357 ) ) / ( temp_output_21_0_g357 + temp_output_19_0_g357 ) );
 				#else
-				float4 staticSwitch29_g334 = tex2DArrayNode23_g334;
+				float4 staticSwitch29_g355 = tex2DArrayNode23_g355;
 				#endif
 				float temp_output_19_0_g349 = max( ( ( temp_output_26_0_g349 + temp_output_27_0_g349 ) - temp_output_1_0_g349 ) , 0.0 );
-				float temp_output_24_0_g346 = temp_output_302_3;
-				float temp_output_25_0_g346 = temp_output_274_0;
-				float temp_output_26_0_g346 = temp_output_299_3;
-				float temp_output_27_0_g346 = break273.x;
-				float temp_output_1_0_g346 = ( max( ( temp_output_24_0_g346 + temp_output_25_0_g346 ) , ( temp_output_26_0_g346 + temp_output_27_0_g346 ) ) - 0.2 );
-				float temp_output_21_0_g346 = max( ( ( temp_output_24_0_g346 + temp_output_25_0_g346 ) - temp_output_1_0_g346 ) , 0.0 );
-				float temp_output_19_0_g346 = max( ( ( temp_output_26_0_g346 + temp_output_27_0_g346 ) - temp_output_1_0_g346 ) , 0.0 );
-				float4 temp_output_290_0 = ( ( ( staticSwitch31_g351 * temp_output_21_0_g346 ) + ( staticSwitch31_g334 * temp_output_19_0_g346 ) ) / ( temp_output_21_0_g346 + temp_output_19_0_g346 ) );
+				float temp_output_24_0_g363 = temp_output_302_3;
+				float temp_output_25_0_g363 = temp_output_274_0;
+				float temp_output_26_0_g363 = temp_output_299_3;
+				float temp_output_27_0_g363 = break273.x;
+				float temp_output_1_0_g363 = ( max( ( temp_output_24_0_g363 + temp_output_25_0_g363 ) , ( temp_output_26_0_g363 + temp_output_27_0_g363 ) ) - 0.2 );
+				float temp_output_21_0_g363 = max( ( ( temp_output_24_0_g363 + temp_output_25_0_g363 ) - temp_output_1_0_g363 ) , 0.0 );
+				float temp_output_19_0_g363 = max( ( ( temp_output_26_0_g363 + temp_output_27_0_g363 ) - temp_output_1_0_g363 ) , 0.0 );
+				float4 temp_output_290_0 = ( ( ( staticSwitch31_g351 * temp_output_21_0_g363 ) + ( staticSwitch31_g355 * temp_output_19_0_g363 ) ) / ( temp_output_21_0_g363 + temp_output_19_0_g363 ) );
 				float temp_output_24_0_g350 = temp_output_290_0.z;
 				float temp_output_275_0 = ( 1.0 - break273.y );
 				float temp_output_25_0_g350 = temp_output_275_0;
@@ -1023,7 +1023,7 @@ Shader "GroundSplatSimple"
 				#endif
 				float temp_output_19_0_g348 = max( ( ( temp_output_26_0_g348 + temp_output_27_0_g348 ) - temp_output_1_0_g348 ) , 0.0 );
 				float temp_output_19_0_g350 = max( ( ( temp_output_26_0_g350 + temp_output_27_0_g350 ) - temp_output_1_0_g350 ) , 0.0 );
-				float4 temp_output_159_0 = ( ( ( ( ( ( staticSwitch29_g351 * temp_output_21_0_g349 ) + ( staticSwitch29_g334 * temp_output_19_0_g349 ) ) / ( temp_output_21_0_g349 + temp_output_19_0_g349 ) ) * temp_output_21_0_g350 ) + ( ( ( ( staticSwitch29_g342 * temp_output_21_0_g348 ) + ( staticSwitch29_g338 * temp_output_19_0_g348 ) ) / ( temp_output_21_0_g348 + temp_output_19_0_g348 ) ) * temp_output_19_0_g350 ) ) / ( temp_output_21_0_g350 + temp_output_19_0_g350 ) );
+				float4 temp_output_159_0 = ( ( ( ( ( ( staticSwitch29_g351 * temp_output_21_0_g349 ) + ( staticSwitch29_g355 * temp_output_19_0_g349 ) ) / ( temp_output_21_0_g349 + temp_output_19_0_g349 ) ) * temp_output_21_0_g350 ) + ( ( ( ( staticSwitch29_g342 * temp_output_21_0_g348 ) + ( staticSwitch29_g338 * temp_output_19_0_g348 ) ) / ( temp_output_21_0_g348 + temp_output_19_0_g348 ) ) * temp_output_19_0_g350 ) ) / ( temp_output_21_0_g350 + temp_output_19_0_g350 ) );
 				float4 tex2DNode14_g351 = tex2D( _Tint, temp_output_12_0_g351 );
 				float temp_output_24_0_g354 = tex2DArrayNode35_g351.b;
 				float temp_output_25_0_g354 = tex2DNode16_g351.a;
@@ -1037,32 +1037,32 @@ Shader "GroundSplatSimple"
 				#else
 				float4 staticSwitch30_g351 = tex2DNode14_g351;
 				#endif
-				float temp_output_24_0_g356 = temp_output_302_3;
-				float temp_output_25_0_g356 = temp_output_274_0;
-				float temp_output_26_0_g356 = temp_output_299_3;
-				float temp_output_27_0_g356 = break273.x;
-				float temp_output_1_0_g356 = ( max( ( temp_output_24_0_g356 + temp_output_25_0_g356 ) , ( temp_output_26_0_g356 + temp_output_27_0_g356 ) ) - 0.2 );
-				float temp_output_21_0_g356 = max( ( ( temp_output_24_0_g356 + temp_output_25_0_g356 ) - temp_output_1_0_g356 ) , 0.0 );
-				float4 tex2DNode14_g334 = tex2D( _Tint, temp_output_12_0_g334 );
-				float temp_output_24_0_g337 = tex2DArrayNode35_g334.b;
-				float temp_output_25_0_g337 = tex2DNode16_g334.a;
-				float temp_output_26_0_g337 = tex2DArrayNode32_g334.b;
-				float temp_output_27_0_g337 = temp_output_41_0_g334;
-				float temp_output_1_0_g337 = ( max( ( temp_output_24_0_g337 + temp_output_25_0_g337 ) , ( temp_output_26_0_g337 + temp_output_27_0_g337 ) ) - 0.2 );
-				float temp_output_21_0_g337 = max( ( ( temp_output_24_0_g337 + temp_output_25_0_g337 ) - temp_output_1_0_g337 ) , 0.0 );
-				float temp_output_19_0_g337 = max( ( ( temp_output_26_0_g337 + temp_output_27_0_g337 ) - temp_output_1_0_g337 ) , 0.0 );
-				#ifdef GRASS
-				float4 staticSwitch30_g334 = ( ( ( tex2DNode16_g334 * temp_output_21_0_g337 ) + ( tex2DNode14_g334 * temp_output_19_0_g337 ) ) / ( temp_output_21_0_g337 + temp_output_19_0_g337 ) );
-				#else
-				float4 staticSwitch30_g334 = tex2DNode14_g334;
-				#endif
-				float temp_output_19_0_g356 = max( ( ( temp_output_26_0_g356 + temp_output_27_0_g356 ) - temp_output_1_0_g356 ) , 0.0 );
-				float temp_output_24_0_g358 = temp_output_290_0.z;
-				float temp_output_25_0_g358 = temp_output_275_0;
-				float temp_output_26_0_g358 = temp_output_293_0.z;
-				float temp_output_27_0_g358 = break273.y;
+				float temp_output_24_0_g359 = temp_output_302_3;
+				float temp_output_25_0_g359 = temp_output_274_0;
+				float temp_output_26_0_g359 = temp_output_299_3;
+				float temp_output_27_0_g359 = break273.x;
+				float temp_output_1_0_g359 = ( max( ( temp_output_24_0_g359 + temp_output_25_0_g359 ) , ( temp_output_26_0_g359 + temp_output_27_0_g359 ) ) - 0.2 );
+				float temp_output_21_0_g359 = max( ( ( temp_output_24_0_g359 + temp_output_25_0_g359 ) - temp_output_1_0_g359 ) , 0.0 );
+				float4 tex2DNode14_g355 = tex2D( _Tint, temp_output_12_0_g355 );
+				float temp_output_24_0_g358 = tex2DArrayNode35_g355.b;
+				float temp_output_25_0_g358 = tex2DNode16_g355.a;
+				float temp_output_26_0_g358 = tex2DArrayNode32_g355.b;
+				float temp_output_27_0_g358 = temp_output_41_0_g355;
 				float temp_output_1_0_g358 = ( max( ( temp_output_24_0_g358 + temp_output_25_0_g358 ) , ( temp_output_26_0_g358 + temp_output_27_0_g358 ) ) - 0.2 );
 				float temp_output_21_0_g358 = max( ( ( temp_output_24_0_g358 + temp_output_25_0_g358 ) - temp_output_1_0_g358 ) , 0.0 );
+				float temp_output_19_0_g358 = max( ( ( temp_output_26_0_g358 + temp_output_27_0_g358 ) - temp_output_1_0_g358 ) , 0.0 );
+				#ifdef GRASS
+				float4 staticSwitch30_g355 = ( ( ( tex2DNode16_g355 * temp_output_21_0_g358 ) + ( tex2DNode14_g355 * temp_output_19_0_g358 ) ) / ( temp_output_21_0_g358 + temp_output_19_0_g358 ) );
+				#else
+				float4 staticSwitch30_g355 = tex2DNode14_g355;
+				#endif
+				float temp_output_19_0_g359 = max( ( ( temp_output_26_0_g359 + temp_output_27_0_g359 ) - temp_output_1_0_g359 ) , 0.0 );
+				float temp_output_24_0_g361 = temp_output_290_0.z;
+				float temp_output_25_0_g361 = temp_output_275_0;
+				float temp_output_26_0_g361 = temp_output_293_0.z;
+				float temp_output_27_0_g361 = break273.y;
+				float temp_output_1_0_g361 = ( max( ( temp_output_24_0_g361 + temp_output_25_0_g361 ) , ( temp_output_26_0_g361 + temp_output_27_0_g361 ) ) - 0.2 );
+				float temp_output_21_0_g361 = max( ( ( temp_output_24_0_g361 + temp_output_25_0_g361 ) - temp_output_1_0_g361 ) , 0.0 );
 				float4 tex2DNode14_g342 = tex2D( _Tint, temp_output_12_0_g342 );
 				float temp_output_24_0_g345 = tex2DArrayNode35_g342.b;
 				float temp_output_25_0_g345 = tex2DNode16_g342.a;
@@ -1076,12 +1076,12 @@ Shader "GroundSplatSimple"
 				#else
 				float4 staticSwitch30_g342 = tex2DNode14_g342;
 				#endif
-				float temp_output_24_0_g357 = temp_output_300_3;
-				float temp_output_25_0_g357 = temp_output_274_0;
-				float temp_output_26_0_g357 = temp_output_301_3;
-				float temp_output_27_0_g357 = break273.x;
-				float temp_output_1_0_g357 = ( max( ( temp_output_24_0_g357 + temp_output_25_0_g357 ) , ( temp_output_26_0_g357 + temp_output_27_0_g357 ) ) - 0.2 );
-				float temp_output_21_0_g357 = max( ( ( temp_output_24_0_g357 + temp_output_25_0_g357 ) - temp_output_1_0_g357 ) , 0.0 );
+				float temp_output_24_0_g360 = temp_output_300_3;
+				float temp_output_25_0_g360 = temp_output_274_0;
+				float temp_output_26_0_g360 = temp_output_301_3;
+				float temp_output_27_0_g360 = break273.x;
+				float temp_output_1_0_g360 = ( max( ( temp_output_24_0_g360 + temp_output_25_0_g360 ) , ( temp_output_26_0_g360 + temp_output_27_0_g360 ) ) - 0.2 );
+				float temp_output_21_0_g360 = max( ( ( temp_output_24_0_g360 + temp_output_25_0_g360 ) - temp_output_1_0_g360 ) , 0.0 );
 				float4 tex2DNode14_g338 = tex2D( _Tint, temp_output_12_0_g338 );
 				float temp_output_24_0_g341 = tex2DArrayNode35_g338.b;
 				float temp_output_25_0_g341 = tex2DNode16_g338.a;
@@ -1095,21 +1095,21 @@ Shader "GroundSplatSimple"
 				#else
 				float4 staticSwitch30_g338 = tex2DNode14_g338;
 				#endif
-				float temp_output_19_0_g357 = max( ( ( temp_output_26_0_g357 + temp_output_27_0_g357 ) - temp_output_1_0_g357 ) , 0.0 );
-				float temp_output_19_0_g358 = max( ( ( temp_output_26_0_g358 + temp_output_27_0_g358 ) - temp_output_1_0_g358 ) , 0.0 );
+				float temp_output_19_0_g360 = max( ( ( temp_output_26_0_g360 + temp_output_27_0_g360 ) - temp_output_1_0_g360 ) , 0.0 );
+				float temp_output_19_0_g361 = max( ( ( temp_output_26_0_g361 + temp_output_27_0_g361 ) - temp_output_1_0_g361 ) , 0.0 );
 				
-				float temp_output_24_0_g355 = temp_output_290_0.z;
-				float temp_output_25_0_g355 = temp_output_275_0;
-				float temp_output_26_0_g355 = temp_output_293_0.z;
-				float temp_output_27_0_g355 = break273.y;
-				float temp_output_1_0_g355 = ( max( ( temp_output_24_0_g355 + temp_output_25_0_g355 ) , ( temp_output_26_0_g355 + temp_output_27_0_g355 ) ) - 0.2 );
-				float temp_output_21_0_g355 = max( ( ( temp_output_24_0_g355 + temp_output_25_0_g355 ) - temp_output_1_0_g355 ) , 0.0 );
-				float temp_output_19_0_g355 = max( ( ( temp_output_26_0_g355 + temp_output_27_0_g355 ) - temp_output_1_0_g355 ) , 0.0 );
-				float4 temp_output_180_0 = ( ( ( temp_output_290_0 * temp_output_21_0_g355 ) + ( temp_output_293_0 * temp_output_19_0_g355 ) ) / ( temp_output_21_0_g355 + temp_output_19_0_g355 ) );
+				float temp_output_24_0_g362 = temp_output_290_0.z;
+				float temp_output_25_0_g362 = temp_output_275_0;
+				float temp_output_26_0_g362 = temp_output_293_0.z;
+				float temp_output_27_0_g362 = break273.y;
+				float temp_output_1_0_g362 = ( max( ( temp_output_24_0_g362 + temp_output_25_0_g362 ) , ( temp_output_26_0_g362 + temp_output_27_0_g362 ) ) - 0.2 );
+				float temp_output_21_0_g362 = max( ( ( temp_output_24_0_g362 + temp_output_25_0_g362 ) - temp_output_1_0_g362 ) , 0.0 );
+				float temp_output_19_0_g362 = max( ( ( temp_output_26_0_g362 + temp_output_27_0_g362 ) - temp_output_1_0_g362 ) , 0.0 );
+				float4 temp_output_180_0 = ( ( ( temp_output_290_0 * temp_output_21_0_g362 ) + ( temp_output_293_0 * temp_output_19_0_g362 ) ) / ( temp_output_21_0_g362 + temp_output_19_0_g362 ) );
 				float3 unpack220 = UnpackNormalScale( temp_output_180_0, _NormalScale );
 				unpack220.z = lerp( 1, unpack220.z, saturate(_NormalScale) );
 				
-				surfaceDescription.Albedo = ( temp_output_159_0 * ( ( ( ( ( ( staticSwitch30_g351 * temp_output_21_0_g356 ) + ( staticSwitch30_g334 * temp_output_19_0_g356 ) ) / ( temp_output_21_0_g356 + temp_output_19_0_g356 ) ) * temp_output_21_0_g358 ) + ( ( ( ( staticSwitch30_g342 * temp_output_21_0_g357 ) + ( staticSwitch30_g338 * temp_output_19_0_g357 ) ) / ( temp_output_21_0_g357 + temp_output_19_0_g357 ) ) * temp_output_19_0_g358 ) ) / ( temp_output_21_0_g358 + temp_output_19_0_g358 ) ) ).xyz;
+				surfaceDescription.Albedo = ( temp_output_159_0 * ( ( ( ( ( ( staticSwitch30_g351 * temp_output_21_0_g359 ) + ( staticSwitch30_g355 * temp_output_19_0_g359 ) ) / ( temp_output_21_0_g359 + temp_output_19_0_g359 ) ) * temp_output_21_0_g361 ) + ( ( ( ( staticSwitch30_g342 * temp_output_21_0_g360 ) + ( staticSwitch30_g338 * temp_output_19_0_g360 ) ) / ( temp_output_21_0_g360 + temp_output_19_0_g360 ) ) * temp_output_19_0_g361 ) ) / ( temp_output_21_0_g361 + temp_output_19_0_g361 ) ) ).xyz;
 				surfaceDescription.Normal = unpack220;
 				surfaceDescription.BentNormal = float3( 0, 0, 1 );
 				surfaceDescription.CoatMask = 0;
@@ -1782,52 +1782,52 @@ Shader "GroundSplatSimple"
 				float2 break273 = ( temp_output_266_0 - temp_output_270_0 );
 				float temp_output_274_0 = ( 1.0 - break273.x );
 				float temp_output_25_0_g349 = temp_output_274_0;
-				float2 temp_output_12_0_g334 = ( ( temp_output_270_0 + float2( 1,0 ) ) / appendResult265 );
-				float4 tex2DNode6_g334 = tex2D( _Control, temp_output_12_0_g334 );
-				float4 tex2DArrayNode32_g334 = SAMPLE_TEXTURE2D_ARRAY( _ShapeMap, sampler_ShapeMap, uv_ShapeMap,( tex2DNode6_g334.g * 255.0 ) );
-				float4 tex2DNode15_g334 = tex2D( _GrassControl, temp_output_12_0_g334 );
-				float4 tex2DArrayNode35_g334 = SAMPLE_TEXTURE2D_ARRAY( _ShapeMap, sampler_ShapeMap, uv_ShapeMap,( tex2DNode15_g334.g * 255.0 ) );
-				float temp_output_24_0_g335 = tex2DArrayNode35_g334.b;
-				float4 tex2DNode16_g334 = tex2D( _GrassTint, temp_output_12_0_g334 );
-				float temp_output_25_0_g335 = tex2DNode16_g334.a;
-				float temp_output_26_0_g335 = tex2DArrayNode32_g334.b;
-				float temp_output_41_0_g334 = ( 1.0 - tex2DNode16_g334.a );
-				float temp_output_27_0_g335 = temp_output_41_0_g334;
-				float temp_output_1_0_g335 = ( max( ( temp_output_24_0_g335 + temp_output_25_0_g335 ) , ( temp_output_26_0_g335 + temp_output_27_0_g335 ) ) - 0.2 );
-				float temp_output_21_0_g335 = max( ( ( temp_output_24_0_g335 + temp_output_25_0_g335 ) - temp_output_1_0_g335 ) , 0.0 );
-				float temp_output_19_0_g335 = max( ( ( temp_output_26_0_g335 + temp_output_27_0_g335 ) - temp_output_1_0_g335 ) , 0.0 );
+				float2 temp_output_12_0_g355 = ( ( temp_output_270_0 + float2( 1,0 ) ) / appendResult265 );
+				float4 tex2DNode6_g355 = tex2D( _Control, temp_output_12_0_g355 );
+				float4 tex2DArrayNode32_g355 = SAMPLE_TEXTURE2D_ARRAY( _ShapeMap, sampler_ShapeMap, uv_ShapeMap,( tex2DNode6_g355.g * 255.0 ) );
+				float4 tex2DNode15_g355 = tex2D( _GrassControl, temp_output_12_0_g355 );
+				float4 tex2DArrayNode35_g355 = SAMPLE_TEXTURE2D_ARRAY( _ShapeMap, sampler_ShapeMap, uv_ShapeMap,( tex2DNode15_g355.g * 255.0 ) );
+				float temp_output_24_0_g356 = tex2DArrayNode35_g355.b;
+				float4 tex2DNode16_g355 = tex2D( _GrassTint, temp_output_12_0_g355 );
+				float temp_output_25_0_g356 = tex2DNode16_g355.a;
+				float temp_output_26_0_g356 = tex2DArrayNode32_g355.b;
+				float temp_output_41_0_g355 = ( 1.0 - tex2DNode16_g355.a );
+				float temp_output_27_0_g356 = temp_output_41_0_g355;
+				float temp_output_1_0_g356 = ( max( ( temp_output_24_0_g356 + temp_output_25_0_g356 ) , ( temp_output_26_0_g356 + temp_output_27_0_g356 ) ) - 0.2 );
+				float temp_output_21_0_g356 = max( ( ( temp_output_24_0_g356 + temp_output_25_0_g356 ) - temp_output_1_0_g356 ) , 0.0 );
+				float temp_output_19_0_g356 = max( ( ( temp_output_26_0_g356 + temp_output_27_0_g356 ) - temp_output_1_0_g356 ) , 0.0 );
 				#ifdef GRASS
-				float4 staticSwitch31_g334 = ( ( ( tex2DArrayNode35_g334 * temp_output_21_0_g335 ) + ( tex2DArrayNode32_g334 * temp_output_19_0_g335 ) ) / ( temp_output_21_0_g335 + temp_output_19_0_g335 ) );
+				float4 staticSwitch31_g355 = ( ( ( tex2DArrayNode35_g355 * temp_output_21_0_g356 ) + ( tex2DArrayNode32_g355 * temp_output_19_0_g356 ) ) / ( temp_output_21_0_g356 + temp_output_19_0_g356 ) );
 				#else
-				float4 staticSwitch31_g334 = tex2DArrayNode32_g334;
+				float4 staticSwitch31_g355 = tex2DArrayNode32_g355;
 				#endif
-				float temp_output_299_3 = staticSwitch31_g334.b;
+				float temp_output_299_3 = staticSwitch31_g355.b;
 				float temp_output_26_0_g349 = temp_output_299_3;
 				float temp_output_27_0_g349 = break273.x;
 				float temp_output_1_0_g349 = ( max( ( temp_output_24_0_g349 + temp_output_25_0_g349 ) , ( temp_output_26_0_g349 + temp_output_27_0_g349 ) ) - 0.2 );
 				float temp_output_21_0_g349 = max( ( ( temp_output_24_0_g349 + temp_output_25_0_g349 ) - temp_output_1_0_g349 ) , 0.0 );
-				float4 tex2DArrayNode23_g334 = SAMPLE_TEXTURE2D_ARRAY( _MatTexArray, sampler_MatTexArray, uv_MatTexArray,( tex2DNode6_g334.r * 255.0 ) );
-				float temp_output_24_0_g336 = tex2DArrayNode35_g334.b;
-				float temp_output_25_0_g336 = tex2DNode16_g334.a;
-				float temp_output_26_0_g336 = tex2DArrayNode32_g334.b;
-				float temp_output_27_0_g336 = temp_output_41_0_g334;
-				float temp_output_1_0_g336 = ( max( ( temp_output_24_0_g336 + temp_output_25_0_g336 ) , ( temp_output_26_0_g336 + temp_output_27_0_g336 ) ) - 0.2 );
-				float temp_output_21_0_g336 = max( ( ( temp_output_24_0_g336 + temp_output_25_0_g336 ) - temp_output_1_0_g336 ) , 0.0 );
-				float temp_output_19_0_g336 = max( ( ( temp_output_26_0_g336 + temp_output_27_0_g336 ) - temp_output_1_0_g336 ) , 0.0 );
+				float4 tex2DArrayNode23_g355 = SAMPLE_TEXTURE2D_ARRAY( _MatTexArray, sampler_MatTexArray, uv_MatTexArray,( tex2DNode6_g355.r * 255.0 ) );
+				float temp_output_24_0_g357 = tex2DArrayNode35_g355.b;
+				float temp_output_25_0_g357 = tex2DNode16_g355.a;
+				float temp_output_26_0_g357 = tex2DArrayNode32_g355.b;
+				float temp_output_27_0_g357 = temp_output_41_0_g355;
+				float temp_output_1_0_g357 = ( max( ( temp_output_24_0_g357 + temp_output_25_0_g357 ) , ( temp_output_26_0_g357 + temp_output_27_0_g357 ) ) - 0.2 );
+				float temp_output_21_0_g357 = max( ( ( temp_output_24_0_g357 + temp_output_25_0_g357 ) - temp_output_1_0_g357 ) , 0.0 );
+				float temp_output_19_0_g357 = max( ( ( temp_output_26_0_g357 + temp_output_27_0_g357 ) - temp_output_1_0_g357 ) , 0.0 );
 				#ifdef GRASS
-				float4 staticSwitch29_g334 = ( ( ( SAMPLE_TEXTURE2D_ARRAY( _MatTexArray, sampler_MatTexArray, uv_MatTexArray,( tex2DNode15_g334.r * 255.0 ) ) * temp_output_21_0_g336 ) + ( tex2DArrayNode23_g334 * temp_output_19_0_g336 ) ) / ( temp_output_21_0_g336 + temp_output_19_0_g336 ) );
+				float4 staticSwitch29_g355 = ( ( ( SAMPLE_TEXTURE2D_ARRAY( _MatTexArray, sampler_MatTexArray, uv_MatTexArray,( tex2DNode15_g355.r * 255.0 ) ) * temp_output_21_0_g357 ) + ( tex2DArrayNode23_g355 * temp_output_19_0_g357 ) ) / ( temp_output_21_0_g357 + temp_output_19_0_g357 ) );
 				#else
-				float4 staticSwitch29_g334 = tex2DArrayNode23_g334;
+				float4 staticSwitch29_g355 = tex2DArrayNode23_g355;
 				#endif
 				float temp_output_19_0_g349 = max( ( ( temp_output_26_0_g349 + temp_output_27_0_g349 ) - temp_output_1_0_g349 ) , 0.0 );
-				float temp_output_24_0_g346 = temp_output_302_3;
-				float temp_output_25_0_g346 = temp_output_274_0;
-				float temp_output_26_0_g346 = temp_output_299_3;
-				float temp_output_27_0_g346 = break273.x;
-				float temp_output_1_0_g346 = ( max( ( temp_output_24_0_g346 + temp_output_25_0_g346 ) , ( temp_output_26_0_g346 + temp_output_27_0_g346 ) ) - 0.2 );
-				float temp_output_21_0_g346 = max( ( ( temp_output_24_0_g346 + temp_output_25_0_g346 ) - temp_output_1_0_g346 ) , 0.0 );
-				float temp_output_19_0_g346 = max( ( ( temp_output_26_0_g346 + temp_output_27_0_g346 ) - temp_output_1_0_g346 ) , 0.0 );
-				float4 temp_output_290_0 = ( ( ( staticSwitch31_g351 * temp_output_21_0_g346 ) + ( staticSwitch31_g334 * temp_output_19_0_g346 ) ) / ( temp_output_21_0_g346 + temp_output_19_0_g346 ) );
+				float temp_output_24_0_g363 = temp_output_302_3;
+				float temp_output_25_0_g363 = temp_output_274_0;
+				float temp_output_26_0_g363 = temp_output_299_3;
+				float temp_output_27_0_g363 = break273.x;
+				float temp_output_1_0_g363 = ( max( ( temp_output_24_0_g363 + temp_output_25_0_g363 ) , ( temp_output_26_0_g363 + temp_output_27_0_g363 ) ) - 0.2 );
+				float temp_output_21_0_g363 = max( ( ( temp_output_24_0_g363 + temp_output_25_0_g363 ) - temp_output_1_0_g363 ) , 0.0 );
+				float temp_output_19_0_g363 = max( ( ( temp_output_26_0_g363 + temp_output_27_0_g363 ) - temp_output_1_0_g363 ) , 0.0 );
+				float4 temp_output_290_0 = ( ( ( staticSwitch31_g351 * temp_output_21_0_g363 ) + ( staticSwitch31_g355 * temp_output_19_0_g363 ) ) / ( temp_output_21_0_g363 + temp_output_19_0_g363 ) );
 				float temp_output_24_0_g350 = temp_output_290_0.z;
 				float temp_output_275_0 = ( 1.0 - break273.y );
 				float temp_output_25_0_g350 = temp_output_275_0;
@@ -1917,7 +1917,7 @@ Shader "GroundSplatSimple"
 				#endif
 				float temp_output_19_0_g348 = max( ( ( temp_output_26_0_g348 + temp_output_27_0_g348 ) - temp_output_1_0_g348 ) , 0.0 );
 				float temp_output_19_0_g350 = max( ( ( temp_output_26_0_g350 + temp_output_27_0_g350 ) - temp_output_1_0_g350 ) , 0.0 );
-				float4 temp_output_159_0 = ( ( ( ( ( ( staticSwitch29_g351 * temp_output_21_0_g349 ) + ( staticSwitch29_g334 * temp_output_19_0_g349 ) ) / ( temp_output_21_0_g349 + temp_output_19_0_g349 ) ) * temp_output_21_0_g350 ) + ( ( ( ( staticSwitch29_g342 * temp_output_21_0_g348 ) + ( staticSwitch29_g338 * temp_output_19_0_g348 ) ) / ( temp_output_21_0_g348 + temp_output_19_0_g348 ) ) * temp_output_19_0_g350 ) ) / ( temp_output_21_0_g350 + temp_output_19_0_g350 ) );
+				float4 temp_output_159_0 = ( ( ( ( ( ( staticSwitch29_g351 * temp_output_21_0_g349 ) + ( staticSwitch29_g355 * temp_output_19_0_g349 ) ) / ( temp_output_21_0_g349 + temp_output_19_0_g349 ) ) * temp_output_21_0_g350 ) + ( ( ( ( staticSwitch29_g342 * temp_output_21_0_g348 ) + ( staticSwitch29_g338 * temp_output_19_0_g348 ) ) / ( temp_output_21_0_g348 + temp_output_19_0_g348 ) ) * temp_output_19_0_g350 ) ) / ( temp_output_21_0_g350 + temp_output_19_0_g350 ) );
 				float4 tex2DNode14_g351 = tex2D( _Tint, temp_output_12_0_g351 );
 				float temp_output_24_0_g354 = tex2DArrayNode35_g351.b;
 				float temp_output_25_0_g354 = tex2DNode16_g351.a;
@@ -1931,32 +1931,32 @@ Shader "GroundSplatSimple"
 				#else
 				float4 staticSwitch30_g351 = tex2DNode14_g351;
 				#endif
-				float temp_output_24_0_g356 = temp_output_302_3;
-				float temp_output_25_0_g356 = temp_output_274_0;
-				float temp_output_26_0_g356 = temp_output_299_3;
-				float temp_output_27_0_g356 = break273.x;
-				float temp_output_1_0_g356 = ( max( ( temp_output_24_0_g356 + temp_output_25_0_g356 ) , ( temp_output_26_0_g356 + temp_output_27_0_g356 ) ) - 0.2 );
-				float temp_output_21_0_g356 = max( ( ( temp_output_24_0_g356 + temp_output_25_0_g356 ) - temp_output_1_0_g356 ) , 0.0 );
-				float4 tex2DNode14_g334 = tex2D( _Tint, temp_output_12_0_g334 );
-				float temp_output_24_0_g337 = tex2DArrayNode35_g334.b;
-				float temp_output_25_0_g337 = tex2DNode16_g334.a;
-				float temp_output_26_0_g337 = tex2DArrayNode32_g334.b;
-				float temp_output_27_0_g337 = temp_output_41_0_g334;
-				float temp_output_1_0_g337 = ( max( ( temp_output_24_0_g337 + temp_output_25_0_g337 ) , ( temp_output_26_0_g337 + temp_output_27_0_g337 ) ) - 0.2 );
-				float temp_output_21_0_g337 = max( ( ( temp_output_24_0_g337 + temp_output_25_0_g337 ) - temp_output_1_0_g337 ) , 0.0 );
-				float temp_output_19_0_g337 = max( ( ( temp_output_26_0_g337 + temp_output_27_0_g337 ) - temp_output_1_0_g337 ) , 0.0 );
-				#ifdef GRASS
-				float4 staticSwitch30_g334 = ( ( ( tex2DNode16_g334 * temp_output_21_0_g337 ) + ( tex2DNode14_g334 * temp_output_19_0_g337 ) ) / ( temp_output_21_0_g337 + temp_output_19_0_g337 ) );
-				#else
-				float4 staticSwitch30_g334 = tex2DNode14_g334;
-				#endif
-				float temp_output_19_0_g356 = max( ( ( temp_output_26_0_g356 + temp_output_27_0_g356 ) - temp_output_1_0_g356 ) , 0.0 );
-				float temp_output_24_0_g358 = temp_output_290_0.z;
-				float temp_output_25_0_g358 = temp_output_275_0;
-				float temp_output_26_0_g358 = temp_output_293_0.z;
-				float temp_output_27_0_g358 = break273.y;
+				float temp_output_24_0_g359 = temp_output_302_3;
+				float temp_output_25_0_g359 = temp_output_274_0;
+				float temp_output_26_0_g359 = temp_output_299_3;
+				float temp_output_27_0_g359 = break273.x;
+				float temp_output_1_0_g359 = ( max( ( temp_output_24_0_g359 + temp_output_25_0_g359 ) , ( temp_output_26_0_g359 + temp_output_27_0_g359 ) ) - 0.2 );
+				float temp_output_21_0_g359 = max( ( ( temp_output_24_0_g359 + temp_output_25_0_g359 ) - temp_output_1_0_g359 ) , 0.0 );
+				float4 tex2DNode14_g355 = tex2D( _Tint, temp_output_12_0_g355 );
+				float temp_output_24_0_g358 = tex2DArrayNode35_g355.b;
+				float temp_output_25_0_g358 = tex2DNode16_g355.a;
+				float temp_output_26_0_g358 = tex2DArrayNode32_g355.b;
+				float temp_output_27_0_g358 = temp_output_41_0_g355;
 				float temp_output_1_0_g358 = ( max( ( temp_output_24_0_g358 + temp_output_25_0_g358 ) , ( temp_output_26_0_g358 + temp_output_27_0_g358 ) ) - 0.2 );
 				float temp_output_21_0_g358 = max( ( ( temp_output_24_0_g358 + temp_output_25_0_g358 ) - temp_output_1_0_g358 ) , 0.0 );
+				float temp_output_19_0_g358 = max( ( ( temp_output_26_0_g358 + temp_output_27_0_g358 ) - temp_output_1_0_g358 ) , 0.0 );
+				#ifdef GRASS
+				float4 staticSwitch30_g355 = ( ( ( tex2DNode16_g355 * temp_output_21_0_g358 ) + ( tex2DNode14_g355 * temp_output_19_0_g358 ) ) / ( temp_output_21_0_g358 + temp_output_19_0_g358 ) );
+				#else
+				float4 staticSwitch30_g355 = tex2DNode14_g355;
+				#endif
+				float temp_output_19_0_g359 = max( ( ( temp_output_26_0_g359 + temp_output_27_0_g359 ) - temp_output_1_0_g359 ) , 0.0 );
+				float temp_output_24_0_g361 = temp_output_290_0.z;
+				float temp_output_25_0_g361 = temp_output_275_0;
+				float temp_output_26_0_g361 = temp_output_293_0.z;
+				float temp_output_27_0_g361 = break273.y;
+				float temp_output_1_0_g361 = ( max( ( temp_output_24_0_g361 + temp_output_25_0_g361 ) , ( temp_output_26_0_g361 + temp_output_27_0_g361 ) ) - 0.2 );
+				float temp_output_21_0_g361 = max( ( ( temp_output_24_0_g361 + temp_output_25_0_g361 ) - temp_output_1_0_g361 ) , 0.0 );
 				float4 tex2DNode14_g342 = tex2D( _Tint, temp_output_12_0_g342 );
 				float temp_output_24_0_g345 = tex2DArrayNode35_g342.b;
 				float temp_output_25_0_g345 = tex2DNode16_g342.a;
@@ -1970,12 +1970,12 @@ Shader "GroundSplatSimple"
 				#else
 				float4 staticSwitch30_g342 = tex2DNode14_g342;
 				#endif
-				float temp_output_24_0_g357 = temp_output_300_3;
-				float temp_output_25_0_g357 = temp_output_274_0;
-				float temp_output_26_0_g357 = temp_output_301_3;
-				float temp_output_27_0_g357 = break273.x;
-				float temp_output_1_0_g357 = ( max( ( temp_output_24_0_g357 + temp_output_25_0_g357 ) , ( temp_output_26_0_g357 + temp_output_27_0_g357 ) ) - 0.2 );
-				float temp_output_21_0_g357 = max( ( ( temp_output_24_0_g357 + temp_output_25_0_g357 ) - temp_output_1_0_g357 ) , 0.0 );
+				float temp_output_24_0_g360 = temp_output_300_3;
+				float temp_output_25_0_g360 = temp_output_274_0;
+				float temp_output_26_0_g360 = temp_output_301_3;
+				float temp_output_27_0_g360 = break273.x;
+				float temp_output_1_0_g360 = ( max( ( temp_output_24_0_g360 + temp_output_25_0_g360 ) , ( temp_output_26_0_g360 + temp_output_27_0_g360 ) ) - 0.2 );
+				float temp_output_21_0_g360 = max( ( ( temp_output_24_0_g360 + temp_output_25_0_g360 ) - temp_output_1_0_g360 ) , 0.0 );
 				float4 tex2DNode14_g338 = tex2D( _Tint, temp_output_12_0_g338 );
 				float temp_output_24_0_g341 = tex2DArrayNode35_g338.b;
 				float temp_output_25_0_g341 = tex2DNode16_g338.a;
@@ -1989,21 +1989,21 @@ Shader "GroundSplatSimple"
 				#else
 				float4 staticSwitch30_g338 = tex2DNode14_g338;
 				#endif
-				float temp_output_19_0_g357 = max( ( ( temp_output_26_0_g357 + temp_output_27_0_g357 ) - temp_output_1_0_g357 ) , 0.0 );
-				float temp_output_19_0_g358 = max( ( ( temp_output_26_0_g358 + temp_output_27_0_g358 ) - temp_output_1_0_g358 ) , 0.0 );
+				float temp_output_19_0_g360 = max( ( ( temp_output_26_0_g360 + temp_output_27_0_g360 ) - temp_output_1_0_g360 ) , 0.0 );
+				float temp_output_19_0_g361 = max( ( ( temp_output_26_0_g361 + temp_output_27_0_g361 ) - temp_output_1_0_g361 ) , 0.0 );
 				
-				float temp_output_24_0_g355 = temp_output_290_0.z;
-				float temp_output_25_0_g355 = temp_output_275_0;
-				float temp_output_26_0_g355 = temp_output_293_0.z;
-				float temp_output_27_0_g355 = break273.y;
-				float temp_output_1_0_g355 = ( max( ( temp_output_24_0_g355 + temp_output_25_0_g355 ) , ( temp_output_26_0_g355 + temp_output_27_0_g355 ) ) - 0.2 );
-				float temp_output_21_0_g355 = max( ( ( temp_output_24_0_g355 + temp_output_25_0_g355 ) - temp_output_1_0_g355 ) , 0.0 );
-				float temp_output_19_0_g355 = max( ( ( temp_output_26_0_g355 + temp_output_27_0_g355 ) - temp_output_1_0_g355 ) , 0.0 );
-				float4 temp_output_180_0 = ( ( ( temp_output_290_0 * temp_output_21_0_g355 ) + ( temp_output_293_0 * temp_output_19_0_g355 ) ) / ( temp_output_21_0_g355 + temp_output_19_0_g355 ) );
+				float temp_output_24_0_g362 = temp_output_290_0.z;
+				float temp_output_25_0_g362 = temp_output_275_0;
+				float temp_output_26_0_g362 = temp_output_293_0.z;
+				float temp_output_27_0_g362 = break273.y;
+				float temp_output_1_0_g362 = ( max( ( temp_output_24_0_g362 + temp_output_25_0_g362 ) , ( temp_output_26_0_g362 + temp_output_27_0_g362 ) ) - 0.2 );
+				float temp_output_21_0_g362 = max( ( ( temp_output_24_0_g362 + temp_output_25_0_g362 ) - temp_output_1_0_g362 ) , 0.0 );
+				float temp_output_19_0_g362 = max( ( ( temp_output_26_0_g362 + temp_output_27_0_g362 ) - temp_output_1_0_g362 ) , 0.0 );
+				float4 temp_output_180_0 = ( ( ( temp_output_290_0 * temp_output_21_0_g362 ) + ( temp_output_293_0 * temp_output_19_0_g362 ) ) / ( temp_output_21_0_g362 + temp_output_19_0_g362 ) );
 				float3 unpack220 = UnpackNormalScale( temp_output_180_0, _NormalScale );
 				unpack220.z = lerp( 1, unpack220.z, saturate(_NormalScale) );
 				
-				surfaceDescription.Albedo = ( temp_output_159_0 * ( ( ( ( ( ( staticSwitch30_g351 * temp_output_21_0_g356 ) + ( staticSwitch30_g334 * temp_output_19_0_g356 ) ) / ( temp_output_21_0_g356 + temp_output_19_0_g356 ) ) * temp_output_21_0_g358 ) + ( ( ( ( staticSwitch30_g342 * temp_output_21_0_g357 ) + ( staticSwitch30_g338 * temp_output_19_0_g357 ) ) / ( temp_output_21_0_g357 + temp_output_19_0_g357 ) ) * temp_output_19_0_g358 ) ) / ( temp_output_21_0_g358 + temp_output_19_0_g358 ) ) ).xyz;
+				surfaceDescription.Albedo = ( temp_output_159_0 * ( ( ( ( ( ( staticSwitch30_g351 * temp_output_21_0_g359 ) + ( staticSwitch30_g355 * temp_output_19_0_g359 ) ) / ( temp_output_21_0_g359 + temp_output_19_0_g359 ) ) * temp_output_21_0_g361 ) + ( ( ( ( staticSwitch30_g342 * temp_output_21_0_g360 ) + ( staticSwitch30_g338 * temp_output_19_0_g360 ) ) / ( temp_output_21_0_g360 + temp_output_19_0_g360 ) ) * temp_output_19_0_g361 ) ) / ( temp_output_21_0_g361 + temp_output_19_0_g361 ) ) ).xyz;
 				surfaceDescription.Normal = unpack220;
 				surfaceDescription.BentNormal = float3( 0, 0, 1 );
 				surfaceDescription.CoatMask = 0;
@@ -3604,39 +3604,39 @@ Shader "GroundSplatSimple"
 				float4 staticSwitch31_g351 = tex2DArrayNode32_g351;
 				#endif
 				float temp_output_302_3 = staticSwitch31_g351.b;
-				float temp_output_24_0_g346 = temp_output_302_3;
+				float temp_output_24_0_g363 = temp_output_302_3;
 				float2 break273 = ( temp_output_266_0 - temp_output_270_0 );
 				float temp_output_274_0 = ( 1.0 - break273.x );
-				float temp_output_25_0_g346 = temp_output_274_0;
-				float2 temp_output_12_0_g334 = ( ( temp_output_270_0 + float2( 1,0 ) ) / appendResult265 );
-				float4 tex2DNode6_g334 = tex2D( _Control, temp_output_12_0_g334 );
-				float4 tex2DArrayNode32_g334 = SAMPLE_TEXTURE2D_ARRAY( _ShapeMap, sampler_ShapeMap, uv_ShapeMap,( tex2DNode6_g334.g * 255.0 ) );
-				float4 tex2DNode15_g334 = tex2D( _GrassControl, temp_output_12_0_g334 );
-				float4 tex2DArrayNode35_g334 = SAMPLE_TEXTURE2D_ARRAY( _ShapeMap, sampler_ShapeMap, uv_ShapeMap,( tex2DNode15_g334.g * 255.0 ) );
-				float temp_output_24_0_g335 = tex2DArrayNode35_g334.b;
-				float4 tex2DNode16_g334 = tex2D( _GrassTint, temp_output_12_0_g334 );
-				float temp_output_25_0_g335 = tex2DNode16_g334.a;
-				float temp_output_26_0_g335 = tex2DArrayNode32_g334.b;
-				float temp_output_41_0_g334 = ( 1.0 - tex2DNode16_g334.a );
-				float temp_output_27_0_g335 = temp_output_41_0_g334;
-				float temp_output_1_0_g335 = ( max( ( temp_output_24_0_g335 + temp_output_25_0_g335 ) , ( temp_output_26_0_g335 + temp_output_27_0_g335 ) ) - 0.2 );
-				float temp_output_21_0_g335 = max( ( ( temp_output_24_0_g335 + temp_output_25_0_g335 ) - temp_output_1_0_g335 ) , 0.0 );
-				float temp_output_19_0_g335 = max( ( ( temp_output_26_0_g335 + temp_output_27_0_g335 ) - temp_output_1_0_g335 ) , 0.0 );
+				float temp_output_25_0_g363 = temp_output_274_0;
+				float2 temp_output_12_0_g355 = ( ( temp_output_270_0 + float2( 1,0 ) ) / appendResult265 );
+				float4 tex2DNode6_g355 = tex2D( _Control, temp_output_12_0_g355 );
+				float4 tex2DArrayNode32_g355 = SAMPLE_TEXTURE2D_ARRAY( _ShapeMap, sampler_ShapeMap, uv_ShapeMap,( tex2DNode6_g355.g * 255.0 ) );
+				float4 tex2DNode15_g355 = tex2D( _GrassControl, temp_output_12_0_g355 );
+				float4 tex2DArrayNode35_g355 = SAMPLE_TEXTURE2D_ARRAY( _ShapeMap, sampler_ShapeMap, uv_ShapeMap,( tex2DNode15_g355.g * 255.0 ) );
+				float temp_output_24_0_g356 = tex2DArrayNode35_g355.b;
+				float4 tex2DNode16_g355 = tex2D( _GrassTint, temp_output_12_0_g355 );
+				float temp_output_25_0_g356 = tex2DNode16_g355.a;
+				float temp_output_26_0_g356 = tex2DArrayNode32_g355.b;
+				float temp_output_41_0_g355 = ( 1.0 - tex2DNode16_g355.a );
+				float temp_output_27_0_g356 = temp_output_41_0_g355;
+				float temp_output_1_0_g356 = ( max( ( temp_output_24_0_g356 + temp_output_25_0_g356 ) , ( temp_output_26_0_g356 + temp_output_27_0_g356 ) ) - 0.2 );
+				float temp_output_21_0_g356 = max( ( ( temp_output_24_0_g356 + temp_output_25_0_g356 ) - temp_output_1_0_g356 ) , 0.0 );
+				float temp_output_19_0_g356 = max( ( ( temp_output_26_0_g356 + temp_output_27_0_g356 ) - temp_output_1_0_g356 ) , 0.0 );
 				#ifdef GRASS
-				float4 staticSwitch31_g334 = ( ( ( tex2DArrayNode35_g334 * temp_output_21_0_g335 ) + ( tex2DArrayNode32_g334 * temp_output_19_0_g335 ) ) / ( temp_output_21_0_g335 + temp_output_19_0_g335 ) );
+				float4 staticSwitch31_g355 = ( ( ( tex2DArrayNode35_g355 * temp_output_21_0_g356 ) + ( tex2DArrayNode32_g355 * temp_output_19_0_g356 ) ) / ( temp_output_21_0_g356 + temp_output_19_0_g356 ) );
 				#else
-				float4 staticSwitch31_g334 = tex2DArrayNode32_g334;
+				float4 staticSwitch31_g355 = tex2DArrayNode32_g355;
 				#endif
-				float temp_output_299_3 = staticSwitch31_g334.b;
-				float temp_output_26_0_g346 = temp_output_299_3;
-				float temp_output_27_0_g346 = break273.x;
-				float temp_output_1_0_g346 = ( max( ( temp_output_24_0_g346 + temp_output_25_0_g346 ) , ( temp_output_26_0_g346 + temp_output_27_0_g346 ) ) - 0.2 );
-				float temp_output_21_0_g346 = max( ( ( temp_output_24_0_g346 + temp_output_25_0_g346 ) - temp_output_1_0_g346 ) , 0.0 );
-				float temp_output_19_0_g346 = max( ( ( temp_output_26_0_g346 + temp_output_27_0_g346 ) - temp_output_1_0_g346 ) , 0.0 );
-				float4 temp_output_290_0 = ( ( ( staticSwitch31_g351 * temp_output_21_0_g346 ) + ( staticSwitch31_g334 * temp_output_19_0_g346 ) ) / ( temp_output_21_0_g346 + temp_output_19_0_g346 ) );
-				float temp_output_24_0_g355 = temp_output_290_0.z;
+				float temp_output_299_3 = staticSwitch31_g355.b;
+				float temp_output_26_0_g363 = temp_output_299_3;
+				float temp_output_27_0_g363 = break273.x;
+				float temp_output_1_0_g363 = ( max( ( temp_output_24_0_g363 + temp_output_25_0_g363 ) , ( temp_output_26_0_g363 + temp_output_27_0_g363 ) ) - 0.2 );
+				float temp_output_21_0_g363 = max( ( ( temp_output_24_0_g363 + temp_output_25_0_g363 ) - temp_output_1_0_g363 ) , 0.0 );
+				float temp_output_19_0_g363 = max( ( ( temp_output_26_0_g363 + temp_output_27_0_g363 ) - temp_output_1_0_g363 ) , 0.0 );
+				float4 temp_output_290_0 = ( ( ( staticSwitch31_g351 * temp_output_21_0_g363 ) + ( staticSwitch31_g355 * temp_output_19_0_g363 ) ) / ( temp_output_21_0_g363 + temp_output_19_0_g363 ) );
+				float temp_output_24_0_g362 = temp_output_290_0.z;
 				float temp_output_275_0 = ( 1.0 - break273.y );
-				float temp_output_25_0_g355 = temp_output_275_0;
+				float temp_output_25_0_g362 = temp_output_275_0;
 				float2 temp_output_12_0_g342 = ( ( temp_output_270_0 + float2( 0,1 ) ) / appendResult265 );
 				float4 tex2DNode6_g342 = tex2D( _Control, temp_output_12_0_g342 );
 				float4 tex2DArrayNode32_g342 = SAMPLE_TEXTURE2D_ARRAY( _ShapeMap, sampler_ShapeMap, uv_ShapeMap,( tex2DNode6_g342.g * 255.0 ) );
@@ -3685,12 +3685,12 @@ Shader "GroundSplatSimple"
 				float temp_output_21_0_g347 = max( ( ( temp_output_24_0_g347 + temp_output_25_0_g347 ) - temp_output_1_0_g347 ) , 0.0 );
 				float temp_output_19_0_g347 = max( ( ( temp_output_26_0_g347 + temp_output_27_0_g347 ) - temp_output_1_0_g347 ) , 0.0 );
 				float4 temp_output_293_0 = ( ( ( staticSwitch31_g342 * temp_output_21_0_g347 ) + ( staticSwitch31_g338 * temp_output_19_0_g347 ) ) / ( temp_output_21_0_g347 + temp_output_19_0_g347 ) );
-				float temp_output_26_0_g355 = temp_output_293_0.z;
-				float temp_output_27_0_g355 = break273.y;
-				float temp_output_1_0_g355 = ( max( ( temp_output_24_0_g355 + temp_output_25_0_g355 ) , ( temp_output_26_0_g355 + temp_output_27_0_g355 ) ) - 0.2 );
-				float temp_output_21_0_g355 = max( ( ( temp_output_24_0_g355 + temp_output_25_0_g355 ) - temp_output_1_0_g355 ) , 0.0 );
-				float temp_output_19_0_g355 = max( ( ( temp_output_26_0_g355 + temp_output_27_0_g355 ) - temp_output_1_0_g355 ) , 0.0 );
-				float4 temp_output_180_0 = ( ( ( temp_output_290_0 * temp_output_21_0_g355 ) + ( temp_output_293_0 * temp_output_19_0_g355 ) ) / ( temp_output_21_0_g355 + temp_output_19_0_g355 ) );
+				float temp_output_26_0_g362 = temp_output_293_0.z;
+				float temp_output_27_0_g362 = break273.y;
+				float temp_output_1_0_g362 = ( max( ( temp_output_24_0_g362 + temp_output_25_0_g362 ) , ( temp_output_26_0_g362 + temp_output_27_0_g362 ) ) - 0.2 );
+				float temp_output_21_0_g362 = max( ( ( temp_output_24_0_g362 + temp_output_25_0_g362 ) - temp_output_1_0_g362 ) , 0.0 );
+				float temp_output_19_0_g362 = max( ( ( temp_output_26_0_g362 + temp_output_27_0_g362 ) - temp_output_1_0_g362 ) , 0.0 );
+				float4 temp_output_180_0 = ( ( ( temp_output_290_0 * temp_output_21_0_g362 ) + ( temp_output_293_0 * temp_output_19_0_g362 ) ) / ( temp_output_21_0_g362 + temp_output_19_0_g362 ) );
 				float3 unpack220 = UnpackNormalScale( temp_output_180_0, _NormalScale );
 				unpack220.z = lerp( 1, unpack220.z, saturate(_NormalScale) );
 				
@@ -3714,18 +3714,18 @@ Shader "GroundSplatSimple"
 				float temp_output_27_0_g349 = break273.x;
 				float temp_output_1_0_g349 = ( max( ( temp_output_24_0_g349 + temp_output_25_0_g349 ) , ( temp_output_26_0_g349 + temp_output_27_0_g349 ) ) - 0.2 );
 				float temp_output_21_0_g349 = max( ( ( temp_output_24_0_g349 + temp_output_25_0_g349 ) - temp_output_1_0_g349 ) , 0.0 );
-				float4 tex2DArrayNode23_g334 = SAMPLE_TEXTURE2D_ARRAY( _MatTexArray, sampler_MatTexArray, uv_MatTexArray,( tex2DNode6_g334.r * 255.0 ) );
-				float temp_output_24_0_g336 = tex2DArrayNode35_g334.b;
-				float temp_output_25_0_g336 = tex2DNode16_g334.a;
-				float temp_output_26_0_g336 = tex2DArrayNode32_g334.b;
-				float temp_output_27_0_g336 = temp_output_41_0_g334;
-				float temp_output_1_0_g336 = ( max( ( temp_output_24_0_g336 + temp_output_25_0_g336 ) , ( temp_output_26_0_g336 + temp_output_27_0_g336 ) ) - 0.2 );
-				float temp_output_21_0_g336 = max( ( ( temp_output_24_0_g336 + temp_output_25_0_g336 ) - temp_output_1_0_g336 ) , 0.0 );
-				float temp_output_19_0_g336 = max( ( ( temp_output_26_0_g336 + temp_output_27_0_g336 ) - temp_output_1_0_g336 ) , 0.0 );
+				float4 tex2DArrayNode23_g355 = SAMPLE_TEXTURE2D_ARRAY( _MatTexArray, sampler_MatTexArray, uv_MatTexArray,( tex2DNode6_g355.r * 255.0 ) );
+				float temp_output_24_0_g357 = tex2DArrayNode35_g355.b;
+				float temp_output_25_0_g357 = tex2DNode16_g355.a;
+				float temp_output_26_0_g357 = tex2DArrayNode32_g355.b;
+				float temp_output_27_0_g357 = temp_output_41_0_g355;
+				float temp_output_1_0_g357 = ( max( ( temp_output_24_0_g357 + temp_output_25_0_g357 ) , ( temp_output_26_0_g357 + temp_output_27_0_g357 ) ) - 0.2 );
+				float temp_output_21_0_g357 = max( ( ( temp_output_24_0_g357 + temp_output_25_0_g357 ) - temp_output_1_0_g357 ) , 0.0 );
+				float temp_output_19_0_g357 = max( ( ( temp_output_26_0_g357 + temp_output_27_0_g357 ) - temp_output_1_0_g357 ) , 0.0 );
 				#ifdef GRASS
-				float4 staticSwitch29_g334 = ( ( ( SAMPLE_TEXTURE2D_ARRAY( _MatTexArray, sampler_MatTexArray, uv_MatTexArray,( tex2DNode15_g334.r * 255.0 ) ) * temp_output_21_0_g336 ) + ( tex2DArrayNode23_g334 * temp_output_19_0_g336 ) ) / ( temp_output_21_0_g336 + temp_output_19_0_g336 ) );
+				float4 staticSwitch29_g355 = ( ( ( SAMPLE_TEXTURE2D_ARRAY( _MatTexArray, sampler_MatTexArray, uv_MatTexArray,( tex2DNode15_g355.r * 255.0 ) ) * temp_output_21_0_g357 ) + ( tex2DArrayNode23_g355 * temp_output_19_0_g357 ) ) / ( temp_output_21_0_g357 + temp_output_19_0_g357 ) );
 				#else
-				float4 staticSwitch29_g334 = tex2DArrayNode23_g334;
+				float4 staticSwitch29_g355 = tex2DArrayNode23_g355;
 				#endif
 				float temp_output_19_0_g349 = max( ( ( temp_output_26_0_g349 + temp_output_27_0_g349 ) - temp_output_1_0_g349 ) , 0.0 );
 				float temp_output_24_0_g350 = temp_output_290_0.z;
@@ -3768,7 +3768,7 @@ Shader "GroundSplatSimple"
 				#endif
 				float temp_output_19_0_g348 = max( ( ( temp_output_26_0_g348 + temp_output_27_0_g348 ) - temp_output_1_0_g348 ) , 0.0 );
 				float temp_output_19_0_g350 = max( ( ( temp_output_26_0_g350 + temp_output_27_0_g350 ) - temp_output_1_0_g350 ) , 0.0 );
-				float4 temp_output_159_0 = ( ( ( ( ( ( staticSwitch29_g351 * temp_output_21_0_g349 ) + ( staticSwitch29_g334 * temp_output_19_0_g349 ) ) / ( temp_output_21_0_g349 + temp_output_19_0_g349 ) ) * temp_output_21_0_g350 ) + ( ( ( ( staticSwitch29_g342 * temp_output_21_0_g348 ) + ( staticSwitch29_g338 * temp_output_19_0_g348 ) ) / ( temp_output_21_0_g348 + temp_output_19_0_g348 ) ) * temp_output_19_0_g350 ) ) / ( temp_output_21_0_g350 + temp_output_19_0_g350 ) );
+				float4 temp_output_159_0 = ( ( ( ( ( ( staticSwitch29_g351 * temp_output_21_0_g349 ) + ( staticSwitch29_g355 * temp_output_19_0_g349 ) ) / ( temp_output_21_0_g349 + temp_output_19_0_g349 ) ) * temp_output_21_0_g350 ) + ( ( ( ( staticSwitch29_g342 * temp_output_21_0_g348 ) + ( staticSwitch29_g338 * temp_output_19_0_g348 ) ) / ( temp_output_21_0_g348 + temp_output_19_0_g348 ) ) * temp_output_19_0_g350 ) ) / ( temp_output_21_0_g350 + temp_output_19_0_g350 ) );
 				
 				surfaceDescription.Normal = unpack220;
 				surfaceDescription.Smoothness = ( temp_output_159_0.w * _Rough );
@@ -4414,39 +4414,39 @@ Shader "GroundSplatSimple"
 				float4 staticSwitch31_g351 = tex2DArrayNode32_g351;
 				#endif
 				float temp_output_302_3 = staticSwitch31_g351.b;
-				float temp_output_24_0_g346 = temp_output_302_3;
+				float temp_output_24_0_g363 = temp_output_302_3;
 				float2 break273 = ( temp_output_266_0 - temp_output_270_0 );
 				float temp_output_274_0 = ( 1.0 - break273.x );
-				float temp_output_25_0_g346 = temp_output_274_0;
-				float2 temp_output_12_0_g334 = ( ( temp_output_270_0 + float2( 1,0 ) ) / appendResult265 );
-				float4 tex2DNode6_g334 = tex2D( _Control, temp_output_12_0_g334 );
-				float4 tex2DArrayNode32_g334 = SAMPLE_TEXTURE2D_ARRAY( _ShapeMap, sampler_ShapeMap, uv_ShapeMap,( tex2DNode6_g334.g * 255.0 ) );
-				float4 tex2DNode15_g334 = tex2D( _GrassControl, temp_output_12_0_g334 );
-				float4 tex2DArrayNode35_g334 = SAMPLE_TEXTURE2D_ARRAY( _ShapeMap, sampler_ShapeMap, uv_ShapeMap,( tex2DNode15_g334.g * 255.0 ) );
-				float temp_output_24_0_g335 = tex2DArrayNode35_g334.b;
-				float4 tex2DNode16_g334 = tex2D( _GrassTint, temp_output_12_0_g334 );
-				float temp_output_25_0_g335 = tex2DNode16_g334.a;
-				float temp_output_26_0_g335 = tex2DArrayNode32_g334.b;
-				float temp_output_41_0_g334 = ( 1.0 - tex2DNode16_g334.a );
-				float temp_output_27_0_g335 = temp_output_41_0_g334;
-				float temp_output_1_0_g335 = ( max( ( temp_output_24_0_g335 + temp_output_25_0_g335 ) , ( temp_output_26_0_g335 + temp_output_27_0_g335 ) ) - 0.2 );
-				float temp_output_21_0_g335 = max( ( ( temp_output_24_0_g335 + temp_output_25_0_g335 ) - temp_output_1_0_g335 ) , 0.0 );
-				float temp_output_19_0_g335 = max( ( ( temp_output_26_0_g335 + temp_output_27_0_g335 ) - temp_output_1_0_g335 ) , 0.0 );
+				float temp_output_25_0_g363 = temp_output_274_0;
+				float2 temp_output_12_0_g355 = ( ( temp_output_270_0 + float2( 1,0 ) ) / appendResult265 );
+				float4 tex2DNode6_g355 = tex2D( _Control, temp_output_12_0_g355 );
+				float4 tex2DArrayNode32_g355 = SAMPLE_TEXTURE2D_ARRAY( _ShapeMap, sampler_ShapeMap, uv_ShapeMap,( tex2DNode6_g355.g * 255.0 ) );
+				float4 tex2DNode15_g355 = tex2D( _GrassControl, temp_output_12_0_g355 );
+				float4 tex2DArrayNode35_g355 = SAMPLE_TEXTURE2D_ARRAY( _ShapeMap, sampler_ShapeMap, uv_ShapeMap,( tex2DNode15_g355.g * 255.0 ) );
+				float temp_output_24_0_g356 = tex2DArrayNode35_g355.b;
+				float4 tex2DNode16_g355 = tex2D( _GrassTint, temp_output_12_0_g355 );
+				float temp_output_25_0_g356 = tex2DNode16_g355.a;
+				float temp_output_26_0_g356 = tex2DArrayNode32_g355.b;
+				float temp_output_41_0_g355 = ( 1.0 - tex2DNode16_g355.a );
+				float temp_output_27_0_g356 = temp_output_41_0_g355;
+				float temp_output_1_0_g356 = ( max( ( temp_output_24_0_g356 + temp_output_25_0_g356 ) , ( temp_output_26_0_g356 + temp_output_27_0_g356 ) ) - 0.2 );
+				float temp_output_21_0_g356 = max( ( ( temp_output_24_0_g356 + temp_output_25_0_g356 ) - temp_output_1_0_g356 ) , 0.0 );
+				float temp_output_19_0_g356 = max( ( ( temp_output_26_0_g356 + temp_output_27_0_g356 ) - temp_output_1_0_g356 ) , 0.0 );
 				#ifdef GRASS
-				float4 staticSwitch31_g334 = ( ( ( tex2DArrayNode35_g334 * temp_output_21_0_g335 ) + ( tex2DArrayNode32_g334 * temp_output_19_0_g335 ) ) / ( temp_output_21_0_g335 + temp_output_19_0_g335 ) );
+				float4 staticSwitch31_g355 = ( ( ( tex2DArrayNode35_g355 * temp_output_21_0_g356 ) + ( tex2DArrayNode32_g355 * temp_output_19_0_g356 ) ) / ( temp_output_21_0_g356 + temp_output_19_0_g356 ) );
 				#else
-				float4 staticSwitch31_g334 = tex2DArrayNode32_g334;
+				float4 staticSwitch31_g355 = tex2DArrayNode32_g355;
 				#endif
-				float temp_output_299_3 = staticSwitch31_g334.b;
-				float temp_output_26_0_g346 = temp_output_299_3;
-				float temp_output_27_0_g346 = break273.x;
-				float temp_output_1_0_g346 = ( max( ( temp_output_24_0_g346 + temp_output_25_0_g346 ) , ( temp_output_26_0_g346 + temp_output_27_0_g346 ) ) - 0.2 );
-				float temp_output_21_0_g346 = max( ( ( temp_output_24_0_g346 + temp_output_25_0_g346 ) - temp_output_1_0_g346 ) , 0.0 );
-				float temp_output_19_0_g346 = max( ( ( temp_output_26_0_g346 + temp_output_27_0_g346 ) - temp_output_1_0_g346 ) , 0.0 );
-				float4 temp_output_290_0 = ( ( ( staticSwitch31_g351 * temp_output_21_0_g346 ) + ( staticSwitch31_g334 * temp_output_19_0_g346 ) ) / ( temp_output_21_0_g346 + temp_output_19_0_g346 ) );
-				float temp_output_24_0_g355 = temp_output_290_0.z;
+				float temp_output_299_3 = staticSwitch31_g355.b;
+				float temp_output_26_0_g363 = temp_output_299_3;
+				float temp_output_27_0_g363 = break273.x;
+				float temp_output_1_0_g363 = ( max( ( temp_output_24_0_g363 + temp_output_25_0_g363 ) , ( temp_output_26_0_g363 + temp_output_27_0_g363 ) ) - 0.2 );
+				float temp_output_21_0_g363 = max( ( ( temp_output_24_0_g363 + temp_output_25_0_g363 ) - temp_output_1_0_g363 ) , 0.0 );
+				float temp_output_19_0_g363 = max( ( ( temp_output_26_0_g363 + temp_output_27_0_g363 ) - temp_output_1_0_g363 ) , 0.0 );
+				float4 temp_output_290_0 = ( ( ( staticSwitch31_g351 * temp_output_21_0_g363 ) + ( staticSwitch31_g355 * temp_output_19_0_g363 ) ) / ( temp_output_21_0_g363 + temp_output_19_0_g363 ) );
+				float temp_output_24_0_g362 = temp_output_290_0.z;
 				float temp_output_275_0 = ( 1.0 - break273.y );
-				float temp_output_25_0_g355 = temp_output_275_0;
+				float temp_output_25_0_g362 = temp_output_275_0;
 				float2 temp_output_12_0_g342 = ( ( temp_output_270_0 + float2( 0,1 ) ) / appendResult265 );
 				float4 tex2DNode6_g342 = tex2D( _Control, temp_output_12_0_g342 );
 				float4 tex2DArrayNode32_g342 = SAMPLE_TEXTURE2D_ARRAY( _ShapeMap, sampler_ShapeMap, uv_ShapeMap,( tex2DNode6_g342.g * 255.0 ) );
@@ -4495,12 +4495,12 @@ Shader "GroundSplatSimple"
 				float temp_output_21_0_g347 = max( ( ( temp_output_24_0_g347 + temp_output_25_0_g347 ) - temp_output_1_0_g347 ) , 0.0 );
 				float temp_output_19_0_g347 = max( ( ( temp_output_26_0_g347 + temp_output_27_0_g347 ) - temp_output_1_0_g347 ) , 0.0 );
 				float4 temp_output_293_0 = ( ( ( staticSwitch31_g342 * temp_output_21_0_g347 ) + ( staticSwitch31_g338 * temp_output_19_0_g347 ) ) / ( temp_output_21_0_g347 + temp_output_19_0_g347 ) );
-				float temp_output_26_0_g355 = temp_output_293_0.z;
-				float temp_output_27_0_g355 = break273.y;
-				float temp_output_1_0_g355 = ( max( ( temp_output_24_0_g355 + temp_output_25_0_g355 ) , ( temp_output_26_0_g355 + temp_output_27_0_g355 ) ) - 0.2 );
-				float temp_output_21_0_g355 = max( ( ( temp_output_24_0_g355 + temp_output_25_0_g355 ) - temp_output_1_0_g355 ) , 0.0 );
-				float temp_output_19_0_g355 = max( ( ( temp_output_26_0_g355 + temp_output_27_0_g355 ) - temp_output_1_0_g355 ) , 0.0 );
-				float4 temp_output_180_0 = ( ( ( temp_output_290_0 * temp_output_21_0_g355 ) + ( temp_output_293_0 * temp_output_19_0_g355 ) ) / ( temp_output_21_0_g355 + temp_output_19_0_g355 ) );
+				float temp_output_26_0_g362 = temp_output_293_0.z;
+				float temp_output_27_0_g362 = break273.y;
+				float temp_output_1_0_g362 = ( max( ( temp_output_24_0_g362 + temp_output_25_0_g362 ) , ( temp_output_26_0_g362 + temp_output_27_0_g362 ) ) - 0.2 );
+				float temp_output_21_0_g362 = max( ( ( temp_output_24_0_g362 + temp_output_25_0_g362 ) - temp_output_1_0_g362 ) , 0.0 );
+				float temp_output_19_0_g362 = max( ( ( temp_output_26_0_g362 + temp_output_27_0_g362 ) - temp_output_1_0_g362 ) , 0.0 );
+				float4 temp_output_180_0 = ( ( ( temp_output_290_0 * temp_output_21_0_g362 ) + ( temp_output_293_0 * temp_output_19_0_g362 ) ) / ( temp_output_21_0_g362 + temp_output_19_0_g362 ) );
 				float3 unpack220 = UnpackNormalScale( temp_output_180_0, _NormalScale );
 				unpack220.z = lerp( 1, unpack220.z, saturate(_NormalScale) );
 				
@@ -4524,18 +4524,18 @@ Shader "GroundSplatSimple"
 				float temp_output_27_0_g349 = break273.x;
 				float temp_output_1_0_g349 = ( max( ( temp_output_24_0_g349 + temp_output_25_0_g349 ) , ( temp_output_26_0_g349 + temp_output_27_0_g349 ) ) - 0.2 );
 				float temp_output_21_0_g349 = max( ( ( temp_output_24_0_g349 + temp_output_25_0_g349 ) - temp_output_1_0_g349 ) , 0.0 );
-				float4 tex2DArrayNode23_g334 = SAMPLE_TEXTURE2D_ARRAY( _MatTexArray, sampler_MatTexArray, uv_MatTexArray,( tex2DNode6_g334.r * 255.0 ) );
-				float temp_output_24_0_g336 = tex2DArrayNode35_g334.b;
-				float temp_output_25_0_g336 = tex2DNode16_g334.a;
-				float temp_output_26_0_g336 = tex2DArrayNode32_g334.b;
-				float temp_output_27_0_g336 = temp_output_41_0_g334;
-				float temp_output_1_0_g336 = ( max( ( temp_output_24_0_g336 + temp_output_25_0_g336 ) , ( temp_output_26_0_g336 + temp_output_27_0_g336 ) ) - 0.2 );
-				float temp_output_21_0_g336 = max( ( ( temp_output_24_0_g336 + temp_output_25_0_g336 ) - temp_output_1_0_g336 ) , 0.0 );
-				float temp_output_19_0_g336 = max( ( ( temp_output_26_0_g336 + temp_output_27_0_g336 ) - temp_output_1_0_g336 ) , 0.0 );
+				float4 tex2DArrayNode23_g355 = SAMPLE_TEXTURE2D_ARRAY( _MatTexArray, sampler_MatTexArray, uv_MatTexArray,( tex2DNode6_g355.r * 255.0 ) );
+				float temp_output_24_0_g357 = tex2DArrayNode35_g355.b;
+				float temp_output_25_0_g357 = tex2DNode16_g355.a;
+				float temp_output_26_0_g357 = tex2DArrayNode32_g355.b;
+				float temp_output_27_0_g357 = temp_output_41_0_g355;
+				float temp_output_1_0_g357 = ( max( ( temp_output_24_0_g357 + temp_output_25_0_g357 ) , ( temp_output_26_0_g357 + temp_output_27_0_g357 ) ) - 0.2 );
+				float temp_output_21_0_g357 = max( ( ( temp_output_24_0_g357 + temp_output_25_0_g357 ) - temp_output_1_0_g357 ) , 0.0 );
+				float temp_output_19_0_g357 = max( ( ( temp_output_26_0_g357 + temp_output_27_0_g357 ) - temp_output_1_0_g357 ) , 0.0 );
 				#ifdef GRASS
-				float4 staticSwitch29_g334 = ( ( ( SAMPLE_TEXTURE2D_ARRAY( _MatTexArray, sampler_MatTexArray, uv_MatTexArray,( tex2DNode15_g334.r * 255.0 ) ) * temp_output_21_0_g336 ) + ( tex2DArrayNode23_g334 * temp_output_19_0_g336 ) ) / ( temp_output_21_0_g336 + temp_output_19_0_g336 ) );
+				float4 staticSwitch29_g355 = ( ( ( SAMPLE_TEXTURE2D_ARRAY( _MatTexArray, sampler_MatTexArray, uv_MatTexArray,( tex2DNode15_g355.r * 255.0 ) ) * temp_output_21_0_g357 ) + ( tex2DArrayNode23_g355 * temp_output_19_0_g357 ) ) / ( temp_output_21_0_g357 + temp_output_19_0_g357 ) );
 				#else
-				float4 staticSwitch29_g334 = tex2DArrayNode23_g334;
+				float4 staticSwitch29_g355 = tex2DArrayNode23_g355;
 				#endif
 				float temp_output_19_0_g349 = max( ( ( temp_output_26_0_g349 + temp_output_27_0_g349 ) - temp_output_1_0_g349 ) , 0.0 );
 				float temp_output_24_0_g350 = temp_output_290_0.z;
@@ -4578,7 +4578,7 @@ Shader "GroundSplatSimple"
 				#endif
 				float temp_output_19_0_g348 = max( ( ( temp_output_26_0_g348 + temp_output_27_0_g348 ) - temp_output_1_0_g348 ) , 0.0 );
 				float temp_output_19_0_g350 = max( ( ( temp_output_26_0_g350 + temp_output_27_0_g350 ) - temp_output_1_0_g350 ) , 0.0 );
-				float4 temp_output_159_0 = ( ( ( ( ( ( staticSwitch29_g351 * temp_output_21_0_g349 ) + ( staticSwitch29_g334 * temp_output_19_0_g349 ) ) / ( temp_output_21_0_g349 + temp_output_19_0_g349 ) ) * temp_output_21_0_g350 ) + ( ( ( ( staticSwitch29_g342 * temp_output_21_0_g348 ) + ( staticSwitch29_g338 * temp_output_19_0_g348 ) ) / ( temp_output_21_0_g348 + temp_output_19_0_g348 ) ) * temp_output_19_0_g350 ) ) / ( temp_output_21_0_g350 + temp_output_19_0_g350 ) );
+				float4 temp_output_159_0 = ( ( ( ( ( ( staticSwitch29_g351 * temp_output_21_0_g349 ) + ( staticSwitch29_g355 * temp_output_19_0_g349 ) ) / ( temp_output_21_0_g349 + temp_output_19_0_g349 ) ) * temp_output_21_0_g350 ) + ( ( ( ( staticSwitch29_g342 * temp_output_21_0_g348 ) + ( staticSwitch29_g338 * temp_output_19_0_g348 ) ) / ( temp_output_21_0_g348 + temp_output_19_0_g348 ) ) * temp_output_19_0_g350 ) ) / ( temp_output_21_0_g350 + temp_output_19_0_g350 ) );
 				
 				surfaceDescription.Normal = unpack220;
 				surfaceDescription.Smoothness = ( temp_output_159_0.w * _Rough );
@@ -5376,52 +5376,52 @@ Shader "GroundSplatSimple"
 				float2 break273 = ( temp_output_266_0 - temp_output_270_0 );
 				float temp_output_274_0 = ( 1.0 - break273.x );
 				float temp_output_25_0_g349 = temp_output_274_0;
-				float2 temp_output_12_0_g334 = ( ( temp_output_270_0 + float2( 1,0 ) ) / appendResult265 );
-				float4 tex2DNode6_g334 = tex2D( _Control, temp_output_12_0_g334 );
-				float4 tex2DArrayNode32_g334 = SAMPLE_TEXTURE2D_ARRAY( _ShapeMap, sampler_ShapeMap, uv_ShapeMap,( tex2DNode6_g334.g * 255.0 ) );
-				float4 tex2DNode15_g334 = tex2D( _GrassControl, temp_output_12_0_g334 );
-				float4 tex2DArrayNode35_g334 = SAMPLE_TEXTURE2D_ARRAY( _ShapeMap, sampler_ShapeMap, uv_ShapeMap,( tex2DNode15_g334.g * 255.0 ) );
-				float temp_output_24_0_g335 = tex2DArrayNode35_g334.b;
-				float4 tex2DNode16_g334 = tex2D( _GrassTint, temp_output_12_0_g334 );
-				float temp_output_25_0_g335 = tex2DNode16_g334.a;
-				float temp_output_26_0_g335 = tex2DArrayNode32_g334.b;
-				float temp_output_41_0_g334 = ( 1.0 - tex2DNode16_g334.a );
-				float temp_output_27_0_g335 = temp_output_41_0_g334;
-				float temp_output_1_0_g335 = ( max( ( temp_output_24_0_g335 + temp_output_25_0_g335 ) , ( temp_output_26_0_g335 + temp_output_27_0_g335 ) ) - 0.2 );
-				float temp_output_21_0_g335 = max( ( ( temp_output_24_0_g335 + temp_output_25_0_g335 ) - temp_output_1_0_g335 ) , 0.0 );
-				float temp_output_19_0_g335 = max( ( ( temp_output_26_0_g335 + temp_output_27_0_g335 ) - temp_output_1_0_g335 ) , 0.0 );
+				float2 temp_output_12_0_g355 = ( ( temp_output_270_0 + float2( 1,0 ) ) / appendResult265 );
+				float4 tex2DNode6_g355 = tex2D( _Control, temp_output_12_0_g355 );
+				float4 tex2DArrayNode32_g355 = SAMPLE_TEXTURE2D_ARRAY( _ShapeMap, sampler_ShapeMap, uv_ShapeMap,( tex2DNode6_g355.g * 255.0 ) );
+				float4 tex2DNode15_g355 = tex2D( _GrassControl, temp_output_12_0_g355 );
+				float4 tex2DArrayNode35_g355 = SAMPLE_TEXTURE2D_ARRAY( _ShapeMap, sampler_ShapeMap, uv_ShapeMap,( tex2DNode15_g355.g * 255.0 ) );
+				float temp_output_24_0_g356 = tex2DArrayNode35_g355.b;
+				float4 tex2DNode16_g355 = tex2D( _GrassTint, temp_output_12_0_g355 );
+				float temp_output_25_0_g356 = tex2DNode16_g355.a;
+				float temp_output_26_0_g356 = tex2DArrayNode32_g355.b;
+				float temp_output_41_0_g355 = ( 1.0 - tex2DNode16_g355.a );
+				float temp_output_27_0_g356 = temp_output_41_0_g355;
+				float temp_output_1_0_g356 = ( max( ( temp_output_24_0_g356 + temp_output_25_0_g356 ) , ( temp_output_26_0_g356 + temp_output_27_0_g356 ) ) - 0.2 );
+				float temp_output_21_0_g356 = max( ( ( temp_output_24_0_g356 + temp_output_25_0_g356 ) - temp_output_1_0_g356 ) , 0.0 );
+				float temp_output_19_0_g356 = max( ( ( temp_output_26_0_g356 + temp_output_27_0_g356 ) - temp_output_1_0_g356 ) , 0.0 );
 				#ifdef GRASS
-				float4 staticSwitch31_g334 = ( ( ( tex2DArrayNode35_g334 * temp_output_21_0_g335 ) + ( tex2DArrayNode32_g334 * temp_output_19_0_g335 ) ) / ( temp_output_21_0_g335 + temp_output_19_0_g335 ) );
+				float4 staticSwitch31_g355 = ( ( ( tex2DArrayNode35_g355 * temp_output_21_0_g356 ) + ( tex2DArrayNode32_g355 * temp_output_19_0_g356 ) ) / ( temp_output_21_0_g356 + temp_output_19_0_g356 ) );
 				#else
-				float4 staticSwitch31_g334 = tex2DArrayNode32_g334;
+				float4 staticSwitch31_g355 = tex2DArrayNode32_g355;
 				#endif
-				float temp_output_299_3 = staticSwitch31_g334.b;
+				float temp_output_299_3 = staticSwitch31_g355.b;
 				float temp_output_26_0_g349 = temp_output_299_3;
 				float temp_output_27_0_g349 = break273.x;
 				float temp_output_1_0_g349 = ( max( ( temp_output_24_0_g349 + temp_output_25_0_g349 ) , ( temp_output_26_0_g349 + temp_output_27_0_g349 ) ) - 0.2 );
 				float temp_output_21_0_g349 = max( ( ( temp_output_24_0_g349 + temp_output_25_0_g349 ) - temp_output_1_0_g349 ) , 0.0 );
-				float4 tex2DArrayNode23_g334 = SAMPLE_TEXTURE2D_ARRAY( _MatTexArray, sampler_MatTexArray, uv_MatTexArray,( tex2DNode6_g334.r * 255.0 ) );
-				float temp_output_24_0_g336 = tex2DArrayNode35_g334.b;
-				float temp_output_25_0_g336 = tex2DNode16_g334.a;
-				float temp_output_26_0_g336 = tex2DArrayNode32_g334.b;
-				float temp_output_27_0_g336 = temp_output_41_0_g334;
-				float temp_output_1_0_g336 = ( max( ( temp_output_24_0_g336 + temp_output_25_0_g336 ) , ( temp_output_26_0_g336 + temp_output_27_0_g336 ) ) - 0.2 );
-				float temp_output_21_0_g336 = max( ( ( temp_output_24_0_g336 + temp_output_25_0_g336 ) - temp_output_1_0_g336 ) , 0.0 );
-				float temp_output_19_0_g336 = max( ( ( temp_output_26_0_g336 + temp_output_27_0_g336 ) - temp_output_1_0_g336 ) , 0.0 );
+				float4 tex2DArrayNode23_g355 = SAMPLE_TEXTURE2D_ARRAY( _MatTexArray, sampler_MatTexArray, uv_MatTexArray,( tex2DNode6_g355.r * 255.0 ) );
+				float temp_output_24_0_g357 = tex2DArrayNode35_g355.b;
+				float temp_output_25_0_g357 = tex2DNode16_g355.a;
+				float temp_output_26_0_g357 = tex2DArrayNode32_g355.b;
+				float temp_output_27_0_g357 = temp_output_41_0_g355;
+				float temp_output_1_0_g357 = ( max( ( temp_output_24_0_g357 + temp_output_25_0_g357 ) , ( temp_output_26_0_g357 + temp_output_27_0_g357 ) ) - 0.2 );
+				float temp_output_21_0_g357 = max( ( ( temp_output_24_0_g357 + temp_output_25_0_g357 ) - temp_output_1_0_g357 ) , 0.0 );
+				float temp_output_19_0_g357 = max( ( ( temp_output_26_0_g357 + temp_output_27_0_g357 ) - temp_output_1_0_g357 ) , 0.0 );
 				#ifdef GRASS
-				float4 staticSwitch29_g334 = ( ( ( SAMPLE_TEXTURE2D_ARRAY( _MatTexArray, sampler_MatTexArray, uv_MatTexArray,( tex2DNode15_g334.r * 255.0 ) ) * temp_output_21_0_g336 ) + ( tex2DArrayNode23_g334 * temp_output_19_0_g336 ) ) / ( temp_output_21_0_g336 + temp_output_19_0_g336 ) );
+				float4 staticSwitch29_g355 = ( ( ( SAMPLE_TEXTURE2D_ARRAY( _MatTexArray, sampler_MatTexArray, uv_MatTexArray,( tex2DNode15_g355.r * 255.0 ) ) * temp_output_21_0_g357 ) + ( tex2DArrayNode23_g355 * temp_output_19_0_g357 ) ) / ( temp_output_21_0_g357 + temp_output_19_0_g357 ) );
 				#else
-				float4 staticSwitch29_g334 = tex2DArrayNode23_g334;
+				float4 staticSwitch29_g355 = tex2DArrayNode23_g355;
 				#endif
 				float temp_output_19_0_g349 = max( ( ( temp_output_26_0_g349 + temp_output_27_0_g349 ) - temp_output_1_0_g349 ) , 0.0 );
-				float temp_output_24_0_g346 = temp_output_302_3;
-				float temp_output_25_0_g346 = temp_output_274_0;
-				float temp_output_26_0_g346 = temp_output_299_3;
-				float temp_output_27_0_g346 = break273.x;
-				float temp_output_1_0_g346 = ( max( ( temp_output_24_0_g346 + temp_output_25_0_g346 ) , ( temp_output_26_0_g346 + temp_output_27_0_g346 ) ) - 0.2 );
-				float temp_output_21_0_g346 = max( ( ( temp_output_24_0_g346 + temp_output_25_0_g346 ) - temp_output_1_0_g346 ) , 0.0 );
-				float temp_output_19_0_g346 = max( ( ( temp_output_26_0_g346 + temp_output_27_0_g346 ) - temp_output_1_0_g346 ) , 0.0 );
-				float4 temp_output_290_0 = ( ( ( staticSwitch31_g351 * temp_output_21_0_g346 ) + ( staticSwitch31_g334 * temp_output_19_0_g346 ) ) / ( temp_output_21_0_g346 + temp_output_19_0_g346 ) );
+				float temp_output_24_0_g363 = temp_output_302_3;
+				float temp_output_25_0_g363 = temp_output_274_0;
+				float temp_output_26_0_g363 = temp_output_299_3;
+				float temp_output_27_0_g363 = break273.x;
+				float temp_output_1_0_g363 = ( max( ( temp_output_24_0_g363 + temp_output_25_0_g363 ) , ( temp_output_26_0_g363 + temp_output_27_0_g363 ) ) - 0.2 );
+				float temp_output_21_0_g363 = max( ( ( temp_output_24_0_g363 + temp_output_25_0_g363 ) - temp_output_1_0_g363 ) , 0.0 );
+				float temp_output_19_0_g363 = max( ( ( temp_output_26_0_g363 + temp_output_27_0_g363 ) - temp_output_1_0_g363 ) , 0.0 );
+				float4 temp_output_290_0 = ( ( ( staticSwitch31_g351 * temp_output_21_0_g363 ) + ( staticSwitch31_g355 * temp_output_19_0_g363 ) ) / ( temp_output_21_0_g363 + temp_output_19_0_g363 ) );
 				float temp_output_24_0_g350 = temp_output_290_0.z;
 				float temp_output_275_0 = ( 1.0 - break273.y );
 				float temp_output_25_0_g350 = temp_output_275_0;
@@ -5511,7 +5511,7 @@ Shader "GroundSplatSimple"
 				#endif
 				float temp_output_19_0_g348 = max( ( ( temp_output_26_0_g348 + temp_output_27_0_g348 ) - temp_output_1_0_g348 ) , 0.0 );
 				float temp_output_19_0_g350 = max( ( ( temp_output_26_0_g350 + temp_output_27_0_g350 ) - temp_output_1_0_g350 ) , 0.0 );
-				float4 temp_output_159_0 = ( ( ( ( ( ( staticSwitch29_g351 * temp_output_21_0_g349 ) + ( staticSwitch29_g334 * temp_output_19_0_g349 ) ) / ( temp_output_21_0_g349 + temp_output_19_0_g349 ) ) * temp_output_21_0_g350 ) + ( ( ( ( staticSwitch29_g342 * temp_output_21_0_g348 ) + ( staticSwitch29_g338 * temp_output_19_0_g348 ) ) / ( temp_output_21_0_g348 + temp_output_19_0_g348 ) ) * temp_output_19_0_g350 ) ) / ( temp_output_21_0_g350 + temp_output_19_0_g350 ) );
+				float4 temp_output_159_0 = ( ( ( ( ( ( staticSwitch29_g351 * temp_output_21_0_g349 ) + ( staticSwitch29_g355 * temp_output_19_0_g349 ) ) / ( temp_output_21_0_g349 + temp_output_19_0_g349 ) ) * temp_output_21_0_g350 ) + ( ( ( ( staticSwitch29_g342 * temp_output_21_0_g348 ) + ( staticSwitch29_g338 * temp_output_19_0_g348 ) ) / ( temp_output_21_0_g348 + temp_output_19_0_g348 ) ) * temp_output_19_0_g350 ) ) / ( temp_output_21_0_g350 + temp_output_19_0_g350 ) );
 				float4 tex2DNode14_g351 = tex2D( _Tint, temp_output_12_0_g351 );
 				float temp_output_24_0_g354 = tex2DArrayNode35_g351.b;
 				float temp_output_25_0_g354 = tex2DNode16_g351.a;
@@ -5525,32 +5525,32 @@ Shader "GroundSplatSimple"
 				#else
 				float4 staticSwitch30_g351 = tex2DNode14_g351;
 				#endif
-				float temp_output_24_0_g356 = temp_output_302_3;
-				float temp_output_25_0_g356 = temp_output_274_0;
-				float temp_output_26_0_g356 = temp_output_299_3;
-				float temp_output_27_0_g356 = break273.x;
-				float temp_output_1_0_g356 = ( max( ( temp_output_24_0_g356 + temp_output_25_0_g356 ) , ( temp_output_26_0_g356 + temp_output_27_0_g356 ) ) - 0.2 );
-				float temp_output_21_0_g356 = max( ( ( temp_output_24_0_g356 + temp_output_25_0_g356 ) - temp_output_1_0_g356 ) , 0.0 );
-				float4 tex2DNode14_g334 = tex2D( _Tint, temp_output_12_0_g334 );
-				float temp_output_24_0_g337 = tex2DArrayNode35_g334.b;
-				float temp_output_25_0_g337 = tex2DNode16_g334.a;
-				float temp_output_26_0_g337 = tex2DArrayNode32_g334.b;
-				float temp_output_27_0_g337 = temp_output_41_0_g334;
-				float temp_output_1_0_g337 = ( max( ( temp_output_24_0_g337 + temp_output_25_0_g337 ) , ( temp_output_26_0_g337 + temp_output_27_0_g337 ) ) - 0.2 );
-				float temp_output_21_0_g337 = max( ( ( temp_output_24_0_g337 + temp_output_25_0_g337 ) - temp_output_1_0_g337 ) , 0.0 );
-				float temp_output_19_0_g337 = max( ( ( temp_output_26_0_g337 + temp_output_27_0_g337 ) - temp_output_1_0_g337 ) , 0.0 );
-				#ifdef GRASS
-				float4 staticSwitch30_g334 = ( ( ( tex2DNode16_g334 * temp_output_21_0_g337 ) + ( tex2DNode14_g334 * temp_output_19_0_g337 ) ) / ( temp_output_21_0_g337 + temp_output_19_0_g337 ) );
-				#else
-				float4 staticSwitch30_g334 = tex2DNode14_g334;
-				#endif
-				float temp_output_19_0_g356 = max( ( ( temp_output_26_0_g356 + temp_output_27_0_g356 ) - temp_output_1_0_g356 ) , 0.0 );
-				float temp_output_24_0_g358 = temp_output_290_0.z;
-				float temp_output_25_0_g358 = temp_output_275_0;
-				float temp_output_26_0_g358 = temp_output_293_0.z;
-				float temp_output_27_0_g358 = break273.y;
+				float temp_output_24_0_g359 = temp_output_302_3;
+				float temp_output_25_0_g359 = temp_output_274_0;
+				float temp_output_26_0_g359 = temp_output_299_3;
+				float temp_output_27_0_g359 = break273.x;
+				float temp_output_1_0_g359 = ( max( ( temp_output_24_0_g359 + temp_output_25_0_g359 ) , ( temp_output_26_0_g359 + temp_output_27_0_g359 ) ) - 0.2 );
+				float temp_output_21_0_g359 = max( ( ( temp_output_24_0_g359 + temp_output_25_0_g359 ) - temp_output_1_0_g359 ) , 0.0 );
+				float4 tex2DNode14_g355 = tex2D( _Tint, temp_output_12_0_g355 );
+				float temp_output_24_0_g358 = tex2DArrayNode35_g355.b;
+				float temp_output_25_0_g358 = tex2DNode16_g355.a;
+				float temp_output_26_0_g358 = tex2DArrayNode32_g355.b;
+				float temp_output_27_0_g358 = temp_output_41_0_g355;
 				float temp_output_1_0_g358 = ( max( ( temp_output_24_0_g358 + temp_output_25_0_g358 ) , ( temp_output_26_0_g358 + temp_output_27_0_g358 ) ) - 0.2 );
 				float temp_output_21_0_g358 = max( ( ( temp_output_24_0_g358 + temp_output_25_0_g358 ) - temp_output_1_0_g358 ) , 0.0 );
+				float temp_output_19_0_g358 = max( ( ( temp_output_26_0_g358 + temp_output_27_0_g358 ) - temp_output_1_0_g358 ) , 0.0 );
+				#ifdef GRASS
+				float4 staticSwitch30_g355 = ( ( ( tex2DNode16_g355 * temp_output_21_0_g358 ) + ( tex2DNode14_g355 * temp_output_19_0_g358 ) ) / ( temp_output_21_0_g358 + temp_output_19_0_g358 ) );
+				#else
+				float4 staticSwitch30_g355 = tex2DNode14_g355;
+				#endif
+				float temp_output_19_0_g359 = max( ( ( temp_output_26_0_g359 + temp_output_27_0_g359 ) - temp_output_1_0_g359 ) , 0.0 );
+				float temp_output_24_0_g361 = temp_output_290_0.z;
+				float temp_output_25_0_g361 = temp_output_275_0;
+				float temp_output_26_0_g361 = temp_output_293_0.z;
+				float temp_output_27_0_g361 = break273.y;
+				float temp_output_1_0_g361 = ( max( ( temp_output_24_0_g361 + temp_output_25_0_g361 ) , ( temp_output_26_0_g361 + temp_output_27_0_g361 ) ) - 0.2 );
+				float temp_output_21_0_g361 = max( ( ( temp_output_24_0_g361 + temp_output_25_0_g361 ) - temp_output_1_0_g361 ) , 0.0 );
 				float4 tex2DNode14_g342 = tex2D( _Tint, temp_output_12_0_g342 );
 				float temp_output_24_0_g345 = tex2DArrayNode35_g342.b;
 				float temp_output_25_0_g345 = tex2DNode16_g342.a;
@@ -5564,12 +5564,12 @@ Shader "GroundSplatSimple"
 				#else
 				float4 staticSwitch30_g342 = tex2DNode14_g342;
 				#endif
-				float temp_output_24_0_g357 = temp_output_300_3;
-				float temp_output_25_0_g357 = temp_output_274_0;
-				float temp_output_26_0_g357 = temp_output_301_3;
-				float temp_output_27_0_g357 = break273.x;
-				float temp_output_1_0_g357 = ( max( ( temp_output_24_0_g357 + temp_output_25_0_g357 ) , ( temp_output_26_0_g357 + temp_output_27_0_g357 ) ) - 0.2 );
-				float temp_output_21_0_g357 = max( ( ( temp_output_24_0_g357 + temp_output_25_0_g357 ) - temp_output_1_0_g357 ) , 0.0 );
+				float temp_output_24_0_g360 = temp_output_300_3;
+				float temp_output_25_0_g360 = temp_output_274_0;
+				float temp_output_26_0_g360 = temp_output_301_3;
+				float temp_output_27_0_g360 = break273.x;
+				float temp_output_1_0_g360 = ( max( ( temp_output_24_0_g360 + temp_output_25_0_g360 ) , ( temp_output_26_0_g360 + temp_output_27_0_g360 ) ) - 0.2 );
+				float temp_output_21_0_g360 = max( ( ( temp_output_24_0_g360 + temp_output_25_0_g360 ) - temp_output_1_0_g360 ) , 0.0 );
 				float4 tex2DNode14_g338 = tex2D( _Tint, temp_output_12_0_g338 );
 				float temp_output_24_0_g341 = tex2DArrayNode35_g338.b;
 				float temp_output_25_0_g341 = tex2DNode16_g338.a;
@@ -5583,21 +5583,21 @@ Shader "GroundSplatSimple"
 				#else
 				float4 staticSwitch30_g338 = tex2DNode14_g338;
 				#endif
-				float temp_output_19_0_g357 = max( ( ( temp_output_26_0_g357 + temp_output_27_0_g357 ) - temp_output_1_0_g357 ) , 0.0 );
-				float temp_output_19_0_g358 = max( ( ( temp_output_26_0_g358 + temp_output_27_0_g358 ) - temp_output_1_0_g358 ) , 0.0 );
+				float temp_output_19_0_g360 = max( ( ( temp_output_26_0_g360 + temp_output_27_0_g360 ) - temp_output_1_0_g360 ) , 0.0 );
+				float temp_output_19_0_g361 = max( ( ( temp_output_26_0_g361 + temp_output_27_0_g361 ) - temp_output_1_0_g361 ) , 0.0 );
 				
-				float temp_output_24_0_g355 = temp_output_290_0.z;
-				float temp_output_25_0_g355 = temp_output_275_0;
-				float temp_output_26_0_g355 = temp_output_293_0.z;
-				float temp_output_27_0_g355 = break273.y;
-				float temp_output_1_0_g355 = ( max( ( temp_output_24_0_g355 + temp_output_25_0_g355 ) , ( temp_output_26_0_g355 + temp_output_27_0_g355 ) ) - 0.2 );
-				float temp_output_21_0_g355 = max( ( ( temp_output_24_0_g355 + temp_output_25_0_g355 ) - temp_output_1_0_g355 ) , 0.0 );
-				float temp_output_19_0_g355 = max( ( ( temp_output_26_0_g355 + temp_output_27_0_g355 ) - temp_output_1_0_g355 ) , 0.0 );
-				float4 temp_output_180_0 = ( ( ( temp_output_290_0 * temp_output_21_0_g355 ) + ( temp_output_293_0 * temp_output_19_0_g355 ) ) / ( temp_output_21_0_g355 + temp_output_19_0_g355 ) );
+				float temp_output_24_0_g362 = temp_output_290_0.z;
+				float temp_output_25_0_g362 = temp_output_275_0;
+				float temp_output_26_0_g362 = temp_output_293_0.z;
+				float temp_output_27_0_g362 = break273.y;
+				float temp_output_1_0_g362 = ( max( ( temp_output_24_0_g362 + temp_output_25_0_g362 ) , ( temp_output_26_0_g362 + temp_output_27_0_g362 ) ) - 0.2 );
+				float temp_output_21_0_g362 = max( ( ( temp_output_24_0_g362 + temp_output_25_0_g362 ) - temp_output_1_0_g362 ) , 0.0 );
+				float temp_output_19_0_g362 = max( ( ( temp_output_26_0_g362 + temp_output_27_0_g362 ) - temp_output_1_0_g362 ) , 0.0 );
+				float4 temp_output_180_0 = ( ( ( temp_output_290_0 * temp_output_21_0_g362 ) + ( temp_output_293_0 * temp_output_19_0_g362 ) ) / ( temp_output_21_0_g362 + temp_output_19_0_g362 ) );
 				float3 unpack220 = UnpackNormalScale( temp_output_180_0, _NormalScale );
 				unpack220.z = lerp( 1, unpack220.z, saturate(_NormalScale) );
 				
-				surfaceDescription.Albedo = ( temp_output_159_0 * ( ( ( ( ( ( staticSwitch30_g351 * temp_output_21_0_g356 ) + ( staticSwitch30_g334 * temp_output_19_0_g356 ) ) / ( temp_output_21_0_g356 + temp_output_19_0_g356 ) ) * temp_output_21_0_g358 ) + ( ( ( ( staticSwitch30_g342 * temp_output_21_0_g357 ) + ( staticSwitch30_g338 * temp_output_19_0_g357 ) ) / ( temp_output_21_0_g357 + temp_output_19_0_g357 ) ) * temp_output_19_0_g358 ) ) / ( temp_output_21_0_g358 + temp_output_19_0_g358 ) ) ).xyz;
+				surfaceDescription.Albedo = ( temp_output_159_0 * ( ( ( ( ( ( staticSwitch30_g351 * temp_output_21_0_g359 ) + ( staticSwitch30_g355 * temp_output_19_0_g359 ) ) / ( temp_output_21_0_g359 + temp_output_19_0_g359 ) ) * temp_output_21_0_g361 ) + ( ( ( ( staticSwitch30_g342 * temp_output_21_0_g360 ) + ( staticSwitch30_g338 * temp_output_19_0_g360 ) ) / ( temp_output_21_0_g360 + temp_output_19_0_g360 ) ) * temp_output_19_0_g361 ) ) / ( temp_output_21_0_g361 + temp_output_19_0_g361 ) ) ).xyz;
 				surfaceDescription.Normal = unpack220;
 				surfaceDescription.BentNormal = float3( 0, 0, 1 );
 				surfaceDescription.CoatMask = 0;
@@ -6644,42 +6644,12 @@ Shader "GroundSplatSimple"
 }
 /*ASEBEGIN
 Version=18935
--7;66;2560;1305;-300.5929;2492.789;1;True;True
+-7;132;2560;1239;-300.5929;2459.789;1;True;True
 Node;AmplifyShaderEditor.CommentaryNode;253;-1403.167,-1201.167;Inherit;False;613;372;World UV;8;264;262;261;260;259;257;254;296;;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;256;-1449.881,-1473.772;Inherit;False;703.2;252.2002;ControlCords;4;266;265;263;258;;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;271;-228.8044,-1488.192;Inherit;False;277.1;155.1;ControlFraction;2;273;272;;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;268;-685.5034,-1490.408;Inherit;False;415.7999;163.6;ControlCordsBase;3;270;269;267;;1,1,1,1;0;0
-Node;AmplifyShaderEditor.FunctionNode;301;-164.9707,-1808.643;Inherit;False;Sample Terrain Tile;-1;;338;68db4cbbb16712044b9cfe83a0a98414;0;9;5;SAMPLER2D;0;False;7;FLOAT2;0,0;False;8;FLOAT2;0,0;False;9;FLOAT2;0,0;False;10;SAMPLER2D;0;False;13;SAMPLER2D;0;False;17;SAMPLER2D;0;False;22;SAMPLER2DARRAY;0;False;33;SAMPLER2DARRAY;0;False;4;COLOR;0;COLOR;1;COLOR;2;FLOAT;3
-Node;AmplifyShaderEditor.FunctionNode;300;-165.5717,-2085.146;Inherit;False;Sample Terrain Tile;-1;;342;68db4cbbb16712044b9cfe83a0a98414;0;9;5;SAMPLER2D;0;False;7;FLOAT2;0,0;False;8;FLOAT2;0,0;False;9;FLOAT2;0,0;False;10;SAMPLER2D;0;False;13;SAMPLER2D;0;False;17;SAMPLER2D;0;False;22;SAMPLER2DARRAY;0;False;33;SAMPLER2DARRAY;0;False;4;COLOR;0;COLOR;1;COLOR;2;FLOAT;3
-Node;AmplifyShaderEditor.UnpackScaleNormalNode;220;1371.664,-2094.727;Inherit;False;Tangent;2;0;FLOAT4;0,0,0,0;False;1;FLOAT;2;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
-Node;AmplifyShaderEditor.FunctionNode;293;351.6413,-1903.392;Inherit;False;MixColor;-1;;347;c73e8a542d6aa7b41a97cfb308620336;0;6;29;FLOAT4;0,0,0,0;False;24;FLOAT;0;False;25;FLOAT;0;False;30;FLOAT4;0,0,0,0;False;26;FLOAT;0;False;27;FLOAT;0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.BreakToComponentsNode;224;700.3339,-2252.92;Inherit;False;FLOAT4;1;0;FLOAT4;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
-Node;AmplifyShaderEditor.OneMinusNode;275;100.3539,-1382.677;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.OneMinusNode;274;86.84914,-1461.881;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.FunctionNode;292;350.3744,-2094.677;Inherit;False;MixColor;-1;;348;c73e8a542d6aa7b41a97cfb308620336;0;6;29;FLOAT4;0,0,0,0;False;24;FLOAT;0;False;25;FLOAT;0;False;30;FLOAT4;0,0,0,0;False;26;FLOAT;0;False;27;FLOAT;0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.FunctionNode;289;349.1077,-2671.066;Inherit;False;MixColor;-1;;349;c73e8a542d6aa7b41a97cfb308620336;0;6;29;FLOAT4;0,0,0,0;False;24;FLOAT;0;False;25;FLOAT;0;False;30;FLOAT4;0,0,0,0;False;26;FLOAT;0;False;27;FLOAT;0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.FunctionNode;159;984.686,-2335.74;Inherit;False;MixColor;-1;;350;c73e8a542d6aa7b41a97cfb308620336;0;6;29;FLOAT4;0,0,0,0;False;24;FLOAT;0;False;25;FLOAT;0;False;30;FLOAT4;0,0,0,0;False;26;FLOAT;0;False;27;FLOAT;0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;307;1806.674,-1665.47;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.FunctionNode;302;-159.4047,-2633.547;Inherit;False;Sample Terrain Tile;-1;;351;68db4cbbb16712044b9cfe83a0a98414;0;9;5;SAMPLER2D;0;False;7;FLOAT2;0,0;False;8;FLOAT2;0,0;False;9;FLOAT2;0,0;False;10;SAMPLER2D;0;False;13;SAMPLER2D;0;False;17;SAMPLER2D;0;False;22;SAMPLER2DARRAY;0;False;33;SAMPLER2DARRAY;0;False;4;COLOR;0;COLOR;1;COLOR;2;FLOAT;3
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;310;1967.674,-1967.47;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.FunctionNode;299;-158.8227,-2360.228;Inherit;False;Sample Terrain Tile;-1;;334;68db4cbbb16712044b9cfe83a0a98414;0;9;5;SAMPLER2D;0;False;7;FLOAT2;0,0;False;8;FLOAT2;0,0;False;9;FLOAT2;0,0;False;10;SAMPLER2D;0;False;13;SAMPLER2D;0;False;17;SAMPLER2D;0;False;22;SAMPLER2DARRAY;0;False;33;SAMPLER2DARRAY;0;False;4;COLOR;0;COLOR;1;COLOR;2;FLOAT;3
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;308;1721.674,-1977.47;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;2;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;20;1278.981,-1605.207;Inherit;False;Property;_MetalLevel;Metallic;4;0;Create;False;0;0;0;False;0;False;0;0;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.FunctionNode;291;351.6413,-2284.695;Inherit;False;MixColor;-1;;356;c73e8a542d6aa7b41a97cfb308620336;0;6;29;FLOAT4;0,0,0,0;False;24;FLOAT;0;False;25;FLOAT;0;False;30;FLOAT4;0,0,0,0;False;26;FLOAT;0;False;27;FLOAT;0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.FunctionNode;294;352.9081,-1708.305;Inherit;False;MixColor;-1;;357;c73e8a542d6aa7b41a97cfb308620336;0;6;29;FLOAT4;0,0,0,0;False;24;FLOAT;0;False;25;FLOAT;0;False;30;FLOAT4;0,0,0,0;False;26;FLOAT;0;False;27;FLOAT;0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.SimpleSubtractOpNode;309;1843.674,-1972.47;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;1;False;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;161;1383.344,-2199.261;Inherit;False;2;2;0;FLOAT4;0,0,0,0;False;1;FLOAT4;1,1,1,0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.FunctionNode;221;986.623,-1917.384;Inherit;False;MixColor;-1;;358;c73e8a542d6aa7b41a97cfb308620336;0;6;29;FLOAT4;0,0,0,0;False;24;FLOAT;0;False;25;FLOAT;0;False;30;FLOAT4;0,0,0,0;False;26;FLOAT;0;False;27;FLOAT;0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.BreakToComponentsNode;298;1272.346,-1842.381;Inherit;False;FLOAT4;1;0;FLOAT4;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
-Node;AmplifyShaderEditor.BreakToComponentsNode;303;1588.674,-2017.47;Inherit;False;FLOAT4;1;0;FLOAT4;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
-Node;AmplifyShaderEditor.FunctionNode;180;989.8365,-2135.369;Inherit;False;MixColor;-1;;355;c73e8a542d6aa7b41a97cfb308620336;0;6;29;FLOAT4;0,0,0,0;False;24;FLOAT;0;False;25;FLOAT;0;False;30;FLOAT4;0,0,0,0;False;26;FLOAT;0;False;27;FLOAT;0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.BreakToComponentsNode;223;703.6003,-2427.254;Inherit;False;FLOAT4;1;0;FLOAT4;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
-Node;AmplifyShaderEditor.TexturePropertyNode;258;-1428.77,-1433.443;Inherit;True;Property;_Control;Control;2;0;Create;True;0;0;0;True;0;False;None;None;False;black;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
-Node;AmplifyShaderEditor.FunctionNode;290;350.3746,-2479.781;Inherit;False;MixColor;-1;;346;c73e8a542d6aa7b41a97cfb308620336;0;6;29;FLOAT4;0,0,0,0;False;24;FLOAT;0;False;25;FLOAT;0;False;30;FLOAT4;0,0,0,0;False;26;FLOAT;0;False;27;FLOAT;0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.TexturePropertyNode;279;-1129.757,-1997.791;Inherit;True;Property;_GrassControl;GrassControl;3;0;Create;True;0;0;0;True;0;False;None;None;False;black;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
-Node;AmplifyShaderEditor.Vector4Node;254;-1395.301,-1002.302;Inherit;False;Property;_WorldBounds;WorldBounds;6;0;Create;True;0;0;0;False;0;False;0,0,1,1;0,0,1,1;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.DynamicAppendNode;260;-1229.167,-1024.168;Inherit;False;FLOAT2;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.DynamicAppendNode;259;-1228.167,-927.1675;Inherit;False;FLOAT2;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.BreakToComponentsNode;273;-81.64874,-1440.814;Inherit;False;FLOAT2;1;0;FLOAT2;0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
 Node;AmplifyShaderEditor.SimpleSubtractOpNode;262;-1065.168,-1106.167;Inherit;False;2;0;FLOAT2;0,0;False;1;FLOAT2;0,0;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.Vector2Node;280;-433.5106,-2589.893;Inherit;False;Constant;_Offset3;Offset;13;0;Create;True;0;0;0;False;0;False;0,0;0,0;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
@@ -6691,8 +6661,8 @@ Node;AmplifyShaderEditor.DynamicAppendNode;257;-1223.167,-1159.167;Inherit;False
 Node;AmplifyShaderEditor.SimpleSubtractOpNode;269;-546.6046,-1445.291;Inherit;False;2;0;FLOAT2;0,0;False;1;FLOAT2;0.5,0.5;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.TexelSizeNode;263;-1213.22,-1431.339;Inherit;False;14;1;0;SAMPLER2D;;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.WorldPosInputsNode;296;-1392.025,-1161.401;Inherit;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
-Node;AmplifyShaderEditor.TexturePropertyNode;283;-1129.04,-1802.328;Inherit;True;Property;_Tint;Tint;0;0;Create;False;0;0;0;True;0;False;None;None;False;black;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
 Node;AmplifyShaderEditor.Vector2Node;281;-433.5106,-2280.893;Inherit;False;Constant;_Offset2;Offset;13;0;Create;True;0;0;0;False;0;False;1,0;0,0;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
+Node;AmplifyShaderEditor.Vector4Node;254;-1395.301,-1002.302;Inherit;False;Property;_WorldBounds;WorldBounds;6;0;Create;True;0;0;0;False;0;False;0,0,1,1;0,0,1,1;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.TexturePropertyNode;277;-1129.041,-2570.937;Inherit;True;Property;_MatTexArray;MatTexArray;7;0;Create;True;0;0;0;False;0;False;None;None;False;white;LockedToTexture2DArray;Texture2DArray;-1;0;2;SAMPLER2DARRAY;0;SAMPLERSTATE;1
 Node;AmplifyShaderEditor.TexturePropertyNode;284;-1123.306,-2185.024;Inherit;True;Property;_GrassTint;GrassTint;1;0;Create;True;0;0;0;True;0;False;None;None;False;black;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
 Node;AmplifyShaderEditor.SimpleSubtractOpNode;272;-220.9044,-1441.792;Inherit;False;2;0;FLOAT2;0,0;False;1;FLOAT2;0,0;False;1;FLOAT2;0
@@ -6700,21 +6670,74 @@ Node;AmplifyShaderEditor.RangedFloatNode;313;1284.593,-1682.789;Inherit;False;Pr
 Node;AmplifyShaderEditor.Vector2Node;282;-424.5107,-1720.892;Inherit;False;Constant;_Offset;Offset;13;0;Create;True;0;0;0;False;0;False;1,1;0,0;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
 Node;AmplifyShaderEditor.Vector2Node;276;-424.5107,-1984.892;Inherit;False;Constant;_Offset1;Offset;13;0;Create;True;0;0;0;False;0;False;0,1;0,0;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
 Node;AmplifyShaderEditor.SimpleAddOpNode;267;-664.0034,-1444.291;Inherit;False;2;2;0;FLOAT2;0,0;False;1;FLOAT2;0.5,0.5;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.TexturePropertyNode;278;-1126.232,-2378.53;Inherit;True;Property;_ShapeMap;Shape Texture Splat;8;1;[Normal];Create;False;0;0;0;False;0;False;9eea02fcbbb4cc24aaf9072337d93cd4;None;False;bump;LockedToTexture2DArray;Texture2DArray;-1;0;2;SAMPLER2DARRAY;0;SAMPLERSTATE;1
+Node;AmplifyShaderEditor.TexturePropertyNode;278;-1126.232,-2378.53;Inherit;True;Property;_ShapeMap;Shape Texture Splat;8;1;[Normal];Create;False;0;0;0;False;0;False;9eea02fcbbb4cc24aaf9072337d93cd4;9eea02fcbbb4cc24aaf9072337d93cd4;False;bump;LockedToTexture2DArray;Texture2DArray;-1;0;2;SAMPLER2DARRAY;0;SAMPLERSTATE;1
 Node;AmplifyShaderEditor.RangedFloatNode;21;1290.476,-1512.45;Inherit;False;Property;_Rough;Roughness;5;0;Create;False;0;0;0;False;0;False;0.5;0.5;0;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.FloorOpNode;270;-400.3875,-1435.931;Inherit;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;245;1794.491,-1976.747;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;Motion Vectors;0;5;Motion Vectors;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;False;False;False;False;False;False;False;False;True;True;0;True;-10;255;False;-1;255;True;-11;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;False;False;True;1;LightMode=MotionVectors;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;242;1794.491,-1976.747;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;ShadowCaster;0;2;ShadowCaster;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;True;False;False;False;False;0;False;-1;False;False;False;False;False;False;False;False;False;True;1;False;-1;True;3;False;-1;False;True;1;LightMode=ShadowCaster;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;249;1794.491,-1976.747;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;TransparentDepthPostpass;0;9;TransparentDepthPostpass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;1;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;True;False;False;False;False;0;False;-1;False;False;False;False;False;False;False;False;False;True;1;False;-1;False;False;True;1;LightMode=TransparentDepthPostpass;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;246;1794.491,-1976.747;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;Distortion;0;6;Distortion;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;4;1;False;-1;1;False;-1;4;1;False;-1;1;False;-1;True;1;False;-1;1;False;-1;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;False;False;False;False;False;False;False;False;True;True;0;True;-12;255;False;-1;255;True;-13;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;2;False;-1;True;3;False;-1;False;True;1;LightMode=DistortionVectors;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;243;1794.491,-1976.747;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;SceneSelectionPass;0;3;SceneSelectionPass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=SceneSelectionPass;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;241;1794.491,-1976.747;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;META;0;1;META;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Meta;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;251;1794.491,-1976.747;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;ScenePickingPass;0;11;ScenePickingPass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;True;3;False;-1;False;True;1;LightMode=Picking;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;244;1794.491,-1976.747;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;DepthOnly;0;4;DepthOnly;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;False;False;False;False;False;False;False;False;True;True;0;True;-8;255;False;-1;255;True;-9;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;False;False;True;1;LightMode=DepthOnly;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;247;1794.491,-1976.747;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;TransparentBackface;0;7;TransparentBackface;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;1;0;True;-22;0;True;-23;1;0;True;-24;0;True;-25;False;False;False;False;False;False;False;False;False;False;False;False;True;1;False;-1;False;False;False;True;True;True;True;True;0;True;-53;False;False;False;False;False;False;False;True;0;True;-28;True;0;True;-37;False;True;1;LightMode=TransparentBackface;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TexturePropertyNode;283;-1129.04,-1802.328;Inherit;True;Property;_Tint;Tint;0;0;Create;False;0;0;0;True;0;False;None;None;False;black;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
+Node;AmplifyShaderEditor.TexturePropertyNode;279;-1129.757,-1997.791;Inherit;True;Property;_GrassControl;GrassControl;3;0;Create;True;0;0;0;True;0;False;None;None;False;black;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
+Node;AmplifyShaderEditor.DynamicAppendNode;259;-1228.167,-927.1675;Inherit;False;FLOAT2;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.TexturePropertyNode;258;-1428.77,-1433.443;Inherit;True;Property;_Control;Control;2;0;Create;True;0;0;0;True;0;False;None;None;False;black;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
+Node;AmplifyShaderEditor.FunctionNode;301;-164.9707,-1808.643;Inherit;False;Sample Terrain Tile;-1;;338;68db4cbbb16712044b9cfe83a0a98414;0;9;5;SAMPLER2D;0;False;7;FLOAT2;0,0;False;8;FLOAT2;0,0;False;9;FLOAT2;0,0;False;10;SAMPLER2D;0;False;13;SAMPLER2D;0;False;17;SAMPLER2D;0;False;22;SAMPLER2DARRAY;0;False;33;SAMPLER2DARRAY;0;False;4;COLOR;0;COLOR;1;COLOR;2;FLOAT;3
+Node;AmplifyShaderEditor.FunctionNode;300;-165.5717,-2085.146;Inherit;False;Sample Terrain Tile;-1;;342;68db4cbbb16712044b9cfe83a0a98414;0;9;5;SAMPLER2D;0;False;7;FLOAT2;0,0;False;8;FLOAT2;0,0;False;9;FLOAT2;0,0;False;10;SAMPLER2D;0;False;13;SAMPLER2D;0;False;17;SAMPLER2D;0;False;22;SAMPLER2DARRAY;0;False;33;SAMPLER2DARRAY;0;False;4;COLOR;0;COLOR;1;COLOR;2;FLOAT;3
+Node;AmplifyShaderEditor.UnpackScaleNormalNode;220;1371.664,-2094.727;Inherit;False;Tangent;2;0;FLOAT4;0,0,0,0;False;1;FLOAT;2;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
+Node;AmplifyShaderEditor.FunctionNode;293;351.6413,-1903.392;Inherit;False;MixColor;-1;;347;c73e8a542d6aa7b41a97cfb308620336;0;6;29;FLOAT4;0,0,0,0;False;24;FLOAT;0;False;25;FLOAT;0;False;30;FLOAT4;0,0,0,0;False;26;FLOAT;0;False;27;FLOAT;0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.BreakToComponentsNode;224;700.3339,-2252.92;Inherit;False;FLOAT4;1;0;FLOAT4;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
+Node;AmplifyShaderEditor.OneMinusNode;275;100.3539,-1382.677;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.OneMinusNode;274;86.84914,-1461.881;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.FunctionNode;290;350.3746,-2479.781;Inherit;False;MixColor;-1;;363;c73e8a542d6aa7b41a97cfb308620336;0;6;29;FLOAT4;0,0,0,0;False;24;FLOAT;0;False;25;FLOAT;0;False;30;FLOAT4;0,0,0,0;False;26;FLOAT;0;False;27;FLOAT;0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.FunctionNode;289;349.1077,-2671.066;Inherit;False;MixColor;-1;;349;c73e8a542d6aa7b41a97cfb308620336;0;6;29;FLOAT4;0,0,0,0;False;24;FLOAT;0;False;25;FLOAT;0;False;30;FLOAT4;0,0,0,0;False;26;FLOAT;0;False;27;FLOAT;0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.FunctionNode;159;984.686,-2335.74;Inherit;False;MixColor;-1;;350;c73e8a542d6aa7b41a97cfb308620336;0;6;29;FLOAT4;0,0,0,0;False;24;FLOAT;0;False;25;FLOAT;0;False;30;FLOAT4;0,0,0,0;False;26;FLOAT;0;False;27;FLOAT;0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;307;1806.674,-1665.47;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.FunctionNode;302;-159.4047,-2633.547;Inherit;False;Sample Terrain Tile;-1;;351;68db4cbbb16712044b9cfe83a0a98414;0;9;5;SAMPLER2D;0;False;7;FLOAT2;0,0;False;8;FLOAT2;0,0;False;9;FLOAT2;0,0;False;10;SAMPLER2D;0;False;13;SAMPLER2D;0;False;17;SAMPLER2D;0;False;22;SAMPLER2DARRAY;0;False;33;SAMPLER2DARRAY;0;False;4;COLOR;0;COLOR;1;COLOR;2;FLOAT;3
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;310;1967.674,-1967.47;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.FunctionNode;292;350.3744,-2094.677;Inherit;False;MixColor;-1;;348;c73e8a542d6aa7b41a97cfb308620336;0;6;29;FLOAT4;0,0,0,0;False;24;FLOAT;0;False;25;FLOAT;0;False;30;FLOAT4;0,0,0,0;False;26;FLOAT;0;False;27;FLOAT;0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;308;1721.674,-1977.47;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;2;False;1;FLOAT;0
+Node;AmplifyShaderEditor.FunctionNode;299;-158.8227,-2360.228;Inherit;False;Sample Terrain Tile;-1;;355;68db4cbbb16712044b9cfe83a0a98414;0;9;5;SAMPLER2D;0;False;7;FLOAT2;0,0;False;8;FLOAT2;0,0;False;9;FLOAT2;0,0;False;10;SAMPLER2D;0;False;13;SAMPLER2D;0;False;17;SAMPLER2D;0;False;22;SAMPLER2DARRAY;0;False;33;SAMPLER2DARRAY;0;False;4;COLOR;0;COLOR;1;COLOR;2;FLOAT;3
+Node;AmplifyShaderEditor.FunctionNode;180;989.8365,-2135.369;Inherit;False;MixColor;-1;;362;c73e8a542d6aa7b41a97cfb308620336;0;6;29;FLOAT4;0,0,0,0;False;24;FLOAT;0;False;25;FLOAT;0;False;30;FLOAT4;0,0,0,0;False;26;FLOAT;0;False;27;FLOAT;0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.BreakToComponentsNode;303;1588.674,-2017.47;Inherit;False;FLOAT4;1;0;FLOAT4;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
+Node;AmplifyShaderEditor.BreakToComponentsNode;298;1272.346,-1842.381;Inherit;False;FLOAT4;1;0;FLOAT4;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
+Node;AmplifyShaderEditor.FunctionNode;221;986.623,-1917.384;Inherit;False;MixColor;-1;;361;c73e8a542d6aa7b41a97cfb308620336;0;6;29;FLOAT4;0,0,0,0;False;24;FLOAT;0;False;25;FLOAT;0;False;30;FLOAT4;0,0,0,0;False;26;FLOAT;0;False;27;FLOAT;0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.BreakToComponentsNode;223;703.6003,-2427.254;Inherit;False;FLOAT4;1;0;FLOAT4;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
+Node;AmplifyShaderEditor.SimpleSubtractOpNode;309;1843.674,-1972.47;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.FunctionNode;294;352.9081,-1708.305;Inherit;False;MixColor;-1;;360;c73e8a542d6aa7b41a97cfb308620336;0;6;29;FLOAT4;0,0,0,0;False;24;FLOAT;0;False;25;FLOAT;0;False;30;FLOAT4;0,0,0,0;False;26;FLOAT;0;False;27;FLOAT;0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.FunctionNode;291;351.6413,-2284.695;Inherit;False;MixColor;-1;;359;c73e8a542d6aa7b41a97cfb308620336;0;6;29;FLOAT4;0,0,0,0;False;24;FLOAT;0;False;25;FLOAT;0;False;30;FLOAT4;0,0,0,0;False;26;FLOAT;0;False;27;FLOAT;0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.RangedFloatNode;20;1278.981,-1605.207;Inherit;False;Property;_MetalLevel;Metallic;4;0;Create;False;0;0;0;False;0;False;0;0;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;161;1383.344,-2199.261;Inherit;False;2;2;0;FLOAT4;0,0,0,0;False;1;FLOAT4;1,1,1,0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;248;1794.491,-1976.747;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;TransparentDepthPrepass;0;8;TransparentDepthPrepass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;1;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;False;False;False;False;False;False;False;False;True;True;0;True;-8;255;False;-1;255;True;-9;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;3;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;False;False;True;1;LightMode=TransparentDepthPrepass;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;240;2123.491,-2096.747;Float;False;True;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;2;GroundSplatSimple;53b46d85872c5b24c8f4f0a1c3fe4c87;True;GBuffer;0;0;GBuffer;35;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;False;False;False;False;False;False;False;False;True;True;0;True;-15;255;False;-1;255;True;-14;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;False;True;0;True;-16;False;True;1;LightMode=GBuffer;False;False;0;;0;0;Standard;42;Surface Type;0;0;  Rendering Pass;1;0;  Refraction Model;0;0;    Blending Mode;0;0;    Blend Preserves Specular;1;0;  Receive Fog;1;0;  Back Then Front Rendering;0;0;  Transparent Depth Prepass;0;0;  Transparent Depth Postpass;0;0;  Transparent Writes Motion Vector;0;0;  Distortion;0;0;    Distortion Mode;0;0;    Distortion Depth Test;1;0;  ZWrite;0;0;  Z Test;4;0;Double-Sided;0;0;Alpha Clipping;0;0;  Use Shadow Threshold;0;0;Material Type,InvertActionOnDeselection;0;0;  Energy Conserving Specular;1;0;  Transmission;1;0;Receive Decals;0;638025943539503617;Receives SSR;0;638025943542930856;Receive SSR Transparent;0;0;Motion Vectors;1;638025981245303722;  Add Precomputed Velocity;0;0;Specular AA;0;0;Specular Occlusion Mode;1;0;Override Baked GI;0;0;Depth Offset;0;0;DOTS Instancing;0;0;LOD CrossFade;0;0;Tessellation;0;0;  Phong;0;0;  Strength;0.5,False,-1;0;  Type;0;0;  Tess;16,False,-1;0;  Min;10,False,-1;0;  Max;25,False,-1;0;  Edge Length;16,False,-1;0;  Max Displacement;25,False,-1;0;Vertex Position;1;0;0;12;True;True;True;True;True;True;False;False;False;False;True;True;False;;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;247;1794.491,-1976.747;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;TransparentBackface;0;7;TransparentBackface;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;1;0;True;-22;0;True;-23;1;0;True;-24;0;True;-25;False;False;False;False;False;False;False;False;False;False;False;False;True;1;False;-1;False;False;False;True;True;True;True;True;0;True;-53;False;False;False;False;False;False;False;True;0;True;-28;True;0;True;-37;False;True;1;LightMode=TransparentBackface;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;244;1794.491,-1976.747;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;DepthOnly;0;4;DepthOnly;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;False;False;False;False;False;False;False;False;True;True;0;True;-8;255;False;-1;255;True;-9;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;False;False;True;1;LightMode=DepthOnly;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;251;1794.491,-1976.747;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;ScenePickingPass;0;11;ScenePickingPass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;True;3;False;-1;False;True;1;LightMode=Picking;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;241;1794.491,-1976.747;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;META;0;1;META;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Meta;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;246;1794.491,-1976.747;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;Distortion;0;6;Distortion;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;4;1;False;-1;1;False;-1;4;1;False;-1;1;False;-1;True;1;False;-1;1;False;-1;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;False;False;False;False;False;False;False;False;True;True;0;True;-12;255;False;-1;255;True;-13;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;2;False;-1;True;3;False;-1;False;True;1;LightMode=DistortionVectors;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;249;1794.491,-1976.747;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;TransparentDepthPostpass;0;9;TransparentDepthPostpass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;1;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;True;False;False;False;False;0;False;-1;False;False;False;False;False;False;False;False;False;True;1;False;-1;False;False;True;1;LightMode=TransparentDepthPostpass;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;242;1794.491,-1976.747;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;ShadowCaster;0;2;ShadowCaster;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;True;False;False;False;False;0;False;-1;False;False;False;False;False;False;False;False;False;True;1;False;-1;True;3;False;-1;False;True;1;LightMode=ShadowCaster;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;245;1794.491,-1976.747;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;Motion Vectors;0;5;Motion Vectors;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;False;False;False;False;False;False;False;False;True;True;0;True;-10;255;False;-1;255;True;-11;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;False;False;True;1;LightMode=MotionVectors;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;240;2123.491,-2096.747;Float;False;True;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;2;DF/GroundSplatSimple;53b46d85872c5b24c8f4f0a1c3fe4c87;True;GBuffer;0;0;GBuffer;35;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;False;False;False;False;False;False;False;False;True;True;0;True;-15;255;False;-1;255;True;-14;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;False;True;0;True;-16;False;True;1;LightMode=GBuffer;False;False;0;;0;0;Standard;42;Surface Type;0;0;  Rendering Pass;1;0;  Refraction Model;0;0;    Blending Mode;0;0;    Blend Preserves Specular;1;0;  Receive Fog;1;0;  Back Then Front Rendering;0;0;  Transparent Depth Prepass;0;0;  Transparent Depth Postpass;0;0;  Transparent Writes Motion Vector;0;0;  Distortion;0;0;    Distortion Mode;0;0;    Distortion Depth Test;1;0;  ZWrite;0;0;  Z Test;4;0;Double-Sided;0;0;Alpha Clipping;0;0;  Use Shadow Threshold;0;0;Material Type,InvertActionOnDeselection;0;0;  Energy Conserving Specular;1;0;  Transmission;1;0;Receive Decals;0;638025943539503617;Receives SSR;0;638025943542930856;Receive SSR Transparent;0;0;Motion Vectors;1;638025981245303722;  Add Precomputed Velocity;0;0;Specular AA;0;0;Specular Occlusion Mode;1;0;Override Baked GI;0;0;Depth Offset;0;0;DOTS Instancing;0;0;LOD CrossFade;0;0;Tessellation;0;0;  Phong;0;0;  Strength;0.5,False,-1;0;  Type;0;0;  Tess;16,False,-1;0;  Min;10,False,-1;0;  Max;25,False,-1;0;  Edge Length;16,False,-1;0;  Max Displacement;25,False,-1;0;Vertex Position;1;0;0;12;True;True;True;True;True;True;False;False;False;False;True;True;False;;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;243;1794.491,-1976.747;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;SceneSelectionPass;0;3;SceneSelectionPass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=SceneSelectionPass;False;False;0;;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;250;1794.491,-1976.747;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;Forward;0;10;Forward;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;1;0;True;-22;0;True;-23;1;0;True;-24;0;True;-25;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-33;False;False;False;True;True;True;True;True;0;True;-53;False;False;False;False;False;True;True;0;True;-6;255;False;-1;255;True;-7;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;0;True;-28;True;0;True;-36;False;True;1;LightMode=Forward;False;False;0;;0;0;Standard;0;False;0
+WireConnection;260;0;254;1
+WireConnection;260;1;254;2
+WireConnection;273;0;272;0
+WireConnection;262;0;257;0
+WireConnection;262;1;260;0
+WireConnection;261;0;259;0
+WireConnection;261;1;260;0
+WireConnection;264;0;262;0
+WireConnection;264;1;261;0
+WireConnection;265;0;263;3
+WireConnection;265;1;263;4
+WireConnection;266;0;264;0
+WireConnection;266;1;265;0
+WireConnection;257;0;296;1
+WireConnection;257;1;296;3
+WireConnection;269;0;267;0
+WireConnection;263;0;258;0
+WireConnection;272;0;266;0
+WireConnection;272;1;270;0
+WireConnection;267;0;266;0
+WireConnection;270;0;269;0
+WireConnection;259;0;254;3
+WireConnection;259;1;254;4
 WireConnection;301;5;258;0
 WireConnection;301;7;270;0
 WireConnection;301;8;282;0
@@ -6744,12 +6767,12 @@ WireConnection;293;27;273;0
 WireConnection;224;0;293;0
 WireConnection;275;0;273;1
 WireConnection;274;0;273;0
-WireConnection;292;29;300;0
-WireConnection;292;24;300;3
-WireConnection;292;25;274;0
-WireConnection;292;30;301;0
-WireConnection;292;26;301;3
-WireConnection;292;27;273;0
+WireConnection;290;29;302;1
+WireConnection;290;24;302;3
+WireConnection;290;25;274;0
+WireConnection;290;30;299;1
+WireConnection;290;26;299;3
+WireConnection;290;27;273;0
 WireConnection;289;29;302;0
 WireConnection;289;24;302;3
 WireConnection;289;25;274;0
@@ -6775,6 +6798,13 @@ WireConnection;302;22;277;0
 WireConnection;302;33;278;0
 WireConnection;310;0;309;0
 WireConnection;310;1;20;0
+WireConnection;292;29;300;0
+WireConnection;292;24;300;3
+WireConnection;292;25;274;0
+WireConnection;292;30;301;0
+WireConnection;292;26;301;3
+WireConnection;292;27;273;0
+WireConnection;308;0;303;3
 WireConnection;299;5;258;0
 WireConnection;299;7;270;0
 WireConnection;299;8;281;0
@@ -6784,70 +6814,40 @@ WireConnection;299;13;279;0
 WireConnection;299;17;284;0
 WireConnection;299;22;277;0
 WireConnection;299;33;278;0
-WireConnection;308;0;303;3
-WireConnection;291;29;302;2
-WireConnection;291;24;302;3
-WireConnection;291;25;274;0
-WireConnection;291;30;299;2
-WireConnection;291;26;299;3
-WireConnection;291;27;273;0
-WireConnection;294;29;300;2
-WireConnection;294;24;300;3
-WireConnection;294;25;274;0
-WireConnection;294;30;301;2
-WireConnection;294;26;301;3
-WireConnection;294;27;273;0
-WireConnection;309;0;308;0
-WireConnection;161;0;159;0
-WireConnection;161;1;221;0
-WireConnection;221;29;291;0
-WireConnection;221;24;223;2
-WireConnection;221;25;275;0
-WireConnection;221;30;294;0
-WireConnection;221;26;224;2
-WireConnection;221;27;273;1
-WireConnection;298;0;180;0
-WireConnection;303;0;159;0
 WireConnection;180;29;290;0
 WireConnection;180;24;223;2
 WireConnection;180;25;275;0
 WireConnection;180;30;293;0
 WireConnection;180;26;224;2
 WireConnection;180;27;273;1
+WireConnection;303;0;159;0
+WireConnection;298;0;180;0
+WireConnection;221;29;291;0
+WireConnection;221;24;223;2
+WireConnection;221;25;275;0
+WireConnection;221;30;294;0
+WireConnection;221;26;224;2
+WireConnection;221;27;273;1
 WireConnection;223;0;290;0
-WireConnection;290;29;302;1
-WireConnection;290;24;302;3
-WireConnection;290;25;274;0
-WireConnection;290;30;299;1
-WireConnection;290;26;299;3
-WireConnection;290;27;273;0
-WireConnection;260;0;254;1
-WireConnection;260;1;254;2
-WireConnection;259;0;254;3
-WireConnection;259;1;254;4
-WireConnection;273;0;272;0
-WireConnection;262;0;257;0
-WireConnection;262;1;260;0
-WireConnection;261;0;259;0
-WireConnection;261;1;260;0
-WireConnection;264;0;262;0
-WireConnection;264;1;261;0
-WireConnection;265;0;263;3
-WireConnection;265;1;263;4
-WireConnection;266;0;264;0
-WireConnection;266;1;265;0
-WireConnection;257;0;296;1
-WireConnection;257;1;296;3
-WireConnection;269;0;267;0
-WireConnection;263;0;258;0
-WireConnection;272;0;266;0
-WireConnection;272;1;270;0
-WireConnection;267;0;266;0
-WireConnection;270;0;269;0
+WireConnection;309;0;308;0
+WireConnection;294;29;300;2
+WireConnection;294;24;300;3
+WireConnection;294;25;274;0
+WireConnection;294;30;301;2
+WireConnection;294;26;301;3
+WireConnection;294;27;273;0
+WireConnection;291;29;302;2
+WireConnection;291;24;302;3
+WireConnection;291;25;274;0
+WireConnection;291;30;299;2
+WireConnection;291;26;299;3
+WireConnection;291;27;273;0
+WireConnection;161;0;159;0
+WireConnection;161;1;221;0
 WireConnection;240;0;161;0
 WireConnection;240;1;220;0
 WireConnection;240;4;310;0
 WireConnection;240;7;307;0
 WireConnection;240;8;298;0
 ASEEND*/
-//CHKSM=99E88F9E80AF5845678A98D31C2FC238693BDCDE
+//CHKSM=76F4626BB1258AEACDD456F8AE07E932C06F7A90

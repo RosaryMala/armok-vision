@@ -1,135 +1,368 @@
 fileFormatVersion: 2
 guid: 93626d14c8967c04a8af90130d655cb8
-timeCreated: 1496221098
-licenseType: Free
 ModelImporter:
-  serializedVersion: 19
-  fileIDToRecycleName:
-    100000: AxleRest002
-    100002: AxleRest01
-    100004: AxleRestPlank002
-    100006: AxleRestPlank01
-    100008: BevelGear002
-    100010: BevelGear003
-    100012: BevelGear004
-    100014: BevelGear005
-    100016: BevelGear006
-    100018: BevelGear01
-    100020: CylinderGearOuter002
-    100022: CylinderGearOuter003
-    100024: CylinderGearOuter004
-    100026: CylinderGearOuter005
-    100028: CylinderGearOuter01
-    100030: Dummy001
-    100032: //RootNode
-    100034: LooseShaft01
-    100036: Shaft003
-    100038: Shaft004
-    100040: Shaft005
-    100042: Shaft006
-    100044: Shaft007
-    100046: Shaft01
-    400000: AxleRest002
-    400002: AxleRest01
-    400004: AxleRestPlank002
-    400006: AxleRestPlank01
-    400008: BevelGear002
-    400010: BevelGear003
-    400012: BevelGear004
-    400014: BevelGear005
-    400016: BevelGear006
-    400018: BevelGear01
-    400020: CylinderGearOuter002
-    400022: CylinderGearOuter003
-    400024: CylinderGearOuter004
-    400026: CylinderGearOuter005
-    400028: CylinderGearOuter01
-    400030: Dummy001
-    400032: //RootNode
-    400034: LooseShaft01
-    400036: Shaft003
-    400038: Shaft004
-    400040: Shaft005
-    400042: Shaft006
-    400044: Shaft007
-    400046: Shaft01
-    2300000: AxleRest002
-    2300002: AxleRest01
-    2300004: AxleRestPlank002
-    2300006: AxleRestPlank01
-    2300008: BevelGear002
-    2300010: BevelGear003
-    2300012: BevelGear004
-    2300014: BevelGear005
-    2300016: BevelGear006
-    2300018: BevelGear01
-    2300020: CylinderGearOuter002
-    2300022: CylinderGearOuter003
-    2300024: CylinderGearOuter004
-    2300026: CylinderGearOuter005
-    2300028: CylinderGearOuter01
-    2300030: LooseShaft01
-    2300032: Shaft003
-    2300034: Shaft004
-    2300036: Shaft005
-    2300038: Shaft006
-    2300040: Shaft007
-    2300042: Shaft01
-    3300000: AxleRest002
-    3300002: AxleRest01
-    3300004: AxleRestPlank002
-    3300006: AxleRestPlank01
-    3300008: BevelGear002
-    3300010: BevelGear003
-    3300012: BevelGear004
-    3300014: BevelGear005
-    3300016: BevelGear006
-    3300018: BevelGear01
-    3300020: CylinderGearOuter002
-    3300022: CylinderGearOuter003
-    3300024: CylinderGearOuter004
-    3300026: CylinderGearOuter005
-    3300028: CylinderGearOuter01
-    3300030: LooseShaft01
-    3300032: Shaft003
-    3300034: Shaft004
-    3300036: Shaft005
-    3300038: Shaft006
-    3300040: Shaft007
-    3300042: Shaft01
-    4300000: Shaft01
-    4300002: BevelGear01
-    4300004: LooseShaft01
-    4300006: CylinderGearOuter01
-    4300008: BevelGear002
-    4300010: CylinderGearOuter003
-    4300012: Shaft003
-    4300014: CylinderGearOuter002
-    4300016: Shaft004
-    4300018: CylinderGearOuter004
-    4300020: Shaft005
-    4300022: BevelGear003
-    4300024: BevelGear005
-    4300026: Shaft006
-    4300028: BevelGear006
-    4300030: Shaft007
-    4300032: BevelGear004
-    4300034: CylinderGearOuter005
-    4300036: AxleRestPlank01
-    4300038: AxleRest01
-    4300040: AxleRest002
-    4300042: AxleRestPlank002
-    7400000: Take 001
-    9500000: //RootNode
+  serializedVersion: 22103
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: AxleRest002
+  - first:
+      1: 100002
+    second: AxleRest01
+  - first:
+      1: 100004
+    second: AxleRestPlank002
+  - first:
+      1: 100006
+    second: AxleRestPlank01
+  - first:
+      1: 100008
+    second: BevelGear002
+  - first:
+      1: 100010
+    second: BevelGear003
+  - first:
+      1: 100012
+    second: BevelGear004
+  - first:
+      1: 100014
+    second: BevelGear005
+  - first:
+      1: 100016
+    second: BevelGear006
+  - first:
+      1: 100018
+    second: BevelGear01
+  - first:
+      1: 100020
+    second: CylinderGearOuter002
+  - first:
+      1: 100022
+    second: CylinderGearOuter003
+  - first:
+      1: 100024
+    second: CylinderGearOuter004
+  - first:
+      1: 100026
+    second: CylinderGearOuter005
+  - first:
+      1: 100028
+    second: CylinderGearOuter01
+  - first:
+      1: 100030
+    second: Dummy001
+  - first:
+      1: 100032
+    second: //RootNode
+  - first:
+      1: 100034
+    second: LooseShaft01
+  - first:
+      1: 100036
+    second: Shaft003
+  - first:
+      1: 100038
+    second: Shaft004
+  - first:
+      1: 100040
+    second: Shaft005
+  - first:
+      1: 100042
+    second: Shaft006
+  - first:
+      1: 100044
+    second: Shaft007
+  - first:
+      1: 100046
+    second: Shaft01
+  - first:
+      4: 400000
+    second: AxleRest002
+  - first:
+      4: 400002
+    second: AxleRest01
+  - first:
+      4: 400004
+    second: AxleRestPlank002
+  - first:
+      4: 400006
+    second: AxleRestPlank01
+  - first:
+      4: 400008
+    second: BevelGear002
+  - first:
+      4: 400010
+    second: BevelGear003
+  - first:
+      4: 400012
+    second: BevelGear004
+  - first:
+      4: 400014
+    second: BevelGear005
+  - first:
+      4: 400016
+    second: BevelGear006
+  - first:
+      4: 400018
+    second: BevelGear01
+  - first:
+      4: 400020
+    second: CylinderGearOuter002
+  - first:
+      4: 400022
+    second: CylinderGearOuter003
+  - first:
+      4: 400024
+    second: CylinderGearOuter004
+  - first:
+      4: 400026
+    second: CylinderGearOuter005
+  - first:
+      4: 400028
+    second: CylinderGearOuter01
+  - first:
+      4: 400030
+    second: Dummy001
+  - first:
+      4: 400032
+    second: //RootNode
+  - first:
+      4: 400034
+    second: LooseShaft01
+  - first:
+      4: 400036
+    second: Shaft003
+  - first:
+      4: 400038
+    second: Shaft004
+  - first:
+      4: 400040
+    second: Shaft005
+  - first:
+      4: 400042
+    second: Shaft006
+  - first:
+      4: 400044
+    second: Shaft007
+  - first:
+      4: 400046
+    second: Shaft01
+  - first:
+      23: 2300000
+    second: AxleRest002
+  - first:
+      23: 2300002
+    second: AxleRest01
+  - first:
+      23: 2300004
+    second: AxleRestPlank002
+  - first:
+      23: 2300006
+    second: AxleRestPlank01
+  - first:
+      23: 2300008
+    second: BevelGear002
+  - first:
+      23: 2300010
+    second: BevelGear003
+  - first:
+      23: 2300012
+    second: BevelGear004
+  - first:
+      23: 2300014
+    second: BevelGear005
+  - first:
+      23: 2300016
+    second: BevelGear006
+  - first:
+      23: 2300018
+    second: BevelGear01
+  - first:
+      23: 2300020
+    second: CylinderGearOuter002
+  - first:
+      23: 2300022
+    second: CylinderGearOuter003
+  - first:
+      23: 2300024
+    second: CylinderGearOuter004
+  - first:
+      23: 2300026
+    second: CylinderGearOuter005
+  - first:
+      23: 2300028
+    second: CylinderGearOuter01
+  - first:
+      23: 2300030
+    second: LooseShaft01
+  - first:
+      23: 2300032
+    second: Shaft003
+  - first:
+      23: 2300034
+    second: Shaft004
+  - first:
+      23: 2300036
+    second: Shaft005
+  - first:
+      23: 2300038
+    second: Shaft006
+  - first:
+      23: 2300040
+    second: Shaft007
+  - first:
+      23: 2300042
+    second: Shaft01
+  - first:
+      33: 3300000
+    second: AxleRest002
+  - first:
+      33: 3300002
+    second: AxleRest01
+  - first:
+      33: 3300004
+    second: AxleRestPlank002
+  - first:
+      33: 3300006
+    second: AxleRestPlank01
+  - first:
+      33: 3300008
+    second: BevelGear002
+  - first:
+      33: 3300010
+    second: BevelGear003
+  - first:
+      33: 3300012
+    second: BevelGear004
+  - first:
+      33: 3300014
+    second: BevelGear005
+  - first:
+      33: 3300016
+    second: BevelGear006
+  - first:
+      33: 3300018
+    second: BevelGear01
+  - first:
+      33: 3300020
+    second: CylinderGearOuter002
+  - first:
+      33: 3300022
+    second: CylinderGearOuter003
+  - first:
+      33: 3300024
+    second: CylinderGearOuter004
+  - first:
+      33: 3300026
+    second: CylinderGearOuter005
+  - first:
+      33: 3300028
+    second: CylinderGearOuter01
+  - first:
+      33: 3300030
+    second: LooseShaft01
+  - first:
+      33: 3300032
+    second: Shaft003
+  - first:
+      33: 3300034
+    second: Shaft004
+  - first:
+      33: 3300036
+    second: Shaft005
+  - first:
+      33: 3300038
+    second: Shaft006
+  - first:
+      33: 3300040
+    second: Shaft007
+  - first:
+      33: 3300042
+    second: Shaft01
+  - first:
+      43: 4300000
+    second: Shaft01
+  - first:
+      43: 4300002
+    second: BevelGear01
+  - first:
+      43: 4300004
+    second: LooseShaft01
+  - first:
+      43: 4300006
+    second: CylinderGearOuter01
+  - first:
+      43: 4300008
+    second: BevelGear002
+  - first:
+      43: 4300010
+    second: CylinderGearOuter003
+  - first:
+      43: 4300012
+    second: Shaft003
+  - first:
+      43: 4300014
+    second: CylinderGearOuter002
+  - first:
+      43: 4300016
+    second: Shaft004
+  - first:
+      43: 4300018
+    second: CylinderGearOuter004
+  - first:
+      43: 4300020
+    second: Shaft005
+  - first:
+      43: 4300022
+    second: BevelGear003
+  - first:
+      43: 4300024
+    second: BevelGear005
+  - first:
+      43: 4300026
+    second: Shaft006
+  - first:
+      43: 4300028
+    second: BevelGear006
+  - first:
+      43: 4300030
+    second: Shaft007
+  - first:
+      43: 4300032
+    second: BevelGear004
+  - first:
+      43: 4300034
+    second: CylinderGearOuter005
+  - first:
+      43: 4300036
+    second: AxleRestPlank01
+  - first:
+      43: 4300038
+    second: AxleRest01
+  - first:
+      43: 4300040
+    second: AxleRest002
+  - first:
+      43: 4300042
+    second: AxleRestPlank002
+  - first:
+      74: 7400000
+    second: Take 001
+  - first:
+      95: 9500000
+    second: //RootNode
+  externalObjects: {}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
+    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -137,12 +370,15 @@ ModelImporter:
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
+    extraUserProperties: []
     clipAnimations: []
     isReadable: 1
   meshes:
@@ -150,26 +386,48 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 0
     importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
+    normalCalculationMode: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 0
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -179,14 +437,19 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
-    hasExtraRoot: 1
+    hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

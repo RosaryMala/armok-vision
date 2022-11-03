@@ -32,13 +32,13 @@ public class GameSettings : MonoBehaviour
         public int drawRangeUp = 1;
         public int drawRangeDown = 5;
         public int maxBlocksToDraw = 460800;
-        public int maxTextureSize = 256;
-        public int textureAtlasSize = 2048;
+        public int maxTextureSize = 1024;
+        public int textureAtlasSize = 4096;
         public bool debugTextureAtlas = false;
         public bool drawClouds = true;
         public LandscapeDetail distantTerrainDetail = LandscapeDetail.High;
         public int vSyncCount = 0;
-        public int targetFrameRate = -1;
+        public int targetFrameRate = 30;
         public bool showHiddenTiles = false;
         public bool fog = true;
         public int maxItemsPerTile = 10;
@@ -265,7 +265,7 @@ public class GameSettings : MonoBehaviour
             switch (input)
             {
                 case true:
-                    item.shadows = LightShadows.Hard;
+                    item.shadows = LightShadows.Soft;
                     break;
                 default:
                     item.shadows = LightShadows.None;

@@ -1,166 +1,470 @@
 fileFormatVersion: 2
 guid: 57f04e3c127f37047920da69d3a84d3c
-timeCreated: 1519537944
-licenseType: Free
 ModelImporter:
-  serializedVersion: 22
-  fileIDToRecycleName:
-    100000: Gem000
-    100002: Gem001
-    100004: Gem002
-    100006: Gem003
-    100008: Gem004
-    100010: Gem005
-    100012: Gem006
-    100014: Gem007
-    100016: Gem008
-    100018: Gem009
-    100020: Gem010
-    100022: Gem011
-    100024: Gem012
-    100026: Gem013
-    100028: Gem014
-    100030: Gem015
-    100032: Gem016
-    100034: Gem017
-    100036: Gem018
-    100038: Gem019
-    100040: Gem020
-    100042: Gem021
-    100044: Gem022
-    100046: Gem023
-    100048: Gem024
-    100050: Gem025
-    100052: Gem026
-    100054: Gem027
-    100056: Gem028
-    100058: Gem029
-    100060: Gem030
-    100062: Gem031
-    100064: Gem032
-    100066: Gem033
-    100068: Gem034
-    100070: Gem035
-    100072: Gem036
-    100074: Gem037
-    100076: Gem038
-    100078: Gem039
-    100080: Gem040
-    100082: Gem041
-    100084: Gem042
-    100086: Gem043
-    100088: Gem044
-    100090: Gem045
-    100092: Gem046
-    100094: Gem047
-    100096: Gem048
-    100098: Gem049
-    100100: Gem050
-    100102: Gem051
-    100104: Gem052
-    100106: Gem053
-    100108: Gem054
-    100110: Gem055
-    100112: Image00
-    100114: Image001
-    100116: Image002
-    100118: Image003
-    100120: Image004
-    100122: Image005
-    100124: Image006
-    100126: //RootNode
-    100128: Quern Full
-    100130: Quern Handle
-    100132: Quern Stone
-    100134: Ring
-    100136: Ring 004
-    100138: Ring 2
-    100140: Ring 3
-    400000: Gem000
-    400002: Gem001
-    400004: Gem002
-    400006: Gem003
-    400008: Gem004
-    400010: Gem005
-    400012: Gem006
-    400014: Gem007
-    400016: Gem008
-    400018: Gem009
-    400020: Gem010
-    400022: Gem011
-    400024: Gem012
-    400026: Gem013
-    400028: Gem014
-    400030: Gem015
-    400032: Gem016
-    400034: Gem017
-    400036: Gem018
-    400038: Gem019
-    400040: Gem020
-    400042: Gem021
-    400044: Gem022
-    400046: Gem023
-    400048: Gem024
-    400050: Gem025
-    400052: Gem026
-    400054: Gem027
-    400056: Gem028
-    400058: Gem029
-    400060: Gem030
-    400062: Gem031
-    400064: Gem032
-    400066: Gem033
-    400068: Gem034
-    400070: Gem035
-    400072: Gem036
-    400074: Gem037
-    400076: Gem038
-    400078: Gem039
-    400080: Gem040
-    400082: Gem041
-    400084: Gem042
-    400086: Gem043
-    400088: Gem044
-    400090: Gem045
-    400092: Gem046
-    400094: Gem047
-    400096: Gem048
-    400098: Gem049
-    400100: Gem050
-    400102: Gem051
-    400104: Gem052
-    400106: Gem053
-    400108: Gem054
-    400110: Gem055
-    400112: Image00
-    400114: Image001
-    400116: Image002
-    400118: Image003
-    400120: Image004
-    400122: Image005
-    400124: Image006
-    400126: //RootNode
-    400128: Quern Full
-    400130: Quern Handle
-    400132: Quern Stone
-    400134: Ring
-    400136: Ring 004
-    400138: Ring 2
-    400140: Ring 3
-    2100000: No Name
-    2300000: Quern Full
-    2300002: Quern Handle
-    2300004: Quern Stone
-    3300000: Quern Full
-    3300002: Quern Handle
-    3300004: Quern Stone
-    4300000: Quern Stone
-    4300002: Quern Handle
-    4300004: Quern Full
-    9500000: //RootNode
+  serializedVersion: 22103
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: Gem000
+  - first:
+      1: 100002
+    second: Gem001
+  - first:
+      1: 100004
+    second: Gem002
+  - first:
+      1: 100006
+    second: Gem003
+  - first:
+      1: 100008
+    second: Gem004
+  - first:
+      1: 100010
+    second: Gem005
+  - first:
+      1: 100012
+    second: Gem006
+  - first:
+      1: 100014
+    second: Gem007
+  - first:
+      1: 100016
+    second: Gem008
+  - first:
+      1: 100018
+    second: Gem009
+  - first:
+      1: 100020
+    second: Gem010
+  - first:
+      1: 100022
+    second: Gem011
+  - first:
+      1: 100024
+    second: Gem012
+  - first:
+      1: 100026
+    second: Gem013
+  - first:
+      1: 100028
+    second: Gem014
+  - first:
+      1: 100030
+    second: Gem015
+  - first:
+      1: 100032
+    second: Gem016
+  - first:
+      1: 100034
+    second: Gem017
+  - first:
+      1: 100036
+    second: Gem018
+  - first:
+      1: 100038
+    second: Gem019
+  - first:
+      1: 100040
+    second: Gem020
+  - first:
+      1: 100042
+    second: Gem021
+  - first:
+      1: 100044
+    second: Gem022
+  - first:
+      1: 100046
+    second: Gem023
+  - first:
+      1: 100048
+    second: Gem024
+  - first:
+      1: 100050
+    second: Gem025
+  - first:
+      1: 100052
+    second: Gem026
+  - first:
+      1: 100054
+    second: Gem027
+  - first:
+      1: 100056
+    second: Gem028
+  - first:
+      1: 100058
+    second: Gem029
+  - first:
+      1: 100060
+    second: Gem030
+  - first:
+      1: 100062
+    second: Gem031
+  - first:
+      1: 100064
+    second: Gem032
+  - first:
+      1: 100066
+    second: Gem033
+  - first:
+      1: 100068
+    second: Gem034
+  - first:
+      1: 100070
+    second: Gem035
+  - first:
+      1: 100072
+    second: Gem036
+  - first:
+      1: 100074
+    second: Gem037
+  - first:
+      1: 100076
+    second: Gem038
+  - first:
+      1: 100078
+    second: Gem039
+  - first:
+      1: 100080
+    second: Gem040
+  - first:
+      1: 100082
+    second: Gem041
+  - first:
+      1: 100084
+    second: Gem042
+  - first:
+      1: 100086
+    second: Gem043
+  - first:
+      1: 100088
+    second: Gem044
+  - first:
+      1: 100090
+    second: Gem045
+  - first:
+      1: 100092
+    second: Gem046
+  - first:
+      1: 100094
+    second: Gem047
+  - first:
+      1: 100096
+    second: Gem048
+  - first:
+      1: 100098
+    second: Gem049
+  - first:
+      1: 100100
+    second: Gem050
+  - first:
+      1: 100102
+    second: Gem051
+  - first:
+      1: 100104
+    second: Gem052
+  - first:
+      1: 100106
+    second: Gem053
+  - first:
+      1: 100108
+    second: Gem054
+  - first:
+      1: 100110
+    second: Gem055
+  - first:
+      1: 100112
+    second: Image00
+  - first:
+      1: 100114
+    second: Image001
+  - first:
+      1: 100116
+    second: Image002
+  - first:
+      1: 100118
+    second: Image003
+  - first:
+      1: 100120
+    second: Image004
+  - first:
+      1: 100122
+    second: Image005
+  - first:
+      1: 100124
+    second: Image006
+  - first:
+      1: 100126
+    second: //RootNode
+  - first:
+      1: 100128
+    second: Quern Full
+  - first:
+      1: 100130
+    second: Quern Handle
+  - first:
+      1: 100132
+    second: Quern Stone
+  - first:
+      1: 100134
+    second: Ring
+  - first:
+      1: 100136
+    second: Ring 004
+  - first:
+      1: 100138
+    second: Ring 2
+  - first:
+      1: 100140
+    second: Ring 3
+  - first:
+      4: 400000
+    second: Gem000
+  - first:
+      4: 400002
+    second: Gem001
+  - first:
+      4: 400004
+    second: Gem002
+  - first:
+      4: 400006
+    second: Gem003
+  - first:
+      4: 400008
+    second: Gem004
+  - first:
+      4: 400010
+    second: Gem005
+  - first:
+      4: 400012
+    second: Gem006
+  - first:
+      4: 400014
+    second: Gem007
+  - first:
+      4: 400016
+    second: Gem008
+  - first:
+      4: 400018
+    second: Gem009
+  - first:
+      4: 400020
+    second: Gem010
+  - first:
+      4: 400022
+    second: Gem011
+  - first:
+      4: 400024
+    second: Gem012
+  - first:
+      4: 400026
+    second: Gem013
+  - first:
+      4: 400028
+    second: Gem014
+  - first:
+      4: 400030
+    second: Gem015
+  - first:
+      4: 400032
+    second: Gem016
+  - first:
+      4: 400034
+    second: Gem017
+  - first:
+      4: 400036
+    second: Gem018
+  - first:
+      4: 400038
+    second: Gem019
+  - first:
+      4: 400040
+    second: Gem020
+  - first:
+      4: 400042
+    second: Gem021
+  - first:
+      4: 400044
+    second: Gem022
+  - first:
+      4: 400046
+    second: Gem023
+  - first:
+      4: 400048
+    second: Gem024
+  - first:
+      4: 400050
+    second: Gem025
+  - first:
+      4: 400052
+    second: Gem026
+  - first:
+      4: 400054
+    second: Gem027
+  - first:
+      4: 400056
+    second: Gem028
+  - first:
+      4: 400058
+    second: Gem029
+  - first:
+      4: 400060
+    second: Gem030
+  - first:
+      4: 400062
+    second: Gem031
+  - first:
+      4: 400064
+    second: Gem032
+  - first:
+      4: 400066
+    second: Gem033
+  - first:
+      4: 400068
+    second: Gem034
+  - first:
+      4: 400070
+    second: Gem035
+  - first:
+      4: 400072
+    second: Gem036
+  - first:
+      4: 400074
+    second: Gem037
+  - first:
+      4: 400076
+    second: Gem038
+  - first:
+      4: 400078
+    second: Gem039
+  - first:
+      4: 400080
+    second: Gem040
+  - first:
+      4: 400082
+    second: Gem041
+  - first:
+      4: 400084
+    second: Gem042
+  - first:
+      4: 400086
+    second: Gem043
+  - first:
+      4: 400088
+    second: Gem044
+  - first:
+      4: 400090
+    second: Gem045
+  - first:
+      4: 400092
+    second: Gem046
+  - first:
+      4: 400094
+    second: Gem047
+  - first:
+      4: 400096
+    second: Gem048
+  - first:
+      4: 400098
+    second: Gem049
+  - first:
+      4: 400100
+    second: Gem050
+  - first:
+      4: 400102
+    second: Gem051
+  - first:
+      4: 400104
+    second: Gem052
+  - first:
+      4: 400106
+    second: Gem053
+  - first:
+      4: 400108
+    second: Gem054
+  - first:
+      4: 400110
+    second: Gem055
+  - first:
+      4: 400112
+    second: Image00
+  - first:
+      4: 400114
+    second: Image001
+  - first:
+      4: 400116
+    second: Image002
+  - first:
+      4: 400118
+    second: Image003
+  - first:
+      4: 400120
+    second: Image004
+  - first:
+      4: 400122
+    second: Image005
+  - first:
+      4: 400124
+    second: Image006
+  - first:
+      4: 400126
+    second: //RootNode
+  - first:
+      4: 400128
+    second: Quern Full
+  - first:
+      4: 400130
+    second: Quern Handle
+  - first:
+      4: 400132
+    second: Quern Stone
+  - first:
+      4: 400134
+    second: Ring
+  - first:
+      4: 400136
+    second: Ring 004
+  - first:
+      4: 400138
+    second: Ring 2
+  - first:
+      4: 400140
+    second: Ring 3
+  - first:
+      21: 2100000
+    second: No Name
+  - first:
+      23: 2300000
+    second: Quern Full
+  - first:
+      23: 2300002
+    second: Quern Handle
+  - first:
+      23: 2300004
+    second: Quern Stone
+  - first:
+      33: 3300000
+    second: Quern Full
+  - first:
+      33: 3300002
+    second: Quern Handle
+  - first:
+      33: 3300004
+    second: Quern Stone
+  - first:
+      43: 4300000
+    second: Quern Stone
+  - first:
+      43: 4300002
+    second: Quern Handle
+  - first:
+      43: 4300004
+    second: Quern Full
+  - first:
+      95: 9500000
+    second: //RootNode
   externalObjects: {}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -169,6 +473,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -177,6 +482,7 @@ ModelImporter:
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
@@ -191,32 +497,48 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 0
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -226,14 +548,19 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
-    hasExtraRoot: 1
+    hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

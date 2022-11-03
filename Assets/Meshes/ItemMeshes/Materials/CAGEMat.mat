@@ -228,6 +228,7 @@ Material:
     - _AlphaToMaskInspectorValue: 0
     - _Amount: 0
     - _Anisotropy: 0
+    - _Blend: 0
     - _BlendMode: 0
     - _BumpScale: 1
     - _CoatMask: 0

@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &6486204036940357583
 Transform:
@@ -27,6 +27,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -47,3 +48,5 @@ MonoBehaviour:
   Ring: {fileID: 1850095815795882, guid: b6d83e04c0a5bfd43884558b0430360d, type: 3}
   Spike: {fileID: 1349603023977594, guid: df8a34ffb07e99d4b96fd1f1ce46b39b, type: 3}
   _shape: {fileID: 1912771546669432, guid: b9678995a159d2e44b9f64717053a108, type: 3}
+  mainProgressBar: {fileID: 0}
+  subProgressBar: {fileID: 0}

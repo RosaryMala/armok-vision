@@ -1,207 +1,584 @@
 fileFormatVersion: 2
 guid: 7fa2cf0e2fdad074687dcaa0e9a8ced5
-timeCreated: 1495729242
-licenseType: Free
 ModelImporter:
-  serializedVersion: 19
-  fileIDToRecycleName:
-    100000: Box001
-    100002: Cone001
-    100004: Cone002
-    100006: Cone003
-    100008: Cone005
-    100010: Cone006
-    100012: Cone007
-    100014: Cylinder001
-    100016: Cylinder002
-    100018: Cylinder003
-    100020: Cylinder004
-    100022: Cylinder005
-    100024: Cylinder006
-    100026: Cylinder007
-    100028: Cylinder008
-    100030: Cylinder009
-    100032: Cylinder010
-    100034: Cylinder011
-    100036: Cylinder012
-    100038: //RootNode
-    100040: Bevel Gear
-    100042: Bevel Gear 1
-    100044: Bevel Gear 2
-    100046: Bevel Gear 3
-    100048: Bevel Gear 4
-    100050: Bevel Gear 5
-    100052: Cylinder Gear00
-    100054: Cylinder Gear01
-    100056: Cylinder Gear02
-    100058: Cylinder Gear03
-    100060: Cylinder Gear04
-    100062: Shaft
-    100064: Shaft 1
-    100066: Shaft 2
-    100068: Shaft 3
-    100070: Shaft 4
-    100072: Shaft 5
-    100074: Shaft 6
-    400000: Box001
-    400002: Cone001
-    400004: Cone002
-    400006: Cone003
-    400008: Cone005
-    400010: Cone006
-    400012: Cone007
-    400014: Cylinder001
-    400016: Cylinder002
-    400018: Cylinder003
-    400020: Cylinder004
-    400022: Cylinder005
-    400024: Cylinder006
-    400026: Cylinder007
-    400028: Cylinder008
-    400030: Cylinder009
-    400032: Cylinder010
-    400034: Cylinder011
-    400036: Cylinder012
-    400038: //RootNode
-    400040: Bevel Gear
-    400042: Bevel Gear 1
-    400044: Bevel Gear 2
-    400046: Bevel Gear 3
-    400048: Bevel Gear 4
-    400050: Bevel Gear 5
-    400052: Cylinder Gear00
-    400054: Cylinder Gear01
-    400056: Cylinder Gear02
-    400058: Cylinder Gear03
-    400060: Cylinder Gear04
-    400062: Shaft
-    400064: Shaft 1
-    400066: Shaft 2
-    400068: Shaft 3
-    400070: Shaft 4
-    400072: Shaft 5
-    400074: Shaft 6
-    2300000: Box001
-    2300002: Cone001
-    2300004: Cone002
-    2300006: Cone003
-    2300008: Cone005
-    2300010: Cone006
-    2300012: Cone007
-    2300014: Cylinder001
-    2300016: Cylinder002
-    2300018: Cylinder003
-    2300020: Cylinder004
-    2300022: Cylinder005
-    2300024: Cylinder006
-    2300026: Cylinder007
-    2300028: Cylinder008
-    2300030: Cylinder009
-    2300032: Cylinder010
-    2300034: Cylinder011
-    2300036: Cylinder012
-    2300038: Bevel Gear
-    2300040: Bevel Gear 1
-    2300042: Bevel Gear 2
-    2300044: Bevel Gear 3
-    2300046: Bevel Gear 4
-    2300048: Bevel Gear 5
-    2300050: Cylinder Gear00
-    2300052: Cylinder Gear01
-    2300054: Cylinder Gear02
-    2300056: Cylinder Gear03
-    2300058: Cylinder Gear04
-    2300060: Shaft
-    2300062: Shaft 1
-    2300064: Shaft 2
-    2300066: Shaft 3
-    2300068: Shaft 4
-    2300070: Shaft 5
-    2300072: Shaft 6
-    3300000: Box001
-    3300002: Cone001
-    3300004: Cone002
-    3300006: Cone003
-    3300008: Cone005
-    3300010: Cone006
-    3300012: Cone007
-    3300014: Cylinder001
-    3300016: Cylinder002
-    3300018: Cylinder003
-    3300020: Cylinder004
-    3300022: Cylinder005
-    3300024: Cylinder006
-    3300026: Cylinder007
-    3300028: Cylinder008
-    3300030: Cylinder009
-    3300032: Cylinder010
-    3300034: Cylinder011
-    3300036: Cylinder012
-    3300038: Bevel Gear
-    3300040: Bevel Gear 1
-    3300042: Bevel Gear 2
-    3300044: Bevel Gear 3
-    3300046: Bevel Gear 4
-    3300048: Bevel Gear 5
-    3300050: Cylinder Gear00
-    3300052: Cylinder Gear01
-    3300054: Cylinder Gear02
-    3300056: Cylinder Gear03
-    3300058: Cylinder Gear04
-    3300060: Shaft
-    3300062: Shaft 1
-    3300064: Shaft 2
-    3300066: Shaft 3
-    3300068: Shaft 4
-    3300070: Shaft 5
-    3300072: Shaft 6
-    4300000: Cylinder001
-    4300002: Cylinder002
-    4300004: Cylinder003
-    4300006: Cylinder004
-    4300008: Cylinder005
-    4300010: Cylinder006
-    4300012: Cylinder007
-    4300014: Cylinder008
-    4300016: Box001
-    4300018: Cylinder009
-    4300020: Cone001
-    4300022: Cone002
-    4300024: Cone003
-    4300026: Cylinder010
-    4300028: Cylinder011
-    4300030: Cone005
-    4300032: Cylinder012
-    4300034: Cone006
-    4300036: Cone007
-    4300038: Shaft
-    4300040: Shaft
-    4300042: Shaft
-    4300044: Shaft
-    4300046: Cylinder Gear03
-    4300048: Cylinder Gear00
-    4300050: Cylinder Gear01
-    4300052: Cylinder Gear02
-    4300054: Shaft
-    4300056: Bevel Gear
-    4300058: Bevel Gear
-    4300060: Bevel Gear
-    4300062: Cylinder Gear04
-    4300064: Shaft
-    4300066: Bevel Gear
-    4300068: Shaft
-    4300070: Bevel Gear
-    4300072: Bevel Gear
-    9500000: //RootNode
+  serializedVersion: 22103
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: Box001
+  - first:
+      1: 100002
+    second: Cone001
+  - first:
+      1: 100004
+    second: Cone002
+  - first:
+      1: 100006
+    second: Cone003
+  - first:
+      1: 100008
+    second: Cone005
+  - first:
+      1: 100010
+    second: Cone006
+  - first:
+      1: 100012
+    second: Cone007
+  - first:
+      1: 100014
+    second: Cylinder001
+  - first:
+      1: 100016
+    second: Cylinder002
+  - first:
+      1: 100018
+    second: Cylinder003
+  - first:
+      1: 100020
+    second: Cylinder004
+  - first:
+      1: 100022
+    second: Cylinder005
+  - first:
+      1: 100024
+    second: Cylinder006
+  - first:
+      1: 100026
+    second: Cylinder007
+  - first:
+      1: 100028
+    second: Cylinder008
+  - first:
+      1: 100030
+    second: Cylinder009
+  - first:
+      1: 100032
+    second: Cylinder010
+  - first:
+      1: 100034
+    second: Cylinder011
+  - first:
+      1: 100036
+    second: Cylinder012
+  - first:
+      1: 100038
+    second: //RootNode
+  - first:
+      1: 100040
+    second: Bevel Gear
+  - first:
+      1: 100042
+    second: Bevel Gear 1
+  - first:
+      1: 100044
+    second: Bevel Gear 2
+  - first:
+      1: 100046
+    second: Bevel Gear 3
+  - first:
+      1: 100048
+    second: Bevel Gear 4
+  - first:
+      1: 100050
+    second: Bevel Gear 5
+  - first:
+      1: 100052
+    second: Cylinder Gear00
+  - first:
+      1: 100054
+    second: Cylinder Gear01
+  - first:
+      1: 100056
+    second: Cylinder Gear02
+  - first:
+      1: 100058
+    second: Cylinder Gear03
+  - first:
+      1: 100060
+    second: Cylinder Gear04
+  - first:
+      1: 100062
+    second: Shaft
+  - first:
+      1: 100064
+    second: Shaft 1
+  - first:
+      1: 100066
+    second: Shaft 2
+  - first:
+      1: 100068
+    second: Shaft 3
+  - first:
+      1: 100070
+    second: Shaft 4
+  - first:
+      1: 100072
+    second: Shaft 5
+  - first:
+      1: 100074
+    second: Shaft 6
+  - first:
+      4: 400000
+    second: Box001
+  - first:
+      4: 400002
+    second: Cone001
+  - first:
+      4: 400004
+    second: Cone002
+  - first:
+      4: 400006
+    second: Cone003
+  - first:
+      4: 400008
+    second: Cone005
+  - first:
+      4: 400010
+    second: Cone006
+  - first:
+      4: 400012
+    second: Cone007
+  - first:
+      4: 400014
+    second: Cylinder001
+  - first:
+      4: 400016
+    second: Cylinder002
+  - first:
+      4: 400018
+    second: Cylinder003
+  - first:
+      4: 400020
+    second: Cylinder004
+  - first:
+      4: 400022
+    second: Cylinder005
+  - first:
+      4: 400024
+    second: Cylinder006
+  - first:
+      4: 400026
+    second: Cylinder007
+  - first:
+      4: 400028
+    second: Cylinder008
+  - first:
+      4: 400030
+    second: Cylinder009
+  - first:
+      4: 400032
+    second: Cylinder010
+  - first:
+      4: 400034
+    second: Cylinder011
+  - first:
+      4: 400036
+    second: Cylinder012
+  - first:
+      4: 400038
+    second: //RootNode
+  - first:
+      4: 400040
+    second: Bevel Gear
+  - first:
+      4: 400042
+    second: Bevel Gear 1
+  - first:
+      4: 400044
+    second: Bevel Gear 2
+  - first:
+      4: 400046
+    second: Bevel Gear 3
+  - first:
+      4: 400048
+    second: Bevel Gear 4
+  - first:
+      4: 400050
+    second: Bevel Gear 5
+  - first:
+      4: 400052
+    second: Cylinder Gear00
+  - first:
+      4: 400054
+    second: Cylinder Gear01
+  - first:
+      4: 400056
+    second: Cylinder Gear02
+  - first:
+      4: 400058
+    second: Cylinder Gear03
+  - first:
+      4: 400060
+    second: Cylinder Gear04
+  - first:
+      4: 400062
+    second: Shaft
+  - first:
+      4: 400064
+    second: Shaft 1
+  - first:
+      4: 400066
+    second: Shaft 2
+  - first:
+      4: 400068
+    second: Shaft 3
+  - first:
+      4: 400070
+    second: Shaft 4
+  - first:
+      4: 400072
+    second: Shaft 5
+  - first:
+      4: 400074
+    second: Shaft 6
+  - first:
+      23: 2300000
+    second: Box001
+  - first:
+      23: 2300002
+    second: Cone001
+  - first:
+      23: 2300004
+    second: Cone002
+  - first:
+      23: 2300006
+    second: Cone003
+  - first:
+      23: 2300008
+    second: Cone005
+  - first:
+      23: 2300010
+    second: Cone006
+  - first:
+      23: 2300012
+    second: Cone007
+  - first:
+      23: 2300014
+    second: Cylinder001
+  - first:
+      23: 2300016
+    second: Cylinder002
+  - first:
+      23: 2300018
+    second: Cylinder003
+  - first:
+      23: 2300020
+    second: Cylinder004
+  - first:
+      23: 2300022
+    second: Cylinder005
+  - first:
+      23: 2300024
+    second: Cylinder006
+  - first:
+      23: 2300026
+    second: Cylinder007
+  - first:
+      23: 2300028
+    second: Cylinder008
+  - first:
+      23: 2300030
+    second: Cylinder009
+  - first:
+      23: 2300032
+    second: Cylinder010
+  - first:
+      23: 2300034
+    second: Cylinder011
+  - first:
+      23: 2300036
+    second: Cylinder012
+  - first:
+      23: 2300038
+    second: Bevel Gear
+  - first:
+      23: 2300040
+    second: Bevel Gear 1
+  - first:
+      23: 2300042
+    second: Bevel Gear 2
+  - first:
+      23: 2300044
+    second: Bevel Gear 3
+  - first:
+      23: 2300046
+    second: Bevel Gear 4
+  - first:
+      23: 2300048
+    second: Bevel Gear 5
+  - first:
+      23: 2300050
+    second: Cylinder Gear00
+  - first:
+      23: 2300052
+    second: Cylinder Gear01
+  - first:
+      23: 2300054
+    second: Cylinder Gear02
+  - first:
+      23: 2300056
+    second: Cylinder Gear03
+  - first:
+      23: 2300058
+    second: Cylinder Gear04
+  - first:
+      23: 2300060
+    second: Shaft
+  - first:
+      23: 2300062
+    second: Shaft 1
+  - first:
+      23: 2300064
+    second: Shaft 2
+  - first:
+      23: 2300066
+    second: Shaft 3
+  - first:
+      23: 2300068
+    second: Shaft 4
+  - first:
+      23: 2300070
+    second: Shaft 5
+  - first:
+      23: 2300072
+    second: Shaft 6
+  - first:
+      33: 3300000
+    second: Box001
+  - first:
+      33: 3300002
+    second: Cone001
+  - first:
+      33: 3300004
+    second: Cone002
+  - first:
+      33: 3300006
+    second: Cone003
+  - first:
+      33: 3300008
+    second: Cone005
+  - first:
+      33: 3300010
+    second: Cone006
+  - first:
+      33: 3300012
+    second: Cone007
+  - first:
+      33: 3300014
+    second: Cylinder001
+  - first:
+      33: 3300016
+    second: Cylinder002
+  - first:
+      33: 3300018
+    second: Cylinder003
+  - first:
+      33: 3300020
+    second: Cylinder004
+  - first:
+      33: 3300022
+    second: Cylinder005
+  - first:
+      33: 3300024
+    second: Cylinder006
+  - first:
+      33: 3300026
+    second: Cylinder007
+  - first:
+      33: 3300028
+    second: Cylinder008
+  - first:
+      33: 3300030
+    second: Cylinder009
+  - first:
+      33: 3300032
+    second: Cylinder010
+  - first:
+      33: 3300034
+    second: Cylinder011
+  - first:
+      33: 3300036
+    second: Cylinder012
+  - first:
+      33: 3300038
+    second: Bevel Gear
+  - first:
+      33: 3300040
+    second: Bevel Gear 1
+  - first:
+      33: 3300042
+    second: Bevel Gear 2
+  - first:
+      33: 3300044
+    second: Bevel Gear 3
+  - first:
+      33: 3300046
+    second: Bevel Gear 4
+  - first:
+      33: 3300048
+    second: Bevel Gear 5
+  - first:
+      33: 3300050
+    second: Cylinder Gear00
+  - first:
+      33: 3300052
+    second: Cylinder Gear01
+  - first:
+      33: 3300054
+    second: Cylinder Gear02
+  - first:
+      33: 3300056
+    second: Cylinder Gear03
+  - first:
+      33: 3300058
+    second: Cylinder Gear04
+  - first:
+      33: 3300060
+    second: Shaft
+  - first:
+      33: 3300062
+    second: Shaft 1
+  - first:
+      33: 3300064
+    second: Shaft 2
+  - first:
+      33: 3300066
+    second: Shaft 3
+  - first:
+      33: 3300068
+    second: Shaft 4
+  - first:
+      33: 3300070
+    second: Shaft 5
+  - first:
+      33: 3300072
+    second: Shaft 6
+  - first:
+      43: 4300000
+    second: Cylinder001
+  - first:
+      43: 4300002
+    second: Cylinder002
+  - first:
+      43: 4300004
+    second: Cylinder003
+  - first:
+      43: 4300006
+    second: Cylinder004
+  - first:
+      43: 4300008
+    second: Cylinder005
+  - first:
+      43: 4300010
+    second: Cylinder006
+  - first:
+      43: 4300012
+    second: Cylinder007
+  - first:
+      43: 4300014
+    second: Cylinder008
+  - first:
+      43: 4300016
+    second: Box001
+  - first:
+      43: 4300018
+    second: Cylinder009
+  - first:
+      43: 4300020
+    second: Cone001
+  - first:
+      43: 4300022
+    second: Cone002
+  - first:
+      43: 4300024
+    second: Cone003
+  - first:
+      43: 4300026
+    second: Cylinder010
+  - first:
+      43: 4300028
+    second: Cylinder011
+  - first:
+      43: 4300030
+    second: Cone005
+  - first:
+      43: 4300032
+    second: Cylinder012
+  - first:
+      43: 4300034
+    second: Cone006
+  - first:
+      43: 4300036
+    second: Cone007
+  - first:
+      43: 4300038
+    second: Shaft
+  - first:
+      43: 4300040
+    second: Shaft
+  - first:
+      43: 4300042
+    second: Shaft
+  - first:
+      43: 4300044
+    second: Shaft
+  - first:
+      43: 4300046
+    second: Cylinder Gear03
+  - first:
+      43: 4300048
+    second: Cylinder Gear00
+  - first:
+      43: 4300050
+    second: Cylinder Gear01
+  - first:
+      43: 4300052
+    second: Cylinder Gear02
+  - first:
+      43: 4300054
+    second: Shaft
+  - first:
+      43: 4300056
+    second: Bevel Gear
+  - first:
+      43: 4300058
+    second: Bevel Gear
+  - first:
+      43: 4300060
+    second: Bevel Gear
+  - first:
+      43: 4300062
+    second: Cylinder Gear04
+  - first:
+      43: 4300064
+    second: Shaft
+  - first:
+      43: 4300066
+    second: Bevel Gear
+  - first:
+      43: 4300068
+    second: Shaft
+  - first:
+      43: 4300070
+    second: Bevel Gear
+  - first:
+      43: 4300072
+    second: Bevel Gear
+  - first:
+      95: 9500000
+    second: //RootNode
+  externalObjects: {}
   materials:
-    importMaterials: 1
+    materialImportMode: 0
     materialName: 0
     materialSearch: 1
+    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -209,12 +586,15 @@ ModelImporter:
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
+    extraUserProperties: []
     clipAnimations: []
     isReadable: 1
   meshes:
@@ -222,26 +602,48 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 0
     importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
-  importAnimation: 1
-  copyAvatar: 0
+    normalCalculationMode: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -251,14 +653,19 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

@@ -36,7 +36,7 @@ Material:
   - _EMISSION
   - _NORMALMAP_TANGENT_SPACE
   m_LightmapFlags: 1
-  m_EnableInstancingVariants: 1
+  m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 3000
   stringTagMap:

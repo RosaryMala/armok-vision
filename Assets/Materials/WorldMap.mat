@@ -32,6 +32,7 @@ Material:
   - _DISABLE_DECALS
   m_InvalidKeywords:
   - _ADD_PRECOMPUTED_VELOCITY
+  - _ALPHATOMASK_ON
   - _DISABLE_SSR
   - _DISABLE_SSR_TRANSPARENT
   m_LightmapFlags: 1
@@ -84,8 +85,8 @@ Material:
     - _AlphaCutoffEnable: 1
     - _AlphaDstBlend: 0
     - _AlphaSrcBlend: 1
-    - _AlphaToMask: 0
-    - _AlphaToMaskInspectorValue: 0
+    - _AlphaToMask: 1
+    - _AlphaToMaskInspectorValue: 1
     - _BlendMode: 0
     - _CullMode: 2
     - _CullModeForward: 2
@@ -118,19 +119,17 @@ Material:
     - _TransparentBackfaceEnable: 0
     - _TransparentCullMode: 2
     - _TransparentSortPriority: 0
-    - _TransparentZWrite: 1
-    - _UseShadowThreshold: 1
+    - _TransparentZWrite: 0
+    - _UseShadowThreshold: 0
     - _ZTestDepthEqualForOpaque: 3
     - _ZTestGBuffer: 3
-    - _ZTestTransparent: 4
+    - _ZTestTransparent: 2
     - _ZWrite: 1
     m_Colors:
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _color: {r: 0, g: 0, b: 0, a: 0}
-    - _uv2_BiomeMap: {r: 0, g: 0, b: 0, a: 0}
-    - _uv_MainTex: {r: 0, g: 0, b: 0, a: 0}
-    - _worldPos: {r: 135, g: 378, b: -110, a: 0}
+    - _ViewMax: {r: 99999, g: 99999, b: 99999, a: 0}
+    - _ViewMin: {r: -99999, g: -99999, b: -99999, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &2767584040427215197
 MonoBehaviour:

@@ -1,6 +1,6 @@
 // Made with Amplify Shader Editor
 // Available at the Unity Asset Store - http://u3d.as/y3X 
-Shader "DFTerrainSurface"
+Shader "DF/TerrainSurface"
 {
 	Properties
 	{
@@ -11,7 +11,9 @@ Shader "DFTerrainSurface"
 		_Scale("Scale", Float) = 1
 		_SeaLevel("SeaLevel", Float) = 100
 		_Metallic("Metallic", Range( 0 , 1)) = 0
-		[ASEEnd]_Smoothness("Smoothness", Range( 0 , 1)) = 0.5
+		_Smoothness("Smoothness", Range( 0 , 1)) = 0.5
+		_ViewMin("ViewMin", Vector) = (-99999,-99999,-99999,0)
+		[ASEEnd]_ViewMax("ViewMax", Vector) = (99999,99999,99999,0)
 		[HideInInspector] _texcoord( "", 2D ) = "white" {}
 
 		[HideInInspector]_EmissionColor("Color", Color) = (1, 1, 1, 1)
@@ -51,7 +53,7 @@ Shader "DFTerrainSurface"
 		[HideInInspector] _ZTestDepthEqualForOpaque("ZTest Depth Equal For Opaque", Int) = 4
 		[HideInInspector] [Enum(UnityEngine.Rendering.CompareFunction)] _ZTestTransparent("ZTest Transparent", Float) = 4
 		[HideInInspector] [ToggleUI] _TransparentBackfaceEnable("Transparent Backface Enable", Float) = 0
-		[HideInInspector] [ToggleUI] _AlphaCutoffEnable("Alpha Cutoff Enable", Float) = 0
+		[HideInInspector] [ToggleUI] _AlphaCutoffEnable("Alpha Cutoff Enable", Float) = 1
 		[HideInInspector] [ToggleUI] _UseShadowThreshold("Use Shadow Threshold", Float) = 0
 		[HideInInspector] [ToggleUI] _DoubleSidedEnable("Double Sided Enable", Float) = 0
 		[HideInInspector] [Enum(Flip, 0, Mirror, 1, None, 2)] _DoubleSidedNormalMode("Double Sided Normal Mode", Float) = 2
@@ -355,6 +357,8 @@ Shader "DFTerrainSurface"
 			CBUFFER_START( UnityPerMaterial )
 			float4 _BiomeMap_ST;
 			float4 _MainTex_ST;
+			float3 _ViewMax;
+			float3 _ViewMin;
 			float _Scale;
 			float _SeaLevel;
 			half _Metallic;
@@ -408,8 +412,8 @@ Shader "DFTerrainSurface"
 				float _TessMaxDisp;
 			#endif
 			CBUFFER_END
-			sampler2D _BiomeMap;
 			sampler2D _ElevationGradient;
+			sampler2D _BiomeMap;
 			sampler2D _MainTex;
 
 
@@ -422,8 +426,7 @@ Shader "DFTerrainSurface"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
 
-			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
-			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
+			#define ASE_NEEDS_VERT_NORMAL
 			#define ASE_NEEDS_FRAG_RELATIVE_WORLD_POS
 
 
@@ -459,7 +462,13 @@ Shader "DFTerrainSurface"
 			};
 
 
+			float ASEAnd( float A, float B )
+			{
+				float result = A && B;
+				return result;
+			}
 			
+
 			void BuildSurfaceData(FragInputs fragInputs, inout GlobalSurfaceDescription surfaceDescription, float3 V, PositionInputs posInput, out SurfaceData surfaceData, out float3 bentNormalWS)
 			{
 				ZERO_INITIALIZE(SurfaceData, surfaceData);
@@ -685,7 +694,7 @@ Shader "DFTerrainSurface"
 				inputMesh.positionOS.xyz += vertexValue;
 				#endif
 
-				inputMesh.normalOS =  inputMesh.normalOS ;
+				inputMesh.normalOS = ( 1.0 - inputMesh.normalOS );
 				inputMesh.tangentOS =  inputMesh.tangentOS ;
 
 				float3 positionRWS = TransformObjectToWorld(inputMesh.positionOS);
@@ -833,18 +842,37 @@ Shader "DFTerrainSurface"
 				BuiltinData builtinData;
 
 				GlobalSurfaceDescription surfaceDescription = (GlobalSurfaceDescription)0;
-				float2 uv_BiomeMap = packedInput.ase_texcoord5.xy * _BiomeMap_ST.xy + _BiomeMap_ST.zw;
-				float3 gammaToLinear36_g13 = FastSRGBToLinear( tex2D( _BiomeMap, uv_BiomeMap ).rgb );
 				float3 ase_worldPos = GetAbsolutePositionWS( positionRWS );
-				float3 temp_cast_2 = (_SeaLevel).xxx;
-				float3 temp_output_17_0_g13 = ( ( ( ase_worldPos / _Scale ) - temp_cast_2 ) / float3( 3,3,3 ) );
-				float4 tex2DNode45_g13 = tex2D( _ElevationGradient, ( ( temp_output_17_0_g13 + float3( 100,100,100 ) ) / float3( 280,280,280 ) ).xy );
-				float3 gammaToLinear37_g13 = FastSRGBToLinear( tex2DNode45_g13.rgb );
-				float3 lerpResult29_g13 = lerp( gammaToLinear36_g13 , gammaToLinear37_g13 , tex2DNode45_g13.a);
+				float3 temp_cast_0 = (_SeaLevel).xxx;
+				float3 temp_output_17_0_g22 = ( ( ( ase_worldPos / _Scale ) - temp_cast_0 ) / float3( 3,3,3 ) );
+				float4 tex2DNode45_g22 = tex2D( _ElevationGradient, ( ( temp_output_17_0_g22 + float3( 100,100,100 ) ) / float3( 280,280,280 ) ).xy );
+				float3 appendResult51_g22 = (float3(tex2DNode45_g22.r , tex2DNode45_g22.g , tex2DNode45_g22.b));
+				float2 uv_BiomeMap = packedInput.ase_texcoord5.xy * _BiomeMap_ST.xy + _BiomeMap_ST.zw;
+				float4 tex2DNode28_g22 = tex2D( _BiomeMap, uv_BiomeMap );
+				float3 appendResult50_g22 = (float3(tex2DNode28_g22.r , tex2DNode28_g22.g , tex2DNode28_g22.b));
+				float3 lerpResult29_g22 = lerp( appendResult51_g22 , appendResult50_g22 , tex2DNode45_g22.a);
 				
 				float2 uv_MainTex = packedInput.ase_texcoord5.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 				
-				surfaceDescription.Albedo = lerpResult29_g13;
+				float3 break4_g14 = _ViewMax;
+				float A1_g16 = ( break4_g14.x < ase_worldPos.x ? 0.0 : 0.0 );
+				float3 break5_g14 = _ViewMin;
+				float B1_g16 = ( ase_worldPos.x <= break5_g14.x ? 0.0 : 0.0 );
+				float localASEAnd1_g16 = ASEAnd( A1_g16 , B1_g16 );
+				float A1_g15 = localASEAnd1_g16;
+				float A1_g17 = ( break4_g14.y < ase_worldPos.y ? 0.0 : 0.0 );
+				float B1_g17 = ( ase_worldPos.y <= break5_g14.y ? 0.0 : 0.0 );
+				float localASEAnd1_g17 = ASEAnd( A1_g17 , B1_g17 );
+				float B1_g15 = localASEAnd1_g17;
+				float localASEAnd1_g15 = ASEAnd( A1_g15 , B1_g15 );
+				float A1_g19 = localASEAnd1_g15;
+				float A1_g18 = ( break4_g14.z < ase_worldPos.z ? 0.0 : 0.0 );
+				float B1_g18 = ( ase_worldPos.z <= break5_g14.z ? 0.0 : 0.0 );
+				float localASEAnd1_g18 = ASEAnd( A1_g18 , B1_g18 );
+				float B1_g19 = localASEAnd1_g18;
+				float localASEAnd1_g19 = ASEAnd( A1_g19 , B1_g19 );
+				
+				surfaceDescription.Albedo = lerpResult29_g22;
 				surfaceDescription.Normal = float3( 0, 0, 1 );
 				surfaceDescription.BentNormal = float3( 0, 0, 1 );
 				surfaceDescription.CoatMask = 0;
@@ -860,7 +888,7 @@ Shader "DFTerrainSurface"
 				surfaceDescription.Alpha = tex2D( _MainTex, uv_MainTex ).a;
 
 				#ifdef _ALPHATEST_ON
-				surfaceDescription.AlphaClipThreshold = _AlphaCutoff;
+				surfaceDescription.AlphaClipThreshold = localASEAnd1_g19;
 				#endif
 
 				#ifdef _ALPHATEST_SHADOW_ON
@@ -1000,6 +1028,8 @@ Shader "DFTerrainSurface"
 			CBUFFER_START( UnityPerMaterial )
 			float4 _BiomeMap_ST;
 			float4 _MainTex_ST;
+			float3 _ViewMax;
+			float3 _ViewMin;
 			float _Scale;
 			float _SeaLevel;
 			half _Metallic;
@@ -1053,8 +1083,8 @@ Shader "DFTerrainSurface"
 				float _TessMaxDisp;
 			#endif
 			CBUFFER_END
-			sampler2D _BiomeMap;
 			sampler2D _ElevationGradient;
+			sampler2D _BiomeMap;
 			sampler2D _MainTex;
 
 
@@ -1067,8 +1097,7 @@ Shader "DFTerrainSurface"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
 
-			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
-			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
+			#define ASE_NEEDS_VERT_NORMAL
 
 
 			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
@@ -1103,7 +1132,13 @@ Shader "DFTerrainSurface"
 				#endif
 			};
 
+			float ASEAnd( float A, float B )
+			{
+				float result = A && B;
+				return result;
+			}
 			
+
 			void BuildSurfaceData(FragInputs fragInputs, inout GlobalSurfaceDescription surfaceDescription, float3 V, PositionInputs posInput, out SurfaceData surfaceData, out float3 bentNormalWS)
 			{
 				ZERO_INITIALIZE(SurfaceData, surfaceData);
@@ -1304,13 +1339,13 @@ Shader "DFTerrainSurface"
 				UNITY_TRANSFER_INSTANCE_ID(inputMesh, outputPackedVaryingsMeshToPS);
 
 				float3 ase_worldPos = GetAbsolutePositionWS( TransformObjectToWorld( (inputMesh.positionOS).xyz ) );
-				outputPackedVaryingsMeshToPS.ase_texcoord3.xyz = ase_worldPos;
+				outputPackedVaryingsMeshToPS.ase_texcoord2.xyz = ase_worldPos;
 				
-				outputPackedVaryingsMeshToPS.ase_texcoord2.xy = inputMesh.uv0.xy;
+				outputPackedVaryingsMeshToPS.ase_texcoord3.xy = inputMesh.uv0.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
-				outputPackedVaryingsMeshToPS.ase_texcoord2.zw = 0;
-				outputPackedVaryingsMeshToPS.ase_texcoord3.w = 0;
+				outputPackedVaryingsMeshToPS.ase_texcoord2.w = 0;
+				outputPackedVaryingsMeshToPS.ase_texcoord3.zw = 0;
 
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 				float3 defaultVertexValue = inputMesh.positionOS.xyz;
@@ -1325,7 +1360,7 @@ Shader "DFTerrainSurface"
 				inputMesh.positionOS.xyz += vertexValue;
 				#endif
 
-				inputMesh.normalOS =  inputMesh.normalOS ;
+				inputMesh.normalOS = ( 1.0 - inputMesh.normalOS );
 				inputMesh.tangentOS =  inputMesh.tangentOS ;
 
 				outputPackedVaryingsMeshToPS.positionCS = UnityMetaVertexPosition(inputMesh.positionOS, inputMesh.uv1.xy, inputMesh.uv2.xy, unity_LightmapST, unity_DynamicLightmapST);
@@ -1465,18 +1500,37 @@ Shader "DFTerrainSurface"
 				SurfaceData surfaceData;
 				BuiltinData builtinData;
 				GlobalSurfaceDescription surfaceDescription = (GlobalSurfaceDescription)0;
-				float2 uv_BiomeMap = packedInput.ase_texcoord2.xy * _BiomeMap_ST.xy + _BiomeMap_ST.zw;
-				float3 gammaToLinear36_g13 = FastSRGBToLinear( tex2D( _BiomeMap, uv_BiomeMap ).rgb );
-				float3 ase_worldPos = packedInput.ase_texcoord3.xyz;
-				float3 temp_cast_2 = (_SeaLevel).xxx;
-				float3 temp_output_17_0_g13 = ( ( ( ase_worldPos / _Scale ) - temp_cast_2 ) / float3( 3,3,3 ) );
-				float4 tex2DNode45_g13 = tex2D( _ElevationGradient, ( ( temp_output_17_0_g13 + float3( 100,100,100 ) ) / float3( 280,280,280 ) ).xy );
-				float3 gammaToLinear37_g13 = FastSRGBToLinear( tex2DNode45_g13.rgb );
-				float3 lerpResult29_g13 = lerp( gammaToLinear36_g13 , gammaToLinear37_g13 , tex2DNode45_g13.a);
+				float3 ase_worldPos = packedInput.ase_texcoord2.xyz;
+				float3 temp_cast_0 = (_SeaLevel).xxx;
+				float3 temp_output_17_0_g22 = ( ( ( ase_worldPos / _Scale ) - temp_cast_0 ) / float3( 3,3,3 ) );
+				float4 tex2DNode45_g22 = tex2D( _ElevationGradient, ( ( temp_output_17_0_g22 + float3( 100,100,100 ) ) / float3( 280,280,280 ) ).xy );
+				float3 appendResult51_g22 = (float3(tex2DNode45_g22.r , tex2DNode45_g22.g , tex2DNode45_g22.b));
+				float2 uv_BiomeMap = packedInput.ase_texcoord3.xy * _BiomeMap_ST.xy + _BiomeMap_ST.zw;
+				float4 tex2DNode28_g22 = tex2D( _BiomeMap, uv_BiomeMap );
+				float3 appendResult50_g22 = (float3(tex2DNode28_g22.r , tex2DNode28_g22.g , tex2DNode28_g22.b));
+				float3 lerpResult29_g22 = lerp( appendResult51_g22 , appendResult50_g22 , tex2DNode45_g22.a);
 				
-				float2 uv_MainTex = packedInput.ase_texcoord2.xy * _MainTex_ST.xy + _MainTex_ST.zw;
+				float2 uv_MainTex = packedInput.ase_texcoord3.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 				
-				surfaceDescription.Albedo = lerpResult29_g13;
+				float3 break4_g14 = _ViewMax;
+				float A1_g16 = ( break4_g14.x < ase_worldPos.x ? 0.0 : 0.0 );
+				float3 break5_g14 = _ViewMin;
+				float B1_g16 = ( ase_worldPos.x <= break5_g14.x ? 0.0 : 0.0 );
+				float localASEAnd1_g16 = ASEAnd( A1_g16 , B1_g16 );
+				float A1_g15 = localASEAnd1_g16;
+				float A1_g17 = ( break4_g14.y < ase_worldPos.y ? 0.0 : 0.0 );
+				float B1_g17 = ( ase_worldPos.y <= break5_g14.y ? 0.0 : 0.0 );
+				float localASEAnd1_g17 = ASEAnd( A1_g17 , B1_g17 );
+				float B1_g15 = localASEAnd1_g17;
+				float localASEAnd1_g15 = ASEAnd( A1_g15 , B1_g15 );
+				float A1_g19 = localASEAnd1_g15;
+				float A1_g18 = ( break4_g14.z < ase_worldPos.z ? 0.0 : 0.0 );
+				float B1_g18 = ( ase_worldPos.z <= break5_g14.z ? 0.0 : 0.0 );
+				float localASEAnd1_g18 = ASEAnd( A1_g18 , B1_g18 );
+				float B1_g19 = localASEAnd1_g18;
+				float localASEAnd1_g19 = ASEAnd( A1_g19 , B1_g19 );
+				
+				surfaceDescription.Albedo = lerpResult29_g22;
 				surfaceDescription.Normal = float3( 0, 0, 1 );
 				surfaceDescription.BentNormal = float3( 0, 0, 1 );
 				surfaceDescription.CoatMask = 0;
@@ -1492,7 +1546,7 @@ Shader "DFTerrainSurface"
 				surfaceDescription.Alpha = tex2D( _MainTex, uv_MainTex ).a;
 
 				#ifdef _ALPHATEST_ON
-				surfaceDescription.AlphaClipThreshold = _AlphaCutoff;
+				surfaceDescription.AlphaClipThreshold = localASEAnd1_g19;
 				#endif
 
 				#ifdef _ENABLE_GEOMETRIC_SPECULAR_AA
@@ -1618,6 +1672,8 @@ Shader "DFTerrainSurface"
 			CBUFFER_START( UnityPerMaterial )
 			float4 _BiomeMap_ST;
 			float4 _MainTex_ST;
+			float3 _ViewMax;
+			float3 _ViewMin;
 			float _Scale;
 			float _SeaLevel;
 			half _Metallic;
@@ -1683,7 +1739,9 @@ Shader "DFTerrainSurface"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
 
-			
+			#define ASE_NEEDS_VERT_NORMAL
+			#define ASE_NEEDS_FRAG_RELATIVE_WORLD_POS
+
 
 			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
 				#define ASE_NEED_CULLFACE 1
@@ -1709,7 +1767,13 @@ Shader "DFTerrainSurface"
 				#endif
 			};
 
+			float ASEAnd( float A, float B )
+			{
+				float result = A && B;
+				return result;
+			}
 			
+
 			void BuildSurfaceData(FragInputs fragInputs, inout AlphaSurfaceDescription surfaceDescription, float3 V, PositionInputs posInput, out SurfaceData surfaceData, out float3 bentNormalWS)
 			{
 				ZERO_INITIALIZE(SurfaceData, surfaceData);
@@ -1868,7 +1932,7 @@ Shader "DFTerrainSurface"
 				inputMesh.positionOS.xyz += vertexValue;
 				#endif
 
-				inputMesh.normalOS =  inputMesh.normalOS ;
+				inputMesh.normalOS = ( 1.0 - inputMesh.normalOS );
 
 				float3 positionRWS = TransformObjectToWorld(inputMesh.positionOS);
 				outputPackedVaryingsMeshToPS.positionCS = TransformWorldToHClip(positionRWS);
@@ -2024,10 +2088,29 @@ Shader "DFTerrainSurface"
 				AlphaSurfaceDescription surfaceDescription = (AlphaSurfaceDescription)0;
 				float2 uv_MainTex = packedInput.ase_texcoord1.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 				
+				float3 break4_g14 = _ViewMax;
+				float3 ase_worldPos = GetAbsolutePositionWS( positionRWS );
+				float A1_g16 = ( break4_g14.x < ase_worldPos.x ? 0.0 : 0.0 );
+				float3 break5_g14 = _ViewMin;
+				float B1_g16 = ( ase_worldPos.x <= break5_g14.x ? 0.0 : 0.0 );
+				float localASEAnd1_g16 = ASEAnd( A1_g16 , B1_g16 );
+				float A1_g15 = localASEAnd1_g16;
+				float A1_g17 = ( break4_g14.y < ase_worldPos.y ? 0.0 : 0.0 );
+				float B1_g17 = ( ase_worldPos.y <= break5_g14.y ? 0.0 : 0.0 );
+				float localASEAnd1_g17 = ASEAnd( A1_g17 , B1_g17 );
+				float B1_g15 = localASEAnd1_g17;
+				float localASEAnd1_g15 = ASEAnd( A1_g15 , B1_g15 );
+				float A1_g19 = localASEAnd1_g15;
+				float A1_g18 = ( break4_g14.z < ase_worldPos.z ? 0.0 : 0.0 );
+				float B1_g18 = ( ase_worldPos.z <= break5_g14.z ? 0.0 : 0.0 );
+				float localASEAnd1_g18 = ASEAnd( A1_g18 , B1_g18 );
+				float B1_g19 = localASEAnd1_g18;
+				float localASEAnd1_g19 = ASEAnd( A1_g19 , B1_g19 );
+				
 				surfaceDescription.Alpha = tex2D( _MainTex, uv_MainTex ).a;
 
 				#ifdef _ALPHATEST_ON
-				surfaceDescription.AlphaClipThreshold = _AlphaCutoff;
+				surfaceDescription.AlphaClipThreshold = localASEAnd1_g19;
 				#endif
 
 				#ifdef _ALPHATEST_SHADOW_ON
@@ -2135,6 +2218,8 @@ Shader "DFTerrainSurface"
 			CBUFFER_START( UnityPerMaterial )
 			float4 _BiomeMap_ST;
 			float4 _MainTex_ST;
+			float3 _ViewMax;
+			float3 _ViewMin;
 			float _Scale;
 			float _SeaLevel;
 			half _Metallic;
@@ -2202,7 +2287,9 @@ Shader "DFTerrainSurface"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
 
-			
+			#define ASE_NEEDS_VERT_NORMAL
+			#define ASE_NEEDS_FRAG_RELATIVE_WORLD_POS
+
 
 			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
 				#define ASE_NEED_CULLFACE 1
@@ -2231,7 +2318,13 @@ Shader "DFTerrainSurface"
 			int _ObjectId;
 			int _PassValue;
 
+			float ASEAnd( float A, float B )
+			{
+				float result = A && B;
+				return result;
+			}
 			
+
 			void BuildSurfaceData(FragInputs fragInputs, inout SceneSurfaceDescription surfaceDescription, float3 V, PositionInputs posInput, out SurfaceData surfaceData, out float3 bentNormalWS)
 			{
 				ZERO_INITIALIZE(SurfaceData, surfaceData);
@@ -2386,7 +2479,7 @@ Shader "DFTerrainSurface"
 				inputMesh.positionOS.xyz += vertexValue;
 				#endif
 
-				inputMesh.normalOS =  inputMesh.normalOS ;
+				inputMesh.normalOS = ( 1.0 - inputMesh.normalOS );
 
 				float3 positionRWS = TransformObjectToWorld(inputMesh.positionOS);
 				outputPackedVaryingsMeshToPS.positionCS = TransformWorldToHClip(positionRWS);
@@ -2524,10 +2617,29 @@ Shader "DFTerrainSurface"
 				SceneSurfaceDescription surfaceDescription = (SceneSurfaceDescription)0;
 				float2 uv_MainTex = packedInput.ase_texcoord1.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 				
+				float3 break4_g14 = _ViewMax;
+				float3 ase_worldPos = GetAbsolutePositionWS( positionRWS );
+				float A1_g16 = ( break4_g14.x < ase_worldPos.x ? 0.0 : 0.0 );
+				float3 break5_g14 = _ViewMin;
+				float B1_g16 = ( ase_worldPos.x <= break5_g14.x ? 0.0 : 0.0 );
+				float localASEAnd1_g16 = ASEAnd( A1_g16 , B1_g16 );
+				float A1_g15 = localASEAnd1_g16;
+				float A1_g17 = ( break4_g14.y < ase_worldPos.y ? 0.0 : 0.0 );
+				float B1_g17 = ( ase_worldPos.y <= break5_g14.y ? 0.0 : 0.0 );
+				float localASEAnd1_g17 = ASEAnd( A1_g17 , B1_g17 );
+				float B1_g15 = localASEAnd1_g17;
+				float localASEAnd1_g15 = ASEAnd( A1_g15 , B1_g15 );
+				float A1_g19 = localASEAnd1_g15;
+				float A1_g18 = ( break4_g14.z < ase_worldPos.z ? 0.0 : 0.0 );
+				float B1_g18 = ( ase_worldPos.z <= break5_g14.z ? 0.0 : 0.0 );
+				float localASEAnd1_g18 = ASEAnd( A1_g18 , B1_g18 );
+				float B1_g19 = localASEAnd1_g18;
+				float localASEAnd1_g19 = ASEAnd( A1_g19 , B1_g19 );
+				
 				surfaceDescription.Alpha = tex2D( _MainTex, uv_MainTex ).a;
 
 				#ifdef _ALPHATEST_ON
-				surfaceDescription.AlphaClipThreshold = _AlphaCutoff;
+				surfaceDescription.AlphaClipThreshold = localASEAnd1_g19;
 				#endif
 
 				#ifdef _DEPTHOFFSET_ON
@@ -2624,6 +2736,8 @@ Shader "DFTerrainSurface"
 			CBUFFER_START( UnityPerMaterial )
 			float4 _BiomeMap_ST;
 			float4 _MainTex_ST;
+			float3 _ViewMax;
+			float3 _ViewMin;
 			float _Scale;
 			float _SeaLevel;
 			half _Metallic;
@@ -2689,7 +2803,9 @@ Shader "DFTerrainSurface"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
 
-			
+			#define ASE_NEEDS_VERT_NORMAL
+			#define ASE_NEEDS_FRAG_RELATIVE_WORLD_POS
+
 
 			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
 				#define ASE_NEED_CULLFACE 1
@@ -2718,7 +2834,13 @@ Shader "DFTerrainSurface"
 				#endif
 			};
 
+			float ASEAnd( float A, float B )
+			{
+				float result = A && B;
+				return result;
+			}
 			
+
 			void BuildSurfaceData(FragInputs fragInputs, inout SmoothSurfaceDescription surfaceDescription, float3 V, PositionInputs posInput, out SurfaceData surfaceData, out float3 bentNormalWS)
 			{
 				ZERO_INITIALIZE(SurfaceData, surfaceData);
@@ -2879,7 +3001,7 @@ Shader "DFTerrainSurface"
 				inputMesh.positionOS.xyz += vertexValue;
 				#endif
 
-				inputMesh.normalOS =  inputMesh.normalOS ;
+				inputMesh.normalOS = ( 1.0 - inputMesh.normalOS );
 				inputMesh.tangentOS =  inputMesh.tangentOS ;
 
 				float3 positionRWS = TransformObjectToWorld(inputMesh.positionOS);
@@ -3047,12 +3169,31 @@ Shader "DFTerrainSurface"
 				SmoothSurfaceDescription surfaceDescription = (SmoothSurfaceDescription)0;
 				float2 uv_MainTex = packedInput.ase_texcoord3.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 				
+				float3 break4_g14 = _ViewMax;
+				float3 ase_worldPos = GetAbsolutePositionWS( positionRWS );
+				float A1_g16 = ( break4_g14.x < ase_worldPos.x ? 0.0 : 0.0 );
+				float3 break5_g14 = _ViewMin;
+				float B1_g16 = ( ase_worldPos.x <= break5_g14.x ? 0.0 : 0.0 );
+				float localASEAnd1_g16 = ASEAnd( A1_g16 , B1_g16 );
+				float A1_g15 = localASEAnd1_g16;
+				float A1_g17 = ( break4_g14.y < ase_worldPos.y ? 0.0 : 0.0 );
+				float B1_g17 = ( ase_worldPos.y <= break5_g14.y ? 0.0 : 0.0 );
+				float localASEAnd1_g17 = ASEAnd( A1_g17 , B1_g17 );
+				float B1_g15 = localASEAnd1_g17;
+				float localASEAnd1_g15 = ASEAnd( A1_g15 , B1_g15 );
+				float A1_g19 = localASEAnd1_g15;
+				float A1_g18 = ( break4_g14.z < ase_worldPos.z ? 0.0 : 0.0 );
+				float B1_g18 = ( ase_worldPos.z <= break5_g14.z ? 0.0 : 0.0 );
+				float localASEAnd1_g18 = ASEAnd( A1_g18 , B1_g18 );
+				float B1_g19 = localASEAnd1_g18;
+				float localASEAnd1_g19 = ASEAnd( A1_g19 , B1_g19 );
+				
 				surfaceDescription.Normal = float3( 0, 0, 1 );
 				surfaceDescription.Smoothness = _Smoothness;
 				surfaceDescription.Alpha = tex2D( _MainTex, uv_MainTex ).a;
 
 				#ifdef _ALPHATEST_ON
-				surfaceDescription.AlphaClipThreshold = _AlphaCutoff;
+				surfaceDescription.AlphaClipThreshold = localASEAnd1_g19;
 				#endif
 
 				#ifdef _DEPTHOFFSET_ON
@@ -3165,6 +3306,8 @@ Shader "DFTerrainSurface"
 			CBUFFER_START( UnityPerMaterial )
 			float4 _BiomeMap_ST;
 			float4 _MainTex_ST;
+			float3 _ViewMax;
+			float3 _ViewMin;
 			float _Scale;
 			float _SeaLevel;
 			half _Metallic;
@@ -3230,7 +3373,8 @@ Shader "DFTerrainSurface"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
 
-			
+			#define ASE_NEEDS_VERT_NORMAL
+
 
 			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
 				#define ASE_NEED_CULLFACE 1
@@ -3256,6 +3400,7 @@ Shader "DFTerrainSurface"
 				float3 vpassInterpolators0 : TEXCOORD1; //interpolators0
 				float3 vpassInterpolators1 : TEXCOORD2; //interpolators1
 				float4 ase_texcoord3 : TEXCOORD3;
+				float4 ase_texcoord4 : TEXCOORD4;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 				#if defined(SHADER_STAGE_FRAGMENT) && defined(ASE_NEED_CULLFACE)
@@ -3264,7 +3409,13 @@ Shader "DFTerrainSurface"
 			};
 
 
+			float ASEAnd( float A, float B )
+			{
+				float result = A && B;
+				return result;
+			}
 			
+
 			void BuildSurfaceData(FragInputs fragInputs, inout SmoothSurfaceDescription surfaceDescription, float3 V, PositionInputs posInput, out SurfaceData surfaceData, out float3 bentNormalWS)
 			{
 				ZERO_INITIALIZE(SurfaceData, surfaceData);
@@ -3399,10 +3550,14 @@ Shader "DFTerrainSurface"
 			AttributesMesh ApplyMeshModification(AttributesMesh inputMesh, float3 timeParameters, inout PackedVaryingsMeshToPS outputPackedVaryingsMeshToPS )
 			{
 				_TimeParameters.xyz = timeParameters;
+				float3 ase_worldPos = GetAbsolutePositionWS( TransformObjectToWorld( (inputMesh.positionOS).xyz ) );
+				outputPackedVaryingsMeshToPS.ase_texcoord4.xyz = ase_worldPos;
+				
 				outputPackedVaryingsMeshToPS.ase_texcoord3.xy = inputMesh.ase_texcoord.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
 				outputPackedVaryingsMeshToPS.ase_texcoord3.zw = 0;
+				outputPackedVaryingsMeshToPS.ase_texcoord4.w = 0;
 
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 				float3 defaultVertexValue = inputMesh.positionOS.xyz;
@@ -3416,7 +3571,7 @@ Shader "DFTerrainSurface"
 				#else
 				inputMesh.positionOS.xyz += vertexValue;
 				#endif
-				inputMesh.normalOS =  inputMesh.normalOS ;
+				inputMesh.normalOS = ( 1.0 - inputMesh.normalOS );
 				return inputMesh;
 			}
 
@@ -3651,12 +3806,31 @@ Shader "DFTerrainSurface"
 				SmoothSurfaceDescription surfaceDescription = (SmoothSurfaceDescription)0;
 				float2 uv_MainTex = packedInput.ase_texcoord3.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 				
+				float3 break4_g14 = _ViewMax;
+				float3 ase_worldPos = packedInput.ase_texcoord4.xyz;
+				float A1_g16 = ( break4_g14.x < ase_worldPos.x ? 0.0 : 0.0 );
+				float3 break5_g14 = _ViewMin;
+				float B1_g16 = ( ase_worldPos.x <= break5_g14.x ? 0.0 : 0.0 );
+				float localASEAnd1_g16 = ASEAnd( A1_g16 , B1_g16 );
+				float A1_g15 = localASEAnd1_g16;
+				float A1_g17 = ( break4_g14.y < ase_worldPos.y ? 0.0 : 0.0 );
+				float B1_g17 = ( ase_worldPos.y <= break5_g14.y ? 0.0 : 0.0 );
+				float localASEAnd1_g17 = ASEAnd( A1_g17 , B1_g17 );
+				float B1_g15 = localASEAnd1_g17;
+				float localASEAnd1_g15 = ASEAnd( A1_g15 , B1_g15 );
+				float A1_g19 = localASEAnd1_g15;
+				float A1_g18 = ( break4_g14.z < ase_worldPos.z ? 0.0 : 0.0 );
+				float B1_g18 = ( ase_worldPos.z <= break5_g14.z ? 0.0 : 0.0 );
+				float localASEAnd1_g18 = ASEAnd( A1_g18 , B1_g18 );
+				float B1_g19 = localASEAnd1_g18;
+				float localASEAnd1_g19 = ASEAnd( A1_g19 , B1_g19 );
+				
 				surfaceDescription.Normal = float3( 0, 0, 1 );
 				surfaceDescription.Smoothness = _Smoothness;
 				surfaceDescription.Alpha = tex2D( _MainTex, uv_MainTex ).a;
 
 				#ifdef _ALPHATEST_ON
-				surfaceDescription.AlphaClipThreshold = _AlphaCutoff;
+				surfaceDescription.AlphaClipThreshold = localASEAnd1_g19;
 				#endif
 
 				#ifdef _DEPTHOFFSET_ON
@@ -3805,6 +3979,8 @@ Shader "DFTerrainSurface"
 			CBUFFER_START( UnityPerMaterial )
 			float4 _BiomeMap_ST;
 			float4 _MainTex_ST;
+			float3 _ViewMax;
+			float3 _ViewMin;
 			float _Scale;
 			float _SeaLevel;
 			half _Metallic;
@@ -3858,8 +4034,8 @@ Shader "DFTerrainSurface"
 				float _TessMaxDisp;
 			#endif
 			CBUFFER_END
-			sampler2D _BiomeMap;
 			sampler2D _ElevationGradient;
+			sampler2D _BiomeMap;
 			sampler2D _MainTex;
 
 
@@ -3877,8 +4053,7 @@ Shader "DFTerrainSurface"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
 
-			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
-			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
+			#define ASE_NEEDS_VERT_NORMAL
 			#define ASE_NEEDS_FRAG_RELATIVE_WORLD_POS
 
 
@@ -3923,7 +4098,13 @@ Shader "DFTerrainSurface"
 				#endif
 			};
 
+			float ASEAnd( float A, float B )
+			{
+				float result = A && B;
+				return result;
+			}
 			
+
 			void BuildSurfaceData(FragInputs fragInputs, inout GlobalSurfaceDescription surfaceDescription, float3 V, PositionInputs posInput, out SurfaceData surfaceData, out float3 bentNormalWS)
 			{
 				ZERO_INITIALIZE(SurfaceData, surfaceData);
@@ -4140,7 +4321,7 @@ Shader "DFTerrainSurface"
 				#else
 				inputMesh.positionOS.xyz += vertexValue;
 				#endif
-				inputMesh.normalOS = inputMesh.normalOS;
+				inputMesh.normalOS = ( 1.0 - inputMesh.normalOS );
 				inputMesh.tangentOS = inputMesh.tangentOS;
 				return inputMesh;
 			}
@@ -4395,18 +4576,37 @@ Shader "DFTerrainSurface"
 				float3 V = GetWorldSpaceNormalizeViewDir(input.positionRWS);
 
 				GlobalSurfaceDescription surfaceDescription = (GlobalSurfaceDescription)0;
-				float2 uv_BiomeMap = packedInput.ase_texcoord7.xy * _BiomeMap_ST.xy + _BiomeMap_ST.zw;
-				float3 gammaToLinear36_g13 = FastSRGBToLinear( tex2D( _BiomeMap, uv_BiomeMap ).rgb );
 				float3 ase_worldPos = GetAbsolutePositionWS( positionRWS );
-				float3 temp_cast_2 = (_SeaLevel).xxx;
-				float3 temp_output_17_0_g13 = ( ( ( ase_worldPos / _Scale ) - temp_cast_2 ) / float3( 3,3,3 ) );
-				float4 tex2DNode45_g13 = tex2D( _ElevationGradient, ( ( temp_output_17_0_g13 + float3( 100,100,100 ) ) / float3( 280,280,280 ) ).xy );
-				float3 gammaToLinear37_g13 = FastSRGBToLinear( tex2DNode45_g13.rgb );
-				float3 lerpResult29_g13 = lerp( gammaToLinear36_g13 , gammaToLinear37_g13 , tex2DNode45_g13.a);
+				float3 temp_cast_0 = (_SeaLevel).xxx;
+				float3 temp_output_17_0_g22 = ( ( ( ase_worldPos / _Scale ) - temp_cast_0 ) / float3( 3,3,3 ) );
+				float4 tex2DNode45_g22 = tex2D( _ElevationGradient, ( ( temp_output_17_0_g22 + float3( 100,100,100 ) ) / float3( 280,280,280 ) ).xy );
+				float3 appendResult51_g22 = (float3(tex2DNode45_g22.r , tex2DNode45_g22.g , tex2DNode45_g22.b));
+				float2 uv_BiomeMap = packedInput.ase_texcoord7.xy * _BiomeMap_ST.xy + _BiomeMap_ST.zw;
+				float4 tex2DNode28_g22 = tex2D( _BiomeMap, uv_BiomeMap );
+				float3 appendResult50_g22 = (float3(tex2DNode28_g22.r , tex2DNode28_g22.g , tex2DNode28_g22.b));
+				float3 lerpResult29_g22 = lerp( appendResult51_g22 , appendResult50_g22 , tex2DNode45_g22.a);
 				
 				float2 uv_MainTex = packedInput.ase_texcoord7.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 				
-				surfaceDescription.Albedo = lerpResult29_g13;
+				float3 break4_g14 = _ViewMax;
+				float A1_g16 = ( break4_g14.x < ase_worldPos.x ? 0.0 : 0.0 );
+				float3 break5_g14 = _ViewMin;
+				float B1_g16 = ( ase_worldPos.x <= break5_g14.x ? 0.0 : 0.0 );
+				float localASEAnd1_g16 = ASEAnd( A1_g16 , B1_g16 );
+				float A1_g15 = localASEAnd1_g16;
+				float A1_g17 = ( break4_g14.y < ase_worldPos.y ? 0.0 : 0.0 );
+				float B1_g17 = ( ase_worldPos.y <= break5_g14.y ? 0.0 : 0.0 );
+				float localASEAnd1_g17 = ASEAnd( A1_g17 , B1_g17 );
+				float B1_g15 = localASEAnd1_g17;
+				float localASEAnd1_g15 = ASEAnd( A1_g15 , B1_g15 );
+				float A1_g19 = localASEAnd1_g15;
+				float A1_g18 = ( break4_g14.z < ase_worldPos.z ? 0.0 : 0.0 );
+				float B1_g18 = ( ase_worldPos.z <= break5_g14.z ? 0.0 : 0.0 );
+				float localASEAnd1_g18 = ASEAnd( A1_g18 , B1_g18 );
+				float B1_g19 = localASEAnd1_g18;
+				float localASEAnd1_g19 = ASEAnd( A1_g19 , B1_g19 );
+				
+				surfaceDescription.Albedo = lerpResult29_g22;
 				surfaceDescription.Normal = float3( 0, 0, 1 );
 				surfaceDescription.BentNormal = float3( 0, 0, 1 );
 				surfaceDescription.CoatMask = 0;
@@ -4422,7 +4622,7 @@ Shader "DFTerrainSurface"
 				surfaceDescription.Alpha = tex2D( _MainTex, uv_MainTex ).a;
 
 				#ifdef _ALPHATEST_ON
-				surfaceDescription.AlphaClipThreshold = _AlphaCutoff;
+				surfaceDescription.AlphaClipThreshold = localASEAnd1_g19;
 				#endif
 
 				#ifdef _ENABLE_GEOMETRIC_SPECULAR_AA
@@ -4665,6 +4865,8 @@ Shader "DFTerrainSurface"
             CBUFFER_START( UnityPerMaterial )
 			float4 _BiomeMap_ST;
 			float4 _MainTex_ST;
+			float3 _ViewMax;
+			float3 _ViewMin;
 			float _Scale;
 			float _SeaLevel;
 			half _Metallic;
@@ -4730,7 +4932,8 @@ Shader "DFTerrainSurface"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
         
 
-			
+			#define ASE_NEEDS_VERT_NORMAL
+
 
 			struct VertexInput
 			{
@@ -4747,11 +4950,18 @@ Shader "DFTerrainSurface"
 				float3 normalWS : TEXCOORD0;
 				float4 tangentWS : TEXCOORD1;
 				float4 ase_texcoord2 : TEXCOORD2;
+				float4 ase_texcoord3 : TEXCOORD3;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 
+			float ASEAnd( float A, float B )
+			{
+				float result = A && B;
+				return result;
+			}
 			
+
             struct SurfaceDescription
 			{
 				float Alpha;
@@ -4808,10 +5018,14 @@ Shader "DFTerrainSurface"
 				UNITY_SETUP_INSTANCE_ID(inputMesh);
 				UNITY_TRANSFER_INSTANCE_ID(inputMesh, o );
 
+				float3 ase_worldPos = GetAbsolutePositionWS( TransformObjectToWorld( (inputMesh.positionOS).xyz ) );
+				o.ase_texcoord3.xyz = ase_worldPos;
+				
 				o.ase_texcoord2.xy = inputMesh.ase_texcoord.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
 				o.ase_texcoord2.zw = 0;
+				o.ase_texcoord3.w = 0;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 				float3 defaultVertexValue = inputMesh.positionOS.xyz;
 				#else
@@ -4824,7 +5038,7 @@ Shader "DFTerrainSurface"
 				inputMesh.positionOS.xyz += vertexValue;
 				#endif
 
-				inputMesh.normalOS =  inputMesh.normalOS ;
+				inputMesh.normalOS = ( 1.0 - inputMesh.normalOS );
 
 				float3 positionRWS = TransformObjectToWorld(inputMesh.positionOS);
 				float3 normalWS = TransformObjectToWorldNormal(inputMesh.normalOS);
@@ -4945,8 +5159,27 @@ Shader "DFTerrainSurface"
 				SurfaceDescription surfaceDescription = (SurfaceDescription)0;
 				float2 uv_MainTex = packedInput.ase_texcoord2.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 				
+				float3 break4_g14 = _ViewMax;
+				float3 ase_worldPos = packedInput.ase_texcoord3.xyz;
+				float A1_g16 = ( break4_g14.x < ase_worldPos.x ? 0.0 : 0.0 );
+				float3 break5_g14 = _ViewMin;
+				float B1_g16 = ( ase_worldPos.x <= break5_g14.x ? 0.0 : 0.0 );
+				float localASEAnd1_g16 = ASEAnd( A1_g16 , B1_g16 );
+				float A1_g15 = localASEAnd1_g16;
+				float A1_g17 = ( break4_g14.y < ase_worldPos.y ? 0.0 : 0.0 );
+				float B1_g17 = ( ase_worldPos.y <= break5_g14.y ? 0.0 : 0.0 );
+				float localASEAnd1_g17 = ASEAnd( A1_g17 , B1_g17 );
+				float B1_g15 = localASEAnd1_g17;
+				float localASEAnd1_g15 = ASEAnd( A1_g15 , B1_g15 );
+				float A1_g19 = localASEAnd1_g15;
+				float A1_g18 = ( break4_g14.z < ase_worldPos.z ? 0.0 : 0.0 );
+				float B1_g18 = ( ase_worldPos.z <= break5_g14.z ? 0.0 : 0.0 );
+				float localASEAnd1_g18 = ASEAnd( A1_g18 , B1_g18 );
+				float B1_g19 = localASEAnd1_g18;
+				float localASEAnd1_g19 = ASEAnd( A1_g19 , B1_g19 );
+				
 				surfaceDescription.Alpha = tex2D( _MainTex, uv_MainTex ).a;
-				surfaceDescription.AlphaClipThreshold =  _AlphaCutoff;
+				surfaceDescription.AlphaClipThreshold =  localASEAnd1_g19;
 				
 
 				float3 V = float3(1.0, 1.0, 1.0); 
@@ -5456,39 +5689,49 @@ Shader "DFTerrainSurface"
 }
 /*ASEBEGIN
 Version=18935
--7;108;2560;1263;1482.1;691.2749;1;True;True
-Node;AmplifyShaderEditor.TexturePropertyNode;17;-720.4,-411.5999;Inherit;True;Property;_ElevationGradient;ElevationGradient;1;0;Create;True;0;0;0;False;0;False;50e978fa24c89ab458b9a23f6b9f6c0d;50e978fa24c89ab458b9a23f6b9f6c0d;False;white;LockedToTexture2D;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
+-1920;0;1920;1011;1758.916;669.3943;1.3;True;True
 Node;AmplifyShaderEditor.RangedFloatNode;29;-709.2996,182.5999;Float;False;Property;_SeaLevel;SeaLevel;4;0;Create;True;0;0;0;False;0;False;100;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.TexturePropertyNode;17;-720.4,-411.5999;Inherit;True;Property;_ElevationGradient;ElevationGradient;1;0;Create;True;0;0;0;False;0;False;50e978fa24c89ab458b9a23f6b9f6c0d;50e978fa24c89ab458b9a23f6b9f6c0d;False;white;LockedToTexture2D;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
 Node;AmplifyShaderEditor.TexturePropertyNode;18;-714.4999,-225.7;Inherit;True;Property;_BiomeMap;BiomeMap;2;0;Create;True;0;0;0;False;0;False;1e4358acdb78b9248bb4a21645538d1a;1e4358acdb78b9248bb4a21645538d1a;False;white;LockedToTexture2D;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
-Node;AmplifyShaderEditor.RangedFloatNode;30;-708.9006,258.8;Half;False;Property;_Metallic;Metallic;5;0;Create;True;0;0;0;False;0;False;0;0;0;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.WorldPosInputsNode;66;-723.1,-31.7749;Inherit;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
-Node;AmplifyShaderEditor.RangedFloatNode;31;-709.9003,334.0002;Half;False;Property;_Smoothness;Smoothness;6;0;Create;True;0;0;0;False;0;False;0.5;0;0;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;28;-709.6998,109.5;Float;False;Property;_Scale;Scale;3;0;Create;True;0;0;0;False;0;False;1;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.TexturePropertyNode;16;-726.7003,-626.2999;Inherit;True;Property;_MainTex;MainTex;0;0;Create;True;0;0;0;False;0;False;None;None;False;white;LockedToTexture2D;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
-Node;AmplifyShaderEditor.FunctionNode;67;-315.3,-214.1;Inherit;False;DFTerrainSurface;-1;;13;eaebcae33cda69f4b8cdf1ab00c57e73;0;8;1;SAMPLER2D;0;False;2;SAMPLER2D;0;False;3;SAMPLER2D;0;False;7;FLOAT3;1,1,1;False;14;FLOAT;1;False;16;FLOAT;100;False;40;FLOAT;0;False;41;FLOAT;0.5;False;5;FLOAT3;49;FLOAT3;0;FLOAT;18;FLOAT;19;FLOAT;20
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;0;162,-256;Float;False;True;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;2;DFTerrainSurface;53b46d85872c5b24c8f4f0a1c3fe4c87;True;GBuffer;0;0;GBuffer;35;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;True;True;0;True;-30;False;False;False;False;False;False;False;False;False;True;True;0;True;-15;255;False;-1;255;True;-14;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;False;True;0;True;-16;False;True;1;LightMode=GBuffer;False;False;0;;0;0;Standard;42;Surface Type;0;0;  Rendering Pass;1;0;  Refraction Model;0;0;    Blending Mode;0;0;    Blend Preserves Specular;1;0;  Receive Fog;1;0;  Back Then Front Rendering;0;0;  Transparent Depth Prepass;0;0;  Transparent Depth Postpass;0;0;  Transparent Writes Motion Vector;0;0;  Distortion;0;0;    Distortion Mode;0;0;    Distortion Depth Test;1;0;  ZWrite;0;0;  Z Test;4;0;Double-Sided;0;0;Alpha Clipping;0;0;  Use Shadow Threshold;0;0;Material Type,InvertActionOnDeselection;0;0;  Energy Conserving Specular;1;0;  Transmission;1;0;Receive Decals;0;638025312910099564;Receives SSR;0;638025312915199780;Receive SSR Transparent;0;0;Motion Vectors;1;638025573045403742;  Add Precomputed Velocity;1;638025573066406282;Specular AA;0;0;Specular Occlusion Mode;0;638025573162316550;Override Baked GI;0;0;Depth Offset;0;0;DOTS Instancing;0;0;LOD CrossFade;0;0;Tessellation;0;0;  Phong;0;0;  Strength;0.5,False,-1;0;  Type;0;0;  Tess;16,False,-1;0;  Min;10,False,-1;0;  Max;25,False,-1;0;  Edge Length;16,False,-1;0;  Max Displacement;25,False,-1;0;Vertex Position;1;638025572711047015;0;12;True;True;True;True;True;True;False;False;False;False;True;True;False;;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;11;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;ScenePickingPass;0;11;ScenePickingPass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;True;3;False;-1;False;True;1;LightMode=Picking;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;8;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;TransparentDepthPrepass;0;8;TransparentDepthPrepass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;1;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;False;False;False;False;False;False;False;False;True;True;0;True;-8;255;False;-1;255;True;-9;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;3;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;False;False;True;1;LightMode=TransparentDepthPrepass;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;3;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;SceneSelectionPass;0;3;SceneSelectionPass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=SceneSelectionPass;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;5;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;Motion Vectors;0;5;Motion Vectors;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;False;False;False;False;False;False;False;False;True;True;0;True;-10;255;False;-1;255;True;-11;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;False;False;True;1;LightMode=MotionVectors;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;4;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;DepthOnly;0;4;DepthOnly;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;False;False;False;False;False;False;False;False;True;True;0;True;-8;255;False;-1;255;True;-9;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;False;False;True;1;LightMode=DepthOnly;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;10;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;Forward;0;10;Forward;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;1;0;True;-22;0;True;-23;1;0;True;-24;0;True;-25;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-33;False;False;False;True;True;True;True;True;0;True;-53;False;False;False;False;False;True;True;0;True;-6;255;False;-1;255;True;-7;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;0;True;-28;True;0;True;-36;False;True;1;LightMode=Forward;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;9;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;TransparentDepthPostpass;0;9;TransparentDepthPostpass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;1;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;True;False;False;False;False;0;False;-1;False;False;False;False;False;False;False;False;False;True;1;False;-1;False;False;True;1;LightMode=TransparentDepthPostpass;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;7;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;TransparentBackface;0;7;TransparentBackface;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;1;0;True;-22;0;True;-23;1;0;True;-24;0;True;-25;False;False;False;False;False;False;False;False;False;False;False;False;True;1;False;-1;False;False;False;True;True;True;True;True;0;True;-53;False;False;False;False;False;False;False;True;0;True;-28;True;0;True;-37;False;True;1;LightMode=TransparentBackface;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;6;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;Distortion;0;6;Distortion;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;4;1;False;-1;1;False;-1;4;1;False;-1;1;False;-1;True;1;False;-1;1;False;-1;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;False;False;False;False;False;False;False;False;True;True;0;True;-12;255;False;-1;255;True;-13;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;2;False;-1;True;3;False;-1;False;True;1;LightMode=DistortionVectors;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;2;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;ShadowCaster;0;2;ShadowCaster;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;True;False;False;False;False;0;False;-1;False;False;False;False;False;False;False;False;False;True;1;False;-1;True;3;False;-1;False;True;1;LightMode=ShadowCaster;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;1;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;META;0;1;META;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Meta;False;False;0;;0;0;Standard;0;False;0
-WireConnection;67;1;16;0
-WireConnection;67;2;17;0
-WireConnection;67;3;18;0
-WireConnection;67;7;66;0
-WireConnection;67;14;28;0
-WireConnection;67;16;29;0
-WireConnection;67;40;30;0
-WireConnection;67;41;31;0
-WireConnection;0;0;67;0
-WireConnection;0;4;67;18
-WireConnection;0;7;67;19
-WireConnection;0;9;67;20
+Node;AmplifyShaderEditor.NormalVertexDataNode;96;-1194.716,-141.5944;Inherit;False;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;30;-708.9006,258.8;Half;False;Property;_Metallic;Metallic;5;0;Create;True;0;0;0;False;0;False;0;0;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.Vector3Node;69;-292.5172,166.5052;Inherit;False;Property;_ViewMin;ViewMin;7;0;Create;True;0;0;0;False;0;False;-99999,-99999,-99999;0,0,0;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
+Node;AmplifyShaderEditor.Vector3Node;70;-283.4172,313.4052;Inherit;False;Property;_ViewMax;ViewMax;8;0;Create;True;0;0;0;False;0;False;99999,99999,99999;0,0,0;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
+Node;AmplifyShaderEditor.TexturePropertyNode;16;-726.7003,-626.2999;Inherit;True;Property;_MainTex;MainTex;0;0;Create;True;0;0;0;True;0;False;None;None;False;white;LockedToTexture2D;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
+Node;AmplifyShaderEditor.RangedFloatNode;31;-709.9003,334.0002;Half;False;Property;_Smoothness;Smoothness;6;0;Create;True;0;0;0;False;0;False;0.5;0;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.FunctionNode;85;-315.3,-214.1;Inherit;False;DFTerrainSurface;-1;;22;eaebcae33cda69f4b8cdf1ab00c57e73;0;8;1;SAMPLER2D;0;False;2;SAMPLER2D;0;False;3;SAMPLER2D;0;False;7;FLOAT3;1,1,1;False;14;FLOAT;1;False;16;FLOAT;100;False;40;FLOAT;0;False;41;FLOAT;0.5;False;5;FLOAT3;49;FLOAT3;0;FLOAT;18;FLOAT;19;FLOAT;20
+Node;AmplifyShaderEditor.OneMinusNode;95;-915.216,-239.0943;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.FunctionNode;68;-51.29995,278.5251;Inherit;False;CliptoWorld;-1;;14;3ef4578d1d1fc1d4fa7eef99b513e2b3;0;2;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;9;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;TransparentDepthPostpass;0;9;TransparentDepthPostpass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;1;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;True;False;False;False;False;0;False;-1;False;False;False;False;False;False;False;False;False;True;1;False;-1;False;False;True;1;LightMode=TransparentDepthPostpass;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;2;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;ShadowCaster;0;2;ShadowCaster;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;True;False;False;False;False;0;False;-1;False;False;False;False;False;False;False;False;False;True;1;False;-1;True;3;False;-1;False;True;1;LightMode=ShadowCaster;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;3;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;SceneSelectionPass;0;3;SceneSelectionPass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=SceneSelectionPass;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;5;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;Motion Vectors;0;5;Motion Vectors;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;False;False;False;False;False;False;False;False;True;True;0;True;-10;255;False;-1;255;True;-11;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;False;False;True;1;LightMode=MotionVectors;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;0;162,-256;Float;False;True;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;2;DF/TerrainSurface;53b46d85872c5b24c8f4f0a1c3fe4c87;True;GBuffer;0;0;GBuffer;35;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;True;True;0;True;-30;False;False;False;False;False;False;False;False;False;True;True;0;True;-15;255;False;-1;255;True;-14;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;False;True;0;True;-16;False;True;1;LightMode=GBuffer;False;False;0;;0;0;Standard;42;Surface Type;0;0;  Rendering Pass;1;0;  Refraction Model;0;0;    Blending Mode;0;0;    Blend Preserves Specular;1;0;  Receive Fog;1;0;  Back Then Front Rendering;0;0;  Transparent Depth Prepass;0;0;  Transparent Depth Postpass;0;0;  Transparent Writes Motion Vector;0;0;  Distortion;0;0;    Distortion Mode;0;0;    Distortion Depth Test;1;0;  ZWrite;0;0;  Z Test;4;0;Double-Sided;0;0;Alpha Clipping;1;638029923165312824;  Use Shadow Threshold;0;0;Material Type,InvertActionOnDeselection;0;0;  Energy Conserving Specular;1;0;  Transmission;1;0;Receive Decals;0;638025312910099564;Receives SSR;0;638025312915199780;Receive SSR Transparent;0;0;Motion Vectors;1;638025573045403742;  Add Precomputed Velocity;1;638025573066406282;Specular AA;0;0;Specular Occlusion Mode;0;638025573162316550;Override Baked GI;0;0;Depth Offset;0;0;DOTS Instancing;0;0;LOD CrossFade;0;0;Tessellation;0;0;  Phong;0;0;  Strength;0.5,False,-1;0;  Type;0;0;  Tess;16,False,-1;0;  Min;10,False,-1;0;  Max;25,False,-1;0;  Edge Length;16,False,-1;0;  Max Displacement;25,False,-1;0;Vertex Position;1;638029949958982764;0;12;True;True;True;True;True;True;False;False;False;False;True;True;False;;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;11;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;ScenePickingPass;0;11;ScenePickingPass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;True;3;False;-1;False;True;1;LightMode=Picking;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;META;0;1;META;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Meta;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;7;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;TransparentBackface;0;7;TransparentBackface;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;1;0;True;-22;0;True;-23;1;0;True;-24;0;True;-25;False;False;False;False;False;False;False;False;False;False;False;False;True;1;False;-1;False;False;False;True;True;True;True;True;0;True;-53;False;False;False;False;False;False;False;True;0;True;-28;True;0;True;-37;False;True;1;LightMode=TransparentBackface;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;6;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;Distortion;0;6;Distortion;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;4;1;False;-1;1;False;-1;4;1;False;-1;1;False;-1;True;1;False;-1;1;False;-1;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;False;False;False;False;False;False;False;False;True;True;0;True;-12;255;False;-1;255;True;-13;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;2;False;-1;True;3;False;-1;False;True;1;LightMode=DistortionVectors;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;8;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;TransparentDepthPrepass;0;8;TransparentDepthPrepass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;1;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;False;False;False;False;False;False;False;False;True;True;0;True;-8;255;False;-1;255;True;-9;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;3;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;False;False;True;1;LightMode=TransparentDepthPrepass;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;4;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;DepthOnly;0;4;DepthOnly;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-30;False;False;False;False;False;False;False;False;False;True;True;0;True;-8;255;False;-1;255;True;-9;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;False;False;True;1;LightMode=DepthOnly;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;10;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LightingShaderGraphGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;Forward;0;10;Forward;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;1;0;True;-22;0;True;-23;1;0;True;-24;0;True;-25;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-33;False;False;False;True;True;True;True;True;0;True;-53;False;False;False;False;False;True;True;0;True;-6;255;False;-1;255;True;-7;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;0;True;-28;True;0;True;-36;False;True;1;LightMode=Forward;False;False;0;;0;0;Standard;0;False;0
+WireConnection;85;1;16;0
+WireConnection;85;2;17;0
+WireConnection;85;3;18;0
+WireConnection;85;7;66;0
+WireConnection;85;14;28;0
+WireConnection;85;16;29;0
+WireConnection;85;40;30;0
+WireConnection;85;41;31;0
+WireConnection;95;0;96;0
+WireConnection;68;1;69;0
+WireConnection;68;2;70;0
+WireConnection;0;0;85;0
+WireConnection;0;4;85;18
+WireConnection;0;7;85;19
+WireConnection;0;9;85;20
+WireConnection;0;10;68;0
+WireConnection;0;12;95;0
 ASEEND*/
-//CHKSM=B35548D06ED7058F374F65AA40B8DC5BD3546880
+//CHKSM=73F6C0F182125BC93FE3E220691725E3CB7AA1B0

@@ -1,49 +1,125 @@
 fileFormatVersion: 2
 guid: a630b7a8a3f557c40a0bf13a15c51fe3
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: //RootNode
-    100002: Canine Head
-    100004: Canine Nose
-    100006: Hyena Ear
-    100008: Jackal Ear
-    100010: Bear Ear
-    100012: Coyote Ear
-    100014: Ursine Head
-    400000: //RootNode
-    400002: Canine Head
-    400004: Canine Nose
-    400006: Hyena Ear
-    400008: Jackal Ear
-    400010: Bear Ear
-    400012: Coyote Ear
-    400014: Ursine Head
-    2100000: No Name
-    2300000: Canine Head
-    2300002: Canine Nose
-    2300004: Hyena Ear
-    2300006: Jackal Ear
-    2300008: Bear Ear
-    2300010: Coyote Ear
-    2300012: Ursine Head
-    3300000: Canine Head
-    3300002: Canine Nose
-    3300004: Hyena Ear
-    3300006: Jackal Ear
-    3300008: Bear Ear
-    3300010: Coyote Ear
-    3300012: Ursine Head
-    4300000: Canine Head
-    4300002: Canine Nose
-    4300004: Hyena Ear
-    4300006: Jackal Ear
-    4300008: Coyote Ear
-    4300010: Bear Ear
-    4300012: Ursine Head
+  serializedVersion: 22103
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: //RootNode
+  - first:
+      1: 100002
+    second: Canine Head
+  - first:
+      1: 100004
+    second: Canine Nose
+  - first:
+      1: 100006
+    second: Hyena Ear
+  - first:
+      1: 100008
+    second: Jackal Ear
+  - first:
+      1: 100010
+    second: Bear Ear
+  - first:
+      1: 100012
+    second: Coyote Ear
+  - first:
+      1: 100014
+    second: Ursine Head
+  - first:
+      4: 400000
+    second: //RootNode
+  - first:
+      4: 400002
+    second: Canine Head
+  - first:
+      4: 400004
+    second: Canine Nose
+  - first:
+      4: 400006
+    second: Hyena Ear
+  - first:
+      4: 400008
+    second: Jackal Ear
+  - first:
+      4: 400010
+    second: Bear Ear
+  - first:
+      4: 400012
+    second: Coyote Ear
+  - first:
+      4: 400014
+    second: Ursine Head
+  - first:
+      21: 2100000
+    second: No Name
+  - first:
+      23: 2300000
+    second: Canine Head
+  - first:
+      23: 2300002
+    second: Canine Nose
+  - first:
+      23: 2300004
+    second: Hyena Ear
+  - first:
+      23: 2300006
+    second: Jackal Ear
+  - first:
+      23: 2300008
+    second: Bear Ear
+  - first:
+      23: 2300010
+    second: Coyote Ear
+  - first:
+      23: 2300012
+    second: Ursine Head
+  - first:
+      33: 3300000
+    second: Canine Head
+  - first:
+      33: 3300002
+    second: Canine Nose
+  - first:
+      33: 3300004
+    second: Hyena Ear
+  - first:
+      33: 3300006
+    second: Jackal Ear
+  - first:
+      33: 3300008
+    second: Bear Ear
+  - first:
+      33: 3300010
+    second: Coyote Ear
+  - first:
+      33: 3300012
+    second: Ursine Head
+  - first:
+      43: 4300000
+    second: Canine Head
+  - first:
+      43: 4300002
+    second: Canine Nose
+  - first:
+      43: 4300004
+    second: Hyena Ear
+  - first:
+      43: 4300006
+    second: Jackal Ear
+  - first:
+      43: 4300008
+    second: Coyote Ear
+  - first:
+      43: 4300010
+    second: Bear Ear
+  - first:
+      43: 4300012
+    second: Ursine Head
   externalObjects: {}
   materials:
-    importMaterials: 1
+    materialImportMode: 2
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -52,6 +128,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -76,25 +153,35 @@ ModelImporter:
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -103,10 +190,10 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
-  importAnimation: 1
-  copyAvatar: 0
+  referencedClips: []
+  importAnimation: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -116,13 +203,19 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

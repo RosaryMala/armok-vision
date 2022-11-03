@@ -1,12 +1,20 @@
 ﻿using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 
 public class SunRotate : MonoBehaviour
 {
     public float rotationSpeed = 1.0f;
     public float longitude;
     public float axialTilt;
-    private int CubemapPosition;
+    private bool CubemapPosition;
     private float skyTransitionTime;
+
+    [SerializeField] VolumeProfile volumeProfile;
+    HDRISky sky;
+    public Cubemap sky_day, sky_night;
+
+    public bool CubemapPosition1 { get => CubemapPosition; set => CubemapPosition = value; }
 
     //private int moonMatrix;
 
@@ -34,7 +42,7 @@ public class SunRotate : MonoBehaviour
 
     private void Awake()
     {
-        CubemapPosition = Shader.PropertyToID("_CubemapPosition");
+        CubemapPosition = volumeProfile.TryGet(out sky);
         //moonMatrix = Shader.PropertyToID("_MoonRotationMatrix");
     }
 
@@ -49,7 +57,15 @@ public class SunRotate : MonoBehaviour
         //RenderSettings.skybox.SetMatrix(CubemapPosition, Matrix4x4.Rotate(planetRotation * yearRotation * seasonRotation));
         //RenderSettings.skybox.SetMatrix(moonMatrix, Matrix4x4.Rotate(planetRotation * moonRotation * seasonRotation));
         var skyTransitionTime = this.transform.rotation.eulerAngles.x / 360;
-        RenderSettings.skybox.SetFloat("_CubemapTransition", skyTransitionTime);
+        sky.rotation.value = rotationSpeed;
+        if (skyTransitionTime < 0.5)
+        {
+            sky.hdriSky.value = sky_day;
+        }
+        else if (skyTransitionTime > 0.5)
+        {
+            sky.hdriSky.value = sky_night;
+        }
         Debug.Log(skyTransitionTime);
     }
 }

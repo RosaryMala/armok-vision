@@ -28,6 +28,7 @@ Material:
     RenderType: Transparent
   disabledShaderPasses:
   - TransparentBackface
+  - MOTIONVECTORS
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
