@@ -24,7 +24,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: WorldMap
-  m_Shader: {fileID: 4800000, guid: 5e7c073c6d4fe8e44b7ed3d5ffc39864, type: 3}
+  m_Shader: {fileID: 4800000, guid: 683f3bbaca204b0459461104368a34b7, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
@@ -32,7 +32,6 @@ Material:
   - _DISABLE_DECALS
   m_InvalidKeywords:
   - _ADD_PRECOMPUTED_VELOCITY
-  - _ALPHATOMASK_ON
   - _DISABLE_SSR
   - _DISABLE_SSR_TRANSPARENT
   m_LightmapFlags: 1
@@ -46,10 +45,15 @@ Material:
   - RayTracingPrepass
   - TransparentDepthPostpass
   - TransparentBackface
+  - MOTIONVECTORS
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _Biome:
+        m_Texture: {fileID: 2800000, guid: 1e4358acdb78b9248bb4a21645538d1a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BiomeMap:
         m_Texture: {fileID: 2800000, guid: 1e4358acdb78b9248bb4a21645538d1a, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -58,7 +62,19 @@ Material:
         m_Texture: {fileID: 2800000, guid: 50e978fa24c89ab458b9a23f6b9f6c0d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Elevationt:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Main:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TextureSample0:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -85,15 +101,17 @@ Material:
     - _AlphaCutoffEnable: 1
     - _AlphaDstBlend: 0
     - _AlphaSrcBlend: 1
-    - _AlphaToMask: 1
-    - _AlphaToMaskInspectorValue: 1
+    - _AlphaToMask: 0
+    - _AlphaToMaskInspectorValue: 0
     - _BlendMode: 0
     - _CullMode: 2
     - _CullModeForward: 2
     - _DoubleSidedEnable: 0
-    - _DoubleSidedNormalMode: 2
+    - _DoubleSidedNormalMode: 0
     - _DstBlend: 0
-    - _EnableFogOnTransparent: 1
+    - _EnableFogOnTransparent: 0
+    - _Glossiness: 0.5
+    - _Metal: 0
     - _Metallic: 0
     - _OpaqueCullMode: 2
     - _ReceivesSSR: 0
@@ -102,6 +120,7 @@ Material:
     - _RequireSplitLighting: 0
     - _Scale: 1
     - _SeaLevel: 297
+    - _Smooth: 0
     - _Smoothness: 0.5
     - _SrcBlend: 1
     - _StencilRef: 0
@@ -116,17 +135,19 @@ Material:
     - _StencilWriteMaskMV: 40
     - _SupportDecals: 0
     - _SurfaceType: 0
+    - _TransitionDistance: 300
+    - _TransitionFalloff: 4
     - _TransparentBackfaceEnable: 0
     - _TransparentCullMode: 2
     - _TransparentSortPriority: 0
-    - _TransparentZWrite: 0
+    - _TransparentZWrite: 1
     - _UseShadowThreshold: 0
     - _ZTestDepthEqualForOpaque: 3
     - _ZTestGBuffer: 3
     - _ZTestTransparent: 2
     - _ZWrite: 1
     m_Colors:
-    - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
+    - _DoubleSidedConstants: {r: -1, g: -1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _ViewMax: {r: 99999, g: 99999, b: 99999, a: 0}
     - _ViewMin: {r: -99999, g: -99999, b: -99999, a: 0}

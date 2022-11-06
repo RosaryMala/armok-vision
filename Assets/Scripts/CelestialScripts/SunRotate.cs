@@ -57,7 +57,7 @@ public class SunRotate : MonoBehaviour
         //RenderSettings.skybox.SetMatrix(CubemapPosition, Matrix4x4.Rotate(planetRotation * yearRotation * seasonRotation));
         //RenderSettings.skybox.SetMatrix(moonMatrix, Matrix4x4.Rotate(planetRotation * moonRotation * seasonRotation));
         var skyTransitionTime = this.transform.rotation.eulerAngles.x / 360;
-        sky.rotation.value = rotationSpeed;
+        sky.rotation.value = skyTransitionTime * 24;
         if (skyTransitionTime < 0.5)
         {
             sky.hdriSky.value = sky_day;
