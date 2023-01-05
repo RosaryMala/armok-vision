@@ -219,7 +219,7 @@ public class SplatManager : MonoBehaviour
             terrainTintLayers[blockZ].SetPixels(terrainTintColor[blockZ]);
         }
         if (terrainTintLayers[blockZ].width != MapDataStore.MapSize.x || terrainTintLayers[blockZ].height != MapDataStore.MapSize.y)
-            terrainTintLayers[blockZ].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
+            terrainTintLayers[blockZ].Reinitialize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
 
         terrainTintLayers[blockZ].SetPixels(blockX * GameMap.blockSize, blockY * GameMap.blockSize, GameMap.blockSize, GameMap.blockSize, GetColorBlock(blockX, blockY, terrainTintColor[blockZ]));
         terrainTintLayers[blockZ].Apply();
@@ -241,7 +241,7 @@ public class SplatManager : MonoBehaviour
                 }
         }
         if (terrainTintLayers[blockZ].width != MapDataStore.MapSize.x || terrainTintLayers[blockZ].height != MapDataStore.MapSize.y)
-            terrainTintLayers[blockZ].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
+            terrainTintLayers[blockZ].Reinitialize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
 
         terrainTintLayers[blockZ].SetPixels(terrainTintColor[blockZ]);
         terrainTintLayers[blockZ].Apply();
@@ -258,7 +258,7 @@ public class SplatManager : MonoBehaviour
             terrainSplatLayers[blockZ].SetPixels(terrainSplatColor[blockZ]);
         }
         if (terrainSplatLayers[blockZ].width != MapDataStore.MapSize.x || terrainSplatLayers[blockZ].height != MapDataStore.MapSize.y)
-            terrainSplatLayers[blockZ].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
+            terrainSplatLayers[blockZ].Reinitialize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
 
         terrainSplatLayers[blockZ].SetPixels(blockX * GameMap.blockSize, blockY * GameMap.blockSize, GameMap.blockSize, GameMap.blockSize, GetColorBlock(blockX, blockY, terrainSplatColor[blockZ]));
         terrainSplatLayers[blockZ].Apply();
@@ -275,7 +275,7 @@ public class SplatManager : MonoBehaviour
             terrainSplatLayers[blockZ].wrapMode = TextureWrapMode.Clamp;
         }
         if (terrainSplatLayers[blockZ].width != MapDataStore.MapSize.x || terrainSplatLayers[blockZ].height != MapDataStore.MapSize.y)
-            terrainSplatLayers[blockZ].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
+            terrainSplatLayers[blockZ].Reinitialize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
 
         terrainSplatLayers[blockZ].SetPixels(terrainSplatColor[blockZ]);
         terrainSplatLayers[blockZ].Apply();
@@ -341,7 +341,7 @@ public class SplatManager : MonoBehaviour
             grassSplatLayers[blockZ].wrapMode = TextureWrapMode.Clamp;
         }
         if (grassSplatLayers[blockZ].width != MapDataStore.MapSize.x || terrainSplatLayers[blockZ].height != MapDataStore.MapSize.y)
-            grassSplatLayers[blockZ].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
+            grassSplatLayers[blockZ].Reinitialize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
 
         grassSplatLayers[blockZ].SetPixels(grassSplatColor[blockZ]);
         grassSplatLayers[blockZ].Apply();
@@ -360,7 +360,7 @@ public class SplatManager : MonoBehaviour
                 }
         }
         if (grassTintLayers[blockZ].width != MapDataStore.MapSize.x || terrainTintLayers[blockZ].height != MapDataStore.MapSize.y)
-            grassTintLayers[blockZ].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
+            grassTintLayers[blockZ].Reinitialize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
 
         grassTintLayers[blockZ].SetPixels(grassTintColor[blockZ]);
         grassTintLayers[blockZ].Apply();
@@ -378,7 +378,7 @@ public class SplatManager : MonoBehaviour
             grassSplatLayers[blockZ].SetPixels(grassSplatColor[blockZ]);
         }
         if (grassSplatLayers[blockZ].width != MapDataStore.MapSize.x || terrainSplatLayers[blockZ].height != MapDataStore.MapSize.y)
-            grassSplatLayers[blockZ].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
+            grassSplatLayers[blockZ].Reinitialize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
 
         grassSplatLayers[blockZ].SetPixels(blockX * GameMap.blockSize, blockY * GameMap.blockSize, GameMap.blockSize, GameMap.blockSize, GetColorBlock(blockX, blockY, grassSplatColor[blockZ]));
         grassSplatLayers[blockZ].Apply();
@@ -398,7 +398,7 @@ public class SplatManager : MonoBehaviour
                 }
         }
         if (grassTintLayers[blockZ].width != MapDataStore.MapSize.x || terrainTintLayers[blockZ].height != MapDataStore.MapSize.y)
-            grassTintLayers[blockZ].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
+            grassTintLayers[blockZ].Reinitialize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
 
         grassTintLayers[blockZ].SetPixels(blockX * GameMap.blockSize, blockY * GameMap.blockSize, GameMap.blockSize, GameMap.blockSize, GetColorBlock(blockX, blockY, grassTintColor[blockZ]));
         grassTintLayers[blockZ].Apply();
@@ -495,7 +495,7 @@ public class SplatManager : MonoBehaviour
                 }
         }
         if (spatterLayers[blockZ].width != MapDataStore.MapSize.x || spatterLayers[blockZ].height != MapDataStore.MapSize.y)
-            spatterLayers[blockZ].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
+            spatterLayers[blockZ].Reinitialize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
 
         spatterLayers[blockZ].SetPixels(spatterColor[blockZ]);
         spatterLayers[blockZ].Apply();
@@ -520,7 +520,7 @@ public class SplatManager : MonoBehaviour
         }
         if (spatterLayers[blockZ].width != MapDataStore.MapSize.x || spatterLayers[blockZ].height != MapDataStore.MapSize.y)
         {
-            spatterLayers[blockZ].Resize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
+            spatterLayers[blockZ].Reinitialize(MapDataStore.MapSize.x, MapDataStore.MapSize.y);
             spatterLayers[blockZ].SetPixels(spatterColor[blockZ]);
         }
 

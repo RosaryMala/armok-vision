@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.VR;
 
 public class CameraSelector : MonoBehaviour
 {
@@ -9,7 +8,6 @@ public class CameraSelector : MonoBehaviour
     {
         GodView,
         FirstPerson,
-        VR,
     }
 
     public Camera ActualCamera;
@@ -25,31 +23,11 @@ public class CameraSelector : MonoBehaviour
         switch (option)
         {
             case CameraOption.GodView:
-#if SteamVR
-                if(ActualCamera.GetComponent<SteamVR_Camera>().enabled)
-                {
-                    ActualCamera.GetComponent<SteamVR_Camera>().enabled = false;
-                    ActualCamera.GetComponent<SteamVR_Camera>().Collapse();
-                }
-#endif
                 ChangeParent(GodViewCamera);
                 break;
             case CameraOption.FirstPerson:
-#if SteamVR
-                if (ActualCamera.GetComponent<SteamVR_Camera>().enabled)
-                {
-                    ActualCamera.GetComponent<SteamVR_Camera>().enabled = false;
-                    ActualCamera.GetComponent<SteamVR_Camera>().Collapse();
-                }
-#endif
                 ChangeParent(FirstPersonCamera);
                 break;
-#if SteamVR
-            case CameraOption.VR:
-                ChangeParent(GodViewVRCamera);
-                ActualCamera.GetComponent<SteamVR_Camera>().enabled = true;
-                break;
-#endif
             default:
                 break;
         }
@@ -57,10 +35,6 @@ public class CameraSelector : MonoBehaviour
 
     void CycleCamera()
     {
-#if SteamVR
-        if (SteamVR.active)
-            return;
-#endif
         switch (currentCamera)
         {
             case CameraOption.GodView:
@@ -119,14 +93,6 @@ public class CameraSelector : MonoBehaviour
 
     public void Start()
     {
-#if !UNITY_STANDALONE_LINUX
-        if (UnityEngine.XR.XRSettings.loadedDeviceName == "OpenVR")
-        {
-            ChangeCamera(CameraOption.VR);
-            Debug.Log("Started VR Mode");
-        }
-        else
-#endif
         {
             ChangeCamera(CameraOption.GodView);
             Debug.Log("Started Monitor Mode");

@@ -79,6 +79,11 @@ UNITY_INSTANCING_BUFFER_END(MyProperties)
 
         void DecalFinalGBuffer (Input IN, SurfaceOutputStandard o, inout half4 diffuse, inout half4 specSmoothness, inout half4 normal, inout half4 emission)
         {
+#ifdef _BOUNDING_BOX_ENABLED
+            clip(IN.worldPos - _ViewMin);
+            clip(_ViewMax - IN.worldPos);
+#endif
+
             diffuse *= o.Alpha * _ContributionAlbedo; 
             specSmoothness *= o.Alpha * _ContributionSpecSmoothness; 
             normal *= o.Alpha * _ContributionNormal; 

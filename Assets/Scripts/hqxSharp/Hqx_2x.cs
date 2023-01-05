@@ -47,7 +47,7 @@ namespace hqx
             var bmpData = bitmap.GetPixels32();
             var destData = new Color32[bitmap.width * 2 * bitmap.height * 2];
 
-            bitmap.Resize(bitmap.width * 2, bitmap.height * 2);
+            bitmap.Reinitialize(bitmap.width * 2, bitmap.height * 2);
 
             Scale2(bmpData, destData, Xres, Yres, trY, trU, trV, trA, wrapX, wrapY);
 
